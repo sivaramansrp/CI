@@ -4,15 +4,15 @@ import { Injectable } from '@angular/core';
 
 /**
  * Función que crea el estado inicial para el formulario de residuo.
- * 
+ *
  * Retorna un objeto con los valores por defecto de los campos del formularioDatos
  * y formularioResiduo, todos inicializados como cadenas vacías.
- * 
+ *
  * @returns EstadoFormularioResiduo - Estado inicial del formulario
  */
 export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
   return {
-    formularioDatos: {
+    formularioMateriaPrima: {
       /** Número de identificación del registro de materia prima */
       numero: '',
 
@@ -76,7 +76,7 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
 
       /** Capacidad del contenedor */
       capacidad: '',
-    }
+    },
   };
 }
 
@@ -99,10 +99,12 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
    * Actualiza los datos del formulario relacionados con la materia prima.
    * @param datos - Objeto que contiene los datos de formularioDatos.
    */
-  actualizarFormularioDatos(datos: EstadoFormularioResiduo['formularioDatos']): void {
-    this.update(state => ({
+  actualizarFormularioDatos(
+    datos: EstadoFormularioResiduo['formularioMateriaPrima']
+  ): void {
+    this.update((state) => ({
       ...state,
-      formularioDatos: { ...datos }
+      formularioDatos: { ...datos },
     }));
   }
 
@@ -110,10 +112,12 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
    * Actualiza los datos del formulario relacionados con el residuo.
    * @param residuo - Objeto que contiene los datos de formularioResiduo.
    */
-  actualizarFormularioResiduo(residuo: EstadoFormularioResiduo['formularioResiduo']): void {
-    this.update(state => ({
+  actualizarFormularioResiduo(
+    residuo: EstadoFormularioResiduo['formularioResiduo']
+  ): void {
+    this.update((state) => ({
       ...state,
-      formularioResiduo: { ...residuo }
+      formularioResiduo: { ...residuo },
     }));
   }
 
@@ -123,5 +127,4 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
   limpiarFormulario(): void {
     this.reset();
   }
-
 }

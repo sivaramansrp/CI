@@ -11,6 +11,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { map, takeUntil } from 'rxjs';
 import { AutorizacionImportacionTemporalService } from '../../services/autorizacion-importacion-temporal.service';
+import {SolicitudComponent} from '../solicitud/solicitud.component';
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
@@ -40,6 +41,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * Estado de la consulta actual, obtenido desde el store.
    */
   public consultaState!: ConsultaioState;
+
+   /**
+   * @property {SolicitudComponent} solicitudComponent
+   * @description
+   * Referencia al componente hijo `SolicitudComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de pago de derechos,
+   * especialmente para validar la información de pago y llave de pago.
+   */
+   @ViewChild('datosSolicitud') datosSolicitud!:SolicitudComponent;
+
 
   /**
    * El índice de la pestaña actualmente seleccionada.
@@ -107,6 +118,50 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   ngAfterViewInit(): void {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  }
+  /*
+  * Valida los formularios del solicitante y de datos de solicitud.
+  * @returns {string} - Indica el resultado de la validación:
+  * */
+  public validarFormularios(): string {
+    let isSolicitaneValid = true;
+    if (!this.solicitante?.form || this.solicitante.form.invalid) {
+      this.solicitante?.form?.markAllAsTouched();
+      isSolicitaneValid = false;
+    }
+  
+    let isDatosSolicitudValid = true;
+    let isManifiestoValid = true;
+    if (!this.datosSolicitud) {
+      isDatosSolicitudValid = false;
+      isManifiestoValid = false;
+    } else {
+      isDatosSolicitudValid = this.datosSolicitud.validarFormulario();
+      isManifiestoValid = this.datosSolicitud.validarManifiesto();
+    }
+  
+    if (this.indice === 2) {
+      if ((!isDatosSolicitudValid || !isSolicitaneValid) && !isManifiestoValid) {
+        return "showBothErrors";
+      }
+      if ((!isDatosSolicitudValid || !isSolicitaneValid) && isManifiestoValid) {
+        return "showFirstError";
+      }
+    }
+  
+    if (this.indice === 1) {
+      if (!isSolicitaneValid && !isManifiestoValid) {
+        return "showBothErrors";
+      }
+      if (!isSolicitaneValid && isManifiestoValid) {
+        return "showFirstError";
+      }
+      if (isSolicitaneValid && !isManifiestoValid) {
+        return "showSecondError";
+      }
+    }
+  
+    return "showNoErrors";
   }
 
   /**

@@ -80,7 +80,7 @@ export interface DatosDeLaTabla {
   descripcionGeneral: string;
   formaAdquisicion: string;
   valorEnPesos: number;
-  comprobanteDePago: string;
+  comprobante: string;
 }
 
 export interface RespuestaConsulta {
@@ -113,17 +113,18 @@ export interface ConsultaDatos {
 
 export interface SolicitudState {
   tipoDeInversion?: Catalogo[];
-  valorEnPesos?: number;
+  valorEnPesos?: string;
   descripcionGeneral?: string;
   listaDeDocumentos?: string;
+  comprobante?: string;
   manifiesto1?: string;
   manifiesto2?: string;
   manifiesto3?: string;
-  claveDeReferencia?: number;
+  claveDeReferencia?: string;
   cadenaDeLaDependencia?: string;
-  numeroDeOperacion?: number;
+  numeroDeOperacion?: string;
   banco?: Catalogo[] | null;
-  llaveDePago?: number;
+  llaveDePago?: string;
   fechaInicialInput?: string;
-  importeDePago?: number;
+  importeDePago?: string;
 }

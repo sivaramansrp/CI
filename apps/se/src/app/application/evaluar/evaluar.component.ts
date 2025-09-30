@@ -56,6 +56,9 @@ import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDi
 import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firmar-requerimiento-request.model';
 import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firmarRequermiento.service';
 import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
+import { ServiceConfig } from '../shared/models/service-config.model';
+import { TramiteConfig } from '../shared/models/tramite-config.model';
+import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 /**
  * @component
@@ -182,7 +185,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @property {string} conformidadDictamen
    * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
    */
-  conformidadDictamen!: CriteriosResponse;
+  conformidadDictamen: CriteriosResponse = {} as CriteriosResponse;
 
   /** 
    * @property {GuardarDictamenRequest} guardarDictamenRequest
@@ -311,6 +314,18 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   tabsOpcionEvaluacion: { id: number; nombre: string }[] = [];
 
   /**
+   * @property {TramiteConfig} config
+   * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
+   */
+  config!: TramiteConfig;
+
+  /**
+   * @property {ServiceConfig} serviceConfig
+   * @description Configuración de servicios específicos del trámite, obtenida del servicio TramiteConfigService.
+   */
+  serviceConfig!: ServiceConfig;
+
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -334,7 +349,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private guardarService: GuardarDictamenService,
     private guardarRequerimientoService: GuardarRequerimientoService,
     private firmarDictamenService: FirmarDictamenService,
-    private firmarRequermientoService: FirmarRequermientoService
+    private firmarRequermientoService: FirmarRequermientoService,
+    private tramiteConfigService: TramiteConfigService,
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -355,6 +371,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.tramite = Number(this.guardarDatos?.procedureId);
+    this.config = this.tramiteConfigService.getConfig(this.tramite);
+    this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
@@ -1069,7 +1087,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
           this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
-          this.obtenerCriterios();
+          if(this.serviceConfig.serviceCriterios){
+             this.obtenerCriterios();
+          }
         }
 
       },
@@ -1172,9 +1192,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
-      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
-      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen
+      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
+      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
+      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1250,9 +1270,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
-      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
-      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen,
+      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
+      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
+      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
       solicitante: {
         rfc: this.guardarDatos.current_user,
         nombre: 'PRUEBA',

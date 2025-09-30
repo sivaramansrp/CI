@@ -179,7 +179,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Array que almacena los elementos seleccionados en la tabla de destinatarios.
    * Se utiliza para identificar qué registros han sido marcados para operaciones como modificar o eliminar.
    */
-  listaseleccionadaDestinatario!: TereceorsConfiguracionItem[];
+  listaseleccionadaDestinatario: TereceorsConfiguracionItem[]|null =null;
 
   /**
    * @property {boolean} mostrarError
@@ -526,7 +526,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarSeleccionados(): void {
-    if(this.listaseleccionadaDestinatario?.length === 0){
+    if(this.listaseleccionadaDestinatario === null){
       this.mostrarError = true;
       this.nuevaNotificacionEliminar = {
         tipoNotificacion: 'alert',
@@ -542,7 +542,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
     else{
       this.tablaDatos = this.tablaDatos.filter(
-        item => !this.listaseleccionadaDestinatario.some(
+        item => !this.listaseleccionadaDestinatario?.some(
           seleccionado => seleccionado === item
         )
       );
