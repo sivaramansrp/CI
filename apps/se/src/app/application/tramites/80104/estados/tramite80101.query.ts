@@ -189,6 +189,13 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   );
 
   /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectEstadosOpciones$ = this.select(
+    (state) => state.estadosOpciones
+  );
+
+  /**
    * Selecciona los datos de los fedatarios para el formulario del estado.
    */
   selectDatosPlantasImmex$ = this.select((state) => {

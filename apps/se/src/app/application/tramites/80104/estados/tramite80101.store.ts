@@ -89,6 +89,7 @@ export interface Tramite80101State {
    */
   plantasDisponiblesTablaLista: PlantasDisponibles[];
   empresasSeleccionadas: DisponsibleFiscal[];
+  estadosOpciones: Catalogo[];
   /**
    * Información detallada de plantas IMMEX.
    */
@@ -252,7 +253,13 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   plantasImmexTablaLista: [],
   plantasDisponiblesTablaLista: [],
   empresasSeleccionadas: [],
-  proyectoImmexTablaLista:[]
+  proyectoImmexTablaLista: [],
+  complementarPlantaDatos: [],
+  firmantesDatos: [],
+  montosInversionDatos: [],
+  empleadosDatos: [],
+  tablaDatosCapacidadInstalada: [],
+  estadosOpciones: []
 };
 
 /**
@@ -915,6 +922,18 @@ export class Tramite80101Store extends Store<Tramite80101State> {
         empresasSeleccionadas,
       }));
     }
+
+    /**
+   * Establece la lista de empresas seleccionadas en el estado.
+   * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
+   */
+    public setEstadosOpciones(estadosOpciones: Catalogo[]):void {
+      this.update((state) => ({
+        ...state,
+        estadosOpciones: estadosOpciones,
+      }));
+    }
+    
 
 
     /**

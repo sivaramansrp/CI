@@ -95,6 +95,32 @@ export interface Tramite80101State {
  * Información detallada de plantas IMMEX.
  */
   proyectoImmexTablaLista: ProyectoImmex[];
+
+/**
+ * Información detallada de los complementos de planta en la tabla.
+ */
+  complementarPlantaDatos: ComplementoDePlanta[];
+
+/**
+ * Información de los firmantes relacionada con los complementos de planta.
+ */
+  firmantesDatos: ComplementarPlantaState[];
+
+/**
+ * Información de los montos de inversión registrados en la tabla.
+ */
+  montosInversionDatos: MontoDeInversion[];
+
+/**
+ * Información de los empleados directos registrados en la tabla.
+ */
+  empleadosDatos: Directos[];
+  /**
+ * así como información de proveedores y capacidad instalada.
+ */
+  tablaDatosCapacidadInstalada: CapacidadInstalada[];
+
+  estadosOpciones: Catalogo[];
 }
 
 /**
@@ -254,7 +280,28 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   plantasDisponiblesTablaLista: [],
   idSolicitud: 0,
   empresasSeleccionadas: [],
-  proyectoImmexTablaLista: []
+  proyectoImmexTablaLista: [],
+  complementarPlantaDatos: [],
+  firmantesDatos: [],
+  montosInversionDatos: [],
+  empleadosDatos: [],
+  tablaDatosCapacidadInstalada: [],
+  datosFederatarios: {
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeActa: '',
+    fechaDelActa: '',
+    numeroDeNotaria: '',
+    entidadFederativa: '',
+    municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: '',
+    },
+    estadosOpciones: []
 };
 
 /**
@@ -958,4 +1005,75 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       },
     }));
   }
-}
+
+  /**
+   * Agrega datos complementarios de planta al estado existente.
+   * 
+   * @param complementar - Lista de datos complementarios de planta a agregar.
+   */
+  setComplementarPlantaDatos(complementar: ComplementoDePlanta[]): void {
+    this.update((state) => ({
+      ...state,
+      complementarPlantaDatos: [...state.complementarPlantaDatos, ...complementar ],
+    }));
+  }
+  
+  /**
+   * Agrega datos de firmantes al estado existente.
+   * 
+   * @param firmantes - Lista de datos de firmantes a agregar.
+   */
+  setFirmantesDatos(firmantes: ComplementarPlantaState[]): void {
+    this.update((state) => ({
+      ...state,
+      firmantesDatos: [...state.firmantesDatos, ...firmantes],
+    }));
+  }
+  
+  /**
+   * Agrega datos de montos de inversión al estado existente.
+   * 
+   * @param montosInversion - Lista de montos de inversión a agregar.
+   */
+  setMontosInversionDatos(montosInversion: MontoDeInversion[]): void {
+    this.update((state) => ({
+      ...state,
+      montosInversionDatos: [...state.montosInversionDatos, ...montosInversion],
+    }))
+  }
+  
+  /**
+   * Agrega datos de empleados directos al estado existente.
+   * 
+   * @param empleados - Lista de empleados directos a agregar.
+   */
+  setEmpleadosDatos(empleados: Directos[]): void {
+    this.update((state) => ({
+      ...state,
+      empleadosDatos: [...state.empleadosDatos, ...empleados]
+    }))
+  }
+
+/**
+ * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
+ *
+ * @param CapacidadInstaladaTablaLista - Arreglo de objetos de tipo `CapacidadInstalada` que serán añadidos a la tabla de datos de capacidad instalada.
+ */
+setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada[]): void {
+    this.update((state) => ({
+      ...state,
+      tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
+    }));
+  }
+
+  /**
+   * Establece la lista de empresas seleccionadas en el estado.
+   * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
+   */
+    public setEstadosOpciones(estadosOpciones: Catalogo[]):void {
+      this.update((state) => ({
+        ...state,
+        estadosOpciones: estadosOpciones,
+      }));
+    }
+  }
