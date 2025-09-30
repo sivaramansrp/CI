@@ -357,7 +357,7 @@
       [label]="'Aviso de funcionamiento:'" 
       [required]="true"
       formControlName="avisoCheckbox" 
-      [isDisabled]="esFormularioSoloLectura || !!domicilio.get('licenciaSanitaria')?.value"
+      [isDisabled]="esFormularioSoloLectura || !!domicilio.get('licenciaSanitaria')?.value || botonDesactivarParaProrrogar"
       (change)="setValorStore(domicilio, 'avisoCheckbox')"
     ></lib-input-check>
   </div>

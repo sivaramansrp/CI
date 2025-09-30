@@ -1,4 +1,11 @@
-import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoCertificadoOrigen, GrupoTratado, SeleccionadasTabla } from '../../tramites/110212/models/validacion-posteriori.model';
+import {
+  AgregarDatosProductorFormulario,
+  DisponiblesTabla,
+  FormularioMercancia,
+  GrupoCertificadoOrigen,
+  GrupoTratado,
+  SeleccionadasTabla,
+} from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoDeDirecciones } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoOperador } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoReceptor } from '../../tramites/110212/models/validacion-posteriori.model';
@@ -13,6 +20,9 @@ import { StoreConfig } from '@datorama/akita';
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite110212State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * Observaciones generales del trámite.
    */
@@ -100,14 +110,14 @@ export interface Tramite110212State {
   /**
    * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos
    * @description Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
-   * 
+   *
    * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
    */
   mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
   /**
    * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos
    * @description Lista de mercancías disponibles para ser mostradas en la tabla de datos.
-   * 
+   *
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
@@ -120,6 +130,7 @@ export interface Tramite110212State {
  */
 export function createInitialState(): Tramite110212State {
   return {
+    idSolicitud: 0,
     observaciones: '',
     pasoActivo: 1,
     pestanaActiva: 1,
@@ -223,6 +234,18 @@ export class Tramite110212Store extends Store<Tramite110212State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**
@@ -653,7 +676,10 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   ): void {
     this.update((state) => ({
       ...state,
-      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, correoElectronico },
+      grupoCertificadoOrigen: {
+        ...state.grupoCertificadoOrigen,
+        correoElectronico,
+      },
     }));
   }
 
@@ -1169,11 +1195,11 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   /**
    * @method setGrupoOperador
    * @description Actualiza la información del operador en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del operador en el grupo operador del estado.
-   * 
+   *
    * @param {GrupoOperador} grupoOperador - Objeto que contiene la información del operador a actualizar.
-   * 
+   *
    * @returns {void}
    */
   public setGrupoOperador(grupoOperador: GrupoOperador): void {
@@ -1185,14 +1211,16 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   /**
    * @method setMercanciaTablaDatos
    * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
-   * 
+   *
    * Este método permite establecer las mercancías seleccionadas por el usuario en la tabla de datos.
-   * 
+   *
    * @param {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el estado.
-   * 
+   *
    * @returns {void}
    */
-  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+  public setMercanciaTablaDatos(
+    mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       mercanciaSeleccionadasTablaDatos,
@@ -1201,14 +1229,16 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   /**
    * @method setMercanciaDisponsiblesTablaDatos
    * @description Actualiza la lista de mercancías disponibles en la tabla de datos del estado del trámite.
-   * 
+   *
    * Este método permite establecer las mercancías disponibles para ser seleccionadas por el usuario en la tabla de datos.
-   * 
+   *
    * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles a actualizar en el estado.
-   * 
+   *
    * @returns {void}
    */
-  public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+  public setMercanciaDisponsiblesTablaDatos(
+    mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       mercanciaDisponsiblesTablaDatos,
@@ -1217,11 +1247,11 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   /**
    * @method setGrupoReceptor
    * @description Actualiza la información del receptor en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del receptor en el grupo receptor del estado.
-   * 
+   *
    * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
-   * 
+   *
    * @returns {void}
    */
   public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
@@ -1233,11 +1263,11 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   /**
    * @method setGrupoDeDirecciones
    * @description Actualiza la información de las direcciones del receptor en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del grupo de direcciones en el estado del trámite.
-   * 
+   *
    * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
-   * 
+   *
    * @returns {void}
    */
   public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
@@ -1249,14 +1279,16 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   /**
    * @method setGrupoRepresentativo
    * @description Actualiza la información representativa del trámite en el estado.
-   * 
+   *
    * Este método permite establecer los datos del grupo representativo en el estado del trámite.
-   * 
+   *
    * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene la información representativa a actualizar.
-   * 
+   *
    * @returns {void}
    */
-  public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+  public setGrupoRepresentativo(
+    grupoRepresentativo: GrupoRepresentativo
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo,

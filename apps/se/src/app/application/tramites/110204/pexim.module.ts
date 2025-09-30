@@ -5,6 +5,7 @@ import { CertificadoOrigenComponent } from './components/certificado-origen/cert
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PeximRoutingModule } from './pexim-routing.module';
@@ -41,6 +42,7 @@ import { ToastrService } from 'ngx-toastr';
     CatalogoSelectComponent,
     CertificadoOrigenComponent,
     PasoUnoComponent,
+    PasoFirmaComponent
   ],
   exports: [
     DatosCertificadoComponent,

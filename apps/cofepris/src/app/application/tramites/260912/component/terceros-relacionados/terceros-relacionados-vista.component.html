@@ -10,5 +10,7 @@
 	(destinatarioSeleccionadoDatos)="onDestinatarioSeleccionado($event)"
 	(proveedorSeleccionadoDatos)="onProveedorSeleccionado($event)"
 	(facturadorSeleccionadoDatos)="onFacturadorSeleccionado($event)"
+	[estaOculto]="botonDesactivarParaProrrogar"
+	[idProcedimiento]="idProcedimiento"
 	[formularioDeshabilitado]="esFormularioSoloLectura || isFabricanteTablaDatosDisabled || isDestinatarioFinalTablaDatosDisabled || isProveedorTablaDatosDisabled || isFacturadorTablaDatosDisabled"
 ></app-terceros-relacionados>

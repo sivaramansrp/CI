@@ -10,3 +10,7 @@
 .align-middle {
   vertical-align: middle !important;
 }
+.is-invalid {
+  border: 1px solid #dc3545 !important; /* Bootstrap danger color */
+  border-radius: 4px;
+}
