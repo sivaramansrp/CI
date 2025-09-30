@@ -47,8 +47,8 @@
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-default" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
               (click)="editarFila(filaSeleccionada)">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
-              data-bs-toggle="modal" data-bs-target="#confirmarModalCancelar" (click)="prepararEliminarFila(filaSeleccionada)">Eliminar</button>
+            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filasSeleccionadas.length === 0"
+              data-bs-toggle="modal" data-bs-target="#confirmarModalCancelar" (click)="prepararEliminarFila()">Eliminar</button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()"
               [disabled]="soloLectura">Agregar</button>
@@ -393,7 +393,7 @@
         
       </div>
       <div class="modal-body">
-        <label>¿Estás seguro que deseas eliminar los registros marcados?</label>
+        <label>¿Estás seguro que deseas eliminar el/los registro(s) seleccionado(s)?</label>
       </div>
       <div class="modal-footer modal-footer-centered">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>

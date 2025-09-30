@@ -78,32 +78,43 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Índice de la fila pendiente de eliminación (para el modal de confirmación).
+        * Índices de las filas pendientes de eliminación (para el modal de confirmación).
    *
-   * @type {number | null}
+   * @type {number[]}
    */
-  filaPendienteEliminar: number | null = null;
+  filasPendientesEliminar: number[] = [];
 
   /**
-   * Prepara la fila para su eliminación almacenando su índice antes de mostrar el modal de confirmación.
+   * Prepara las filas para su eliminación almacenando sus índices antes de mostrar el modal de confirmación.
    *
-   * @param {number | null} index Índice de la fila a eliminar.
    * @returns {void}
    */
-  prepararEliminarFila(index: number | null): void {
-    this.filaPendienteEliminar = index;
+  prepararEliminarFila(): void {
+    this.filasPendientesEliminar = [...this.filasSeleccionadas];
   }
 
   /**
-   * Elimina la fila después de la confirmación desde el modal.
+   * Elimina las filas después de la confirmación desde el modal.
    *
    * @returns {void}
    */
   eliminarMercancias(): void {
-    if (this.filaPendienteEliminar !== null && this.filaPendienteEliminar >= 0 && this.filaPendienteEliminar < this.mercanciaBodyData.length) {
-      this.eliminarFila(this.filaPendienteEliminar);
+    if (this.filasPendientesEliminar.length > 0) {
+      // Ordenar los índices en orden descendente para evitar problemas al eliminar
+      const INDICES_ORDENADOS = [...this.filasPendientesEliminar].sort((a, b) => b - a);
+      
+      // Eliminar cada fila empezando por la última
+      INDICES_ORDENADOS.forEach(index => {
+        if (index >= 0 && index < this.mercanciaBodyData.length) {
+          this.eliminarFila(index);
+        }
+      });
+      
+      // Limpiar la selección después de eliminar
+      this.filasSeleccionadas = [];
+      this.filaSeleccionada = null;
     }
-    this.filaPendienteEliminar = null;
+    this.filasPendientesEliminar = [];
   }
   /**
    * Agrega la mercancía a la tabla después de aceptar en el modal de confirmación y cierra el modal.
