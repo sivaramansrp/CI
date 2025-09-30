@@ -1,4 +1,4 @@
-import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
+import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, REGEX_ENTERO_O_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
 
 /**
  * Lista de pasos del proceso de captura y firma de solicitud.
@@ -250,7 +250,7 @@ export const DATOS_DEL_SEGURO = [
       },
       {
         tipo: 'pattern',
-        valor: PATRON_NUMERO_DECIMAL_10_2,
+        valor: REGEX_ENTERO_O_DECIMAL_10_2,
         mensaje: 'No cumple con el formato esperado: 9999999999.99'
       }
     ],
@@ -277,7 +277,7 @@ export const DATOS_DEL_SEGURO = [
       },
       {
         tipo: 'pattern',
-        valor: PATRON_NUMERO_DECIMAL_10_2,
+        valor: REGEX_ENTERO_O_DECIMAL_10_2,
         mensaje: 'No cumple con el formato esperado: 9999999999.99'
       }
     ],
@@ -539,3 +539,13 @@ export const ERROR_FORMA_ALERT =
   </div>
 </div>
 `;
+
+/**
+ * @constant TITLE_NOTIFICATION
+ * @description
+ * Mensaje de advertencia que se muestra al usuario antes de culminar el trámite.
+ * Informa que debe verificar todos los datos capturados y los documentos adjuntos,
+ * ya que posteriormente a la firma no será posible modificar o eliminar la información.
+ */
+export const TITLE_NOTIFICATION =
+  'Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.';

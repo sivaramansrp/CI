@@ -9,6 +9,9 @@
           <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
         </div>
     }
+      <div class="mt-3 mb-3">
+        <ng-alert class="text-center" [CONTENIDO]="TITLE_NOTIFICATION"></ng-alert>
+      </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
 
     </div>

@@ -763,6 +763,21 @@ export const PATRON_LETRAS_NUMEROS_ESPACIOS = /^[A-Za-z0-9 ]+$/;
 export const PATRON_NUMERO_DECIMAL_10_2 = /^\d{1,10}\.\d{2}$/;
 
 /**
+ * Expresión regular para validar números enteros o decimales con hasta 10 dígitos enteros y opcionalmente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890"
+ * - "1234567890.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901" (más de 10 dígitos enteros)
+ * - "123.1" (menos de 2 decimales si hay decimales)
+ * - "abc" (no es un número)
+ */
+export const REGEX_ENTERO_O_DECIMAL_10_2 = /^\d{1,10}(\.\d{2})?$/;
+
+/**
  * Expresión regular para validar números decimales con hasta 3 dígitos enteros y hasta 18 decimales.
  *
  * Ejemplos válidos:
