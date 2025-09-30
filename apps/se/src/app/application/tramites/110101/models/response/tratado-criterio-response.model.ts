@@ -28,4 +28,7 @@ export interface CriterioTratadoResponse {
 
     /** Cve tratado acuerdo (null si no aplica)*/
     cve_tratado_acuerdo: string | null;
+    
+    /** Cve tratado acuerdo bloque (null si no aplica)*/
+    cve_tratado_acuerdo_bloque: string | null;
 }

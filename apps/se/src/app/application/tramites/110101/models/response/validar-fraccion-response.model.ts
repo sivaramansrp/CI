@@ -44,5 +44,28 @@ export interface DetalleMercancia {
     descripcion_alterna_modificada: string | null;
     
     /** Procesos solicitados */
-    procesos_solicitados: any[];
+    procesos_solicitados?: ProcesoSolicitado[];
+}
+
+/**
+ * Modelo de respuesta para procesos solicitado
+ */
+export interface ProcesoSolicitado {
+    /** ID único del proceso CEROR */
+    id_proceso_ceror: number;
+    
+    /** Nombre del proceso */
+    nombre: string;
+    
+    /** Fecha de inicio de vigencia */
+    fec_ini_vigencia: string;
+    
+    /** Fecha de fin de vigencia (null si no aplica) */
+    fec_fin_vigencia: string | null;
+    
+    /** Indica si el proceso está activo */
+    activo: boolean;
+    
+    /** Indica si cumple con el proceso */
+    cumple_proceso: boolean;
 }

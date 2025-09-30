@@ -3,8 +3,8 @@
  */
 export interface DeclaracionDatosResponse {
     /** Descripción de la declaración */
-    descripcion: string;
+    descripcion: string | null;
 
     /** Clave de la declaración */
-    clave: string;
+    clave: string | null;
 }

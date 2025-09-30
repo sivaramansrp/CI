@@ -6,10 +6,10 @@ import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla, ProcesosTabla } f
  * @description Opciones de radio.
  */
 export const RADIO_OPCIONS = [
-  { label: 'Programa IMMEX vigente', value: 'programaImmex' },
-  { label: 'Haber exportador al menos una ocasionya sea en el ultimo ano fiscal o en los ultimos 12 meses anteriores immediatos a partir de la fecha de la solicitud', value: 'haberExportador' },
-  { label: 'La mercancia a exportar es un producto perecedero', value: 'perecedero' },
-  { label: 'La mercancia a exportar es un producto artesanal', value: 'artesanal' }
+  { label: 'Programa IMMEX vigente', value: 'CEXPA.01' },
+  { label: 'Haber exportador al menos una ocasionya sea en el ultimo ano fiscal o en los ultimos 12 meses anteriores immediatos a partir de la fecha de la solicitud', value: 'CEXPA.02' },
+  { label: 'La mercancia a exportar es un producto perecedero', value: 'CEXPA.03' },
+  { label: 'La mercancia a exportar es un producto artesanal', value: 'CEXPA.04' }
 ];
 
 /**
@@ -32,13 +32,13 @@ export const SELECCIONAR_TRANSFORMACION = [
 
 /** Configuración de las columnas para la tabla de insumos en el trámite 110101. */
 export const INSUMOS_TABLA: ConfiguracionColumna<InsumosTabla>[] = [
-    { encabezado: 'Nombre técnico', clave: (item: InsumosTabla) => item.nombreTecnico, orden: 1 },
-    { encabezado: "Proveedor", clave: (item: InsumosTabla) => item.proveedor, orden: 2 },
-    { encabezado: "Fabricante o productor", clave: (item: InsumosTabla) => item.fabricanteOProductor, orden: 3 },
-    { encabezado: "RFC", clave: (item: InsumosTabla) => item.rfc, orden: 4 },
-    { encabezado: "Fracción arancelaria", clave: (item: InsumosTabla) => item.fraccionArancelaria, orden: 5 },
-    { encabezado: "Valor en dolares", clave: (item: InsumosTabla) => item.valorEnDolares, orden: 6 },
-    { encabezado: "Pais de origen", clave: (item: InsumosTabla) => item.paisDeOrigen, orden: 7 },
+    { encabezado: 'Nombre técnico', clave: (item: InsumosTabla) => item.nombreTecnico ?? undefined, orden: 1 },
+    { encabezado: "Proveedor", clave: (item: InsumosTabla) => item.proveedor ?? undefined, orden: 2 },
+    { encabezado: "Fabricante o productor", clave: (item: InsumosTabla) => item.fabricanteOProductor ?? undefined, orden: 3 },
+    { encabezado: "RFC", clave: (item: InsumosTabla) => item.rfc ?? undefined, orden: 4 },
+    { encabezado: "Fracción arancelaria", clave: (item: InsumosTabla) => item.fraccionArancelaria ?? undefined, orden: 5 },
+    { encabezado: "Valor en dolares", clave: (item: InsumosTabla) => item.valorEnDolares ?? undefined, orden: 6 },
+    { encabezado: "Pais de origen", clave: (item: InsumosTabla) => item.paisDeOrigen ?? undefined, orden: 7 },
     { encabezado: "Peso", clave: (item: InsumosTabla) => item.peso ?? '', orden: 8 },
     { encabezado: "Volumen", clave: (item: InsumosTabla) => item.volumen ?? '', orden: 9 },
   ];
@@ -50,12 +50,12 @@ export const PROCESO_TABLA: ConfiguracionColumna<ProcesosTabla>[] = [
 
   /** Configuración de las columnas para la tabla de envases en el trámite 110101. */
 export const ENVASES_TABLA: ConfiguracionColumna<EnvasesTabla>[] = [
-  { encabezado: 'Nombre técnico', clave: (item: EnvasesTabla) => item.nombreTecnico, orden: 1 },
-  { encabezado: "Proveedor", clave: (item: EnvasesTabla) => item.proveedor, orden: 2 },
-  { encabezado: "Fabricante o productor", clave: (item: EnvasesTabla) => item.fabricanteOProductor, orden: 3 },
-  { encabezado: "Fracción arancelaria", clave: (item: EnvasesTabla) => item.fraccionArancelaria, orden: 4 },
-  { encabezado: "Valor de transacción", clave: (item: EnvasesTabla) => item.valorEnDolares, orden: 5 },
-  { encabezado: "País de origen", clave: (item: EnvasesTabla) => item.paisDeOrigen, orden: 6 }
+  { encabezado: 'Nombre técnico', clave: (item: EnvasesTabla) => item.nombreTecnico ?? undefined, orden: 1 },
+  { encabezado: "Proveedor", clave: (item: EnvasesTabla) => item.proveedor ?? undefined, orden: 2 },
+  { encabezado: "Fabricante o productor", clave: (item: EnvasesTabla) => item.fabricanteOProductor ?? undefined, orden: 3 },
+  { encabezado: "Fracción arancelaria", clave: (item: EnvasesTabla) => item.fraccionArancelaria ?? undefined, orden: 4 },
+  { encabezado: "Valor de transacción", clave: (item: EnvasesTabla) => item.valorEnDolares ?? undefined, orden: 5 },
+  { encabezado: "País de origen", clave: (item: EnvasesTabla) => item.paisDeOrigen ?? undefined, orden: 6 }
 ];
 
 /** Configuración de las columnas para la tabla modal de mercancías en el trámite 110101. */

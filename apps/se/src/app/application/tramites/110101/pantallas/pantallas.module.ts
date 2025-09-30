@@ -1,5 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+
+import { BtnContinuarComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { DatosComponent } from '../pages/datos/datos.component';
@@ -20,7 +21,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   declarations: [
     DatosComponent,
     PantallasComponent,
-    FirmarSolicitudComponent
+    FirmarSolicitudComponent,
   ],
   imports: [
     CommonModule,
@@ -36,7 +37,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     BtnContinuarComponent,
     FirmaElectronicaComponent,
     ProtestoDecirVerdadComponent,
-    ProcesosComponent
+    ProcesosComponent,
+    NotificacionesComponent
 ]
 })
 

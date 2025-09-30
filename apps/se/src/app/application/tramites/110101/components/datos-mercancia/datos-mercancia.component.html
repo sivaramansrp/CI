@@ -21,6 +21,7 @@
             </div>
         </div>
         <div class=" row mb-3">
+          @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_nombre_ingles === true) {
             <div class="col-md-8">
                 <label for="nombreIngles" class="form-label">Nombre en inglés*:</label>
                 <input type="text" id="nombreIngles" 
@@ -37,6 +38,7 @@
                     </div>
                 }
             </div>
+          }
         </div>
         <div class="row mb-3">
             <div class="col-md-4 mb-3">
@@ -44,8 +46,7 @@
                 <input type="text" id="fraccionArancelaria" 
                 formControlName="fraccionArancelaria" 
                 class="form-control"
-                (change)="setValoresStore(formMercancia,'fraccionArancelaria', 'setFraccionArancelaria')"
-                [ngClass]="isValid('fraccionArancelaria') ? 'required' : ''">
+                (change)="setValoresStore(formMercancia,'fraccionArancelaria', 'setFraccionArancelaria')">
             </div>
             <div class="col-md-8 mb-3">
                 <label for="descripcion" class="form-label">Descripción:</label>
@@ -55,16 +56,28 @@
                 ></textarea>
             </div>
         </div>
+      @if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_valor_transaccional_fob === true){
        <div class="row mb-3">
         <div class="col-md-4">
             <label for="valorTransaccion" class="form-label">Valor de transacción*:</label>
             <input type="text" id="valorTransaccion"
              formControlName="valorTransaccion" 
              class="form-control"
-             (change)="setValoresStore(formMercancia,'valorTransaccion', 'setValorTransaccion')"
-            [ngClass]="isValid('valorTransaccion') ? 'required' : ''">
+             (change)="setValoresStore(formMercancia,'valorTransaccion', 'setValorTransaccion')">
         </div>
        </div>
+       }
+       @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_precio_franco_fabrica === true) {
+        <div class="row mb-3">
+          <div class="col-md-4">
+              <label for="francofabrica" class="form-label">Precio franco fabrica (en dólares)*:</label>
+              <input type="text" id="francofabrica"
+              formControlName="francofabrica" 
+              class="form-control"
+              (change)="setValoresStore(formMercancia,'francofabrica', 'setFrancofabrica')">
+          </div>
+        </div>
+       }
     </form>
 
     @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true) {

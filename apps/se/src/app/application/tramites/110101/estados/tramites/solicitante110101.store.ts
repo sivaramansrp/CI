@@ -1,10 +1,12 @@
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
+import { DeclaracionDatosResponse } from '../../models/response/declaracion-datos-response.model';
 import { FraccionValidarResponse } from '../../models/response/validar-fraccion-response.model';
 
-import { EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
+import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+
 
 /**
  * **Estado del formulario de solicitante**
@@ -29,25 +31,27 @@ export interface Solicitante110101State {
   /** Criterio Instancia de uruguay. */
   criterio: string;
   /** nombreComercial del solicitante. */
-  nombreComercial: string;
+  nombreComercial: string | null;
   /** Nombre en inglés del solicitante. */
-  nombreIngles: string;
+  nombreIngles: string | null;
   /** Fracción arancelaria del producto o servicio. */
-  fraccionArancelaria: string;
+  fraccionArancelaria: string | null;
   /** Descripción del producto o servicio. */
   descripcion: string;
   /** Valor de la transacción en moneda local. */
-  valorTransaccion: string;
+  valorTransaccion: number | null;
+ /** Valor de la franco fabrica */
+  francofabrica: number | null;
   /** Entidad a la que pertenece el solicitante. */
   entidad: string;
   /** Representación legal o administrativa del solicitante. */
-  representacion: string;
+  representacion: string | null;
     /** Método de separación contable seleccionado por el solicitante. */
   metodoSeparacion: boolean;
     /** Opción de exportador autorizado seleccionada por el solicitante. */
   exportadorAutorizado: boolean;
     /** Información seleccionada en los radios del formulario por el solicitante. */
-  informacionRadios: string;
+  informacionRadios: string | null;
 
   /** Datos de la tabla de respuesta del servicio */
   respuestaServicioDatosTabla: CriterioTratadoResponse[];
@@ -61,8 +65,20 @@ export interface Solicitante110101State {
   /** Un array de objetos que representa los insumos registrados */
   insumosTablaDatos: InsumosTabla[];
 
+  /** Un array de objetos que contiene los criterios de tratados asociados a los insumos */
+  insumoCriteriosDatos: DatosMercanciaModalTabla[];
+
   /** Un array de objetos que representa los empaques registrados */
   envasesTablaDatos: EnvasesTabla[];
+
+  /** Un array de objetos que contiene los criterios de tratados asociados a los envases */
+  envasesCriteriosDatos: DatosMercanciaModalTabla[];
+
+  /** Un array de objetos que contiene los datos de declaración de la solicitud */
+  declaracion_solicitud: DeclaracionDatosResponse[];
+
+  /** Valor para check protesto */
+  protesto_verdad: boolean;
 }
 
 
@@ -84,16 +100,17 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     tratado: '',
     origen: '',
     criterio: '',
-    nombreComercial: '',
-    nombreIngles: '',
-    fraccionArancelaria: '',
+    nombreComercial: null,
+    nombreIngles: null,
+    fraccionArancelaria: null,
+    francofabrica:null,
     descripcion: '',
-    valorTransaccion: '',
+    valorTransaccion: null,
     entidad: '',
     representacion: '',
     metodoSeparacion: false,
     exportadorAutorizado: false,
-    informacionRadios: '',
+    informacionRadios: null,
     respuestaServicioDatosTabla: [],
     respuestaServiceConfiguracion: {
       mostrar_datos_mercancia: false,
@@ -143,7 +160,11 @@ export function createSolicitanteInitialState(): Solicitante110101State {
       cumple_acumulacion: false
     },
     insumosTablaDatos: [],
+    insumoCriteriosDatos: [],
     envasesTablaDatos: [],
+    envasesCriteriosDatos: [],
+    declaracion_solicitud:[],
+    protesto_verdad: false
   };
 }
 
@@ -262,7 +283,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param nombreComercial - El país a establecer en el estado.
    */
-  public setNombreComercial(nombreComercial: string):void {
+  public setNombreComercial(nombreComercial: string | null):void {
     this.update((state) => ({
       ...state,
       nombreComercial,
@@ -273,7 +294,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param nombreIngles - El país a establecer en el estado.
    */
-  public setNombreIngles(nombreIngles: string):void {
+  public setNombreIngles(nombreIngles: string | null):void {
     this.update((state) => ({
       ...state,
       nombreIngles,
@@ -284,10 +305,21 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param fraccionArancelaria - El país a establecer en el estado.
    */
-  public setFraccionArancelaria(fraccionArancelaria: string):void {
+  public setFraccionArancelaria(fraccionArancelaria: string | null):void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el franco fabrica
+   * @param francofabrica - El precio en dolares.
+   */
+  public setFrancofabrica(francofabrica: number | null):void {
+    this.update((state) => ({
+      ...state,
+      francofabrica,
     }));
   }
 
@@ -306,7 +338,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param valorTransaccion - El país a establecer en el estado.
    */
-  public setValorTransaccion(valorTransaccion: string):void {
+  public setValorTransaccion(valorTransaccion: number | null):void {
     this.update((state) => ({
       ...state,
       valorTransaccion,
@@ -328,7 +360,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param representacion - El país a establecer en el estado.
    */
-  public setRepresentacion(representacion: string):void {
+  public setRepresentacion(representacion: string | null):void {
     this.update((state) => ({
       ...state,
       representacion,
@@ -361,7 +393,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el valor seleccionado en los radios del formulario.
    * @param informacionRadios - El valor seleccionado a establecer en el estado para la información de los radios.
    */
-  public setInformacionRadios(informacionRadios: string): void {
+  public setInformacionRadios(informacionRadios: string | null): void {
     this.update((state) => ({
       ...state,
       informacionRadios,
@@ -453,6 +485,27 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
   }
 
   /**
+   * Agrega un nuevo insumo al estado `DatosMercanciaModalTabla`.
+   * @param insumo - El objeto `DatosMercanciaModalTabla` a insertar en el array.
+  */
+  public addInsumoCriterios(insumoCriterios: DatosMercanciaModalTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      insumoCriteriosDatos: insumoCriterios,
+    }));
+  }
+
+  /**
+   * Limpia la lista de insumos, dejando el array vacío.
+   */
+  public clearInsumosCriterios(): void {
+    this.update((state) => ({
+      ...state,
+      insumoCriteriosDatos: [],
+    }));
+  }
+
+  /**
    * Agrega un nuevo empaque al estado `envasesTablaDatos`.
    * @param empaque - El objeto `EnvasesTabla` a insertar en el array.
    */
@@ -470,6 +523,59 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       envasesTablaDatos: [],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo insumo al estado `DatosMercanciaModalTabla`.
+   * @param empaque - El objeto `DatosMercanciaModalTabla` a insertar en el array.
+  */
+  public addEmpaqueCriterios(empaqueCriterios: DatosMercanciaModalTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      empaqueCriteriosDatos: empaqueCriterios,
+    }));
+  }
+
+  /**
+   * Limpia la lista de empaques criterios, dejando el array vacío.
+   */
+  public clearEmpaquesCriterios(): void {
+    this.update((state) => ({
+      ...state,
+      empaqueCriteriosDatos: [],
+    }));
+  }
+
+  /**
+   * Agrega una delcaracion `DeclaracionDatosResponse`.
+   * @param declaraciones - El objeto `DeclaracionDatosResponse` a insertar en el array.
+  */
+  public addDeclaraciones(declaraciones: DeclaracionDatosResponse[]): void {
+    this.update((state) => ({
+      ...state,
+      declaracion_solicitud: declaraciones,
+    }));
+  }
+
+  /**
+   * Limpia la lista de declaraciones.
+   */
+  public clearDeclaraciones(): void {
+    this.update((state) => ({
+      ...state,
+      declaracion_solicitud: [],
+    }));
+  }
+
+   /**
+   * Actualiza el campo protesto decir verdad.
+   * @param protesto_verdad - El valor booleano a establecer true o false.
+   */
+  public setProtesto(protesto_verdad: boolean): void {
+    this.update((state) => ({
+      ...state,
+      protesto_verdad,
     }));
   }
 }

@@ -37,13 +37,13 @@ export interface TratadosTabla {
  * @property valorDeTransaccion - Valor de transacción del insumo.
  */
 export interface InsumosTabla {
-    nombreTecnico: string;
-    proveedor: string;
-    fabricanteOProductor: string;
-    rfc: string;
-    fraccionArancelaria: string;
-    valorEnDolares: number;
-    paisDeOrigen: string;
+    nombreTecnico: string | null;
+    proveedor: string | null;
+    fabricanteOProductor: string | null;
+    rfc: string | null;
+    fraccionArancelaria: string | null;
+    valorEnDolares: number | null;
+    paisDeOrigen: string | null;
     peso: boolean | null;
     volumen: boolean | null;
 }
@@ -59,12 +59,15 @@ export interface InsumosTabla {
  * @property paisDeOrigen - País de origen del envase.
  */
 export interface EnvasesTabla {
-    nombreTecnico: string;
-    proveedor: string;
-    fabricanteOProductor: string;
-    fraccionArancelaria: string;
-    valorEnDolares: number;
-    paisDeOrigen: string;
+    nombreTecnico: string | null;
+    proveedor: string | null;
+    fabricanteOProductor: string | null;
+    rfc: string | null;
+    fraccionArancelaria: string | null;
+    valorEnDolares: number | null;
+    paisDeOrigen: string | null;
+    peso: boolean | null;
+    volumen: boolean | null;
 }
 
 /**
@@ -100,6 +103,9 @@ export interface DatosMercanciaModalTabla {
 
     /** Cve tratado acuerdo (null si no aplica)*/
     cve_tratado_acuerdo?: string | null;
+
+    /** Cve tratado acuerdo bloque (null si no aplica)*/
+    cve_tratado_acuerdo_bloque: string | null;
 }
 /**
  * Representa una fila de la tabla de procesos.

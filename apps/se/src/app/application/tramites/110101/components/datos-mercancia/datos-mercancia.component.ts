@@ -383,7 +383,8 @@ get ninoFormGroup(): FormGroup {
       nombreIngles: [this.solicitudeState?.nombreIngles, Validators.required],
       fraccionArancelaria: [this.solicitudeState?.fraccionArancelaria, [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       descripcion: [{value: this.solicitudeState?.descripcion, disabled: true}],
-      valorTransaccion: [this.solicitudeState?.valorTransaccion, Validators.maxLength(20)]
+      valorTransaccion: [this.solicitudeState?.valorTransaccion, Validators.maxLength(20)],
+      francofabrica:[this.solicitudeState?.francofabrica, Validators.maxLength(20)],
     });
   }
 
@@ -398,16 +399,6 @@ get ninoFormGroup(): FormGroup {
     const VALOR = form.get(campo)?.value;
     (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
-  /**
- * Metodo para saber si el campo del formulario es valido.
- * @param field El nombre del campo del formulario que se va a validar.
- * @returns {boolean | null} : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
- */
-  isValid(field: string): boolean | null {
-    return this.validacionesService.isValid(this.formMercancia, field);
-  }
-
   /**
    * @method listaDeFilaSeleccionadaInsumos
    * @description
@@ -456,6 +447,7 @@ get ninoFormGroup(): FormGroup {
           cve_pais: item.cve_pais ?? null,
           mensaje_agregado: item.mensaje_agregado ?? null,
           cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? null,
+          cve_tratado_acuerdo_bloque: item.cve_tratado_acuerdo_bloque
       }));
     this.modal = event;
     if (this.modalElement) {
@@ -603,17 +595,25 @@ get ninoFormGroup(): FormGroup {
               });
               this.tramite110101Store.clearInsumos();
               this.tramite110101Store.addInsumo(this.insumosTablaDatos);
+              this.tramite110101Store.clearInsumosCriterios();
+              this.tramite110101Store.addInsumoCriterios(this.filasSeleccionadas);
             }else{
               this.envasesTablaDatos.push({
-                 nombreTecnico:  this.ninoFormGroup.get('nombreTecnico')?.value ?? '',
-                 proveedor: this.ninoFormGroup.get('proveedor')?.value ?? '',
-                 fabricanteOProductor: this.ninoFormGroup.get('fabricante')?.value ?? '',
-                 fraccionArancelaria:this.ninoFormGroup.get('fraccionArancelaria')?.value ?? '',
-                 valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value ?? 0,
-                 paisDeOrigen: PAIS_DESC?.descripcion ?? ''
+                 nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value ?? '',
+                proveedor: this.ninoFormGroup.get('proveedor')?.value ?? '',
+                fabricanteOProductor: this.ninoFormGroup.get('fabricante')?.value ?? '',
+                rfc: this.ninoFormGroup.get('rfc')?.value ?? '',
+                fraccionArancelaria:this.ninoFormGroup.get('fraccionArancelaria')?.value ?? '',
+                valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value ?? 0,
+                paisDeOrigen: PAIS_DESC?.descripcion ?? '',
+                //No se sabe de donde sale 
+                peso: PAYLOAD.insumo.peso,
+                volumen: PAYLOAD.insumo.volumen
               });
               this.tramite110101Store.clearEmpaques();
               this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
+              this.tramite110101Store.clearEmpaquesCriterios();
+              this.tramite110101Store.addEmpaqueCriterios(this.filasSeleccionadas);
             }
            
            this.cd.detectChanges();

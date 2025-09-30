@@ -307,6 +307,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public getRepresentacionFederal(cveEntidad: string): void {
+    this.tramite110101Store.setEntidad(cveEntidad);
     this.catalogoTramiteService.getCatRepresentacionFederal(cveEntidad)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -362,6 +363,18 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja el cambio de selección de representación federal y 
+   * actualiza el estado del store con la clave seleccionada.
+   *
+   * @method onRepresentacionChange
+   * @param {Catalogo} event - Objeto del catálogo que representa la opción seleccionada.
+   * @returns {void} No retorna ningún valor.
+   */
+  onRepresentacionChange(event: Catalogo): void {
+    this.tramite110101Store.setRepresentacion(event.clave ?? null);
+  }
+
+  /**
    * @method getDeclaracionDatos
    * @description Obtiene el catálogo de la declaración de datos.
    * Recupera y establece la información de la declaración de datos.
@@ -374,7 +387,9 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((response) => {
         if (response.codigo === CodigoRespuesta.EXITO) {          
-         this.textos = response.datos?.[0]?.descripcion;
+         this.textos = response.datos?.[0]?.descripcion ?? undefined;
+         this.tramite110101Store.clearDeclaraciones();
+         this.tramite110101Store.addDeclaraciones(response.datos ?? []);
         }else {
         this.textos = PROTESTA.ADJUNTAR;}
       });
