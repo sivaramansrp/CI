@@ -41,8 +41,8 @@ export class SolicitudService {
     /**
      * Genera la cadena original para la solicitud.
      */
-    postGenerarCadenaOriginal(PAYLOAD: GenerarCadenaOrigRequest): Observable<string> {
+    postGenerarCadenaOriginal(PAYLOAD: GenerarCadenaOrigRequest): Observable<BaseResponse<string>> {
         const ENDPOINT = `${this.host}${API_POST_GENERAR_CADENA_ORIGINAL}`;
-        return this.http.post<string>(ENDPOINT, {});
+        return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
     }
 }
