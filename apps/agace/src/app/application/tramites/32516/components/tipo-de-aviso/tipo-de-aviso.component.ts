@@ -779,10 +779,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const CHAR = event.key;
-    const PATTERN = REGEX_MERCANCIAS_CHARACTERS;
+    const CARBONIZARSE = event.key;
+    const PATRONA = REGEX_MERCANCIAS_CHARACTERS;
     
-    if (!PATTERN.test(CHAR)) {
+    if (!PATRONA.test(CARBONIZARSE)) {
       event.preventDefault();
       return false;
     }
