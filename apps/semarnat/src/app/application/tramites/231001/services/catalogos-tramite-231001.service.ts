@@ -124,16 +124,10 @@ export class CatalogosTramite231001Service {
 
   /**
    * Obtiene las unidades de medida disponibles para un tipo de trámite.
-   * @param tipoTramite Identificador del tipo de trámite (se reemplaza en la URL).
    * @returns Observable con la respuesta que contiene un arreglo de Catalogo.
    */
-  getUnidadMedida(
-    tipoTramite: string
-  ): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${this.urlServer}/api/${API_GET_UNIDAD_MEDIDA.replace(
-      TRAMITE,
-      tipoTramite
-    )}`;
+  getUnidadMedida(): Observable<SimpleCatalogoResponse<Catalogo[]>> {
+    const URL = `${this.urlServer}/api/${API_GET_UNIDAD_MEDIDA}`;
     return this.httpClient.get<SimpleCatalogoResponse<Catalogo[]>>(URL);
   }
 

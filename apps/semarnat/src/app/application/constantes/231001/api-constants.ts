@@ -28,34 +28,31 @@ export const API_GET_FRACCIONES_ARANCELARIAS =
 export const API_GET_CAPITULO_FRACCION =
   'sat-t231001/catalogo/capitulo-fraccion';
 
-  /**
-   * API para obtener las partidas de fracción del tramite 231001.
-   * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-partidas-fraccion
-   */
+/**
+ * API para obtener las partidas de fracción del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-partidas-fraccion
+ */
 
-  export const API_GET_PARTIDAS_FRACCION =
+export const API_GET_PARTIDAS_FRACCION =
   'sat-t231001/catalogo/partida-fraccion/capitulo-fraccion/' +
   `${CVE_CAPITULO_FRACCION}`;
 
-
-  /**
-   * API para obtener las subpartidas de fracción del tramite 231001.
-   * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-subpartidas-fraccion
-   */
-  export const API_GET_SUBPARTIDAS_FRACCION =
+/**
+ * API para obtener las subpartidas de fracción del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-subpartidas-fraccion
+ */
+export const API_GET_SUBPARTIDAS_FRACCION =
   'sat-t231001/catalogo/subpartida-fraccion/capitulo-fraccion/' +
   `${CVE_CAPITULO_FRACCION}/partida-fraccion/${CVE_PARTIDA_FRACCION}`;
 
+/**
+ * API para obtener las unidades de medida del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-unidades-medida-comercial
+ */
+export const API_GET_UNIDAD_MEDIDA = `sat-t231001/catalogo/unidades-medida-comercial`;
 
-  /**
-   * API para obtener las unidades de medida del tramite 231001.
-   * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-unidades-medida-comercial
-   */
-  export const API_GET_UNIDAD_MEDIDA = `sat-t231001/catalogo/unidades-medida-comercial/tramite/${TRAMITE}`;
+export const GET_ADUANAS = `sat-t231001/catalogo/aduanas`;
 
-
-  export const GET_ADUANAS = `sat-t231001/catalogo/aduanas`;
-  
 /**
  * API para obtener los datos de IMMEX por RFC.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-no-autorizacion-immex

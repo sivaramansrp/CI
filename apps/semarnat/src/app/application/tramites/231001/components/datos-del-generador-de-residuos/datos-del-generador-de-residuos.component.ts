@@ -162,8 +162,8 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.immexCatalogo = data.datos.map((item: ImmexResponse) => ({
-          id: item.idProgAutorizado,
-          descripcion: item.numFolioTramite,
+          id: item.id_prog_autorizado,
+          descripcion: item.num_folio_tramite,
         }));
       });
   }

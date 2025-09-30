@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 
 import {
   API_POST_GUARDAR_ACUSE,
+  API_POST_GUARDAR_CERTIFICADO,
   API_POST_VISTA_PREVIA,
+  API_POST_VISTA_PREVIA_CERTIFICADO,
   COMUN_URL,
 } from '../../servers/api-router';
 import { Observable, catchError, throwError } from 'rxjs';
@@ -13,7 +15,7 @@ import { DocumentoResponse } from '../../models/shared/documentos-request.model'
 @Injectable({
   providedIn: 'root',
 })
-export class DocumentosService {
+export class DocumentosT231001Service {
   /**
    * URL base del servicio
    */
@@ -30,20 +32,24 @@ export class DocumentosService {
   /**
    * Guarda el acuse de la solicitud
    * @param idSolicitud Identificador de la solicitud
+   * @param procedure Numero de procedimiento
+   * @param esAcuse Indica si es acuse o certificado
    * @returns Observable con la respuesta del servidor
    */
-  guardarAcuse(
+  guardarDocumento(
     idSolicitud: string,
-    procedure: number
+    procedure: number,
+    esAcuse: boolean
   ): Observable<BaseResponse<null>> {
     const ENDPOINT =
-      `${this.host}` + API_POST_GUARDAR_ACUSE(idSolicitud, procedure);
+      `${this.host}` +
+      (esAcuse
+        ? API_POST_GUARDAR_ACUSE(idSolicitud, procedure)
+        : API_POST_GUARDAR_CERTIFICADO(idSolicitud, procedure));
 
     return this.http.post<BaseResponse<null>>(ENDPOINT, null).pipe(
       catchError(() => {
-        const ERROR = new Error(
-          `Error al obtener la cadena original en ${ENDPOINT}`
-        );
+        const ERROR = new Error(`Error al obtener el documento ${ENDPOINT}`);
         return throwError(() => ERROR);
       })
     );
@@ -52,20 +58,24 @@ export class DocumentosService {
   /**
    * Obtiene la vista previa del documento asociado a la solicitud
    * @param idSolicitud Identificador de la solicitud
+   * @param procedure Numero de procedimiento
+   * @param esAcuse Indica si es acuse o certificado
    * @returns Observable con la respuesta del servidor que contiene el documento
    */
-  vistaPrevia(
+  vistaPreviaDocumento(
     idSolicitud: string,
-    procedure: number
+    procedure: number,
+    esAcuse: boolean
   ): Observable<BaseResponse<DocumentoResponse>> {
     const ENDPOINT =
-      `${this.host}` + API_POST_VISTA_PREVIA(idSolicitud, procedure);
+      `${this.host}` +
+      (esAcuse
+        ? API_POST_VISTA_PREVIA(idSolicitud, procedure)
+        : API_POST_VISTA_PREVIA_CERTIFICADO(idSolicitud, procedure));
 
     return this.http.post<BaseResponse<DocumentoResponse>>(ENDPOINT, null).pipe(
       catchError(() => {
-        const ERROR = new Error(
-          `Error al obtener la cadena original en ${ENDPOINT}`
-        );
+        const ERROR = new Error(`Error al obtener el documento ${ENDPOINT}`);
         return throwError(() => ERROR);
       })
     );
