@@ -1,6 +1,6 @@
 import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estados/tramites/tramite32101.store';
 import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -57,6 +57,19 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Representa la información relacionada con la comprobante.
+   * 
+   * @property {Catalogo[]} catalogos - Lista de catálogos asociados a la comprobante.
+   * @property {string} labelNombre - Etiqueta que representa el nombre de la comprobante.
+   * @property {string} primerOpcion - Primera opción seleccionable en el contexto de la comprobante.
+   */
+  comprobante: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
+
+  /**
    * Sujeto utilizado como notificador para la destrucción del componente.
    * Se emite un valor cuando el componente se destruye, permitiendo cancelar
    * suscripciones o liberar recursos asociados.
@@ -70,6 +83,11 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
 
   configuracionTablaDatos: DatosDeLaTabla[] = [];
 
+  /**
+   * Referencia al modal para agregar mercancías.
+   */
+  @ViewChild('modalModificar', { static: false }) modalRef!: ElementRef;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -80,13 +98,19 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
     this.tramiteList = {
       catalogos: [],
       labelNombre: 'Tipo de inversión',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
 
     this.aduana = {
       catalogos: [],
       labelNombre: 'Forma de adquisición',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
+    };
+
+    this.comprobante = {
+      catalogos: [],
+      labelNombre: 'Comprobante',
+      primerOpcion: 'Seleccione una opción',
     };
   }
 
@@ -111,6 +135,7 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
     this.initForm();
     this.fetchListaDeDocumentos();
     this.fetchListaDeInversion();
+    this.fetchListaDeComprobante();
   }
 
     /**
@@ -140,6 +165,7 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       descripcionGeneral: [SELECTED_ROW?.descripcionGeneral],
       valorEnPesos: [SELECTED_ROW?.valorEnPesos],
       formaAdquisicion: [SELECTED_ROW?.formaAdquisicion],
+      comprobante: [SELECTED_ROW?.comprobante],
     });
   }
 
@@ -196,7 +222,33 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
         });
       });
   }
-  
+
+  /**
+   * Obtiene la lista de documentos relacionados con la comprobante y actualiza el formulario
+   * con los valores correspondientes basados en la selección del usuario.
+   *
+   * Este método realiza una consulta al servicio `consultaAvisoAcreditacionService` para
+   * obtener los documentos disponibles. Luego, filtra los resultados para encontrar el documento
+   * que coincide con la descripción de la comprobante seleccionada en el estado de la solicitud.
+   * Finalmente, actualiza el formulario con el identificador del documento encontrado.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  fetchListaDeComprobante(): void {
+    this.consultaAvisoAcreditacionService
+      .getListaDeDocumentos('listaDeComprobante')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        this.comprobante.catalogos = respuesta.data;
+        const VALOR3 = this.comprobante.catalogos.find(
+          (res) => res.descripcion === this.solicitudState.abc?.comprobante
+        );
+        this.modificarFormulario.patchValue({
+          comprobante: VALOR3?.id,
+        });
+      });
+  }
+
   /**
    * Obtiene la etiqueta de un elemento seleccionado en un catálogo.
    *
@@ -206,9 +258,9 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    *          de lo contrario, devuelve una cadena vacía.
    */
   static getDropdownLabel(selectedId: number, catalog: Catalogo[]): string {
-  const SELECTED_ITEMS = catalog.find((item) => item.id === selectedId);
-  return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : '';
-}
+    const SELECTED_ITEMS = catalog.find((item) => item.id === selectedId);
+    return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : '';
+  }
 
   /**
    * Maneja el evento para guardar los cambios realizados en el formulario de modificación.
@@ -216,18 +268,8 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    * Este método crea un objeto `datosDeLaTabla` con los valores actualizados del formulario
    * y lo envía al servicio `consultaAvisoAcreditacionService` para actualizar la fila correspondiente.
    * 
-   * @remarks
-   * - Utiliza métodos estáticos para obtener las etiquetas de los valores seleccionados en los desplegables.
-   * - Si no se encuentra un ID en el estado de la solicitud, se asigna un valor predeterminado de `0`.
-   * - El campo `comprobanteDePago` se establece como "N/A" de forma predeterminada.
-   * 
-   * @example
-   * ```typescript
-   * this.onGuardarCambios();
-   * ```
-   */
+   */  
   onGuardarCambios(): void {
-    const CURRENT_URL = this.router.url;
     const UPDATED_ROW: DatosDeLaTabla = {
       id: this.solicitudState.abc?.id ?? 0,
       tipoDeInversion: ComponenteDeActualizacionComponent.getDropdownLabel(
@@ -240,18 +282,55 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
         this.aduana.catalogos
       ),
       valorEnPesos: this.modificarFormulario.value.valorEnPesos,
-      comprobanteDePago: 'N/A',
+      comprobante: 'N/A',
     };
-    this.configuracionTablaDatos = [...this.configuracionTablaDatos, UPDATED_ROW];
+    
     this.consultaAvisoAcreditacionService.setUpdatedRow([UPDATED_ROW]);
-    this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-    setTimeout(() => {
-      if (CURRENT_URL.includes('agace')) {
-        this.router.navigate(['/agace/consulta-aviso-acreditacion/solicitud']);
+    this.cerrarModal();
+  }  
+  
+  /**
+   * Abre el modal y carga los datos de la fila seleccionada
+   */
+  abrirModal(selectedRow: DatosDeLaTabla): void {
+    this.modificarFormulario.patchValue({
+      tipoDeInversion: this.getIdFromDescription(selectedRow.tipoDeInversion, this.tramiteList.catalogos),
+      valorEnPesos: selectedRow.valorEnPesos,
+      descripcionGeneral: selectedRow.descripcionGeneral,
+      formaAdquisicion: this.getIdFromDescription(selectedRow.formaAdquisicion, this.aduana.catalogos)
+    });
+
+    if (this.modalRef?.nativeElement) {
+      const MODAL = new (window).bootstrap.Modal(this.modalRef.nativeElement);
+      MODAL.show();
+    }
+  }
+
+  /**
+   * Cierra el modal si está abierto.
+   */
+  cerrarModal(): void {
+    if (this.modalRef?.nativeElement) {
+      const CERRAR_MODAL = (window).bootstrap.Modal.getInstance(this.modalRef.nativeElement);
+      if (CERRAR_MODAL) {
+        CERRAR_MODAL.hide();
       }
-      if (CURRENT_URL.includes('pago')) {
-        this.router.navigate(['/pago/consulta-aviso-acreditacion/solicitud']);
-      }
-    }, 100);
+    }
+  }
+
+  /**
+   * Maneja el evento de cancelar la modificación.
+   * Cierra el modal sin guardar cambios.
+   */
+  onCancelar(): void {
+    this.cerrarModal();
+  }
+
+  /**
+   * Obtiene el ID de un elemento basado en su descripción
+   */
+  private getIdFromDescription(description: string, catalog: Catalogo[]): number | null {
+    const ITEM = catalog.find(cat => cat.descripcion === description);
+    return ITEM ? ITEM.id : null;
   }
 }

@@ -100,6 +100,11 @@ export interface Tramite260911State {
    */
   facturadorTablaDatos: Facturador[];
   
+   /**
+   * Lista de fabricantes relacionados con el trámite.
+   */
+  fabricanteTablaModificaDatos: Fabricante[];
+  
 }
 
 /**
@@ -148,6 +153,7 @@ export function createInitialState(): Tramite260911State {
     proveedorTablaDatos: [],
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
+    fabricanteTablaModificaDatos: [],
   };
 }
 
@@ -175,6 +181,22 @@ export class Tramite260911Store extends Store<Tramite260911State> {
     this.update((state) => ({
       ...state,
       fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+    }));
+  }
+
+   /**
+   * @method fabricanteTablaModificaDatos
+   * @description
+   * Actualiza los datos seleccionados en la tabla de fabricantes en el estado del trámite.
+   * Sustituye el arreglo actual por el nuevo conjunto de fabricantes.
+   *
+   * @param {Fabricante[]} tabSeleccionado - Lista de fabricantes seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public fabricanteTablaModificaDatos(tabSeleccionado: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteTablaModificaDatos: tabSeleccionado,
     }));
   }
 
