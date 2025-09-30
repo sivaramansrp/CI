@@ -9,7 +9,6 @@ const ROUTES: Routes = [
     path: 'modalidad-ampliacion-terciarizadoras',
     component: RegistroExpansionComponent,
        canActivate: [IniciarTramiteResolver],
-        resolve: { iniciarResolverData: IniciarTramiteResolver },
         data: {
           iniciarConfig: {
             procedureId: '80211'
