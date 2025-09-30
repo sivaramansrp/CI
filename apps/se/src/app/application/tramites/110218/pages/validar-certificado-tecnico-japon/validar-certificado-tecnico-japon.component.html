@@ -14,7 +14,7 @@
             @case(1){
                 <app-solicitante-tabs #solicitanteTabs [indice]="capturarTapIndice"></app-solicitante-tabs>
             }@case(2){
-              <app-paso-tres></app-paso-tres>
+              <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110218" [procedureUrl]="'certificado-tecnico-japon/validar-certificado-tecnico-japon'"></paso-firma>
             }
         }
   <btn-continuar [datos]="datosPasos" [ocultabotonAnterior]="indice === 1" (continuarEvento)="getValorIndice($event)"></btn-continuar>

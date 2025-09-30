@@ -9,7 +9,6 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class FormularioResiduoQuery extends Query<EstadoFormularioResiduo> {
-  
   /**
    * Observable que emite los valores actuales del formulario de datos generales.
    */
@@ -20,9 +19,10 @@ export class FormularioResiduoQuery extends Query<EstadoFormularioResiduo> {
    */
   obtenerFormularioResiduo$ = this.select((state) => state.formularioResiduo);
 
+  obtenerResiduosPeligrosos$ = this.select((state) => state.residuos);
   /**
    * Constructor del query. Inyecta el store asociado al formulario de residuos.
-   * 
+   *
    * @param store - Instancia del store que mantiene el estado de `EstadoFormularioResiduo`.
    */
   constructor(protected override store: FormularioResiduoStore) {

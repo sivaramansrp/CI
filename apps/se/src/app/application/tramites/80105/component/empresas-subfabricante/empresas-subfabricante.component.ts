@@ -1,7 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna,TablaSeleccion, doDeepCopy, esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
+
 
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -116,7 +118,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     public query: Tramite80101Query,
     private store: Tramite80101Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private _compartidaSvc: ComplimentosService
   ) {
     this.inicializarFormularioDatosSubcontratista();
   }
@@ -182,7 +185,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    */
   enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
     this.formularioDatosSubcontratista.patchValue({
-      estado: estadoSeleccionado.id.toString(),
+      rfc: this.formularioDatosSubcontratista.get('rfc')?.value,
+      estado: estadoSeleccionado.clave,
     })
     this.store.setDatosSubcontratista(this.formularioDatosSubcontratista.value);
   }
@@ -233,13 +237,22 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
  * @method obtenerSubfabricantesDisponibles
  */
   obtenerSubfabricantesDisponibles(): void {
-    this.nuevoProgramaIndustrialService
-      .getSubfabricantesDisponibles()
+      const PAYLOAD = {
+        "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
+        "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
+        "idPrograma": null
+      }
+    this._compartidaSvc
+      .getSubfabricantesDisponibles(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response: PlantasSubfabricante[]) => {
-        if (response.length > 0) {
-          this.store.setPlantasBuscadas(response)
-        }
+      .subscribe((response) => {
+          if(esValidObject(response)) {
+            const API_DATOS = doDeepCopy(response);
+            if(esValidArray(API_DATOS.datos)) {
+              const RESPONSE:PlantasSubfabricante[] = this._compartidaSvc.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
+              this.store.setPlantasBuscadas(RESPONSE);
+            } 
+          }
       });
   }
 

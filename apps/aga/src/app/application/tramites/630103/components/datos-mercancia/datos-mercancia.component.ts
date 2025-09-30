@@ -130,6 +130,14 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     this.tramite630103Store.setTramite630103State($event.campo, $event.valor);
   }
+/*
+  * Valida el formulario de datos de importación temporal.
+  * @returns {boolean} - `true` si el formulario es válido, `false` en caso contrario.
+  */
+  validarFormulario(): boolean {
+    this.datosMercancia.markAllAsTouched();
+    return this.datosMercancia.valid;
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

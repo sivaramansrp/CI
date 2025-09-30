@@ -55,21 +55,20 @@
     "cadenaDependencia": "CADENA123",
     "banco": "1",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-05",
+    "fechaPago": "05/06/2025",
     "importePago": "1500.00"
   },
   "merccancialTablaDatos": [
     {
-      "descripcion": "Producto de ejemplo",
-      "cantidad": 10,
-      "unidadMedida": "Pieza",
-      "valorUnitario": 100.00,
-      "valorTotal": 1000.00,
-      "paisOrigen": "México",
-      "fraccionArancelaria": "1234.56.78",
-      "marca": "MarcaX",
-      "modelo": "ModeloY",
-      "serie": "SerieZ"
+      "fraccionArancelaria": "25030002",
+      "descripcionFraccion": "Producto de ejemplo",
+      "unidadMedidaTarifa": 10,
+      "umc": "Kilogramo",
+      "cantidadUMT": 100.00,
+      "valorComercial": 1000.00,
+      "tipoMoneda": "Dólar Estadounidense",
+      "descripcion": "Descripción detallada del producto de ejemplo",
+      "paisOrigen": "México"
     }
   ],
   "datosDelTramite": {

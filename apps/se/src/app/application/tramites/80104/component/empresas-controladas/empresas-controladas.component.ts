@@ -1,13 +1,13 @@
 // Componente para la vista de los anexos dos y tres en el trámite 80103
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store} from '../../estados/tramite80101.store';
-import catalogo from '@libs/shared/theme/assets/json/80104/controladas.json';
 /*
   * Componente para mostrar la lista de empresas terciarizadas en el trámite 80103.
   *
@@ -31,14 +31,20 @@ import catalogo from '@libs/shared/theme/assets/json/80104/controladas.json';
   * @class EmpresasTerciarizadaasComponent
   * @implements {OnDestroy}
   */
-export class EmpresasControladasComponent implements OnDestroy {
+export class EmpresasControladasComponent implements OnDestroy, OnInit {
+
+  public estadosCatalogo$!: Observable<Catalogo[]>;
 
   /*
   * Constructor del componente.
   * @param {NuevoProgramaIndustrialService} nuevoProgramaIndustrialService - Servicio para gestionar la información del nuevo programa industrial.
   */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store){
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80104Store: Tramite80101Store, private tramite80104Query: Tramite80101Query){
 
+  }
+
+  ngOnInit(): void {
+    this.estadosCatalogo$ = this.tramite80104Query.selectEstadosOpciones$;
   }
 
   /**
@@ -65,33 +71,18 @@ export class EmpresasControladasComponent implements OnDestroy {
     { encabezado: 'Domicilio fiscal del solicitante', clave: (item) => item.domicilioFiscalSolicitante, orden: 10 },
     { encabezado: 'Razón social', clave: (item) => item.razonSocial, orden: 11 },
   ];
-  /**
-   * Lista de encabezados de la tabla de empresas terciarizadas.
-   * @type {ConfiguracionColumna<DisponsibleFiscal>[]}
-   */
-  estadosCatalogo: Catalogo[]=catalogo?.estadosCatalogos;
 
   actualizarSeleccionadas(event: DisponsibleFiscal[]): void {
    if (event) {
-    this.tramite80101Store.setSeleccionadas(event);
+    this.tramite80104Store.setSeleccionadas(event);
    }
   }
 
-   /**
-   * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
-   * @method obtenerListaEstado
-   */
-    obtenerListaEstado(): void {
-      this.nuevoProgramaIndustrialService
-        .obtenerListaEstado()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((response) => {
-          if (response) {
-            this.estadosCatalogo = response.data;
-          }
-        });
+  actualizarEstados(event: Catalogo[]): void {
+    if (event) {
+      this.tramite80104Store.setEstadosOpciones(event);
     }
-
+  }
 
     /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

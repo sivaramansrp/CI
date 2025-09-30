@@ -1,12 +1,24 @@
-
 /**
  * Este componente maneja la lógica y la interfaz de usuario para la página de solicitud,
  */
-import { AccionBoton, ERROR_FORMA_ALERT, PASOS } from '../../constantes/certificado-sgp.enum';
+import {
+  AccionBoton,
+  ERROR_FORMA_ALERT,
+  PASOS,
+} from '../../constantes/certificado-sgp.enum';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import {
+  Tramite110209State,
+  Tramite110209Store,
+} from '../../estados/stores/tramite110209.store';
 import { CapturarSolicitudComponent } from '../capturar-solicitud/capturar-solicitud.component';
-
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 
 /**
  * Componente que representa la página de solicitud.
@@ -14,7 +26,7 @@ import { CapturarSolicitudComponent } from '../capturar-solicitud/capturar-solic
 
 @Component({
   templateUrl: './solicitud-page.component.html',
-  styles: ``
+  styles: ``,
 })
 /**
  * Componente que representa la página de solicitud.
@@ -27,10 +39,24 @@ export class SolicitudPageComponent {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
    * Referencia al componente del asistente.
    * @type {WizardComponent}
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
   /**
    * @property {CapturarSolicitudComponent} pasoUnoComponent
    * @description
@@ -57,8 +83,6 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
-
-  
   /**
    * Indica si se debe mostrar el formulario de mercancía.
    * @type {boolean}
@@ -69,7 +93,7 @@ export class SolicitudPageComponent {
    * Índice del tap capturado.
    * @type {number}
    */
-  capturarTapIndice=1;
+  capturarTapIndice = 1;
   /**
    * @property {boolean} esFormaValido
    * @description
@@ -87,17 +111,51 @@ export class SolicitudPageComponent {
    */
   public formErrorAlert = ERROR_FORMA_ALERT;
 
+  /**
+   * Estado actual del trámite 110209.
+   *
+   * Se mantiene sincronizado de forma reactiva con el store mediante
+   * la suscripción al observable `selectTramite110209$`.
+   * Contiene toda la información necesaria para representar y manejar
+   * la solicitud en curso.
+   */
+  solicitudState!: Tramite110209State;
+
+  /**
+   * Constructor del componente.
+   *
+   * Inyecta los servicios necesarios para gestionar el estado del trámite **110209**.
+   * Al inicializarse, se suscribe al observable `selectTramite110209$` expuesto por
+   * el `Tramite110209Query`, de manera que la propiedad `solicitudState` se mantenga
+   * siempre sincronizada con el estado global gestionado por el store.
+   *
+   * @param {Tramite110209Store} tramiteStore - Servicio `Store` encargado de crear,
+   *                                            actualizar y resetear el estado global
+   *                                            del trámite 110209.
+   * @param {Tramite110209Query} tramiteQuery - Servicio `Query` que expone observables
+   * y selectores para consultar el estado del trámite 110209.
+   */
+  constructor(
+    public tramiteStore: Tramite110209Store,
+    public tramiteQuery: Tramite110209Query
+  ) {
+    this.tramiteQuery.selectTramite110209$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
 
   /**
    * Muestra u oculta el formulario de mercancía y captura el índice de la pestaña.
-   * 
+   *
    * @param $event - Indica si se debe mostrar (true) u ocultar (false) el formulario de mercancía.
    * @param ind - Índice de la pestaña que se está capturando.
    * @returns {void}
    */
-  showMercancia($event: boolean,tapIndice:number):void {
-    this.showMercanciaForm=$event;
-    this.capturarTapIndice=tapIndice
+  showMercancia($event: boolean, tapIndice: number): void {
+    this.showMercanciaForm = $event;
+    this.capturarTapIndice = tapIndice;
   }
   /**
    * Actualiza el índice del paso actual y navega al siguiente o anterior paso.
@@ -123,7 +181,6 @@ export class SolicitudPageComponent {
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
@@ -142,7 +199,7 @@ export class SolicitudPageComponent {
    * Si la referencia al componente no existe, retorna `true` para permitir la navegación.
    * Llama al método `validarFormularios()` del componente hijo para verificar la validez de todos sus formularios.
    * Si algún formulario es inválido, retorna `false` para impedir el avance al siguiente paso.
-   * 
+   *
    * @returns {boolean} `true` si todos los formularios son válidos o si el componente no existe, `false` si algún formulario es inválido.
    * @private
    */
