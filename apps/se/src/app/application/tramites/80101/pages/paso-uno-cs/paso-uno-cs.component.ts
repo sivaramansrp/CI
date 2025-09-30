@@ -95,25 +95,16 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
       .fetchMostrarDatos(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (resp: any) => {
-          console.log('SUCCESS:', resp);
+        next: () => {
+          // response from next
         },
         error: () => {
-          console.log('dummy', this.mostrarDummyData)
           this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(this.mostrarDummyData);
         },
         complete: () => {
-          console.log('Request completed');
+          // complete
         }
       });
-    // this.autorizacionProgrmaNuevoService
-    //   .getRegistroTomaMuestrasMercanciasData()
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe((resp) => {
-    //     if (resp) {
-    //       this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(resp);
-    //     }
-    //   });
   }
 
   /**
