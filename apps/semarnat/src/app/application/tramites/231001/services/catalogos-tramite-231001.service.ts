@@ -9,6 +9,7 @@ import {
   CVE_PARTIDA_FRACCION,
   CVE_SUBPARTIDA_FRACCION,
   GET_ADUANAS,
+  RFC,
   TRAMITE,
 } from '../../../constantes/231001/api-constants';
 
@@ -54,7 +55,7 @@ export class CatalogosTramite231001Service {
   getDatosImmex(
     rfc: string
   ): Observable<SimpleCatalogoResponse<ImmexResponse[]>> {
-    const URL = `${this.urlServer}${API_GET_IMMEX}/${rfc}`;
+    const URL = `${this.urlServer}${API_GET_IMMEX.replace(RFC, rfc)}`;
     return this.httpClient.get<SimpleCatalogoResponse<ImmexResponse[]>>(URL);
   }
 
