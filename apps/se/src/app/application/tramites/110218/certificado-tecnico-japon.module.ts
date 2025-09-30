@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { CertificadoTecnicoJaponRoutingModule } from './certificado-tecnico-japon-routing.module';
 
-import { BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CatalogoSelectComponent, PasoFirmaComponent, SolicitanteComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -42,8 +42,8 @@ import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.comp
     DatosCertificadoComponent,
     MercanciasSeleccionadasFormComponent,
     CatalogoSelectComponent,
-    PasoTresComponent
-    
+    PasoTresComponent,
+    PasoFirmaComponent
   ]
 })
 export class CertificadoTecnicoJaponModule { }

@@ -2,6 +2,7 @@ import { CEDULAS_OPTIONS, DIRECTOS, Directos } from '../../constantes/empleados.
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -18,8 +19,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-
-
 /**
  * Componente para gestionar la información de empleados.
  * @class EmpleadosComponent
@@ -34,6 +33,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     CatalogoSelectComponent,
     InputFechaComponent,
     ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './empleados.component.html',
   styleUrl: './empleados.component.css',
@@ -44,7 +44,11 @@ export class EmpleadosComponent implements OnInit {
    * @property {FormGroup} empleadosForm
    */
   empleadosForm!: FormGroup;
-
+  /**
+   * Nueva notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
  * Estado actual de la solicitud, utilizado para inicializar y gestionar los datos del formulario de empleados.
  * @property {ComplementarState} solicitudState
@@ -306,9 +310,68 @@ export class EmpleadosComponent implements OnInit {
         RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
         RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
       };
+
       this.directosDatos = [...this.directosDatos, TABLA_VALOR];
-      this.limpiar();
+     
     }
+    this.agregarValidacion();
+  }
+  /**
+   * Agrega validaciones al formulario de empleados.
+   * 
+   * Este método verifica las condiciones de los campos del formulario `empleadosForm`
+   */
+  agregarValidacion(): void {
+    if (this.empleadosForm.get('directos')?.value && !this.empleadosForm.get('indirectos')?.value) {
+      const DIRECTOS = this.empleadosForm.get('directo')?.value;
+      const CEDULA_DE_CUOTAS = this.empleadosForm.get('cedula')?.value;
+      const FECHA_DE_CEDULA = this.empleadosForm.get('fechaCedula')?.value;
+
+      if (DIRECTOS === "" || CEDULA_DE_CUOTAS === "" || FECHA_DE_CEDULA === "") {
+        this.mostrarValidacion();
+      }
+    }
+    else if (this.empleadosForm.get('indirectos')?.value && !this.empleadosForm.get('directos')?.value) {
+      const CONTRATO = this.empleadosForm.get('contrato')?.value;
+      const OBJETO_DEL_CONTRATO_DEL_SERVICIO = this.empleadosForm.get('objeto')?.value;
+      const FECHA_FIRMA = this.empleadosForm.get('fechaFirma')?.value;
+      const FECHA_FIN_VIGENCIA = this.empleadosForm.get('fechaFinVigencia')?.value;
+      const RFC = this.empleadosForm.get('rfcEmpresa')?.value;
+      const RAZON_SOCIAL = this.empleadosForm.get('razonSocial')?.value;
+
+      if (
+        CONTRATO === "" ||
+        OBJETO_DEL_CONTRATO_DEL_SERVICIO === "" ||
+        FECHA_FIRMA === "" ||
+        FECHA_FIN_VIGENCIA === "" ||
+        RFC === "" ||
+        RAZON_SOCIAL === ""
+      ) {
+        this.mostrarValidacion();
+      }
+    }
+    else if (this.empleadosForm.invalid) {
+      this.mostrarValidacion();
+    }
+ this.limpiar();
+  }
+  /**
+   * Muestra una notificación de validación al usuario.
+   * 
+   * Esta función configura y muestra una notificación de advertencia indicando que
+   * el usuario debe capturar todos los datos marcados como obligatorios.
+   */
+  mostrarValidacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**

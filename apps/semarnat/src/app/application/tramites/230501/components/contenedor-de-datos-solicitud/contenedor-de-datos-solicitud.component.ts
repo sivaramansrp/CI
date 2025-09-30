@@ -5,10 +5,11 @@ import { CatalogoSelectComponent,InputCheckComponent,InputRadioComponent } from 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs'
 import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 
 /**
@@ -19,7 +20,7 @@ import { Tramite230501Query } from '../../estados/queries/tramite230501Query.que
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent, InputCheckComponent, InputRadioComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent, InputCheckComponent, InputRadioComponent, TooltipModule],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
   providers: [MaterialesPeligrososService],

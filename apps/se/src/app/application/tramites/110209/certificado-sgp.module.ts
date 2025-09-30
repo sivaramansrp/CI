@@ -1,5 +1,6 @@
 
 import { AlertComponent, BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { PasoFirmaComponent, WizardComponent} from '@libs/shared/data-access-user/src';
 import { CapturarSolicitudComponent } from './pages/capturar-solicitud/capturar-solicitud.component';
 import { CertificadoSGPRoutingModule } from './certificado-sgp-routing.module';
 import { CommonModule } from '@angular/common';
@@ -15,7 +16,6 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
 import { TransporteComponent } from './components/transporte/transporte.component';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     DatosDelCertificadoComponent,
     RegistroDeMercanciaComponent,
     DomicilioDelDestinatarioComponent,
-    AlertComponent
+    AlertComponent,
+    PasoFirmaComponent
 ],
   providers: [ToastrService],
 })

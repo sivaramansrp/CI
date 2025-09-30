@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, PasoFirmaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -62,7 +62,8 @@ import { TramitesDisponiblesRoutingModule } from './tramites-disponibles-routing
     DatosDelCertificadoComponent,
     DatosDelDestinatarioComponent,
     DomicilioDelDestinatarioComponent,
-    DomicilioTablaComponent
+    DomicilioTablaComponent,
+    PasoFirmaComponent
   ]
 })
 /**
