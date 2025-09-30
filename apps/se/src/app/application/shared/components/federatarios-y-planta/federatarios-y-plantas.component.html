@@ -190,7 +190,7 @@
 <ng-container *ngIf="mostrarComplementarPlantaPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-complementar-planta (cerrarPopup)="cerrarComplementarPlanta()"></app-complementar-planta>
+      <app-complementar-planta (obtenerComplementarPlantaList)="obtenerComplementarPlantaList($event)" (obtenerFirmantesList)="obtenerFirmantesList($event)" (cerrarPopup)="cerrarComplementarPlanta()"></app-complementar-planta>
     </div>
   </div>
 </ng-container>
@@ -198,7 +198,7 @@
 <ng-container *ngIf="mostrarMontosDeInversionPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-montos-de-inversion (cerrarPopup)="cerrarMontosDeInversion()"></app-montos-de-inversion>
+      <app-montos-de-inversion (obtenerMontosInversionList)="obtenerMontosInversionList($event)" (cerrarPopup)="cerrarMontosDeInversion()"></app-montos-de-inversion>
     </div>
   </div>
 </ng-container>
@@ -206,7 +206,7 @@
 <ng-container *ngIf="mostrarEmpleadosPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-empleados (cerrarPopup)="cerrarEmpleados()"></app-empleados>
+      <app-empleados (obtenerEmpleadosList)="obtenerEmpleadosList($event)" (cerrarPopup)="cerrarEmpleados()"></app-empleados>
     </div>
   </div>
 </ng-container>
@@ -214,7 +214,8 @@
 <ng-container *ngIf="mostrarCapacidadInstaladaPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-capacidad-instalada (cerrarPopup)="cerrarCapacidadInstalada()"></app-capacidad-instalada>
+      <app-capacidad-instalada (obtenerCapacidadInstaladaTablaList)="obtenerCapacidadInstaladaTablaList($event)"
+  (cerrarPopup)="cerrarCapacidadInstalada()"></app-capacidad-instalada>
     </div>
   </div>
 </ng-container>

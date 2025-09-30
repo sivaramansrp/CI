@@ -614,110 +614,113 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
 
 
  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-/**
- * Construye el objeto `anexo` a partir de los datos proporcionados.
- *
- * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
- * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
- *
- * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
- * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
- * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
- *
- * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
- */
- buildAnexo(data: any) {
- 
-  const buildAnexoItem = (item: Anexo1) => ({
-    descripcion: item.encabezadoFraccion,
-    idTipoBien: 0,
-    idBienComercial: 0,
-    testado: true,
-    contadorGrid: null,
-    descripcionTestado: item.encabezadoDescripcion,
-  });
-
-  const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
-    idProveedor: item.idProveedor,
-    paisOrigen: item.paisOrigen,
-    rfcProveedor: item.rfcProveedor,
-    razonProveedor: item.razonProveedor,
-    paisDestino: item.paisDestino,
-    rfcCliente: item.rfcClinte,
-    razonCliente: item.razonSocial,
-    domicilio: item.domicilio,
-    testado: item.testado,
-    idProductoP: item.idProductoP,
-    descTestado: item.descTestado,
-  });
-
-  const buildDatosParaNavegar = (datos: any) => ({
-    anexoII: datos?.encabezadoAnexoII,
-    tipo: datos?.encabezadoTipo,
-    unidadMedida: datos?.encabezadoAnexoII,
-    categoria: datos?.encabezadoCategoria,
-    descripcion: datos?.encabezadoDescripcionComercial,
-    valorMensual: datos?.encabezadoVolumenMensual,
-    valorAnual: datos?.encabezadoVolumenAnual,
-    volumenMensual: datos?.encabezadoValorEnMonedaMensual,
-    volumenAnual: datos?.encabezadoValorEnMonedaAnual,
-    testado: true,
-    fecFinVigencia: null,
-    volumenAnualSolicitado: null,
-  });
-
-  
-    const anexoDos: any = [];
-
-    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
-      anexoDos.push({
-        fraccionExportacion: item.encabezadoFraccionExportacion,
-        fraccionImportacion: item.encabezadoFraccionImportacion,
-        descFraccionImpo: item.encabezadoDescripcionComercial,
-        claveFraccionAnexo: item.encabezadoAnexoII,
-        idProducto: item.encabezadoIdProducto,
-        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
-        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
-        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
-        categoriaFraccion: item.encabezadoCategoria,
-        tipoFraccion:item.encabezadoTipo,
-        umt:item.encabezadoUmt
-      });
+ /**
+   * Construye el objeto `anexo` a partir de los datos proporcionados.
+   *
+   * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
+   * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
+   *
+   * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
+   * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
+   * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
+   *
+   * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
+   */
+  buildAnexo(data: any) {
+    const buildAnexoItem = (item: Anexo1) => ({
+      descripcion: item.encabezadoFraccion,
+      idTipoBien: 0,
+      idBienComercial: 0,
+      testado: true,
+      contadorGrid: null,
+      descripcionTestado: item.encabezadoDescripcion,
     });
-
-     const proyectoImmexDatos = (item: any) => ({
+ 
+    const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
+      idProveedor: item.idProveedor,
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      testado: item.testado,
+      idProductoP: item.idProductoP,
+      descTestado: item.descTestado,
+    });
+ 
+    const buildDatosParaNavegar = (datos: any) => ({
+      anexoII: datos?.encabezadoAnexoII,
+      tipo: datos?.encabezadoTipo,
+      unidadMedida: datos?.encabezadoAnexoII,
+      categoria: datos?.encabezadoCategoria,
+      descripcion: datos?.encabezadoDescripcionComercial,
+      valorMensual: datos?.encabezadoVolumenMensual,
+      valorAnual: datos?.encabezadoVolumenAnual,
+      volumenMensual: datos?.encabezadoValorEnMonedaMensual,
+      volumenAnual: datos?.encabezadoValorEnMonedaAnual,
+      testado: true,
+      fecFinVigencia: null,
+      volumenAnualSolicitado: null,
+    });
+ 
+    const buildAnexoDos = (item: any) => ({
+      fraccionExportacion: item.encabezadoFraccionExportacion,
+      fraccionImportacion: item.encabezadoFraccionImportacion,
+      descFraccionImpo: item.encabezadoDescripcionComercial,
+      claveFraccionAnexo: item.encabezadoAnexoII,
+      idProducto: item.encabezadoIdProducto,
+      fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+      fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+      fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+      fraccionVolumenMensual: item?.encabezadoValorEnMonedaMensual,
+      fraccionVolumenAnual: item?.encabezadoVolumenAnual,
+      categoriaFraccion: item.encabezadoCategoria,
+      tipoFraccion: item.encabezadoTipo,
+      umt: item.encabezadoUmt,
+    });
+ 
+    const proyectoImmexDatos = (item: any) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
-      fechaFirma:  item.encabezadoFechaFirma,
-      fechaVigencia:  item.encabezadoFechaVigencia,
-      rfcFirmante:  item.encabezadoRfc,
-      razonFirmante:  item.encabezadoRazonFirmante,
+      fechaFirma: item.encabezadoFechaFirma,
+      fechaVigencia: item.encabezadoFechaVigencia,
+      rfcFirmante: item.encabezadoRfc,
+      razonFirmante: item.encabezadoRazonFirmante,
       testado: true,
-      fecFinVigencia:  item.encabezadoFechaVigencia,
+      fecFinVigencia: item.encabezadoFechaVigencia,
     });
-
+ 
+    /**
+     * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
+     *
+     * @param item - Objeto que contiene la información del proveedor y cliente.
+     * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
+     */
     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
-          paisOrigen: item.paisOrigen,
-          rfcProveedor: item.rfcProveedor,
-          razonProveedor: item.razonProveedor,
-          paisDestino: item.paisDestino,
-          rfcCliente: item.rfcClinte,
-          razonCliente: item.razonSocial,
-          domicilio: item.domicilio,
-          descTestado: item.descTestado,
-        });
-  return {
-    anexo: {
-      ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
-      ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
-      proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-      datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-      tableDos: anexoDos,
-      proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
-       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
-    },
-  };
-}
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      descTestado: item.descTestado,
+    });
+ 
+    return {
+      anexo: {
+        ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
+        ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
+        proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
+        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.importarDatosTabla[0] || {}),
+        tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
+        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
+      },
+    };
+  }
 
 /**
  * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
@@ -767,31 +770,103 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
  * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
  */
     // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
+
+    // eslint-disable-next-line complexity
+    const mapCapacidadInstalada = (item: any) => ({
+      idPlantaCa: item.PLANTA ?? "",
+      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
+      umt: item.UMT ?? "",
+      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
+      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
+      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
+      turnos: (item.TURNOS ?? "").toString(),
+      horasTurno: (item.HORAS_POR_TURNO ?? "").toString(),
+      cantidadEmpleados: (item.CANTIDAD_EMPLEADOS ?? "").toString(),
+      cantidadMaquinaria: (item.CANTIDAD_MAQUINARIA ?? "").toString(),
+      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
+      capacidadMensual: (item.CAPACIDAD_INSTALADA_MENSUAL ?? "").toString(),
+      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
+      testado: "1",
+      claveServicio: item.CLAVE_SERVICIO ?? "",
+      cveTipoServicio: item.CVE_TIPO_SERVICIO ?? "",
+      descripcionServicio: item.DESCRIPCION_SERVICIO ?? "",
+      descTestado: item.DESC_TESTADO ?? "",
+      fraccionVista: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO ?? "",
+      idCapacidad: item.ID_CAPACIDAD ?? "",
+      tipoServicio: item.TIPO_SERVICIO ?? "",
+    });
+
+    const MAP_MONTOS_INVERSION = (item: any) => ({
+      idPlantaM: item.PLANTA ?? "",
+      tipo: item.TIPO ?? "",
+      cantidad: item.CANTIDAD ?? "",
+      descripcion: item.DESCRIPCION ?? "",
+      monto: item.MONTO ?? "",
+    })
+
+    const MAP_EMPLEADOS = (item: any) => ({
+      idPlantaE: item.PLANTA ?? '',
+      totalEmpleados: item.TOTAL ?? '',
+      directos: item.DIRECTOS ?? '',
+      cedula: item.CEDULA_DE_CUOTAS ?? '',
+      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
+      indirectos: item.INDIRECTOS ?? '',
+      contrato: item.CONTRATO ?? '',
+      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
+      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
+      rfcEmpresa: item.RFC ?? '',
+      razonEmpresa: item.RAZON_SOCIAL ?? '',
+    })
+
+    const MAP_COMPLEMENTAR = (item: any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+    })
+
+    const MAP_FIRMANTES = (item:any) => ({
+      tipoFirmante: item.tipoFirmante ?? '',
+    })
+
+    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
+    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
+    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
+    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
+ 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+    let RESULT: any[] = [];
     array.forEach(arr => {
+      // eslint-disable-next-line complexity
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      idPlanta: arr.planta ?? '',
-      calle: arr.calle ?? '',
-      numeroExterior: arr.numeroExterior ?? '',
-      numeroInterior: arr.numeroInterior ?? '',
-      codigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.localidad ?? '',
-      colonia: arr.colonia ?? '',
-      delegacionMunicipio: arr.delegacionMunicipio ?? '',
-      entidadFederativa: arr.entidadFederativa ?? '',
-      pais: arr.pais ?? '',
-      rfc: arr.registroFederalDeContribuyentes ?? '',
-      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-      razonSocial: arr.razonSocial ?? '',
+          idPlanta: arr.planta ?? '',
+          calle: arr.calle ?? '',
+          numeroExterior: arr.numeroExterior ?? '',
+          numeroInterior: arr.numeroInterior ?? '',
+          codigoPostal: arr.codigoPostal ?? '',
+          localidad: arr.localidad ?? '',
+          colonia: arr.colonia ?? '',
+          delegacionMunicipio: arr.delegacionMunicipio ?? '',
+          entidadFederativa: arr.entidadFederativa ?? '',
+          pais: arr.pais ?? '',
+          rfc: arr.registroFederalDeContribuyentes ?? '',
+          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+          razonSocial: arr.razonSocial ?? '',
         });
       });
     });
-    return RESULT;
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
+    return RESULT_DATA;
   }
 
 /**
@@ -813,7 +888,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       apellidoMaterno: arr.segundoApellido ?? '',
       apellidoPaterno: arr.primerApellido ?? '',
       numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: arr.fechaInicioInput ?? '',
+      fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
       numeroNotaria: arr.numeroDeNotaria ?? '',
       entidadFederativa: arr.estado ?? '',
       delegacionMunicipio: arr.estadoOptions ?? '',
@@ -833,7 +908,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
   guardar(data: any): Promise<any> {
     const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
@@ -862,8 +937,8 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     "solicitante": {
         
     },
-    "planta": [...PLANTAS],
-    "notario":[...NOTARIOS],
+    "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
+    "notarios":[...NOTARIOS],
     "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
     "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
     "mercanciaImportacion": [
