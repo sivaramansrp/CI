@@ -14,10 +14,20 @@ import { GuadarSolicitudResponse } from '../modelos/response/guardar-solicitud-r
 })
 export class GuardarService {
 
-  private readonly host: string;
+  /**
+   * La URL base del servidor al que se realizarán las solicitudes.
+   * Esta propiedad es de solo lectura y se utiliza para construir las rutas de los servicios.
+   */
+  private readonly servidor: string;
 
+  /**
+   * Crea una nueva instancia del servicio `guardar.service`.
+   * Inicializa la propiedad `servidor` con la URL base de la API utilizando la constante `ENVIRONMENT.API_HOST`.
+   * 
+   * @param http Instancia de `HttpClient` utilizada para realizar solicitudes HTTP al servidor.
+   */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.servidor = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**
@@ -25,9 +35,8 @@ export class GuardarService {
    * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
    * @returns Observable con la respuesta del servidor.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   postSolicitud(solicitud: any): Observable<BaseResponse<GuadarSolicitudResponse>> {
-    const ENDPOINT = `${this.host}` + API_POST_SOLICITUD;
+    const ENDPOINT = `${this.servidor}` + API_POST_SOLICITUD;
     return this.http.post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud).pipe(
       map((response) => {
         return response;
@@ -52,7 +61,7 @@ export class GuardarService {
    * @returns Observable con la respuesta del servidor.
    */
   getCertificadoAntiguedad(): Observable<BaseResponse<null>> {
-    const ENDPOINT = `${this.host}${API_GET_CERTIFICADO_ANTIGUEDAD}`;
+    const ENDPOINT = `${this.servidor}${API_GET_CERTIFICADO_ANTIGUEDAD}`;
 
     return this.http.get<BaseResponse<null>>(ENDPOINT).pipe(
       map((response) => {
@@ -74,7 +83,7 @@ export class GuardarService {
    */
   getMolinosHabilitar(cveFraccion: string): Observable<BaseResponse<boolean>> {
     const ENDPOINT =
-      `${this.host}` +
+      `${this.servidor}` +
       API_GET_MOLINOS_ACERO_HABILITAR(cveFraccion);
 
     return this.http.get<BaseResponse<boolean>>(ENDPOINT).pipe(

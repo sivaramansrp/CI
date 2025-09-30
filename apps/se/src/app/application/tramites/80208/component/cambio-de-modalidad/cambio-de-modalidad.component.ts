@@ -632,7 +632,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      */
     seleccionarDomicilios(domicilios: ServicioInfo): void {
       this.domiciliosSeleccionados = [{ ...domicilios }];
-      // Update the store with selected data
       this.cambioModalidadStore.setDomiciliosSeleccionados(this.domiciliosSeleccionados);
     }
    /**

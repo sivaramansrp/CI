@@ -71,6 +71,24 @@ export const SECCIONES_TRAMITE_80208 = {
     },
 };
 
+/**
+ * Información del usuario utilizada en el proceso de solicitud.
+ *
+ * @property {object} persona - Datos personales del usuario.
+ * @property {string} persona.claveUsuario - Clave única del usuario.
+ * @property {string} persona.rfc - RFC del usuario.
+ * @property {string} persona.nombre - Nombre del usuario.
+ * @property {string} persona.apellidoPaterno - Apellido paterno del usuario.
+ * @property {string} persona.apellidoMaterno - Apellido materno del usuario.
+ * @property {object} firmaElectronica - Información de la firma electrónica del usuario.
+ * @property {string} firmaElectronica.cadenaOriginal - Cadena original utilizada en la firma.
+ * @property {string} firmaElectronica.certificado - Certificado digital en formato PEM.
+ * @property {string} firmaElectronica.firma - Firma electrónica generada.
+ * @property {string} rolActual - Rol actual del usuario en el sistema.
+ * @property {string} rfcSolicitante - RFC del solicitante.
+ * @property {number} idSolicitud - Identificador único de la solicitud.
+ * @property {string} referenciaSolicitud - Referencia adicional de la solicitud.
+ */
 export const USUARIO_INFO = {
   persona: {
     claveUsuario: '828811',

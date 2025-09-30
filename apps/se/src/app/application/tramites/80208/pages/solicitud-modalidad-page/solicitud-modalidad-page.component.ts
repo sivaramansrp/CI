@@ -211,7 +211,6 @@ getValorIndice(e: AccionBoton): void {
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns Promise<any>
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: CambioModalidadState): Promise<any> {
     const PAYLOAD = 
     {
@@ -1802,7 +1801,6 @@ getValorIndice(e: AccionBoton): void {
           response?.causa ||
           'Ocurrió un error al guardar la solicitud.';
         const ERRORESMODELO = (response?.errores_modelo || []).map(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error: any) => ({
             campo: error.campo || 'general',
             errores: Array.isArray(error.errores)

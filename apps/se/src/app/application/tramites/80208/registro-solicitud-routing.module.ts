@@ -7,7 +7,6 @@ import { SolicitudModalidadPageComponent } from './pages/solicitud-modalidad-pag
 export const ROUTES_SOLICITUD: Routes = [
   {
     canActivate: [IniciarTramiteResolver],
-      resolve: { iniciarResolverData: IniciarTramiteResolver },
       data: {
         iniciarConfig: {
           procedureId: '80208'

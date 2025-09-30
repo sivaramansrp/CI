@@ -127,7 +127,6 @@ export class CambioModalidadService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardarDatosPost(body: CambioModalidadState): Observable<any> {
     return this.httpService.post<any>(`${ENVIRONMENT.API_HOST}/api/solicitud/guardar`, { body: body });
   }

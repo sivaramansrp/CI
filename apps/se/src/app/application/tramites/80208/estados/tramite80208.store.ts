@@ -378,4 +378,11 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     }));
   }
 
+    /**
+   * Limpia los datos de la solicitud
+   */
+  public limpiarSolicitud(): void {
+    this.reset();
+  }
+
 }
