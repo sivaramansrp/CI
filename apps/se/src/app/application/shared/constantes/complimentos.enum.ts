@@ -254,7 +254,7 @@ export const TABLA_SOCIO_ACCIONISTAS = [
     orden: 1,
   },
   {
-    encabezado: 'razón social',
+    encabezado: 'Razón social',
     clave: (ele: SociaoAccionistas): string | undefined => ele.razonSocial,
     orden: 2,
   },
@@ -315,7 +315,7 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
     orden: 1,
   },
   {
-    encabezado: 'razón social',
+    encabezado: 'Razón social',
     clave: (ele: SociaoAccionistas): string | undefined => ele.razonSocial,
     orden: 2,
   },
