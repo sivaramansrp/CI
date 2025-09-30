@@ -18,11 +18,11 @@
  * - enviarFormularioMercancia: Envía el formulario de mercancía y agrega los datos a la tabla.
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CONFIGURACION_TABLA_MERCANCIA, ConfiguracionItem } from '../../enum/mercancia.enum';
 import { CROSLISTA_ENTRADA, CROSSLIST_BOTONS, CrosslistBoton } from '../../enum/crossList-botons.enum';
 import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud230902State, Tramite230902Store} from '../../estados/tramite230902.store';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs';
@@ -379,7 +379,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       clasificacionTaxonomica: [DEFAULT_DATA.clasificacionTaxonomica, Validators.required],
       nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
       nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
-      marca: [DEFAULT_DATA.marca, Validators.required],
+      marca: [DEFAULT_DATA.marca, [Validators.required, DatosSolicitudComponent.noSpecialCharactersValidator]],
       cantidad: [DEFAULT_DATA.cantidad, [Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)]],
       unidadMedida: [DEFAULT_DATA.unidadMedida, Validators.required],
       paisOrigen: [DEFAULT_DATA.paisOrigen, Validators.required],
@@ -871,6 +871,29 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       this.formMercancia.markAllAsTouched();
     }
     return false
+  }
+
+  /**
+   * @method noSpecialCharactersValidator
+   * @description
+   * Validador personalizado estático que verifica si un campo contiene caracteres especiales no permitidos.
+   * Utiliza una expresión regular para detectar caracteres como: !"#$%/()=?=)(/&%$#""#$%$#"#$&
+   * Si se detectan caracteres especiales, retorna un error de validación que puede ser usado para mostrar
+   * el mensaje "Ingresa datos validos." en la interfaz de usuario.
+   * 
+   * @param {AbstractControl} control - El control de formulario que se está validando.
+   * @returns {ValidationErrors | null} Objeto con el error 'hasSpecialCharacters' si hay caracteres especiales, null si la validación pasa.
+   * @static
+   */
+  static noSpecialCharactersValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const SPECIALCHARACTERREGEX = /[!"#$%/()=?=)(/&%$#""#$%$#"#$&]/;
+    const HASSPECIALCHAR = SPECIALCHARACTERREGEX.test(control.value);
+
+    return HASSPECIALCHAR ? { hasSpecialCharacters: true } : null;
   }
 
   /**
