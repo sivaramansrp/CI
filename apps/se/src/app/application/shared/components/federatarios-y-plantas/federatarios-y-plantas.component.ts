@@ -485,8 +485,8 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       mensaje: this.federatariosSeleccionadoDatos.length > 0 ? '¿Está seguro de eliminar el(los) notario(s)?' : 'Seleccione el notario que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: this.federatariosSeleccionadoDatos.length > 0 ? 'Cancelar' : '',
+      txtBtnAceptar: 'Aceptar'
     };
   }
 
