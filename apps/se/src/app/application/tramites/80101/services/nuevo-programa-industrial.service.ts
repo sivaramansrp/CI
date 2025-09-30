@@ -543,11 +543,11 @@ export class NuevoProgramaIndustrialService {
       descTipoFirmante: item.descTipoFirmante ?? '',
     })
  
-    const LISTA_CAPACIDAD = (data.tablaDatosCapacidadInstalada || []).map(MAP_CAPACIDAD_INSTALADA);
-    const MONTOS = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
-    const DATOS_EMPLEADOS = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
-    const DATOS_COMPLEMENTARIOS = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
-    const FIRMATES = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
+    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(MAP_CAPACIDAD_INSTALADA);
+    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
+    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
+    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
  
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
@@ -573,7 +573,7 @@ export class NuevoProgramaIndustrialService {
         });
       });
     });
-    const RESULT_DATA = { ...RESULT[0], LISTA_CAPACIDAD, MONTOS, DATOS_EMPLEADOS, DATOS_COMPLEMENTARIOS, FIRMATES };
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
     return RESULT_DATA;
   }
 
