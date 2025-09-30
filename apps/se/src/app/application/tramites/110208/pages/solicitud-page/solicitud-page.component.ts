@@ -1,10 +1,12 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modificacion.enum";
 import { Solocitud110208Service } from '../../services/service110208.service';
+import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
 /**
  * Componente para la página de solicitud.
@@ -22,6 +24,18 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
   indice: number = 1;
 
   /**
+   * Estado actual de la 110208.
+   * @type {Solicitud110208State}
+   */
+  public solicitudState!: Solicitud110208State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
    * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
    * @param consultaQuery Consulta a los datos del store.
    * @param solocitud110208Service Servicio para carga y actualización de datos del formulario.
@@ -29,7 +43,16 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solocitud110208Service: Solocitud110208Service,
-  ) {}
+    public tramite110208Store: Tramite110208Store,
+    private tramite110208Query: Tramite110208Query,
+  ) {
+    this.tramite110208Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
+  }
 
   /**
    * Constante de alerta utilizada en el componente.
