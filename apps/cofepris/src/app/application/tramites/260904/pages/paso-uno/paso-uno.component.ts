@@ -97,6 +97,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   get subTabIndex(): number {
     return this._indice;
   }
+  /**
+   * Obtiene la instancia del componente `DomicilioDelEstablecimiento260904Component`.
+   *
+   * @returns La instancia del componente `DomicilioDelEstablecimiento260904Component` si existe, de lo contrario `undefined`.
+   */
+  public getDomicilioDelEstablecimientoComponent(): DomicilioDelEstablecimiento260904Component | undefined {
+  return this.domicilioDelEstablecimientoComponent;
+}
 
   /** Bandera que indica si los datos de respuesta están disponibles */
   esDatosRespuesta: boolean = false;

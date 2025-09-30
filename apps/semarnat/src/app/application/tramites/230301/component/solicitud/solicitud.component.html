@@ -23,7 +23,15 @@
              <div class="col-md-12">
                 <div class="form-group my-4" >
                     <label class="form-label" for="desistimientoMotivo">Motivo de desistimiento*:</label>
-                    <textarea (change)="onDescripcionChange()" rows="6" class="mb-4 ht" name="desistimientoMotivo" id="desistimientoMotivo"  placeholder="" formControlName="desistimientoMotivo">
+                    <textarea 
+                      (change)="onDescripcionChange()" 
+                      rows="6" 
+                      class="mb-4 ht" 
+                      [ngStyle]="formDesistimiento.get('desistimientoMotivo')?.touched && formDesistimiento.get('desistimientoMotivo')?.errors?.['required'] ? {'border': '1px solid red'} : {}"
+                      name="desistimientoMotivo" 
+                      id="desistimientoMotivo"  
+                      placeholder="" 
+                      formControlName="desistimientoMotivo">
                     </textarea>
                     <div *ngIf="formDesistimiento.get('desistimientoMotivo')?.touched && formDesistimiento.get('desistimientoMotivo')?.invalid">
                   <small *ngIf="formDesistimiento.get('desistimientoMotivo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>

@@ -36,11 +36,21 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
   {
     labelNombre: 'Tax ID',
     campo: 'taxId',
-    class: 'col-md-7 col-sm-10 pr-5',
+    class: 'col-md-6 col-sm-10 pr-5',
     tipo_input: 'text',
     required: true,
     maxlength: 12,
     orden: 1,
+  },
+    {
+    labelNombre: '',
+    campo: '',
+    class: 'col-md-6 col-sm-10 pr-5',
+    tipo_input: '',
+    required: false,
+    maxlength: 0,
+    orden: 2,
+
   },
   {
     labelNombre: 'Denominación o razón social',
@@ -49,7 +59,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     maxlength: 254,
-    orden: 2,
+    orden: 3,
   },
   {
     labelNombre: 'País',
@@ -58,7 +68,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     tipo_input: 'select-catalog',
     required: true,
     opciones: [],
-    orden: 3,
+    orden: 4,
     },
   {
     labelNombre: 'Código postal',
@@ -67,7 +77,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     maxlength: 12,
-    orden: 4,
+    orden: 5,
   },
   {
     labelNombre: 'Estado',
@@ -76,7 +86,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     opciones: [],
-    orden: 5,
+    orden: 6,
   },
   {
     labelNombre: 'Correo electrónico',
@@ -85,7 +95,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     maxlength: 200,
-    orden: 6,
+    orden: 7,
   },
 ];
 

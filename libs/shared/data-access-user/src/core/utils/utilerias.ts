@@ -313,5 +313,12 @@ export function formatearFechaYyyyMmDd(
   }
   return '';
 }
+
+export function parseToString(value: unknown): string {
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  return value.toString();
+}
     
 
