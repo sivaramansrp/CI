@@ -257,6 +257,10 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
       this.inicializarFormulario();
     }
   }
+  /**
+   * Obtiene la lista de estados desde el servicio de catálogo y los asigna a la variable `optionsEstado`.
+   * @returns {void}
+   */
   getEstado(): void {
     this.catalogoServices.estadosCatalogo(this.tramiteId).pipe(takeUntil(this.destoryNotification$)).subscribe((res) => {
       this.optionsEstado = res.datos ?? [];
@@ -278,7 +282,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
   inicializarFormulario(): void {
     this.initializeTramite80211State();
     this.showPlantas = this.tramites80211State.showPlantas;
-    // this.registroSolicitudService.obtenerEstados();
     this.registroSolicitudService
       .obtenerFormularioDatos()
       .pipe(takeUntil(this.destoryNotification$))
