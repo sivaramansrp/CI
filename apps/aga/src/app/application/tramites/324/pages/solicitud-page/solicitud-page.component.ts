@@ -3,9 +3,8 @@ import {
   DatosPasos,
   ListaPasosWizard,
   PASOS,
-  WizardComponent,
 } from '@ng-mf/data-access-user';
-
+import { WizardComponent} from '@libs/shared/data-access-user/src';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
