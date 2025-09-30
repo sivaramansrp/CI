@@ -1,10 +1,12 @@
 import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
 import { CommonModule } from '@angular/common';
-import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { RegistroSolicitudService } from '../../../tramites/220201/services/220201/registro-solicitud/registro-solicitud.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -125,7 +127,9 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * 
    * @param fb FormBuilder para crear formularios reactivos.
    */
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
   }
 
@@ -201,7 +205,10 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   agregarDetalle(): void {
-    this.sensiblesTablaDatos.push({
+    const SEXO_CATALOGO = this.catalogosDatos.sexoList.find(
+      (item: Catalogo) => item.clave === this.detalleForm.value.sexo
+    );
+    const DETALLE = {
       NumeroLote: this.detalleForm.value.numeroLote,
       ColorPelaje: this.detalleForm.value.colorPelaje,
       EdadAnimal: this.detalleForm.value.edadAnimal,
@@ -211,8 +218,10 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       NumeroIdentificacion: this.detalleForm.value.numeroIdentificacion,
       Raza: this.detalleForm.value.raza,
       NombreCientifico: this.detalleForm.value.nombreCientifico,
-      Sexo: this.detalleForm.value.sexo
-    });
+      Sexo: SEXO_CATALOGO ? SEXO_CATALOGO.descripcion : '',
+      SexoClave: this.detalleForm.value.sexo
+    };
+    this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, DETALLE];
     this.detalleForm.reset();
   }
 
@@ -268,6 +277,46 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       this.cerrar.emit();
     }
 
+  }
+
+  /**
+   * Actualiza los datos almacenados en el store.
+   * @method setValoresStore
+   */
+  setValoresStoreFraccion(): void {
+    const VALOR = this.mercanciaForm.value.fraccionArancelaria;
+    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220201, VALOR).subscribe(
+      (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
+        if (response && response.codigo === '00' && response.datos) {          
+          this.mercanciaForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+        } else {
+          this.mercanciaForm.get('descripcionFraccion')?.setValue('');
+        }
+      }
+    );
+    
+  }
+
+  /**
+   * Actualiza la descripción del NICO en el formulario `mercanciaForm`.
+   * 
+   * Este método obtiene la fracción arancelaria y el NICO seleccionados en el formulario,
+   * consulta la descripción correspondiente a través del servicio `registroSolicitudService`
+   * y actualiza el campo `descripcionNico` en el formulario. Si la respuesta es exitosa,
+   * se asigna la descripción obtenida; en caso contrario, se limpia el campo.
+   */
+  setValoresStoreFraccionNico(): void {
+    const VALOR_FRACCION = this.mercanciaForm.value.fraccionArancelaria;
+    const VALOR_NICO = this.mercanciaForm.value.nico;
+    this.registroSolicitudService.obtieneNicoDescripcion(220201, VALOR_FRACCION, VALOR_NICO).subscribe(
+      (response: BaseResponse<Catalogo>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.mercanciaForm.get('descripcionNico')?.setValue(response.datos);
+        } else {
+          this.mercanciaForm.get('descripcionNico')?.setValue('');
+        }
+      }
+    );
   }
 
   /**

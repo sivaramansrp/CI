@@ -34,7 +34,8 @@ import {
     API_GET_CATALOGO_TIPO_PLANTA,
     API_GET_CATALOGO_TIPO_PRESENTACION,
     API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
-    API_GET_CATALOGO_USOS_MERCANCIA    
+    API_GET_CATALOGO_USOS_MERCANCIA,    
+    API_GET_DATOS_SOLICITUD
 } from '../../../../../core/server/api-router';
 
 @Injectable({
@@ -113,6 +114,26 @@ export class CatalogosService {
     obtieneCatalogoRestricciones(tramite: number): Observable<BaseResponse<Catalogo[]>> {
         const ENDPOINT = `${this.host}${API_GET_CATALOGO_RESTRICCIONES(tramite.toString())}`;
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    obtieneCatalogoNico(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+        // Servicio mock: regresa un dato fijo "00"
+        return new Observable<BaseResponse<Catalogo[]>>(observer => {
+            observer.next({
+            datos: [{
+                id: 0, clave: '00', descripcion: '00',
+            },
+            {
+                id: 1, clave: '01', descripcion: '01'
+            }],
+            mensaje: tramite.toString(),
+            codigo: '00',
+            path: '',
+            timestamp: new Date().toISOString()
+            });
+            observer.complete();
+        });
     }
 
     /**
@@ -389,5 +410,6 @@ export class CatalogosService {
         const ENDPOINT = `${this.host}${API_GET_CATALOGO_ADUANAS(tramite.toString())}`;
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
+
     
 }

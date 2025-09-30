@@ -1,12 +1,15 @@
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
-import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
+import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CommonModule } from '@angular/common';
-import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
+import { RegistroSolicitudService } from '../../../tramites/220201/services/220201/registro-solicitud/registro-solicitud.service';
 import { Subject } from 'rxjs';
+
 
 
 /**
@@ -150,7 +153,9 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param ubicaccion - Servicio de ubicación para navegar entre páginas.
    */
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
   }
 
@@ -340,6 +345,38 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.detallasDatosTablaDatos.push(VALOR);
     this.detalleForm.reset();
   }
+
+  /**
+     * Actualiza los datos almacenados en el store.
+     * @method setValoresStore
+     */
+    setValoresStoreFraccion(): void {
+      const VALOR = this.productosForm.value.fraccionArancelaria;
+      this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220201, VALOR).subscribe(
+        (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
+          if (response && response.codigo === '00' && response.datos) {          
+            this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+          } else {
+            this.productosForm.get('descripcionFraccion')?.setValue('');
+          }
+        }
+      );
+      
+    }
+
+    setValoresStoreFraccionNico(): void {
+        const VALOR_FRACCION = this.productosForm.value.fraccionArancelaria;
+        const VALOR_NICO = this.productosForm.value.nico;
+        this.registroSolicitudService.obtieneNicoDescripcion(220201, VALOR_FRACCION, VALOR_NICO).subscribe(
+          (response: BaseResponse<Catalogo>) => {
+            if (response && response.codigo === '00' && response.datos) {
+              this.productosForm.get('descripcionNico')?.setValue(response.datos);
+            } else {
+              this.productosForm.get('descripcionNico')?.setValue('');
+            }
+          }
+        );
+    }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.

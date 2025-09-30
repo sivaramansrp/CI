@@ -307,6 +307,11 @@ export class SubProductosContenedoraComponent implements OnDestroy {
       this.catalogosDatos.tipoPresentacionList = data.datos ?? [];
     });
 
+    this.catalogoService.obtieneCatalogoNico(220201).subscribe((data) => {
+      this.catalogosDatos.nicoList = data.datos ?? [];
+    });
+  
+
 
     /**
      * @suscripcion_estado_reactivo

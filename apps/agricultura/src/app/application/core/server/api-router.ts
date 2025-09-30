@@ -185,7 +185,6 @@ export const API_GET_CATALOGO_ADUANAS = (TRAMITE: string) : string => `sat-t${TR
  */
 export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA: string) : string => `sat-t${TRAMITE}/catalogo/aduana/${CVEADUANA}/oficinas-inspeccion`;
 
-
 /**
  * Genera la ruta de la API para obtener los datos de una solicitud.
  *
@@ -193,5 +192,39 @@ export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA:
  * @param esPrellenado - Indica si es prellenado.
  * @param idSolicitud - ID de la solicitud.
  * @returns Ruta de la API como string.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-datos-solicitud
  */
 export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;
+
+/**
+ * Genera la ruta de la API para obtener las solicitudes recientes de un trámite específico y RFC dado.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param RFC - RFC del usuario.
+ * @returns Ruta de la API como cadena de texto.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/get-last-solicitudes
+ */
+export const API_GET_SOLICITUDES_RECENTES = (TRAMITE: string, RFC: string) : string => `sat-t${TRAMITE}/solicitud/recientes/${RFC}`;
+
+
+/**
+ * Genera la ruta de la API para obtener las solicitudes recientes de un trámite específico y RFC dado.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param cveFraccion - Clave de la fracción arancelaria.
+ * @returns Ruta de la API como cadena de texto.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-descripcion-fraccion-arancelaria
+ */
+export const API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION = (TRAMITE: string, cveFraccion: string) : string => `sat-t${TRAMITE}/fraccion-arancelaria/${cveFraccion}/descripcion`;
+
+
+/**
+ * Genera la ruta de la API para obtener la descripción de un NICO específico dentro de una fracción arancelaria y trámite dados.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param cveFraccion - Clave de la fracción arancelaria.
+ * @param cveNico - Clave del NICO.
+ * @returns La ruta de la API como cadena de texto para consultar la descripción del NICO.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-descripcion-nico
+ */
+export const API_GET_SOLICITUDES_NICO_DESCRIPCION = (TRAMITE: string, cveFraccion: string,cveNico: string) : string => `sat-t${TRAMITE}/fraccion/${cveFraccion}/nico/${cveNico}/descripcion`;

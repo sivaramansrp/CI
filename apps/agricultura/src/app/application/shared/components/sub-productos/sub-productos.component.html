@@ -27,24 +27,20 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.fraccionArancelariaList"
                     formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
-                    name="fraccionArancelaria" [isDisabled]="productosForm.disabled"></app-catalogo-select>
+                    name="fraccionArancelaria" [isDisabled]="productosForm.disabled" (change)="setValoresStoreFraccion()"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción de la fracción arancelaria*:</label>
                 <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
                     [title]="'Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos'"></i>
-                <input type="text" class="form-control" formControlName="descripcionFraccion" maxlength="1000" />
-                <div *ngIf="productosForm.get('descripcionFraccion')?.hasError('maxlength') && productosForm.get('descripcionFraccion')?.touched"
-                    class="text-danger">
-                    Por favor, no escribas más de 1000 caracteres
-                </div>
+                <input type="text" class="form-control" formControlName="descripcionFraccion" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.nicoList" formControlName="nico" [label]="'Nico'"
-                    [required]="true" name="nico" [isDisabled]="productosForm.disabled"></app-catalogo-select>
+                    name="nico" [isDisabled]="productosForm.disabled" (change)="setValoresStoreFraccionNico()"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción Nico*:</label>

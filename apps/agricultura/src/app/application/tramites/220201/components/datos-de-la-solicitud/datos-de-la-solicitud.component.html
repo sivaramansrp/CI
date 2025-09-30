@@ -22,7 +22,8 @@
                   </div>
                   <div class="col-md-12">
                     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
-                      [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud"
+                      [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud" [tableId]="'tabla-solicitud'"
+                      [showPagination]="true" [mode]="'client'" [totalItems]="cuerpoTablaSolicitud.length" [itemsPerPage]="5"
                       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (filaClic)="onFilaClic($event)"></app-tabla-dinamica>
                   </div>
                 </div>

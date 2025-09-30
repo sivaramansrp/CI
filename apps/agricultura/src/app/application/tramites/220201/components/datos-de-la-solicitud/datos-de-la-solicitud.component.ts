@@ -18,6 +18,7 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
@@ -254,10 +255,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @type {ConfiguracionColumna<SolicitudData>[]}
    */
   configuracionColumnasSolicitud: ConfiguracionColumna<SolicitudData>[] = [
-    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fecha_creacion, orden: 1 },
     { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
     { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
-    { encabezado: 'Proovedor', clave: (fila) => fila.proovedor, orden: 4 },
+    { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 4 },
   ];
 
   /**
@@ -266,43 +267,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Este arreglo contiene objetos que representan las filas de la tabla.
    * @type {SolicitudData[]}
    */
-  cuerpoTablaSolicitud: SolicitudData[] = [
-    {
-      id:1,
-      fechaCreacion: '2025-06-17 10:30:00',
-      mercancia: 'Laptop HP',
-      cantidad: 5,
-      proovedor: 'Tech Solutions Inc.'
-    },
-    {
-      id:2,
-      fechaCreacion: '2025-06-16 14:15:30',
-      mercancia: 'Monitor Dell 27"',
-      cantidad: 10,
-      proovedor: 'Global Electronics'
-    },
-    {
-      id:3,
-      fechaCreacion: '2025-06-15 09:00:00',
-      mercancia: 'Teclado Mecánico RGB',
-      cantidad: 8,
-      proovedor: 'Peripherals World'
-    },
-    {
-      id:4,
-      fechaCreacion: '2025-06-14 17:45:10',
-      mercancia: 'Mouse Inalámbrico Logitech',
-      cantidad: 12,
-      proovedor: 'Tech Accessories Co.'
-    },
-    {
-      id:5,
-      fechaCreacion: '2025-06-13 11:20:05',
-      mercancia: 'Impresora Epson EcoTank',
-      cantidad: 3,
-      proovedor: 'Print Masters'
-    }
-  ];
+  cuerpoTablaSolicitud: SolicitudData[] = [];
+
   /**
    * Mensaje de error para mostrar en caso de que no se encuentre información.
    * @property {string} messageDeError
@@ -327,7 +293,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     public fitosanitarioStore: ZoosanitarioStore,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    private catalogoService: CatalogosService
+    private catalogoService: CatalogosService,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
     this.obtenerListasDesplegables();
   }
@@ -414,7 +381,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       regimen: ['', Validators.required],
       datosDeMercancia:['']
     });
-     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
+    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
         this.datosDelaSolicitud.patchValue({
@@ -433,7 +400,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         this.radioBotonSeleccionado();
       }
     });
-   
   }
 
   /**
@@ -454,6 +420,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.obtenerEstablecimientoList();
     this.obtenerVeterinarioList();
     this.obtenerRegimenList();
+    this.obtenerDatosTablaSolicitud();
   }
 
   /**
@@ -533,6 +500,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
   }
 
+  obtenerDatosTablaSolicitud(): void {
+    this.registroSolicitudService.obtieneDatosDeLaSolicitud(220201,'AAL0409235E6').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.cuerpoTablaSolicitud = data.datos ?? [];
+    });
+  }
+  
   /**
    * Actualiza los datos almacenados en el store.
    * @method setValoresStore

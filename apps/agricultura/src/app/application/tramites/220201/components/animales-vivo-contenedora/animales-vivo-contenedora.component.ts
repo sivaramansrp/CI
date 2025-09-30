@@ -257,6 +257,10 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       this.catalogosDatos.tipoRequisitoList = data.datos ?? [];
     });
 
+    this.catalogoService.obtieneCatalogoNico(220201).subscribe((data) => {
+      this.catalogosDatos.nicoList = data.datos ?? [];
+    });
+
     /**
      * @suscripcion_estado
      * @descripcion
