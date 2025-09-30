@@ -27,7 +27,8 @@
           </label>
           <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="25"
             (input)="onNombreInput($event)"
-            (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')" />
+            (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')"
+            [ngClass]="isValid(formCertificado, 'nombres') ? 'required' : ''" />
           @if(formCertificado.controls['nombres'].invalid && (formCertificado.controls['nombres'].touched ||
           formCertificado.controls['nombres'].dirty)) {
           <div class="d-grid">
@@ -46,7 +47,8 @@
             <label class="form-label" for="primerApellido">Primer apellido<span
                 *ngIf="!requerida">*</span>:</label>
             <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="15"
-              (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')"
+              [ngClass]="isValid(formCertificado, 'primerApellido') ? 'required' : ''" />
           </div>
           @if(formCertificado.controls['primerApellido'].invalid && (formCertificado.controls['primerApellido'].touched
           || formCertificado.controls['primerApellido'].dirty)) {
@@ -84,7 +86,8 @@
             <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
             <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
               maxlength="30"
-              (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'numeroDeRegistroFiscal') ? 'required' : ''" />
           </div>
           @if(formCertificado.controls['numeroDeRegistroFiscal'].invalid &&
           (formCertificado.controls['numeroDeRegistroFiscal'].touched ||
@@ -107,7 +110,8 @@
                 *ngIf="!requerida">*</span>:</label>
             <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
               (input)="onRazonSocialInput($event)"
-              (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')"
+              [ngClass]="isValid(formCertificado, 'razonSocial') ? 'required' : ''" />
           </div>
           @if(formCertificado.controls['razonSocial'].invalid && (formCertificado.controls['razonSocial'].touched ||
           formCertificado.controls['razonSocial'].dirty)) {
@@ -130,7 +134,8 @@
              <div class="form-group">
               <label class="form-label" for="calle1">Calle*:</label>
               <input type="text" id="calle1" class="form-control" formControlName="calle1"
-                (change)="setValoresStore('formCertificado','calle1','setFormCertificadoGenric')" />
+                (change)="setValoresStore('formCertificado','calle1','setFormCertificadoGenric')" 
+                [ngClass]="isValid(formCertificado, 'calle1') ? 'required' : ''" />
                 @if(formCertificado.controls['calle1'].invalid && (formCertificado.controls['calle1'].touched ||
           formCertificado.controls['calle1'].dirty)) {
           <div class="d-grid">
@@ -145,7 +150,8 @@
             <div class="form-group">
              <label class="form-label" for="numeroLetra1">Número y/o letra*:</label>
             <input type="text" id="numeroLetra1" class="form-control" formControlName="numeroLetra1"
-              (change)="setValoresStore('formCertificado','numeroLetra1','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','numeroLetra1','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'numeroLetra1') ? 'required' : ''"/>
                 @if(formCertificado.controls['numeroLetra1'].invalid && (formCertificado.controls['numeroLetra1'].touched ||
           formCertificado.controls['numeroLetra1'].dirty)) {
           <div class="d-grid">
@@ -162,7 +168,8 @@
             <div class="form-group">
               <label class="form-label" for="ciudad1">Ciudad (población, estado o provincia)*:</label>
               <input type="text" id="ciudad1" class="form-control" formControlName="ciudad1"
-                (change)="setValoresStore('formCertificado','ciudad1','setFormCertificadoGenric')" />
+                (change)="setValoresStore('formCertificado','ciudad1','setFormCertificadoGenric')"
+                [ngClass]="isValid(formCertificado, 'ciudad1') ? 'required' : ''" />
                 @if(formCertificado.controls['ciudad1'].invalid && (formCertificado.controls['ciudad1'].touched || formCertificado.controls['ciudad1'].dirty)) {
           <div class="d-grid">
             @if(formCertificado.controls['ciudad1'].errors?.['required']) {
@@ -185,7 +192,8 @@
             <div class="form-group">
               <label class="form-label" for="correo1">Correo electrónico*:</label>
               <input type="email" id="correo1" class="form-control" formControlName="correo1"
-                (change)="setValoresStore('formCertificado','correo1','setFormCertificadoGenric')" />
+                (change)="setValoresStore('formCertificado','correo1','setFormCertificadoGenric')"
+                [ngClass]="isValid(formCertificado, 'correo1') ? 'required' : ''"  />
                 @if(formCertificado.controls['correo1'].invalid && (formCertificado.controls['correo1'].touched || formCertificado.controls['correo1'].dirty)) {
           <div class="d-grid">
             @if(formCertificado.controls['correo1'].errors?.['required']) {
@@ -347,7 +355,8 @@
           <div class="form-group">
             <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
-              (change)="setValoresStore('formCertificado','ciudad','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','ciudad','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'ciudad') ? 'required' : ''" />
                  @if (formCertificado.get('ciudad')?.invalid && 
              (formCertificado.get('ciudad')?.touched || formCertificado.get('ciudad')?.dirty)) {
           <span class="mensaje-error">Este campo es obligatorio.</span>
@@ -360,7 +369,8 @@
           <div class="form-group">
             <label class="form-label" for="calle">Calle<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
-              (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')"
+              [ngClass]="isValid(formCertificado, 'calle') ? 'required' : ''" />
                @if (formCertificado.get('calle')?.invalid && 
              (formCertificado.get('calle')?.touched || formCertificado.get('calle')?.dirty)) {
           <span class="mensaje-error">Este campo es obligatorio.</span>
@@ -370,7 +380,8 @@
         <div class="col-md-4">
           <label class="form-label" for="numeroLetra">Número y/o letra4<span *ngIf="!requerida">*</span>:</label>
           <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
-            (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+            (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')"
+             [ngClass]="isValid(formCertificado, 'numeroLetra') ? 'required' : ''"  />
              @if (formCertificado.get('numeroLetra')?.invalid && 
            (formCertificado.get('numeroLetra')?.touched || formCertificado.get('numeroLetra')?.dirty)) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
@@ -382,7 +393,8 @@
           <div class="form-group">
             <label class="form-label" for="lada">Lada<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="lada" class="form-control" formControlName="lada"
-              (change)="setValoresStore('formCertificado','lada','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','lada','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'lada') ? 'required' : ''"/>
                 @if (formCertificado.get('lada')?.invalid && 
              (formCertificado.get('lada')?.touched || formCertificado.get('lada')?.dirty)) {
           <span class="mensaje-error">Este campo es obligatorio.</span>
@@ -393,7 +405,8 @@
           <div class="form-group">
             <label class="form-label" for="telefono">Teléfono<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono"
-              (change)="setValoresStore('formCertificado','telefono','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','telefono','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'telefono') ? 'required' : ''"/>
                @if (formCertificado.get('telefono')?.invalid && 
              (formCertificado.get('telefono')?.touched || formCertificado.get('telefono')?.dirty)) {
           <span class="mensaje-error">Este campo es obligatorio.</span>
@@ -412,7 +425,8 @@
             <label class="form-label" for="correo">Correo electrónico<span *ngIf="!requerida">*</span>:</label>
             <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
             <input type="email" id="correo" class="form-control" formControlName="correo"
-              (change)="setValoresStore('formCertificado','correo','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','correo','setFormCertificadoGenric')"
+              [ngClass]="isValid(formCertificado, 'correo') ? 'required' : ''" />
                @if (formCertificado.get('correo')?.invalid && 
              (formCertificado.get('correo')?.touched || formCertificado.get('correo')?.dirty)) {
           <span class="mensaje-error">Este campo es obligatorio.</span>
@@ -449,7 +463,8 @@
           <div class="form-group">
             <label class="form-label" for="calle">Calle<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle" maxlength="90"
-              (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')"
+              [ngClass]="isValid(formCertificado, 'calle') ? 'required' : ''" />
           </div>
           @if(formCertificado.controls['calle'].invalid && (formCertificado.controls['calle'].touched ||
           formCertificado.controls['calle'].dirty)) {
@@ -469,7 +484,8 @@
             <label class="form-label" for="numeroLetras">Número y/o letra<span
                 *ngIf="idProcedimiento !== 110205">*</span>:</label>
             <input type="text" id="numeroLetras" class="form-control" formControlName="numeroLetras" maxlength="30"
-              (change)="setValoresStore('formCertificado','numeroLetras','setFormCertificadoGenric')" />
+              (change)="setValoresStore('formCertificado','numeroLetras','setFormCertificadoGenric')"
+              [ngClass]="isValid(formCertificado, 'numeroLetras') ? 'required' : ''"  />
           </div>
           @if(formCertificado.controls['numeroLetras'].invalid && (formCertificado.controls['numeroLetras'].touched ||
           formCertificado.controls['numeroLetras'].dirty)) {

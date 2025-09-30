@@ -176,17 +176,19 @@
                             <div class="col-md-8">
                                 <label>Número de registro fiscal*:</label>
                                 <input type="text" required="false" class="form-control"
+                                    [ngClass]="isValid(formularioMercancia, 'numeroDeRegistroFiscal') ? 'required' : ''"
                                     formControlName="numeroDeRegistroFiscal"
-                                    (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') " />
+                                    (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') "
+                                     />
                                       @if (formularioMercancia.controls['numeroDeRegistroFiscal'].invalid &&
-                                        (formularioMercancia.controls['numeroDeRegistroFiscal'].touched ||
-                                            formularioMercancia.controls['numeroDeRegistroFiscal'].dirty)) {
-                                        <div class="text-danger mt-1">
-                                        @if (formularioMercancia.controls['numeroDeRegistroFiscal'].errors?.['required']) {
-                                            <small>Este campo es obligatorio.</small>
-                                        }
-                                        </div>
+                                    (formularioMercancia.controls['numeroDeRegistroFiscal'].touched ||
+                                        formularioMercancia.controls['numeroDeRegistroFiscal'].dirty)) {
+                                    <div class="text-danger mt-1">
+                                    @if (formularioMercancia.controls['numeroDeRegistroFiscal'].errors?.['required']) {
+                                        <small>Este campo es obligatorio.</small>
                                     }
+                                    </div>
+                                }
                             </div>
                         </div>
                     </ng-container>
