@@ -1,16 +1,17 @@
-import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
-import { Component, EventEmitter } from '@angular/core';
-import { OnInit, ViewChild } from '@angular/core';
+import { 
+  AVISO, 
+  DatosPasos, 
+  ListaPasosWizard, 
+  PASOS,  
+} from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80211Store, Tramites80211State } from '../../estados/tramites80211.store';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
 import { PAYLOAD } from '../../enums/registro-expansion.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { registroSolicitudImmexService } from '../../services/registro-expansion.service';
-
 /**
  * Interfaz que representa el botón de acción.
  */
@@ -130,7 +131,27 @@ export class RegistroExpansionComponent implements OnInit {
  */
   activarBotonCargaArchivos: boolean = false;
 
+  /**
+   * Almacena el valor inicial para el payload utilizado en el componente registro-expansion.
+   * El valor se asigna desde la constante `PAYLOAD`.
+   *
+   * @remarks
+   * Este payload se utiliza para almacenar o transferir datos relacionados con el proceso de registro de expansión.
+   *
+   * @see PAYLOAD
+   */
   payload = PAYLOAD;
+  /**
+   * Indica si se están cargando datos o recursos.
+   * Se establece en `true` cuando la carga está en progreso, y en `false` cuando la carga ha finalizado.
+   */
+  public isLoading: boolean = false;
+  /**
+   * Constructor del componente.
+   * @param tramite80211Store - Servicio para manejar el estado del trámite 80211.
+   * @param tramite80211Query - Servicio para consultar el estado del trámite 80211.
+   * @param registroService - Servicio para manejar las solicitudes de registro IMMEX.
+   */
   constructor(
     private tramite80211Store: Tramite80211Store,
     private tramite80211Query: Tramite80211Query,
@@ -139,6 +160,12 @@ export class RegistroExpansionComponent implements OnInit {
 
 
 
+  /**
+   * Método del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas.
+   * Se suscribe al observable `selectTramite80211$` del servicio `tramite80211Query`.
+   * Actualiza la propiedad `solicitudState` cada vez que el observable emite un nuevo valor.
+   * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite, evitando fugas de memoria.
+   */
   ngOnInit(): void {
     this.tramite80211Query.selectTramite80211$
       .pipe(
@@ -155,9 +182,6 @@ export class RegistroExpansionComponent implements OnInit {
    */
   getValorIndice(evento: AccionBoton): void {
     this.esFormaValido = false;
-
-
-
     // Validación específica para el paso 1
     if (this.indice === 1 && evento.accion === 'cont') {
       const IS_VALID = this.validarTodosFormulariosPasoUno();
@@ -207,6 +231,14 @@ export class RegistroExpansionComponent implements OnInit {
   }
 
 
+  /**
+   * Transforma un arreglo de objetos de entrada en un arreglo de objetos estandarizados de "Plantas Terciarizadoras".
+   * Cada propiedad en el objeto retornado se mapea desde la propiedad correspondiente del objeto de entrada,
+   * proporcionando valores por defecto si la propiedad no existe o es indefinida.
+   *
+   * @param array - El arreglo de objetos de entrada a transformar. Por defecto es un arreglo vacío.
+   * @returns Un arreglo de objetos que representan "Plantas Terciarizadoras" con propiedades estandarizadas.
+   */
   buildPlantasTerciarizadoras(array: any[] = []): any[] {
     // eslint-disable-next-line complexity
     return array.map(flat => ({
@@ -248,6 +280,11 @@ export class RegistroExpansionComponent implements OnInit {
         this.guardar(data);
       });
   }
+  /**
+   * Guarda los datos obtenidos del store utilizando el servicio `registroService`.
+   * Actualiza el payload con los datos necesarios antes de enviarlos al servicio.
+   * @param item - Los datos obtenidos del store.
+   */
   guardar(item: any): void {
     this.payload = {
       ...this.payload,
@@ -301,6 +338,10 @@ export class RegistroExpansionComponent implements OnInit {
     this.cargarArchivosEvento.emit();
   }
 
+  /**
+   * Emite un evento para regresar a la sección de carga de documentos.
+   * {void} No retorna ningún valor.
+   * */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }

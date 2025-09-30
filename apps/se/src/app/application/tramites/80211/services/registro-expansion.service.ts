@@ -4,8 +4,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite80211Store, Tramites80211State } from '../estados/tramites80211.store';
 import { HttpClient } from '@angular/common/http';
-import { Tramite80211Query } from '../estados/tramites80211.query';
 import { PROC_80211 } from '../servers/api-route';
+import { Tramite80211Query } from '../estados/tramites80211.query';
 
 /**
  * Servicio para manejar las renovaciones de muestras de mercancías.
@@ -116,7 +116,6 @@ export class registroSolicitudImmexService implements OnDestroy {
    */
   guardarDatosPost(body: any) : Observable<any> {
     return this.httpService.post<any>(PROC_80211.GUARDAR, { body: body });
-    // return this.httpService.post<any>('localhost:8080/api/sat-t80211/solicitud/guardar', { body: body });
   }
   /**
      * Actualiza el estado del formulario en el store global.
@@ -138,6 +137,12 @@ export class registroSolicitudImmexService implements OnDestroy {
   }
 
 
+  /**
+   * Realiza una solicitud POST para buscar datos de plantas terciarizadas.
+   *
+   * @param body - Objeto que contiene los parámetros de búsqueda.
+   * @returns {Observable<any>} Observable con la respuesta de la solicitud POST.
+   */
   getBuscarPlantasDatos(body:any) : Observable<any> {
     return this.httpService.post<any>(PROC_80211.BUSCAR_PLANTAS,{ body: body })
   }

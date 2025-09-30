@@ -33,10 +33,21 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+  /**
+   * Referencia a la instancia del componente EmpresasTerciarizadasComponent dentro de la plantilla.
+   * 
+   * Esta propiedad es poblada por el decorador @ViewChild de Angular y proporciona acceso
+   * a los métodos y propiedades públicos del componente hijo.
+   */
   @ViewChild('empresasTerciarizadas') empresasTerciarizadas!: EmpresasTerciarizadasComponent;
   /** Referencia al componente hijo SolicitanteComponent para acceso a sus métodos y propiedades */
 @ViewChild(SolicitanteComponent, { static: false }) solicitante!: SolicitanteComponent;
 
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * @param registroSolicitudService Servicio inyectado para manejar las solicitudes de registro.
+   * @param consultaQuery Query inyectada para acceder al estado de la consulta.
+   */
   constructor(
     @Inject(registroSolicitudImmexService)
     public registroSolicitudService: registroSolicitudImmexService,

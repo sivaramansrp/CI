@@ -33,6 +33,16 @@ export const CONFIGURACION_TABLA_PLANTAS: ConfiguracionColumna<Plantas>[] = [
 {encabezado:'Razón social', clave: (item: Plantas):string=>item.razon, orden:11 }
 ]
 
+/**
+ * PAYLOAD
+ * @description Objeto JSON que representa un ejemplo de payload para una solicitud de trámite IMMEX.
+ *  Este objeto contiene información detallada sobre la solicitud, incluyendo datos del solicitante,
+ * la solicitud específica, notarios involucrados, plantas asociadas, capacidad de producción,
+ * plantas submanufactureras y plantas controladoras.
+ * @type {Object}
+ * @property {string} tipoDeSolicitud - Tipo de solicitud (e.g., "guardar").
+ *  @property {number} idSolicitud - Identificador único de la solicitud.
+ */
 export const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 0,

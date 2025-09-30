@@ -293,6 +293,11 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
       });
   }
 
+  /**
+   * Valida los formularios y las listas de plantas.
+   *
+   * @returns {boolean} Retorna `true` si ambos formularios son válidos y las listas de plantas no están vacías; de lo contrario, retorna `false`.
+   */ 
   validarFormularios(): boolean {
     let isValid = true;
 
