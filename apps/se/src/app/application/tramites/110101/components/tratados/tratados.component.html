@@ -59,27 +59,14 @@
 </div>
 }
 
-@if (isUruguay) {
-  <ng-titulo titulo="Otras Instancias para TLC-Uruguay" />
-  <ng-alert [CONTENIDO]="mensajeUruguay.ADJUNTAR"></ng-alert>
-   <form [formGroup]="formularioTratados">
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <lib-input-check [label]="'Acumulación'" [required]="false" [id]="'acumulación'"></lib-input-check>
-      </div>
-      <div class="col-md-4">
-        <lib-input-check [label]="'Bienes y Materiales Fungibles'" [required]="false" [id]="'bienes'"></lib-input-check>
-      </div>
-      <div class="col-md-4">
-        <lib-input-check [label]="'Materiales Intermedios'" [required]="false" [id]="'intermedio'"></lib-input-check>
-      </div>
-    </div>
-    <div class="col-md-8">
-      <app-catalogo-select [catalogo]="criteriosInstanciasCatalogo" formControlName="criterioInstancias" [label]="'Criterio Otras instancias'" [required]="false"
-        name="Criterio Otras instancias" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'criterioInstancias', 'setCriterioInstancia');getLabelFromCatalogData(criteriosInstanciasCatalogo,'criterioInstancias')"></app-catalogo-select>
-      </div>
-   </form>
+@for (pais of paisesInstancias; track pais) {
+  <app-otras-instancias
+    [pais]="pais"
+    [titulo]="instanciasConfig[pais].titulo"
+    [mensajeAlerta]="instanciasConfig[pais].alerta"
+    [catalogo]="instanciasConfig[pais].cargarCatalogo" 
+    [modificacionTxt]="instanciasConfig[pais].modificacionText">
+  </app-otras-instancias>
 }
 
 @if (nuevaNotificacion) {
