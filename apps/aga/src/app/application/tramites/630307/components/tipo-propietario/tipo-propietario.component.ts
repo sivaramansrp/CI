@@ -12,8 +12,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
-
+import {SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
@@ -130,16 +130,30 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarEstadoFormulario();
+    this.inicializarDatosIniciales();
+  
+    this.tramite630307Query.selectTramite630307State$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoSeleccionado = data;
+        if (this.tipoPropietarioFormulario) {
+          this.tipoPropietarioFormulario.patchValue({
+            propietario: data['propietario'],
+            tipoDePropietario: data['tipoDePropietario'],
+          });
+          this.cambiarPropietario();
+          this.cambiarTipoPropietario();
+        }
+      });
   }
+  
 
   inicializarDatosIniciales(): void {
     this.inicializarFormulario();
     this.getPropietario();
     this.getTipoDePropietario();
     this.getPais();
-    this.cambiarPropietario();
-    this.cambiarTipoPropietario();
+   
   }
 
   /**

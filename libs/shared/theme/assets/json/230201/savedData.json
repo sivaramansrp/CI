@@ -1,5 +1,6 @@
 {
-  "paisDeProcedencia": [{ "id": 1, "descripcion": "MÉXICO" }],
+
+  "paisDeProcedencia": "1",
   "aduana": "2",
   "fechasSeleccionadas": [
     "AGUASCALIENTES",
@@ -9,7 +10,7 @@
   ],
   "pais": "1",
   "entidades": [{ "id": 1, "descripcion": "CDMX" }],
-  "descripcionProducto": [{ "id": 1, "descripcion": "Maguey" }],
+  "descripcionProducto": "1",
   "datosSolicitud": [
     {
       "id": 1,

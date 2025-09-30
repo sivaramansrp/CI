@@ -8,11 +8,12 @@
  * @author Equipo Team4
  * @since 2025
  */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from '../../component/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ViewChild } from '@angular/core';
 
 import { DomicilioDelEstablecimientoComponent } from '../../component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
+import { ModificacionDelPermisoSanitarioService } from '../../services/modificacion-del-permiso-sanitario.service';
 import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
 import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component';
 
@@ -22,6 +23,9 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solocitud260911Service } from '../../services/service260911.service';
+
+
+
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
@@ -43,139 +47,96 @@ import { Solocitud260911Service } from '../../services/service260911.service';
  * la gestión de pestañas y la obtención de datos desde el servicio y el store.
  */
 export class PasoUnoComponent implements OnInit, OnDestroy {
-  /**
-   * Evento que se emite cuando se cambia de pestaña.
+  /** 
+   * Evento que se emite cuando cambia la pestaña activa.
+   * Comunica al componente padre el índice de la nueva pestaña seleccionada.
    */
   @Output() tabChanged = new EventEmitter<number>();
-  /**
-   * Referencia al componente de datos de la solicitud.
-   */
-  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
-  /**
-   * Referencia al componente de domicilio del establecimiento.
-   */
-  @ViewChild(DomicilioDelEstablecimientoComponent) domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimientoComponent;
-  /**
-   * Referencia al componente de terceros relacionados.
-   */
-  @ViewChild(TercerosRelacionadosVistaComponent) tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
-  /**
-   * Referencia al componente de pago de derechos.
-   */
-  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
-  /**
-   * Referencia al componente de trámites asociado.
-   */
-  @ViewChild(TramitesAsociadoComponent) tramitesAsociadoComponent!: TramitesAsociadoComponent;
-  /**
-   * Tipo de trámite seleccionado.
-   */
-  /**
-   * Tipo de trámite seleccionado por el usuario.
-   */
+
+  /** Referencia al componente de datos de la solicitud del trámite 260911 */
+  @ViewChild(DatosDeLaSolicitudComponent)
+  datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /** Referencia al componente de domicilio del establecimiento para el trámite 260911 */
+  @ViewChild(DomicilioDelEstablecimientoComponent)
+  domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimientoComponent;
+
+  /** Referencia al componente de vista de terceros relacionados */
+  @ViewChild(TercerosRelacionadosVistaComponent)
+  tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+
+  /** Referencia al componente de pago de derechos */
+  @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
+  /** Referencia al componente de trámites asociados */
+  @ViewChild(TramitesAsociadoComponent)
+  tramitesAsociadoComponent!: TramitesAsociadoComponent;
+
+  /** Tipo de trámite seleccionado por el usuario */
   selectedTipoTramite: string = '';
-
-  /**
-   * Maneja el cambio en el tipo de trámite seleccionado.
-   * @param tipo El nuevo tipo de trámite seleccionado.
-   */
-  /**
-   * Actualiza el tipo de trámite seleccionado.
-   * @param tipo El nuevo tipo de trámite seleccionado.
-   */
-  onTipoTramiteChange(tipo: string): void {
-    this.selectedTipoTramite = tipo;
-  }
-
-  /**
-   * Estado de selección del botón de radio global.
-   */
-  /**
-   * Indica si el botón de radio global está seleccionado.
-   */
+  
+  /** Bandera que indica si hay un radio button seleccionado globalmente */
   isRadioButtonSelectedGlobal: boolean = false;
 
+  /** Índice privado de la pestaña actual */
+  private _indice: number = 1;
+
   /**
-   * Maneja el cambio en el estado de selección del botón de radio global.
-   * @param selected El nuevo estado de selección del botón de radio.
+   * Setter para el índice de la subpestaña activa.
+   * Emite un evento cuando el valor cambia.
+   * @param value - Nuevo índice de la subpestaña
    */
-  /**
-   * Actualiza el estado de selección del botón de radio global.
-   * @param selected El nuevo estado de selección.
-   */
-  onRadioButtonSelectedChange(selected: boolean): void {
-    this.isRadioButtonSelectedGlobal = selected;
+  @Input()
+  set subTabIndex(value: number) {
+    if (value && value !== this._indice) {
+      this._indice = value;
+      this.tabChanged.emit(this._indice);
+    }
   }
 
   /**
-   * Indica si se han recibido correctamente los datos desde el servidor.
+   * Getter para obtener el índice actual de la subpestaña.
+   * @returns El índice de la pestaña activa
    */
-  /**
-   * Indica si se han recibido correctamente los datos desde el servidor.
-   */
-  public esDatosRespuesta: boolean = false;
+  get subTabIndex(): number {
+    return this._indice;
+  }
 
-  /**
-   * Subject utilizado para cancelar suscripciones y evitar fugas de memoria al destruir el componente.
-   * Se emite un valor y se completa cuando el componente se destruye.
-   * @private
-   */
-  /**
-   * Subject utilizado para cancelar suscripciones y evitar fugas de memoria al destruir el componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Estado actual de la consulta obtenido desde el store.
-   */
-  /**
-   * Estado actual de la consulta obtenido desde el store.
-   */
-  public consultaState!: ConsultaioState;
-
-  /**
-   * El índice de la pestaña actualmente seleccionada.
-   */
-  /**
-   * Índice de la pestaña actualmente seleccionada.
-   */
-  indice: number = 1;
+  /** Bandera que indica si los datos de respuesta están disponibles */
+  esDatosRespuesta: boolean = false;
+  
+  /** Subject para manejar la destrucción de suscripciones */
+  destroyNotifier$: Subject<void> = new Subject<void>();
+  
+  /** Estado actual de la consulta */
+  consultaioState!: ConsultaioState;
 
   /**
    * Constructor del componente.
-   * @param consultaQuery Consulta de estado de solo lectura.
-   * @param solocitud260911Service Servicio para obtener y actualizar datos del formulario.
-   */
-  /**
-   * Constructor del componente PasoUnoComponent.
-   * @param consultaQuery Consulta de estado de solo lectura.
-   * @param solocitud260911Service Servicio para obtener y actualizar datos del formulario.
+   * @param consultaQuery - Servicio de consulta para obtener el estado
+   * @param modificacionDelPermisoSanitarioService - Servicio para gestionar la modificación del permiso sanitario
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private solocitud260911Service: Solocitud260911Service,
+    private modificacionDelPermisoSanitarioService: ModificacionDelPermisoSanitarioService
   ) {}
 
   /**
-   * Hook del ciclo de vida de Angular.
-   * Se ejecuta al inicializar el componente y se suscribe al estado del store.
-   * Si el estado indica actualización, solicita los datos del formulario.
-   */
-  /**
-   * Inicializa el componente y suscribe al estado del store.
-   * Si el estado indica actualización, solicita los datos del formulario.
+   * Hook de inicialización del componente.
+   * Configura la suscripción al estado de consulta y carga los datos iniciales.
    */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.consultaState = seccionState;
+          this.consultaioState = seccionState;
         })
       )
       .subscribe();
 
-    if (this.consultaState.update) {
+    if (this.consultaioState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -183,44 +144,103 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Solicita los datos del formulario al servicio y actualiza el store si la respuesta es válida.
-   * Marca la bandera de datos recibidos si la respuesta es exitosa.
+   * Maneja el cambio de tipo de trámite seleccionado.
+   * @param tipo - Nuevo tipo de trámite seleccionado
    */
+  onTipoTramiteChange(tipo: string): void {
+    this.selectedTipoTramite = tipo;
+  }
+
   /**
-   * Solicita los datos del formulario al servicio y actualiza el store si la respuesta es válida.
-   * Marca la bandera de datos recibidos si la respuesta es exitosa.
+   * Maneja el cambio en la selección global de radio buttons.
+   * @param selected - Estado de selección del radio button
+   */
+  onRadioButtonSelectedChange(selected: boolean): void {
+    this.isRadioButtonSelectedGlobal = selected;
+  }
+
+  /**
+   * Guarda los datos del formulario utilizando el servicio de modificación.
+   * Se suscribe al servicio para obtener los datos y actualizar el estado del formulario.
    */
   guardarDatosFormulario(): void {
-    this.solocitud260911Service
-      .getRegistroTomaMuestrasMercanciasData()
+    this.modificacionDelPermisoSanitarioService
+      .getData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solocitud260911Service.actualizarEstadoFormulario(resp);
+          this.modificacionDelPermisoSanitarioService.actualizarEstadoFormulario(resp);
         }
       });
   }
 
   /**
-   * Selecciona una pestaña estableciendo su índice.
-   * @param i El índice de la pestaña a seleccionar.
-   */
-  /**
-   * Selecciona una pestaña estableciendo su índice y emite el evento correspondiente.
-   * @param i Índice de la pestaña a seleccionar.
+   * Selecciona una pestaña específica y emite el evento de cambio.
+   * @param i - Índice de la pestaña a seleccionar
    */
   seleccionaTab(i: number): void {
-  this.indice = i;
-  this.tabChanged.emit(i);
+    this._indice = i;
+    this.tabChanged.emit(i);
   }
 
   /**
-   * Hook del ciclo de vida Angular que se ejecuta al destruir el componente.
-   * Libera recursos cancelando todas las suscripciones activas.
+   * Valida los campos requeridos de todos los subcomponentes en paso-uno.
+   * Retorna false si algún campo requerido está faltando.
+   * @returns true si todos los campos requeridos son válidos, false en caso contrario
    */
+  public validateRequiredFields(): boolean {
+    let isValid = true;
+
+    if (this.datosDeLaSolicitudComponent?.validateRequiredFields) {
+      isValid = this.datosDeLaSolicitudComponent.validateRequiredFields() && isValid;
+    }
+
+    if (this.domicilioDelEstablecimientoComponent?.validateRequiredFields) {
+      isValid = this.domicilioDelEstablecimientoComponent.validateRequiredFields() && isValid;
+    }
+
+    if (this.tercerosRelacionadosVistaComponent?.validateRequiredFields) {
+      isValid = this.tercerosRelacionadosVistaComponent.validateRequiredFields() && isValid;
+    }
+
+    if (this.tramitesAsociadoComponent?.validateRequiredFields) {
+      isValid = this.tramitesAsociadoComponent.validateRequiredFields() && isValid;
+    }
+
+    return isValid;
+  }
+
   /**
-   * Libera recursos cancelando todas las suscripciones activas al destruir el componente.
+   * Marca todos los campos como tocados en todos los subcomponentes de paso-uno.
+   * Esto ayuda a mostrar errores de validación en la interfaz de usuario.
+   */
+  public markAllFieldsTouched(): void {
+    if (this.datosDeLaSolicitudComponent?.markAllFieldsTouched) {
+      this.datosDeLaSolicitudComponent.markAllFieldsTouched();
+    }
+    if (this.domicilioDelEstablecimientoComponent?.markAllFieldsTouched) {
+      this.domicilioDelEstablecimientoComponent.markAllFieldsTouched();
+    }
+    if (this.tercerosRelacionadosVistaComponent?.markAllFieldsTouched) {
+      this.tercerosRelacionadosVistaComponent.markAllFieldsTouched();
+    }
+    if (this.tramitesAsociadoComponent?.markAllFieldsTouched) {
+      this.tramitesAsociadoComponent.markAllFieldsTouched();
+    }
+  }
+
+  /**
+   * Devuelve la instancia actual del componente `PagoDeDerechosComponent`.
+   * 
+   * @returns {PagoDeDerechosComponent | undefined} La instancia del componente si está disponible, de lo contrario `undefined`.
+   */
+  public getPagoDeDerechosComponent(): PagoDeDerechosComponent | undefined {
+  return this.pagoDeDerechosComponent;
+}
+  /**
+   * Hook de destrucción del componente.
+   * Completa el subject para cancelar todas las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

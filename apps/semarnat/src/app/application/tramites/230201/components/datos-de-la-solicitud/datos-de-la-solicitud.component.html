@@ -24,9 +24,9 @@
               [label]="'País de procedencia'"
               formControlName="paisDeProcedencia"
               [required]="true"
-              name="paisDeProcedencia"
-              [isDisabled]="true"
+              [isDisabled]="soloLectura"
               (change)="paisDeProcedenciaSeleccion()"
+              name="paisDeProcedencia"
             >
             </app-catalogo-select>
           </div>
@@ -37,6 +37,7 @@
           [label]="entidadesLabel"
           [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
           [isDisabled]="soloLectura"
+          [botones]="entidadFederativaOrigenBotons"
           (fechasSeleccionadasChange)="onEntidadesSeleccionadasChange($event)"
         ></crosslist>
 
@@ -79,6 +80,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             [disabled]="soloLectura"
+            (click)="agregarMercancias()"
           >
             Agregar
           </button>
@@ -99,29 +101,43 @@
         </div>
         <div class="row">
           <div class="col-md-8">
-            <label>Lungar de entrada en el pais importador:</label>
-            <span class="require">*</span>
+            <label>Lugar de entrada en el país importador*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="lungarDeEntrada"
               id="lungarDeEntrada"
+              maxlength="250"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
             />
+              @if (solicitudForm.get('exportacionForm.lungarDeEntrada')?.invalid && solicitudForm.get('exportacionForm.lungarDeEntrada')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.lungarDeEntrada')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
-            <label>Destino en el país importador </label>
-            <span class="require">*:</span>
+            <label>Destino en el país importador*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="destinoDeImportador"
               id="destinoDeImportador"
+              maxlength="2000"
               [required]="true"
               
             />
+              @if (solicitudForm.get('exportacionForm.destinoDeImportador')?.invalid && solicitudForm.get('exportacionForm.destinoDeImportador')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.destinoDeImportador')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
         </div>
         <ng-titulo titulo="Datos del transporte"></ng-titulo>
@@ -139,33 +155,47 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-8">
-            <label>Número y descripción de los bultos y/o contenedores</label>
-            <span class="require">*</span>
+            <label>Número y descripción de los bultos y/o contenedores*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="numeroYDescripcion"
               id="numeroYDescripcion"
+              maxlength="100"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
             />
+              @if (solicitudForm.get('exportacionForm.numeroYDescripcion')?.invalid && solicitudForm.get('exportacionForm.numeroYDescripcion')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.numeroYDescripcion')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
         </div>
         <ng-titulo titulo="Datos de la ubicación de la Mercancía"></ng-titulo>
         <div class="row">
           <div class="col-md-4">
-            <label>Código Postal o equivalente</label>
-            <span class="require">*</span>
+            <label>Código Postal o equivalente*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="codigoPostal"
               id="codigoPostal"
               [required]="true"
+              maxlength="12"
               
               (change)="setValoresStore(exportacionForm, 'codigoPostal', 'setCodigoPostal')"
             />
+              @if (solicitudForm.get('exportacionForm.codigoPostal')?.invalid && solicitudForm.get('exportacionForm.codigoPostal')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.codigoPostal')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
             <app-catalogo-select
@@ -180,54 +210,75 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <label>Calle</label>
-            <span class="require">*</span>
+            <label>Calle*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="calle"
               id="calle"
+              maxlength="100"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'calle', 'setCalle')"
             />
+              @if (solicitudForm.get('exportacionForm.calle')?.invalid && solicitudForm.get('exportacionForm.calle')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.calle')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
         </div>
         <div class="row">
           <div class="col-md-4">
-            <label>Colonia</label>
-            <span class="require">*</span>
+            <label>Colonia*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="colonia"
               id="colonia"
+              maxlength="120"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'colonia', 'setColonia')"
             />
+              @if (solicitudForm.get('exportacionForm.colonia')?.invalid && solicitudForm.get('exportacionForm.colonia')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.colonia')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
-            <label>Número exterior</label>
-            <span class="require">*</span>
+            <label>Número exterior*:</label>
             <input
               type="text"
               class="form-control"
               formControlName="numeroExterior"
               id="numeroExterior"
               [required]="true"
+              maxlength="55"
               
               (change)="setValoresStore(exportacionForm, 'numeroExterior', 'setNumeroExterior')"
             />
+              @if (solicitudForm.get('exportacionForm.numeroExterior')?.invalid && solicitudForm.get('exportacionForm.numeroExterior')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.numeroExterior')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
-            <label>Número interior</label>
-            <span class="require">*</span>
+            <label>Número interior:</label>
             <input
               type="text"
               class="form-control"
               formControlName="numeroInterior"
               id="numeroInterior"
+              maxlength="55"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'numeroInterior', 'setNumeroInterior')"
@@ -267,15 +318,12 @@
                 ></app-catalogo-select>
               </div>
               <div class="col-md-8">
-                <label>Descripción de la fracción arancelaria:</label>
-                <span class="require">*</span>
+                <label>Descripción de la fracción arancelaria*:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="descripcionfraccionArancelaria"
                   id="descripcionfraccionArancelaria"
-                  [required]="true"
-                  
                   (change)="
                     setValoresStore(
                       datosMercancia,
@@ -288,17 +336,28 @@
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label for="cantidad">Cantidad:</label>
-                <span class="require">*</span>
+                <label for="cantidad">Cantidad*:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="cantidad"
+                  maxlength="16"
                   id="cantidad"
-                  [required]="true"
-                  
-                  (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
+                  (focus)="onCantidadFocus()"
+                  (blur)="onCantidadBlur()"
                 />
+                @if (agregarMercanciasForm.get('datosMercancia.cantidad')?.invalid && agregarMercanciasForm.get('datosMercancia.cantidad')?.touched) {
+                  <div class="text-danger">
+                    @if (agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['required']) {
+                      <small>Este campo es obligatorio.</small>
+                    }
+                  </div>
+                }
+                @if (mostrarErrorCantidad) {
+                  <div class="text-danger">
+                    <small>No está permitido capturar "," (COMA)</small>
+                  </div>
+                }
               </div>
               <div class="col-md-8">
                 <label for="cantidadComercial">Cantidad(letra)</label>
@@ -387,7 +446,7 @@
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" [disabled]="soloLectura" class="btn btn-default">Limpiar</button>
+              <button type="button" [disabled]="soloLectura" class="btn btn-default" (click)="limpiarAgregarMercanciasForm()">Limpiar</button>
               <button type="button" [disabled]="soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
                 Cancelar
               </button>
@@ -407,30 +466,10 @@
   </div>
 </div>
 
-<div
-  id="modalConfirmacion"
-  aria-labelledby="modalConfirmacionLabel"
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  aria-hidden="true"
-  #modalConfirmacion
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content modalsm">
-      <div class="modal-body">
-        <label>Seleccione la descripcion<br />del producto</label>
-      </div>
-      <div class="modal-footer" style="justify-content: center">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-          #closeModal
-        >
-          Acceptar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+
+@if(moduloEmergente){
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="manejarConfirmacionNotificacion($event)"
+  ></lib-notificaciones>
+}

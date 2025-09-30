@@ -266,6 +266,7 @@
               </div>
               <div *ngIf="esInvalido('marca')" class="text-danger">
                 <span *ngIf="formMercancia.controls['marca'].hasError('required')">Este campo es obligatorio.</span>
+                <span *ngIf="formMercancia.controls['marca'].hasError('hasSpecialCharacters')">Ingresa datos validos.</span>
             </div>
             </div>
             <div class="col-md-4">

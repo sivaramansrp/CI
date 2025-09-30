@@ -27,7 +27,7 @@ export interface Solicitud32101State {
   /**
    * Valor en pesos asociado a la solicitud.
    */
-  valorEnPesos: number;
+  valorEnPesos: string;
 
   /**
    * Descripción general de la solicitud.
@@ -38,6 +38,11 @@ export interface Solicitud32101State {
    * Lista de documentos relacionados con la solicitud.
    */
   listaDeDocumentos: string;
+
+  /**
+   * Comprobante asociado a la solicitud.
+   */
+  comprobante: string;
 
   /**
    * Datos del contenedor representados como un arreglo de objetos de tipo `datosDeLaTabla`.
@@ -68,12 +73,12 @@ export interface Solicitud32101State {
   /**
    * Clave de referencia única para la solicitud.
    */
-  claveDeReferencia: number;
+  claveDeReferencia: string;
 
   /**
    * Importe de pago asociado a la solicitud.
    */
-  importeDePago: number;
+  importeDePago: string;
 
   /**
    * Cadena proporcionada por la dependencia correspondiente.
@@ -83,7 +88,7 @@ export interface Solicitud32101State {
   /**
    * Número de operación relacionado con la solicitud.
    */
-  numeroDeOperacion: number;
+  numeroDeOperacion: string;
 
   /**
    * Lista de bancos disponibles.
@@ -94,7 +99,7 @@ export interface Solicitud32101State {
   /**
    * Llave única de pago asociada a la solicitud.
    */
-  llaveDePago: number;
+  llaveDePago: string;
 
   /**
    * Fecha inicial ingresada en formato de cadena.
@@ -128,20 +133,21 @@ export interface Solicitud32101State {
 export function createInitialState(): Solicitud32101State {
   return {
     tipoDeInversion: null,
-    valorEnPesos: 0,
+    valorEnPesos: '',
     descripcionGeneral: '',
     listaDeDocumentos: '',
+    comprobante: '',
     datosDelContenedor: [],
     abc: null,
     manifiesto1: '',
     manifiesto2: '',  
     manifiesto3: '',
-    claveDeReferencia: 0,
-    importeDePago: 0,
+    claveDeReferencia: '',
+    importeDePago: '',
     cadenaDeLaDependencia: '',
-    numeroDeOperacion: 0,
+    numeroDeOperacion: '',
     banco: null,
-    llaveDePago: 0,
+    llaveDePago: '',
     fechaInicialInput: '',
     
   };
@@ -172,7 +178,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param valorEnPesos - El nuevo valor en pesos que se debe asignar al estado.
    */
-  public setValorEnPesos(valorEnPesos: number): void {
+  public setValorEnPesos(valorEnPesos: string): void {
     this.update((state) => ({
       ...state,
       valorEnPesos,
@@ -190,6 +196,18 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
       descripcionGeneral,
     }));
   }
+
+/**
+   * Establece la comprobante en el estado de la tienda.
+   *
+   * @param comprobante - La nueva comprobante que se asignará al estado.
+   */
+  public setComprobante(comprobante: string): void {
+    this.update((state) => ({
+      ...state,
+      comprobante,
+    }));
+  }  
 
   /**
    * Establece el valor de "abc" en el estado de la tienda.
@@ -244,7 +262,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param claveDeReferencia - El número que representa la clave de referencia a establecer.
    */
-  public setClaveDeReferencia(claveDeReferencia: number): void {
+  public setClaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
       claveDeReferencia,
@@ -256,7 +274,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param importeDePago - El nuevo importe de pago que se debe asignar.
    */
-  public setImporteDePago(importeDePago: number): void {
+  public setImporteDePago(importeDePago: string): void {
     this.update((state) => ({
       ...state,
       importeDePago,
@@ -280,7 +298,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param numeroDeOperacion - El número de operación que se debe asignar al estado.
    */
-  public setNumeroDeOperacion(numeroDeOperacion: number): void {
+  public setNumeroDeOperacion(numeroDeOperacion: string): void {
     this.update((state) => ({
       ...state,
       numeroDeOperacion,
@@ -304,7 +322,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param llaveDePago - El número que representa la llave de pago a establecer.
    */
-  public setLlaveDePago(llaveDePago: number): void {
+  public setLlaveDePago(llaveDePago: string): void {
     this.update((state) => ({
       ...state,
       llaveDePago,

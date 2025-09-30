@@ -178,10 +178,12 @@ export class AgregarFacturadorComponent
         this.obtenerValor('estadoLocalidad'),
         [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
-      codigoPostal: [
-        this.obtenerValor('codigoPostal'),
-        [Validators.pattern(CODIGO_POSTAL)],
-      ],
+     codigoPostal: [
+      this.obtenerValor('codigoPostal'),
+      this.idProcedimiento === 260911
+        ? [Validators.required, Validators.pattern(CODIGO_POSTAL)]
+        : [Validators.pattern(CODIGO_POSTAL)]
+    ],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), [Validators.required]],
       numeroExterior: [
