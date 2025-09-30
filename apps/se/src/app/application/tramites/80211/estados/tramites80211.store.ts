@@ -10,6 +10,7 @@ import { Plantas } from '../modelos/registro-expansion.model';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80211State {
+  /** Identificador de la solicitud actual. */
   idSolicitud: number | null;
   /**
    * Lista de identificadores de plantas disponibles.

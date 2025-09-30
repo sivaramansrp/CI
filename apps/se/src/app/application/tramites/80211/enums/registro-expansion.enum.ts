@@ -1366,6 +1366,22 @@ export const PAYLOAD = {
 }
 
 
+/**
+ * Representa la estructura para la información de una planta, incluyendo dirección y datos fiscales.
+ *
+ * @property idPlanta - (Opcional) Identificador único de la planta.
+ * @property calle - (Opcional) Nombre de la calle de la dirección de la planta.
+ * @property numInterior - (Opcional) Número interior de la dirección de la planta.
+ * @property numExterior - (Opcional) Número exterior de la dirección de la planta.
+ * @property codigoPostal - (Opcional) Código postal de la dirección de la planta.
+ * @property colonia - (Opcional) Colonia o barrio de la dirección de la planta.
+ * @property municipio - (Opcional) Municipio de la dirección de la planta.
+ * @property entidadFederativa - (Opcional) Entidad federativa o estado de la dirección de la planta.
+ * @property pais - (Opcional) País de la dirección de la planta.
+ * @property rfc - (Opcional) RFC (Registro Federal de Contribuyentes) de la planta.
+ * @property domicilioFiscal - (Opcional) Domicilio fiscal de la planta.
+ * @property razonSocial - (Opcional) Razón social de la planta.
+ */
 export interface PLANTASBUILD {
   idPlanta?: string;
   calle?: string;
