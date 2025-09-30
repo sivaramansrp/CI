@@ -180,6 +180,17 @@ export class Transporte110203Component implements OnInit, OnDestroy {
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Obtiene el catálogo de medios de transporte utilizando el servicio `catalogoService`
+   * y actualiza la propiedad `medio` con los datos recibidos.
+   * 
+   * Realiza la petición pasando los trámites actuales (`this.tramites`) y gestiona la suscripción
+   * para que se cancele automáticamente cuando el componente se destruya, usando `destroyNotifier$`.
+   * 
+   * @remarks
+   * Los datos recibidos se asignan a la propiedad `medio`. Si la respuesta no contiene datos,
+   * se asigna un arreglo vacío.
+   */
   obtenerMedioTransporte(): void {
     this.catalogoService.medioTransporteCatalogo(this.tramites)
       .pipe(takeUntil(this.destroyNotifier$))
