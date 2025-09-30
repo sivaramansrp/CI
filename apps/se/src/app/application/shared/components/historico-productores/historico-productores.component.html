@@ -178,6 +178,15 @@
                                 <input type="text" required="false" class="form-control"
                                     formControlName="numeroDeRegistroFiscal"
                                     (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') " />
+                                      @if (formularioMercancia.controls['numeroDeRegistroFiscal'].invalid &&
+                                        (formularioMercancia.controls['numeroDeRegistroFiscal'].touched ||
+                                            formularioMercancia.controls['numeroDeRegistroFiscal'].dirty)) {
+                                        <div class="text-danger mt-1">
+                                        @if (formularioMercancia.controls['numeroDeRegistroFiscal'].errors?.['required']) {
+                                            <small>Este campo es obligatorio.</small>
+                                        }
+                                        </div>
+                                    }
                             </div>
                         </div>
                     </ng-container>

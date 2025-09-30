@@ -348,6 +348,10 @@
             <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
               (change)="setValoresStore('formCertificado','ciudad','setFormCertificadoGenric')" />
+                 @if (formCertificado.get('ciudad')?.invalid && 
+             (formCertificado.get('ciudad')?.touched || formCertificado.get('ciudad')?.dirty)) {
+          <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
           </div>
         </div>
       </div>
@@ -357,12 +361,20 @@
             <label class="form-label" for="calle">Calle<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
               (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
+               @if (formCertificado.get('calle')?.invalid && 
+             (formCertificado.get('calle')?.touched || formCertificado.get('calle')?.dirty)) {
+          <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
           </div>
         </div>
         <div class="col-md-4">
-          <label class="form-label" for="numeroLetra">Número y/o letra<span *ngIf="!requerida">*</span>:</label>
+          <label class="form-label" for="numeroLetra">Número y/o letra4<span *ngIf="!requerida">*</span>:</label>
           <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
             (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+             @if (formCertificado.get('numeroLetra')?.invalid && 
+           (formCertificado.get('numeroLetra')?.touched || formCertificado.get('numeroLetra')?.dirty)) {
+        <span class="mensaje-error">Este campo es obligatorio.</span>
+      }
         </div>
       </div>
       <div class="row">
@@ -371,6 +383,10 @@
             <label class="form-label" for="lada">Lada<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="lada" class="form-control" formControlName="lada"
               (change)="setValoresStore('formCertificado','lada','setFormCertificadoGenric')" />
+                @if (formCertificado.get('lada')?.invalid && 
+             (formCertificado.get('lada')?.touched || formCertificado.get('lada')?.dirty)) {
+          <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
           </div>
         </div>
         <div class="col-md-3">
@@ -378,6 +394,10 @@
             <label class="form-label" for="telefono">Teléfono<span *ngIf="!requerida">*</span>:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono"
               (change)="setValoresStore('formCertificado','telefono','setFormCertificadoGenric')" />
+               @if (formCertificado.get('telefono')?.invalid && 
+             (formCertificado.get('telefono')?.touched || formCertificado.get('telefono')?.dirty)) {
+          <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
           </div>
         </div>
         <div class="col-md-3">
@@ -393,6 +413,10 @@
             <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
             <input type="email" id="correo" class="form-control" formControlName="correo"
               (change)="setValoresStore('formCertificado','correo','setFormCertificadoGenric')" />
+               @if (formCertificado.get('correo')?.invalid && 
+             (formCertificado.get('correo')?.touched || formCertificado.get('correo')?.dirty)) {
+          <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
           </div>
         </div>
       </div>
