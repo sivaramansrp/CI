@@ -112,11 +112,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       isValid = false;
     }
-
-    console.log(isValid, 'isValid 116');
-    console.log(this.solicitante, 'solicitante 117');
-    console.log(this.empresasTerciarizadas, 'empresasTerciarizadas 118');
-
     return isValid;
   }
   /**

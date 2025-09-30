@@ -5,7 +5,7 @@ import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80211Store, Tramites80211State } from '../../estados/tramites80211.store';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { PAYLOAD} from '../../enums/registro-expansion.enum';
+import { PAYLOAD } from '../../enums/registro-expansion.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -56,12 +56,12 @@ export class RegistroExpansionComponent implements OnInit {
  * Permite interactuar con sus propiedades y métodos en el código del componente principal.
  */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-    /**
-   * @property {PasoUnoComponent} pasoUnoComponent
-   * @description
-   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
-   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
-   */
+  /**
+ * @property {PasoUnoComponent} pasoUnoComponent
+ * @description
+ * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+ * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+ */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -81,14 +81,14 @@ export class RegistroExpansionComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-    /**
-   * URL de la página actual.
-   */
+  /**
+ * URL de la página actual.
+ */
   public solicitudState!: Tramites80211State;
 
-   /**
-   * Indica si se debe mostrar el botón de continuar (controla la visibilidad según el estado de carga de archivo).
-   */
+  /**
+  * Indica si se debe mostrar el botón de continuar (controla la visibilidad según el estado de carga de archivo).
+  */
   cargarArchivo: boolean = true;
   /**
 * Indica si la sección de carga de documentos está activa.
@@ -131,7 +131,7 @@ export class RegistroExpansionComponent implements OnInit {
   activarBotonCargaArchivos: boolean = false;
 
   payload = PAYLOAD;
-    constructor(
+  constructor(
     private tramite80211Store: Tramite80211Store,
     private tramite80211Query: Tramite80211Query,
     private registroService: registroSolicitudImmexService,
@@ -139,7 +139,7 @@ export class RegistroExpansionComponent implements OnInit {
 
 
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.tramite80211Query.selectTramite80211$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -153,35 +153,36 @@ export class RegistroExpansionComponent implements OnInit {
    * Maneja la navegación entre los pasos del asistente según las acciones de los botones.
    * @param e - La acción del botón que contiene el tipo de acción y el valor del índice.
    */
-getValorIndice(evento: AccionBoton): void {
-  this.esFormaValido = false;
+  getValorIndice(evento: AccionBoton): void {
+    this.esFormaValido = false;
 
-  // Obtener datos del store antes de cualquier validación
-  this.obtenerDatosDelStore();
 
-  // Validación específica para el paso 1
-  if (this.indice === 1 && evento.accion === 'cont') {
-    const IS_VALID = this.validarTodosFormulariosPasoUno();
-    if (!IS_VALID) {
-      this.esFormaValido = true;
-      this.datosPasos.indice = 1;
-      return; 
+
+    // Validación específica para el paso 1
+    if (this.indice === 1 && evento.accion === 'cont') {
+      const IS_VALID = this.validarTodosFormulariosPasoUno();
+      if (!IS_VALID) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = 1;
+        return;
+      }
+      // Obtener datos del store antes de cualquier validación
+      this.obtenerDatosDelStore();
     }
-  }
 
-  if (evento.valor > 0 && evento.valor <= this.pasos.length) {
-    this.indice = evento.valor;
-    this.datosPasos.indice = evento.valor;
+    if (evento.valor > 0 && evento.valor <= this.pasos.length) {
+      this.indice = evento.valor;
+      this.datosPasos.indice = evento.valor;
 
-    if (evento.valor > 0 && evento.valor < 5) {
-      if (evento.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+      if (evento.valor > 0 && evento.valor < 5) {
+        if (evento.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
-}
 
   /**
      * @method validarTodosFormulariosPasoUno
@@ -206,40 +207,40 @@ getValorIndice(evento: AccionBoton): void {
   }
 
 
-buildPlantasTerciarizadoras(array: any[] = []): any[] {
-  // eslint-disable-next-line complexity
-  return array.map(flat => ({
-    idPlanta: flat.idPlanta ?? '',
-    calle: flat.calle ?? '',
-    numeroInterior: flat.numeroInterio ?? '',
-    numeroExterior: flat.numeroExterio ?? '',
-    codigoPostal: flat.codiogoPostal ?? '',
-    colonia: flat.colonia ?? '',
-    delegacionMunicipio: flat.municipio ?? '',
-    entidadFederativa: flat.entidadFederativa ?? '',
-    pais: flat.pais ?? '',
-    rfc: flat.registroFederal ?? '',
-    domicilioFiscal: flat.domicilio ?? '',
-    razonSocial: flat.razon ?? '',
-    empresaCalle: flat.calle ?? '',
-    empresaNumeroInterior: flat.numeroInterio ?? '',
-    empresaNumeroExterior: flat.numeroExterio ?? '',
-    empresaCodigoPostal: flat.codiogoPostal ?? '',
-    empresaColonia: flat.colonia ?? '',
-    empresaDelegacionMunicipio: flat.municipio ?? '',
-    empresaEntidadFederativa: flat.entidadFederativa ?? '',
-    empresaPais: flat.pais ?? '',
-    datosComplementarios: flat.datosComplementarios ?? [],
-    firmantes: flat.firmantes ?? [],
-    montos: flat.montos ?? [],
-    listaCapacidad: flat.listaCapacidad ?? [],
-    datosEmpleados: flat.datosEmpleados ?? []
-  }));
-}
+  buildPlantasTerciarizadoras(array: any[] = []): any[] {
+    // eslint-disable-next-line complexity
+    return array.map(flat => ({
+      idPlanta: flat.idPlanta ?? '',
+      calle: flat.calle ?? '',
+      numeroInterior: flat.numeroInterio ?? '',
+      numeroExterior: flat.numeroExterio ?? '',
+      codigoPostal: flat.codiogoPostal ?? '',
+      colonia: flat.colonia ?? '',
+      delegacionMunicipio: flat.municipio ?? '',
+      entidadFederativa: flat.entidadFederativa ?? '',
+      pais: flat.pais ?? '',
+      rfc: flat.registroFederal ?? '',
+      domicilioFiscal: flat.domicilio ?? '',
+      razonSocial: flat.razon ?? '',
+      empresaCalle: flat.calle ?? '',
+      empresaNumeroInterior: flat.numeroInterio ?? '',
+      empresaNumeroExterior: flat.numeroExterio ?? '',
+      empresaCodigoPostal: flat.codiogoPostal ?? '',
+      empresaColonia: flat.colonia ?? '',
+      empresaDelegacionMunicipio: flat.municipio ?? '',
+      empresaEntidadFederativa: flat.entidadFederativa ?? '',
+      empresaPais: flat.pais ?? '',
+      datosComplementarios: flat.datosComplementarios ?? [],
+      firmantes: flat.firmantes ?? [],
+      montos: flat.montos ?? [],
+      listaCapacidad: flat.listaCapacidad ?? [],
+      datosEmpleados: flat.datosEmpleados ?? []
+    }));
+  }
 
- /**
- * Obtiene los datos del store y los guarda utilizando el servicio.
- */
+  /**
+  * Obtiene los datos del store y los guarda utilizando el servicio.
+  */
   obtenerDatosDelStore(): void {
     this.registroService.getAllState()
       .pipe(take(1))
@@ -247,11 +248,11 @@ buildPlantasTerciarizadoras(array: any[] = []): any[] {
         this.guardar(data);
       });
   }
-    guardar(item: any): void {
-      this.payload = {
+  guardar(item: any): void {
+    this.payload = {
       ...this.payload,
       idSolicitud: item.idSolicitud,
-    plantasTerciarizadoras: this.buildPlantasTerciarizadoras(item.plantasSeleccionadas),
+      plantasTerciarizadoras: this.buildPlantasTerciarizadoras(item.plantasSeleccionadas),
     };
 
     this.registroService.guardarDatosPost(this.payload).subscribe(response => {
