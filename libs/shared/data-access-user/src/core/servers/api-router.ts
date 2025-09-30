@@ -254,25 +254,25 @@ export const IDSOLICITUD = '{idSolicitud}';
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_ACUSE = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/guardar`;
+export const API_POST_GUARDAR_ACUSE = (idSolicitud: string, procedure: number): string => `sat-t${procedure}/solicitud/${idSolicitud}/acuse/guardar`;
 
 /**
  * API para guardar el recibo oficial de una solicitud.
- * @param IDSOLICITUD Identificador de la solicitud
- * @param PROCEDURE Número de procedimiento
+ * @param idSolicitud Identificador de la solicitud
+ * @param tramite Número de procedimiento
  * @returns URL del endpoint para guardar el recibo oficial
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_CERTIFICADO = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/constancia/guardar`;
+export const API_POST_GUARDAR_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/guardar`;
 
 /**
  * API para guardar el certificado de una solicitud.
- * @param IDSOLICITUD Identificador de la solicitud
- * @param PROCEDURE Número de procedimiento
+ * @param idSolicitud Identificador de la solicitud
+ * @param tramite Número de procedimiento
  * @returns URL del endpoint para guardar el certificado
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_VISTA_PREVIA_CERTIFICADO = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/constancia/vista-previa`;
+export const API_POST_VISTA_PREVIA_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/vista-previa`;
 
 
 
@@ -280,7 +280,7 @@ export const API_POST_VISTA_PREVIA_CERTIFICADO = (IDSOLICITUD: string, PROCEDURE
  * API para generar la vista previa del acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
  */
-export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+export const API_POST_VISTA_PREVIA = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/acuse/vista-previa`;
 
 /**
  * API para obtener los documentos

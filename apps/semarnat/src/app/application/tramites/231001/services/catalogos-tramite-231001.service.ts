@@ -38,7 +38,7 @@ export class CatalogosTramite231001Service {
   /**
    * Host base de la API (se obtiene de la configuración de entorno).
    */
-  urlServer = ENVIRONMENT.API_HOST;
+  urlServer = `${ENVIRONMENT.API_HOST}/api/`;
 
   /**
    * Constructor del servicio.
@@ -54,7 +54,7 @@ export class CatalogosTramite231001Service {
   getDatosImmex(
     rfc: string
   ): Observable<SimpleCatalogoResponse<ImmexResponse[]>> {
-    const URL = `${this.urlServer}/api/${API_GET_IMMEX}/${rfc}`;
+    const URL = `${this.urlServer}${API_GET_IMMEX}/${rfc}`;
     return this.httpClient.get<SimpleCatalogoResponse<ImmexResponse[]>>(URL);
   }
 
@@ -63,7 +63,7 @@ export class CatalogosTramite231001Service {
    * @returns Observable con la respuesta que contiene un arreglo de Catalogo.
    */
   getCapitulos(): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${this.urlServer}/api/${API_GET_CAPITULO_FRACCION}`;
+    const URL = `${this.urlServer}${API_GET_CAPITULO_FRACCION}`;
     return this.httpClient.get<SimpleCatalogoResponse<Catalogo[]>>(URL);
   }
 
@@ -75,7 +75,7 @@ export class CatalogosTramite231001Service {
   getPartidas(
     cveCapituloFraccion: string
   ): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${this.urlServer}/api/${API_GET_PARTIDAS_FRACCION.replace(
+    const URL = `${this.urlServer}${API_GET_PARTIDAS_FRACCION.replace(
       CVE_CAPITULO_FRACCION,
       cveCapituloFraccion
     )}`;
@@ -92,7 +92,7 @@ export class CatalogosTramite231001Service {
     cveCapituloFraccion: string,
     cvePartidaFraccion: string
   ): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${this.urlServer}/api/${API_GET_SUBPARTIDAS_FRACCION.replace(
+    const URL = `${this.urlServer}${API_GET_SUBPARTIDAS_FRACCION.replace(
       CVE_CAPITULO_FRACCION,
       cveCapituloFraccion
     ).replace(CVE_PARTIDA_FRACCION, cvePartidaFraccion)}`;
@@ -111,9 +111,7 @@ export class CatalogosTramite231001Service {
     cvePartidaFraccion: string,
     cveSubpartidaFraccion: string
   ): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${
-      this.urlServer
-    }/api/${API_GET_FRACCIONES_ARANCELARIAS.replace(
+    const URL = `${this.urlServer}${API_GET_FRACCIONES_ARANCELARIAS.replace(
       CVE_CAPITULO_FRACCION,
       cveCapituloFraccion
     )
@@ -127,7 +125,7 @@ export class CatalogosTramite231001Service {
    * @returns Observable con la respuesta que contiene un arreglo de Catalogo.
    */
   getUnidadMedida(): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${this.urlServer}/api/${API_GET_UNIDAD_MEDIDA}`;
+    const URL = `${this.urlServer}${API_GET_UNIDAD_MEDIDA}`;
     return this.httpClient.get<SimpleCatalogoResponse<Catalogo[]>>(URL);
   }
 
@@ -136,7 +134,7 @@ export class CatalogosTramite231001Service {
    * @returns Observable con la respuesta que contiene un arreglo de Catalogo.
    */
   getAduanas(): Observable<SimpleCatalogoResponse<Catalogo[]>> {
-    const URL = `${this.urlServer}/api/${GET_ADUANAS}`;
+    const URL = `${this.urlServer}${GET_ADUANAS}`;
     return this.httpClient.get<SimpleCatalogoResponse<Catalogo[]>>(URL);
   }
 }

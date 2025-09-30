@@ -400,6 +400,14 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     this.base64Archivos(url, 'descargar');
   }
 
+
+
+  /**
+   * Método que maneja la navegación al salir del componente.
+   *
+   * Si no hay datos en la tabla, redirige a la selección de trámite.
+   * Si hay datos, redirige a la bandeja de tareas pendientes.
+   */
   salir(): void {
     if (this.datosTabla.length === 0) {
       this.router.navigate(['/seleccion-tramite']);
@@ -414,9 +422,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   private descargarDocumentoTramite231001(): void {
     const ID = this.idSolicitud.toString();
 
-    /**
-     * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
-     */
+  /**
+   * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+   */
     const ACUSE_SOLICITUD = this.documentosService231001
       .guardarDocumento(ID, this.procedure, true)
       .pipe(
@@ -429,10 +437,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         )
       );
 
-      /**
-       * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
-       */
-
+  /**
+   * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
+   */
     const CONSTANCIA_SOLICITUD = this.documentosService231001
       .guardarDocumento(ID, this.procedure, false)
       .pipe(
@@ -445,9 +452,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         )
       );
 
-      /**
-       * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
-       */
+  /**
+   * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
+   */
     forkJoin([ACUSE_SOLICITUD, CONSTANCIA_SOLICITUD])
       .pipe(
         takeUntil(this.destroyed$),

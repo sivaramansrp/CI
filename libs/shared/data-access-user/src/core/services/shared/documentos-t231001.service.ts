@@ -40,14 +40,14 @@ export class DocumentosT231001Service {
     idSolicitud: string,
     procedure: number,
     esAcuse: boolean
-  ): Observable<BaseResponse<null>> {
+  ): Observable<BaseResponse<DocumentoResponse>> {
     const ENDPOINT =
       `${this.host}` +
       (esAcuse
         ? API_POST_GUARDAR_ACUSE(idSolicitud, procedure)
         : API_POST_GUARDAR_CERTIFICADO(idSolicitud, procedure));
 
-    return this.http.post<BaseResponse<null>>(ENDPOINT, null).pipe(
+    return this.http.post<BaseResponse<DocumentoResponse>>(ENDPOINT, null).pipe(
       catchError(() => {
         const ERROR = new Error(`Error al obtener el documento ${ENDPOINT}`);
         return throwError(() => ERROR);
