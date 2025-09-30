@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 
 /**
  * Crea y retorna el estado inicial para el formulario de residuo con valores por defecto.
- * 
+ *
  * Los campos del formulario `formularioDatos` y `formularioResiduo` son inicializados como cadenas vacías.
  *
  * @returns {EstadoFormularioResiduo} Estado inicial del formulario de residuo
@@ -78,6 +78,7 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
       /** Capacidad del contenedor */
       capacidad: '',
     },
+    residuos: [],
   };
 }
 
@@ -101,7 +102,9 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
    *
    * @param {EstadoFormularioResiduo['formularioDatos']} datos - Objeto que contiene los datos de `formularioDatos`.
    */
-  actualizarFormularioDatos(datos: EstadoFormularioResiduo['formularioDatos']): void {
+  actualizarFormularioDatos(
+    datos: EstadoFormularioResiduo['formularioDatos']
+  ): void {
     this.update((state) => ({
       ...state,
       formularioDatos: { ...datos },
@@ -113,7 +116,9 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
    *
    * @param {EstadoFormularioResiduo['formularioResiduo']} residuo - Objeto que contiene los datos de `formularioResiduo`.
    */
-  actualizarFormularioResiduo(residuo: EstadoFormularioResiduo['formularioResiduo']): void {
+  actualizarFormularioResiduo(
+    residuo: EstadoFormularioResiduo['formularioResiduo']
+  ): void {
     this.update((state) => ({
       ...state,
       formularioResiduo: { ...residuo },

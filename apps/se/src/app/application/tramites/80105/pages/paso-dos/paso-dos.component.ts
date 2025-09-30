@@ -81,6 +81,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   @Input() datosUsuario!: Usuario;
 
+  /** Indica si hay una carga en progreso. */
+    @Output() cargaEnProgreso = new EventEmitter<boolean>();
+
   /**
    * Constructor del componente.
    * 
@@ -156,5 +159,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+    /** Emite un evento para indicar si hay una carga en progreso.
+   * @param carga - Indica si hay una carga en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso.emit(carga);
   }
 }

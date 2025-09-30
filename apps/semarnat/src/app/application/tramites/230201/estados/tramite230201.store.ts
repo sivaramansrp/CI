@@ -178,7 +178,7 @@ export interface Solicitud230201State {
   /**
    * Banco relacionado con la solicitud.
    */
-  banco: string;
+  banco: Catalogo[] | null;
 
   /**
    * Llave de pago para la solicitud.
@@ -202,7 +202,7 @@ export interface Solicitud230201State {
  */
 export function createInitialState(): Solicitud230201State {
   return {
-    paisDeProcedencia: [{id: 0, descripcion: 'paisDeProcedencia'}],
+    paisDeProcedencia: null,
     aduana: null,
     fechasSeleccionadas: [],
     pais: null,
@@ -231,7 +231,7 @@ export function createInitialState(): Solicitud230201State {
     tercerosPopupState: false,
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
-    banco: '',
+    banco: null,
     llaveDePago: '',
     fecPago: '',
     impPago: '',
@@ -263,7 +263,7 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
   public setpaisDeProcedencia(paisDeProcedencia: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      paisDeProcedencia: paisDeProcedencia,
+      paisDeProcedencia,
     }));
   }
 
@@ -603,7 +603,7 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
    * Actualiza el banco.
    * @param {string} banco - Nuevo banco.
    */
-  public setBanco(banco: string): void {
+  public setBanco(banco: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       banco

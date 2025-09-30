@@ -9,7 +9,24 @@ export interface Solicitud120301State {
     idExpedicion: number;
     /** Identificador regimen */
     identificadorRegimen: string;
-
+    /** Id de la solicitud. */
+    idSolicitud: number;
+    /** Unidad de medida */
+    unidadMedida: string;
+    /** País de origen o destino */
+    pais_origen_destino: string;
+    /** Clave de entidad */
+    cve_entidad: string;
+    /** Clave */
+    clave: string;
+    /** Clave de país */
+    cve_pais: string;
+    /** ID del mecanismo */
+    id_mecanismo: number;
+    /** ID de asignación del trámite */
+    id_asignacion: number;
+    /** ID de la factura de expedición */
+    id_factura_expedicion:number;
 }
 /**
  * Crea el estado inicial del trámite 120301.
@@ -19,7 +36,15 @@ export function createInitialState(): Solicitud120301State {
     return {
         idExpedicion: 0,
         identificadorRegimen: '',
-
+        idSolicitud: 0,
+        unidadMedida: '',
+        pais_origen_destino: '',
+        cve_entidad: '',
+        clave: '',
+        cve_pais: '',
+        id_mecanismo: 0,
+        id_asignacion: 0,
+        id_factura_expedicion:0
     };
 }
 
@@ -62,4 +87,101 @@ export class Tramite120301Store extends Store<Solicitud120301State> {
         }));
     }
 
+    /**
+     * Actualiza el Id de la solicitud.
+     * @param idSolicitud Nuevo Id de la solicitud. 
+     * */
+    public setIdSolicitud(idSolicitud: number): void {
+        this.update((state) => ({
+            ...state,
+            idSolicitud,
+        }));
+    }
+
+    /**
+     * Actualiza el país de origen o destino.
+     * @param pais_origen_destino Nuevo país de origen o destino.
+     * */
+    public setPaisOrigenDestino(pais_origen_destino: string): void {
+        this.update((state) => ({
+            ...state,
+            pais_origen_destino,
+        }));
+    }
+
+    /**
+     * Actualiza la unidad de medida.
+     * @param unidadMedida Nueva unidad de medida.
+     * */
+    public setUnidadMedida(unidadMedida: string): void {
+        this.update((state) => ({
+            ...state,
+            unidadMedida,
+        }));
+    }
+
+    /** 
+ * Actualiza la clave de entidad
+ * @param cve_entidad - Nueva clave de entidad
+ */
+    public setClave(cve_entidad: string): void {
+        this.update((state) => ({
+            ...state,
+            cve_entidad,
+        }));
+    }
+
+    /** 
+     * Actualiza la clave
+     * @param clave - Nueva clave
+     */
+    public setClaveEntidad(clave: string): void {
+        this.update((state) => ({
+            ...state,
+            clave,
+        }));
+    }
+
+    /** 
+     * Actualiza el ID del mecanismo
+     * @param id_mecanismo - Nuevo ID del mecanismo
+     */
+    public setIdMecanismo(id_mecanismo: number): void {
+        this.update((state) => ({
+            ...state,
+            id_mecanismo,
+        }));
+    }
+
+    /** 
+     * Actualiza la clave de país
+     * @param cve_pais - Nueva clave de país
+     */
+    public setClavePais(cve_pais: string): void {
+        this.update((state) => ({
+            ...state,
+            cve_pais,
+        }));
+    }
+
+    public setId(idSolicitud: number): void {
+        this.update((state) => ({
+            ...state,
+            idSolicitud,
+        }));
+    }
+
+    public setIdAsignacion(id_asignacion: number): void {
+        this.update((state) => ({
+            ...state,
+            id_asignacion,
+        }));
+    }
+
+     public setFacturaExpedicion(id_factura_expedicion: number): void {
+        this.update((state) => ({
+            ...state,
+            id_factura_expedicion,
+        }));
+    }
 }
