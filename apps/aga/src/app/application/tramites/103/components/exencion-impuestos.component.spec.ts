@@ -217,7 +217,7 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
       });
       
       component.eliminarMercancias();
-      expect(eliminarFilaSpy).toHaveBeenCalledWith(2); // Called with higher index first
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(2);
       expect(eliminarFilaSpy).toHaveBeenCalledWith(1);
       expect(component.filasSeleccionadas).toEqual([]);
       expect(component.filaSeleccionada).toBe(null);
@@ -233,7 +233,7 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
     });
 
     it('should handle invalid indices in multiple deletion', () => {
-      component.filasPendientesEliminar = [-1, 10, 1]; // Mix of invalid and valid indices
+      component.filasPendientesEliminar = [-1, 10, 1];
       component.filasSeleccionadas = [-1, 10, 1];
       const eliminarFilaSpy = jest.spyOn(component, 'eliminarFila').mockImplementation((index) => {
         if (index !== null && index >= 0 && index < component.mercanciaBodyData.length) {
@@ -242,9 +242,9 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
       });
       
       component.eliminarMercancias();
-      expect(eliminarFilaSpy).toHaveBeenCalledWith(10); // Called but should not delete due to bounds check
-      expect(eliminarFilaSpy).toHaveBeenCalledWith(1);  // Valid index, should delete
-      expect(eliminarFilaSpy).toHaveBeenCalledWith(-1); // Called but should not delete due to bounds check
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(10);
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(1);
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(-1);
       expect(component.filasSeleccionadas).toEqual([]);
       expect(component.filasPendientesEliminar).toEqual([]);
     });
