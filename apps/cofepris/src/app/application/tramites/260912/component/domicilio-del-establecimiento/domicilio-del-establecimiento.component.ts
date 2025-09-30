@@ -87,7 +87,11 @@ import { Validators } from '@angular/forms';
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-public mercanciasTableTouched = false;
+   /**
+     * Indica si la tabla de mercancías ha sido interactuada por el usuario.
+     * Se utiliza para controlar la validación o el estado visual relacionado con la interacción del usuario.
+     */
+  public mercanciasTableTouched = false;
   /**
    * Indica si el componente debe estar deshabilitado.
    * Cuando es `true`, el componente no permite interacción del usuario.
@@ -1730,9 +1734,25 @@ public markAllFieldsTouched(): void {
       });
     }
   }
+  /**
+   * Valida si la tabla de mercancías contiene datos.
+   *
+   * @returns {boolean} `true` si existen datos en la tabla de mercancías, de lo contrario `false`.
+   */
   public validateMercanciasTable(): boolean {
   return this.mercanciasTablaDatos && this.mercanciasTablaDatos.length > 0;
 }
+/**
+ * Marca la tabla de mercancías como "tocada" (touched).
+ *
+ * @remarks
+ * Este método establece la bandera `mercanciasTableTouched` en `true`, lo que puede ser útil para activar validaciones,
+ * mostrar mensajes de error o actualizar el estado visual de la tabla en el template.
+ *
+ * @example
+ * // Llamar este método cuando el usuario interactúe con la tabla de mercancías
+ * this.markMercanciasTableTouched();
+ */
 public markMercanciasTableTouched(): void {
   // Aquí podrías emitir un flag o llamar ChangeDetectorRef si usas mensajes en el template
   // Ejemplo: this.mercanciasTableTouched = true;

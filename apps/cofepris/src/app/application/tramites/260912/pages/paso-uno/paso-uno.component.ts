@@ -88,6 +88,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return this._indice;
   }
 
+  
+  /**
+   * Obtiene la instancia del componente `DomicilioDelEstablecimientoComponent`.
+   *
+   * @returns La instancia de `DomicilioDelEstablecimientoComponent` si está disponible, de lo contrario `undefined`.
+   */
   public getDomicilioDelEstablecimientoComponent(): DomicilioDelEstablecimientoComponent | undefined {
   return this.domicilioDelEstablecimientoComponent;
 }

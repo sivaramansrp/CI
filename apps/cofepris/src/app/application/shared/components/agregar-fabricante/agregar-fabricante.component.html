@@ -81,7 +81,8 @@
       </div>
     </div>
 
-    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
+    @if( agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr ||
+  idProcedimiento === 260904){
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">R.F.C.*: </label>
@@ -110,7 +111,32 @@
           </small>
         </div>
       </div>
-      @if (!estaOculto && idProcedimiento !== 260911 && idProcedimiento !== 260912 ) {
+      @if (
+  !agregarFabricanteForm.get('nacionalidad')?.value &&
+  !agregarFabricanteForm.get('tipoPersona')?.value &&
+  chequeoValidacionAlGuardar
+) {
+  <div class="col-md-4">
+    <label class="form-label">C.U.R.P.*:</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="curp"
+      [ngClass]="esInvalido('curp') ? 'required' : ''"
+    />
+    <div *ngIf="esInvalido('curp')" class="text-danger">
+      <small
+        *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']"
+      >
+        Este campo es obligatorio
+      </small>
+      <small *ngIf="agregarFabricanteForm.controls['curp'].errors?.['pattern']">
+        Existen datos incorrectos que no cumplen con el formato esperado.
+      </small>
+    </div>
+  </div>
+}
+      @else if (!estaOculto && !chequeoValidacionAlGuardar ) {
       <div class="col-md-4">
         <label class="form-label">C.U.R.P.*:</label>
         <input
