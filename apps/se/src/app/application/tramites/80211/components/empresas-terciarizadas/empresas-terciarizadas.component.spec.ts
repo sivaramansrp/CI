@@ -24,6 +24,7 @@ describe('EmpresasTerciarizadasComponent', () => {
 
     tramite80211QueryMock = {
       selectTramite80211$: of({
+        idSolicitud: 0,
         plantasDisponibles: [],
         plantasSeleccionadas: [],
         showPlantas: false,
@@ -160,6 +161,7 @@ describe('EmpresasTerciarizadasComponent', () => {
 
   it('debería segregar plantas disponibles y seleccionadas', () => {
     componente.tramites80211State = {
+      idSolicitud: 0,
       plantasDisponibles: [DATOS_MOCK[0]],
       plantasSeleccionadas: [DATOS_MOCK[1]],
       showPlantas: true,

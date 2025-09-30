@@ -71,6 +71,9 @@ export interface ProductorAsociado {
  * Estado inicial para la interfaz del trámite 110219.
  */
 export interface Solicitud110219State {
+    /** ID de la solicitud */
+  idSolicitud: number | null;
+  
   /** Lista de catálogos disponibles. */
   catalogos: Catalogo[];
 
@@ -110,9 +113,9 @@ export interface Solicitud110219State {
   /** Fecha de vencimiento del certificado. */
   fechaVencimiento: string;
   /** Bloque asociado al trámite. */
-  bloque:string;
+  bloque: string;
   /** Acuerdo asociado al trámite. */
-  acuerdo:string;
+  acuerdo: string;
   /** Observaciones adicionales del trámite. */
   observaciones: string;
   /** Nombre del solicitante. */
@@ -145,6 +148,7 @@ export interface Solicitud110219State {
  */
 export function createInitialState(): Solicitud110219State {
   return {
+    idSolicitud: 0,
     catalogos: [],
     mercancias: [],
     productores: [],
@@ -158,8 +162,8 @@ export function createInitialState(): Solicitud110219State {
     motivoCancelacion: '',
     fechaExpedicion: '',
     fechaVencimiento: '',
-    bloque:'',
-    acuerdo:'',
+    bloque: '',
+    acuerdo: '',
     observaciones: '',
     nombre: '',
     primerApellido: '',
@@ -171,7 +175,7 @@ export function createInitialState(): Solicitud110219State {
     telefono: 0,
     ciudad: 0,
     fax: 0,
-    correoElectronico: '',  
+    correoElectronico: '',
   };
 }
 
@@ -189,6 +193,18 @@ export class Tramite110219Store extends Store<Solicitud110219State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**
@@ -263,115 +279,114 @@ export class Tramite110219Store extends Store<Solicitud110219State> {
   }
 
   /**
- * Actualiza el valor de bloque en el estado.
- * @param bloque Valor a actualizar.
- */
-public setBloque(bloque: string): void {
-  this.update((state) => ({ ...state, bloque }));
-}
+   * Actualiza el valor de bloque en el estado.
+   * @param bloque Valor a actualizar.
+   */
+  public setBloque(bloque: string): void {
+    this.update((state) => ({ ...state, bloque }));
+  }
 
-/**
- * Actualiza el valor de acuerdo en el estado.
- * @param acuerdo Valor a actualizar.
- */
-public setAcuerdo(acuerdo: string): void {
-  this.update((state) => ({ ...state, acuerdo }));
-}
+  /**
+   * Actualiza el valor de acuerdo en el estado.
+   * @param acuerdo Valor a actualizar.
+   */
+  public setAcuerdo(acuerdo: string): void {
+    this.update((state) => ({ ...state, acuerdo }));
+  }
 
-/**
- * Actualiza el valor de observaciones en el estado.
- * @param observaciones Valor a actualizar.
- */
-public setObservaciones(observaciones: string): void {
-  this.update((state) => ({ ...state, observaciones }));
-}
+  /**
+   * Actualiza el valor de observaciones en el estado.
+   * @param observaciones Valor a actualizar.
+   */
+  public setObservaciones(observaciones: string): void {
+    this.update((state) => ({ ...state, observaciones }));
+  }
 
-/**
- * Actualiza el valor de nombre en el estado.
- * @param nombre Valor a actualizar.
- */
-public setNombre(nombre: string): void {
-  this.update((state) => ({ ...state, nombre }));
-}
+  /**
+   * Actualiza el valor de nombre en el estado.
+   * @param nombre Valor a actualizar.
+   */
+  public setNombre(nombre: string): void {
+    this.update((state) => ({ ...state, nombre }));
+  }
 
-/**
- * Actualiza el valor de primerApellido en el estado.
- * @param primerApellido Valor a actualizar.
- */
-public setPrimerApellido(primerApellido: string): void {
-  this.update((state) => ({ ...state, primerApellido }));
-}
+  /**
+   * Actualiza el valor de primerApellido en el estado.
+   * @param primerApellido Valor a actualizar.
+   */
+  public setPrimerApellido(primerApellido: string): void {
+    this.update((state) => ({ ...state, primerApellido }));
+  }
 
-/**
- * Actualiza el valor de segundoApellido en el estado.
- * @param segundoApellido Valor a actualizar.
- */
-public setSegundoApellido(segundoApellido: string): void {
-  this.update((state) => ({ ...state, segundoApellido }));
-}
+  /**
+   * Actualiza el valor de segundoApellido en el estado.
+   * @param segundoApellido Valor a actualizar.
+   */
+  public setSegundoApellido(segundoApellido: string): void {
+    this.update((state) => ({ ...state, segundoApellido }));
+  }
 
-/**
- * Actualiza el valor de registroFiscal en el estado.
- * @param registroFiscal Valor a actualizar.
- */
-public setRegistroFiscal(registroFiscal: string): void {
-  this.update((state) => ({ ...state, registroFiscal }));
-}
+  /**
+   * Actualiza el valor de registroFiscal en el estado.
+   * @param registroFiscal Valor a actualizar.
+   */
+  public setRegistroFiscal(registroFiscal: string): void {
+    this.update((state) => ({ ...state, registroFiscal }));
+  }
 
-/**
- * Actualiza el valor de razonSocial en el estado.
- * @param razonSocial Valor a actualizar.
- */
-public setRazonSocial(razonSocial: string): void {
-  this.update((state) => ({ ...state, razonSocial }));
-}
+  /**
+   * Actualiza el valor de razonSocial en el estado.
+   * @param razonSocial Valor a actualizar.
+   */
+  public setRazonSocial(razonSocial: string): void {
+    this.update((state) => ({ ...state, razonSocial }));
+  }
 
-/**
- * Actualiza el valor de calle en el estado.
- * @param calle Valor a actualizar.
- */
-public setCalle(calle: string): void {
-  this.update((state) => ({ ...state, calle }));
-}
+  /**
+   * Actualiza el valor de calle en el estado.
+   * @param calle Valor a actualizar.
+   */
+  public setCalle(calle: string): void {
+    this.update((state) => ({ ...state, calle }));
+  }
 
-/**
- * Actualiza el valor de numeroLetra en el estado.
- * @param numeroLetra Valor a actualizar.
- */
-public setNumeroLetra(numeroLetra: string): void {
-  this.update((state) => ({ ...state, numeroLetra }));
-}
+  /**
+   * Actualiza el valor de numeroLetra en el estado.
+   * @param numeroLetra Valor a actualizar.
+   */
+  public setNumeroLetra(numeroLetra: string): void {
+    this.update((state) => ({ ...state, numeroLetra }));
+  }
 
-/**
- * Actualiza el valor de telefono en el estado.
- * @param telefono Valor a actualizar.
- */
-public setTelefono(telefono: number): void {
-  this.update((state) => ({ ...state, telefono }));
-}
+  /**
+   * Actualiza el valor de telefono en el estado.
+   * @param telefono Valor a actualizar.
+   */
+  public setTelefono(telefono: number): void {
+    this.update((state) => ({ ...state, telefono }));
+  }
 
-/**
- * Actualiza el valor de ciudad en el estado.
- * @param ciudad Valor a actualizar.
- */
-public setCiudad(ciudad: number): void {
-  this.update((state) => ({ ...state, ciudad }));
-}
+  /**
+   * Actualiza el valor de ciudad en el estado.
+   * @param ciudad Valor a actualizar.
+   */
+  public setCiudad(ciudad: number): void {
+    this.update((state) => ({ ...state, ciudad }));
+  }
 
-/**
- * Actualiza el valor de fax en el estado.
- * @param fax Valor a actualizar.
- */
-public setFax(fax: number): void {
-  this.update((state) => ({ ...state, fax }));
-}
+  /**
+   * Actualiza el valor de fax en el estado.
+   * @param fax Valor a actualizar.
+   */
+  public setFax(fax: number): void {
+    this.update((state) => ({ ...state, fax }));
+  }
 
-/**
- * Actualiza el valor de correoElectronico en el estado.
- * @param correoElectronico Valor a actualizar.
- */
-public setCorreoElectronico(correoElectronico: string): void {
-  this.update((state) => ({ ...state, correoElectronico }));
-}
-
+  /**
+   * Actualiza el valor de correoElectronico en el estado.
+   * @param correoElectronico Valor a actualizar.
+   */
+  public setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({ ...state, correoElectronico }));
+  }
 }

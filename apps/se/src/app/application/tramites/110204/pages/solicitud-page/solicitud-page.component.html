@@ -19,9 +19,8 @@
       <app-paso-uno #pasoUnoRef></app-paso-uno>
       }
       @case (2) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110204" [procedureUrl]="'pexim/certificado-origen'"></paso-firma>
       }
-
       }
 
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"

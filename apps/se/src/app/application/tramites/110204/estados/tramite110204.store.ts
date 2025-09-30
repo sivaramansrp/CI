@@ -9,6 +9,9 @@ import { Mercancias } from '../models/plantas-consulta.model';
  * Este estado contiene formularios, catálogos, listas, valores seleccionados y otros datos requeridos.
  */
 export interface TramiteState {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /** Lista de catálogos que representan los idiomas disponibles. */
   idiomaDatos: Catalogo[];
 
@@ -46,19 +49,25 @@ export interface TramiteState {
    * Objeto que contiene datos del formulario del certificado.
    * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
    */
-  formCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formCertificado: {
+    [key: string]: undefined | boolean | string | number | object;
+  };
 
   /**
    * Objeto que contiene datos del formulario de datos del certificado.
    * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
    */
-  formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formDatosCertificado: {
+    [key: string]: undefined | boolean | string | number | object;
+  };
 
   /**
    * Objeto que contiene datos del formulario de mercancía.
    * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
    */
-  mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
+  mercanciaForm: {
+    [key: string]: undefined | boolean | string | number | object;
+  };
 
   /** Lista de mercancías encontradas o buscadas. */
   buscarMercancia: Mercancias[];
@@ -71,8 +80,6 @@ export interface TramiteState {
 
   mercanciaTabla: Mercancia[];
 }
-
-
 
 /**
  * Interfaz que representa el estado de una solicitud tipo 110204.
@@ -164,6 +171,7 @@ export interface Solicitud110204State {
  * Estado inicial que se utiliza para crear el store con valores por defecto.
  */
 export const INITIAL_STATE: TramiteState = {
+  idSolicitud: 0,
   altaPlanta: [],
   paisBloques: [],
   estado: { id: -1, descripcion: '' },
@@ -220,7 +228,7 @@ export const INITIAL_STATE: TramiteState = {
  * Store que administra el estado global del trámite 110204 utilizando Akita.
  * Este store encapsula todos los datos y formularios necesarios para la gestión
  * de un trámite, tales como catálogos, formularios, validaciones y mercancías.
- * 
+ *
  * Cada método `set` permite actualizar secciones específicas del estado de forma inmutable.
  */
 @Injectable({ providedIn: 'root' })
@@ -228,6 +236,18 @@ export const INITIAL_STATE: TramiteState = {
 export class Tramite110204Store extends Store<TramiteState> {
   constructor() {
     super(INITIAL_STATE);
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**
@@ -283,7 +303,9 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Actualiza los valores del formulario de datos del certificado.
    * @param values Clave/valor con campos del formulario a actualizar.
    */
-  setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDatosCertificado(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -296,7 +318,9 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Actualiza los valores del formulario principal del certificado.
    * @param values Clave/valor con campos del formulario.
    */
-  setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormCertificado(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -309,7 +333,9 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Actualiza los valores del formulario de mercancía.
    * @param values Clave/valor con información sobre la mercancía.
    */
-  setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormMercancia(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       mercanciaForm: {
         ...state.mercanciaForm,
@@ -364,7 +390,9 @@ export class Tramite110204Store extends Store<TramiteState> {
     this.update((state) => ({ ...state, representacionFederal }));
   }
 
-  public setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+  public setRepresentacionFederalDatos(
+    representacionFederalDatos: Catalogo[]
+  ): void {
     this.update((state) => ({ ...state, representacionFederalDatos }));
   }
 
