@@ -682,7 +682,7 @@ export class NuevoProgramaIndustrialService {
           apellidoMaterno: arr.segundoApellido ?? '',
           apellidoPaterno: arr.primerApellido ?? '',
           numeroActa: arr.numeroDeActa ?? '',
-          fechaActa: arr.fechaInicioInput ?? '',
+          fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
           numeroNotaria: arr.numeroDeNotaria ?? '',
           entidadFederativa: arr.estado ?? '',
           delegacionMunicipio: arr.estadoOptions ?? '',
