@@ -1,6 +1,7 @@
-import { API_POST_GUARDAR_SOLICITUD } from "../server/api-router";
+import { API_POST_GENERAR_CADENA_ORIGINAL, API_POST_GUARDAR_SOLICITUD } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
+import { GenerarCadenaOrigRequest } from "../models/request/generar-cadena-original-request.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -35,5 +36,13 @@ export class SolicitudService {
     postSolicitudGuardar(PAYLOAD: SolicitudCompletaRequest): Observable<BaseResponse<number>> {
         const ENDPOINT = `${this.host}${API_POST_GUARDAR_SOLICITUD}`;
         return this.http.post<BaseResponse<number>>(ENDPOINT, PAYLOAD);
+    }
+
+    /**
+     * Genera la cadena original para la solicitud.
+     */
+    postGenerarCadenaOriginal(PAYLOAD: GenerarCadenaOrigRequest): Observable<string> {
+        const ENDPOINT = `${this.host}${API_POST_GENERAR_CADENA_ORIGINAL}`;
+        return this.http.post<string>(ENDPOINT, {});
     }
 }

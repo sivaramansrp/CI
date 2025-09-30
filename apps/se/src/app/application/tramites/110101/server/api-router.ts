@@ -1,3 +1,5 @@
+import { IDSOLICITUD } from "@libs/shared/data-access-user/src";
+
 /**
  * cvePais de la solicitud que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el cvePais real de la solicitud.
@@ -129,3 +131,10 @@ export const API_POST_VALIDAR_EMPAQUE = `sat-t110101/solicitud/empaque/validar`;
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/guardar-solicitud
  */
 export const API_POST_GUARDAR_SOLICITUD = `sat-t110101/solicitud/guardar`;
+
+
+/**
+ * API para generar la cadena original para la solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original
+ */
+export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/generar-cadena-original`;
