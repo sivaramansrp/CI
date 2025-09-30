@@ -6,9 +6,9 @@ import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 
 import { CATALOGO_TIPO, MontoDeInversion } from '../../constantes/complementar-planta.enum';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MONTOS_DE_INVERSION } from '../../constantes/montos-de-inversion.enum';
@@ -180,9 +180,16 @@ export class MontosDeInversionComponent implements OnInit {
       .subscribe();
     this.montosDeInversionForm = this.fb.group({
       tipos: [this.solicitudState.tipos],
-      cantidad: [this.solicitudState.cantidad],
-      descripsion: [this.solicitudState.descripsion],
-      mnx: [this.solicitudState.mnx],
+      cantidad: [this.solicitudState.cantidad, [Validators.required , Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      descripsion: [this.solicitudState.descripsion, [Validators.required , Validators.maxLength(1000)]],
+      mnx: [
+        this.solicitudState.mnx,
+        [
+          Validators.required,
+          Validators.maxLength(16), 
+          Validators.pattern('^\\d{1,16}$')
+        ]
+      ],
     });
   }
   /**
