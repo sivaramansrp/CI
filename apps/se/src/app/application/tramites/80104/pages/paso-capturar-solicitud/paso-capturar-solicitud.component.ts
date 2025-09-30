@@ -1,5 +1,5 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState,ERROR_FORMA_ALERT,WizardService} from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -319,8 +319,8 @@ ngOnInit(): void {
         if (!this.consultaState.update) {
           this.esFormaValido = this.verificarLaValidezDelFormulario();
           if (!this.esFormaValido) {
-            this.indice = e.valor-1;
-            this.datosPasos.indice = e.valor-1;
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
             this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
             this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
             this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
@@ -450,15 +450,16 @@ ngOnInit(): void {
 
 
 /**
-   * Construye un arreglo de objetos de plantas basado en una estructura base común.
-   *
-   * @param arr Arreglo de datos de entrada para cada planta.
-   * @param base Objeto base que se combina con los datos específicos de cada planta.
-   * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
-   */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[], data: any): any {
-    // eslint-disable-next-line complexity
+ * Construye un arreglo de objetos de plantas basado en una estructura base común.
+ * 
+ * @param arr Arreglo de datos de entrada para cada planta.
+ * @param base Objeto base que se combina con los datos específicos de cada planta.
+ * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
+ */
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+ buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
+
+   // eslint-disable-next-line complexity
     const mapCapacidadInstalada = (item: any) => ({
       idPlantaCa: item.PLANTA ?? "",
       fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
@@ -482,65 +483,51 @@ ngOnInit(): void {
       idCapacidad: item.ID_CAPACIDAD ?? "",
       tipoServicio: item.TIPO_SERVICIO ?? "",
     });
- 
-    const MAP_MONTOS_INVERSION = (item: any) => ({
+
+  const MAP_COMPLEMENTAR = (item:any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+  })
+
+  const MAP_FIRMANTES = (item:any) => ({
+      tipoFirmante: item.tipoFirmante ?? '',
+  })
+  
+  const MAP_MONTOS_INVERSION = (item:any) => ({
       idPlantaM: item.PLANTA ?? "",
-      idMonto: (item.MONTO ?? "").toString(),
       tipo: item.TIPO ?? "",
-      descTipo: item.DESC_TIPO ?? "",
-      cantidad: (item.CANTIDAD ?? "").toString(),
+      cantidad: item.CANTIDAD ?? "",
       descripcion: item.DESCRIPCION ?? "",
-      monto: (item.MONTO ?? "").toString(),
-      testado: item.TESTADO ?? "",
-      descTestado: item.DESC_TESTADO ?? "",
-    })
- 
-    const MAP_EMPLEADOS = (item: any) => ({
+      monto: item.MONTO ?? "",
+  })
+
+  const MAP_EMPLEADOS = (item:any) => ({
       idPlantaE: item.PLANTA ?? '',
-      idEmpleados: item.ID_EMPLEADOS ?? '',
-      totalEmpleados: (item.TOTAL ?? '').toString(),
+      totalEmpleados: item.TOTAL ?? '',
       directos: item.DIRECTOS ?? '',
       cedula: item.CEDULA_DE_CUOTAS ?? '',
       fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
-      indirectos: item.INDIRECTOS_TEST ?? '',
+      indirectos: item.INDIRECTOS ?? '',
       contrato: item.CONTRATO ?? '',
       objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
       fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
       fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
-      testado: item.TESTADO ?? '',
-      descTestado: item.DESC_TESTADO ?? '',
-    })
- 
-    const MAP_COMPLEMENTAR = (item: any) => ({
-      idPlantaC: item.PLANTA ?? '' ,
-      idDato: item.DATO ?? '',
-      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
-      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
-      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
-      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
-      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
-      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
-      respaldoOtro: item.RESPALDO_OTRO ?? '',
-      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
-      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
-      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
-      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
-    })
- 
-    const MAP_FIRMANTES = (item:any) => ({
-      idPlantaF: item.planta ?? '',
-      tipoFirmante: item.tipoFirmante ?? '',
-      descTipoFirmante: item.descTipoFirmante ?? '',
-    })
- 
-    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
-    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
-    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
-    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
-    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
- 
+  })
+
+  const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
+  const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+  const firmantes = (data.firmantesDatos || []).map(MAP_FIRMANTES); 
+  const montos = (data.montosInversionDatos || []).map(MAP_MONTOS_INVERSION);
+  const datosEmpleados = (data.empleadosDatos || []).map(MAP_EMPLEADOS);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let RESULT: any[] = [];
     array.forEach(arr => {
@@ -588,7 +575,7 @@ ngOnInit(): void {
       apellidoMaterno: arr.segundoApellido ?? '',
       apellidoPaterno: arr.primerApellido ?? '',
       numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: arr.fechaDelActa ?? '',
+      fechaActa: formatearFechaYyyyMmDd(arr.fechaDelActa ?? ''),
       numeroNotaria: arr.numeroDeNotaria ?? '',
       entidadFederativa: arr.estado ?? '',
       delegacionMunicipio: arr.estadoOptions ?? '',
@@ -638,7 +625,7 @@ ngOnInit(): void {
         
     },
       "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
-      "notario":[...NOTARIOS],
+      "notarios":[...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [

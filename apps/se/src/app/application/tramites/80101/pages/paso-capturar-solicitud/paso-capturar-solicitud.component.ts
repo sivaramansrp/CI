@@ -15,7 +15,6 @@ import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
- 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  *
@@ -45,7 +44,6 @@ import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-acci
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
- 
   padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
@@ -165,7 +163,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
   * URL de la página actual.
   */
   public solicitudState!: Tramite80101State;
- 
+  
   /**
   * @property consultaState
   * @description

@@ -42,6 +42,9 @@ import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-p
 import { CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { ComplimentosService } from '../../services/complimentos.service';
 
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
+import { Directos } from '../../constantes/empleados.enum';
+
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -77,6 +80,12 @@ import { ComplimentosService } from '../../services/complimentos.service';
 export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
 
 
+  /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
+  @Input()
+  datosFederatarios!: FederatariosEncabezado;
   /**
    * Contiene los datos de los federatarios utilizados en el formulario de representante legal.
    * Esta propiedad se inicializa con la constante `DATOS_FEDERATARIOS`.
@@ -160,6 +169,34 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     CapacidadInstalada[]
   > = new EventEmitter<CapacidadInstalada[]>(false);
 
+/**
+ * Evento que emite la lista de complementos de planta.
+ * 
+ * La emisión es síncrona para garantizar que los datos se procesen inmediatamente.
+ */
+  @Output() obtenerComplementarPlantaListChange = new EventEmitter<ComplementoDePlanta[]>(false);
+
+/**
+ * Evento que emite la lista de firmantes relacionados con los complementos de planta.
+ * 
+ * La emisión es síncrona para garantizar el procesamiento inmediato de los datos.
+ */
+  @Output() obtenerFirmantesListChange = new EventEmitter<ComplementarPlantaState[]>(false);
+
+/**
+ * Evento que emite la lista de montos de inversión.
+ * 
+ * La emisión es síncrona para asegurar que los datos se procesen de inmediato.
+ */
+  @Output() obtenerMontosInversionListChange = new EventEmitter<MontoDeInversion[]>(false);
+
+/**
+ * Evento que emite la lista de empleados directos.
+ * 
+ * La emisión es síncrona para garantizar el procesamiento inmediato de los datos.
+ */
+  @Output() obtenerEmpleadosListChange = new EventEmitter<Directos[]>(false);
+  
   /**
    * Configuración para la tabla de plantas disponibles
    * @property {FederatariosYPlantasConfiguration<PlantasDisponibles>} plantasDisponiblesConfig
@@ -281,10 +318,16 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
 
   /**
-    * Controla la visibilidad del popup "Complementar Planta".
-    * @property {boolean} mostrarComplementarPlantaPopup
-    */
-  public mostrarComplementarPlantaPopup: boolean = false;
+   * Emisor de eventos para los datos de federatarios.
+   */
+  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
+
+ /**
+   * Controla la visibilidad del popup "Complementar Planta".
+   * @property {boolean} mostrarComplementarPlantaPopup
+   */
+  public mostrarComplementarPlantaPopup:boolean = false;
+  
 
   /**
  * Controla la visibilidad del popup "Montos de Inversión".
@@ -612,35 +655,34 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     this.federatariosFormGroup.reset();
   }
 
-  /**
-   * Asigna a `plantasDisponiblesDatos` los datos disponibles de plantas IMMEX.
-   * Método utilizado para cargar o actualizar la lista de plantas disponibles.
-   */
-  buscarPlantasImmex(): void {
-    this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
-    this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
-  }
+/**
+ * Asigna a `plantasDisponiblesDatos` los datos disponibles de plantas IMMEX.
+ * Método utilizado para cargar o actualizar la lista de plantas disponibles.
+ */
+buscarPlantasImmex(): void {
+  this.datosPlantaDisponibles.emit();
+}
 
-  /**
-   * Adds IMMEX plant data to the `plantasImmexDatos` array.
-   * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
-   *
-   * @remarks
-   * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
-   */
-  agregarPlantas(): void {
-    this.plantasImmexDatos = [INMEX_PLANTAS];
-    this.datosPlantasImmex.emit(this.plantasImmexDatos);
-  }
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
+}
 
 
-  setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
-    if (row) {
-      this.selectedPlantaImmex = row;
-    } else {
-      this.selectedPlantaImmex = null;
-    }
+setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
+  if (row) {
+    this.selectedPlantaImmex = row;
+  } else {
+    this.selectedPlantaImmex = null;
   }
+}
 
   /**
    * Abre un diálogo modal para complementar información de la planta.
@@ -882,6 +924,58 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     this.obtenerCapacidadInstaladaTablaDatos.emit(event);
   }
 
+  
+/**
+ * Emite el evento `obtenerComplementarPlantaListChange` con la lista de complementos de planta recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `ComplementoDePlanta` que representa la lista de complementos de planta.
+ */
+  obtenerComplementarPlantaList(event: ComplementoDePlanta[]): void {
+      this.obtenerComplementarPlantaListChange.emit(event);
+  }
+
+/**
+ * Emite el evento `obtenerFirmantesListChange` con la lista de firmantes recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `ComplementarPlantaState` que representa la lista de firmantes.
+ */
+  obtenerFirmantesList(event:ComplementarPlantaState[]): void {
+    this.obtenerFirmantesListChange.emit(event);
+  }
+
+/**
+ * Emite el evento `obtenerMontosInversionListChange` con la lista de montos de inversión recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `MontoDeInversion` que representa la lista de montos de inversión.
+ */
+  obtenerMontosInversionList(event:MontoDeInversion[]): void {
+    this.obtenerMontosInversionListChange.emit(event);
+  }
+
+/**
+ * Emite el evento `obtenerEmpleadosListChange` con la lista de empleados directos recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `Directos` que representa la lista de empleados directos.
+ */
+  obtenerEmpleadosList(event:Directos[]): void {
+    this.obtenerEmpleadosListChange.emit(event);
+  }
+
+    /**
+ * Maneja el cambio de valor en un campo del formulario de federatarios.
+ * Actualiza el objeto de datos, emite el evento correspondiente y sincroniza el valor en el formulario reactivo.
+ * @param event Objeto del catálogo seleccionado.
+ * @param campo Nombre del campo que se actualiza.
+ */
+  eventoDeCambioDeValor(event: Catalogo, campo: string): void {
+    this.datosFederatarios = {
+      ...this.datosFederatarios,
+      [campo]: event.clave
+    };
+    this.datosFederatariosEvent.emit(this.datosFederatarios);
+
+  }
+
   /**
   * @method ngOnDestroy
   * @description
@@ -895,3 +989,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   }
 
 }
+function abrirDialogoComplementarPlanta() {
+  throw new Error('Function not implemented.');
+}
+
