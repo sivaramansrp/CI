@@ -254,7 +254,7 @@ export const IDSOLICITUD = '{idSolicitud}';
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_ACUSE = (idSolicitud: string, procedure: number): string => `sat-t${procedure}/solicitud/${idSolicitud}/acuse/guardar`;
+export const API_POST_GUARDAR_ACUSE = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/acuse/guardar`;
 
 /**
  * API para guardar el recibo oficial de una solicitud.
