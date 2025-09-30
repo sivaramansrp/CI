@@ -59,17 +59,17 @@ export class SolicitudPageComponent {
   indice: number = 1;
 
   /**
-   * @property {boolean} esFormaValido
-   * @description
-   * Indica si el formulario del paso actual es válido.
-   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
-   */
+    * @property {boolean} esFormaValido
+    * @description
+    * Indica si el formulario del paso actual es válido.
+    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+    */
   esFormaValido: boolean = false;
   /**
-   * @property {string} formErrorAlert
-   * @description
-   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
-   */
+    * @property {string} formErrorAlert
+    * @description
+    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+    */
   public formErrorAlert = ERROR_FORMA_ALERT;
   /**
    * @property {PasoUnoComponent} pasoUnoComponent
@@ -106,6 +106,7 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+
     this.esFormaValido = false;
 
     if (this.indice === 1 && e.accion === 'cont') {
@@ -125,6 +126,7 @@ export class SolicitudPageComponent {
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
@@ -140,6 +142,16 @@ export class SolicitudPageComponent {
     }
   }
 
+  /**
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
