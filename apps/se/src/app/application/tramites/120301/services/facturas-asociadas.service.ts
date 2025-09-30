@@ -193,8 +193,16 @@ export class FacturasAsociadasService {
     return this.http.post<BaseResponse<null>>(ENDPOINT, body);
   }
 
+  /**
+   * Elimina una factura TPL específica.
+   * 
+   * @param id_factura Identificador único de la factura a eliminar.
+   * @returns Observable con la respuesta del servidor que indica el resultado de la operación.
+   */
   deleteFactura(id_factura: number): Observable<BaseResponse<void>> {
     const ENDPOINT = `${this.host}${API_DELETE_FACTURAS_TPL(id_factura.toString())}`;
     return this.http.delete<BaseResponse<void>>(ENDPOINT);
   }
+
 }
+

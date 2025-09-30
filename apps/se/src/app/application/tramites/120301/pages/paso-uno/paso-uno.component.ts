@@ -8,24 +8,26 @@
  */
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-
 import {
   ConsultaioQuery,
   ConsultaioState,
   ConsultaioStore,
 } from '@ng-mf/data-access-user';
-
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-
-import { PersonaTerceros } from '@ng-mf/data-access-user';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CapturarFacturasComponent } from '../../components/capturar-facturas/capturar-facturas.component';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { ConstanciaDelRegistroComponent } from '../../components/constancia-del-registro/constancia-del-registro.component';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
+import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FabricanteResponse } from '../../models/response/fabricantes-response.model';
+import { FacturasTplAsociadaResponse } from '../../models/response/datos-factura-response.model';
 import { FormularioAsociacionFacturaComponent } from '../../components/facturas-asociadas/facturas-asociadas.component';
 import { HistoricoFabricantesComponent } from '../../components/historico-fabricantes/historico-fabricantes.component';
+import { ImportadorDestinoResponse } from '../../models/response/importador-destino-response.model';
 import { ImportadorEnDestinoComponent } from '../../components/importador-en-destino/importador-en-destino.component';
+import { PersonaTerceros } from '@ng-mf/data-access-user';
+import { TplDetalleResponse } from '../../models/response/tpl-detalle-response.model';
 
 /**
  * @class PasoUnoComponent
@@ -155,74 +157,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @ViewChild('importadorEnDestinoRef') importadorEnDestinoComp!: ImportadorEnDestinoComponent;
 
   /**
-   * Maneja el evento emitido por el componente hijo para mostrar pestañas adicionales.
-   * @param event Valor booleano emitido por el hijo.
-   */
-  /**
-   * @method onMostrarTabs
-   * @description
-   * Maneja el evento emitido por el componente hijo para mostrar u ocultar pestañas adicionales.
-   * Si el evento es verdadero, habilita la visualización de la pestaña extra y avanza el índice a la pestaña de facturas asociadas.
-   * Si el evento es falso, oculta la pestaña adicional. En ambos casos, emite el cambio al componente padre mediante mostrarOtraPestanaChange.
-   * @param {boolean} event - Valor booleano que indica si se deben mostrar las pestañas adicionales.
-   * @returns {void} No retorna ningún valor.
-   * @example
-   * // Desde el hijo: this.mostrarTabs.emit(true);
-   * // Desde el padre: <app-paso-uno (mostrarOtraPestanaChange)="onCambioPestana($event)"></app-paso-uno>
-   */
-  public onMostrarTabs(event: boolean): void {
-    if (event) {
-      this.mostrarOtraPestana = true;
-      this.indice = 3; // Avanza a la siguiente tab (Facturas asociadas)
-      this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
-    } else {
-      this.mostrarOtraPestana = false;
-      this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
-    }
-  }
-
-  /**
-   * @method alErrorDeValidacion
-   * @description
-   * Maneja el evento de error de validación emitido por el componente hijo ConstanciaDelRegistroComponent
-   * cuando ocurren errores en la validación del formulario de año. Este método actúa como un puente
-   * de comunicación entre el componente hijo y el componente padre, propagando el estado de error
-   * hacia arriba en la jerarquía de componentes para que pueda ser manejado adecuadamente.
-   * 
-   * @param {boolean} event - Valor booleano que indica si hay errores de validación.
-   *                         - `true`: Existen errores de validación en el formulario
-   *                         - `false`: El formulario es válido, no hay errores
-   * 
-   * @returns {void} No retorna ningún valor.
-   * 
-   * @public
-   * @memberof PasoUnoComponent
-   * @since 1.0.0
-   * 
-   * @example
-   * ```html
-   * <!-- Uso en el template del componente padre -->
-   * <app-constancia-del-registro 
-   *   (errorValidacion)="alErrorDeValidacion($event)"
-   *   [formularioDeshabilitado]="formularioDeshabilitado">
-   * </app-constancia-del-registro>
-   * ```
-   * 
-   * @example
-   * ```typescript
-   * // El flujo de eventos es:
-   * // 1. ConstanciaDelRegistroComponent detecta error → emite errorValidacion(true)
-   * // 2. PasoUnoComponent recibe evento → ejecuta alErrorDeValidacion(true)
-   * // 3. PasoUnoComponent propaga evento → emite errorValidacion(true) al padre
-   * ```
-   * 
-   * @see {@link ConstanciaDelRegistroComponent} - Componente que emite el evento original
-   * @see {@link EventEmitter#emit} - Método utilizado para propagar el evento
-   */
-  public alErrorDeValidacion(event: boolean): void {
-    this.errorValidacion.emit(event);
-  }
-  /**
    * @property {boolean} mostrarOtraPestana
    * @description
    * Controla la visibilidad de pestañas adicionales en la interfaz del componente.
@@ -242,6 +176,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * ```
    */
   mostrarOtraPestana: boolean = false;
+  mostrarEvaluar: boolean = false;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -269,7 +204,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-   
+
   /**
    * Indica si existen datos de respuesta para mostrar en el formulario.
    * @type {boolean}
@@ -299,7 +234,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * }
    * ```
    */
- public consultaState!: ConsultaioState;
+  public consultaState!: ConsultaioState;
   /**
    * @property {boolean} esFormularioSoloLectura
    * @description
@@ -330,10 +265,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
-    /**
-   * Lista de personas relacionadas con el trámite.
-   * @type {PersonaTerceros[]}
-   */
+  /**
+ * Lista de personas relacionadas con el trámite.
+ * @type {PersonaTerceros[]}
+ */
   public personas: PersonaTerceros[] = [];
 
   /**
@@ -371,6 +306,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @see {@link validarTodosLosFormularios} - Método que utiliza este conjunto para validación
    */
   tabsCompletadas: Set<number> = new Set();
+
+  /**
+   * @property {DetallesCupoResponse} detalles
+   * obtiene los detalles del cupo seleccionado.
+   */
+  detalles!: TplDetalleResponse;
+
+  /**
+   * @property {FacturasTplAsociadaResponse[]} facturas
+   */
+  informacionFacturasAsociadas!: FacturasTplAsociadaResponse;
+
+  /**
+   * @property {FabricanteResponse} InformacionHistorico
+   */
+  informacionHistorico!: FabricanteResponse;
+
+  informacionImportador!: ImportadorDestinoResponse;
 
   /**
    * @method seleccionaTab
@@ -569,10 +522,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private consultaStore: ConsultaioStore,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
-    private elegibilidadTextilesService: ElegibilidadTextilesService
-  ) {}
+    private elegibilidadTextilesService: ElegibilidadTextilesService,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
+  ) { }
 
   /**
    * @method ngOnInit
@@ -602,7 +555,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
-        this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -610,6 +563,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.esFormularioSoloLectura = seccionState.readonly;
           // Normal logic: readonly true = disable fields, readonly false = enable fields
           this.formularioDeshabilitado = seccionState.readonly;
+          if (this.consultaState.folioTramite) {
+            this.obtenerDetallesCupo(this.consultaState.folioTramite ?? '');
+            this.obtenerDatosFacturasAsociadas(this.consultaState.folioTramite ?? '');
+            this.obtenerDatosHistorico(this.consultaState.folioTramite ?? '');
+            this.obtenerInformacionImportador(this.consultaState.folioTramite);
+            this.mostrarOtraPestana = true;
+            this.mostrarEvaluar = false;
+          }
           if (this.consultaState.update) {
             this.guardarDatosFormulario();
           } else {
@@ -619,105 +580,152 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-    /**
-     * @method guardarDatosFormulario
-     * @description
-     * Guarda los datos del formulario obtenidos del servicio de elegibilidad de textiles.
-     * Este método se suscribe al servicio para obtener los datos de prefill de la solicitud
-     * y actualiza el estado del formulario con la información recibida del backend.
-     * 
-     * La suscripción se maneja de forma segura utilizando el patrón `takeUntil` para
-     * evitar fugas de memoria. Los datos obtenidos incluyen información de personas
-     * y otros datos relevantes para el trámite que deben ser pre-cargados en el formulario.
-     * 
-     * @returns {void} No retorna ningún valor.
-     * 
-     * @private
-     * @memberof PasoUnoComponent
-     * @since 1.0.0
-     * 
-     * @throws {Error} Puede lanzar errores si el servicio de elegibilidad falla
-     *                 o si hay problemas de conectividad con el backend.
-     * 
-     * @example
-     * ```typescript
-     * // Se ejecuta automáticamente cuando el estado cambia a 'update'
-     * if (this.consultaState.update) {
-     *   this.guardarDatosFormulario(); // Carga datos existentes
-     * }
-     * ```
-     * 
-     * @example
-     * ```typescript
-     * // Flujo interno del método
-     * this.elegibilidadTextilesService.getPrefillDatos()
-     *   .pipe(takeUntil(this.destroyNotifier$))
-     *   .subscribe((resp) => {
-     *     if (resp) {
-     *       this.esDatosRespuesta = true;
-     *       this.personas = resp.personas || [];
-     *       this.elegibilidadTextilesService.actualizarEstadoFormulario(resp);
-     *     }
-     *   });
-     * ```
-     * 
-     * @see {@link ElegibilidadTextilesService#getPrefillDatos} - Servicio que provee los datos
-     * @see {@link ElegibilidadTextilesService#actualizarEstadoFormulario} - Método para actualizar estado
-     * @see {@link esDatosRespuesta} - Propiedad que se actualiza con el resultado
-     * @see {@link personas} - Array que se actualiza con los datos de personas
-     */
-    guardarDatosFormulario(): void {
-      this.elegibilidadTextilesService
-        .getPrefillDatos()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((resp) => {
-          if (resp) {
-            this.esDatosRespuesta = true;
-            this.personas =
-              (resp as { personas?: PersonaTerceros[] }).personas || [];
-            this.elegibilidadTextilesService.actualizarEstadoFormulario(resp);
-          }
-        });
-    }
+
   /**
-   * @method onMostrarTabs
+   * Obtener los datos del importador del destino
+   * @param idFolio Identificador del folio del trámite
+   */
+  obtenerInformacionImportador(idFolio: string): void {
+    this.evaluacionSolicitud.getDatosImportadorDestino(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.informacionImportador = response.datos ?? {} as ImportadorDestinoResponse;
+          }
+          else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+  }
+
+  /**
+   * Obtiene los datos históricos de un trámite.
+   * @param idFolio Identificador del folio del trámite
+   */
+  obtenerDatosHistorico(idFolio: string): void {
+    this.evaluacionSolicitud.getDatosFabricante(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.informacionHistorico = response.datos ?? {} as FabricanteResponse;
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+  }
+
+  /**
+   * Obtener los datos de las facturas asociadas 
+   *  * @param idFolio Identificador del folio del trámite
+   */
+  obtenerDatosFacturasAsociadas(idFolio: string): void {
+    this.evaluacionSolicitud.getFacturasAsociadasPorFolio(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.informacionFacturasAsociadas = response.datos ?? {} as FacturasTplAsociadaResponse;
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+  }
+
+  /**
+   * Obtiene los detalles del cupo asociado al folio del trámite.
+   * @param idFolio Identificador del folio del trámite
+   */
+  obtenerDetallesCupo(idFolio: string): void {
+    this.evaluacionSolicitud.getDetallesCupo(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.detalles = response.datos ?? {} as TplDetalleResponse;
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+  }
+
+  /**
+   * @method guardarDatosFormulario
    * @description
-   * Maneja el evento emitido por un componente hijo para controlar la visibilidad de pestañas adicionales.
-   * Este método se ejecuta cuando el componente hijo determina que se deben mostrar pestañas extra
-   * basándose en la lógica de negocio o en la entrada del usuario. Solo actualiza el estado
-   * cuando el valor recibido es verdadero, manteniendo la visibilidad una vez habilitada.
+   * Guarda los datos del formulario obtenidos del servicio de elegibilidad de textiles.
+   * Este método se suscribe al servicio para obtener los datos de prefill de la solicitud
+   * y actualiza el estado del formulario con la información recibida del backend.
    * 
-   * @param {boolean} value - Valor booleano emitido por el componente hijo que indica
-   *                         si las pestañas adicionales deben ser mostradas.
-   *                         - `true`: Las pestañas adicionales se mostrarán
-   *                         - `false`: No realiza ninguna acción (mantiene el estado actual)
+   * La suscripción se maneja de forma segura utilizando el patrón `takeUntil` para
+   * evitar fugas de memoria. Los datos obtenidos incluyen información de personas
+   * y otros datos relevantes para el trámite que deben ser pre-cargados en el formulario.
    * 
    * @returns {void} No retorna ningún valor.
    * 
-   * @public
+   * @private
    * @memberof PasoUnoComponent
    * @since 1.0.0
    * 
+   * @throws {Error} Puede lanzar errores si el servicio de elegibilidad falla
+   *                 o si hay problemas de conectividad con el backend.
+   * 
    * @example
    * ```typescript
-   * // Uso desde el template del componente hijo
-   * // <app-hijo-component (mostrarTabs)="onMostrarTabs($event)"></app-hijo-component>
-   * 
-   * // El componente hijo emite el evento
-   * // this.mostrarTabs.emit(true);
-   * 
-   * // Resultado: this.mostrarOtraPestana = true
+   * // Se ejecuta automáticamente cuando el estado cambia a 'update'
+   * if (this.consultaState.update) {
+   *   this.guardarDatosFormulario(); // Carga datos existentes
+   * }
    * ```
    * 
    * @example
-   * ```html
-   * <!-- Uso en el template del componente padre -->
-   * <app-formulario-hijo 
-   *   (mostrarTabsEvent)="onMostrarTabs($event)"
-   *   [formularioDeshabilitado]="formularioDeshabilitado">
-   * </app-formulario-hijo>
+   * ```typescript
+   * // Flujo interno del método
+   * this.elegibilidadTextilesService.getPrefillDatos()
+   *   .pipe(takeUntil(this.destroyNotifier$))
+   *   .subscribe((resp) => {
+   *     if (resp) {
+   *       this.esDatosRespuesta = true;
+   *       this.personas = resp.personas || [];
+   *       this.elegibilidadTextilesService.actualizarEstadoFormulario(resp);
+   *     }
+   *   });
    * ```
+   * 
+   * @see {@link ElegibilidadTextilesService#getPrefillDatos} - Servicio que provee los datos
+   * @see {@link ElegibilidadTextilesService#actualizarEstadoFormulario} - Método para actualizar estado
+   * @see {@link esDatosRespuesta} - Propiedad que se actualiza con el resultado
+   * @see {@link personas} - Array que se actualiza con los datos de personas
    */
+  guardarDatosFormulario(): void {
+    this.elegibilidadTextilesService
+      .getPrefillDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.personas =
+            (resp as { personas?: PersonaTerceros[] }).personas || [];
+          this.elegibilidadTextilesService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * @method cargarDatosPrevios
@@ -825,4 +833,76 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
+  /**
+   * Maneja el evento emitido por el componente hijo para mostrar pestañas adicionales.
+   * @param event Valor booleano emitido por el hijo.
+   */
+  /**
+   * @method onMostrarTabs
+   * @description
+   * Maneja el evento emitido por el componente hijo para mostrar u ocultar pestañas adicionales.
+   * Si el evento es verdadero, habilita la visualización de la pestaña extra y avanza el índice a la pestaña de facturas asociadas.
+   * Si el evento es falso, oculta la pestaña adicional. En ambos casos, emite el cambio al componente padre mediante mostrarOtraPestanaChange.
+   * @param {boolean} event - Valor booleano que indica si se deben mostrar las pestañas adicionales.
+   * @returns {void} No retorna ningún valor.
+   * @example
+   * // Desde el hijo: this.mostrarTabs.emit(true);
+   * // Desde el padre: <app-paso-uno (mostrarOtraPestanaChange)="onCambioPestana($event)"></app-paso-uno>
+   */
+  public onMostrarTabs(event: boolean): void {
+    if (event) {
+      this.mostrarOtraPestana = true;
+      this.mostrarEvaluar = true;
+      this.indice = 3; // Avanza a la siguiente tab (Facturas asociadas)
+      this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
+    } else {
+      this.mostrarOtraPestana = false;
+      this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
+    }
+  }
+
+  /**
+   * @method alErrorDeValidacion
+   * @description
+   * Maneja el evento de error de validación emitido por el componente hijo ConstanciaDelRegistroComponent
+   * cuando ocurren errores en la validación del formulario de año. Este método actúa como un puente
+   * de comunicación entre el componente hijo y el componente padre, propagando el estado de error
+   * hacia arriba en la jerarquía de componentes para que pueda ser manejado adecuadamente.
+   * 
+   * @param {boolean} event - Valor booleano que indica si hay errores de validación.
+   *                         - `true`: Existen errores de validación en el formulario
+   *                         - `false`: El formulario es válido, no hay errores
+   * 
+   * @returns {void} No retorna ningún valor.
+   * 
+   * @public
+   * @memberof PasoUnoComponent
+   * @since 1.0.0
+   * 
+   * @example
+   * ```html
+   * <!-- Uso en el template del componente padre -->
+   * <app-constancia-del-registro 
+   *   (errorValidacion)="alErrorDeValidacion($event)"
+   *   [formularioDeshabilitado]="formularioDeshabilitado">
+   * </app-constancia-del-registro>
+   * ```
+   * 
+   * @example
+   * ```typescript
+   * // El flujo de eventos es:
+   * // 1. ConstanciaDelRegistroComponent detecta error → emite errorValidacion(true)
+   * // 2. PasoUnoComponent recibe evento → ejecuta alErrorDeValidacion(true)
+   * // 3. PasoUnoComponent propaga evento → emite errorValidacion(true) al padre
+   * ```
+   * 
+   * @see {@link ConstanciaDelRegistroComponent} - Componente que emite el evento original
+   * @see {@link EventEmitter#emit} - Método utilizado para propagar el evento
+   */
+  public alErrorDeValidacion(event: boolean): void {
+    this.errorValidacion.emit(event);
+  }
 }
+
