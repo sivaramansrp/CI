@@ -223,7 +223,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       informacionRadios: [this.solicitudeState?.informacionRadios],
       juegoSurtido:[],
       descripcionJuegoSurtido: ['', Validators.required],
-      protestoDecirVerdad: [false, Validators.requiredTrue]
+      protesto_verdad: [false, Validators.requiredTrue]
     });
   }
 

@@ -79,6 +79,9 @@ export interface Solicitante110101State {
 
   /** Valor para check protesto */
   protesto_verdad: boolean;
+
+  /** Valor habilitar tab Procesos */
+  tab_procesos: boolean;
 }
 
 
@@ -164,7 +167,8 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     envasesTablaDatos: [],
     envasesCriteriosDatos: [],
     declaracion_solicitud:[],
-    protesto_verdad: false
+    protesto_verdad: false,
+    tab_procesos: false
   };
 }
 
@@ -576,6 +580,17 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       protesto_verdad,
+    }));
+  }
+
+   /**
+   * Actualiza el la vista de Proceso.
+   * @param tab_procesos - El valor booleano a establecer true o false.
+   */
+  public setTabProceso(tab_procesos: boolean ): void {
+    this.update((state) => ({
+      ...state,
+      tab_procesos,
     }));
   }
 }

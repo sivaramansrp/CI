@@ -49,10 +49,11 @@
             </li>
             }
             }
-
+            @if (this.solicitudeState.tab_procesos === true) {
             <li [ngClass]="indice === 5 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(5)" (click)="seleccionaTab(5)">Procesos</a>
             </li>
+            }
         </ul>
 
         <ng-container>
@@ -76,7 +77,9 @@
             }
             }
             @case (5) {
+             @if (this.solicitudeState.tab_procesos === true) {
             <app-procesos></app-procesos>
+            }
             }
             }
         </ng-container>

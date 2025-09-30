@@ -505,7 +505,17 @@ get ninoFormGroup(): FormGroup {
     }
     this.cerrarDialogo();
   }
-  
+
+  /**
+   * @method datoNull
+   * @description Convierte cadenas vacías o valores `undefined` en `null` para uniformidad en el payload.
+   * @param {string | null | undefined} value - Valor a evaluar.
+   * @returns {string | null} `null` si el valor es vacío o undefined; en caso contrario regresa el valor original.
+   */
+  private static datoNull(value: string | null | undefined): string | null {
+    return value === '' || value === undefined ? null : value;
+  }
+    
 
 /**
  * @method validarInsumoOempaque
@@ -518,31 +528,25 @@ get ninoFormGroup(): FormGroup {
  * @returns {void}
  */
   validarInsumoOempaque(tipo: 'Insumo' | 'Empaque'): void {
-    // Función auxiliar
-    const DATONULL = (value: string | null | undefined) => {
-      return value === '' || value === undefined ? null : value;
-    };
-    
-    
    
     const PAIS_DESC = this.paisOrigen.find(item => item.id === Number(this.ninoFormGroup.get('pais')?.value)) || null;
     // Construcción base del payload
     const PAYLOAD: InsumoTratadosRequest = {
       insumo: {
         id_solicitud: null,
-        nombre: DATONULL(this.ninoFormGroup.get('nombreTecnico')?.value),
-        desc_fabricante_productor: DATONULL(this.ninoFormGroup.get('fabricante')?.value),
-        desc_proveedor: DATONULL(this.ninoFormGroup.get('proveedor')?.value),
-        cve_fraccion: DATONULL(this.ninoFormGroup.get('fraccionArancelaria')?.value),
+        nombre: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('nombreTecnico')?.value),
+        desc_fabricante_productor: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('fabricante')?.value),
+        desc_proveedor: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('proveedor')?.value),
+        cve_fraccion: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('fraccionArancelaria')?.value),
         imp_valor: this.ninoFormGroup.get('valorDolares')?.value,
         ide_tipo_insumo: this.modal === 'Insumo' ? 'TIPIN.02' : 'TIPIN.01',
         //Aveces esta oculto 
         peso: this.solicitudeState.validacionFraccionArancelaria.peso_requerido,
         //Combo
-        cve_pais: DATONULL(PAIS_DESC?.clave),
+        cve_pais: DatosMercanciaComponent.datoNull(PAIS_DESC?.clave),
         volumen: this.solicitudeState.validacionFraccionArancelaria.volumen_requerido,
         // Aveces sale
-        rfc_fabricante_productor: DATONULL(this.ninoFormGroup.get('rfc')?.value),
+        rfc_fabricante_productor: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('rfc')?.value),
       
         tratados_originarios: this.filasSeleccionadas.map(fila => ({
           id_criterio_tratado: fila.id_criterio_tratado ?? 0, 
@@ -775,6 +779,7 @@ get ninoFormGroup(): FormGroup {
             }
             this.tramite110101Store.clearRespuestaServicioValidarFraccionArancelaria();
             this.tramite110101Store.setRespuestaServicioValidarFraccion(response.datos ?? {} as FraccionValidarResponse);
+            this.tramite110101Store.setTabProceso(response.datos?.mercancia.proceso_es_requerido ?? false)
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
