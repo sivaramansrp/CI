@@ -1,4 +1,3 @@
-
 <div class="page">
     <div class="container">
         <div class="row">
@@ -11,11 +10,36 @@
             @switch (indice) { @case (1) {
             <app-paso-uno></app-paso-uno>
             } @case (2) {
-            <app-paso-dos></app-paso-dos>
+            <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'80208'"
+                [cargaArchivosEvento]="cargarArchivosEvento"
+                (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+                (reenviarCargaRealizada)="cargaRealizada($event)"
+                (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
             } @case (3) {
-            <app-paso-cuatro></app-paso-cuatro>
+            <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="80208"
+                [procedureUrl]="'solicitud-modalidad/modalidad'"></paso-firma>
             } }
-            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+            <div class="row">
+                <div class="col-md-12">
+                    @if (indice !== 2) {
+                    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" ></btn-continuar>
+                    } @else {
+                    <div class="mt-5 mb-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-default" (click)="anterior()"
+                            *ngIf="seccionCargarDocumentos">
+                            Anterior
+                        </button>
+
+                        <button class="btn btn-primary ms-3" (click)="
+              seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
+            " [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)">
+                            {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+                        </button>
+                    </div>
+                    }
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

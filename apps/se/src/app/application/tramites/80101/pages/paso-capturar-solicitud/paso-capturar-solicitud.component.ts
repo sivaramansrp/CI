@@ -15,7 +15,6 @@ import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
- 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  *
@@ -45,7 +44,6 @@ import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-acci
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
- 
   padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
@@ -165,7 +163,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
   * URL de la página actual.
   */
   public solicitudState!: Tramite80101State;
- 
+  
   /**
   * @property consultaState
   * @description
@@ -516,59 +514,45 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
       testado: "1",
     });
- 
+
     const MAP_MONTOS_INVERSION = (item: any) => ({
       idPlantaM: item.PLANTA ?? "",
-      idMonto: (item.MONTO ?? "").toString(),
       tipo: item.TIPO ?? "",
-      descTipo: item.DESC_TIPO ?? "",
-      cantidad: (item.CANTIDAD ?? "").toString(),
+      cantidad: item.CANTIDAD ?? "",
       descripcion: item.DESCRIPCION ?? "",
-      monto: (item.MONTO ?? "").toString(),
-      testado: item.TESTADO ?? "",
-      descTestado: item.DESC_TESTADO ?? "",
+      monto: item.MONTO ?? "",
     })
- 
+
     const MAP_EMPLEADOS = (item: any) => ({
       idPlantaE: item.PLANTA ?? '',
-      idEmpleados: item.ID_EMPLEADOS ?? '',
-      totalEmpleados: (item.TOTAL ?? '').toString(),
+      totalEmpleados: item.TOTAL ?? '',
       directos: item.DIRECTOS ?? '',
       cedula: item.CEDULA_DE_CUOTAS ?? '',
       fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
-      indirectos: item.INDIRECTOS_TEST ?? '',
+      indirectos: item.INDIRECTOS ?? '',
       contrato: item.CONTRATO ?? '',
       objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
       fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
       fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
-      testado: item.TESTADO ?? '',
-      descTestado: item.DESC_TESTADO ?? '',
     })
- 
+
     const MAP_COMPLEMENTAR = (item: any) => ({
       idPlantaC: item.PLANTA ?? '' ,
-      idDato: item.DATO ?? '',
       amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
       tipoDocumento: item.TIPO_DOCUMENTO ?? '',
-      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
-      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
-      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
-      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
-      respaldoOtro: item.RESPALDO_OTRO ?? '',
       fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
       fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
       fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
- 
+
     const MAP_FIRMANTES = (item:any) => ({
-      idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
-      descTipoFirmante: item.descTipoFirmante ?? '',
     })
- 
+
     const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
     const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
     const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
@@ -622,7 +606,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
           apellidoMaterno: arr.segundoApellido ?? '',
           apellidoPaterno: arr.primerApellido ?? '',
           numeroActa: arr.numeroDeActa ?? '',
-          fechaActa: arr.fechaInicioInput ?? '',
+          fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
           numeroNotaria: arr.numeroDeNotaria ?? '',
           entidadFederativa: arr.estado ?? '',
           delegacionMunicipio: arr.estadoOptions ?? '',
@@ -790,7 +774,6 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): Promise<any> {
-
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
