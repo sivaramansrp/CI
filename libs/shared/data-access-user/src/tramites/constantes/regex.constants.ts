@@ -1142,3 +1142,72 @@ export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
  * o campos alfanuméricos específicos.
  */
 export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico con caracteres especiales limitados.
+ *
+ * Esta expresión regular permite:
+ * - Letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
+ * - Dígitos del 0 al 9
+ * - Caracteres especiales específicos: & ) , (
+ * - No permite espacios ni otros caracteres especiales
+ *
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "Empresa&Asociados"
+ * - "Test(México),SA"
+ * - "ABC123(&),"
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial no permitido)
+ * - "Test-Case" (contiene un guión no permitido)
+ */
+export const REGEX_RFC_ALPHANUMERICO = /^[A-Za-z0-9Ññ&(),]+$/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico con caracteres especiales limitados.
+ *
+ * Esta expresión regular permite:
+ * - Letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
+ * - Dígitos del 0 al 9
+ * - Caracteres especiales específicos: , ( )
+ * - No permite espacios ni otros caracteres especiales
+ *
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "Empresa,Asociados"
+ * - "Test(México),SA"
+ * - "ABC123(),"
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial no permitido)
+ * - "Test-Case" (contiene un guión no permitido)
+ */
+export const REGEX_NOMBRE_ALPHANUMERICO = /^[A-Za-z0-9Ññ(), ]+$/;
+
+/**
+ * PATRONES PARA FILTRADO DE ENTRADA EN TIEMPO REAL
+ * Estos patrones se usan para bloquear caracteres no permitidos mientras el usuario escribe
+ */
+
+/**
+ * Patrón para permitir solo letras, números y caracteres específicos: &, (, ), ,
+ * Usado para filtrar entrada en tiempo real en campos RFC
+ */
+export const INPUT_FILTER_RFC_ALPHANUMERICO = /[A-Za-z0-9Ññ&(),]/;
+
+/**
+ * Patrón para permitir solo letras, números, comas, paréntesis y espacios
+ * Usado para filtrar entrada en tiempo real en campos de nombres
+ */
+export const INPUT_FILTER_NOMBRE_ALPHANUMERICO = /[A-Za-z0-9Ññ(), ]/;
+
+/**
+ * Patrón para permitir solo letras, números, comas, paréntesis y espacios
+ * Usado para filtrar entrada en tiempo real en campos de dirección
+ */
+export const INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /[A-Za-z0-9,() ]/;

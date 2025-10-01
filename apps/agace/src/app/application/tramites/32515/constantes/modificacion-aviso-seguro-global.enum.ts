@@ -1,4 +1,4 @@
-import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, REGEX_ENTERO_O_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
+import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, REGEX_ENTERO_O_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_TELEFONO, REGEX_RFC_ALPHANUMERICO, REGEX_NOMBRE_ALPHANUMERICO, INPUT_FILTER_RFC_ALPHANUMERICO, INPUT_FILTER_NOMBRE_ALPHANUMERICO, INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO } from "@libs/shared/data-access-user/src";
 
 /**
  * Lista de pasos del proceso de captura y firma de solicitud.
@@ -328,8 +328,7 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' },
+    soloLectura: false,    validadores: [{ tipo: 'required' },
       {
         tipo: 'maxlength',
         valor: 13,
@@ -337,10 +336,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_PATRON_ALFANUMERICO,
-        mensaje: 'Solo se permiten letras y números.'
+        valor: REGEX_RFC_ALPHANUMERICO
       }
     ],
+    inputFilter: INPUT_FILTER_RFC_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -353,8 +352,7 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-8',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' },
+    soloLectura: false,    validadores: [{ tipo: 'required' },
       {
         tipo: 'maxlength',
         valor: 50,
@@ -362,10 +360,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_ALFANUMERICO_CON_ESPACIOS,
-        mensaje: 'Solo se permiten letras, números y espacios.'
+        valor: REGEX_NOMBRE_ALPHANUMERICO
       }
     ],
+    inputFilter: INPUT_FILTER_NOMBRE_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -427,11 +425,11 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
       
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -451,17 +449,16 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
   },
-  {
-    id: 'datosDelSeguro.numeroExterior',
+  {    id: 'datosDelSeguro.numeroExterior',
     labelNombre: 'Número y/o letra exterior',
     campo: 'numeroExterior',
     clase: 'col-md-4',
@@ -475,10 +472,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -491,24 +488,23 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-    habilitado: true,    validadores: [
+    soloLectura: false,    validadores: [
       {
         tipo: 'maxlength',
         valor: 50
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
   },
-  {
-    id: 'datosDelSeguro.codigoPostal',
+  {    id: 'datosDelSeguro.codigoPostal',
     labelNombre: 'Código postal',
     campo: 'codigoPostal',
     clase: 'col-md-4',
@@ -521,10 +517,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,

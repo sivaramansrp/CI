@@ -38,6 +38,7 @@
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
                           [attr.maxlength]="item.maxlength"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
+                          (keypress)="filtrarCaracteres($event, item.inputFilter)"
                         />
                         
                         <validadores-de-formularios 
@@ -115,6 +116,7 @@
                         [ngClass]="esValido(item.campo) ? 'required' : ''"
                         [attr.maxlength]="item.maxlength"
                         (change)="eventoDeCambioDeValor($event, item.campo)"
+                        (keypress)="filtrarCaracteres($event, item.inputFilter)"
                       ></textarea>
               
                         <validadores-de-formularios 
