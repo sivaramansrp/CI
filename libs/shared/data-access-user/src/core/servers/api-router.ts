@@ -587,3 +587,56 @@ export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string =
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
  */
 export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+/*
+ * API para obtener la representación federal por clave de entidad
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/representacion-federal/{cveEntidad}
+ */
+export const CATALOGO_REPRESENTACION_FEDERAL = (TRAMITE: string, CVEENTIDAD: string): string =>
+  `sat-t${TRAMITE}/catalogo/representacion-federal/${CVEENTIDAD}`;
+
+/*
+ * API para obtener el tipo de factura
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tipo-factura
+ */
+export const CATALOGO_TIPO_FACTURA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-factura`;
+
+/*
+ * API para obtener la unidad de medida de la masa bruta
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/unidad-medida-masa-bruta
+ */
+export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/unidades-medidas`;
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
+ */
+export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
+
+
+/*
+ * API para obtener el catálogo de idiomas
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/idioma
+ */
+export const CATALOGO_IDIOMA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/idioma`;
+
+/*
+ * API para obtener el catálogo de medios de transporte
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/medio-transporte
+ */
+export const CATALOGO_MEDIO_TRANSPORTE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/medio-transporte`;
+
+/*
+ * API para obtener unidades de medida comercial
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/unidades-medida-comercial
+ */
+export const UNIDADES_MEDIDA_COMERCIAL = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/unidades-medida-comercial`;
+
+/*
+ * API para obtener el catálogo de entidades federativas
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/entidades-federativas
+ */
+export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/entidades-federativas`;
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
+ */
+export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
