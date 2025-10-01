@@ -380,9 +380,10 @@ export const INFORMACION_DE_COMPANIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Selecciona una opción',
     valorPredeterminado: '',
     marginTop: 2,
+    markTouched: false
   },
   {
     id: 'informacionCompania.municipioDemarcacionTerritorial',
@@ -393,9 +394,10 @@ export const INFORMACION_DE_COMPANIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Selecciona una opción',
     valorPredeterminado: '',
     marginTop: 2,
+    markTouched: false
   },
   {
     id: 'informacionCompania.colonia',
@@ -406,9 +408,10 @@ export const INFORMACION_DE_COMPANIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Selecciona una opción',
     valorPredeterminado: '',
     marginTop: 2,
+    markTouched: false
   },
   {
     id: 'datosDelSeguro.localidad',

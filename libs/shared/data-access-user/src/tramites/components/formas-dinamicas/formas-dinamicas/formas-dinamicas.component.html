@@ -136,6 +136,7 @@
                           [required]="item.esRequerido ?? false"
                           [placeholder]="item.marcadorDePosicion || ''" 
                           [isDisabled]="item.desactivado || soloLectura"
+                          [markTouched]="forma.get(item.campo)?.touched??false"
                           [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
                           [tooltipQuestionCircleText]="item.tooltipTxt ?? '' "
                           name=""
