@@ -194,7 +194,6 @@ export class SolicitudPageComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-this.obtenerDatosDelStore()
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
@@ -203,13 +202,14 @@ this.obtenerDatosDelStore()
         return;
       }
     }
-
+    
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (e.valor > 0 && e.valor <= this.pasos.length) {
-
+      
       // Actualizar el índice y datosPasos
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
+      this.obtenerDatosDelStore()
 
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;

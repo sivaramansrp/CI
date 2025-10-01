@@ -41,7 +41,7 @@
           </div>
           <div class="col-md-4">
             <label># Registro producto:</label>
-            <input type="text" required="true" class="form-control" formControlName="numeroRegistro" maxlength="12"
+            <input type="text" class="form-control" formControlName="numeroRegistro" maxlength="12"
               (change)=" setValoresStore( validacionForm, 'numeroRegistro', 'setNumRegistro' ) " />
             <div
               *ngIf="registroForm.get('validacionForm.numeroRegistro')?.invalid && registroForm.get('validacionForm.numeroRegistro')?.touched"
@@ -53,7 +53,7 @@
           </div>
           <div class="col-md-4">
             <label>Nombre comercial:</label>
-            <input type="text" required="true" class="form-control" formControlName="nombreComercial" maxlength="200"
+            <input type="text" class="form-control" formControlName="nombreComercial" maxlength="200"
               (change)=" setValoresStore( validacionForm, 'nombreComercial', 'setNomComercial' ) " />
             <div
               *ngIf="registroForm.get('validacionForm.nombreComercial')?.invalid && registroForm.get('validacionForm.nombreComercial')?.touched"

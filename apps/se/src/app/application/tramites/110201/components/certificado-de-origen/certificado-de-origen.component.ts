@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogoServices, CatalogosSelect, ConfiguracionColumna, InputFecha, Notificacion, NotificacionesComponent, Pedimento, REGEX_CANTIDAD_15_4, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_NUMERO_ENTERO, REGEX_SIN_DIGITOS, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogoServices, CatalogosSelect, ConfiguracionColumna, InputFecha, Notificacion, NotificacionesComponent, Pedimento, REGEX_CANTIDAD_15_4, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_NUMERO_ENTERO, REGEX_SIN_DIGITOS, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
@@ -439,7 +439,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    */
   ngOnInit(): void {
     this.mercanciatable();
-    this.getSolicitudesTabla();
     this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
@@ -583,11 +582,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     this.setValoresStore(this.validacionMercanciaForm, 'fecha', 'setFecha');
   }
 
-  onTratadoChange(event: any): void {
+  onTratadoChange(event: Catalogo): void {
     this.store.setTratadoDescripciones(event.descripcion);
   }
 
-  onPaisChange(event: any): void {
+  onPaisChange(event: Catalogo): void {
     this.store.setPaisDescripcion(event.descripcion);
   }
 
@@ -616,14 +615,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       pais: { clave: this.solicitudState.pais || '' }
     };
 
-
     this.registroService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
-      console.log(response, 'response');
       this.mercanciaDisponsiblesTablaDatos = response.datos || [];
+      this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
     });
 
-    this.hayMercanciasDisponibles = true;
-    this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
 
     // this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
     this.hayMercanciasDisponibles = true;
@@ -633,7 +629,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    * @method abrirModalMercancia - Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles
    * @param rowData - Datos de la fila seleccionada de tipo ColumnasTabla
    */
-  abrirModalMercancia(rowData: ColumnasTabla): void {    
+  abrirModalMercancia(rowData: ColumnasTabla): void {        
     if (rowData) {
       this.esFormulario = true;
       this.esMercanciaEnEdicion = false;
@@ -1011,7 +1007,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       validacionForm: this.fb.group({
         tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
         pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
-        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(8)]],
+        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.minLength(8),Validators.maxLength(8)]],
         numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }],
         nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }],
         fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }],
@@ -1040,28 +1036,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       }),
     });
   }
-
-  /**
-   * Obtiene los datos de la tabla de mercancías disponibles desde el servicio.
-   * Realiza una suscripción al método `getSolicitudesTabla` del servicio `RegistroService`
-   * y asigna los datos obtenidos a la propiedad `mercanciaDisponsiblesTablaDatos`.
-   */
-  public getSolicitudesTabla(): void {
-    this.registroService.getSolicitudesTabla().subscribe((data) => {
-      this.mercanciaDisponsiblesTablaDatos = data;
-    });
-  }
-  /**
-   * Obtiene los datos de la tabla de mercancías seleccionadas desde el servicio.
-   * Realiza una suscripción al método `getSolicitudesDataTabla` del servicio `RegistroService`
-   * y asigna los datos obtenidos a la propiedad `mercanciaSeleccionadasTablaData`.
-   */
-  public getSolicitudesDataTabla(): void {
-    this.registroService.getSolicitudesDataTabla().subscribe((data) => {
-      this.mercanciaSeleccionadasTablaData = data;
-    });
-  }
-
 
   /**
    * Formatea el valor del campo 'cantidad' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
@@ -1291,15 +1265,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     });
   }
 
-  onUmcChange(event: any): void {
+  onUmcChange(event: Catalogo): void {
     this.store.setUmcDescripcion(event.descripcion);
   }
 
-  onUnidadMedidaChange(event: any): void {
+  onUnidadMedidaChange(event: Catalogo): void {
     this.store.setUnidadMedidaDescripcion(event.descripcion);
   }
 
-  onTipoFacturaChange(event: any): void {
+  onTipoFacturaChange(event: Catalogo): void {
     this.store.setTipoFacturaDescripcion(event.descripcion);
   }
 

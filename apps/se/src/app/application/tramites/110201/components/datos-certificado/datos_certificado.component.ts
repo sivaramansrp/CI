@@ -171,11 +171,19 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  onIdiomaChange(event: any): void {
+  /** Maneja el evento de cambio cuando se selecciona un nuevo idioma.
+   * Actualiza la descripción del idioma en el store global.
+   * @param event - Objeto Catalogo que representa el idioma seleccionado.
+   */
+  onIdiomaChange(event: Catalogo): void {
     this.store.setIdiomaDescripcion(event.descripcion);
   }
 
-  onRepresentacionChange(event: any): void {
+  /** Maneja el evento de cambio cuando se selecciona una nueva entidad federativa.
+   * Actualiza la descripción de la entidad en el store global y obtiene las representaciones federales correspondientes.
+   * @param event - Objeto Catalogo que representa la entidad seleccionada.
+   */
+  onRepresentacionChange(event: Catalogo): void {
     this.store.setRepresentacionDescripcion(event.descripcion);
   }
   /**
@@ -266,9 +274,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy, OnChanges {
   getEntidadDatos(): void {
     this.catalogoServices.entidadesFederativasCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.optionsEntidad.catalogos = res.datos ?? [];
-      // this.registroForm.get('validacionForm.entidad')?.valueChanges.pipe(takeUntil(this.destroyed$), take(1)).subscribe((cveEntidad) => {
-      //     this.getRepresentacionDatos(cveEntidad);
-      //   });
     });
   }
   /** Maneja el evento de cambio cuando se selecciona una nueva entidad federativa.
