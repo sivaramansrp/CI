@@ -57,8 +57,7 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CATALOGO_NICO(tramite, claveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-  
-/*
+  /*
  * Obtiene el catálogo de tratados y acuerdos.
  * @param {string} tramite - El ID del trámite.
  * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
@@ -149,5 +148,4 @@ unidadesMedidaComercialCatalogo(tramite: string): Observable<BaseResponse<Catalo
   const ENDPOINT = `${this.host}${UNIDADES_MEDIDA_COMERCIAL(tramite)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
-
 }
