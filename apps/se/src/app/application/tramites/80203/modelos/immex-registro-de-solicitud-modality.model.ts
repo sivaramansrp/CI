@@ -866,3 +866,9 @@ export interface ImmexTablaJson {
    */
   fraccionGridDatos: fraccionInfo[];
 }
+
+export interface BuscarPayload {
+    tipoSolicitud: string;
+    idProyecto: string;
+    rfcSolicitante: string;
+}

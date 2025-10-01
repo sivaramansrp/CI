@@ -11,6 +11,9 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  doDeepCopy,
+  esValidArray,
+  esValidObject,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -532,7 +535,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
 
       // need to check
     const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
-    this.fetchData(PERMISO_VALUE);
+    //this.fetchData(PERMISO_VALUE);
     this.disableFormControls();
 
     // Para el botón de validación Continuar
@@ -683,26 +686,178 @@ export class Anexo1Component implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-  showTableExportacion(): void {
-    const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
-    if (!PERMISO_VALUE || PERMISO_VALUE.length === 0 || PERMISO_VALUE === '') {
-      this.espectaculoAlertaAgregar = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Tiene que introducir el permiso immex.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    } else {
-      this.showTableExport = true;
-      this.espectaculoAlertaAgregar = false;
-      this.fetchData(PERMISO_VALUE);
-    }
+ showTableExportacion(): void {
+  const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
+
+  if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
+    this.espectaculoAlertaAgregar = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe introducir el número de permiso IMMEX.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
   }
+
+  // Reset alerts
+  this.espectaculoAlertaAgregar = false;
+  this.espectaculoAlerta = false;
+  
+  // Call the API to get data
+  this.obtenerpermisoImmexDatos();
+  
+  // Show both tables (they will be populated by the API response)
+  this.showTableExport = true;
+  this.showTableFractionExp = true;
+}
+
+
+obtenerpermisoImmexDatos(): void {
+  const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
+  
+  if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
+    this.espectaculoAlerta = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe introducir un número de permiso IMMEX válido.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+
+  const PAYLOAD = {
+    "tipoSolicitud": "",
+    "idProyecto": PERMISO_VALUE,
+    "rfcSolicitante": "BRO180601EW5"
+  };
+
+  this.permisoImmexDatosService
+    .getPermisoImmex(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: API_DATOS.error || API_DATOS.mensaje || 'El permiso IMMEX solicitado no existe.',
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            
+            // Clear both tables
+            this.immexTableDatos = [];
+            this.fraccionTablaDatos = [];
+            this.immexRegistroStore.establecerDatos({ 
+              immexTableDatos: [],
+              fraccionTablaDatos: []
+            });
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            let totalRecords = 0;
+            
+            // Process datosConsultaProgramaDtos for immex table
+            if (esValidArray(API_DATOS.datos.datosConsultaProgramaDtos)) {
+              const IMMEX_RESPONSE: PermisoImmexGridDatos[] = this.permisoImmexDatosService
+                .mapApiResponseToPermisoImmexGridDatos(API_DATOS.datos.datosConsultaProgramaDtos);
+              
+              this.immexTableDatos = IMMEX_RESPONSE;
+              totalRecords += IMMEX_RESPONSE.length;
+            }
+
+            // Process productoExportacionDtoList for fraction table
+            if (esValidArray(API_DATOS.datos.productoExportacionDtoList)) {
+              const FRACCION_RESPONSE: fraccionInfo[] = this.permisoImmexDatosService
+                .mapApiResponseToFraccionExportacion(API_DATOS.datos.productoExportacionDtoList);
+              
+              this.fraccionTablaDatos = FRACCION_RESPONSE;
+              totalRecords += FRACCION_RESPONSE.length;
+            }
+
+            // Update store with both datasets
+            this.immexRegistroStore.establecerDatos({ 
+              immexTableDatos: this.immexTableDatos,
+              fraccionTablaDatos: this.fraccionTablaDatos
+            });
+            
+            // Show success notification
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'success',
+              categoria: 'success',
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: `Se encontraron ${totalRecords} registro(s) para el permiso IMMEX.`,
+              cerrar: true,
+              tiempoDeEspera: 3000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          } else {
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'warning',
+              modo: 'action',
+              titulo: 'Advertencia',
+              mensaje: 'No se encontraron datos para el permiso IMMEX especificado.',
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            
+            this.immexTableDatos = [];
+            this.fraccionTablaDatos = [];
+            this.immexRegistroStore.establecerDatos({ 
+              immexTableDatos: [],
+              fraccionTablaDatos: []
+            });
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener permiso IMMEX:', error);
+        this.espectaculoAlerta = true;
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: 'Error de conexión',
+          mensaje: 'Error al conectar con el servidor. Intente nuevamente.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        
+        this.immexTableDatos = [];
+        this.fraccionTablaDatos = [];
+        this.immexRegistroStore.establecerDatos({ 
+          immexTableDatos: [],
+          fraccionTablaDatos: []
+        });
+      }
+    });
+}
+
 
   /**
    * @method mostrarDetalleMercancia
