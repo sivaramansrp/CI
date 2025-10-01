@@ -1,11 +1,17 @@
-import { API_POST_GENERAR_CADENA_ORIGINAL, API_POST_GUARDAR_SOLICITUD } from "../server/api-router";
-import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
-import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
-import { GenerarCadenaOrigRequest } from "../models/request/generar-cadena-original-request.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+
+import {Observable, catchError, map, throwError,} from "rxjs";
+
+import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
+import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
+import { FirmarRequest } from "@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model";
+
+import { API_POST_FIRMA, API_POST_GENERAR_CADENA_ORIGINAL, API_POST_GUARDAR_SOLICITUD } from "../server/api-router";
+import { GenerarCadenaOrigRequest } from "../models/request/generar-cadena-original-request.model";
 import { SolicitudCompletaRequest } from "../models/request/guardado-solicitud-request.model";
+
+import { FirmaResponse } from "../models/response/firma-response.model";
 
 @Injectable({
     providedIn: 'root'
@@ -41,8 +47,25 @@ export class SolicitudService {
     /**
      * Genera la cadena original para la solicitud.
      */
-    postGenerarCadenaOriginal(PAYLOAD: GenerarCadenaOrigRequest): Observable<BaseResponse<string>> {
-        const ENDPOINT = `${this.host}${API_POST_GENERAR_CADENA_ORIGINAL}`;
+    postGenerarCadenaOriginal(idSolicitud: number, PAYLOAD: GenerarCadenaOrigRequest): Observable<BaseResponse<string>> {
+        const ENDPOINT = `${this.host}${API_POST_GENERAR_CADENA_ORIGINAL(idSolicitud.toString())}`;
         return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
+    }
+
+    /**
+      * Envía una solicitud de firma electrónica.
+      * @param idSolicitud - ID de la solicitud a firmar.
+      * @param body - Cuerpo de la solicitud de firma.
+      * @returns Observable con la respuesta del servidor.
+    */
+    enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<FirmaResponse>> {
+        const ENDPOINT = `${this.host}` + API_POST_FIRMA(String(idSolicitud));
+        return this.http.post<BaseResponse<FirmaResponse>>(ENDPOINT, body).pipe(
+            map(response => response),
+            catchError(() => {
+                const ERROR = new Error(`Error al firmar solicitud con ID ${idSolicitud}`);
+                return throwError(() => ERROR);
+            })
+        );
     }
 }

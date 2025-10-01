@@ -1,4 +1,3 @@
-import { IDSOLICITUD } from "@libs/shared/data-access-user/src";
 
 /**
  * cvePais de la solicitud que se utilizará en las consultas.
@@ -23,6 +22,12 @@ export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
  * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
  */
 export const CVEFRACCION = '{cveFraccion}';
+
+/**
+ * cveFraccion de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
+ */
+export const IDSOLICITUD = '{idSolicitud}';
 
 /**
  *  URLs de catalogos
@@ -137,7 +142,7 @@ export const API_POST_GUARDAR_SOLICITUD = `sat-t110101/solicitud/guardar`;
  * API para generar la cadena original para la solicitud
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original
  */
-export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/generar-cadena-original`;
+export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/genera-cadena-original`;
 
 /**
  * API para firmar la solicitud del tramite 110101.
