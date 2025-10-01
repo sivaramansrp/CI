@@ -31,9 +31,10 @@
     </div>
       <div class="row">
       <div class="col-md-12">
-        @if (indice !== 2) {
+       
         <btn-continuar [datos]="datosPasos"  (continuarEvento)="getValorIndice($event)" (btnGuardarClicked)="obtenerDatosDelStore()"></btn-continuar>
-        } @else {
+      
+        <!-- @else {
         <div class="mt-5 mb-3 d-flex justify-content-end">
           <button
             type="button"
@@ -54,7 +55,7 @@
             {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
           </button>
         </div>
-        }
+        } -->
       </div>
     </div>
   </div>

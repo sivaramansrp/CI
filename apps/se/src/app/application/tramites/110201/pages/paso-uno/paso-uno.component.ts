@@ -135,6 +135,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
     if (this.certificadoOrigen) {
       if (!this.certificadoOrigen.validarFormularios()) {
+        console.log('Datos del certificado inválidos', this.certificadoOrigen);
         isValid = false;
       }
     } else {
@@ -143,14 +144,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
     if (this.datosCertificado) {
       if (!this.datosCertificado.validarFormulariosDatos()) {
+        console.log('Datos del datosCertificado inválidos',this.datosCertificado);
         isValid = false;
       }
-    } else {
+    } else {,
       isValid = false;
     }
 
     if (this.destinatario) {
       if (!this.destinatario.validarFormulario()) {
+                console.log('Datos del destinatario inválidos',this.destinatario);
+
         isValid = false;
       }
     } else {

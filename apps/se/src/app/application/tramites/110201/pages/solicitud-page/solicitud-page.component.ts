@@ -1,9 +1,8 @@
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, PASOS2, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
-import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
@@ -68,7 +67,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Lista de pasos del asistente.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
 
   /**
    * Indica si se debe mostrar el botón de continuar (controla la visibilidad según el estado de carga de archivo).
@@ -196,11 +195,13 @@ export class SolicitudPageComponent implements OnInit {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
+      
       if (!ISVALID) {
         this.esFormaValido = true;
         this.datosPasos.indice = 1;
         return;
       }
+      this.obtenerDatosDelStore()
     }
     
     // Validar que el nuevo índice esté dentro de los límites permitidos
@@ -209,8 +210,6 @@ export class SolicitudPageComponent implements OnInit {
       // Actualizar el índice y datosPasos
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
-      this.obtenerDatosDelStore()
-
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
         if (e.accion === 'cont') {
@@ -328,6 +327,8 @@ return arr.map((item: any) => ({
 
     this.registroService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
+      console.log(this.solicitudState.idSolicitud,'this.solicitudState.idSolicitud');
+      
       console.log(response,'response');
 
       return response;
@@ -342,6 +343,7 @@ return arr.map((item: any) => ({
       .pipe(take(1))
       .subscribe(data => {
         this.guardar(data);
+        
       });
   }
   /**
