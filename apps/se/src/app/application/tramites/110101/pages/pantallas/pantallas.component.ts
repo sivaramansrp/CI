@@ -7,7 +7,8 @@ import { PASOS } from '@ng-mf/data-access-user';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
-import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
+
+import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 
 import { EmpaqueMercancia, InsumoMercancia, SolicitudCompletaRequest } from '../../models/request/guardado-solicitud-request.model';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -127,6 +128,7 @@ export class PantallasComponent implements OnInit {
     private solicitudService: SolicitudService,
     private consultaioQuery: ConsultaioQuery,
     private solicitanteQuery: Solicitante110101Query,
+    private tramite110101Store: Tramite110101Store,
   ){
   
   }
@@ -150,14 +152,15 @@ export class PantallasComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
+    this.guardarSolicitudCompleta(() => {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente(); // Avanza al siguiente paso.
-        this.guardarSolicitudCompleta();
+        this.wizardComponent.siguiente();
       } else {
-        this.wizardComponent.atras(); // Retrocede al paso anterior.
+        this.wizardComponent.atras();
       }
-    }
+    });
+  }
   }
   /**
    * @method guardarSolicitudCompleta
@@ -172,7 +175,7 @@ export class PantallasComponent implements OnInit {
    * 
    * @returns {void}
    */
-  guardarSolicitudCompleta(): void {
+  guardarSolicitudCompleta(callback: () => void): void {
     const PAYLOAD: SolicitudCompletaRequest = {
       id_solicitud: null,
       id_tipo_tramite: null,
@@ -325,9 +328,8 @@ export class PantallasComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
-
-            const DATOS = response.datos || [];
-
+            this.tramite110101Store.setId_solicitud(response.datos ?? 0);
+            callback();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
