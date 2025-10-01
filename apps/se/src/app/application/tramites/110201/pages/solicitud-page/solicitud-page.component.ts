@@ -203,9 +203,7 @@ export class SolicitudPageComponent implements OnInit {
       }
       this.obtenerDatosDelStore()
     }
-    
-    // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (e.valor > 0 && e.valor <= this.pasos.length) {
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
       
       // Actualizar el índice y datosPasos
       this.indice = e.valor;
@@ -320,16 +318,14 @@ return arr.map((item: any) => ({
       }
     };
 
-
-    console.log(PAYLOAD, 'PAYLOAD');
-    console.log(item,'item');
-    
-
     this.registroService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      console.log(this.solicitudState.idSolicitud,'this.solicitudState.idSolicitud');
-      
-      console.log(response,'response');
+      if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+        this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
+        this.datosPasos.indice = 2;
+        this.indice = 2;
+         this.wizardComponent.siguiente();
+      }
 
       return response;
     });

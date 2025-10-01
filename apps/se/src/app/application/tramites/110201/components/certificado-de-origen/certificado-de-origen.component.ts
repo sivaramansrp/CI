@@ -447,6 +447,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
         map((seccionState) => {
           this.solicitudState = seccionState;
           this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData || [];
+          this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercancias_disponibles || [];
         })
       )
       .subscribe();
