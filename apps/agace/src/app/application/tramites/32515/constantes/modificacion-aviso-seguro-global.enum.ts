@@ -37,11 +37,17 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'text', // Tipo de campo
     desactivado: false, // Indica si está deshabilitado
     soloLectura: false, // Indica si solo es de lectura
-    validadores: [{ tipo: 'required', mensaje: '' }, {
+    validadores: [{ tipo: 'required'}, {
         tipo: 'maxlength',
         valor: 50,
         
-      }], // Validadores asociados
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
+      }
+    ], // Validadores asociados
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, // Filtro de entrada para caracteres permitidos
     marcadorDePosicion: '', // Texto de placeholder
     valorPredeterminado: '', // Valor inicial
     marginTop: 0, // Margen superior personalizado
@@ -54,11 +60,17 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }, {
+    validadores: [{ tipo: 'required'}, {
         tipo: 'maxlength',
         valor: 50,
         
-      }],
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
+      }
+    ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
