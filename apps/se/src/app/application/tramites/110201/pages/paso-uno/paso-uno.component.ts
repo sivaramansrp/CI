@@ -147,7 +147,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         console.log('Datos del datosCertificado inválidos',this.datosCertificado);
         isValid = false;
       }
-    } else {,
+    } else {
       isValid = false;
     }
 
