@@ -90,18 +90,18 @@
                     }
                   </div>
                 </div>
-                <div class="col-md-4">
-                  <app-catalogo-select [isDisabled]="true || formularioDeshabilitado" [catalogo]="unidadDeMedida"
-                    formControlName="unidadDeMedida" [label]="'Unidad de medida'" [required]="true"
-                    name="unidadDeMedida" (change)="
-                      setValoresStore(
-                        facturaForm,
-                        'unidadDeMedida',
-                        'setUnidadDeMedida'
-                      )
-                    "></app-catalogo-select>
-                </div>
-                <div class="col-md-4">
+              <div class="col-md-4">
+                <label for="unidadDeMedida" class="form-label">Unidad de medida*</label>
+                <select class="form-control" formControlName="unidadDeMedida" [disabled]="true || formularioDeshabilitado"
+                  (change)="setValoresStore(facturaForm, 'unidadDeMedida', 'setUnidadDeMedida')">
+                  <option value="">Seleccione una opción</option>
+                  <option *ngFor="let unidad of unidadDeMedida" [value]="unidad.clave">
+                    {{ unidad.descripcion }}
+                  </option>
+                </select>
+              </div>
+              
+              <div class="col-md-4">
                   <div class="form-group capturar-factura-datepicker">
                     <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
                       [datos]="fechaInicioInputs"
