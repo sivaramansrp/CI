@@ -6,11 +6,11 @@ export type SimpleCatalogoResponse<T> = Pick<
 > & { datos: T };
 
 export interface ImmexResponse {
-  idProgAutorizado: number;
-  numFolioTramite: string;
-  idTipoTramite: number;
+  id_prog_autorizado: number;
+  num_folio_tramite: string;
+  id_tipo_persona: number;
   idTipoPersona: string;
-  isPersonaMoral: boolean | null;
-  razonSocial: string;
+  is_persona_moral: boolean | null;
+  razon_social: string;
   nombre: string | null;
 }

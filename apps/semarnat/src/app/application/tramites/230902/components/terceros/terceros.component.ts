@@ -381,7 +381,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       codigoPostal: [this.solicitud230902State.codigoPostal, [Validators.required]],
       pais: [this.solicitud230902State.pais, [Validators.required]],
       estado: [this.solicitud230902State.estado, [Validators.required]],
-      nombre: [this.solicitud230902State.nombre, [Validators.required]],
+      nombre: [this.solicitud230902State.nombre, [Validators.required, Validators.maxLength(1000)]],
     });
 
     // Suscribirse a los cambios del formulario para actualizar los datos de la tabla

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { CambioDeModalidadComponent } from '../../component/cambio-de-modalidad/cambio-de-modalidad.component';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
 import { SECCIONES_TRAMITE_80208 } from '../../constantes/solicitud-modalidad.enums';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
@@ -53,6 +54,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   public esFormularioSoloLectura: boolean = false;
+
+    /**
+     * Referencia al componente CambioDeModalidadComponent.
+     * Permite interactuar con el formulario de cambio de modalidad.
+     */
+    @ViewChild(CambioDeModalidadComponent) cambioDeModalidadComponent!: CambioDeModalidadComponent;
 
   /**
    * @constructor

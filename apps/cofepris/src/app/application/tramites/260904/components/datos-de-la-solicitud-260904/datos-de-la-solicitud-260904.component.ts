@@ -217,14 +217,14 @@ private initialEstablecimientoValues: { rfcDel: string; denominacion: string; co
   correo: ''
 };
 
-  crearFormulario(): void {
-    this.tramite260904Query.selectTramite260904$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.estadoSeleccionado = seccionState;
-           this.initialFormValues = {
-          btonDeRadio: seccionState.btonDeRadio || '1',
+ crearFormulario(): void {
+  this.tramite260904Query.selectTramite260904$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.estadoSeleccionado = seccionState;
+        this.initialFormValues = {
+          btonDeRadio: seccionState.btonDeRadio || '',
           justificacion: seccionState.justificacion || 'Justificación de prueba'
         };
 
@@ -233,57 +233,53 @@ private initialEstablecimientoValues: { rfcDel: string; denominacion: string; co
           denominacion: seccionState.denominacion || 'Empresa de Prueba S.A. de C.V.',
           correo: seccionState.correo || 'prueba@empresa.com'
         };
-        })
-      )
-      .subscribe();
+        this.form = this.fb.group({
+          btonDeRadio: [this.initialFormValues.btonDeRadio, [Validators.required]],
+          justificacion: [this.initialFormValues.justificacion, [Validators.required]],
+        });
 
-    this.form = this.fb.group({
-      btonDeRadio: [this.estadoSeleccionado.btonDeRadio, [Validators.required]],
-      justificacion: [this.estadoSeleccionado.justificacion || 'justificationData', [Validators.required]],
-    });
-
-    this.datosDelEstablecimiento = this.fb.group({
-      rfcDel: [
-        { value: this.estadoSeleccionado?.rfcDel, disabled: true },
-        [Validators.required, Validators.maxLength(13),
-        Validators.pattern(REGEX_RFC)
-        ]
-      ],
-      denominacion: [
-        { value: this.estadoSeleccionado?.denominacion, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(100),
-          Validators.pattern(/^(?!.*https?:\/\/)[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s.,\-/#()]+$/)
-        ]
-      ],
-      correo: this.fb.control(
-        this.estadoSeleccionado?.correo,
-        {
-          validators: [
-            Validators.required,
-            DatosDeLaSolicitud260904Component.rfcEmailValidator,
-            Validators.maxLength(320)
+        this.datosDelEstablecimiento = this.fb.group({
+          rfcDel: [
+            { value: this.initialEstablecimientoValues.rfcDel, disabled: true },
+            [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]
           ],
-          updateOn: 'blur'
+          denominacion: [
+            { value: this.initialEstablecimientoValues.denominacion, disabled: true },
+            [
+              Validators.required,
+              Validators.maxLength(100),
+              Validators.pattern(/^(?!.*https?:\/\/)[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s.,\-/#()]+$/)
+            ]
+          ],
+          correo: this.fb.control(
+            this.initialEstablecimientoValues.correo,
+            {
+              validators: [
+                Validators.required,
+                DatosDeLaSolicitud260904Component.rfcEmailValidator,
+                Validators.maxLength(320)
+              ],
+              updateOn: 'blur'
+            }
+          )
+        });
+
+        this.isRadioButtonSelected = Boolean(this.initialFormValues.btonDeRadio);
+        this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
+          this.onRadioButtonChange(value);
+        });
+        const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+        if (RADIO_VALUE === undefined || RADIO_VALUE === null || RADIO_VALUE === '') {
+          this.disableSections();
+        } else if (RADIO_VALUE === '0') {
+          this.enableProrrogaOnly();
+        } else {
+          this.enableSections();
         }
-      )
-    });
-
-
-    this.isRadioButtonSelected = Boolean(this.estadoSeleccionado.btonDeRadio);
-    this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
-      this.onRadioButtonChange(value);
-    });
-    const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
-    if (RADIO_VALUE === undefined || RADIO_VALUE === null || RADIO_VALUE === '') {
-      this.disableSections();
-    } else if (RADIO_VALUE === '0') {
-      this.enableProrrogaOnly();
-    } else {
-      this.enableSections();
-    }
-  }
+      })
+    )
+    .subscribe();
+}
 
   public esInvalido(nombreControl: string): boolean {
     let CONTROL = this.form.get(nombreControl);

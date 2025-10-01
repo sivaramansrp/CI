@@ -21,6 +21,7 @@
             </div>
         </div>
         <div class=" row mb-3">
+          @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_nombre_ingles === true) {
             <div class="col-md-8">
                 <label for="nombreIngles" class="form-label">Nombre en inglés*:</label>
                 <input type="text" id="nombreIngles" 
@@ -37,6 +38,7 @@
                     </div>
                 }
             </div>
+          }
         </div>
         <div class="row mb-3">
             <div class="col-md-4 mb-3">
@@ -44,8 +46,7 @@
                 <input type="text" id="fraccionArancelaria" 
                 formControlName="fraccionArancelaria" 
                 class="form-control"
-                (change)="setValoresStore(formMercancia,'fraccionArancelaria', 'setFraccionArancelaria')"
-                [ngClass]="isValid('fraccionArancelaria') ? 'required' : ''">
+                (change)="setValoresStore(formMercancia,'fraccionArancelaria', 'setFraccionArancelaria')">
             </div>
             <div class="col-md-8 mb-3">
                 <label for="descripcion" class="form-label">Descripción:</label>
@@ -55,68 +56,86 @@
                 ></textarea>
             </div>
         </div>
+      @if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_valor_transaccional_fob === true){
        <div class="row mb-3">
         <div class="col-md-4">
             <label for="valorTransaccion" class="form-label">Valor de transacción*:</label>
             <input type="text" id="valorTransaccion"
              formControlName="valorTransaccion" 
              class="form-control"
-             (change)="setValoresStore(formMercancia,'valorTransaccion', 'setValorTransaccion')"
-            [ngClass]="isValid('valorTransaccion') ? 'required' : ''">
+             (change)="setValoresStore(formMercancia,'valorTransaccion', 'setValorTransaccion')">
         </div>
        </div>
+       }
+       @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_precio_franco_fabrica === true) {
+        <div class="row mb-3">
+          <div class="col-md-4">
+              <label for="francofabrica" class="form-label">Precio franco fabrica (en dólares)*:</label>
+              <input type="text" id="francofabrica"
+              formControlName="francofabrica" 
+              class="form-control"
+              (change)="setValoresStore(formMercancia,'francofabrica', 'setFrancofabrica')">
+          </div>
+        </div>
+       }
     </form>
-    <div class="row mt-5">
+
+    @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true) {
+      <div class="row mt-5">
         <h5 class="p-4">Insumos (materias primas, partes y piezas)*:</h5>
         <div class="col-md-12">
-            <app-tabla-dinamica
-                [tipoSeleccionTabla]="tipoSeleccionTabla" 
-                [configuracionTabla]="configuracionTablaInsumos" 
-                [datos]="insumosTablaDatos" 
-                (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaInsumos($event)" 
-                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-            >
-            </app-tabla-dinamica>
+          <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTablaInsumos"
+            [datos]="insumosTablaDatos" (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaInsumos($event)"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+          </app-tabla-dinamica>
         </div>
         <div class="col-md-12">
-            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+          <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
         </div>
-    </div>
-    <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="modificar('Insumo')"> Modificar insumos</button>
-        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar('Insumo')">Eliminar insumos</button>
-        <button class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="abrirDialogo('Insumo')">Agregar insumos</button>
-    </div>
-    <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por archivo</button>
+      </div>
+      <div class="text-end mt-5">
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="modificar('Insumo')"> Modificar
+          insumos</button>
+        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar('Insumo')">Eliminar
+          insumos</button>
+        <button class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="abrirDialogo('Insumo')">Agregar
+          insumos</button>
+      </div>
+      <div class="text-end mt-5">
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por
+          archivo</button>
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar insumos</button>
-    </div>
+      </div>
+    }
 
-    <div class="row mt-5">
+    @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_empaques === true) {
+      <div class="row mt-5">
         <h5 class="p-4">Envases y empaques para venta al menudeo:</h5>
         <div class="col-md-12">
-            <app-tabla-dinamica
-                [tipoSeleccionTabla]="tipoSeleccionTabla" 
-                [configuracionTabla]="configuracionTablaEnvases" 
-                [datos]="envasesTablaDatos" 
-                (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaEnvases($event)" 
-                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-            >
-            </app-tabla-dinamica>
+          <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTablaEnvases"
+            [datos]="envasesTablaDatos" (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaEnvases($event)"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+          </app-tabla-dinamica>
         </div>
         <div class="col-md-12">
-            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+          <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
         </div>
-    </div>
-    <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="modificar('Empaque')"> Modificar envases</button>
-        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar('Empaque')">Eliminar envases</button>
-        <button class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="abrirDialogo('Empaque')">Agregar envases</button>
-    </div>
-    <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por archivo</button>
+      </div>
+      <div class="text-end mt-5">
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="modificar('Empaque')"> Modificar
+          envases</button>
+        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar('Empaque')">Eliminar
+          envases</button>
+        <button class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="abrirDialogo('Empaque')">Agregar
+          envases</button>
+      </div>
+      <div class="text-end mt-5">
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por
+          archivo</button>
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar envases</button>
-    </div>
+      </div>
+    }
+   
 </div>
 
 <div class="modal fade" id="modalAgregar" #modalAgregar tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
@@ -124,24 +143,56 @@
     <div class="modal-content">
       <div class="modal-body">
         <form [formGroup]="forma">
-            <div class="row">
-                <formas-dinamicas [formularioTitulo]="modal==='Insumo' ? 'Insumos (materias primas, partes y piezas)' : 'Envases y empaques para venta al menudeo'" [forma]="ninoFormGroup" [formularioDatos]="modalFormaDatos"></formas-dinamicas>
-            </div>
+          <div class="row" formGroupName="ninoFormGroup">
+            <ng-titulo
+              [titulo]="modal==='Insumo' ? 'Insumos (materias primas, partes y piezas)' : 'Envases y empaques para venta al menudeo'" />
+            
+              <div class="row" *ngIf="tablaDatos.length > 0">
+                <h5>Selecciona los tratados para los cuales es originario</h5>
+                <div class="col-md-12">
+                  <app-tabla-dinamica
+                    [tipoSeleccionTabla]="tipoSeleccionTabla"
+                    [configuracionTabla]="configuracionTabla"
+                    [datos]="tablaDatos"
+                    (listaDeFilaSeleccionada)="onSeleccionChange($event)"
+                  ></app-tabla-dinamica>
+                </div>
+              </div>
+        
+              <div class="col-md-4 mt-4">
+                <app-catalogo-select [catalogo]="paisOrigen" formControlName="pais" [required]="true"
+                  [label]="'Valor de transacción'" [required]="true" name="Tratado o Acuerdo"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                @if(ninoFormGroup.get('pais')?.invalid && ninoFormGroup.get('pais')?.touched) {
+                <div>
+                  @if(ninoFormGroup.get('pais')?.errors?.['required']) {
+                  <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                  }
+                </div>
+                }
+              </div>
+              <div class="col-md-4 mt-4">
+                <label for="rfc" class="form-label">RFC*:</label>
+                <input type="text" id="rfc" formControlName="rfc" class="form-control">
+                @if(ninoFormGroup.get('rfc')?.invalid && ninoFormGroup.get('rfc')?.touched) {
+                <div>
+                  @if(ninoFormGroup.get('rfc')?.errors?.['required']) {
+                  <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                  }
+                </div>
+                }
+              </div>
+              <div class="col-md-4 mt-4">
+                <label for="fabricante" class="form-label">Fabricante o productor:</label>
+                <input type="text" id="fabricante" formControlName="fabricante" class="form-control">
+                <label for="aviso" class="form-label text-start d-block">Si no conoces tu fraccion arancelaria, podrias apoyarte
+                  de la herramienta de "Mi fraccion arancelaria"</label>
+              </div>
+           
+        
+            <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="modalFormaDatos"></formas-dinamicas>
+          </div>
         </form>
-        <div class="row mt-5">
-            <h5>Selecciona los tratados para los cuales es originario</h5>
-            <div class="col-md-12">
-            <app-tabla-dinamica
-                [tipoSeleccionTabla]="tipoSeleccionTabla" 
-                [configuracionTabla]="configuracionTabla" 
-                [datos]="tablaDatos" 
-            >
-            </app-tabla-dinamica>
-        </div>
-        <div class="col-md-12">
-            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
-        </div>
-        </div>
       </div>
       <div class="p-4 text-end mt-5">
         <button class="btn btn-danger ms-2" (click)="limpiarDialogo()">Limpiar datos</button>
@@ -198,3 +249,10 @@
     </div>
   </div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

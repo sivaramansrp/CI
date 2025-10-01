@@ -11,8 +11,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="checkbox">
-                    <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'no'" [label]="'No'" [required]="false"
-                        formControlName="datosConfidencialesProductor"
+                    <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'no'" [label]="'No'"
+                        [required]="false" formControlName="datosConfidencialesProductor"
                         (change)="setValoresStore('formulario','datosConfidencialesProductor')"></lib-input-check>
                 </div>
             </div>
@@ -24,16 +24,16 @@
             </div>
             <div class="col-md-12">
                 <div class="checkbox">
-                    <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'no'" [label]="'No'" [required]="false"
-                        formControlName="productorMismoExportador"
+                    <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'no'" [label]="'No'"
+                        [required]="false" formControlName="productorMismoExportador"
                         (change)="setValoresStore('formulario','productorMismoExportador')"></lib-input-check>
                 </div>
             </div>
             <div class="col-md-12" *ngIf="tramiteState?.productorMismoExportador">
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-                    [datos]="productoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                    [datos]="productoresExportador" (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)"
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-default me-2"
                         (click)="productoresSeleccionados()" [disabled]="esFormularioSoloLectura">
@@ -47,7 +47,8 @@
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="agregarProductoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)"
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-danger"
                         (click)="eliminarProductoresSeleccionados()" [disabled]="esFormularioSoloLectura">
@@ -63,15 +64,18 @@
             @if(esTipoDeSeleccionado){
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
                 [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaDatos"
-                (filaSeleccionada)="obtenerSeleccionadoMercancia($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+                (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
+                [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
             }
             @else{
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
-                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [datos]="mercanciaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [datos]="mercanciaDatos"
+                [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
             }
             <div class="container text-end mt-5">
-                <button type="button" name="agregarMercancia" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="esFormularioSoloLectura">
-                    Agregar Productor
+                <button type="button" name="agregarMercancia" class="btn btn-primary" (click)="agregarMercancia()"
+                    [disabled]="esFormularioSoloLectura">
+                    Asignar productor
                 </button>
             </div>
         </div>
@@ -91,7 +95,8 @@
                             (change)="setValoresStoreAgregarForm('agregarDatosProductorFormulario','numeroRegistroFiscal')"
                             formControlName="numeroRegistroFiscal"
                             [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
-                        <div *ngIf="agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.errors?.['required'] && (agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.touched || agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.dirty)" class="text-danger">
+                        <div *ngIf="agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.errors?.['required'] && (agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.touched || agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.dirty)"
+                            class="text-danger">
                             <small>Este campo es obligatorio.</small>
                         </div>
                     </div>
@@ -108,7 +113,7 @@
             </div>
             <div class="modal-footer custom-footer">
                 <button type="button" class="btn btn-default ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="agregarExportador()" >Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="agregarExportador()">Agregar</button>
             </div>
         </div>
     </div>
@@ -149,7 +154,8 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Valor de la mercancía(dólares):</label>
-                                <input type="text" required="false" class="form-control" formControlName="valorMercancia"
+                                <input type="text" required="false" class="form-control"
+                                    formControlName="valorMercancia"
                                     (change)="setValoresStore( 'formularioMercancia', 'valorMercancia') " />
                             </div>
                         </div>
@@ -169,11 +175,12 @@
 
                         <div class="row mt-5">
                             <div class="col-md-4">
-                                <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'"
-                                    id="tipoFactura" formControlName="tipoFactura"
+                                <app-catalogo-select [isDisabled]="esFormularioSoloLectura"
+                                    [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
+                                    formControlName="tipoFactura"
                                     (change)="setValoresStore('formularioMercancia','tipoFactura')"></app-catalogo-select>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <label>Número de registro fiscal*:</label>
                                 <input type="text" required="false" class="form-control"
                                     formControlName="numeroDeRegistroFiscal"
@@ -185,9 +192,10 @@
 
             </div>
             <div class="modal-footer custom-footer mt-4">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura"> Cancelar </button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal
+                    [disabled]="esFormularioSoloLectura"> Cancelar </button>
                 <button type="submit" class="btn btn-primary" #modalBuscar data-bs-dismiss="modal"
-                    (click)="mercanciaAgregarSeleccionada()" [disabled]="esFormularioSoloLectura"> Agregar </button>
+                    (click)="mercanciaAgregarSeleccionada()" [disabled]="esFormularioSoloLectura"> Asignar </button>
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
   <div class="container">
     <div class="row">
       <ul class="nav nav-tabs">
-        <li [ngClass]="indice === 1 ? 'active' : ''">
+        <li [ngClass]="indice === 1 ? 'active' : 'disabled'">
           <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Solicitante</a>
         </li>
         <li [ngClass]="indice === 2 ? 'active' : ''">

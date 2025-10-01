@@ -1,4 +1,4 @@
-import { AlertComponent, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, Notificacion } from '@ng-mf/data-access-user';
+import { AlertComponent, CONDICIONES_JUEGOS_SURTIDOS, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, MENSAJE_DE_SELECCION, Notificacion } from '@ng-mf/data-access-user';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
 
 import { Component, OnDestroy, OnInit } from '@angular/core'; 
@@ -11,7 +11,8 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { PROTESTA } from '@ng-mf/data-access-user';
-import { RADIO_OPCIONS } from '../constante110101.enum';
+
+import { OPCIONES, RADIO_OPCIONS, SELECCIONAR_TRANSFORMACION} from '../constante110101.enum';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -113,12 +114,47 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   public radioOpcions = RADIO_OPCIONS;
 
   /**
+   * Opciones para el campo de radio (Si/No).
+   */
+  public opciones = OPCIONES;
+
+  /**
+   * Opciones para seleccionar el tipo de proceso (Transformación/Ensamble o montaje).
+   */
+  public seleccionarTransformacion = SELECCIONAR_TRANSFORMACION;
+
+  /**
    * Indica si se deben mostrar los campos adicionales relacionados con la opción de exportador autorizado.
    * Cuando es `true`, se despliegan los campos adicionales en la interfaz; cuando es `false`, permanecen ocultos.
    *
    * @default false
    */
   public mostrarCampos: boolean = false;
+
+  /**
+   * Vista instancia de proceso de transformación
+   * Cuando es 'true', permite ver la vista de proceso de transformación.
+   */
+  isProcesoTransformacion: boolean = false;
+
+  /**
+   * Mensaje de alerta para selección de proceso de transformación de la mercancía
+   * @property {string} mensajeDeSeleccion - Contiene el mensaje para selección de proceso de transformación
+   */
+  mensajeDeSeleccion = MENSAJE_DE_SELECCION;
+
+  /**
+   * Vista instancia de juegos o surtidos
+   * Cuando es 'true', permite ver la vista de juegos o surtidos
+   */
+  isJuegosSurtidos: boolean = false;
+
+  /**
+   * Mensaje de alerta para juegos o surtidos
+   * @property {string} condiciones - Contiene las condiciones para juegos o surtidos
+   */
+  condiciones = CONDICIONES_JUEGOS_SURTIDOS;
+
   /**
    * constructor de la clase
    * Fetch the fetchtiposDocumentos datos
@@ -184,7 +220,10 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       representacion: [this.solicitudeState?.representacion, Validators.required],
       metodoSeparacion: [Boolean(this.solicitudeState?.metodoSeparacion), Validators.required],
       exportadorAutorizado: [Boolean(this.solicitudeState?.exportadorAutorizado), Validators.required],
-      informacionRadios: [this.solicitudeState?.informacionRadios]
+      informacionRadios: [this.solicitudeState?.informacionRadios],
+      juegoSurtido:[],
+      descripcionJuegoSurtido: ['', Validators.required],
+      protesto_verdad: [false, Validators.requiredTrue]
     });
   }
 
@@ -268,6 +307,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public getRepresentacionFederal(cveEntidad: string): void {
+    this.tramite110101Store.setEntidad(cveEntidad);
     this.catalogoTramiteService.getCatRepresentacionFederal(cveEntidad)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -323,6 +363,18 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja el cambio de selección de representación federal y 
+   * actualiza el estado del store con la clave seleccionada.
+   *
+   * @method onRepresentacionChange
+   * @param {Catalogo} event - Objeto del catálogo que representa la opción seleccionada.
+   * @returns {void} No retorna ningún valor.
+   */
+  onRepresentacionChange(event: Catalogo): void {
+    this.tramite110101Store.setRepresentacion(event.clave ?? null);
+  }
+
+  /**
    * @method getDeclaracionDatos
    * @description Obtiene el catálogo de la declaración de datos.
    * Recupera y establece la información de la declaración de datos.
@@ -335,7 +387,9 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((response) => {
         if (response.codigo === CodigoRespuesta.EXITO) {          
-         this.textos = response.datos?.[0]?.descripcion;
+         this.textos = response.datos?.[0]?.descripcion ?? undefined;
+         this.tramite110101Store.clearDeclaraciones();
+         this.tramite110101Store.addDeclaraciones(response.datos ?? []);
         }else {
         this.textos = PROTESTA.ADJUNTAR;}
       });

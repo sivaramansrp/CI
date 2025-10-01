@@ -79,7 +79,6 @@ export class SolicitudPageComponent implements OnInit {
    */
   indice: number = 1;
 
-
   /**
     * @property {boolean} esFormaValido
     * @description
@@ -343,15 +342,15 @@ return arr.map((item: any) => ({
       });
   }
   /**
-     * @method validarTodosFormulariosPasoUno
-     * @description
-     * Valida todos los formularios del componente `PasoUnoComponent`.
-     * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
-     * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
-     * Retorna `true` si todos los formularios son válidos.
-     *
-     * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
-     */
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
 
     if (!this.pasoUnoComponent) {
@@ -364,7 +363,6 @@ return arr.map((item: any) => ({
     return true;
   }
 
-
   /**
    * Actualiza el estado de carga de archivo, permitiendo mostrar u ocultar el botón de continuar.
    * Este método es llamado desde un componente hijo mediante un evento.
@@ -373,59 +371,4 @@ return arr.map((item: any) => ({
   cargaArchivo(data: boolean): void {
     this.cargarArchivo = data;
   }
-
-  /**
- * Método para navegar a la siguiente sección del wizard.
- * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
- * {void} No retorna ningún valor.
- */
-  siguiente(): void {
-    // Aqui se hara la validacion de los documentos cargdados
-    this.wizardComponent.siguiente();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
-
-  /**
-   * Método para navegar a la sección anterior del wizard.
-   * Actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
-   */
-  anterior(): void {
-    this.wizardComponent.atras();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
-
-  /**
-   * Emite un evento para cargar archivos.
-   * {void} No retorna ningún valor.
-   */
-  onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
-
-  onCargaEnProgreso(carga: boolean): void {
-    this.cargaEnProgreso = carga;
-  }
-  /**
- * Método para manejar el evento de carga de documentos.
- * Actualiza el estado de la sección de carga de documentos.
- *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
- * {void} No retorna ningún valor.
- */
-  cargaRealizada(cargaRealizada: boolean): void {
-    this.seccionCargarDocumentos = cargaRealizada ? false : true;
-  }
-
-  /**
-  * Método para manejar el evento de carga de documentos.
-  * Actualiza el estado del botón de carga de archivos.
-  *  carga - Indica si la carga de documentos está activa o no.
-  * {void} No retorna ningún valor.
-  */
-  manejaEventoCargaDocumentos(carga: boolean): void {
-    this.activarBotonCargaArchivos = carga;
-  }
-
 }

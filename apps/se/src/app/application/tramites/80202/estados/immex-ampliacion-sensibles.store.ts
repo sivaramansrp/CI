@@ -46,17 +46,21 @@ import { fraccionInfo, immexInfo } from '../models/immex-ampliacion-sensibles.mo
  * @see {@link immexRegistroform} Para la definición completa de la estructura del formulario
  */
 export interface ImmexRegistroState {
-    /**
-     * @description Datos completos del formulario de registro IMMEX.
-     * Contiene toda la información necesaria para el trámite de cambio de modalidad,
-     * incluyendo datos del permiso, fracciones arancelarias, productos de importación
-     * y exportación, capacidades de producción y códigos de nomenclatura.
-     * 
-     * @type {immexRegistroform}
-     * @memberof ImmexRegistroState
-     */
-    importacion: immexInfo[];
-    exportacion: fraccionInfo[];
+
+  /**
+   * @description Datos completos del formulario de registro IMMEX.
+   * Contiene toda la información necesaria para el trámite de cambio de modalidad,
+   * incluyendo datos del permiso, fracciones arancelarias, productos de importación
+   * y exportación, capacidades de producción y códigos de nomenclatura.
+   * 
+   * @type {immexRegistroform}
+   * @memberof ImmexRegistroState
+   */
+  importacion: immexInfo[];
+  /** Información sobre la fracción arancelaria de importación. */
+  exportacion: fraccionInfo[];
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
 }
 
 /**
@@ -83,10 +87,12 @@ export interface ImmexRegistroState {
  * @author Sistema VUCEM 3.0
  */
 export function createInitialState(): ImmexRegistroState {
-   return {
+  return {
     importacion: [] as immexInfo[],
     exportacion: [] as fraccionInfo[],
-    }
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+    idSolicitud: 0,
+  }
 }
 
 
@@ -128,68 +134,80 @@ export function createInitialState(): ImmexRegistroState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'cambio-modalidad' })
 export class ImmexAmpliacionSensiblesStore extends Store<ImmexRegistroState> {
-    /**
-     * @constructor
-     * @description
-     * Constructor de la clase ImmexRegistroStore que inicializa el store con el estado predeterminado.
-     * Llama al constructor padre de la clase Store pasando el estado inicial creado por la función
-     * createInitialState(), estableciendo así los valores por defecto para todo el formulario.
-     * 
-     * El constructor se ejecuta automáticamente cuando Angular inyecta el servicio y garantiza
-     * que el store esté listo para ser utilizado inmediatamente después de su instanciación.
-     * 
-     * @memberof ImmexRegistroStore
-     * @since 1.0.0
-     * 
-     * @example
-     * ```typescript
-     * // Angular se encarga de la instanciación automática
-     * // No es necesario llamar al constructor manualmente
-     * constructor(private store: ImmexRegistroStore) {
-     *   // El store ya está inicializado y listo para usar
-     * }
-     * ```
-     */
-    constructor() {
-        super(createInitialState());
-    }
-    /**
-     * @method updateImportacion
-     * @description
-     * Actualiza el array de información de importación en el estado del store.
-     * 
-     * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
-     * @memberof ImmexAmpliacionSensiblesStore
-     * @since 1.0.0
-     */
-    updateImportacion(importacion: immexInfo[]): void {
-        this.update({ importacion });
-    }
+  /**
+   * @constructor
+   * @description
+   * Constructor de la clase ImmexRegistroStore que inicializa el store con el estado predeterminado.
+   * Llama al constructor padre de la clase Store pasando el estado inicial creado por la función
+   * createInitialState(), estableciendo así los valores por defecto para todo el formulario.
+   * 
+   * El constructor se ejecuta automáticamente cuando Angular inyecta el servicio y garantiza
+   * que el store esté listo para ser utilizado inmediatamente después de su instanciación.
+   * 
+   * @memberof ImmexRegistroStore
+   * @since 1.0.0
+   * 
+   * @example
+   * ```typescript
+   * // Angular se encarga de la instanciación automática
+   * // No es necesario llamar al constructor manualmente
+   * constructor(private store: ImmexRegistroStore) {
+   *   // El store ya está inicializado y listo para usar
+   * }
+   * ```
+   */
+  constructor() {
+    super(createInitialState());
+  }
+  /**
+   * @method updateImportacion
+   * @description
+   * Actualiza el array de información de importación en el estado del store.
+   * 
+   * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
+   * @memberof ImmexAmpliacionSensiblesStore
+   * @since 1.0.0
+   */
+  updateImportacion(importacion: immexInfo[]): void {
+    this.update({ importacion });
+  }
 
-    /**
-     * @method updateExportacion
-     * @description
-     * Actualiza el array de información de exportación en el estado del store.
-     * 
-     * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
-     * @memberof ImmexAmpliacionSensiblesStore
-     * @since 1.0.0
-     */
-    updateExportacion(exportacion: fraccionInfo[]): void {
-        this.update({ exportacion });
-    }
-    /**
-     * @method updateImportacionAndExportacion
-     * @description
-     * Actualiza tanto el array de información de importación como el de exportación en una sola operación.
-     * 
-     * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
-     * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
-     * @memberof ImmexAmpliacionSensiblesStore
-     * @since 1.0.0
-     */
-    updateImportacionAndExportacion(importacion: immexInfo[], exportacion: fraccionInfo[]): void {
-        this.update({ importacion, exportacion });
-    }
-   
+  /**
+   * @method updateExportacion
+   * @description
+   * Actualiza el array de información de exportación en el estado del store.
+   * 
+   * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
+   * @memberof ImmexAmpliacionSensiblesStore
+   * @since 1.0.0
+   */
+  updateExportacion(exportacion: fraccionInfo[]): void {
+    this.update({ exportacion });
+  }
+  /**
+   * @method updateImportacionAndExportacion
+   * @description
+   * Actualiza tanto el array de información de importación como el de exportación en una sola operación.
+   * 
+   * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
+   * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
+   * @memberof ImmexAmpliacionSensiblesStore
+   * @since 1.0.0
+   */
+  updateImportacionAndExportacion(importacion: immexInfo[], exportacion: fraccionInfo[]): void {
+    this.update({ importacion, exportacion });
+  }
+
+  /**
+  * Guarda el ID de la solicitud en el estado.
+  *
+  * @param idSolicitud - El ID de la solicitud que se va a guardar.
+  */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
 }
