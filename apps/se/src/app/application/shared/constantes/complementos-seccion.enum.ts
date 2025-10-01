@@ -594,7 +594,7 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
 
 export const TABLA_ANEXO_PRODUCTO_FRACCION =[
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoUnoProducto): string | undefined => ele.fraccion,
     orden: 1,
   },

@@ -62,6 +62,7 @@ import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
+
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * Componente Complimentos.
@@ -397,7 +398,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
+        opinionPositiva: [{ value: 1, disabled: true }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
