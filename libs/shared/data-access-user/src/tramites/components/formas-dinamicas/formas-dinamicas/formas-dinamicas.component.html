@@ -222,21 +222,22 @@
                   } @case ('date') {
                     @if (item.mostrar !== false) {
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
-                        <input-fecha
-                          [setFecha]="forma.get(item.campo)?.value"
-                          [datos]="obtenerInformacionDeFecha(item)"
-                          [ngClass]="esValido(item.campo) ? 'required' : ''"
-                          [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
-                          [tooltipQuestionCircleText]="item.tooltipTxt ?? '' "
-                          [isDisabled]="soloLectura"
-                          (valorCambiado)="eventoDeCambioDeValor($event, item.campo, 'date')"
-                        ></input-fecha>
+                        <div class="form-group" [ngClass]="{ 'has-error': esValido(item.campo) }">
+                          <input-fecha
+                            [setFecha]="forma.get(item.campo)?.value"
+                            [datos]="obtenerInformacionDeFecha(item)"
+                            [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
+                            [tooltipQuestionCircleText]="item.tooltipTxt ?? '' "
+                            [isDisabled]="soloLectura"
+                            (valorCambiado)="eventoDeCambioDeValor($event, item.campo, 'date')"
+                          ></input-fecha>
 
-                        <validadores-de-formularios 
-                          [forma]="forma" 
-                          [controlDeFormulario]="item.campo" 
-                          [validadores]="item.validadores ?? []"
-                        ></validadores-de-formularios>
+                          <validadores-de-formularios 
+                            [forma]="forma" 
+                            [controlDeFormulario]="item.campo" 
+                            [validadores]="item.validadores ?? []"
+                          ></validadores-de-formularios>
+                        </div>
                       </div>
                     }
                   } @case ('') {
