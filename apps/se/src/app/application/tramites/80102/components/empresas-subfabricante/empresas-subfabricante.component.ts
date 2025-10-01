@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna,TablaSeleccion, doDeepCopy,esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
@@ -9,6 +9,7 @@ import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION, SUBFABRICANTE_SE
 import { Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { GestionarEmpresasSubfabricantesComponent } from '../../../../shared/components/gestionar-empresas-subfabricante/gestionar-empresas-subfabricante.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
@@ -145,12 +146,15 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @param activatedRoute Información sobre la ruta activa.
    * @param consultaQuery Consulta para el estado de Consultaio.
    */
-  constructor(private AutorizacionProgrmaNuevoServiceServicios: AutorizacionProgrmaNuevoService,
+  constructor(
+    private AutorizacionProgrmaNuevoServiceServicios: AutorizacionProgrmaNuevoService,
     private fb: FormBuilder,
     public query: Tramite80102Query,
     private store: Tramite80102Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute, private consultaQuery: ConsultaioQuery
+    private activatedRoute: ActivatedRoute, 
+    private consultaQuery: ConsultaioQuery,
+    private _compartidaSvc: ComplimentosService
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -227,7 +231,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    */
   enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
     this.formularioDatosSubcontratista.patchValue({
-      estado: estadoSeleccionado.id.toString(),
+      rfc: this.formularioDatosSubcontratista.get('rfc')?.value,
+      estado: estadoSeleccionado.clave,
     })
     this.store.setDatosSubcontratista(this.formularioDatosSubcontratista.value);
   }
@@ -278,13 +283,22 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles(): void {
-    this.AutorizacionProgrmaNuevoServiceServicios
-      .getSubfabricantesDisponibles()
+    const PAYLOAD = {
+        "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
+        "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
+        "idPrograma": null
+      }
+    this._compartidaSvc
+      .getSubfabricantesDisponibles(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response: PlantasSubfabricante[]) => {
-        if (response.length>0) {
-          this.store.setPlantasBuscadas(response)
-        }
+      .subscribe((response) => {
+          if(esValidObject(response)) {
+             const API_DATOS = doDeepCopy(response);
+            if(esValidArray(API_DATOS.datos)) {
+              const RESPONSE:PlantasSubfabricante[] = this._compartidaSvc.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
+              this.store.setPlantasBuscadas(RESPONSE);
+            } 
+          }
       });
   }
 

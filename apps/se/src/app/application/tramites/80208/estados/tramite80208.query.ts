@@ -31,4 +31,9 @@ export class CambioModalidadQuery extends Query<CambioModalidadState> {
     selectCambioModalidad$ = this.select((state) => {
         return state;
     });
+
+    /**
+     * Observable selector for retrieving the entire state.
+     */
+    allStoreData$ = this.select((state) => state);
 }

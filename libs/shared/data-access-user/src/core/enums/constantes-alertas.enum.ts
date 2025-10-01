@@ -112,8 +112,12 @@ export const MENSAJE_ALERTA_TRATADOS = {
 `,
 };
 
-export const INSTANCIA_URUGUAY = {
-  ADJUNTAR: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+export const INSTANCIA = {
+  MENSAJE: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+};
+
+export const INSTANCIA_ALIANZA = {
+  MENSAJE: `<p>Seleccione la(s) opcion(es) por las cual(es) cumple el criterio de otras instacias.</p>`,
 };
 
 export const ELVALORALERTA = {
@@ -404,6 +408,36 @@ export const SELECCIONAR_DOCUMENTOS = {
   <p>-Para solicitar documentos adicionales, selecciona el documento y presiona "Agregar nuevo".</p>
   <p>-En caso de que no requieras algún documento, selecciónalo y elimínalo.</p>`,
 };
+
+/**
+ * Constante que contiene las condiciones para que los juegos o surtidos de mercancías califiquen como originarios.
+ *
+ * @constant
+ * @type {{ CONDICION: string }}
+ */
+export const CONDICIONES_JUEGOS_SURTIDOS = {
+  CONDICION: 
+  `<li><p> Los juegos o surtidos que se clasifiquen según lo dispuesto en la Regla 3 de las Reglas Generales 
+  para la Interpretación del Sistema Armonizado, así como las mercancías cuya descripción, conforme a la 
+  nomenclatura del Sistema Armonizado, sea específicamente la de un juego o surtido, calificarán como originarias, 
+  siempre que cada una de las mercancías contenidas en el juego o surtido cumpla con la regla de origen que se haya 
+  establecido para cada una de esas mercancías y las demás disposiciones aplicables de este Capítulo.<br></p></li>`+
+
+  `<li><p> No obstante lo dispuesto en el párrafo 1, un juego o surtido de mercancías se considerará originario, 
+  si el valor de transacción de todas las mercancías no originarias utilizadas en la formación del juego o surtido, 
+  ajustado sobre la base CIF, no excede del 10 por ciento del valor de transacción del juego o surtido, 
+  ajustado sobre la base FOB.</p></li>`
+}
+
+/**
+ * Constante que contiene el mensaje para seleccionar el proceso de transformación utilizado en la mercancía.
+ * @constant
+ * @type {{ MENSAJE: string }}
+ * @property {string} MENSAJE - Mensaje en formato HTML que indica al usuario que debe seleccionar el proceso de transformación utilizado en la mercancía.
+ */
+export const MENSAJE_DE_SELECCION = {
+  MENSAJE: `<p>Favor de seleccionar el proceso de transformación utilizado en la mercancía.</p>`,
+}
 
 /**
   * @constant ERROR_FORMA_ALERT

@@ -225,6 +225,15 @@ public onContinuar(event: AccionBoton): void {
         this.pasoUnoComponent.markAllFieldsTouched?.();
       }
     }
+     const DOMICILIO_COMP = this.pasoUnoComponent?.getDomicilioDelEstablecimientoComponent?.();
+      if (DOMICILIO_COMP?.validateMercanciasTable) {
+        const MERCANCIA_VALID = DOMICILIO_COMP.validateMercanciasTable();
+        isValid = MERCANCIA_VALID && isValid;
+        if (!MERCANCIA_VALID && DOMICILIO_COMP.markMercanciasTableTouched) {
+          DOMICILIO_COMP.markMercanciasTableTouched();
+          this.cdr.detectChanges();
+        }
+      }
 
     return isValid;
   }

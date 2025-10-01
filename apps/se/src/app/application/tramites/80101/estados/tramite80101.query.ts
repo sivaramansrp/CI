@@ -88,6 +88,11 @@ export class Tramite80101Query extends Query<Tramite80101State> {
    */
   selectTiempoPrograma$ = this.select((state) => state.tiempoPrograma);
 
+   /**
+   * Selecciona el tiempo del programa del estado.
+   */
+  selectProyectoImmexTablaLista$ = this.select((state) => state.proyectoImmexTablaLista);
+
   /**
    * Selecciona los datos de la empresa extranjera y los mapea con el nombre de la entidad federativa.
    */
@@ -248,6 +253,20 @@ export class Tramite80101Query extends Query<Tramite80101State> {
    */
   selectDatosPlantasDisponibles$ = this.select(
     (state) => state.plantasDisponiblesTablaLista
+  );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectProveedorClienteDatosTabla$ = this.select(
+    (state) => state.annexoUno.proveedorClienteDatosTabla
+  );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectProveedorClienteDatosTablaDos$ = this.select(
+    (state) => state.annexoUno.proveedorClienteDatosTablaDos
   );
 
 /**

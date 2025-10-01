@@ -1,119 +1,105 @@
 <div class="container">
   <ng-titulo [titulo]="'Complemento de planta'"></ng-titulo>
- 
-    <form [formGroup]="complementarForm">
-      <div class="form">
-  <div class="row">
-    <div class="col-md-6">
-       <div class="form-group">
-      <app-catalogo-select
-        [catalogo]="permaneceraMercanciaProgramaOptions"
-        [label]="'Permanecerá mercancía al amparo del programa'"
-        [required]="true"
-        name="permanecera"
-        formControlName="permanecera" (change)="setValoresStore(complementarForm, 'permanecera', 'setPermanecera')"
-      
-      ></app-catalogo-select>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-      <app-catalogo-select
-        [catalogo]="documentoOptions"
-        [label]="'Tipo de documento'"
-        [required]="true"
-        name="estado"
-        formControlName="tipo" (change)="setValoresStore(complementarForm, 'tipo', 'setTipo')"
-      ></app-catalogo-select>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="form-group">
-        <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value" (valorCambiado)="cambioFechaFinal($event)" [deshabilitarFuturas]="true"></input-fecha>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <input-fecha [datos]="fetchaDeFinDeVigencia" [setFecha]="complementarForm.get('fetchaDeFinDeVigencia')?.value" (valorCambiado)="cambioFechaFinale($event)"></input-fecha>
-      </div>
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2" (click)="limpiar()">Limpiar</button>
-      <button class="btn btn-primary" (click)="agregarComplemento()">Agregar Complemento</button>
-    </div>
-  </div>
-  <div class="row mt-5">
-    <h6>Complemento de planta</h6>
-    <app-tabla-dinamica
-      [configuracionTabla]="complementoDePlantaEncabezado"
-      [tipoSeleccionTabla]="complecomplementoDePlantaTableSelection"
-      [datos]="complementoDePlantaDatos"
-    ></app-tabla-dinamica>
-  </div>
- <div class="row mt-5">
-    <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2" (click)="limpiar()">Eliminar</button>
-      <button class="btn btn-primary" (click)="agregarComplemento()">Editar</button>
-    </div>
-  </div>
-  <form class="container" [formGroup]="complimentosPlantaForma">
-      <div class="row mt-5">
-      <div class="col-md-4">
-        <label class="form-label" for="cantidad">RFC:</label>
-        <input
-          class="form-control min-hgt"
-          id="rfcFirmante"
-          formControlName="rfcFirmante"
-          type="text"
-          (change)="setValoresStore(complementarForm, 'rfcFirmante', 'setRfcFirmante')"
-        />
-      </div>
-     <div class="col-md-4">
-       <div class="form-group">
-      <app-catalogo-select
-        [catalogo]="permaneceraMercanciaProgramaOptions"
-        [label]="'Tipo de firmante'"
-        [required]="true"
-        name="tipoFirmante"
-        formControlName="tipoFirmante" (change)="setValoresStore(complementarForm, 'tipoFirmante', 'setTipoFirmante')"
-      
-      ></app-catalogo-select>
-      </div>
-    </div>
-         <div class="col-md-4">
-        <button class="btn btn-primary" (click)="agregarFirmante()">Agregar Firmante</button>
+
+  <form [formGroup]="complementarForm">
+    <div class="form">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <app-catalogo-select [catalogo]="permaneceraMercanciaProgramaOptions"
+              [label]="'Permanecerá mercancía al amparo del programa'" [required]="true" name="permanecera"
+              formControlName="permanecera"
+              (change)="setValoresStore(complementarForm, 'permanecera', 'setPermanecera')"></app-catalogo-select>
+          </div>
         </div>
- </div>
-  </form>  
-  
-    <div class="row mt-5">
-      <h6>Complemento de planta</h6>
-      <app-tabla-dinamica
-        [configuracionTabla]="complementoPlanta"
-        [tipoSeleccionTabla]="complementoPlantaTableSelection"
-        [datos]="complementoPlantaDatos"
-      ></app-tabla-dinamica>
-    </div>
-     <div class="row mt-5">
-    <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
-     </div>
-  </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <app-catalogo-select [catalogo]="documentoOptions" [label]="'Tipo de documento'" [required]="true"
+              name="estado" formControlName="tipo"
+              (change)="setValoresStore(complementarForm, 'tipo', 'setTipo')"></app-catalogo-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value"
+              (valorCambiado)="cambioFechaFinal($event)" [deshabilitarFuturas]="true"></input-fecha>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input-fecha [datos]="fetchaDeFinDeVigencia"
+              [setFecha]="complementarForm.get('fetchaDeFinDeVigencia')?.value"
+              (valorCambiado)="cambioFechaFinale($event)"></input-fecha>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+          <p class="mb-0">* Campos obligatorios</p>
+          <div>
+            <button class="btn btn-default me-2" (click)="limpiar()">Limpiar</button>
+            <button class="btn btn-primary" (click)="agregarComplemento()">Agregar Complemento</button>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <h6>Complemento de planta</h6>
+        <app-tabla-dinamica [configuracionTabla]="complementoDePlantaEncabezado"
+          [tipoSeleccionTabla]="complecomplementoDePlantaTableSelection"
+          [datos]="complementoDePlantaDatos"></app-tabla-dinamica>
+        <ul class="pagination d-flex justify-content-center">
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+        </ul>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-default me-2" (click)="limpiar()">Eliminar</button>
+          <button class="btn btn-primary" (click)="agregarComplemento()">Editar</button>
+        </div>
+      </div>
+      <form class="container" [formGroup]="complimentosPlantaForma">
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <label class="form-label" for="cantidad">RFC:</label>
+            <input class="form-control min-hgt" id="rfcFirmante" formControlName="rfcFirmante" type="text"
+              (change)="setValoresStore(complementarForm, 'rfcFirmante', 'setRfcFirmante')" />
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="permaneceraMercanciaProgramaOptions" [label]="'Tipo de firmante'"
+                [required]="true" name="tipoFirmante" formControlName="tipoFirmante"
+                (change)="setValoresStore(complementarForm, 'tipoFirmante', 'setTipoFirmante')"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="col-md-4 mt-espaciado">
+            <button class="btn btn-primary" (click)="agregarFirmante()">Agregar Firmante</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row mt-5">
+        <h6>Complemento de planta</h6>
+        <app-tabla-dinamica [configuracionTabla]="complementoPlanta"
+          [tipoSeleccionTabla]="complementoPlantaTableSelection" [datos]="complementoPlantaDatos"></app-tabla-dinamica>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-default me-2">Eliminar</button>
+        </div>
+      </div>
 
 
-  <div class="row mt-5">
-    <div class="col-12 container text-end mt-5 mb-5">
-      <button class="btn btn-default me-2" (click)="regrasar()">
-        Regresar a plantas
-      </button>
+      <div class="row mt-5">
+        <div class="col-12 container text-end mt-5 mb-5">
+          <button class="btn btn-default me-2" (click)="regrasar()">
+            Regresar a plantas
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-    </form>
+  </form>
 </div>
 
 @if (exitosamenteNotificacion) {

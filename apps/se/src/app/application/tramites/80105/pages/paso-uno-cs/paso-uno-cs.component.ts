@@ -63,8 +63,6 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
         FORMA_VALIDA.push(false);
       }
     }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
  /** Inicializa el componente suscribiéndose al estado de consulta.  a
  *  Ejecuta lógica según si se requiere actualización o solo visualización. */

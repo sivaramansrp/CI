@@ -1,19 +1,10 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
-
-import { DatosEmpresaComponent } from '../../component/datos-empresa/datos-empresa.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-
-import { DomicilioDelEstablecimientoComponent } from '../../component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
-import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component.ts';
-import { TramitesAsociadoComponent } from '../../component/tramites-asociado/tramites-asociado.component';
-
-import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
-
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-
-import { FormGroup } from '@angular/forms';
+import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { take } from 'rxjs';
 
 /**
  * Interfaz que define la estructura de un botón de acción
@@ -38,457 +29,330 @@ interface AccionBoton {
   selector: 'app-permiso-sanitario',
   templateUrl: './permiso-sanitario.component.html',
 })
-export class PermisoSanitarioComponent {
-  
-  /**
-   * Lista de pasos del wizard obtenida de la constante PASOS.
-   * Contiene la configuración de todos los pasos disponibles en el proceso.
-   * @type {ListaPasosWizard[]}
-   * @memberof PermisoSanitarioComponent
-   */
+export class PermisoSanitarioComponent implements AfterViewInit {
+  /** Lista de pasos del wizard definidos en la configuración */
   pasos: ListaPasosWizard[] = PASOS;
-
-  /**
-   * Referencia al componente WizardComponent para poder acceder a sus métodos
-   * de navegación (siguiente, atrás) desde el componente padre.
-   * @type {WizardComponent}
-   * @memberof PermisoSanitarioComponent
-   */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-    /**
-   * Referencias a los subcomponentes de cada paso del asistente.
-   */
-  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
-  @ViewChild(DatosEmpresaComponent) datosDeLaSolicitudComponent!: DatosEmpresaComponent;
-  @ViewChild(DomicilioDelEstablecimientoComponent) domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimientoComponent;
-  @ViewChild(TercerosRelacionadosVistaComponent) tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
-  @ViewChild(TramitesAsociadoComponent) tramitesAsociadoComponent!: TramitesAsociadoComponent;
-  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
-
-   /**
-   * Controla la visibilidad del botón "Anterior".
-   */
-  ocultarBtnAnterior: boolean = true;
-
-  /**
-   * Controla la visibilidad del modal de pago.
-   */
-  showPaymentModal: boolean = false;
-
-   /**
-   * Almacena el último evento de continuar para el asistente.
-   */
-  private lastContinueEvent: AccionBoton | null = null;
-
-  /**
-   * Copia de la lista de pasos utilizada para manejar las pantallas del wizard.
-   * Permite manipular la visualización de pasos sin afectar la lista original.
-   * @type {ListaPasosWizard[]}
-   * @memberof PermisoSanitarioComponent
-   */
+  
+  /** Lista de pantallas de pasos del wizard */
   pantallasPasos: ListaPasosWizard[] = PASOS;
 
-  /**
-   * Índice actual del paso en el que se encuentra el usuario.
-   * Valor por defecto: 1 (primer paso).
-   * @type {number}
-   * @memberof PermisoSanitarioComponent
-   */
-  indice: number = 1;
+  /** Referencia al componente wizard para controlar la navegación */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  
+  /** Referencia al componente del primer paso del formulario */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+  
+  /** Referencia al componente de pago de derechos */
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
 
-  /**
-   * Configuración de datos para el componente wizard.
-   * Contiene información sobre el número total de pasos, índice actual
-   * y textos de los botones de navegación.
-   * @type {DatosPasos}
-   * @memberof PermisoSanitarioComponent
-   */
+  /** Índice actual del paso en el wizard (iniciando en 1) */
+  indice: number = 1;
+  
+  /** Índice de la subpestaña actual dentro del paso */
+  subTabIndex: number = 1;
+  
+  /** Bandera para controlar la visibilidad del botón anterior */
+  ocultarBtnAnterior: boolean = false;
+  
+  /** Bandera para mostrar u ocultar el modal de confirmación de pago */
+  showPaymentModal: boolean = false;
+  
+  /** Almacena el último evento de continuar para procesarlo después del modal */
+  public lastContinueEvent: AccionBoton | null = null;
+  
+  /** Mensaje de error o información para mostrar al usuario */
+  message: string | undefined;
+
+  /** Configuración de datos para el componente de pasos del wizard */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Anterior',
+    txtBtnAnt: '',
     txtBtnSig: 'Continuar',
   };
 
-  /**
-   * Constante que contiene el texto del aviso de privacidad
-   * obtenido del enum AVISO.
-   * @type {string}
-   * @memberof PermisoSanitarioComponent
-   */
+  /** Bandera que indica si ya se intentó validar los campos de pago */
+  hasTriedPagoValidation: boolean = false; 
+
+  /** Constante para el aviso de privacidad */
   AVISO_DE_PRIVACIDAD = AVISO.Aviso;
 
-    /**
-   * Constructor del componente. Inyecta ChangeDetectorRef y el store de estado.
-   * @param cdr Referencia para detección de cambios.
-   * @param tramite260911Store Store para el estado del trámite.
+  /**
+   * Constructor del componente.
+   * @param cdr - Servicio de detección de cambios de Angular
+   * @param tramite260912Store - Store de estado específico para el trámite 260912
    */
-  constructor(private cdr: ChangeDetectorRef, private tramite260912Store: Tramite260912Store) {}
+  constructor(private cdr: ChangeDetectorRef, public tramite260912Store: Tramite260912Store) {}
 
   /**
-   * Maneja la navegación entre pasos del wizard basándose en la acción
-   * del botón presionado por el usuario.
-   * 
-   * Valida que el valor del índice esté dentro del rango permitido (1-4)
-   * y ejecuta la acción correspondiente en el componente wizard.
-   * 
-   * @public
-   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del paso
-   * @param {string} e.accion - Tipo de acción ('cont' para continuar, otro valor para retroceder)
-   * @param {number} e.valor - Índice del paso al cual navegar (debe estar entre 1 y 4)
-   * @returns {void}
-   * @memberof PermisoSanitarioComponent
-   * 
-   * @example
-   * // Continuar al siguiente paso
-   * this.getValorIndice({ accion: 'cont', valor: 2 });
-   * 
-   * @example
-   * // Retroceder al paso anterior
-   * this.getValorIndice({ accion: 'atras', valor: 1 });
+   * Hook de ciclo de vida que se ejecuta después de inicializar las vistas.
+   * Actualiza la visibilidad del botón anterior al cargar el componente.
    */
-  public getValorIndice(e: AccionBoton): void {
-    // Validar que el valor esté dentro del rango permitido
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualizar el índice actual
-      this.indice = e.valor;
-      
-      // Ejecutar la acción correspondiente en el wizard
-      if (e.accion === 'cont') {
-        // Navegar al siguiente paso
-        this.wizardComponent.siguiente();
-      } else {
-        // Navegar al paso anterior
-        this.wizardComponent.atras();
-      }
-    }
-  }
-
-   
-  /**
-   * Marca todos los controles de un formulario como "touched", incluso si están deshabilitados.
-   * Útil para forzar la validación visual de todos los campos.
-   * @param form Formulario reactivo a validar.
-   */
-  private static MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(form: import('@angular/forms').FormGroup): void {
-    const CONTROLS = Object.values(form.controls);
-    const DISABLED_CONTROLS: import('@angular/forms').AbstractControl[] = [];
-    CONTROLS.forEach(control => {
-      if (control.disabled) {
-        control.enable({ emitEvent: false });
-        DISABLED_CONTROLS.push(control);
-      }
-    });
-    CONTROLS.forEach(control => {
-      control.markAsTouched();
-    });
-    DISABLED_CONTROLS.forEach(control => {
-      control.disable({ emitEvent: false });
-    });
+  ngAfterViewInit(): void {
+    this.updateAnteriorButtonVisibility();
   }
 
   /**
-   * Actualiza el estado de validación del botón "Continuar" según el índice de la pestaña.
-   * @param tabIndex Índice de la pestaña actual.
+   * Getter que determina si se está en una subpestaña del paso principal 1.
+   * @returns true si está en el paso 1 y en una subpestaña mayor a 1
    */
-  private updateBtnContinuarValidationState(tabIndex: number): void {
-    (this.datosPasos as DatosPasos & { formaValida?: number; seccion?: number }).formaValida = tabIndex;
-    (this.datosPasos as DatosPasos & { formaValida?: number; seccion?: number }).seccion = tabIndex;
+  get inSubTabOfMain1(): boolean {
+    return this.indice === 1 && this.subTabIndex > 1;
   }
 
   /**
-   * Llama al método de continuar usando el evento recibido y el índice actual.
-   * @param event Evento de acción de botón.
+   * Getter que determina si debe mostrarse el botón de continuar.
+   * @returns true siempre (por defecto siempre se muestra)
    */
-  logAndContinue(event: AccionBoton): void {
-    const TAB_INDEX = this.datosPasos.indice;
-    this.onContinuar({ accion: event.accion, valor: TAB_INDEX });
-  }
-  /**
-   * Método para continuar desde un subcomponente hijo.
-   */
-  onContinuarFromChild(): void {
-    this.onContinuar({ accion: 'cont', valor: this.indice });
-  }
-  /**
-   * Valida todos los campos requeridos en los subcomponentes del asistente.
-   * Muestra mensaje de error si falta información.
-   * @returns true si todos los campos son válidos, false en caso contrario.
-   */
-  private validateAllRequiredFields(): boolean {
-    let datosDeLaSolicitudValid = true;
-    let domicilioDelEstablecimientoValid = true;
-    let tercerosRelacionadosValid = true;
-    let pagoDeDerechosValid = true;
-    let tramitesAsociadoValid = true;
-
-    if (this.pasoUnoComponent?.datosDeLaSolicitudComponent?.form) {
-      PermisoSanitarioComponent.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.form);
-      if (this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento) {
-        PermisoSanitarioComponent.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento);
-      }
-      datosDeLaSolicitudValid = this.pasoUnoComponent.datosDeLaSolicitudComponent.form.valid && this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento.valid;
-    }
-    
-    if (this.pasoUnoComponent?.domicilioDelEstablecimientoComponent?.form) {
-      PermisoSanitarioComponent.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.domicilioDelEstablecimientoComponent.form);
-      domicilioDelEstablecimientoValid = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.form.valid;
-      const DOMICILIO = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.domicilio;
-      const REPRESENTANTE_LEGAL = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.representanteLegal;
-      let DOMICILIO_FIELDS_VALID = true;
-      let REPRESENTANTE_LEGAL_FIELDS_VALID = true;
-      if (DOMICILIO) {
-        ['regimen', 'aduanasEntradas'].forEach(field => {
-          const CONTROL = DOMICILIO.get(field);
-          if (CONTROL) {
-            CONTROL.markAsTouched();
-            CONTROL.updateValueAndValidity();
-            if (CONTROL.invalid) {
-              DOMICILIO_FIELDS_VALID = false;
-            }
-          }
-        });
-      }
-      if (REPRESENTANTE_LEGAL) {
-        const FIELDS = ['acuerdoPublico', 'rfc', 'nombre', 'apellidoPaterno'];
-        const DISABLED_CONTROLS: import('@angular/forms').AbstractControl[] = [];
-        FIELDS.forEach(field => {
-          const CONTROL = REPRESENTANTE_LEGAL.get(field);
-          if (CONTROL && CONTROL.disabled) {
-            CONTROL.enable({ emitEvent: false });
-            DISABLED_CONTROLS.push(CONTROL);
-          }
-        });
-        FIELDS.forEach(field => {
-          const CONTROL = REPRESENTANTE_LEGAL.get(field);
-          if (CONTROL) {
-            CONTROL.markAsTouched();
-            CONTROL.updateValueAndValidity();
-            if (CONTROL.invalid) {
-              REPRESENTANTE_LEGAL_FIELDS_VALID = false;
-            }
-          }
-        });
-        DISABLED_CONTROLS.forEach(control => {
-          control.disable({ emitEvent: false });
-        });
-      }
-      domicilioDelEstablecimientoValid = domicilioDelEstablecimientoValid && DOMICILIO_FIELDS_VALID && REPRESENTANTE_LEGAL_FIELDS_VALID;
-    }
-
-    
-    if (this.tercerosRelacionadosVistaComponent) {
-      const FABRICANTES = this.tercerosRelacionadosVistaComponent.fabricanteTablaDatos;
-      const DESTINATARIOS = this.tercerosRelacionadosVistaComponent.destinatarioFinalTablaDatos;
-      
-      tercerosRelacionadosValid = FABRICANTES.length > 0 && DESTINATARIOS.length > 0;
-      const PROVEEDORES = this.tercerosRelacionadosVistaComponent.proveedorTablaDatos;
-      const FACTURADORES = this.tercerosRelacionadosVistaComponent.facturadorTablaDatos;
-      if (PROVEEDORES.length > 0) {
-        tercerosRelacionadosValid = true;
-      }
-      if (FACTURADORES.length > 0) {
-        tercerosRelacionadosValid = true;
-      }
-    }
-
-    
-    if (this.pagoDeDerechosComponent?.pagoDeDerechosForm) {
-      PermisoSanitarioComponent.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pagoDeDerechosComponent.pagoDeDerechosForm);
-      pagoDeDerechosValid = this.pagoDeDerechosComponent.pagoDeDerechosForm.valid;
-    }
-
-    
-    if (this.tramitesAsociadoComponent) {
-      const ASOCIADOS = this.tramitesAsociadoComponent.acuseTablaDatos;
-      tramitesAsociadoValid = ASOCIADOS.length > 0;
-    }
-
-    if (!datosDeLaSolicitudValid || !domicilioDelEstablecimientoValid || !tercerosRelacionadosValid || !pagoDeDerechosValid || !tramitesAsociadoValid) {
-      this.message = '¡Error de registro! Faltan campos por capturar.';
-      setTimeout(() => {
-        const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
-        if (ERROR_ELEMENT) {
-          ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-      this.datosPasos.indice = this.indice;
-      this.datosPasos.txtBtnSig = 'Continuar';
-      return false;
-    }
+  // eslint-disable-next-line class-methods-use-this
+  get shouldShowContinuarButton(): boolean {
     return true;
   }
 
   /**
-   * Maneja el evento de continuar en el asistente, validando los campos y navegando entre pasos.
-   * @param event Evento de acción de botón con el índice del paso.
+   * Método privado que actualiza la visibilidad del botón anterior.
+   * También actualiza los datos de configuración de pasos.
    */
-onContinuar(event: AccionBoton): void {
-  // 1. Validate all required fields except pago-de-derechos and tramitesAsociado
-  if (!this.pasoUnoComponent?.datosDeLaSolicitudComponent?.isValid?.()) {
-    this.goToTab(2, '¡Error de registro! Faltan campos por capturar.');
-    return;
-  }
-  if (!this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.isValid?.()) {
-    this.goToTab(3, '¡Error de registro! Faltan campos por capturar.');
-    return;
+  public updateAnteriorButtonVisibility(): void {
+    this.ocultarBtnAnterior = this.indice === 1;
+    this.datosPasos = {
+      ...this.datosPasos,
+      indice: this.indice,
+      nroPasos: this.pasos.length
+    };
   }
 
-  // 2. Now check pago-de-derechos
-  if (!this.pasoUnoComponent?.pagoDeDerechosComponent?.isValid?.()) {
-    // Show payment modal if payment fields are missing
-    this.showPaymentModal = true;
-    this.message = undefined;
-    this.cdr.detectChanges();
-    this.lastContinueEvent = event;
-    return;
-  }
+  /**
+   * Maneja la navegación entre pasos y subpestañas basado en la acción del botón.
+   * @param e - Objeto que contiene la acción y valor para la navegación
+   */
+  public getValorIndice(e: AccionBoton): void {
+    const VALOR = e.valor;
+    this.subTabIndex = VALOR;
+    this.updateAnteriorButtonVisibility();
+    this.datosPasos.txtBtnSig = 'Continuar';
 
-  // 3. Now check tramitesAsociado
-  if (!this.pasoUnoComponent?.tramitesAsociadoComponent?.isValid?.()) {
-    this.goToTab(5, '¡Error de registro! Faltan campos por capturar.');
-    return;
-  }
-
-  // 4. All validations passed, go to next main tab (Paso 2)
-  this.message = undefined;
-  this.showPaymentModal = false;
-  this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
-  this.datosPasos.indice = this.indice + 1;
-}
-
-onPaymentModalNo(): void {
-  this.showPaymentModal = false;
-  this.lastContinueEvent = null;
-  // Go to Pago de Derechos tab (index 4)
-  this.goToTab(4);
-}
-
-onPaymentModalYes(): void {
-  this.showPaymentModal = false;
-  this.lastContinueEvent = null;
-
-  // Validate all required fields again
-  if (!this.pasoUnoComponent?.datosDeLaSolicitudComponent?.isValid?.()) {
-    this.goToTab(2, '¡Error de registro! Faltan campos por capturar.');
-    return;
-  }
-  if (!this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.isValid?.()) {
-    this.goToTab(3, '¡Error de registro! Faltan campos por capturar.');
-    return;
-  }
-  if (!this.pasoUnoComponent?.pagoDeDerechosComponent?.isValid?.()) {
-    this.goToTab(4, '¡Error de registro! Faltan campos por capturar.');
-    return;
-  }
-  if (!this.pasoUnoComponent?.tramitesAsociadoComponent?.isValid?.()) {
-    this.goToTab(5, '¡Error de registro! Faltan campos por capturar.');
-    return;
-  }
-
-  // All validations passed, go to next main tab (Paso 2)
-  this.message = undefined;
-  this.showPaymentModal = false;
-  this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
-  this.datosPasos.indice = this.indice + 1;
-}
-
-/**
- * Helper to go to a specific tab and show error if needed.
- */
-private goToTab(tabIndex: number, errorMsg?: string): void {
-  this.indice = tabIndex;
-  this.datosPasos.indice = tabIndex;
-  if (this.pasoUnoComponent) {
-    this.pasoUnoComponent.indice = tabIndex;
-    if (typeof this.pasoUnoComponent.seleccionaTab === 'function') {
-      this.pasoUnoComponent.seleccionaTab(tabIndex);
-    }
-  }
-  if (errorMsg) {
-    this.message = errorMsg;
-    setTimeout(() => {
-      const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
-      if (ERROR_ELEMENT) {
-        ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
+    if (e.accion === 'cont') {
+      if (this.indice === 1 && this.subTabIndex === 5) { 
+        this.indice++;
+        this.subTabIndex = 1;
+        this.wizardComponent?.siguiente?.();
+      } else if (this.indice > 1) {
+        this.indice++;
+        this.wizardComponent?.siguiente?.();
       }
-    }, 100);
-  } else {
+    } else {
+      if (this.subTabIndex > 1) {
+        this.subTabIndex--;
+      } else if (this.indice > 1) {
+        this.indice--;
+        if (this.indice === 1) {
+          this.subTabIndex = 5;
+        }
+        this.wizardComponent?.atras?.();
+      }
+    }
+    this.updateAnteriorButtonVisibility();
+  }
+
+  /**
+   * Maneja el evento de continuar, validando campos y mostrando modal de pago si es necesario.
+   * @param event - Evento de acción del botón que contiene la información de navegación
+   */
+ 
+public onContinuar(event: AccionBoton): void {
+  if (event.valor === 4) {
+    this.handlePagoTabContinue(event);
+    return;
+  }
+  const IS_VALID = this.validateAllRequiredFields();
+  if (!IS_VALID) {
+    this.message = '¡Error de registro! Faltan campos por capturer';
+  }
+  this.tramite260912Store._select((state: Tramites260912State) => state)
+    .pipe(take(1))
+    .subscribe(state => {
+      const PAYMENT_FIELDS = PermisoSanitarioComponent.getPaymentFields(state);
+      const ALL_BLANK = PAYMENT_FIELDS.every(val => val === null || val === undefined || val === '');
+      const ALL_FILLED = PAYMENT_FIELDS.every(val => val !== null && val !== undefined && val !== '');
+
+      if (!ALL_FILLED && !this.hasTriedPagoValidation) {
+        this.showPaymentModal = true;
+        this.lastContinueEvent = event;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      if (!IS_VALID) {
+        return;
+      }
+
+      this.message = undefined;
+      this.getValorIndice(event);
+    });
+}
+
+
+  /**
+   * Maneja específicamente el continuar desde la pestaña de pago.
+   * @param event - Evento de acción del botón
+   */
+  private handlePagoTabContinue(event: AccionBoton): void {
     this.message = undefined;
+    this.getValorIndice(event);
+  }
+
+  /**
+   * Valida todos los campos requeridos en los componentes hijos.
+   * @returns true si todos los campos requeridos son válidos, false en caso contrario
+   */
+  private validateAllRequiredFields(): boolean {
+    let isValid = true;
+
+    if (this.pasoUnoComponent?.validateRequiredFields) {
+      const PASO_UNO_VALID = this.pasoUnoComponent.validateRequiredFields();
+      isValid = PASO_UNO_VALID && isValid;
+      if (!PASO_UNO_VALID) {
+        this.pasoUnoComponent.markAllFieldsTouched?.();
+      }
+    }
+   const DOMICILIO_COMP = this.pasoUnoComponent?.getDomicilioDelEstablecimientoComponent?.();
+  if (DOMICILIO_COMP?.validateMercanciasTable) {
+    const MERCANCIA_VALID = DOMICILIO_COMP.validateMercanciasTable();
+    isValid = MERCANCIA_VALID && isValid;
+    if (!MERCANCIA_VALID && DOMICILIO_COMP.markMercanciasTableTouched) {
+      DOMICILIO_COMP.markMercanciasTableTouched();
+      this.cdr.detectChanges();
+    }
+  }
+
+    return isValid;
+  }
+
+  /**
+   * Extrae los campos de pago del estado del store.
+   * @param state - Estado actual del trámite 260912
+   * @returns Array con los valores de los campos de pago
+   */
+  private static getPaymentFields(state: Tramites260912State): (string | null | undefined)[] {
+    return [
+      state.claveDeReferencia,
+      state.cadenaPagoDependencia,
+      state.clave,
+      state.llaveDePago,
+      state.fecPago,
+      state.impPago
+    ];
+  }
+
+  /**
+   * Maneja la confirmación positiva del modal de pago.
+   * Valida campos y procede con la navegación si todo es correcto.
+   */
+
+public onPaymentModalYes(): void {
+  let pagoValid = true;
+  const PAGO_DE_DERECHOS_COMPONENT = this.pasoUnoComponent?.getPagoDeDerechosComponent();
+  const PAGO_DE_DERECHOS_FORM = PAGO_DE_DERECHOS_COMPONENT?.pagoDeDerechosForm;
+  if (PAGO_DE_DERECHOS_FORM) {
+    Object.values(PAGO_DE_DERECHOS_FORM.controls).forEach(ctrl => {
+      ctrl.updateValueAndValidity();
+    });
+    pagoValid = PAGO_DE_DERECHOS_FORM.valid &&
+      Object.values(PAGO_DE_DERECHOS_FORM.value).every(val => val !== null && val !== undefined && val !== '');
+  }
+  const OTHER_FIELDS_VALID = this.validateAllRequiredFields();
+
+  if (!OTHER_FIELDS_VALID) {
+    this.message = '¡Error de registro! Faltan campos por capturer';
+    this.hasTriedPagoValidation = false;
+    this.showPaymentModal = false;
+    return;
+  }
+
+  if (!pagoValid) {
+    this.message = 'Todos los campos de pago son requeridos';
+    this.hasTriedPagoValidation = false;
+    this.showPaymentModal = false;
+    return;
+  }
+
+  this.message = undefined;
+  this.hasTriedPagoValidation = true;
+  this.showPaymentModal = false;
+
+  if (this.lastContinueEvent) {
+    this.getValorIndice(this.lastContinueEvent);
+    this.lastContinueEvent = null;
   }
 }
   /**
-   * Variable para almacenar mensajes de información o error.
+   * Maneja la confirmación negativa del modal de pago.
+   * Cierra el modal y navega a la pestaña de pago para completar la información.
    */
-  /**
-   * Variable para almacenar mensajes de información o error.
-   */
-  message: string | undefined;
 
-  /**
-   * Maneja mensajes de error.
-   * Asigna el mensaje de error a la variable `message` y lanza una excepción.
-   * @param errorMessage El mensaje de error que se desea mostrar.
-   */
-  /**
-   * Maneja mensajes de error.
-   * Asigna el mensaje de error a la variable `message` y lanza una excepción.
-   * @param errorMessage El mensaje de error que se desea mostrar.
-   */
-  errorMessage(errorMessage: string): void {
-    this.message = errorMessage;
-    throw new Error('Method not implemented.');
-  }
+public onPaymentModalNo(): void {
+  this.showPaymentModal = false;
+  this.lastContinueEvent = null;
+  this.hasTriedPagoValidation = false;
+  this.subTabIndex = 4;
+  this.updateAnteriorButtonVisibility();
 
-  /**
-   * Método estático para manejar el evento de envío.
-   * Actualmente no implementado.
-   * @throws Error siempre que se llama, ya que no está implementado.
-   */
-  /**
-   * Método estático para manejar el evento de envío.
-   * Actualmente no implementado.
-   * @throws Error siempre que se llama, ya que no está implementado.
-   */
-  static onSubmit(): void {
-    throw new Error('Method not implemented.');
-  }
-
-  /**
-   * Formulario reactivo asociado al componente.
-   */
-  /**
-   * Formulario reactivo asociado al componente.
-   */
-  form: FormGroup | undefined;
-
-
- 
-  /**
-   * Maneja el cambio de pestaña en el paso uno del asistente.
-   * Actualiza el índice y los textos de los botones según el paso seleccionado.
-   * @param tabIndex Índice de la pestaña seleccionada.
-   */
-  onPasoUnoTabChanged(tabIndex: number): void {
-    this.indice = tabIndex;
-    this.datosPasos.indice = tabIndex;
-    this.updateBtnContinuarValidationState(tabIndex);
-    this.showPaymentModal = false;
-    this.lastContinueEvent = null;
-  
-    if (tabIndex === 3) {
-      this.datosPasos.txtBtnSig = 'Continuar';
-      this.ocultarBtnAnterior = true;
-      this.datosPasos.txtBtnAnt = '';
-    } else if (tabIndex === 1) {
-      this.datosPasos.txtBtnSig = 'Continuar';
-      this.ocultarBtnAnterior = true;
-      this.datosPasos.txtBtnAnt = '';
+  setTimeout(() => {
+    const PAGO_DE_DERECHOS_COMPONENT = this.pasoUnoComponent?.getPagoDeDerechosComponent();
+    if (PAGO_DE_DERECHOS_COMPONENT) {
+      PAGO_DE_DERECHOS_COMPONENT.mostrarErroresDeCampoPago = true;
+      Object.values(PAGO_DE_DERECHOS_COMPONENT.pagoDeDerechosForm.controls).forEach(ctrl => {
+        ctrl.markAsTouched();
+        ctrl.markAsDirty();
+        ctrl.updateValueAndValidity();
+      });
     } else {
-      this.datosPasos.txtBtnSig = 'Continuar';
-      this.ocultarBtnAnterior = true;
-      this.datosPasos.txtBtnAnt = '';
+      console.warn('PagoDeDerechosComponent reference is undefined!');
+    }
+    this.cdr.detectChanges();
+  }, 300);
+}
+
+
+  /**
+   * Fuerza el marcado de campos de pago como tocados y establece errores si están vacíos.
+   * @param message - Mensaje de error opcional para mostrar en los campos
+   */
+  private forceMarkPagoFields(message?: string): void {
+    if (this.pagoDeDerechosComponent?.pagoDeDerechosForm) {
+      Object.values(this.pagoDeDerechosComponent.pagoDeDerechosForm.controls).forEach(ctrl => {
+        ctrl.markAsTouched();
+        ctrl.markAsDirty();
+        ctrl.updateValueAndValidity();
+        if (message && (ctrl.value === null || ctrl.value === undefined || ctrl.value === '')) {
+          ctrl.setErrors({ required: true, custom: message });
+        }
+      });
     }
   }
+
+  /**
+   * Maneja el evento cuando se limpian los campos de pago.
+   * Resetea la bandera de validación de pago.
+   */
+  public onPagoFieldsCleared(): void {
+    this.hasTriedPagoValidation = false;
+  }
+
+  /**
+   * Maneja el cambio de pestaña en el componente del paso uno.
+   * @param tabIndex - Índice de la nueva pestaña seleccionada
+   */
+ public onPasoUnoTabChanged(tabIndex: number): void {
+  this.subTabIndex = tabIndex;
+  this.updateAnteriorButtonVisibility();
+  this.datosPasos.txtBtnSig = 'Continuar';
+  this.showPaymentModal = false;
+  this.lastContinueEvent = null;
+  const PAGO_DE_DERECHOS_COMPONENT = this.pasoUnoComponent?.getPagoDeDerechosComponent();
+  if (PAGO_DE_DERECHOS_COMPONENT) {
+    PAGO_DE_DERECHOS_COMPONENT.mostrarErroresDeCampoPago = false;
+  }
+}
 }

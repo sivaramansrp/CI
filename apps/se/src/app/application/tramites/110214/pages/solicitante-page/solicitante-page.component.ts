@@ -1,8 +1,21 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PASOS, TEXTO_DE_ALERTA, TEXTO_DE_PELIGRO } from '../../constants/validar-inicialmente-certificado.enum';
-import { Tramite110214State, Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
+import {
+  PASOS,
+  TEXTO_DE_ALERTA,
+  TEXTO_DE_PELIGRO,
+} from '../../constants/validar-inicialmente-certificado.enum';
+import {
+  Tramite110214State,
+  Tramite110214Store,
+} from '../../../../estados/tramites/tramite110214.store';
 
-import { CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, TipoNotificacionEnum } from '@ng-mf/data-access-user';
+import {
+  CategoriaMensaje,
+  DatosPasos,
+  ListaPasosWizard,
+  Notificacion,
+  TipoNotificacionEnum,
+} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/validar-inicialmente-certificado.model';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
@@ -12,7 +25,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Componente para gestionar la página del solicitante.
- * 
+ *
  * Este componente permite al usuario navegar entre los pasos del wizard y gestionar
  * las acciones relacionadas con el trámite, como avanzar o retroceder entre los pasos.
  */
@@ -61,7 +74,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-/**
+  /**
    * Configuración de notificación actual para mostrar al usuario.
    */
   public nuevaNotificacion!: Notificacion;
@@ -85,10 +98,26 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   isPeligro: boolean = false;
 
-   /**
+  /**
    * Indica si se debe mostrar el botón de continuar.
    */
   btnContinuar: boolean = false;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
+   * Estado actual del trámite 110214.
+   *
+   * Esta propiedad mantiene la información de la solicitud en curso y
+   * se sincroniza de manera reactiva con el store correspondiente.
+   * Contiene los datos necesarios para representar y manipular
+   * la solicitud dentro del componente.
+   */
+  public solicitudState!: Tramite110214State;
 
   /**
    * Constructor del componente.
@@ -96,7 +125,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   constructor(
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query
-  ) {}
+  ) {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -121,8 +156,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;
-      this.TEXTO_DE_PELIGRO = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
-      this.mostrarNotificacionError();
+        this.TEXTO_DE_PELIGRO =
+          '<strong>¡Error de registro!</strong> Faltan campos por capturar';
+        this.mostrarNotificacionError();
 
         return; // Detener ejecución si los formularios son inválidos
       }
@@ -147,12 +183,11 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Valida los formularios del paso actual antes de permitir continuar.
-   * 
+   *
    * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
    */
   validarFormulariosPasoActual(): boolean {
     if (this.indice === 1) {
-      
       // Validar formularios del paso uno
       return this.pasoUnoComponent?.validarFormularios() ?? true;
     }
@@ -168,8 +203,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       this.isPeligro = false;
     }
   }
-  
- /**
+
+  /**
    * Muestra una notificación cuando el RFC tiene un formato incorrecto.
    */
   mostrarNotificacionError(): void {
@@ -185,12 +220,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     };
     this.btnContinuar = true;
   }
-      /**
-     * Maneja la confirmación del modal de notificación.
-     */
-    btnContinuarNotificacion(): void {
-      this.btnContinuar = false;
-    }
+  /**
+   * Maneja la confirmación del modal de notificación.
+   */
+  btnContinuarNotificacion(): void {
+    this.btnContinuar = false;
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    */

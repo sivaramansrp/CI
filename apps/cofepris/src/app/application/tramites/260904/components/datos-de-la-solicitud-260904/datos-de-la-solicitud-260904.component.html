@@ -49,7 +49,7 @@
           (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && (form.get('btonDeRadio')?.touched || form.get('btonDeRadio')?.dirty) && form.get('btonDeRadio')?.errors?.['required']" class="text-danger">
-          Este campo es obligatorio
+          <small>Este campo es obligatorio.</small>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
               [ngClass]="{'is-invalid': esInvalido('justificacion')}"
             ></textarea>
             <div *ngIf="form.get('justificacion')?.invalid && form.get('justificacion')?.touched" class="text-danger">
-              Este campo es obligatorio
+              <small>Este campo es obligatorio.</small>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@
                  El RFC no tiene un formato valido.
               </div>
               <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-                Este campo es obligatorio.
+                <small>Este campo es obligatorio.</small>
               </div>
           </div>
           </div>
@@ -135,7 +135,7 @@
   />
   <div class="text-danger" *ngIf="datosDelEstablecimiento.get('denominacion')?.touched && datosDelEstablecimiento.get('denominacion')?.invalid">
     <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
-      Este campo es obligatorio
+      <small>Este campo es obligatorio.</small>
     </span>
     <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
       Máximo 100 caracteres permitidos
@@ -171,7 +171,7 @@
             />
           <div *ngIf="isInvalid(datosDelEstablecimiento, 'correo')" class="text-danger">
             <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-              Este campo es obligatorio.
+              <small>Este campo es obligatorio.</small>
             </div>
             <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
               El valor ingresado no es una dirección válida de correo electrónico

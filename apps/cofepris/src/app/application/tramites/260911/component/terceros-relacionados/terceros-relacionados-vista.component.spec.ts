@@ -53,7 +53,7 @@ const fullDestinatario = {
 	lada: '56'
 };
 const fullProveedor = {
-	id: '3',
+	id: 3,
 	nombreRazonSocial: 'Prov1',
 	rfc: 'RFC3',
 	curp: 'CURP3',
@@ -77,7 +77,7 @@ const fullProveedor = {
 	lada: '57'
 };
 const fullFacturador = {
-	id: '4',
+	id: 4,
 	nombreRazonSocial: 'Fact1',
 	rfc: 'RFC4',
 	curp: 'CURP4',

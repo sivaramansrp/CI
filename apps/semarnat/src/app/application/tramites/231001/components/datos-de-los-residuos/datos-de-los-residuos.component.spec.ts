@@ -7,6 +7,7 @@ import { Tramite231001Query } from '../../../../tramites/231001/estados/queries/
 import { Tramite231001Store } from '../../../../tramites/231001/estados/tramites/tramite231001.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosDeLosResiduosComponent', () => {
   let component: DatosDeLosResiduosComponent;
@@ -42,9 +43,8 @@ describe('DatosDeLosResiduosComponent', () => {
     mockConsultaioQuery = {
       selectConsultaioState$: of({ readonly: false }),
     };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDeLosResiduosComponent],
+      imports: [ReactiveFormsModule, DatosDeLosResiduosComponent, HttpClientTestingModule],
       declarations: [],
       providers: [
         FormBuilder,
@@ -58,6 +58,7 @@ describe('DatosDeLosResiduosComponent', () => {
 
     fixture = TestBed.createComponent(DatosDeLosResiduosComponent);
     component = fixture.componentInstance;
+    component.ngOnInit(); // Ensure ngOnInit is called to initialize combos
     fixture.detectChanges();
   });
 
