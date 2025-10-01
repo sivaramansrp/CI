@@ -231,7 +231,7 @@ return arr.map((item: any) => ({
   valor_mercancia: item.valorMercancia,
   nombreTecnico: item.nombreTecnico,
   nombre_comercial: item.nombreComercial,
-  registro_producto: item.numeroRegistroProductos,
+  registro_producto: item.numeroRegistroProducto,
   fechaExpedicion: item.fechaExpedicion,
   fechaVencimiento: item.fechaVencimiento,
   tipo_factura: item.tipoFactura,
@@ -257,6 +257,7 @@ return arr.map((item: any) => ({
     const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
+      idSolicitud: this.solicitudState.idSolicitud || 0,
       solicitante: {
         rfc: "AAL0409235E6",
         nombre: "ACEROS ALVARADO S.A. DE C.V.",
@@ -326,7 +327,7 @@ return arr.map((item: any) => ({
     
 
     this.registroService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite110201Store.setIdSolicitud(response.idSolicitud || 0);
+      this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
       console.log(response,'response');
 
       return response;

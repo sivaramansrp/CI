@@ -340,7 +340,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     },
     {
       encabezado: 'Número de registro de productos',
-      clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
+      clave: (ele: ColumnasTabla) => ele.numeroRegistroProducto,
       orden: 4,
     },
     {
@@ -601,31 +601,31 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    */
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-    const NEW_ROW = {
-      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
-      nombreTecnico: FORM_VALUES.nombreTecnico,
-      nombreComercial: FORM_VALUES.nombreComercial,
-      numeroRegistroProductos: FORM_VALUES.numeroRegistro,
-      fechaExpedicion: FORM_VALUES.fechaInicial,
-      fechaVencimiento: FORM_VALUES.fechaFinal,
-    };
-
-    // const PAYLOAD = {
-    //   rfcExportador: "AAL0409235E6",
-    //   tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState.tratado || '' },
-    //   pais: { clave: this.solicitudState.pais || '' }
+    // const NEW_ROW = {
+    //   fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+    //   nombreTecnico: FORM_VALUES.nombreTecnico,
+    //   nombreComercial: FORM_VALUES.nombreComercial,
+    //   numeroRegistroProducto: FORM_VALUES.numeroRegistro,
+    //   fechaExpedicion: FORM_VALUES.fechaInicial,
+    //   fechaVencimiento: FORM_VALUES.fechaFinal,
     // };
 
+    const PAYLOAD = {
+      rfcExportador: "AAL0409235E6",
+      tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState.tratado || '' },
+      pais: { clave: this.solicitudState.pais || '' }
+    };
 
-    // this.registroService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
-    //   console.log(response, 'response');
-    //   this.mercanciaDisponsiblesTablaDatos = response || [];
-    // });
+
+    this.registroService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
+      console.log(response, 'response');
+      this.mercanciaDisponsiblesTablaDatos = response.datos || [];
+    });
 
     this.hayMercanciasDisponibles = true;
     this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
 
-    this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
+    // this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
     this.hayMercanciasDisponibles = true;
   }
 
@@ -633,7 +633,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    * @method abrirModalMercancia - Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles
    * @param rowData - Datos de la fila seleccionada de tipo ColumnasTabla
    */
-  abrirModalMercancia(rowData: ColumnasTabla): void {
+  abrirModalMercancia(rowData: ColumnasTabla): void {    
     if (rowData) {
       this.esFormulario = true;
       this.esMercanciaEnEdicion = false;
@@ -657,6 +657,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
           umc: '',
           masaBruta: '',
           unidadMedida: '',
+          numeroRegistroProducto: rowData.numeroRegistroProducto || '',
           criterioParaConferir: rowData.criterioOrigen || '',
           nombreEnIngles: rowData.nombreComercial || '',
         },
@@ -688,7 +689,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
       nombreTecnico: FORM_VALUES.nombreTecnico,
       nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
-      numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
+      numeroRegistroProducto: FORM_VALUES.numeroRegistroProducto || '',
       fechaExpedicion: FORM_VALUES.fechaExpedicion || '',
       fechaVencimiento: FORM_VALUES.fechaVencimiento || ''
     };
@@ -711,7 +712,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       valorMercancia: FORM_VALUES.valorDelaMercancia,
       nombreTecnico: FORM_VALUES.nombreTecnico,
       nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
-      numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
+      numeroRegistroProducto: FORM_VALUES.numeroRegistroProducto || '',
       fechaExpedicion: FORM_VALUES.fechaExpedicion || '',
       fechaVencimiento: FORM_VALUES.fechaVencimiento || '',
       tipoFactura: FORM_VALUES.tipoFactura?.toString() || '',
@@ -848,7 +849,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       valorMercancia: articulo['valorMercancia'] || '',
       nombreTecnico: articulo['nombreTecnico'] || '',
       nombreComercial: articulo['nombreComercial'] || '',
-      numeroRegistroProductos: articulo['numeroRegistroProductos'] || '',
+      numeroRegistroProducto: articulo['numeroRegistroProducto'] || '',
       fechaExpedicion: articulo['fechaExpedicion'] || '',
       fechaVencimiento: articulo['fechaVencimiento'] || '',
       tipoFactura: articulo['tipoFactura'] || '',
@@ -1010,7 +1011,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       validacionForm: this.fb.group({
         tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
         pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
-        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8), Validators.maxLength(8)]],
+        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(8)]],
         numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }],
         nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }],
         fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }],

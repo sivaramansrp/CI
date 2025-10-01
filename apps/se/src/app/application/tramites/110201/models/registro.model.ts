@@ -12,14 +12,14 @@ export interface ColumnasTabla {
   nombreTecnico: string;
   /** Nombre comercial del producto */
   nombreComercial: string;
-  /** Número de registro del producto */
-  numeroRegistroProductos: string;
   /** Fecha de expedición del certificado */
   fechaExpedicion: string;
   /** Fecha de vencimiento del certificado */
   fechaVencimiento: string;
   /** Criterio de origen del producto */
   criterioOrigen?: string;
+  /** Número de registro de productos */
+  numeroRegistroProducto?: string;
 }
 
 /**
