@@ -138,7 +138,7 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
       this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
       this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
     }
-    this.obtienerDivisionesFraccion(this.solicitudState?.fraccionArancelaria || '');
+    this.obtienerDivisionesFraccion();
   }
 
 
@@ -148,8 +148,8 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
    * @returns void
    *  
    */
-  obtienerDivisionesFraccion(cveFraccion: string): void {
-    this.catOctavaTemporalService.getDivisionesFraccionArancelaria(cveFraccion).subscribe((data) => {
+  obtienerDivisionesFraccion(): void {
+    this.catOctavaTemporalService.getDivisionesFraccionArancelaria().subscribe((data) => {
         this.catalogos = data.datos.map((item, index) => ({
           id: index,
           clave: item.clave,

@@ -150,3 +150,9 @@ export const API_GET_TIGIE = (CLVFRACCION: string) : string => `sat-t130102/tram
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Solicitud%20Importaci%C3%B3n%20Regla%20Octava/guardar
  */
 export const API_POST_GUARDAR_SOLICITUD = 'sat-t130102/solicitud/guardar';
+
+/**
+ * API MS para obtener las fracciones y divisiones del tramite 130102.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/exportacion/fracciones-divisiones
+ */
+export const API_GET_FRACCIONES_DIVISIONES = 'sat-t130102/exportacion/fracciones-divisiones';

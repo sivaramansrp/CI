@@ -217,12 +217,12 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
     const data: SaveReglaOctavaRequest = {
         cve_regimen: this.solicitudState.regimen || '',
         cve_clasificacion_regimen: this.solicitudState.clasificacionRegimen || '',
-        numero_autorizado_programa_prosec_pex: "string",
-        cve_usuario_capturista: "string",
+        numero_autorizado_programa_prosec_pex:"9419", /* Valor fijo temporalmente */
+        cve_usuario_capturista: "USUARIO123", /** Valor temporal */
         lista_paises: this.solicitudState.paises || [],
         mercancia: {
             cve_fraccion_arancelaria: this.solicitudState.fraccionArancelaria || '',
-            cve_subdivision: "string",
+            cve_subdivision: "7202199901", /* Valor fijo temporalmente */
             descripcion: this.solicitudState.descripcion || '',
             cve_unidad_medida_tarifaria: this.solicitudState.unidadMedida || '',
             cantidad_tarifaria: this.solicitudState.cantidad || 0,
@@ -230,10 +230,10 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
             ide_condicion_mercancia: this.solicitudState.productos || 'CONDMER.N',
         },
         solicitante: {
-            rfc: "string",
-            nombre: "string",
-            es_persona_moral: false,
-            certificado_serial_number: "string",
+            rfc: "AAL0409235E6", /* Valor fijo temporalmente */
+            nombre: "Juan Pérez", /* Valor fijo temporalmente */
+            es_persona_moral: true, /* Valor fijo temporalmente */
+            certificado_serial_number: "20001000000100001815" /* Valor fijo temporalmente */
         },
         representacion_federal: {
             cve_entidad_federativa: this.solicitudState.entidad || '',

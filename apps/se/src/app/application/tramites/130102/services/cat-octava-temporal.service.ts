@@ -16,7 +16,8 @@ import { API_GET_BLOQUE_PAISES,
   API_GET_OCTAVA_TEMPORAL, 
   API_GET_INICIAR_NOTIFICACION,
   API_GET_TIGIE,
-  API_POST_GUARDAR_SOLICITUD} from '../server/api-router';
+  API_POST_GUARDAR_SOLICITUD,
+  API_GET_FRACCIONES_DIVISIONES} from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 import { IniciarNotificacionResponse } from '../models/response/notificaciones-response.model';
 import { CatalogosTigiesResponse } from '../models/response/catalogos-response.model';
@@ -204,8 +205,8 @@ export class CatOctavaTemporalService {
    * @param cveFraccion Clave de la fracción arancelaria para obtener las subdivisiones correspondientes.
    * @returns 
    */
-  getDivisionesFraccionArancelaria(cveFraccion: string): Observable<CatalogosResponse> {
-    const ENDPOINT = `${this.host}` + API_GET_FRACCION_SUBDIVISIONES(cveFraccion);
+  getDivisionesFraccionArancelaria(): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}` + API_GET_FRACCIONES_DIVISIONES;
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;

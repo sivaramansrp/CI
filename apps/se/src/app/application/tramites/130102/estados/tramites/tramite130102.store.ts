@@ -78,7 +78,7 @@ export interface Solicitud130102State {
   /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
   lista_fracciones_prosec?: FraccionesProsecRequest[];
 
-  paises: string[]; // Lista de países involucrados en la solicitud.
+  paises?: string[]; // Lista de países involucrados en la solicitud.
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.

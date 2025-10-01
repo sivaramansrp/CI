@@ -5,12 +5,13 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -27,8 +28,8 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -92,12 +93,17 @@ export class PaisProcendenciaComponent implements OnInit {
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = this.crosListaDePaises;
+  selectRangoDias: string[] = [];
 
   /**
    * Catálogo de países de procedencia.
    */
   paisProc: Catalogo[] = [];
+
+  /**
+   * Catálogo de países de procedencia.
+   */
+  paisesFuente: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud 130102, obtenido desde el store.
@@ -112,7 +118,13 @@ export class PaisProcendenciaComponent implements OnInit {
    * Indica si el formulario es de solo lectura.
    */
    esFormularioSoloLectura: boolean = false;
-
+  /**
+   * Un QueryList que contiene todas las instancias de {@link CrosslistComponent} encontradas dentro de la vista.
+   * Esto permite interactuar con múltiples componentes hijos CrosslistComponent, como acceder a sus propiedades o invocar sus métodos.
+   * 
+   * @see {@link ViewChildren}
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
@@ -120,12 +132,12 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: () => this.agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar('t'),
+      funcion: () => this.agregar(''),
     },
     {
       btnNombre: 'Restar selección',
@@ -138,6 +150,17 @@ export class PaisProcendenciaComponent implements OnInit {
       funcion: () => this.quitar('t'),
     },
   ];
+
+  /**
+   * Botones de acción para gestionar listas de países en la primera sección.
+  */
+   paisDeProcedenciaBotons = [
+    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
+    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('') },
+    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+  ];
+
 
   /**
    * Constructor del componente.
@@ -196,7 +219,7 @@ export class PaisProcendenciaComponent implements OnInit {
    * Inicializa el formulario reactivo y sus validaciones.
    */
   inicializarFormulario(): void {
-   this.tramite130102Query.selectSolicitud$
+   this.tramite130102Query.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {  
@@ -248,10 +271,11 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param fechas - Arreglo de fechas a agregar.
    * @returns void
    */
-  changeCrosslist(fechas: any): void {
-    console.log("PAISESSS sele"+fechas);
-    //const PAISES = new FormArray([...fechas.map(fecha => new FormControl(fecha))]);
-   //this.paisForm.setControl('fechasSeleccionadas', PAISES);
+  changeCrosslist(fechas:any): void {
+    let  paisesSelect = this.paisesFuente.filter(pais=> fechas.includes(pais.descripcion));
+    const clavesSelect: string[] =  [];
+    clavesSelect.push(...paisesSelect.map(pais=> pais?.clave || ''));
+    this.tramite130102Store.setPaises(clavesSelect);
   }
   /**
    * Elimina elementos de la lista de fechas según el tipo especificado.
@@ -275,7 +299,7 @@ export class PaisProcendenciaComponent implements OnInit {
     obtenerBloques(): void {
       this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
         this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
-          id: index,
+          id: item.id || index,
           clave: item.clave,
           descripcion: item.descripcion,
         }));  
@@ -289,6 +313,11 @@ export class PaisProcendenciaComponent implements OnInit {
     obtenerPaisesBloque(cveBloque: string): void {
       this.catOctavaTemporalService.getPaisesBloqueEsp(cveBloque).subscribe((data) => {
         this.selectRangoDias = data.datos.map((item, index) => item.descripcion); 
+        this.paisesFuente = data.datos.map((item, index) => ({  
+          id: item.id || index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));
       });
       console.log(this.crosListaDePaises);
     } 
