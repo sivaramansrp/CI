@@ -1,4 +1,4 @@
-@if (consultaState.parameter !== "READ_PROCEDURE") {
+@if (consultaState.create === true) {
   <ng-titulo titulo="Tratados y criterios solicitados" />
 <ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
 <form [formGroup]="formularioTratados">
@@ -27,7 +27,7 @@
   </div>
 </form>
 }
-@if (consultaState.parameter !== "READ_PROCEDURE") {
+@if (consultaState.create === true) {
 <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
 
 <h6 class="fs-4">País/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
@@ -50,12 +50,22 @@
 </div>
 }
 
-@if(consultaState.parameter === "READ_PROCEDURE"){
+@if(consultaState.create === false){
   <ng-titulo titulo="País/bloque-tratado/acuerdo seleccionados por el solicitante" />
 <div class="col-md-12">
-  <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"
-    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+  <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosEvaluacionTablaDatos" [tipoSeleccionTabla]="tipoSeleccionTabla">
   </app-tabla-dinamica>
+   <div class=" text-end mt-5">
+    <button class="btn btn-primary me-2"  >
+      Resumen de valores
+    </button>
+    <button class="btn btn-primary  me-2" >
+      Insumos
+    </button>
+    <button class="btn btn-primary  me-2" >
+      Requisito Proceso
+    </button>
+  </div>
 </div>
 }
 

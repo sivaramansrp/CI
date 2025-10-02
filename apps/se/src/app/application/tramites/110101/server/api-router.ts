@@ -149,3 +149,13 @@ export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string =>
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar_2
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t110101/solicitud/${IDSOLICITUD}/firmar`;
+
+/**
+ *  URLs de evaluacion tratados
+ */
+
+/**
+ * API para obtener los datos de la tabla tratados evaluar
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-tratado-acuerdo-by-id
+ */
+export const API_GET_TRATADOS_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/tratado-acuerdo`;
