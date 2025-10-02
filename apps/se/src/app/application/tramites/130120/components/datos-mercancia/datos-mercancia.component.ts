@@ -7,7 +7,7 @@ import {
   Notificacion,
   TituloComponent
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
@@ -19,6 +19,8 @@ import { FECHA_FACTURA } from '../../constants/permiso-importacion-modification.
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
+import { FormValidationService } from '../../services/formValidation.service';
 
 /**
  * @component DatosMercanciaComponent
@@ -97,6 +99,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     public consultaQuery: ConsultaioQuery,
     public permisoImportacionService: PermisoImportacionService,
     private catalogosService: CatalogosTramiteService,
+    private cdr: ChangeDetectorRef,
+    private formValidation: FormValidationService
   ) { }
 
   /**
@@ -145,11 +149,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       marca: [this.DatosState.datosMercanica.marca, [Validators.required, Validators.maxLength(256), Validators.pattern('^[a-zA-Z0-9 ]*$')]],
       tipo_entrada: [this.DatosState.datosMercanica.tipo_entrada, Validators.required],
       fraccion: [this.DatosState.datosMercanica.fraccion, Validators.required],
-      nico: [{ value: this.DatosState.datosMercanica.nico || null, disabled: true }, Validators.required],
-      umt: [{ value: this.DatosState.datosMercanica.umt || null, disabled: true }, Validators.required],
+      nico: [this.DatosState.datosMercanica.nico, Validators.required],
+      umt: [this.DatosState.datosMercanica.umt, Validators.required],
       factura_numero: [this.DatosState.datosMercanica.factura_numero, Validators.required],
       factura_fecha: [this.DatosState.datosMercanica.factura_fecha, Validators.required],
-      umc: [{ value: this.DatosState.datosMercanica.umc || null, disabled: true }, Validators.required],
+      umc: [this.DatosState.datosMercanica.umc , Validators.required],
       otro_umc: [{ value: this.DatosState.datosMercanica.otro_umc, disabled: true }, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc, Validators.required],
       factor_conversion: [{ value: this.DatosState.datosMercanica.factor_conversion, disabled: true }, Validators.required],
@@ -236,7 +240,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     } else {
       this.umtOpcion = [];
       this.datosMercanica.get('umt')?.reset();
-      this.datosMercanica.get('umt')?.disable();
     }
   }
 
@@ -252,14 +255,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
           } else {
             this.nicoOpcion = [];
             this.datosMercanica.get('nico')?.reset();
-            this.datosMercanica.get('nico')?.disable();
           }
         },
         error: (err) => {
           console.error('Error al cargar clasificación de régimen', err);
           this.nicoOpcion = [];
           this.datosMercanica.get('nico')?.reset();
-          this.datosMercanica.get('nico')?.disable();
         }
       });
   }
@@ -276,14 +277,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
           } else {
             this.umtOpcion = [];
             this.datosMercanica.get('umt')?.reset();
-            this.datosMercanica.get('umt')?.disable();
           }
         },
         error: (err) => {
           console.error('Error al cargar clasificación de régimen', err);
           this.umtOpcion = [];
           this.datosMercanica.get('umt')?.reset();
-          this.datosMercanica.get('umt')?.disable();
         }
       });
   }
@@ -300,14 +299,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
           } else {
             this.umcOpcion = [];
             this.datosMercanica.get('umc')?.reset();
-            this.datosMercanica.get('umc')?.disable();
           }
         },
         error: (err) => {
           console.error('Error al cargar clasificación de régimen', err);
           this.umcOpcion = [];
           this.datosMercanica.get('umc')?.reset();
-          this.datosMercanica.get('umc')?.disable();
         }
       });
   }
@@ -515,6 +512,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof PermisoImportacionStore): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  validarFormulario(): boolean {
+    this.formValidation.marcarFormularioComoTocado(this.datosMercanica);
+    this.cdr.detectChanges();
+    return this.datosMercanica.valid;
   }
 
   /**
