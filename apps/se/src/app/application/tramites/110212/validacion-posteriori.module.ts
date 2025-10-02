@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from "@libs/shared/data-access-user/src";
+import { AlertComponent, BtnContinuarComponent, PasoFirmaComponent, WizardComponent } from "@libs/shared/data-access-user/src";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { PasoTresComponent } from "./pages/paso-tres/paso-tres.component";
@@ -20,7 +20,8 @@ import { ValidacionPosterioriRoutingModule } from "./validacion-posteriori-routi
     WizardComponent,
     PasoUnoComponent,
     PasoTresComponent,
-    AlertComponent
+    AlertComponent,
+    PasoFirmaComponent
   ],
   exports: [],
   providers: [ToastrService]

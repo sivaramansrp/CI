@@ -14,6 +14,9 @@ import { StoreConfig } from '@datorama/akita';
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite110216State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * Observaciones generales del trámite.
    */
@@ -130,6 +133,7 @@ export interface Tramite110216State {
  */
 export function createInitialState(): Tramite110216State {
   return {
+    idSolicitud: 0,
     observaciones: '',
     pasoActivo: 1,
     pestanaActiva: 1,
@@ -241,7 +245,17 @@ export class Tramite110216Store extends Store<Tramite110216State> {
   constructor() {
     super(createInitialState());
   }
-
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
   /**
    * Actualiza el paso activo en el flujo del trámite.
    * 

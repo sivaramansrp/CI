@@ -121,7 +121,7 @@
                     <input type="text" formControlName="consecutivo" id="consecutivo" maxlength="3"
                       class="form-control"
                       [ngClass]="mercanciaForm.get('consecutivo')?.invalid && mercanciaForm.get('consecutivo')?.touched ? 'required' : ''"
-                       />
+                      (keypress)="onKeyPress($event)" />
                     @if (mercanciaForm.get('consecutivo')?.hasError('required') &&
                     mercanciaForm.get('consecutivo')?.touched) {
                     <div class="text-danger">
@@ -147,7 +147,8 @@
                   <div class="col-md-4">
                     <label for="cantidad">Cantidad*:</label>
                     <input type="text" formControlName="cantidad" id="cantidad" maxlength="16" class="form-control"
-                      [ngClass]="mercanciaForm.get('cantidad')?.invalid && mercanciaForm.get('cantidad')?.touched ? 'required' : ''" />
+                      [ngClass]="mercanciaForm.get('cantidad')?.invalid && mercanciaForm.get('cantidad')?.touched ? 'required' : ''"
+                      (keypress)="onKeyPress($event)" />
                     @if (mercanciaForm.get('cantidad')?.hasError('required') &&
                     mercanciaForm.get('cantidad')?.touched) {
                     <div class="text-danger">
@@ -171,6 +172,7 @@
                     <label for="peso">Peso (Kg)*:</label>
                     <input type="text" formControlName="peso" id="peso" maxlength="16" class="form-control"
                       [ngClass]="mercanciaForm.get('peso')?.invalid && mercanciaForm.get('peso')?.touched ? 'required' : ''"
+                      (keypress)="onKeyPress($event)"
                        />
                     @if (mercanciaForm.get('peso')?.hasError('required') &&
                     mercanciaForm.get('peso')?.touched) {

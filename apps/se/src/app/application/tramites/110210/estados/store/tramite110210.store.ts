@@ -7,6 +7,9 @@ import { Injectable } from '@angular/core';
  * Interfaz que define el estado del store `Tramite110210State`.
  */
 export interface Tramite110210State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * Clave del registro del productor.
    * @type {string}
@@ -125,6 +128,7 @@ export interface Tramite110210State {
  */
 export function createInitialState(): Tramite110210State {
   return {
+    idSolicitud: 0,
     cveRegistroProductor: '',
     paisBloqueClave: '',
     tratadoAcuerdoClave: '',
@@ -166,6 +170,18 @@ export class Tramite110210Store extends Store<Tramite110210State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**
@@ -372,7 +388,7 @@ export class Tramite110210Store extends Store<Tramite110210State> {
     }));
   }
 
-    /**
+  /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores parciales para actualizar el estado.
    */
@@ -388,11 +404,13 @@ export class Tramite110210Store extends Store<Tramite110210State> {
    * @description
    * Actualiza el arreglo de certificados disponibles en el estado.
    * Reemplaza completamente el arreglo actual con el nuevo arreglo proporcionado.
-   * 
+   *
    * @param {CertificadoDisponibles[]} certificados - Nuevo arreglo de certificados disponibles a almacenar en el estado.
    * @returns {void}
    */
-  public setCertificadosDisponibles(certificados: CertificadoDisponibles[]): void {
+  public setCertificadosDisponibles(
+    certificados: CertificadoDisponibles[]
+  ): void {
     this.update((state) => ({
       ...state,
       certificadosDisponibles: certificados,
