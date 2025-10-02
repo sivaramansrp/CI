@@ -21,14 +21,14 @@
                   {{ reg.descripcion }}
                 </option>
               </select>-->
-              <cdk-virtual-scroll-viewport itemSize="40" class="select-virtual-scroll">
+
               <select class="form-control form-select" formControlName="fraccionArancelariaProsec">
                 <option [ngValue]="null">Selecciona una opción</option>
                 <option *cdkVirtualFor="let reg of catalogos" [value]="reg.clave">
                   {{ reg.descripcion }}
                 </option>
               </select>
-            </cdk-virtual-scroll-viewport>
+
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
