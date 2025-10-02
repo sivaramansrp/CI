@@ -11,7 +11,6 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@
 import {
   ConsultaioQuery,
   ConsultaioState,
-  ConsultaioStore,
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CapturarFacturasComponent } from '../../components/capturar-facturas/capturar-facturas.component';
@@ -176,6 +175,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * ```
    */
   mostrarOtraPestana: boolean = false;
+
+  /**
+   * @property {boolean} mostrarEvaluar
+   */
   mostrarEvaluar: boolean = false;
 
   /**

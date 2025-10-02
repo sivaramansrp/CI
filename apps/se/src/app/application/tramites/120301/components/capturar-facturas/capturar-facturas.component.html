@@ -104,8 +104,8 @@
               <div class="col-md-4">
                   <div class="form-group capturar-factura-datepicker">
                     <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
-                      [datos]="fechaInicioInputs"
-                      (valorCambiado)="facturaForm.get('fechaExpedicionFactura')?.setValue($event)">
+                      [datos]="fechaInicioInputs" 
+                      (valorCambiado)="facturaForm.get('fechaExpedicionFactura')?.setValue($event)"  [deshabilitarFuturas]="true">
                     </input-fecha>
                   </div>
                   <div

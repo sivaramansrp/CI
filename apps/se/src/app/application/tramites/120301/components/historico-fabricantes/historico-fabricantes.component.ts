@@ -26,7 +26,6 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import radioOptionsNacional from '@libs/shared/theme/assets/json/120301/tipo-fabricantes-nacional.json';
@@ -87,12 +86,11 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
   imports: [
     TituloComponent,
     CommonModule,
-    ReactiveFormsModule,
-    InputCheckComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
     ModalModule,
     NotificacionesComponent,
+    ReactiveFormsModule,
   ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
@@ -971,7 +969,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
           if (resp.codigo === '00' && resp.datos) {
             this.isFabricantes = true;
             const FAB = resp.datos;
-
             // Mapear respuesta → HistoricoColumns
             const NUEVO_FABRICANTE: HistoricoColumns = {
               nombreFabricante: FAB.razon_social
@@ -984,12 +981,25 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
               correoElectrónico: FAB.correo_electronico ?? '',
               telefono: FAB.telefono ?? '',
             };
-
-            // Limpiar la tabla y agregar
-            this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
-            this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
-            this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
-            this.cancelar();
+            if (this.fabricante.length < 1) {
+              // Limpiar la tabla y agregar
+              this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
+              this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+              this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
+              this.cancelar();
+            }
+            else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'warning',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Ya existe un fabricante previamente seleccionado.',
+                cerrar: true,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
           } else {
             console.error('Error en la búsqueda:', resp.mensaje);
           }

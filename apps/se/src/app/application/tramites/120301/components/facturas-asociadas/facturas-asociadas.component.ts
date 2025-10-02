@@ -609,12 +609,25 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       cantidad_asociada: this.formularioAsociacionFactura.get('cantidadFacturas')?.value
     };
     if (!PAYLOAD.id_expedicion || !PAYLOAD.id_factura_expedicion || !PAYLOAD.cantidad_asociada) {
+      if (!PAYLOAD.cantidad_asociada) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar la cantidad asociada mayor a 0.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'Debe seleccionar una factura y capturar la cantidad a asociar.',
+        mensaje: 'La factura no puede ser asociada, debido a que la unidad de medida es diferente a la asociada a la constancia.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -744,7 +757,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'Debe seleccionar al menos una factura a eliminar.',
+        mensaje: 'Seleccione el monto a eliminar.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
