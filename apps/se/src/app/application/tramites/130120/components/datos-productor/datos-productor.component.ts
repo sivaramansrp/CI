@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -9,6 +9,8 @@ import { OPCION_DE_RADIO } from '../../constants/permiso-importacion-modificatio
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
+import { FormValidationService } from '../../services/formValidation.service';
 
 
 /**
@@ -94,7 +96,9 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
     public fb: FormBuilder,
     public store: PermisoImportacionStore,
     public query: Tramite130120Query,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef,
+    private formValidation: FormValidationService
   ){
   }
 
@@ -229,6 +233,13 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
     (this.store[metodoNombre] as (value: string) => void)(
       VALOR
     );
+  }
+
+  
+validarFormulario(): boolean {
+    this.formValidation.marcarFormularioComoTocado(this.datosProductor);
+    this.cdr.detectChanges();
+    return this.datosProductor.valid;
   }
 
   /**

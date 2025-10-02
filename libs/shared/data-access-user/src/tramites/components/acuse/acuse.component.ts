@@ -156,7 +156,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
-        80208, 80210, 80211, 110101,
+        80208, 80210, 80211, 110101,120301
       ].includes(this.procedure)
     ) {
       this.documentosService130118
@@ -190,30 +190,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           },
           error: (err) => console.error('Error:', err),
         });
-    } else if (this.url === 'elegibilidad-de-textiles') {
-      this.acusesService.guardarAcuse(this.idSolicitud.toString(), 120301).pipe(
-        switchMap(() => {
-          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), 120301);
-        }),
-        catchError((error) => {
-          console.error('Error en guardarAcuse o vistaPrevia:', error);
-          return throwError(() => error);
-        })
-      ).subscribe({
-        next: (response) => {
-          if (response?.datos) {
-            this.datosTablaAcuse = [{
-              id: 1,
-              documento: response.datos.nombre_archivo,
-              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-              idDocumento: '1'
-            }];
-          } else {
-            this.datosTablaAcuse = [];
-          }
-        },
-        error: (err) => console.error('Error:', err)
-      });
     } else if (this.url === 'aviso-de-materiales') {
       this.descargarDocumentoTramite231001();
     } else {
