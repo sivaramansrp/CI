@@ -227,7 +227,7 @@ export class Tramite260912Store extends Store<Tramites260912State> {
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+      fabricanteTablaDatos: [...newFabricantes],
     }));
   }
 

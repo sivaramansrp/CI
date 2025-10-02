@@ -142,20 +142,23 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should run #eliminarFabricante()', async () => {
-    component.fabricanteSeleccionadoDatos = [{ rfc: 'TEST123' }];
     component.fabricanteTablaDatos = [{ rfc: 'TEST123' }, { rfc: 'TEST456' }];
+    component.fabricanteSeleccionadoDatos = [component.fabricanteTablaDatos[0]];
     component.fabricanteEliminar = component.fabricanteEliminar || {};
     component.fabricanteEliminar.emit = jest.fn();
+    if ('fabricanteSeleccionado' in component) {
+      component.fabricanteSeleccionado = component.fabricanteTablaDatos[0];
+    }
     component.eliminarFabricante();
     expect(component.fabricanteEliminar.emit).toHaveBeenCalled();
   });
 
   it('should run #eliminarDestinatario()', async () => {
-    component.destinatarioSeleccionadoDatos = [{ rfc: 'TEST123' }];
     component.destinatarioFinalTablaDatos = [
       { rfc: 'TEST123' },
       { rfc: 'TEST456' }
     ];
+    component.destinatarioSeleccionadoDatos = [component.destinatarioFinalTablaDatos[0]];
     component.destinatarioEliminar = component.destinatarioEliminar || {};
     component.destinatarioEliminar.emit = jest.fn();
     component.eliminarDestinatario();
@@ -163,11 +166,11 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should run #eliminarProveedor()', async () => {
-    component.proveedorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Provider', razonSocial: 'Test' }];
     component.proveedorTablaDatos = [
       { nombreRazonSocial: 'Test Provider', razonSocial: 'Test' },
       { nombreRazonSocial: 'Another Provider', razonSocial: 'Another' }
     ];
+    component.proveedorSeleccionadoDatos = [component.proveedorTablaDatos[0]];
     component.proveedorEliminar = component.proveedorEliminar || {};
     component.proveedorEliminar.emit = jest.fn();
     component.eliminarProveedor();
@@ -175,11 +178,11 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should run #eliminarFacturador()', async () => {
-    component.facturadorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' }];
     component.facturadorTablaDatos = [
       { nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' },
       { nombreRazonSocial: 'Another Facturador', razonSocial: 'Another' }
     ];
+    component.facturadorSeleccionadoDatos = [component.facturadorTablaDatos[0]];
     component.facturadorEliminar = component.facturadorEliminar || {};
     component.facturadorEliminar.emit = jest.fn();
     component.eliminarFacturador();

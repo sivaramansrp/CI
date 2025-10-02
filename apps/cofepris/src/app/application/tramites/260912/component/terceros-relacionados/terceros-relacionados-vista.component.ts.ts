@@ -14,6 +14,7 @@ import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
 import { Tramite260912Store } from '../../estados/tramite-260912.store';
+import { AgregarFabricanteContenedoraComponent } from '../agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
 
 /**
  * Componente para la gestión y visualización de terceros relacionados (fabricantes y destinatarios).
@@ -39,7 +40,7 @@ import { Tramite260912Store } from '../../estados/tramite-260912.store';
 @Component({
   selector: 'app-terceros-relacionados-vista',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, AgregarFabricanteContenedoraComponent],
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
@@ -346,8 +347,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    * permitiendo la selección de un nuevo fabricante en el componente.
    */
   agregarFabricante(): void {
-    
+    // For add, pass empty array so modal is empty
     this.fabricanteSeleccionadoDatos = [];
+  }
+
+  modificarFabricante(): void {
+    // For edit, pass the selected row
+    // This will be passed to datoSeleccionado
+    // Modal will open with this row pre-filled
+    // (You may want to call abrirModalAgregarFabricante() here)
   }
 
   /**
@@ -549,5 +557,28 @@ public validateRequiredFields(): boolean {
 // eslint-disable-next-line class-methods-use-this
 public markAllFieldsTouched(): void {
   // No fields to mark as touched in this component
+}
+tramiteState: import('../../estados/tramite-260912.store').Tramites260912State = {} as import('../../estados/tramite-260912.store').Tramites260912State;
+
+// Add this method
+// Only handle modal close, do not update store here (store is updated in container)
+updateFabricanteTablaDatos(event: Fabricante[]): void {
+  this.fabricanteTablaDatos = event; // update local array if needed for UI
+  this.cerrarModalAgregarFabricante(); // just close modal
+}
+  // Optionally, handle/log unexpected event types here
+
+
+abrirModalAgregarFabricante(): void {
+  const MODAL = new (window as any).bootstrap.Modal(document.getElementById('modalAgregarFabricante'));
+  MODAL.show();
+}
+
+cerrarModalAgregarFabricante(): void {
+  this.fabricanteSeleccionadoDatos = [];
+  const MODAL = (window as any).bootstrap.Modal.getInstance(document.getElementById('modalAgregarFabricante'));
+  if (MODAL) {
+    MODAL.hide();
+  }
 }
 }

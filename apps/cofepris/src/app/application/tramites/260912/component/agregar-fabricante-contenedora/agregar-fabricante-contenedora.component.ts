@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ActivatedRoute } from '@angular/router';
 import { AgregarFabricanteComponent } from '../../../../shared/components/agregar-fabricante/agregar-fabricante.component';
@@ -35,6 +35,15 @@ import { Tramite260912Query } from '../../estados/tramite-260912.query';
   styleUrl: './agregar-fabricante-contenedora.component.scss',
 })
 export class AgregarFabricanteContenedoraComponent implements OnInit {
+  
+  @Input() idProcedimiento: number = ID_PROCEDIMIENTO;
+  @Input() fabricanteTablaDatos: Fabricante[] = [];
+  @Input() datoSeleccionado: Fabricante[] = [];
+  @Input() tramiteState!: Tramites260912State;
+  @Output() cancelar = new EventEmitter<void>();
+  @Output() guardarYSalir = new EventEmitter<void>();
+  @Output() updateFabricanteTablaDatos = new EventEmitter<Fabricante[]>();
+
   /**
    * @constructor
    * @description
@@ -43,7 +52,7 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
 
-  idProcedimiento: number = ID_PROCEDIMIENTO;
+  // idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * Notificador para la destrucción del componente.
@@ -66,7 +75,7 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * Se inicializa mediante datos externos o servicios que gestionan
    * el flujo de la aplicación.
    */
-  public tramiteState!: Tramites260912State;
+  // public tramiteState!: Tramites260912State;
 
   /**
    * Lista de fabricantes en la tabla de datos.
@@ -77,7 +86,7 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * Se actualiza dinámicamente a partir de la interacción del usuario
    * o de llamadas a servicios.
    */
-  fabricanteTablaDatos: Fabricante[] = [];
+  // fabricanteTablaDatos: Fabricante[] = [];
  
   /**
    * @constructor
@@ -131,14 +140,23 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * @param {Fabricante[]} event - Lista de fabricantes que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    */
-    updateFabricanteTablaDatos(event:Fabricante[]): void {
-        this.tramite260912Store.updateFabricanteTablaDatos(event);
-    }
+ 
 
-    onCancelarFabricante(): void {
-  // Navigate to terceros-relacionados tab for 260912
-  this.router.navigate(['../terceros-relacionados'], { relativeTo: this.route });
+
+
+
+updateFabricanteTablaDatosHandler(event: Fabricante[]): void {
+  this.tramite260912Store.updateFabricanteTablaDatos(event); // update store
+  this.cerrarModalAgregarFabricante(); // close modal (emits only one event)
 }
+
+
+  cerrarModalAgregarFabricante(): void {
+    this.cancelar.emit(); // Only emit one event for modal close
+    // this.guardarYSalir.emit(); // Do not emit both, only one close event
+    // Optionally, you can use guardarYSalir if you want, but not both
+    // this.router.navigate(['../terceros-relacionados'], { relativeTo: this.route });
+  }
 
 onLimpiarFabricante(): void {
   // Optionally reset state or just navigate
@@ -146,7 +164,8 @@ onLimpiarFabricante(): void {
 }
 
 onGuardarFabricante(fabricantes: Fabricante[]): void {
-  this.updateFabricanteTablaDatos(fabricantes);
+  this.updateFabricanteTablaDatos.emit(fabricantes);
   this.router.navigate(['../terceros-relacionados'], { relativeTo: this.route });
 }
+
 }

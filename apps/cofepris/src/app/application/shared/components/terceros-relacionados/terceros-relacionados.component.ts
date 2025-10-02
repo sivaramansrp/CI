@@ -80,6 +80,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
+   * @event agregarFabricante
+   * @description
+   * Evento emitido cuando se solicita agregar un nuevo fabricante.
+   * 
+   * Este evento no envía ningún valor (void) y puede ser escuchado por componentes padres
+   * para ejecutar la lógica correspondiente al agregar un fabricante relacionado.
+   */
+   @Output() agregarFabricante = new EventEmitter<void>();
+  /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
    */
@@ -442,9 +451,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.esVisible =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(
         this.idProcedimiento
-      );
+      )
+      ? true
+      : false;
     }
     
+   
+
+    /**
+     * @method
+     * @description
+     * Emite el evento para agregar un nuevo fabricante.
+     * 
+     * @remarks
+     * Este método se llama cuando el usuario desea agregar un fabricante relacionado.
+     * 
+     * @memberof TercerosRelacionadosComponent
+     * @fires agregarFabricante
+     */
+    onAgregarFabricante(): void {
+      this.agregarFabricante.emit();
+    }
 
 
   /**

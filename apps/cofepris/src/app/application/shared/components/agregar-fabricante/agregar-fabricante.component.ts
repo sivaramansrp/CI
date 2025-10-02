@@ -193,6 +193,24 @@ export class AgregarFabricanteComponent
    */
   chequeoValidacionAlGuardar =false;
 
+    /**
+     * Evento de salida que se emite cuando el usuario decide guardar y salir del formulario.
+     * Los componentes padres pueden suscribirse a este evento para ejecutar acciones adicionales
+     * después de que se haya guardado la información y se haya solicitado salir.
+     */
+    @Output() guardarYSalir = new EventEmitter<void>();
+    /**
+     * Evento de salida que emite una señal para cancelar o cerrar el modal actual.
+     * Los componentes padres pueden suscribirse a este evento para manejar la acción de cancelación.
+     */
+    @Output() cancelarmodal = new EventEmitter<void>();
+    /**
+     * @input
+     * Lista de objetos de tipo `Fabricante` que se mostrarán en la tabla de fabricantes.
+     * Este arreglo es recibido como entrada por el componente.
+     */
+    @Input() fabricanteTablaDatos: Fabricante[] = [];
+
  /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
@@ -320,6 +338,10 @@ export class AgregarFabricanteComponent
    * - Si no existe información, limpia el formulario mediante `reset()`.
    */
   ngOnChanges(currentValue: SimpleChanges): void {
+     if (this.chequeoValidacionAlGuardar) {
+      this.fabricantes = Array.isArray(this.fabricanteTablaDatos) ? [...this.fabricanteTablaDatos] : [];
+    }
+
     if (currentValue['datoSeleccionado'].currentValue?.length > 0) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
       setTimeout(() => {
@@ -393,7 +415,7 @@ export class AgregarFabricanteComponent
       ],
       curp: [
         this.obtenerValor('curp'),
-        this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]
+        this.idProcedimiento === 260912 ? [] : (this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)])
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -485,6 +507,18 @@ export class AgregarFabricanteComponent
         { value: this.obtenerValor('coloniaEquivalente'), disabled: true },
       ],
     });
+
+    if(this.chequeoValidacionAlGuardar){
+       this.agregarFabricanteForm.get('tipoPersona')?.valueChanges.subscribe(tipo => {
+      const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
+      if (tipo === this.tipoPersona.MORAL) {
+        RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      } else {
+        RAZON_SOCIAL_CONTROL?.clearValidators();
+      }
+      RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
+    });
+    }
   }
 
     /**
@@ -550,16 +584,12 @@ private forzarDeshabilitarPais(): void {
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
-    if(this.chequeoValidacionAlGuardar){
-      if (this.agregarFabricanteForm.invalid) {
-            // Marca todos los controles como tocados para mostrar errores de validación
-          Object.values(this.agregarFabricanteForm.controls).forEach(control => {
-            control.markAsTouched();
-            control.updateValueAndValidity();
-          });
-            // NO redirigir ni emitir nada si el formulario es inválido
-          return;
-        }
+   if (this.chequeoValidacionAlGuardar && this.agregarFabricanteForm.invalid) {
+      Object.values(this.agregarFabricanteForm.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      return;
     }
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
@@ -602,10 +632,36 @@ private forzarDeshabilitarPais(): void {
     if (this.datoSeleccionado?.[0]?.id) {
       NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
     }
-
+     if (this.chequeoValidacionAlGuardar) {
+      const IS_EDIT = Boolean(this.datoSeleccionado?.[0]?.id);
+      const CURRENT_ID = this.datoSeleccionado?.[0]?.id;
+      const IS_DUPLICATE = this.fabricantes.some(f => f.rfc === NUEVO_FABRICANTE.rfc && (!IS_EDIT || f.id !== CURRENT_ID));
+      if (IS_DUPLICATE) {
+        this.abrirModal('La información proporcionada de la persona ya existe, favor de verificar.');
+        return;
+      }
+       let updatedFabricantes: Fabricante[];
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
+      updatedFabricantes = this.fabricantes.map(f => f.id === NUEVO_FABRICANTE.id ? NUEVO_FABRICANTE : f);
+    } else {
+      const NEXT_ID = this.fabricantes.length > 0 ? Math.max(...this.fabricantes.map(f => f.id || 0)) + 1 : 1;
+      NUEVO_FABRICANTE.id = NEXT_ID;
+      updatedFabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
+    }
+    this.fabricantes = updatedFabricantes;
+    this.updateFabricanteTablaDatos.emit(this.fabricantes);
+    if (this.chequeoValidacionAlGuardar){
+      this.limpiarFormulario();
+      this.datoSeleccionado = [];
+      this.cancelarmodal.emit();
+    }
+    }
+  else {
     this.fabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
     this.updateFabricanteTablaDatos.emit(this.fabricantes);
     this.ubicaccion.back();
+    }
   }
 
   /**
@@ -673,7 +729,13 @@ private forzarDeshabilitarPais(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
+   if (this.chequeoValidacionAlGuardar) {
+    this.limpiarFormulario();
+    this.datoSeleccionado = [];
+    this.cancelarmodal.emit();
+  } else {
     this.ubicaccion.back();
+  }
   }
 
   /**
@@ -768,6 +830,9 @@ private forzarDeshabilitarPais(): void {
    * @param {Event} event - Evento que se dispara al cambiar el valor del campo de entrada (input).
    */
   onChangeRfc(event: Event): void {
+    if (this.chequeoValidacionAlGuardar) {
+      return;
+    }
     const RFC_VALUE = (event.target as HTMLInputElement).value;
     this.datoSeleccionadorfc?.forEach((dato) => {
       if (dato.rfc === RFC_VALUE) {

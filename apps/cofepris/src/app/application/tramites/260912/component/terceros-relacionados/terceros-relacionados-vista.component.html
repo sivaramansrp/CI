@@ -1,16 +1,37 @@
-
-
-<!-- Renderiza el componente compartido solo una vez, pasando todos los datos de las tablas y enlaces de eventos -->
+<!-- ...existing code... -->
 <app-terceros-relacionados
-	[fabricanteTablaDatos]="fabricanteTablaDatos"
-	[destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
-	[proveedorTablaDatos]="proveedorTablaDatos"
-	[facturadorTablaDatos]="facturadorTablaDatos"
-	(fabricanteSeleccionadoDatos)="onFabricanteSeleccionado($event)"
-	(destinatarioSeleccionadoDatos)="onDestinatarioSeleccionado($event)"
-	(proveedorSeleccionadoDatos)="onProveedorSeleccionado($event)"
-	(facturadorSeleccionadoDatos)="onFacturadorSeleccionado($event)"
-	[estaOculto]="botonDesactivarParaProrrogar"
-	[idProcedimiento]="idProcedimiento"
-	[formularioDeshabilitado]="esFormularioSoloLectura || isFabricanteTablaDatosDisabled || isDestinatarioFinalTablaDatosDisabled || isProveedorTablaDatosDisabled || isFacturadorTablaDatosDisabled"
+  [fabricanteTablaDatos]="fabricanteTablaDatos"
+  [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
+  [proveedorTablaDatos]="proveedorTablaDatos"
+  [facturadorTablaDatos]="facturadorTablaDatos"
+  (fabricanteSeleccionadoDatos)="onFabricanteSeleccionado($event)"
+  (destinatarioSeleccionadoDatos)="onDestinatarioSeleccionado($event)"
+  (proveedorSeleccionadoDatos)="onProveedorSeleccionado($event)"
+  (facturadorSeleccionadoDatos)="onFacturadorSeleccionado($event)"
+  [estaOculto]="botonDesactivarParaProrrogar"
+  [idProcedimiento]="idProcedimiento"
+  (agregarFabricante)="abrirModalAgregarFabricante()"
+  [formularioDeshabilitado]="esFormularioSoloLectura || isFabricanteTablaDatosDisabled || isDestinatarioFinalTablaDatosDisabled || isProveedorTablaDatosDisabled || isFacturadorTablaDatosDisabled"
 ></app-terceros-relacionados>
+
+<!-- Modal for Agregar Fabricante -->
+<div class="modal fade" id="modalAgregarFabricante" tabindex="-1" aria-labelledby="modalAgregarFabricanteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" style="max-width: 98vw;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarFabricanteLabel">Agregar Fabricante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" style="overflow-y: auto; max-height: 80vh;">
+        <app-agregar-fabricante-contenedora
+          [idProcedimiento]="idProcedimiento"
+          [fabricanteTablaDatos]="fabricanteTablaDatos"
+          [tramiteState]="tramiteState"
+          (updateFabricanteTablaDatos)="updateFabricanteTablaDatos($event)"
+          (cancelar)="cerrarModalAgregarFabricante()"
+          (guardarYSalir)="cerrarModalAgregarFabricante()"
+        ></app-agregar-fabricante-contenedora>
+      </div>
+    </div>
+  </div>
+</div>
