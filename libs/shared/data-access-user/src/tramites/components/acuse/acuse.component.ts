@@ -156,7 +156,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
-        80208, 80210, 80211,
+        80208, 80210, 80211, 110101,
       ].includes(this.procedure)
     ) {
       this.documentosService130118

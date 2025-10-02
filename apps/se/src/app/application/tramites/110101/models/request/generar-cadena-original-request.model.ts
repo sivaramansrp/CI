@@ -3,13 +3,13 @@
  */
 export interface GenerarCadenaOrigRequest {
     /** Número de folio del trámite */
-    num_folio_tramite: string;
+    num_folio_tramite: string | null;
 
     /** Indica si el solicitante es extranjero */
     boolean_extranjero: boolean;
 
     /** Lista de documentos requeridos */
-    documento_requerido: DocumentoRequeridoRequest[];
+    documento_requerido?: DocumentoRequeridoRequest[];
 
     /** Datos del solicitante */
     solicitante: SolicitanteRequest;
@@ -36,24 +36,39 @@ export interface DocumentoRequeridoRequest {
  * Modelo para solicitante
  */
 export interface SolicitanteRequest {
-    /** RFC del solicitante */
-    rfc: string;
-
-    /** CURP del solicitante */
-    curp: string;
-
+     /** ID del domicilio */
+    id_domicilio: number;
+    
     /** Nombre del solicitante */
     nombre: string;
-
-    /** Apellido materno del solicitante */
-    apellidoMaterno: string;
-
-    /** Apellido paterno del solicitante */
-    apellidoPaterno: string;
-
-    /** Correo electrónico del solicitante */
-    correoElectronico: string;
-
-    /** Actividad económica preponderante del solicitante */
-    actividadEconomicaPreponderante: string;
+    
+    /** Apellido paterno */
+    apellido_paterno: string;
+    
+    /** Apellido materno */
+    apellido_materno: string;
+    
+    /** Razón social */
+    razon_social: string;
+    
+    /** RFC del solicitante */
+    rfc: string;
+    
+    /** CURP del solicitante */
+    curp: string;
+    
+    /** Clave de usuario */
+    cve_usuario: string;
+    
+    /** Descripción del giro */
+    descripcion_giro: string;
+    
+    /** Número de identificación fiscal */
+    numero_identificacion_fiscal: string;
+    
+    /** Número de seguridad social */
+    nss: string;
+    
+    /** Correo electrónico */
+    correo_electronico: string;
 }
