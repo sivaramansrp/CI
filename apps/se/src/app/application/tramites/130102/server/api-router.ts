@@ -93,10 +93,7 @@ export const CVE_FRACCION = '{cveFraccion}';
 export const API_GET_FRACCION_SUBDIVISIONES = (CVE_FRACCION: string) : string => `sat-t130102/catalogo/fraccion-arancelaria/${CVE_FRACCION}/subdiviciones`;
 
 
-/**
- * Constante para el ID del tipo de trámite.
- */
-export const IDTIPOTRAMITE = '130102';
+
 /**
  * Constante para la clave de la fracción de octava temporal.
  */
@@ -116,7 +113,7 @@ export const CLASIFICACIONREGIMEN = '{clasificacionRegimen}';
  * @param CLASIFICACIONREGIMEN 
  * @returns 
  */
-export const API_GET_OCTAVA_TEMPORAL = (CVEFRACCIONOCTAVA: string, REGIMEN: string, CLASIFICACIONREGIMEN: string) : string => `sat-t130102/esquema-regla/${IDTIPOTRAMITE}/${CVEFRACCIONOCTAVA}/${REGIMEN}/${CLASIFICACIONREGIMEN}/octava`;
+export const API_GET_OCTAVA_TEMPORAL = (CVEFRACCIONOCTAVA: string, REGIMEN: string, CLASIFICACIONREGIMEN: string) : string => `sat-t130102/esquema-regla/${CVEFRACCIONOCTAVA}/${REGIMEN}/${CLASIFICACIONREGIMEN}/octava`;
 
 /**
  * Constante para el número de folio del trámite.

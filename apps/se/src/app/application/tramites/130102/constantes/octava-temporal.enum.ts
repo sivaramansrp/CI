@@ -1,5 +1,5 @@
 import { FraccionArancelariaProsec } from "../models/octava-temporal.model";
-import { PartidaMercancia } from "../models/request/regla-octava-request.model";
+import { FraccionesProsecRequest, PartidaMercancia } from "../models/request/regla-octava-request.model";
 
 /**
  * Mensaje de alerta que se muestra cuando hay un error en el registro 
@@ -56,12 +56,12 @@ export const MERCANCIA_TABLA = [
 export const FRACCIONES_ANARCIA_TABLA = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: FraccionArancelariaProsec): number | string => ele.fraccionArancelariaProsec,
+    clave: (ele: FraccionesProsecRequest): number | string => ele.clave,
     orden: 1,
   },
   {
     encabezado: "Descripción",
-    clave: (ele: FraccionArancelariaProsec): string => ele.descripción,
+    clave: (ele: FraccionesProsecRequest): string => ele.fraccion,
     orden: 2,
   },
  

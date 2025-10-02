@@ -14,6 +14,7 @@ import {
 
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectClaveComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select-clave/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import SolicitudMercanciaValues from 'libs/shared/theme/assets/json/130102/solicitud_mercancia.json';
 
@@ -38,6 +39,7 @@ import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.ser
   imports: [
     TituloComponent,
     CatalogoSelectComponent,
+    CatalogoSelectClaveComponent,
     CommonModule,
     ReactiveFormsModule,
   ],
