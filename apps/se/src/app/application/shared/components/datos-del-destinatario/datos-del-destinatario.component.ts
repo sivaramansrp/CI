@@ -1,4 +1,3 @@
-// ...existing code...
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
@@ -132,7 +131,9 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
     const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
 
-    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) return;
+    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) {
+      return;
+    }
 
     if (this.idProcedimiento === 110205) {
       NUMERO_REGISTRO_FISCAL.setValidators([Validators.required, Validators.maxLength(30)]);
