@@ -1,8 +1,8 @@
-import { CATALOGO_MEDIO_TRANSPORTE, CATALOGO_PAISES, COMUN_URL, Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
+import { CATALOGO_MEDIO_TRANSPORTE, COMUN_URL, Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
+import { Observable ,map } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110201.
@@ -20,9 +20,9 @@ export class DestinatarioService {
     this.host = `${COMUN_URL.BASE_URL}`
   }
 
-  getPaisDestino(tramite: string, paisDestino: string): Observable<any[]> {
+  getPaisDestino(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices
-      .paisesCatalogo(tramite, paisDestino)
+      .paisesCatalogo(tramite)
       .pipe(
         map(res => res?.datos ?? [])
       );
