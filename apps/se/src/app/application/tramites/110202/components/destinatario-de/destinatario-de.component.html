@@ -1,5 +1,6 @@
 <app-datos-del-destinatario
   [datosForm]="formDatosDelDestinatarioValues"
+  [idProcedimiento]="110202"
   (formDatosDelDestinatarioEvent)="setValoresStore($event)"
   (formaValida)="setFormValida($event)"
 ></app-datos-del-destinatario>
@@ -7,6 +8,7 @@
 <app-destinatario
   [paisDestino]="paisDestino"
   (paisDestionSeleccionEvent)="paisDestinSeleccion($event)"
+  [idProcedimiento]="110202"
   [paisDestin]="(paisDestin$ | async) || []"
   (formDestinatarioEvent)="setValoresStoreDe($event)"
   [datosForm]="formDestinatarioValues"
@@ -26,7 +28,6 @@
             formControlName="medioDeTransporte"
             (selectionChange)="medioDeTransporteSeleccion($event)"
           ></app-catalogo-select>
-          <!-- Only show error if Validators.required is present, which is not -->
         </div>
       </div>
     </div>
