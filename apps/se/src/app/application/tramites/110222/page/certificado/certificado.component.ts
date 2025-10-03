@@ -17,6 +17,7 @@ import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { Tramite110222State } from '../../estados/tramite110222.store';
 /**
  * @component CertificadoComponent
  * @description
@@ -77,6 +78,14 @@ export class CertificadoComponent {
     txtBtnSig: 'Continuar',
   };
 
+  solicitudState!: Tramite110222State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @type {Subject<void>}
@@ -90,6 +99,12 @@ export class CertificadoComponent {
    * @param tramiteQuery Query para consultar el estado del trámite.
    */
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query) {
+    this.tramiteQuery.selectTramite$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
   }
 
   /**

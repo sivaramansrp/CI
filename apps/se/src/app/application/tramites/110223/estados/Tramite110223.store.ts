@@ -10,6 +10,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Este estado contiene formularios, catálogos, listas, valores seleccionados y otros datos requeridos.
  */
 export interface TramiteState {
+    /** ID de la solicitud */
+    idSolicitud: number | null;
+
     /**
      * @property {DestinatarioForm} destinatarioForm - Formulario de destinatario.
      * @description
@@ -129,6 +132,7 @@ export interface TramiteState {
  * Estado inicial que se utiliza para crear el store con valores por defecto.
  */
 export const INITIAL_STATE: TramiteState = {
+  idSolicitud: 0,
   selectedMercancia: {} as Mercancia,
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
@@ -211,6 +215,19 @@ export class Tramite110223Store extends Store<TramiteState> {
   constructor() {
     super(INITIAL_STATE);
   }
+
+   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
     /**
    * Elimina una o varias mercancías de la tabla.
    * @param ids Lista de IDs de mercancías a eliminar.

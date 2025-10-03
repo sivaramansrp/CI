@@ -44,6 +44,8 @@ export interface RepresentanteLegalForm{
 }
 
 export interface Tramite110221State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
   
   /**
    * Objeto que contiene datos del formulario de mercancía.
@@ -269,6 +271,7 @@ export interface Tramite110221State {
  */
 export function createInitialState(): Tramite110221State {
   return {
+  idSolicitud:0,
   formCertificado: {
     entidadFederativa: '',
     tercerOperador: false,
@@ -408,6 +411,18 @@ export class Tramite110221Store extends Store<Tramite110221State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**

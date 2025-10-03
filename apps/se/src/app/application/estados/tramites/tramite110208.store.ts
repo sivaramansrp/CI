@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
  * Interfaz que representa el estado de Solicitud260211.
  */
 export interface Solicitud110208State {
+    /** ID de la solicitud */
+    idSolicitud: number | null;
     /**
      * El valor de entidadFederativa.
      */
@@ -162,6 +164,7 @@ export interface Solicitud110208State {
  */
 export function createInitialState(): Solicitud110208State {
     return {
+        idSolicitud:0,
         /**
          * El valor de entidadFederativa.
          */
@@ -329,12 +332,26 @@ export function createInitialState(): Solicitud110208State {
 @StoreConfig({ name: 'tramite110208', resettable: true })
 
 export class Tramite110208Store extends Store<Solicitud110208State>{
+
+
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.
      */
     constructor() {
         super(createInitialState());
+    }
+
+    /**
+     * Guarda el ID de la solicitud en el estado.
+     *
+     * @param idSolicitud - El ID de la solicitud que se va a guardar.
+     */
+    public setIdSolicitud(idSolicitud: number): void {
+        this.update((state) => ({
+        ...state,
+        idSolicitud,
+        }));
     }
 
     /**

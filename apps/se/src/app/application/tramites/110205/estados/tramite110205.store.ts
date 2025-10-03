@@ -45,6 +45,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @property { {[key: string]: unknown} } formulario - Datos generales del formulario.
  */
 export interface Tramite110205State {
+  idSolicitud: number | null;
   formCertificado: {[key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
@@ -91,6 +92,7 @@ export interface Tramite110205State {
  */
 export function createInitialState(): Tramite110205State {
   return {
+    idSolicitud: 0,
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -230,6 +232,18 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**
