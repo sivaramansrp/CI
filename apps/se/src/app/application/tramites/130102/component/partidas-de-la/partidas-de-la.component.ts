@@ -188,7 +188,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.formForTotalCount.controls['cantidadTotal'].disable();
     this.formForTotalCount.controls['valorTotalUSD'].disable();
-    this.formularioRegistroService.registrarFormulario('form', this.form);
+    //this.formularioRegistroService.registrarFormulario('form', this.form);
     this.formularioRegistroService.registrarFormulario('formForTotalCount', this.formForTotalCount);
   }
 

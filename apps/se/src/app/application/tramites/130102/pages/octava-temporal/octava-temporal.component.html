@@ -24,7 +24,7 @@
                  }
             }
         </div>
-        <btn-continuar [dePadre]="consultaState.readonly ? false : true" [datos]="datosPasos" (continuarEvento)="getValorIndice($event); ejecutarGuardadoSolicitud();"></btn-continuar>
+        <btn-continuar [dePadre]="consultaState.readonly ? false : true" [datos]="datosPasos" (continuarEvento)="getValorIndice($event);"></btn-continuar>
          @if (mostrarAlerta) {
  <ng-alert [CONTENIDO]="avisoContrnido"></ng-alert>
 }

@@ -57,6 +57,7 @@ export class FormularioRegistroService {
       formulario.updateValueAndValidity();
 
       if (formulario.invalid) {
+        console.log('Formulario inválido:', formulario);
         todosValidos = false;
       }
     });

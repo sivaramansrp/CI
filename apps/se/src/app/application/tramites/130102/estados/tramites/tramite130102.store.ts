@@ -8,6 +8,7 @@ import { FraccionesProsecRequest, PartidaMercancia } from '../../models/request/
  * Contiene todas las propiedades necesarias para gestionar la información de la solicitud.
  */
 export interface Solicitud130102State {
+  idSolicitud: number; // ID de la solicitud.
   regimen?: string; // Régimen al que se destinará la mercancía.
   clasificacionRegimen?: string; // Clasificación del régimen.
   valorTotalUSD : string; // Valor total de la solicitud en dólares estadounidenses (USD).
@@ -86,6 +87,7 @@ export interface Solicitud130102State {
  */
 export function createInitialState(): Solicitud130102State {
   return {
+    idSolicitud: 0, // ID de la solicitud, inicializado en 0.
     regimen: '', // Régimen al que se destinará la mercancía, vacío por defecto.
     clasificacionRegimen: '', // Clasificación del régimen, vacío por defecto.
     valorTotalUSD:'', // Valor total de la solicitud en USD, vacío por defecto.
@@ -129,6 +131,18 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
   constructor() {
     super(createInitialState()); // Inicializa el estado con los valores por defecto.
   }
+
+  /**
+   * Actualiza el ID de la solicitud en el estado.
+   * @param idSolicitud - Nuevo ID de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number):void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  } 
+
   /**
    * Actualiza el valor total en dólares de la solicitud.
    * @param {string} valorTotalUSD - Nuevo valor total en dólares.

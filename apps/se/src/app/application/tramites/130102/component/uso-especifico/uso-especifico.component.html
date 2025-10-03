@@ -5,7 +5,7 @@
     <form [formGroup]="usoEspicificoForm">
         <div class="row">
             <div class="col-8">
-                <!--<app-catalogo-select-clave
+                <app-catalogo-select-clave
                [label]="'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)'" 
                 (change)="setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
                 formControlName="fraccionArancelariaProsec"
@@ -13,22 +13,7 @@
                 [required]="true"
                  [tooltipQuestionCircle]="true"
                  [tooltipQuestionCircleText]="'Especifica la fracción arancelaria del producto en el que se utilizará la mercancía a importar'"
-               ></app-catalogo-select-clave>-->
-               <!--<label for="fraccionArancelariaProsec" class="form-label">Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)*:</label>
-              <select class="form-control form-select" formControlName="fraccionArancelariaProsec" (change)="setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')">
-                <option [ngValue]="null">Selecciona una opción</option>
-                <option *ngFor="let reg of catalogos" [value]="reg.clave">
-                  {{ reg.descripcion }}
-                </option>
-              </select>-->
-
-              <select class="form-control form-select" formControlName="fraccionArancelariaProsec">
-                <option [ngValue]="null">Selecciona una opción</option>
-                <option *cdkVirtualFor="let reg of catalogos" [value]="reg.clave">
-                  {{ reg.descripcion }}
-                </option>
-              </select>
-
+               ></app-catalogo-select-clave>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {

@@ -153,3 +153,22 @@ export const API_POST_GUARDAR_SOLICITUD = 'sat-t130102/solicitud/guardar';
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/exportacion/fracciones-divisiones
  */
 export const API_GET_FRACCIONES_DIVISIONES = 'sat-t130102/exportacion/fracciones-divisiones';
+
+/**
+ * MS para enviar la solicitud de firma electrónica del tramite 130102.
+ * @param idSolicitud 
+ * @returns 
+ */
+export const API_POST_FIRMA = (idSolicitud: string) : string => `sat-t130102/solicitud/${idSolicitud}/firmar`;
+
+/**
+ *  Id de la solicitud
+ */
+export const  IDSOLICITUD = '{idSolicitud}';
+
+/**
+ * MS para obtener la cadena original de una solicitud específica del tramite 130102.
+ * @param idSolicitud 
+ * @returns 
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t130102/solicitud/${IDSOLICITUD}/genera-cadena-original`;

@@ -183,8 +183,8 @@ this.tramite130102Query.selectSeccionState$
 
     this.formDelTramite = this.fb.group({
       solicitud: [this.solicitudState?.solicitud],
-      tipoDocumento: [''],
-      fraccion: [this.solicitudState?.fraccion, [Validators.required]],
+  
+      //fraccion: [this.solicitudState?.fraccion, [Validators.required]],
       regimen: [this.solicitudState?.regimen, [Validators.required]],
       clasificacionRegimen: [this.solicitudState?.clasificacionRegimen, [Validators.required]],
     });
