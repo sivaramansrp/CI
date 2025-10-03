@@ -27,7 +27,7 @@
               Eliminar
             </button>
             <button
-              *ngIf="currentTable && filasSeleccionadasFabricante.size === 1 && currentTable === 'fabricante'"
+              *ngIf="tablaActual && filasSeleccionadasFabricante.size === 1 && tablaActual === 'fabricante'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
@@ -75,7 +75,7 @@
               Eliminar
             </button>
             <button
-              *ngIf="currentTable && filasSeleccionadasDestinatario.size === 1 && currentTable === 'destinatario'"
+              *ngIf="tablaActual && filasSeleccionadasDestinatario.size === 1 && tablaActual === 'destinatario'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"

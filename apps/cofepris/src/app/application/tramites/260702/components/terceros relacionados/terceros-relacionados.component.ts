@@ -155,10 +155,13 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
    */
   esFormularioSoloLectura: boolean = false;
 
-   currentTable: string = '';
+  /** Datos de los pedimentos */
+   tablaActual: string = '';
 
+  /** Datos de los pedimentos */
    formTitle: string = ''; 
 
+  /** Datos de los destinatarios para 260702 */
   destinatarioDatos: Destinatario[] = [];
 
   /** Datos de los fabricantes para 260702 */
@@ -387,7 +390,7 @@ onGuardar(): void {
 
   /** Manejar únicamente las tablas de 'fabricante' y 'destinatario' */
   let targetTable: Destinatario[] = [];
-  switch (this.currentTable) {
+  switch (this.tablaActual) {
     case 'fabricante':
       targetTable = this.fabricanteDatos;
       break;
@@ -410,9 +413,9 @@ onGuardar(): void {
       };
       targetTable[INDEX] = UPDATED_ROW;
 
-      if (this.currentTable === 'fabricante') {
+      if (this.tablaActual === 'fabricante') {
         this.fabricanteDatos = [...targetTable];
-      } else if (this.currentTable === 'destinatario') {
+      } else if (this.tablaActual === 'destinatario') {
         this.destinatarioDatos = [...targetTable];
       }
     }
@@ -428,9 +431,9 @@ onGuardar(): void {
       ...FORM_DATA.datosPersonales,
     };
 
-    if (this.currentTable === 'fabricante') {
+    if (this.tablaActual === 'fabricante') {
       this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
-    } else if (this.currentTable === 'destinatario') {
+    } else if (this.tablaActual === 'destinatario') {
       this.destinatarioDatos = [...this.destinatarioDatos, NEW_ROW];
     }
   }
@@ -456,14 +459,14 @@ onGuardar(): void {
    * Maneja el cambio de filas seleccionadas en la tabla.
    * @param filasSeleccionadas Filas seleccionadas.
    */
- enCambioDeFilasSeleccionadas(selectedRows: Destinatario[], tableName: string): void {
-  this.currentTable = tableName;
+ enCambioDeFilasSeleccionadas(filasseleccionadas: Destinatario[], tableName: string): void {
+  this.tablaActual = tableName;
   switch (tableName) {
     case 'fabricante':
-      this.filasSeleccionadasFabricante = new Set(selectedRows.map((row) => row.id));
+      this.filasSeleccionadasFabricante = new Set(filasseleccionadas.map((row) => row.id));
       break;
     case 'destinatario':
-      this.filasSeleccionadasDestinatario = new Set(selectedRows.map((row) => row.id));
+      this.filasSeleccionadasDestinatario = new Set(filasseleccionadas.map((row) => row.id));
       break;
     default:
       console.error('Invalid table name. Only "fabricante" and "destinatario" are allowed.');
@@ -474,29 +477,29 @@ onGuardar(): void {
  * Elimina la mercancía seleccionada de la tabla.
  */
 eliminarMercancias(): void {
-  let selectedRows: Set<number>;
+  let filasseleccionadas: Set<number>;
 
   /* Determinar las filas seleccionadas y la tabla objetivo según la tabla actual. */
-  switch (this.currentTable) {
+  switch (this.tablaActual) {
     case 'fabricante':
-      selectedRows = this.filasSeleccionadasFabricante;
+      filasseleccionadas = this.filasSeleccionadasFabricante;
       this.fabricanteDatos = this.fabricanteDatos.filter(
-        (row) => !selectedRows.has(row.id)
+        (row) => !filasseleccionadas.has(row.id)
       );
       break;
     case 'destinatario':
-      selectedRows = this.filasSeleccionadasDestinatario;
+      filasseleccionadas = this.filasSeleccionadasDestinatario;
       this.destinatarioDatos = this.destinatarioDatos.filter(
-        (row) => !selectedRows.has(row.id)
+        (row) => !filasseleccionadas.has(row.id)
       );
       break;
     default:
-      console.error('Invalid table selection:', this.currentTable);
+      console.error('Invalid table selection:', this.tablaActual);
       return;
   }
 
   /** Limpiar las filas seleccionadas */
-  selectedRows.clear();
+  filasseleccionadas.clear();
 
   /** Mostrar una notificación de éxito */
   this.nuevaNotificacion = {
@@ -516,23 +519,23 @@ editingRowId: number | null = null;
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
 openModificarMercancias(): void {
-  let selectedRows: Set<number>;
+  let filasseleccionadas: Set<number>;
 
-  switch (this.currentTable) {
+  switch (this.tablaActual) {
     case 'fabricante':
-      selectedRows = this.filasSeleccionadasFabricante;
+      filasseleccionadas = this.filasSeleccionadasFabricante;
       break;
     case 'destinatario':
-      selectedRows = this.filasSeleccionadasDestinatario;
+      filasseleccionadas = this.filasSeleccionadasDestinatario;
       break;
     default:
-      console.error('Invalid table selection:', this.currentTable);
+      console.error('Invalid table selection:', this.tablaActual);
       return;
   }
 
-  if (selectedRows.size === 1) {
-    const SELECTED_ID = Array.from(selectedRows)[0];
-    const SELECTED_ROW_DATA = this.currentTable === 'fabricante'
+  if (filasseleccionadas.size === 1) {
+    const SELECTED_ID = Array.from(filasseleccionadas)[0];
+    const SELECTED_ROW_DATA = this.tablaActual === 'fabricante'
       ? this.fabricanteDatos.find((row) => row.id === SELECTED_ID)
       : this.destinatarioDatos.find((row) => row.id === SELECTED_ID);
 
@@ -561,12 +564,8 @@ openModificarMercancias(): void {
 
       this.selectedRow = SELECTED_ROW_DATA; 
       this.esFormularioVisible = true;
-    } else {
-      console.error('Selected row data not found.');
-    }
-  } else {
-    console.warn('Please select exactly one row to modify.');
-  }
+    } 
+  } 
 }
   /**
    * Abre el formulario para agregar nuevas mercancías.
@@ -574,12 +573,11 @@ openModificarMercancias(): void {
 agregarMercancias(tableName: string, title: string): void {
   /* Validar el nombre de la tabla para permitir solo 'fabricante' y 'destinatario' */
   if (!['fabricante', 'destinatario'].includes(tableName)) {
-    console.error('Invalid table name:', tableName);
     return;
   }
 
   /** Establecer la tabla actual y el título del formulario */
-  this.currentTable = tableName;
+  this.tablaActual = tableName;
   this.formTitle = title;
 
   /** Restablecer el formulario y hacerlo visible */
@@ -625,22 +623,22 @@ agregarMercancias(tableName: string, title: string): void {
  * Elimina las filas seleccionadas de la tabla actual (fabricante o destinatario).
  */
 enEliminado(tableName: string): void {
-  this.currentTable = tableName;
+  this.tablaActual = tableName;
 
-  let selectedRows: Set<number>;
-  switch (this.currentTable) {
+  let filasseleccionadas: Set<number>;
+  switch (this.tablaActual) {
     case 'fabricante':
-      selectedRows = this.filasSeleccionadasFabricante;
+      filasseleccionadas = this.filasSeleccionadasFabricante;
       break;
     case 'destinatario':
-      selectedRows = this.filasSeleccionadasDestinatario;
+      filasseleccionadas = this.filasSeleccionadasDestinatario;
       break;
     default:
-      console.error('Invalid table selection:', this.currentTable);
+      console.error('Invalid table selection:', this.tablaActual);
       return;
   }
 
-  if (selectedRows.size > 0) {
+  if (filasseleccionadas.size > 0) {
      
 
   this.nuevaNotificacion = {
