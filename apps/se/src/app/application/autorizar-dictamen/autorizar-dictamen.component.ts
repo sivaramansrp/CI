@@ -42,6 +42,10 @@ import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerim
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
 import { ObservacionRequest } from '../core/models/autorizar-requerimiento/request/observacion-guardar-request.model';
+import { TramiteConfig } from '../shared/models/tramite-config.model';
+import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
+
+import { ServiceConfig } from '../shared/models/service-config.model';
 
 @Component({
   selector: 'app-autorizar-dictamen',
@@ -247,6 +251,18 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   */
   public observacionForm!: FormGroup;
 
+  /**
+   * @property {TramiteConfig} config
+   * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
+  */
+  config!: TramiteConfig;
+
+  /**
+  * @property {ServiceConfig} serviceConfig
+  * @description Configuración de servicios específicos del trámite, obtenida del servicio TramiteConfigService.
+  */
+  serviceConfig!: ServiceConfig;
+
 
   /**
    * @constructor
@@ -270,6 +286,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     private autorizarDictamenService: AutorizarDictamenService,
     private acuseDetalleService: AcuseDetalleService,
     private fb: FormBuilder,
+    private tramiteConfigService: TramiteConfigService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -294,6 +311,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.observacionForm = this.fb.group({
       observacion: ['',],
     });
+
+    this.config = this.tramiteConfigService.getConfig(this.tramite);
+    this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
   }
 
   /**

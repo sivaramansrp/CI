@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ServiceConfig } from '../models/service-config.model';
+
+import { ModeloConfig, ServiceConfig } from '../models/service-config.model';
 import { TramiteConfig } from '../models/tramite-config.model';
 
 
@@ -57,4 +58,26 @@ export class TramiteConfigService {
     return this.serviceConfig[tramiteId];
   }
 
+  
+  /**
+   * Configuración de modelos por trámite.
+   * 
+   * Cada entrada indica si se debe actualizar el modelo para un trámite específico.
+   * La clave es el `tramiteId` y el valor indica la propiedad `actualiarModelo`.
+   */
+  private actualizarModeloConfig: Record<number, ModeloConfig> = {
+    130118: { actualiarModelo: false },
+    120301: { actualiarModelo: false },
+    110101: { actualiarModelo: true },
+  }
+
+   /**
+  * Obtiene la configuración de servicios para un trámite.
+  * 
+  * @param tramiteId Identificador del trámite
+  * @returns La configuración del modelo asociada al trámite.
+  */
+  getModeloConfig(tramiteId: number): ModeloConfig {
+    return this.actualizarModeloConfig[tramiteId];
+  }
 }

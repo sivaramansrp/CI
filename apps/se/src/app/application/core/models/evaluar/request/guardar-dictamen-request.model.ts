@@ -17,4 +17,7 @@ export interface GuardarDictamenRequest {
     fecha_fin_vigencia: string;
     /** Texto del dictamen */
     texto_dictamen: string;
+
+    /** Id solicitud en algunos tramites */
+    id_solicitud?: number;
 }

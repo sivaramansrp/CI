@@ -1194,7 +1194,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
       fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null
+      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
+      ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualiarModelo && {
+        id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud)
+      : undefined
+      })
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
