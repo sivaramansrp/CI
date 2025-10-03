@@ -90,7 +90,11 @@
         </div>
       </div>
     </ng-container>
-    <ng-titulo titulo="Datos del domicilio de la planta o bodega de origen de las mercancías" />
+    @if(consultaDatos.parameter === "READ_PROCEDURE"){
+     <ng-titulo titulo="Nombre comercial" />
+    } @else {
+     <ng-titulo titulo="Datos del domicilio de la planta o bodega de origen de las mercancías" />
+    }
     <ng-container formGroupName="direccionOrigen">
       <div class="row">
         <div class="col-md-8">
