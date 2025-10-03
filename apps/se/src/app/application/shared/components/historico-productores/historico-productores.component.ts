@@ -43,6 +43,9 @@ import { Subject } from 'rxjs';
   styleUrl: './historico-productores.component.scss',
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
+
+  @Input() sortMercanciasTablaOrder: boolean = false;
+  
   /**
    * @description
    * Formulario principal para gestionar los datos de los productores.
@@ -241,7 +244,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @comando
    * Utilice esta propiedad para personalizar o acceder a la configuración de las columnas.
    */
-  mercanciaTablaConfiguracion: ConfiguracionColumna<MercanciaTabla>[] = CONFIGURACION_MERCANCIA;
+  mercanciaTablaConfiguracion!: ConfiguracionColumna<MercanciaTabla>[];
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -333,6 +336,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
+    this.mercanciaTablaConfiguracion = CONFIGURACION_MERCANCIA(this.sortMercanciasTablaOrder);
     this.initFormulario();
     this.inicializarEstadoFormulario();
     this.inicializarFormularioMercancia()
@@ -609,6 +613,20 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
     this.nuevaNotificacionStatus = true;
+  }
+
+  /**
+   * Valida el formulario del componente.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+  public validarFormulario(): boolean {
+    let isValid = true;
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**
