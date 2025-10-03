@@ -23,3 +23,14 @@ export interface ServicioItemResponse {
     fecIniVigencia: string | null;
     fecFinVigencia: string | null;
 }
+
+export interface ServicioDtosKey {
+    servicioDtos: ServicioItemResponse[];
+}
+
+export interface ServiciosAutorizadosTablePayload {
+    rfc: string;
+    numeroPrograma: string;
+    idPrograma: string;
+    tipoPrograma: string;
+}

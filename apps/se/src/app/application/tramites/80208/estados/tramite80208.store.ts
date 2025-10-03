@@ -28,6 +28,7 @@ export interface CambioModalidadState {
   rfcEmpresa: string;
   numeroPrograma: string;
   tiempoPrograma: string;
+  datosAutorizados: ServicioInfo[];
   datos: ServicioInmex[];
   ServiciosDatos: ServicioInfo[];
   domiciliosSeleccionados: ServicioInfo[];
@@ -60,6 +61,7 @@ export function createInitialState(): CambioModalidadState {
     rfcEmpresa: '',
     numeroPrograma: '',
     tiempoPrograma: '',
+    datosAutorizados: [],
     datos: [],
     ServiciosDatos: [],
     domiciliosSeleccionados: [],
@@ -267,6 +269,19 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     this.update((state) => ({
       ...state,
       domiciliosSeleccionados,
+    }));
+  }
+
+    /**
+   * Establece los datos autorizados en el estado.
+   *
+   * @param datosAutorizados - Los datos autorizados que se van a guardar.
+   */
+
+    datosAutorizados(datosAutorizados: ServicioInfo[]): void {
+    this.update((state) => ({
+      ...state,
+      datosAutorizados,
     }));
   }
 

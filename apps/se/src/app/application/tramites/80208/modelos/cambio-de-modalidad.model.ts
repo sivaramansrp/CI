@@ -92,12 +92,12 @@ export interface RespuestaCatalogos {
 export const CONFIGURACION_SERVICIO = [
     {
         encabezado: 'Descripción del servicio',
-        clave: (ele: ServicioInfo): string | undefined => ele.descripcionDelServicio,
+        clave: (ele: ServicioInfo): string | undefined => ele.descripcion,
         orden: 1
     },
     {
         encabezado: 'Tipo de servicio',
-        clave: (ele: ServicioInfo): string | undefined => ele.tipoDeServicio,
+        clave: (ele: ServicioInfo): string | undefined => ele.tipoServicio,
         orden: 2
     },
 ]
@@ -112,9 +112,12 @@ export const CONFIGURACION_SERVICIO = [
  * @property {boolean} estatus - Estado del servicio.
  */
 export interface ServicioInfo {
-    descripcionDelServicio: string;
-    tipoDeServicio: string;
-    estatus: boolean;
+    idServicio: string;
+    descripcion: string;
+    tipoServicio: string;
+    descripcionTipo: string;
+    claveServicio: string;
+    testado?: boolean;
 }
 
 /**

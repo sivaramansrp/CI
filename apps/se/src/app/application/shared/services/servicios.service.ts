@@ -1,10 +1,10 @@
-import { ServicioItemResponse, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
+import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
+import { ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,12 @@ export class ServiciosService {
   }
 
 
-  
+  postServiciosAutorizadosTabla(tramite: string, PAYLOAD: ServiciosAutorizadosTablePayload):
+    Observable<BaseResponse<ServicioDtosKey>> {
+    const ENDPOINT = `${this.host}${SERVICIO_AUTORIZADOS_TABLA(tramite.toString())}`;
+    return this.http.post<BaseResponse<ServicioDtosKey>>(ENDPOINT, PAYLOAD);
+  }
+
   static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `
 <div class="d-flex justify-content-center text-center">

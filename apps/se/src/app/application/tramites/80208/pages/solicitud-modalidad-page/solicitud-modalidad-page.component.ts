@@ -1424,10 +1424,10 @@ getValorIndice(e: AccionBoton): void {
         "tipoServicio": "TISIMMEX.TN",
         "testado": true,
         "claveServicio": index + 1,
-        "descripcion": servicio.descripcionDelServicio || '',
-        "descripcionTipo": servicio.tipoDeServicio || '',
+        "descripcion": servicio.descripcion || '',
+        "descripcionTipo": servicio.tipoServicio || '',
         "descripcionTestado": null,
-        "estatus": servicio.estatus || '',
+        "estatus": null,
         "desEstatus": null,
         "fecIniVigencia": "2025-09-07",
         "fecFinVigencia": "2025-09-07"
@@ -1784,6 +1784,7 @@ getValorIndice(e: AccionBoton): void {
       ServiciosDatos: CAMBIO_MODALIDAD_STATE?.ServiciosDatos ?? null,
       domiciliosSeleccionados: CAMBIO_MODALIDAD_STATE?.domiciliosSeleccionados ?? [],
       empresasSeleccionados: CAMBIO_MODALIDAD_STATE?.empresasSeleccionados ?? [],
+      datosAutorizados: CAMBIO_MODALIDAD_STATE?.datosAutorizados ?? null, // <-- Añadido para cumplir con CambioModalidadState
       // Agrega otros campos relevantes según la estructura de CambioModalidadState
     };
 
