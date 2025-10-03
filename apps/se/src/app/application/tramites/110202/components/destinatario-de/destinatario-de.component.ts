@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-return */
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -7,15 +8,9 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -24,7 +19,7 @@ import { DestinatarioComponent } from '../../../../shared/components/destinatari
 import { DestinatarioService } from '../../../../shared/services/destinatario.service';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
-import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs';
+import { ViewChild } from '@angular/core';
 
 /**
  * Interfaz que representa los valores de un formulario con claves dinámicas.
@@ -122,7 +117,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.cargarPaisDestin();
     this.cargarMedioDeTransporte();
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -203,7 +197,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    */
   iniciarFormulario(): void {
     this.destinatarioForm = this.fb.group({
-      medioDeTransporte: [''], // No longer required
+      medioDeTransporte: [''],
     });
   }
 
@@ -330,21 +324,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.store.setPaisDestinSeleccion(estado);
   }
 
-  /**
-   * Carga los países de destino desde el servicio y los actualiza en el estado.
-   */
-  cargarPaisDestin(): void {
-    this.destinatarioService
-      .getPaisDestino('110202')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => response.datos || [])
-      )
-      .subscribe((datos: Catalogo[]) => {
-        this.store.setPaisDestinatario(datos);
-      });
-  }
-
+  
   /**
    * Carga los medios de transporte desde el servicio y los actualiza en el estado.
    */

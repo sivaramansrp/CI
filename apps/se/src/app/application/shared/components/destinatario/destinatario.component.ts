@@ -3,6 +3,7 @@ import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
+import { DestinatarioService } from '../../services/destinatario.service';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
@@ -72,6 +73,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    * @type {Catalogo[]}
    */
   @Input() paisDestin!: Catalogo[];
+  /**
+  * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
+  * @type {Catalogo[]}
+  */
+  paisDestinDestinatario!: Catalogo[];
 
   /**
    * Evento que se emite cuando se selecciona un país de destino
@@ -136,7 +142,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
    */
   constructor(
-    private fb: FormBuilder) {
+    private fb: FormBuilder, public destinatarioService: DestinatarioService) {
 
     // La función se ejecutará después de un segundo.
     setTimeout(() => {
@@ -156,6 +162,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
+    this.getPaisDestino();
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
@@ -247,14 +254,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
     return true;
   }
 
-
-
-  /**
-  * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
-  */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+  getPaisDestino(): void {
+    this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
+      this.paisDestinDestinatario = data as Catalogo[];
+    });
   }
 
   /**
@@ -274,4 +277,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.formaValida.emit(this.formDestinatario.valid);
     this.formDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }
+
+  /**
+  * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

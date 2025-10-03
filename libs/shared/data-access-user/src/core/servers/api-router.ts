@@ -565,7 +565,7 @@ export const CATALOGO_ESTADOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/c
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
  */
 export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises`;
- 
+
 /*
  * API para obtener el catálogo de NICO
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t80203/catalogo/nicos/producto-exportacion/72162101
