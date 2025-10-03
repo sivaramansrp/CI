@@ -304,6 +304,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     this.obtenerImex();
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
+      this.federatariosCatalogoGroup.disable();
     }
     if (!this.estadoOptionsConfig) {
       this.estadoOptionsConfig = {

@@ -4,9 +4,10 @@ import {
   ProveedorClienteDatosTabla,
   Servicio
 } from '../models/nuevo-programa-industrial.model';
-import { AnexoEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, AnexoEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   Catalogo,
+  JSONResponse,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoDatosIdx, FederatariosEncabezado, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
@@ -32,6 +33,99 @@ import { PROC_80101 } from '../servers/api-route';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query } from '../estados/tramite80101.query';
 
+// Interfaz para el método de servicio interno
+  interface CapacidadInstaladaItem {
+    FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO?: string;
+    UMT?: string;
+    DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO?: string;
+    CAPACIDAD_EFECTIVAMENTE_UTILIZADA?: string;
+    CALCULO_CAPACIDAD_INSTALADA?: string;
+    TURNOS?: number | string;
+    HORAS_POR_TURNO?: number | string;
+    CANTIDAD_EMPLEADOS?: number | string;
+    CANTIDAD_MAQUINARIA?: number | string;
+    DESCRIPCION_MAQUINARIA?: string;
+    CAPACIDAD_INSTALADA_MENSUAL?: number | string;
+    CAPACIDAD_INSTALADA_ANUAL?: string;
+  }
+
+  interface MontoInversionItem {
+    PLANTA?: string;
+    MONTO?: number | string;
+    TIPO?: string;
+    DESC_TIPO?: string;
+    CANTIDAD?: number | string;
+    DESCRIPCION?: string;
+    TESTADO?: string;
+    DESC_TESTADO?: string;
+  }
+
+  interface EmpleadoItem {
+    PLANTA?: string;
+    ID_EMPLEADOS?: string | number;
+    TOTAL?: string | number;
+    DIRECTOS?: string | number;
+    CEDULA_DE_CUOTAS?: string;
+    FECHA_DE_CEDULA?: string;
+    INDIRECTOS_TEST?: string | number;
+    CONTRATO?: string;
+    OBJETO_DEL_CONTRATO_DEL_SERVICIO?: string;
+    FECHA_FIRMA?: string;
+    FECHA_FIN_VIGENCIA?: string;
+    RFC?: string;
+    RAZON_SOCIAL?: string;
+    TESTADO?: string;
+    DESC_TESTADO?: string;
+  }
+
+  interface ComplementarItem {
+    PLANTA?: string;
+    DATO?: string;
+    PERMANECERA_MERCANCIA_PROGRAMA?: string;
+    TIPO_DOCUMENTO?: string;
+    DESCRIPCION_DOCUMENTO?: string;
+    DESCRIPCION_OTRO?: string;
+    DOCUMENTO_RESPALDO?: string;
+    DESC_DOCUMENTO_RESPALDO?: string;
+    RESPALDO_OTRO?: string;
+    FECHA_DE_FIRMA?: string;
+    FECHA_DE_FIN_DE_VIGENCIA?: string;
+    FECHA_DE_FIRMA_DOCUMENTO?: string;
+    FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO?: string;
+  }
+
+  interface FirmanteItem {
+    planta?: string;
+    tipoFirmante?: string;
+    descTipoFirmante?: string;
+  }
+
+    interface AnexoDosItem {
+      encabezadoFraccionExportacion?: string;
+      encabezadoFraccionImportacion?: string;
+      encabezadoDescripcionComercial?: string;
+      encabezadoAnexoII?: string;
+      encabezadoIdProducto?: string;
+      encabezadoFraccionDescripcionAnexo?: string;
+      encabezadoValorEnMonedaAnual?: string;
+      encabezadoValorEnMonedaMensual?: string;
+      encabezadoVolumenMensual?: string;
+      encabezadoVolumenAnual?: string;
+      encabezadoCategoria?: string;
+      encabezadoTipo?: string;
+      encabezadoUmt?: string;
+    }
+
+  interface DatosParaNavegar {
+      encabezadoAnexoII?: string;
+      encabezadoTipo?: string;
+      encabezadoCategoria?: string;
+      encabezadoDescripcionComercial?: string;
+      encabezadoVolumenMensual?: string;
+      encabezadoVolumenAnual?: string;
+      encabezadoValorEnMonedaMensual?: string;
+      encabezadoValorEnMonedaAnual?: string;
+    }
 /**
  * Servicio para gestionar las operaciones relacionadas con el programa industrial.
  * Este servicio proporciona métodos para obtener datos desde archivos JSON locales,
@@ -210,7 +304,6 @@ export class NuevoProgramaIndustrialService {
     this.setEmpresasSubmanufactureras(DATOS);
     this.setAnexoI(DATOS);
     this.setAnexoIIyIII(DATOS);
-    console.log('After update:', this.tramite80101Store.getValue());
   }
 
   setComplimentos(DATOS: unknown): void {
@@ -248,30 +341,42 @@ export class NuevoProgramaIndustrialService {
 
   setAnexoI(DATOS: unknown): void {
     if (typeof DATOS === 'object' && DATOS !== null && 'mercanciaImportacion' in DATOS) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const MERCANCIA_IMPORTACION = (DATOS as { mercanciaImportacion?: any[] }).mercanciaImportacion ?? [];
-      const ANEXO_TABLA_UNO = this.reverseBuildDatosParaNavegar(MERCANCIA_IMPORTACION[0]?.complemento);
+      const MERCANCIA_IMPORTACION = (DATOS as { mercanciaImportacion?: unknown[] }).mercanciaImportacion ?? [];
+      const ANEXO_TABLA_UNO = this.reverseBuildDatosParaNavegar(
+        MERCANCIA_IMPORTACION[0] && typeof MERCANCIA_IMPORTACION[0] === 'object' && MERCANCIA_IMPORTACION[0] !== null && 'complemento' in MERCANCIA_IMPORTACION[0]
+          ? MERCANCIA_IMPORTACION[0].complemento
+          : {}
+      );
       this.tramite80101Store.setImportarDatosTabla(ANEXO_TABLA_UNO);
-      const ANEXO_TABLA_DOS = this.reverseBuildAnexoDos(MERCANCIA_IMPORTACION[0]?.anexoI);
+      const ANEXO_TABLA_DOS = this.reverseBuildAnexoDos(
+        MERCANCIA_IMPORTACION[0] && typeof MERCANCIA_IMPORTACION[0] === 'object' && 'anexoI' in MERCANCIA_IMPORTACION[0]
+          ? (MERCANCIA_IMPORTACION[0].anexoI as unknown[])
+          : []
+      );
       this.tramite80101Store.setExportarDatosTabla(ANEXO_TABLA_DOS);
-      const LISTA_PROVEEDORES_CLIENT = this.reverseBuildProveedorCliente(MERCANCIA_IMPORTACION[0]?.listaProveedores);
+      const LISTA_PROVEEDORES_CLIENT = 
+        MERCANCIA_IMPORTACION[0] &&
+        typeof MERCANCIA_IMPORTACION[0] === 'object' &&
+        'listaProveedores' in MERCANCIA_IMPORTACION[0]
+          ? this.reverseBuildProveedorCliente((MERCANCIA_IMPORTACION[0] as { listaProveedores?: unknown[] }).listaProveedores ?? [])
+          : [];
       this.tramite80101Store.setProveedorClienteDatosTablaUno(LISTA_PROVEEDORES_CLIENT);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const LISTA_PROVEEDORES_CLIENT_DOS = this.reverseProveedoresClientDos((DATOS as any).fraccionArancelaria[0].listaProveedores);
+        const LISTA_PROVEEDORES_CLIENT_DOS = this.reverseProveedoresClientDos(
+        ((DATOS as unknown as { fraccionArancelaria?: { listaProveedores?: unknown[] }[] })?.fraccionArancelaria?.[0]?.listaProveedores ?? [])
+      );
       this.tramite80101Store.setProveedorClienteDatosTablaDos(LISTA_PROVEEDORES_CLIENT_DOS);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const PROYECTO_IMMEX = this.reverseProyectoIMMEX((DATOS as any).productoExportacionDtoList[0].proyectosImmex);
+      const PROYECTO_IMMEX = this.reverseProyectoIMMEX(
+        (DATOS as unknown as { productoExportacionDtoList?: { proyectosImmex?: unknown[] }[] })?.productoExportacionDtoList?.[0]?.proyectosImmex ?? []
+      );
       this.tramite80101Store.setProyectoImmexTablaLista(PROYECTO_IMMEX);
     }
   }
 
   setAnexoIIyIII(DATOS: unknown): void {
     if (typeof DATOS === 'object' && DATOS !== null && 'anexoII' in DATOS) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const ANEXO_II = this.reverseBuildAnexoDosTres((DATOS as any).anexoII);
+      const ANEXO_II = this.reverseBuildAnexoDosTres((DATOS as { anexoII?: unknown[] }).anexoII ?? []);
       this.tramite80101Store.setAnnexoDosTableLista(ANEXO_II);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const ANEXO_III = this.reverseBuildAnexoDosTres((DATOS as any).anexoIII);
+      const ANEXO_III = this.reverseBuildAnexoDosTres((DATOS as { anexoIII?: unknown[] }).anexoIII ?? []);
       this.tramite80101Store.setAnnexoTresTableLista(ANEXO_III);
     }
   }
@@ -330,8 +435,8 @@ export class NuevoProgramaIndustrialService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: any): Observable<any> {
-    return this.httpService.post<any>(PROC_80101.GUARDAR, { body: body });
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_80101.GUARDAR, { body: body });
   }
 
   /**
@@ -364,57 +469,58 @@ export class NuevoProgramaIndustrialService {
    * @example
    * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildComplimentos(data: Record<string, any>, base: Record<string, any>): any {
+   buildComplimentos(data: Record<string, unknown>, base: Record<string, unknown>): Record<string, unknown> {
+    if (typeof data !== 'object' || data === null) {
+      throw new Error('Invalid data type for buildComplimentos');
+    }
+    const DATOS_COMPLIMENTOS = (data as Record<string, unknown>)['datosComplimentos'] as DatosComplimentos;
     return {
       ...base,
       notario: {
-        ...base['notario'],
-        rfc: data['datosComplimentos'].formaModificaciones.rfc,
-        numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
+        ...(typeof base['notario'] === 'object' && base['notario'] !== null ? base['notario'] : {}),
+        rfc: DATOS_COMPLIMENTOS.formaModificaciones.rfc,
+        numeroActa: DATOS_COMPLIMENTOS.formaModificaciones.nombreDeActa,
         numeroNotario:
-          data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
-        entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
+          DATOS_COMPLIMENTOS.formaModificaciones.nombreDeNotaria,
+        entidadFederativa: DATOS_COMPLIMENTOS.formaModificaciones.estado,
         fechaActa: formatearFechaYyyyMmDd(
-          data['datosComplimentos'].formaModificaciones.fechaDeActa
+          DATOS_COMPLIMENTOS.formaModificaciones.fechaDeActa
         ),
       },
-      modalidad: data['datosComplimentos'].modalidad,
-      booleanGenerico: data['datosComplimentos'].programaPreOperativo
+      modalidad: DATOS_COMPLIMENTOS.modalidad,
+      booleanGenerico: DATOS_COMPLIMENTOS.programaPreOperativo
         ? true
         : false,
       descripcionSistemasMedicion:
-        data['datosComplimentos'].datosGeneralis.paginaWWeb,
+        DATOS_COMPLIMENTOS.datosGeneralis.paginaWWeb,
       descripcionLugarEmbarque:
-        data['datosComplimentos'].datosGeneralis.localizacion,
+        DATOS_COMPLIMENTOS.datosGeneralis.localizacion,
       capacidadAlmacenaje:
-        data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+        DATOS_COMPLIMENTOS.formaModificaciones.nombreDeNotaria,
       numeroPermiso:
-        data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1
+        DATOS_COMPLIMENTOS.obligacionesFiscales.opinionPositiva === '1'
           ? 'SI'
           : '',
       fechaOperacion: formatearFechaYyyyMmDd(
-        data['datosComplimentos'].obligacionesFiscales.fechaExpedicion
+        DATOS_COMPLIMENTOS.obligacionesFiscales.fechaExpedicion
       ),
       nomOficialAutorizado:
-        data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
+        DATOS_COMPLIMENTOS.formaModificaciones.nombreDelFederatario,
     };
   }
 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
-    const RESULT = [
-      {
-        acepto: data['datosComplimentos'].obligacionesFiscales
-          .aceptarObligacionFiscal
-          ? 1
-          : 0,
-        idTipoTramite: 80101,
-        cveDeclaracion: '123',
-      },
-    ];
-    return RESULT;
+   buildDeclaracionSolicitudEntries(data: Record<string, unknown>): unknown[] {
+      const DATOS_COMPLIMENTOS = (data as { datosComplimentos?: { obligacionesFiscales?: { aceptarObligacionFiscal?: boolean } } }).datosComplimentos;
+      const ACEPTO = DATOS_COMPLIMENTOS?.obligacionesFiscales?.aceptarObligacionFiscal ? 1 : 0;
+      const RESULT = [
+        {
+          ACEPTO,
+          idTipoTramite: 80101,
+          cveDeclaracion: '123',
+        },
+      ];
+      return RESULT;
   }
 
   /**
@@ -433,10 +539,13 @@ export class NuevoProgramaIndustrialService {
    * @example
    * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
-    const BASE_OBJECT = base[0];
-    const CLONED_BASE = structuredClone
+  buildSociosAccionistas(
+    arr1: unknown[],
+    arr2: unknown[],
+    base: Record<string, unknown> = {}
+  ): Record<string, unknown>[] {
+    const BASE_OBJECT = Array.isArray(base) ? base[0] : base;
+    const CLONED_BASE = typeof structuredClone === 'function'
       ? structuredClone(BASE_OBJECT)
       : JSON.parse(JSON.stringify(BASE_OBJECT));
     const MAP_TO_PAYLOAD = (
@@ -458,7 +567,10 @@ export class NuevoProgramaIndustrialService {
       },
     });
 
-    return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
+    return [
+      ...arr1.map((item) => MAP_TO_PAYLOAD(item as Record<string, unknown>)),
+      ...arr2.map((item) => MAP_TO_PAYLOAD(item as Record<string, unknown>))
+    ];
   }
 
   /**
@@ -468,10 +580,8 @@ export class NuevoProgramaIndustrialService {
    * @param base Objeto base que se combina con los datos específicos de cada planta.
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[], data: any): any {
-    // eslint-disable-next-line complexity, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const MAP_CAPACIDAD_INSTALADA = (item: any) => ({
+  buildPlantas(array: unknown[], base: unknown[], data: unknown = {}): unknown {
+    const MAP_CAPACIDAD_INSTALADA = (item: CapacidadInstaladaItem) => ({
       fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
       umt: item.UMT ?? "",
       descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
@@ -486,9 +596,8 @@ export class NuevoProgramaIndustrialService {
       capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
       testado: "1",
     });
- 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const MAP_MONTOS_INVERSION = (item: any) => ({
+
+    const MAP_MONTOS_INVERSION = (item: MontoInversionItem) => ({
       idPlantaM: item.PLANTA ?? "",
       idMonto: (item.MONTO ?? "").toString(),
       tipo: item.TIPO ?? "",
@@ -499,9 +608,8 @@ export class NuevoProgramaIndustrialService {
       testado: item.TESTADO ?? "",
       descTestado: item.DESC_TESTADO ?? "",
     })
- 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const MAP_EMPLEADOS = (item: any) => ({
+
+    const MAP_EMPLEADOS = (item: EmpleadoItem) => ({
       idPlantaE: item.PLANTA ?? '',
       idEmpleados: item.ID_EMPLEADOS ?? '',
       totalEmpleados: (item.TOTAL ?? '').toString(),
@@ -518,9 +626,8 @@ export class NuevoProgramaIndustrialService {
       testado: item.TESTADO ?? '',
       descTestado: item.DESC_TESTADO ?? '',
     })
- 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const MAP_COMPLEMENTAR = (item: any) => ({
+
+    const MAP_COMPLEMENTAR = (item: ComplementarItem) => ({
       idPlantaC: item.PLANTA ?? '' ,
       idDato: item.DATO ?? '',
       amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
@@ -535,45 +642,58 @@ export class NuevoProgramaIndustrialService {
       fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
- 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const MAP_FIRMANTES = (item:any) => ({
+
+
+    const MAP_FIRMANTES = (item: FirmanteItem) => ({
       idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
       descTipoFirmante: item.descTipoFirmante ?? '',
     })
  
-    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(MAP_CAPACIDAD_INSTALADA);
-    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
-    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
-    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
-    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
+    const LISTA_CAPACIDAD = ((data as { tablaDatosCapacidadInstalada?: CapacidadInstaladaItem[] }).tablaDatosCapacidadInstalada || []).map(MAP_CAPACIDAD_INSTALADA);
+    const MONTOS = ((data as { montosDeInversionTablaDatos?: MontoInversionItem[] }).montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
+    const DATOS_EMPLEADOS = ((data as { empleadosTablaDatos?: EmpleadoItem[] }).empleadosTablaDatos || []).map(MAP_EMPLEADOS);
+    const DATOS_COMPLEMENTARIOS = ((data as { complementarPlantaDatos?: ComplementarItem[] }).complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+    const FIRMANTES = ((data as { complementarFirmanteDatos?: FirmanteItem[] }).complementarFirmanteDatos || []).map(MAP_FIRMANTES);
  
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+    const RESULT: unknown[] = [];
     array.forEach(arr => {
-      // eslint-disable-next-line complexity
+      const PLANTA_OBJ = arr as { 
+        planta?: string; 
+        calle?: string; 
+        numeroExterior?: string; 
+        numeroInterior?: string; 
+        codigoPostal?: string; 
+        localidad?: string; 
+        colonia?: string; 
+        delegacionMunicipio?: string; 
+        entidadFederativa?: string; 
+        pais?: string; 
+        registroFederalDeContribuyentes?: string; 
+        domicilioDelSolicitante?: string; 
+        razonSocial?: string;
+      };
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-          idPlanta: arr.planta ?? '',
-          calle: arr.calle ?? '',
-          numeroExterior: arr.numeroExterior ?? '',
-          numeroInterior: arr.numeroInterior ?? '',
-          codigoPostal: arr.codigoPostal ?? '',
-          localidad: arr.localidad ?? '',
-          colonia: arr.colonia ?? '',
-          delegacionMunicipio: arr.delegacionMunicipio ?? '',
-          entidadFederativa: arr.entidadFederativa ?? '',
-          pais: arr.pais ?? '',
-          rfc: arr.registroFederalDeContribuyentes ?? '',
-          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-          razonSocial: arr.razonSocial ?? '',
+          idPlanta: PLANTA_OBJ.planta ?? '',
+          calle: PLANTA_OBJ.calle ?? '',
+          numeroExterior: PLANTA_OBJ.numeroExterior ?? '',
+          numeroInterior: PLANTA_OBJ.numeroInterior ?? '',
+          codigoPostal: PLANTA_OBJ.codigoPostal ?? '',
+          localidad: PLANTA_OBJ.localidad ?? '',
+          colonia: PLANTA_OBJ.colonia ?? '',
+          delegacionMunicipio: PLANTA_OBJ.delegacionMunicipio ?? '',
+          entidadFederativa: PLANTA_OBJ.entidadFederativa ?? '',
+          pais: PLANTA_OBJ.pais ?? '',
+          rfc: PLANTA_OBJ.registroFederalDeContribuyentes ?? '',
+          domicilioFiscal: PLANTA_OBJ.domicilioDelSolicitante ?? '',
+          razonSocial: PLANTA_OBJ.razonSocial ?? '',
         });
       });
     });
-    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
+    const RESULT_DATA = { ...(typeof RESULT[0] === 'object' && RESULT[0] !== null ? RESULT[0] : {}), LISTA_CAPACIDAD, MONTOS, DATOS_EMPLEADOS, DATOS_COMPLEMENTARIOS, FIRMANTES };
     return RESULT_DATA;
   }
 
@@ -584,10 +704,8 @@ export class NuevoProgramaIndustrialService {
    * @param base Objeto base que se fusiona con los datos específicos de cada planta.
    * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantasSubmanufactureras(array: any[] = [], base: unknown[]): unknown[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+  buildPlantasSubmanufactureras(base: unknown[], array: PlantasSubfabricante[] = []): unknown[] {
+    const RESULT: unknown[] = [];
     array.forEach((arr) => {
       base.forEach((item) => {
         const ITEM = item && typeof item === 'object' ? item : {};
@@ -598,22 +716,23 @@ export class NuevoProgramaIndustrialService {
           empresaNumeroExterior: arr.numExterior ?? '',
           empresaCodigoPostal: arr.codigoPostal ?? '',
           localidad: arr.colonia ?? '',
-          empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
+          empresaDelegacionMunicipio: arr.municipio ?? '',
           empresaEntidadFederativa: arr.entidadFederativa ?? '',
           empresaPais: arr.pais ?? '',
           rfc: arr.rfc ?? '',
-          domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
+          domicilioFiscal: arr.domicilioFiscal ?? '',
           razonSocial: arr.razonSocial ?? '',
           datosComplementarios: Array.isArray(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (ITEM as any)?.datosComplementarios
+            (ITEM as { datosComplementarios?: unknown[] })?.datosComplementarios
           )
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? (ITEM as any).datosComplementarios.map((dc: any) => ({
-                idPlantaC: dc.idPlantaC ?? '',
-                idDato: dc.idDato ?? '',
-                amparoPrograma: dc.amparoPrograma ?? '',
-              }))
+            ? (ITEM as { datosComplementarios?: unknown[] }).datosComplementarios!.map((dc: unknown) => {
+                const COMPLEMENTO = dc as { idPlantaC?: string; idDato?: string; amparoPrograma?: string };
+                return {
+                  idPlantaC: COMPLEMENTO.idPlantaC ?? '',
+                  idDato: COMPLEMENTO.idDato ?? '',
+                  amparoPrograma: COMPLEMENTO.amparoPrograma ?? '',
+                };
+              })
             : [],
         });
       });
@@ -629,25 +748,24 @@ export class NuevoProgramaIndustrialService {
    * @param array  Object with keys whose values are arrays
    * @param base            Existing plantasControladoras array
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildComplementosTablaPayload(array: any[], base: unknown[]): unknown[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+ buildComplementosTablaPayload(array: unknown[], base: unknown[]): unknown[] {
+    const RESULT: unknown[] = [];
 
     array.forEach((arr) => {
+      const OBJ = arr as { rfc?: string; taxId?: string; correoElectronico?: string; razonSocial?: string; nombre?: string; apellidoPaterno?: string; apellidoMaterno?: string; codigoPostal?: string; cp?: string; estado?: string };
       base.forEach((item) => {
         const ITEM = item && typeof item === 'object' ? item : {};
         RESULT.push({
           ...ITEM,
-          rfc: arr.rfc || arr.taxId,
-          correoElectronico: arr.correoElectronico,
-          razonSocial: arr.razonSocial,
-          nombre: arr.taxId,
-          apellidoPaterno: arr.apellidoPaterno,
-          apellidoMaterno: arr.apellidoMaterno,
+          rfc: OBJ.rfc || OBJ.taxId,
+          correoElectronico: OBJ.correoElectronico,
+          razonSocial: OBJ.razonSocial,
+          nombre: OBJ.taxId,
+          apellidoPaterno: OBJ.apellidoPaterno,
+          apellidoMaterno: OBJ.apellidoMaterno,
           domicilioSolicitud: {
-            codigoPostal: arr.codigoPostal || arr.cp,
-            informacionExtra: arr.estado,
+            codigoPostal: OBJ.codigoPostal || OBJ.cp,
+            informacionExtra: OBJ.estado,
           },
         });
       });
@@ -662,29 +780,28 @@ export class NuevoProgramaIndustrialService {
    * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
    * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildDatosFederatarios(array: any[] = [], base: unknown[]): unknown[] {
+  buildDatosFederatarios(base: unknown[], array: unknown[] = []): unknown[] {
     const RESULT: unknown[] = [];
     array.forEach((arr) => {
+      const FEDATARIO = arr as { nombre?: string; segundoApellido?: string; primerApellido?: string; numeroDeActa?: string; fechaInicioInput?: string; numeroDeNotaria?: string; estado?: string; estadoOptions?: string };
       base.forEach((item) => {
         const ITEM = item && typeof item === 'object' ? item : {};
         RESULT.push({
           ...ITEM,
-          nombreNotario: arr.nombre ?? '',
-          apellidoMaterno: arr.segundoApellido ?? '',
-          apellidoPaterno: arr.primerApellido ?? '',
-          numeroActa: arr.numeroDeActa ?? '',
-          fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
-          numeroNotaria: arr.numeroDeNotaria ?? '',
-          entidadFederativa: arr.estado ?? '',
-          delegacionMunicipio: arr.estadoOptions ?? '',
+          nombreNotario: FEDATARIO.nombre ?? '',
+          apellidoMaterno: FEDATARIO.segundoApellido ?? '',
+          apellidoPaterno: FEDATARIO.primerApellido ?? '',
+          numeroActa: FEDATARIO.numeroDeActa ?? '',
+          fechaActa: formatearFechaYyyyMmDd(FEDATARIO.fechaInicioInput ?? ''),
+          numeroNotaria: FEDATARIO.numeroDeNotaria ?? '',
+          entidadFederativa: FEDATARIO.estado ?? '',
+          delegacionMunicipio: FEDATARIO.estadoOptions ?? '',
         });
       });
     });
     return RESULT;
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
   /**
    * Construye el objeto `anexo` a partir de los datos proporcionados.
    *
@@ -697,9 +814,7 @@ export class NuevoProgramaIndustrialService {
    *
    * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
    */
-  // eslint-disable-next-line class-methods-use-this
   buildAnexo(data: unknown): { anexo: Record<string, unknown> } {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const BUILD_ANEXO_ITEM = (item: Anexo1) => ({
       descripcion: item.encabezadoFraccion,
       idTipoBien: 0,
@@ -709,7 +824,6 @@ export class NuevoProgramaIndustrialService {
       descripcionTestado: item.encabezadoDescripcion,
     });
  
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const BUILD_PROVEEDOR_CLIENTE = (item: ProveedorClienteDatosTabla) => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
@@ -724,8 +838,7 @@ export class NuevoProgramaIndustrialService {
       descTestado: item.descTestado,
     });
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any
-    const BUILD_DATOS_PARA_NAVEGAR = (datos: any) => ({
+    const BUILD_DATOS_PARA_NAVEGAR = (datos: DatosParaNavegar) => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
       unidadMedida: datos?.encabezadoAnexoII,
@@ -739,9 +852,8 @@ export class NuevoProgramaIndustrialService {
       fecFinVigencia: null,
       volumenAnualSolicitado: null,
     });
- 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const BUILD_ANEXO_DOS = (item: any) => ({
+
+    const BUILD_ANEXO_DOS = (item: AnexoDosItem) => ({
       fraccionExportacion: item.encabezadoFraccionExportacion,
       fraccionImportacion: item.encabezadoFraccionImportacion,
       descFraccionImpo: item.encabezadoDescripcionComercial,
@@ -757,8 +869,7 @@ export class NuevoProgramaIndustrialService {
       umt: item.encabezadoUmt,
     });
  
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-    const PROYECTO_IMMEX_DATOS = (item: any) => ({
+    const PROYECTO_IMMEX_DATOS = (item: ProyectoImmexEncabezado) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
       fechaFirma: item.encabezadoFechaFirma,
@@ -775,7 +886,6 @@ export class NuevoProgramaIndustrialService {
      * @param item - Objeto que contiene la información del proveedor y cliente.
      * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
     const BUILD_PROVEEDOR_CLIENTE_DOS = (item: ProveedorClienteDatosTabla) => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
@@ -789,54 +899,65 @@ export class NuevoProgramaIndustrialService {
  
     return {
       anexo: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ANEXOII: ((data as any).annexoDosTres?.anexoDosTablaLista || []).map(BUILD_ANEXO_ITEM),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ANEXOIII: ((data as any).annexoDosTres?.anexoTresTablaLista || []).map(BUILD_ANEXO_ITEM),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        proveedorCliente: ((data as any).annexoUno?.proveedorClienteDatosTabla || []).map(BUILD_PROVEEDOR_CLIENTE),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        datosParaNavegar: BUILD_DATOS_PARA_NAVEGAR((data as any).annexoUno?.importarDatosTabla[0] || {}),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        tableDos: ((data as any).annexoUno?.exportarDatosTabla || []).map(BUILD_ANEXO_DOS),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        proyectoimex: ((data as any).proyectoImmexTablaLista || []).map(PROYECTO_IMMEX_DATOS),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        proveedorClienteDos: ((data as any).annexoUno?.proveedorClienteDatosTablaDos || []).map(BUILD_PROVEEDOR_CLIENTE_DOS),
+        ANEXOII: ((data as { annexoDosTres?: { anexoDosTablaLista?: Anexo1[] } }).annexoDosTres?.anexoDosTablaLista || []).map(BUILD_ANEXO_ITEM),
+        ANEXOIII: ((data as { annexoDosTres?: { anexoTresTablaLista?: Anexo1[] } }).annexoDosTres?.anexoTresTablaLista || []).map(BUILD_ANEXO_ITEM),
+        proveedorCliente: ((data as { annexoUno?: { proveedorClienteDatosTabla?: ProveedorClienteDatosTabla[] } }).annexoUno?.proveedorClienteDatosTabla || []).map(BUILD_PROVEEDOR_CLIENTE),
+        datosParaNavegar: BUILD_DATOS_PARA_NAVEGAR((data as { annexoUno?: { importarDatosTabla?: unknown[] } })?.annexoUno?.importarDatosTabla?.[0] || {}),
+        tableDos: (((data as { annexoUno?: { exportarDatosTabla?: unknown[] } })?.annexoUno?.exportarDatosTabla || []) as AnexoDosItem[]).map(BUILD_ANEXO_DOS),
+        proyectoimex: ((data as { proyectoImmexTablaLista?: ProyectoImmexEncabezado[] }).proyectoImmexTablaLista || []).map(PROYECTO_IMMEX_DATOS),
+        proveedorClienteDos: ((data as { annexoUno?: { proveedorClienteDatosTablaDos?: ProveedorClienteDatosTabla[] } }).annexoUno?.proveedorClienteDatosTablaDos || []).map(BUILD_PROVEEDOR_CLIENTE_DOS),
       },
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildComplimentos(payload: any): DatosComplimentos {
+  reverseBuildComplimentos(payload: unknown): DatosComplimentos {
+    const PAYLOAD = payload as {
+      solicitud: {
+        notario: {
+          rfc: string;
+          numeroActa: string;
+          numeroNotario: string;
+          entidadFederativa: string;
+          fechaActa: string;
+        };
+        nomOficialAutorizado: string;
+        modalidad: string;
+        booleanGenerico: boolean;
+        descripcionSistemasMedicion: string;
+        descripcionLugarEmbarque: string;
+        numeroPermiso: string;
+        fechaOperacion: string;
+      };
+      declaracionSolicitudEntities?: { acepto?: number }[];
+    };
+
     return {
         formaModificaciones: {
-          rfc: payload.solicitud.notario.rfc,
-          nombreDeActa: payload.solicitud.notario.numeroActa,
-          nombreDeNotaria: payload.solicitud.notario.numeroNotario,
-          estado: payload.solicitud.notario.entidadFederativa,
-          fechaDeActa: formatearFechaDdMmYyyy(payload.solicitud.notario.fechaActa),
-          nombreDelFederatario: payload.solicitud.nomOficialAutorizado,
+          rfc: PAYLOAD.solicitud.notario.rfc,
+          nombreDeActa: PAYLOAD.solicitud.notario.numeroActa,
+          nombreDeNotaria: PAYLOAD.solicitud.notario.numeroNotario,
+          estado: PAYLOAD.solicitud.notario.entidadFederativa,
+          fechaDeActa: formatearFechaDdMmYyyy(PAYLOAD.solicitud.notario.fechaActa),
+          nombreDelFederatario: PAYLOAD.solicitud.nomOficialAutorizado,
         },
-        modalidad: payload.solicitud.modalidad,
-        programaPreOperativo: payload.solicitud.booleanGenerico,
+        modalidad: PAYLOAD.solicitud.modalidad,
+        programaPreOperativo: String(PAYLOAD.solicitud.booleanGenerico),
         datosGeneralis: {
-          paginaWWeb: payload.solicitud.descripcionSistemasMedicion,
-          localizacion: payload.solicitud.descripcionLugarEmbarque,
+          paginaWWeb: PAYLOAD.solicitud.descripcionSistemasMedicion,
+          localizacion: PAYLOAD.solicitud.descripcionLugarEmbarque,
         },
         obligacionesFiscales: {
-          opinionPositiva: payload.solicitud.numeroPermiso === 'SI' ? '' : '',
-          fechaExpedicion: formatearFechaDdMmYyyy(payload.solicitud.fechaOperacion),
-          aceptarObligacionFiscal: payload.declaracionSolicitudEntities?.[0]?.acepto === 1 ? 'Si' : 'No'
+          opinionPositiva: PAYLOAD.solicitud.numeroPermiso === 'SI' ? '' : '',
+          fechaExpedicion: formatearFechaDdMmYyyy(PAYLOAD.solicitud.fechaOperacion),
+          aceptarObligacionFiscal: PAYLOAD.declaracionSolicitudEntities?.[0]?.acepto === 1 ? 'Si' : 'No'
         }
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildSociosAccionistas(payload: any[]): { ARR1: SociaoAccionistas[]; ARR2: SociaoAccionistas[] } {
+  reverseBuildSociosAccionistas(payload: unknown[]): { ARR1: SociaoAccionistas[]; ARR2: SociaoAccionistas[] } {
     const ARR1: SociaoAccionistas[] = [];
     const ARR2: SociaoAccionistas[] = [];
-    for (const ELE of payload) {
+    for (const ELE of payload as Array<{ rfc?: string; rfcExtranjero?: string; nombre?: string; apellidoPaterno?: string; apellidoMaterno?: string; correoElectronico?: string; razonSocial?: string; estadoEntidad?: string; estadoEvaluacionEntidad?: string; cvePaisOrigen?: string; domicilio?: { codigoPostal?: string } }>) {
       if (ELE?.rfc && String(ELE.rfc).trim() !== '') {
         ARR1.push({
           rfc: ELE.rfc
@@ -858,21 +979,30 @@ export class NuevoProgramaIndustrialService {
     return { ARR1, ARR2 };
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildDatosFederatarios(payload: any[]): FederatariosEncabezado[] {
+  reverseBuildDatosFederatarios(payload: unknown[]): FederatariosEncabezado[] {
     const RESULT: FederatariosEncabezado[] = [];
     for (const ELE of payload) {
+      const ELE_OBJ = ELE as {
+        nombreNotario?: string;
+        apellidoPaterno?: string;
+        apellidoMaterno?: string;
+        numeroActa?: string;
+        fechaActa?: string;
+        numeroNotaria?: string;
+        entidadFederativa?: string;
+        delegacionMunicipio?: string;
+      };
       RESULT.push({
-        nombre: ELE.nombreNotario ?? '',
-        primerApellido: ELE.apellidoPaterno ?? '',
-        segundoApellido: ELE.apellidoMaterno ?? '',
-        numeroDeActa: ELE.numeroActa ?? '',
-        fechaDelActa: ELE.fechaActa ?? '',
-        numeroDeNotaria: ELE.numeroNotaria ?? '',
-        estado: ELE.entidadFederativa ?? '',
-        estadoOptions: ELE.delegacionMunicipio ?? '',
-        entidadFederativa: ELE.entidadFederativa ?? '',
-        municipioODelegacion: ELE.delegacionMunicipio ?? '',
+        nombre: ELE_OBJ.nombreNotario ?? '',
+        primerApellido: ELE_OBJ.apellidoPaterno ?? '',
+        segundoApellido: ELE_OBJ.apellidoMaterno ?? '',
+        numeroDeActa: ELE_OBJ.numeroActa ?? '',
+        fechaDelActa: ELE_OBJ.fechaActa ?? '',
+        numeroDeNotaria: ELE_OBJ.numeroNotaria ?? '',
+        estado: ELE_OBJ.entidadFederativa ?? '',
+        estadoOptions: ELE_OBJ.delegacionMunicipio ?? '',
+        entidadFederativa: ELE_OBJ.entidadFederativa ?? '',
+        municipioODelegacion: ELE_OBJ.delegacionMunicipio ?? '',
         estadoUno: '',
         estadoDos: '',
         estadoTres: ''
@@ -882,141 +1012,192 @@ export class NuevoProgramaIndustrialService {
   }
 
   // Turn the merged payload back into the original array of plant objects
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildPlantas(payload: any[]): PlantasImmex[] {
+  reverseBuildPlantas(payload: unknown[]): PlantasImmex[] {
     const RESULT: PlantasImmex[] = [];
     for (const ELE of payload) {
+      const ELE_OBJ = ELE as {
+        idPlanta?: string;
+        calle?: string;
+        numeroExterior?: string;
+        numeroInterior?: string;
+        codigoPostal?: string;
+        localidad?: string;
+        colonia?: string;
+        delegacionMunicipio?: string;
+        entidadFederativa?: string;
+        pais?: string;
+        rfc?: string;
+        domicilioFiscal?: string;
+        razonSocial?: string;
+      };
       RESULT.push({
-        planta: ELE.idPlanta ?? '',
-        calle: ELE.calle ?? '',
-        numeroExterior: ELE.numeroExterior ?? '',
-        numeroInterior: ELE.numeroInterior ?? '',
-        codigoPostal: ELE.codigoPostal ?? '',
-        localidad: ELE.localidad ?? '',
-        colonia: ELE.colonia ?? '',
-        delegacionMunicipio: ELE.delegacionMunicipio ?? '',
-        entidadFederativa: ELE.entidadFederativa ?? '',
-        pais: ELE.pais ?? '',
-        registroFederalDeContribuyentes: ELE.rfc ?? '',
-        domicilioDelSolicitante: ELE.domicilioFiscal ?? '',
-        razonSocial: ELE.razonSocial ?? '',
+        planta: ELE_OBJ.idPlanta ?? '',
+        calle: ELE_OBJ.calle ?? '',
+        numeroExterior: ELE_OBJ.numeroExterior ?? '',
+        numeroInterior: ELE_OBJ.numeroInterior ?? '',
+        codigoPostal: ELE_OBJ.codigoPostal ?? '',
+        localidad: ELE_OBJ.localidad ?? '',
+        colonia: ELE_OBJ.colonia ?? '',
+        delegacionMunicipio: ELE_OBJ.delegacionMunicipio ?? '',
+        entidadFederativa: ELE_OBJ.entidadFederativa ?? '',
+        pais: ELE_OBJ.pais ?? '',
+        registroFederalDeContribuyentes: ELE_OBJ.rfc ?? '',
+        domicilioDelSolicitante: ELE_OBJ.domicilioFiscal ?? '',
+        razonSocial: ELE_OBJ.razonSocial ?? '',
       });
     }
     return RESULT;
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildPlantasSubmanufactureras(payload: any[]): PlantasSubfabricante[] {
+  reverseBuildPlantasSubmanufactureras(payload: unknown[]): PlantasSubfabricante[] {
     const RESULT: PlantasSubfabricante[] = [];
     for (const ELE of payload) {
+      const ELE_OBJ = ELE as {
+        empresaCalle?: string;
+        empresaNumeroInterior?: string;
+        empresaNumeroExterior?: string;
+        empresaCodigoPostal?: string;
+        localidad?: string;
+        empresaDelegacionMunicipio?: string;
+        empresaEntidadFederativa?: string;
+        empresaPais?: string;
+        rfc?: string;
+        domicilioFiscal?: string;
+        razonSocial?: string;
+      };
       RESULT.push({
-        calle: ELE.empresaCalle ?? '',
-        numInterior: ELE.empresaNumeroInterior ?? '',
-        numExterior: ELE.empresaNumeroExterior ?? '',
-        codigoPostal: ELE.empresaCodigoPostal ?? '',
-        colonia: ELE.localidad ?? '',
-        municipio: ELE.empresaDelegacionMunicipio ?? '',
-        entidadFederativa: ELE.empresaEntidadFederativa ?? '',
-        pais: ELE.empresaPais ?? '',
-        rfc: ELE.rfc ?? '',
-        domicilioFiscal: ELE.domicilioFiscal ?? '',
-        razonSocial: ELE.razonSocial ?? '',
+        calle: ELE_OBJ.empresaCalle ?? '',
+        numInterior: ELE_OBJ.empresaNumeroInterior !== undefined && ELE_OBJ.empresaNumeroInterior !== null && ELE_OBJ.empresaNumeroInterior !== ''
+          ? Number(ELE_OBJ.empresaNumeroInterior)
+          : 0,
+        numExterior: ELE_OBJ.empresaNumeroExterior !== undefined && ELE_OBJ.empresaNumeroExterior !== null && ELE_OBJ.empresaNumeroExterior !== ''
+          ? Number(ELE_OBJ.empresaNumeroExterior)
+          : 0,
+        codigoPostal: ELE_OBJ.empresaCodigoPostal !== undefined && ELE_OBJ.empresaCodigoPostal !== null && ELE_OBJ.empresaCodigoPostal !== ''
+          ? Number(ELE_OBJ.empresaCodigoPostal)
+          : 0,
+        colonia: ELE_OBJ.localidad ?? '',
+        municipio: ELE_OBJ.empresaDelegacionMunicipio ?? '',
+        entidadFederativa: ELE_OBJ.empresaEntidadFederativa ?? '',
+        pais: ELE_OBJ.empresaPais ?? '',
+        rfc: ELE_OBJ.rfc ?? '',
+        domicilioFiscal: ELE_OBJ.domicilioFiscal ?? '',
+        razonSocial: ELE_OBJ.razonSocial ?? '',
       });
     }
     return RESULT;
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildAnexoDos(items: any[]): any[] {
+  reverseBuildAnexoDos(items: unknown[]): AnexoDosEncabezado[] {
+    return items.map((built) => {
+      const ITEM = built as {
+        fraccionExportacion?: string;
+        fraccionImportacion?: string;
+        descFraccionImpo?: string;
+        claveFraccionAnexo?: string;
+        idProducto?: string;
+        fraccionDescripcionAnexo?: string;
+        fraccionValorMonedaAI?: string | number;
+        fraccionValorProdMI?: string | number;
+        categoriaFraccion?: string;
+        tipoFraccion?: string;
+        umt?: string;
+        fraccion?: string;
+        descripcionComercialImportacion?: string;
+        estatus?: boolean;
+      };
+      return {
+        encabezadoFraccionExportacion: ITEM.fraccionExportacion ?? '',
+        encabezadoFraccionImportacion: ITEM.fraccionImportacion ?? '',
+        encabezadoDescripcionComercial: ITEM.descFraccionImpo ?? '',
+        encabezadoAnexoII: ITEM.claveFraccionAnexo ?? '',
+        encabezadoIdProducto: ITEM.idProducto ?? '',
+        encabezadoFraccionDescripcionAnexo: ITEM.fraccionDescripcionAnexo ?? '',
+        encabezadoValorEnMonedaAnual: typeof ITEM.fraccionValorMonedaAI === 'string'
+          ? Number(ITEM.fraccionValorMonedaAI)
+          : ITEM.fraccionValorMonedaAI ?? 0,
+        encabezadoValorEnMonedaMensual: typeof ITEM.fraccionValorProdMI === 'string'
+          ? Number(ITEM.fraccionValorProdMI)
+          : ITEM.fraccionValorProdMI ?? 0,
+        encabezadoCategoria: ITEM.categoriaFraccion ?? '',
+        encabezadoTipo: ITEM.tipoFraccion ?? '',
+        encabezadoUmt: ITEM.umt ?? '',
+        encabezadoFraccion: ITEM.fraccion ?? '',
+        encabezadoDescripcionComercialImportacion: ITEM.descripcionComercialImportacion ?? '',
+        estatus: ITEM.estatus ?? true,
+      };
+    });
+  }
+
+  reverseBuildAnexoDosTres(items: unknown[]): AnexoEncabezado[] {
     return items.map((built) => ({
-      encabezadoFraccionExportacion: built.fraccionExportacion,
-      encabezadoFraccionImportacion: built.fraccionImportacion,
-      encabezadoDescripcionComercial: built.descFraccionImpo,
-      encabezadoAnexoII: built.claveFraccionAnexo,
-      encabezadoIdProducto: built.idProducto,
-      encabezadoFraccionDescripcionAnexo: built.fraccionDescripcionAnexo,
-      encabezadoValorEnMonedaAnual: built.fraccionValorMonedaAI,
-      encabezadoValorEnMonedaMensual: built.fraccionValorProdMI,
-      encabezadoCategoria: built.categoriaFraccion,
-      encabezadoTipo: built.tipoFraccion,
-      encabezadoUmt: built.umt,
+      encabezadoFraccion: (built as { descripcion?: string }).descripcion ?? '',
+      encabezadoDescripcion: (built as { descripcionTestado?: string }).descripcionTestado ?? '',
+      estatus: (built as { estatus?: boolean }).estatus ?? true,
     }));
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseBuildAnexoDosTres(items: any[]): AnexoEncabezado[] {
+  reverseBuildProveedorCliente(items: unknown[]): ProveedorClienteDatosTabla[] {
     return items.map((built) => ({
-      encabezadoFraccion: built.descripcion,
-      encabezadoDescripcion: built.descripcionTestado,
-      estatus: built.estatus ?? true, // Default to true if not present
+      idProveedor: (built as { idProveedor?: number }).idProveedor ?? 0,
+      paisOrigen: (built as { paisOrigen?: string }).paisOrigen ?? '',
+      rfcProveedor: (built as { rfcProveedor?: string }).rfcProveedor ?? '',
+      razonProveedor: (built as { razonProveedor?: string }).razonProveedor ?? '',
+      paisDestino: (built as { paisDestino?: string }).paisDestino ?? '',
+      rfcClinte: (built as { rfcCliente?: string }).rfcCliente ?? '',
+      razonSocial: (built as { razonCliente?: string }).razonCliente ?? '',
+      domicilio: (built as { domicilio?: string }).domicilio ?? '',
+      testado: (built as { testado?: boolean }).testado ?? false,
+      idProductoP: (built as { idProductoP?: number }).idProductoP ?? 0,
+      descTestado: (built as { descTestado?: string }).descTestado ?? '',
     }));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
-  reverseBuildProveedorCliente(items: any[]): ProveedorClienteDatosTabla[] {
-    return items.map((built) => ({
-      idProveedor: built.idProveedor,
-      paisOrigen: built.paisOrigen,
-      rfcProveedor: built.rfcProveedor,
-      razonProveedor: built.razonProveedor,
-      paisDestino: built.paisDestino,
-      rfcClinte: built.rfcCliente,
-      razonSocial: built.razonCliente,
-      domicilio: built.domicilio,
-      testado: built.testado,
-      idProductoP: built.idProductoP,
-      descTestado: built.descTestado,
-    }));
-  }
-
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-reverseProveedoresClientDos(items: any[]): ProveedorClienteTabla[] {
+reverseProveedoresClientDos(items: unknown[]): ProveedorClienteTabla[] {
   return items.map((built) => ({
-    idProveedor: built.idProveedor ?? 0,
-    paisOrigen: built.paisOrigen,
-    rfcProveedor: built.rfcProveedor,
-    razonProveedor: built.razonProveedor,
-    paisDestino: built.paisDestino,
-    rfcClinte: built.rfcCliente,
-    razonSocial: built.razonCliente,
-    domicilio: built.domicilio,
-    descTestado: built.descTestado,
-    testado: built.testado ?? false,
-    idProductoP: built.idProductoP ?? 0,
+    idProveedor: (built as { idProveedor?: number }).idProveedor ?? 0,
+    paisOrigen: (built as { paisOrigen?: string }).paisOrigen ?? '',
+    rfcProveedor: (built as { rfcProveedor?: string }).rfcProveedor ?? '',
+    razonProveedor: (built as { razonProveedor?: string }).razonProveedor ?? '',
+    paisDestino: (built as { paisDestino?: string }).paisDestino ?? '',
+    rfcClinte: (built as { rfcCliente?: string }).rfcCliente ?? '',
+    razonSocial: (built as { razonCliente?: string }).razonCliente ?? '',
+    domicilio: (built as { domicilio?: string }).domicilio ?? '',
+    descTestado: (built as { descTestado?: string }).descTestado ?? '',
+    testado: (built as { testado?: boolean }).testado ?? false,
+    idProductoP: (built as { idProductoP?: number }).idProductoP ?? 0,
   }));
 }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  reverseProyectoIMMEX(items: any[]): ProyectoImmexEncabezado[] {
+  reverseProyectoIMMEX(items: unknown[]): ProyectoImmexEncabezado[] {
     return items.map((built) => ({
-      encabezadoTipoDocument: built.tipoDocumento,
-      encabezadoDescripcionOtro: built.descripcion,
-      encabezadoFechaFirma: built.fechaFirma,
-      encabezadoFechaVigencia: built.fechaVigencia,
-      encabezadoRfc: built.rfcFirmante,
-      encabezadoRazonFirmante: built.razonFirmante,
-      testado: built.testado,
-      encabezadoFraccion: built.encabezadoFraccion ?? '',
-      estatus: built.estatus ?? true
+      encabezadoTipoDocument: (built as { tipoDocumento?: string }).tipoDocumento ?? '',
+      encabezadoDescripcionOtro: (built as { descripcion?: string }).descripcion ?? '',
+      encabezadoFechaFirma: (built as { fechaFirma?: string }).fechaFirma ?? '',
+      encabezadoFechaVigencia: (built as { fechaVigencia?: string }).fechaVigencia ?? '',
+      encabezadoRfc: (built as { rfcFirmante?: string }).rfcFirmante ?? '',
+      encabezadoRazonFirmante: (built as { razonFirmante?: string }).razonFirmante ?? '',
+      testado: (built as { testado?: boolean }).testado ?? false,
+      encabezadoFraccion: (built as { encabezadoFraccion?: string }).encabezadoFraccion ?? '',
+      estatus: (built as { estatus?: boolean }).estatus ?? true
     }));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
-  reverseBuildDatosParaNavegar(items: any): AnexoUnoEncabezado[] {
+  reverseBuildDatosParaNavegar(items: unknown): AnexoUnoEncabezado[] {
     return [
       {
-        encabezadoAnexoII: items.anexoII,
-        encabezadoTipo: items.tipo,
-        encabezadoCategoria: items.categoria,
-        encabezadoDescripcionComercial: items.descripcion,
-        encabezadoVolumenMensual: items.valorMensual,
-        encabezadoVolumenAnual: items.valorAnual,
-        encabezadoValorEnMonedaMensual: items.volumenMensual,
-        encabezadoValorEnMonedaAnual: items.volumenAnual,
-        encabezadoFraccion: items.fraccion ?? "",
-        encabezadoFraccionArancelaria: items.fraccionArancelaria ?? "",
-        encabezadoUmt: items.umt ?? "",
-        estatus: items.estatus ?? true,
+        encabezadoAnexoII: (items as { anexoII?: string }).anexoII ?? '',
+        encabezadoTipo: (items as { tipo?: string }).tipo ?? '',
+        encabezadoCategoria: (items as { categoria?: string }).categoria ?? '',
+        encabezadoDescripcionComercial: (items as { descripcion?: string }).descripcion ?? '',
+        encabezadoVolumenMensual: (items as { valorMensual?: number }).valorMensual ?? 0,
+        encabezadoVolumenAnual: (items as { valorAnual?: number }).valorAnual ?? 0,
+        encabezadoValorEnMonedaMensual: (items as { volumenMensual?: number }).volumenMensual ?? 0,
+        encabezadoValorEnMonedaAnual: (items as { volumenAnual?: number }).volumenAnual ?? 0,
+        encabezadoFraccion: (items as { fraccion?: string }).fraccion ?? '',
+        encabezadoFraccionArancelaria: (items as { fraccionArancelaria?: string }).fraccionArancelaria ?? '',
+        encabezadoUmt: (items as { umt?: string }).umt ?? '',
+        estatus: (items as { estatus?: boolean }).estatus ?? true,
       },
     ];
   }
