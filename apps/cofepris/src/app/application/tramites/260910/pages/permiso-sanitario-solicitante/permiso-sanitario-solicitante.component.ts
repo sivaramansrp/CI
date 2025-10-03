@@ -1,8 +1,12 @@
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
+import { ERROR_ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Solicitud260910Query } from '../../estados/tramites260910.query';
+import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -66,22 +70,46 @@ export class PermisoSanitarioSolicitanteComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-     * 
-     * Una cadena que representa la clase CSS para una alerta de información.
-     * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
-     */
-    public infoAlert = 'alert-info';
-  
-    /**
-     * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
-     */
-    TEXTOS = AVISO;
+   * Referencia al componente hijo `PasoUnoComponent`.
+   * Se utiliza para acceder a las propiedades y métodos del primer paso del wizard.
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   *
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO;
+
+  /**
+   * Asigna el mensaje de error de alerta al atributo `ALERTA`.
+   */
+  ALERTA = ERROR_ALERTA;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  /**
+   * Indica si el formulario es válido para proceder.
+   */
+  esValido: boolean = true;
 
   /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
    */
-  constructor() {
+  constructor(
+    public solicitud260910Store: Solicitud260910Store,
+    public solicitud260910Query: Solicitud260910Query
+  ) {
     // Constructor vacío, no requiere inicialización adicional.
   }
 
@@ -92,12 +120,36 @@ export class PermisoSanitarioSolicitanteComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor; // Actualiza el índice activo.
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente(); // Navega al paso siguiente.
-      } else {
-        this.wizardComponent.atras(); // Regresa al paso anterior.
+      if (this.indice === 1) {
+        const PAGO_DERECHOS_COMPONENT =
+          this.pasoUnoComponent.pagoDerechosComponent;
+        const SOLICITUD_DATOS_COMPONENT =
+          this.pasoUnoComponent.solicitudDatosComponent;
+
+        if (SOLICITUD_DATOS_COMPONENT?.solicitudForm.invalid) {
+          this.datosPasos.indice = 1;
+          SOLICITUD_DATOS_COMPONENT.solicitudForm.markAllAsTouched();
+          if (PAGO_DERECHOS_COMPONENT?.pagoDeDerechosForm.invalid) {
+            PAGO_DERECHOS_COMPONENT.esContinuarClicked = true;
+            PAGO_DERECHOS_COMPONENT.pagoDeDerechosForm.markAllAsTouched();
+          }
+          this.esValido = false;
+          return;
+        } else if (PAGO_DERECHOS_COMPONENT?.pagoDeDerechosForm.invalid) {
+          this.datosPasos.indice = 1;
+          PAGO_DERECHOS_COMPONENT.esContinuarClicked = true;
+          PAGO_DERECHOS_COMPONENT.pagoDeDerechosForm.markAllAsTouched();
+          this.esValido = false;
+          return;
+        }
       }
+    }
+
+    this.indice = e.valor; // Actualiza el índice activo.
+    if (e.accion === 'cont') {
+      this.wizardComponent.siguiente(); // Navega al paso siguiente.
+    } else {
+      this.wizardComponent.atras(); // Regresa al paso anterior.
     }
   }
 }

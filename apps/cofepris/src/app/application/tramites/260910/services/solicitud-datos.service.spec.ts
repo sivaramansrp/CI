@@ -129,7 +129,7 @@ describe('SolicitudDatosService', () => {
       rfc: 'FSU861012ABC',
       legalRazonSocial: 'FARMACÉUTICAS DEL SURESTE SA DE CV',
       apellidoPaterno: 'GÓMEZ',
-      apellidoMeterno: 'DELGADO',
+      apellidoMaterno: 'DELGADO',
       mercanciasDatos: [{
         clasificaionProductos: 'Farmacéutico',
         especificarProducto: 3,
@@ -291,7 +291,7 @@ describe('SolicitudDatosService', () => {
     expect(solicitudStoreMock.setRfc).toHaveBeenCalledWith(mockData.rfc);
     expect(solicitudStoreMock.setLegalRazonSocial).toHaveBeenCalledWith(mockData.legalRazonSocial);
     expect(solicitudStoreMock.setApellidoPaterno).toHaveBeenCalledWith(mockData.apellidoPaterno);
-    expect(solicitudStoreMock.setApellidoMeterno).toHaveBeenCalledWith(mockData.apellidoMeterno);
+    expect(solicitudStoreMock.setApellidoMaterno).toHaveBeenCalledWith(mockData.apellidoMaterno);
     expect(solicitudStoreMock.setMercanciasDatos).toHaveBeenCalledWith(mockData.mercanciasDatos);
     expect(solicitudStoreMock.setSCIANDatos).toHaveBeenCalledWith(mockData.SCIANDatos);
     expect(solicitudStoreMock.setManifesto).toHaveBeenCalledWith(mockData.manifesto);
