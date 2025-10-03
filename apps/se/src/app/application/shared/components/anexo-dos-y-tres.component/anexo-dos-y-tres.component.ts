@@ -412,4 +412,26 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     this.seleccionarTresTablaData = event;
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
   }
+
+  /**
+   * Convierte el texto a mayúsculas en tiempo real
+   * @param event Evento del input
+   * @param formulario Tipo de formulario ('anexoDos' o 'anexoTres')
+   */
+  convertirAMayusculas(event: Event, formulario: 'anexoDos' | 'anexoTres'): void {
+    const target = event.target as HTMLTextAreaElement;
+    const valorMayuscula = target.value.toUpperCase();
+    
+    if (formulario === 'anexoDos') {
+      this.anexoDosFormGroup.get('descripcion')?.setValue(valorMayuscula, { emitEvent: false });
+    } else if (formulario === 'anexoTres') {
+      this.anexoTresFormGroup.get('descripcion')?.setValue(valorMayuscula, { emitEvent: false });
+    }
+    
+    // Mantener la posición del cursor
+    const cursorPosition = target.selectionStart;
+    setTimeout(() => {
+      target.setSelectionRange(cursorPosition, cursorPosition);
+    });
+  }
 }
