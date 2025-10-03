@@ -14,7 +14,7 @@
 ></app-destinatario>
 
 <div>
-  <form [formGroup]="destinatarioForm">
+  <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="row">
         <ng-titulo titulo="Detalles del transporte" />
@@ -26,6 +26,7 @@
             formControlName="medioDeTransporte"
             (selectionChange)="medioDeTransporteSeleccion($event)"
           ></app-catalogo-select>
+          <!-- Only show error if Validators.required is present, which is not -->
         </div>
       </div>
     </div>
