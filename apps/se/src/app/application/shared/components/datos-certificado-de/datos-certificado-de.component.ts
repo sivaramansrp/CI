@@ -242,6 +242,8 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
  */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.cargarIdioma(this.idProcedimiento.toString());
+    this.cargarEntidadFederativa();
   }
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -365,6 +367,34 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   representacionFederalSeleccion(estado: Catalogo): void {
     this.representacionFederalSeleccionEvent.emit(estado);
+  }
+
+    /**
+   * Método para cargar la lista de idiomas desde el servicio global.
+   */
+  cargarIdioma(tramite: string): void {
+    this.catalogoServices
+      .catalogoIdioma(tramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data) => {
+          this.idiomaDatos = data.datos as Catalogo[];
+        }
+      );
+  }
+
+    /**
+   * Método para cargar la lista de entidades federativas desde el servicio global.
+   */
+  cargarEntidadFederativa(): void {
+    this.catalogoServices
+      .entidadesFederativasCatalogo(this.idProcedimiento.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data) => {
+          this.entidadFederativaDatos = data.datos as Catalogo[];
+        }
+      );
   }
 
   /**
