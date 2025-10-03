@@ -29,25 +29,38 @@
       }
       @case (2) {
       @if(esDatosRespuesta){
-      <app-certificado-origen></app-certificado-origen>
+       <app-certificado-origen
+          [hidden]="indice !== 2 || !esDatosRespuesta"
+          #CertificadoOrigenComponent>
+        </app-certificado-origen>
+
       }
       }
       @case (3) {
       @if(esDatosRespuesta){
-      <app-historico-productores></app-historico-productores>
+     <app-historico-productores
+          [hidden]="indice !== 3 || !esDatosRespuesta"
+          #HistoricoProductoresComponent>
+        </app-historico-productores>
       }
       }
       @case (4) {
       @if(esDatosRespuesta){
-      <app-destinatario></app-destinatario>
+    <app-destinatario
+          [hidden]="indice !== 4 || !esDatosRespuesta"
+          #DestinatarioComponent>
+        </app-destinatario>
       }
       }
       @case (5) {
       @if(esDatosRespuesta){
-      <app-datos-certificado></app-datos-certificado>
+      <app-datos-certificado
+          [hidden]="indice !== 5 || !esDatosRespuesta"
+          #DatosCertificadoComponent>
+        </app-datos-certificado>
       }
       }
-      }
+    }
     </ng-container>
   </div>
 </div>

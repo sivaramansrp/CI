@@ -16,6 +16,13 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   });
 
   /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectEstadosOpciones$ = this.select(
+    (state) => state.estadosOpciones
+  );
+
+  /**
    * Selecciona la información de registro del estado.
    */
   selectInfoRegistro$ = this.select((state) => state.infoRegistro);
@@ -174,6 +181,14 @@ export class Tramite80101Query extends Query<Tramite80101State> {
    */
   selectExportarTablsDatos$ = this.select(
     (state) => state.annexoUno.exportarDatosTabla
+  );
+
+  /**
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+
+  selectDatosFederatariosFormulario$ = this.select(
+    (state) => state.datosFederatarios
   );
 
   /**

@@ -96,11 +96,16 @@
             (change)="setValoresStore(pagoDeDerechosForm, 'fecPago'); validarFechaFutura('fecPago')"
             [ngClass]="{'is-invalid': mostrarErroresDeCampoPago && pagoDeDerechosForm.get('fecPago')?.invalid}"
           />
-        <span class="text-danger">
-          <small *ngIf="mostrarErroresDeCampoPago && pagoDeDerechosForm.get('fecPago')?.errors?.['custom']">
-            {{ pagoDeDerechosForm.get('fecPago')?.errors?.['custom'] }}
-          </small>
-      </span>
+          <span class="text-danger">
+              <small *ngIf="mostrarErroresDeCampoPago && pagoDeDerechosForm.get('fecPago')?.errors?.['custom']">
+                {{ pagoDeDerechosForm.get('fecPago')?.errors?.['custom'] }}
+              </small>
+          </span>
+          <span class="text-danger">
+            <small *ngIf="pagoDeDerechosForm.get('fecPago')?.errors?.['fechaLim']">
+              La fecha de pago debe ser menor o igual a la fecha actual.
+            </small>
+          </span>
       
         </div>
       </div>

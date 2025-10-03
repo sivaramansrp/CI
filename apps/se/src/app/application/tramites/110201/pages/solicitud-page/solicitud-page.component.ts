@@ -58,7 +58,6 @@ export class SolicitudPageComponent {
    */
   indice: number = 1;
 
-
   /**
     * @property {boolean} esFormaValido
     * @description
@@ -144,15 +143,15 @@ export class SolicitudPageComponent {
   }
 
   /**
-     * @method validarTodosFormulariosPasoUno
-     * @description
-     * Valida todos los formularios del componente `PasoUnoComponent`.
-     * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
-     * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
-     * Retorna `true` si todos los formularios son válidos.
-     *
-     * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
-     */
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
@@ -163,7 +162,6 @@ export class SolicitudPageComponent {
     }
     return true;
   }
-
 
   /**
    * Actualiza el estado de carga de archivo, permitiendo mostrar u ocultar el botón de continuar.

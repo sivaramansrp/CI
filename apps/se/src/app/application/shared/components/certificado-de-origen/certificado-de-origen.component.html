@@ -25,7 +25,7 @@
           <label class="form-label" for="nombres">
             Nombre(s)<span *ngIf="!requerida">*</span>:
           </label>
-          <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="25"
+          <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="50"
             (input)="onNombreInput($event)"
             (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')"
             [ngClass]="isValid(formCertificado, 'nombres') ? 'required' : ''" />
@@ -46,9 +46,9 @@
           <div class="form-group">
             <label class="form-label" for="primerApellido">Primer apellido<span
                 *ngIf="!requerida">*</span>:</label>
-            <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="15"
-              (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')"
-              [ngClass]="isValid(formCertificado, 'primerApellido') ? 'required' : ''" />
+            <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="50"
+              (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'primerApellido') ? 'required' : ''"/>
           </div>
           @if(formCertificado.controls['primerApellido'].invalid && (formCertificado.controls['primerApellido'].touched
           || formCertificado.controls['primerApellido'].dirty)) {
@@ -67,7 +67,7 @@
           <div class="form-group">
             <label class="form-label" for="segundoApellido">Segundo apellido:</label>
             <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
-              maxlength="15"
+              maxlength="50"
               (change)="setValoresStore('formCertificado','segundoApellido','setFormCertificadoGenric')" />
           </div>
           @if(formCertificado.controls['segundoApellido'].invalid &&
@@ -85,7 +85,7 @@
           <div class="form-group">
             <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
             <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
-              maxlength="30"
+              maxlength="32"
               (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" 
               [ngClass]="isValid(formCertificado, 'numeroDeRegistroFiscal') ? 'required' : ''" />
           </div>
@@ -109,9 +109,9 @@
             <label class="form-label" for="razonSocial">Razón social<span
                 *ngIf="!requerida">*</span>:</label>
             <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
-              (input)="onRazonSocialInput($event)"
-              (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')"
-              [ngClass]="isValid(formCertificado, 'razonSocial') ? 'required' : ''" />
+              (input)="onRazonSocialInput($event)" maxlength="250"
+              (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" 
+              [ngClass]="isValid(formCertificado, 'razonSocial') ? 'required' : ''"/>
           </div>
           @if(formCertificado.controls['razonSocial'].invalid && (formCertificado.controls['razonSocial'].touched ||
           formCertificado.controls['razonSocial'].dirty)) {
@@ -120,7 +120,7 @@
             <span class="mensaje-error">Este campo es obligatorio</span>
             }
             @if(formCertificado.controls['razonSocial'].errors?.['maxlength']) {
-            <span class="mensaje-error">Por favor, no escribas más de 200 caracteres</span>
+            <span class="mensaje-error">Por favor, no escribas más de 250 caracteres</span>
             }
           </div>
           }

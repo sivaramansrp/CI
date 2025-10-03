@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent, TablaSeleccion,doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -13,14 +13,18 @@ import {
 } from '../../../../shared/models/federatarios-y-plantas.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
 import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
 
@@ -124,6 +128,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
        */
       public nuevaUnoNotificacion!: Notificacion;
   /**
+   * Valor del estado seleccionado en el formulario.
+   * Se utiliza para almacenar y gestionar el estado actual seleccionado por el usuario.
+   */
+  public estadoValor: string = '';
+  /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
@@ -132,6 +141,7 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     private store: Tramite80102Store,
     private query: Tramite80102Query, private consultaQuery: ConsultaioQuery,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
+    private _complimentoSvc: ComplimentosService
     
       ) {
         this.consultaQuery.selectConsultaioState$
@@ -188,8 +198,24 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * @param {PlantasDisponibles[]} datos - Lista de plantas disponibles.
    * @returns {void}
    */
-  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
-    this.store.setPlantasDisponiblesTablaLista(datos);
+  setPlantasDisponiblesDatos(): void {
+    const PAYLOAD = {
+        "rfcEmpresaSubManufacturera": "AAL0409235E6",
+        "entidadFederativa": this.estadoValor,
+        "idPrograma": null
+    }
+    this._complimentoSvc.getPlantasDisponibles(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        if(esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if(esValidArray(API_DATOS.datos)) {
+            const DATOS: PlantasDisponibles[] = this._complimentoSvc.mapApiResponseToPlantasDisponibles(API_DATOS.datos);
+            this.store.setPlantasDisponiblesTablaLista(DATOS);
+          }
+        }
+      }, (error) => {
+        console.error('Error al obtener los plantas disponibles:', error);
+      });
   }
 
   /**
@@ -319,6 +345,62 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
   }
+
+  /**
+   * Actualiza la lista de montos de inversión en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `MontoDeInversion` que representa la nueva lista de montos de inversión.
+   */
+    obtenerMontosInversionList(event: MontoDeInversion[]): void {
+      this.store.setMontosDeInversionTablaDatos(event);
+    }
+    
+  /**
+   * Actualiza la lista de empleados directos en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `Directos` que representa la nueva lista de empleados directos.
+   */
+    obtenerEmpleadosList(event: Directos[]): void {
+      this.store.setEmpleadosTablaDatos(event);
+    }
+  
+  /**
+   * Actualiza la lista de complementos de planta en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `ComplementoDePlanta` que representa la nueva lista de complementos de planta.
+   */
+    obtenerComplementarPlantaList(event: ComplementoDePlanta[]): void {
+      this.store.setComplementarPlantaDatos(event);
+    }
+  
+  /**
+   * Actualiza la lista de firmantes (estado de complementar planta) utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `ComplementarPlantaState` que representa la nueva lista de firmantes.
+   */
+  obtenerFirmantesList(event: ComplementarPlantaState[]): void {
+      this.store.setComplementarPlantaState(event);
+    }
+
+  /**
+   * Establece los datos de los federatarios y actualiza el estado seleccionado.
+   * @param {FederatariosEncabezado} datos - Datos del encabezado de federatarios.
+   * @returns {void}
+   */
+  setDatosFederatarios(datos: FederatariosEncabezado): void {
+    this.estadoValor = datos.estadoUno;
+    this.store.setFederatariosCatalogo(datos);
+  }
+
+  /**
+     * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+     *
+     * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+     */
+    obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+      this.store.setCapacidadInstaladaTableLista(event);
+    }
+  
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones

@@ -1,30 +1,26 @@
-
 <div class="Page">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Validar por motivos técnicos el certificado EUR</h1>
-            </div>
-            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
-        </div>
-        <div class="row">
-            @switch (indice) {
-            @case (1) {
-           <app-datos></app-datos>
-            }
-            @case (2) {
-                <app-firmar-solicitud></app-firmar-solicitud>
-                
-                }
-            
-
-            }
-            <btn-continuar
-                  [datos]="datosPasos"
-                  (continuarEvento)="getValorIndice($event)"
-                >
-                </btn-continuar>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Validar por motivos técnicos el certificado EUR</h1>
+      </div>
+      <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
-
+    <div class="row">
+      @switch (indice) { @case (1) {
+      <app-datos></app-datos>
+      } @case (2) {
+      <paso-firma
+        [idSolicitud]="solicitudState.idSolicitud"
+        [procedure]="110203"
+        [procedureUrl]="'tecnicos/solicitante'"
+      ></paso-firma>
+      } }
+      <btn-continuar
+        [datos]="datosPasos"
+        (continuarEvento)="getValorIndice($event)"
+      >
+      </btn-continuar>
+    </div>
+  </div>
 </div>

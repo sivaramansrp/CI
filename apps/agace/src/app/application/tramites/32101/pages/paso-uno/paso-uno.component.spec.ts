@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+//@ts-nocheck
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -41,8 +41,8 @@ class SafeHtmlPipe implements PipeTransform {
 }
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: PasoUnoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -72,47 +72,39 @@ describe('PasoUnoComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });  
+  
+  it('should run #ngOnInit() with update false', () => {
+    // Setup simple mocks
+    component.consultaioQuery = {
+      selectConsultaioState$: of({ update: false })
+    };
+    
+    component.consultaDatos = { update: false };
+    
+    // Call ngOnInit
+    component.ngOnInit();
+    
+    // Simple assertion
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-it('should run #ngOnInit()', fakeAsync(() => {
-  const stateMock = { update: true };
-  const getDatosConsultaMockResponse = {
-    success: true,
-    datos: { solicitudFormulario: {} }
-  };
-
-  component.consultaioQuery = {
-    selectConsultaioState$: of(stateMock)
-  } as any;
-
-  component.consultaAvisoAcreditacionService = {
-    getDatosConsulta: jest.fn().mockReturnValue(of(getDatosConsultaMockResponse))
-  } as any;
-
-  component.store = {
-    setTipoDeInversion: jest.fn(),
-    setValorEnPesos: jest.fn(),
-    setDescripcionGeneral: jest.fn(),
-    setListaDeDocumentos: jest.fn(),
-    setManifiesto1: jest.fn(),
-    setManifiesto2: jest.fn(),
-    setManifiesto3: jest.fn(),
-    setClaveDeReferencia: jest.fn(),
-    setCadenaDeLaDependencia: jest.fn(),
-    setNumeroDeOperacion: jest.fn(),
-    setBanco: jest.fn(),
-    setLlaveDePago: jest.fn(),
-    setFechaInicialInput: jest.fn(),
-    setImporteDePago: jest.fn()
-  } as any;
-
-  const spy = jest.spyOn(component, 'fetchGetDatosConsulta');
-
-  component.ngOnInit();
-  tick();
-  expect(spy).toHaveBeenCalled();
-  expect(component.consultaAvisoAcreditacionService.getDatosConsulta).toHaveBeenCalled();
-}));
+  it('should run #ngOnInit() with update true', () => {
+    // Setup simple mocks
+    const fetchSpy = jest.spyOn(component, 'fetchGetDatosConsulta').mockImplementation(() => {});
+    
+    component.consultaioQuery = {
+      selectConsultaioState$: of({ update: true })
+    };
+    
+    component.consultaDatos = { update: true };
+    
+    // Call ngOnInit
+    component.ngOnInit();
+    
+    // Simple assertion
+    expect(fetchSpy).toHaveBeenCalled();
+  });
 
 it('should run #fetchGetDatosConsulta()', fakeAsync(() => {
   const solicitudFormulario = {
@@ -153,7 +145,8 @@ it('should run #fetchGetDatosConsulta()', fakeAsync(() => {
     setBanco: jest.fn(),
     setLlaveDePago: jest.fn(),
     setFechaInicialInput: jest.fn(),
-    setImporteDePago: jest.fn()
+    setImporteDePago: jest.fn(),
+    setComprobante: jest.fn()
   };
 
   component.fetchGetDatosConsulta();

@@ -55,7 +55,7 @@ export const ENCABEZADO_TABLA_DATOS: ConfiguracionColumna<DatosDeLaTabla>[] = [
   },
   {
     encabezado: 'Comprobante de pago',
-    clave: (artículo) => artículo.comprobanteDePago,
+    clave: (artículo) => artículo.comprobante,
     orden: 5,
   },
 ];

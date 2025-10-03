@@ -1,10 +1,11 @@
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 @Component({
@@ -14,12 +15,17 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './empresas-terciarizadaas.component.html',
   styleUrl: './empresas-terciarizadaas.component.scss',
 })
-export class EmpresasTerciarizadaasComponent implements OnDestroy {
+export class EmpresasTerciarizadaasComponent implements OnDestroy, OnInit {
 
+  public estadosCatalogo$!: Observable<Catalogo[]>;
+  
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
-    private tramite80101Store: Tramite80101Store
+    private tramite80104Store: Tramite80101Store, private tramite80104Query: Tramite80101Query
   ) {
-    this.obtenerListaEstado();
+  }
+
+  ngOnInit(): void {
+    this.estadosCatalogo$ = this.tramite80104Query.selectEstadosOpciones$;
   }
 
   /**
@@ -43,33 +49,18 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
     { encabezado: 'Domicilio fiscal del solicitante', clave: (item) => item.domicilioFiscalSolicitante, orden: 10 },
     { encabezado: 'Razón social', clave: (item) => item.razonSocial, orden: 11 },
   ];
-  /**
-   * Arreglo que contiene los estados disponibles en el catálogo.
-   * Cada elemento es de tipo `Catalogo`.
-   */
-  estadosCatalogo: Catalogo[] = [];
 
   actualizarSeleccionadas(event: DisponsibleFiscal[]): void {
    if (event) {
-    this.tramite80101Store.setSeleccionadas(event);
+    this.tramite80104Store.setSeleccionadas(event);
    }
   }
 
-  /**
-  * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
-  * @method obtenerListaEstado
-  */
-  obtenerListaEstado(): void {
-    this.nuevoProgramaIndustrialService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response) => {
-        if (response) {
-          this.estadosCatalogo = response.data;
-        }
-      });
+  actualizarEstados(event: Catalogo[]): void {
+    if (event) {
+      this.tramite80104Store.setEstadosOpciones(event);
+    }
   }
-
 
   /**
  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
