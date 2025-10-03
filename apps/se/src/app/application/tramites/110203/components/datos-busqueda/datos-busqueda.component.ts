@@ -145,6 +145,12 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
   tramites:string='110203';
 
   /** 
