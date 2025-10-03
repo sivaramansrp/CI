@@ -1,7 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Solicitud110207State,
+  Tramite110207Store,
+} from '../../state/Tramite110207.store';
+import { Subject, takeUntil } from 'rxjs';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { Tramite110207Query } from '../../state/Tramite110207.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -34,7 +40,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.
@@ -45,6 +51,22 @@ export class SolicitudPageComponent {
    * Índice del paso actual.
    */
   indice: number = 1;
+
+  /** Identificador numérico de la solicitud actual. */
+  idSolicitud: number = 0;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  solicitudState!: Solicitud110207State;
+
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Referencia al componente del asistente.
@@ -62,6 +84,31 @@ export class SolicitudPageComponent {
   };
 
   /**
+   * Constructor del componente.
+   *
+   * Inyecta los servicios necesarios para consultar y gestionar el estado
+   * del trámite **110207**.
+   * Al inicializarse, establece una suscripción al observable `selectSolicitud$`
+   * expuesto por el `Tramite110207Query`, con el fin de mantener sincronizada
+   * la propiedad local `solicitudState` en función de los cambios en el store.
+   *
+   * @param {Tramite110207Store} solicitudStore - Servicio `Store` que administra el estado global
+   *                                              del trámite 110207, permitiendo crear, actualizar
+   *                                              o resetear los valores del estado.
+   * @param {Tramite110207Query} tramiteQuery - Servicio `Query` que expone observables y selectores
+   */
+  constructor(
+    public solicitudStore: Tramite110207Store,
+    public tramiteQuery: Tramite110207Query
+  ) {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
+
+  /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
@@ -73,7 +120,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton):void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -82,5 +129,18 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+  /**
+   * Hook de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   *
+   * Su objetivo es limpiar los recursos utilizados durante la vida del componente,
+   * principalmente las suscripciones a observables.
+   * Para lograrlo, emite un valor (`next()`) y completa (`complete()`)
+   * el `Subject` `destroyNotifier$`, el cual se usa junto con `takeUntil`
+   * en las suscripciones RxJS.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

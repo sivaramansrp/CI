@@ -26,7 +26,6 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import radioOptionsNacional from '@libs/shared/theme/assets/json/120301/tipo-fabricantes-nacional.json';
@@ -40,6 +39,7 @@ import {
 } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FabricanteResponse } from '../../models/response/fabricantes-response.model';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 import { HistoricoFabricantesService } from '../../services/historicoFabricantes.service';
 
@@ -86,15 +86,30 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
   imports: [
     TituloComponent,
     CommonModule,
-    ReactiveFormsModule,
-    InputCheckComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
     ModalModule,
     NotificacionesComponent,
+    ReactiveFormsModule,
   ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
+  /**
+   * Información histórica de fabricantes proporcionada al componente.
+   * @input informacionHistorico
+   */
+  @Input()
+  informacionHistorico: FabricanteResponse[] = [];
+
+  /**
+   * Almacena los fabricantes que serán evaluados.
+   */
+  fabricantesEvaluar: FabricanteResponse[] = [];
+
+  /**
+   * Indica si se debe mostrar la evaluación de fabricantes.
+   */
+  visualizarEvaluacion: boolean = false;
 
   /**
    * Método para ver detalle de un fabricante (usado en pruebas)
@@ -496,6 +511,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * todas las suscripciones activas cuando el componente es destruido.
    */
   fabricante: HistoricoColumns[] = [];
+  fabricanteEvaluacion: HistoricoColumns[] = [];
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
@@ -635,6 +651,10 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
     if (this.formularioDeshabilitado) {
       this.historicoFabricantesForm.disable();
+      this.fabricantesEvaluar = this.informacionHistorico;
+      this.visualizarEvaluacion = true;
+      this.isFabricantes = false;
+      this.llenarTabla();
     }
 
     if (this.historicoState.exportadorFabricanteMismo) {
@@ -655,6 +675,19 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       this.fabricante = [...this.historicoState.listaFabricantes];
       this.isFabricantes = true;
     }
+  }
+
+  llenarTabla(): void {
+    this.informacionHistorico.forEach(fab => {
+      const FABRICANTE: HistoricoColumns = {
+        nombreFabricante: fab.nombre_fabricante ?? '',
+        numeroRegistroFiscal: fab.numero_registro_fiscal ?? '',
+        direccion: fab.direccion ?? '',
+        correoElectrónico: fab.correo_electronico ?? '',
+        telefono: fab.telefono ?? '',
+      };
+      this.fabricanteEvaluacion.push(FABRICANTE);
+    });
   }
 
   /**
@@ -936,7 +969,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
           if (resp.codigo === '00' && resp.datos) {
             this.isFabricantes = true;
             const FAB = resp.datos;
-
             // Mapear respuesta → HistoricoColumns
             const NUEVO_FABRICANTE: HistoricoColumns = {
               nombreFabricante: FAB.razon_social
@@ -949,12 +981,25 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
               correoElectrónico: FAB.correo_electronico ?? '',
               telefono: FAB.telefono ?? '',
             };
-
-            // Limpiar la tabla y agregar
-            this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
-            this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
-            this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
-            this.cancelar();
+            if (this.fabricante.length < 1) {
+              // Limpiar la tabla y agregar
+              this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
+              this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+              this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
+              this.cancelar();
+            }
+            else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'warning',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Ya existe un fabricante previamente seleccionado.',
+                cerrar: true,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
           } else {
             console.error('Error en la búsqueda:', resp.mensaje);
           }

@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, CatalogosService, CategoriaMensaje, Notificacion, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import { Tramite130120Query } from '../../estados/permiso-importacion.query';
 
 import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { FormValidationService } from '../../services/formValidation.service';
 
 /**
  * @component
@@ -105,7 +106,9 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     public catalogosServicios: CatalogosService,
     public permisoImportacionService: PermisoImportacionService,
     public consultaQuery: ConsultaioQuery,
-    private catalogosService: CatalogosTramiteService
+    private catalogosService: CatalogosTramiteService,
+    private cdr: ChangeDetectorRef,
+    private formValidation: FormValidationService
   ) { }
 
   /**
@@ -144,7 +147,7 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.datosRealizer = this.fb.group({
       regimen: [this.realizarState.datosRealizer.regimen, Validators.required],
-      classificion_regimen: [{ value: this.realizarState.datosRealizer.classificion_regimen || null, disabled: true }, Validators.required],
+      classificion_regimen: [this.realizarState.datosRealizer.classificion_regimen, Validators.required],
     });
   }
 
@@ -210,7 +213,6 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     } else {
       this.classificationRegimenOpciones = [];
       this.datosRealizer.get('classificion_regimen')?.reset();
-      this.datosRealizer.get('classificion_regimen')?.disable();
     }
   }
 
@@ -229,18 +231,22 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
           } else {
             this.classificationRegimenOpciones = [];
             this.datosRealizer.get('classificion_regimen')?.reset();
-            this.datosRealizer.get('classificion_regimen')?.disable();
           }
         },
         error: (err) => {
           console.error('Error al cargar clasificación de régimen', err);
           this.classificationRegimenOpciones = [];
           this.datosRealizer.get('classificion_regimen')?.reset();
-          this.datosRealizer.get('classificion_regimen')?.disable();
         }
       });
   }
-  
+
+  validarFormulario(): boolean {
+    this.formValidation.marcarFormularioComoTocado(this.datosRealizer);
+    this.cdr.detectChanges();
+    return this.datosRealizer.valid;
+  }
+
   /**
    * @method ngOnDestroy
    * @description Limpia las suscripciones activas cuando el componente es destruido.

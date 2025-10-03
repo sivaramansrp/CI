@@ -5,7 +5,14 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
-import { Subject, catchError, switchMap, takeUntil, throwError } from 'rxjs';
+import {
+  Subject,
+  catchError,
+  forkJoin,
+  switchMap,
+  takeUntil,
+  throwError,
+} from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
@@ -16,6 +23,7 @@ import { AcusesService } from '../../../core/services/120301/acuses.service';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/shared/documentos.service';
+import { DocumentosT231001Service } from '../../../core/services/shared/documentos-t231001.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -111,6 +119,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private documentosService: DocumentoService,
     private route: ActivatedRoute,
     private documentosService130118: DocumentosService,
+    private documentosService231001: DocumentosT231001Service,
     private acuseDetalleService: AcuseDetalleService,
     private acusesService: AcusesService
   ) {}
@@ -147,7 +156,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
-        80208, 80210, 80211,
+        80208, 80210, 80211, 110101,120301
       ].includes(this.procedure)
     ) {
       this.documentosService130118
@@ -181,30 +190,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           },
           error: (err) => console.error('Error:', err),
         });
-    } else if (this.url === 'elegibilidad-de-textiles') {
-      this.acusesService.guardarAcuse(this.idSolicitud.toString(), 120301).pipe(
-        switchMap(() => {
-          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), 120301);
-        }),
-        catchError((error) => {
-          console.error('Error en guardarAcuse o vistaPrevia:', error);
-          return throwError(() => error);
-        })
-      ).subscribe({
-        next: (response) => {
-          if (response?.datos) {
-            this.datosTablaAcuse = [{
-              id: 1,
-              documento: response.datos.nombre_archivo,
-              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-              idDocumento: '1'
-            }];
-          } else {
-            this.datosTablaAcuse = [];
-          }
-        },
-        error: (err) => console.error('Error:', err)
-      });
     } else if (this.url === 'aviso-de-materiales') {
       this.descargarDocumentoTramite231001();
     } else {
@@ -352,6 +337,14 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     this.base64Archivos(url, 'descargar');
   }
 
+
+
+  /**
+   * Método que maneja la navegación al salir del componente.
+   *
+   * Si no hay datos en la tabla, redirige a la selección de trámite.
+   * Si hay datos, redirige a la bandeja de tareas pendientes.
+   */
   salir(): void {
     if (this.datosTabla.length === 0) {
       this.router.navigate(['/seleccion-tramite']);
@@ -360,36 +353,76 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Descarga los documentos asociados al trámite 231001 (Aviso de Materiales).
+   */
   private descargarDocumentoTramite231001(): void {
-    this.documentosService130118
-      .guardarAcuse(this.idSolicitud.toString(), this.procedure)
+    const ID = this.idSolicitud.toString();
+
+  /**
+   * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+   */
+    const ACUSE_SOLICITUD = this.documentosService231001
+      .guardarDocumento(ID, this.procedure, true)
+      .pipe(
+        switchMap(() =>
+          this.documentosService231001.vistaPreviaDocumento(
+            ID,
+            this.procedure,
+            true
+          )
+        )
+      );
+
+  /**
+   * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
+   */
+    const CONSTANCIA_SOLICITUD = this.documentosService231001
+      .guardarDocumento(ID, this.procedure, false)
+      .pipe(
+        switchMap(() =>
+          this.documentosService231001.vistaPreviaDocumento(
+            ID,
+            this.procedure,
+            false
+          )
+        )
+      );
+
+  /**
+   * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
+   */
+    forkJoin([ACUSE_SOLICITUD, CONSTANCIA_SOLICITUD])
       .pipe(
         takeUntil(this.destroyed$),
-        switchMap(() => {
-          return this.documentosService130118.vistaPrevia(
-            this.idSolicitud.toString(),
-            this.procedure
-          );
-        }),
         catchError((error) => {
           console.error('Error en guardarAcuse o vistaPrevia:', error);
           return throwError(() => error);
         })
       )
       .subscribe({
-        next: (response) => {
-          if (response?.datos) {
-            this.datosTablaAcuse = [
-              {
-                id: 1,
-                documento: response.datos.nombre_archivo,
-                urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-                idDocumento: '1',
-              },
-            ];
-          } else {
-            this.datosTablaAcuse = [];
+        next: ([acuseResponse, constanciaResponse]) => {
+          const FILAS: BodyTablaAcuse[] = [];
+          let contador = 1;
+          if (acuseResponse?.datos) {
+            FILAS.push({
+              id: contador++,
+              documento: acuseResponse.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(acuseResponse.datos.contenido),
+              idDocumento: 'acuse',
+            });
           }
+          if (constanciaResponse?.datos) {
+            FILAS.push({
+              id: contador++,
+              documento: constanciaResponse.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(
+                constanciaResponse.datos.contenido
+              ),
+              idDocumento: 'constancia',
+            });
+          }
+          this.datosTablaAcuse = FILAS;
         },
         error: (err) => console.error('Error:', err),
       });

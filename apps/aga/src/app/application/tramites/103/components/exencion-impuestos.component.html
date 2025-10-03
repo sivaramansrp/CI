@@ -47,8 +47,8 @@
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-default" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
               (click)="editarFila(filaSeleccionada)">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
-              data-bs-toggle="modal" data-bs-target="#confirmarModalCancelar" (click)="prepararEliminarFila(filaSeleccionada)">Eliminar</button>
+            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filasSeleccionadas.length === 0"
+              data-bs-toggle="modal" data-bs-target="#confirmarModalCancelar" (click)="prepararEliminarFila()">Eliminar</button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()"
               [disabled]="soloLectura">Agregar</button>
@@ -227,7 +227,7 @@
                 </div>
                 }
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 seleccionar-desplegable">
                 <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía*'"
                   [required]="true" formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()"
                   name="condicionMercancia" [isDisabled]="soloLectura"></app-catalogo-select>
@@ -238,7 +238,7 @@
                 }
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-8">
                 <label for="cantidadComercial">Cantidad*:</label>
                 <input type="text" class="form-control" formControlName="cantidad" id="cantidad" maxlength="20" size="20"
@@ -263,7 +263,7 @@
                     <div class="text-danger small mt-1">Por favor, escribe un valor mayor o igual a 1</div>
                   }
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 seleccionar-desplegable">
                 <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida*'" [required]="true"
                   name="unidadMedida" formControlName="unidadMedida" (change)="unidadMedidaSeleccion()"
                   [isDisabled]="soloLectura"></app-catalogo-select>
@@ -274,7 +274,7 @@
                 }
               </div>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-4">
               <div class="col-md-4">
                 <label>
                   <input type="checkbox" id="vehiculo" formControlName="vehiculo" (change)="vehiculo()" />
@@ -282,7 +282,7 @@
                 </label>
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-4">
                 <label for="marca">Marca:</label>
                 <input type="text" class="form-control" formControlName="marca" id="marca" maxlength="100" size="30"
@@ -294,7 +294,7 @@
                 <div class="text-danger small mt-1">Este campo es obligatorio.</div>
                 }
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 seleccionar-desplegable">
                 <app-catalogo-select [catalogo]="ano" [label]="'Año'" name="ano" formControlName="ano" [required]="true"
                   (change)="anoSeleccion()" [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (agregarMercanciasForm.get('datosMercancia.vehiculo')?.value &&
@@ -316,7 +316,7 @@
                 }
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-8">
                 <label for="serie">Número de serie:</label>
                 <input type="text" class="form-control" formControlName="serie" id="serie" size="50" maxlength="25"
@@ -354,7 +354,6 @@
   <div class="modal-dialog modal-sm confirmar-modal-small" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <label>No se ha registrado ningún vehículo en el año fiscal 2025.</label>
@@ -372,9 +371,7 @@
   aria-hidden="true" #confirmarModalAgregar>
   <div class="modal-dialog modal-sm confirmar-modal-small" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" aria-label="Close" class="btn-close" (click)="cerrarModalManual()"></button>
-      </div>
+      <div class="modal-header"></div>
       <div class="modal-body">
         <label id="confirmarModalAgregarLabel">La mercancía fue agregada correctamente.</label>
       </div>
@@ -393,7 +390,7 @@
   <div class="modal-dialog modal-sm modal-cancelar confirmar-modal-large" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+        
       </div>
       <div class="modal-body">
         <label>¿Estás seguro que deseas eliminar los registros marcados?</label>
@@ -413,7 +410,6 @@
   <div class="modal-dialog modal-sm confirmar-modal-medium" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmarModalVehiculoLabel">Confirmación de Vehículo</h5>
       </div>
       <div class="modal-body">
         <p><strong>No se ha registrado ningún vehículo en el año fiscal 2025.</strong></p>

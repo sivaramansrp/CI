@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from "@libs/shared/data-access-user/src";
+import { AlertComponent, BtnContinuarComponent, PasoFirmaComponent, WizardComponent } from "@libs/shared/data-access-user/src";
 import { CommonModule } from "@angular/common";
 import { InicialmenteCertificadoOrigenRoutingModule } from "./inicialmente-certificado-origen-routing.module";
 import { NgModule } from "@angular/core";
@@ -20,7 +20,8 @@ import { ToastrService } from "ngx-toastr";
     WizardComponent,
     PasoUnoComponent,
     PasoTresComponent,
-    AlertComponent
+    AlertComponent,
+    PasoFirmaComponent
   ],
   exports: [],
   providers: [ToastrService]

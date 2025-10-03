@@ -9,23 +9,26 @@ import { StoreConfig } from '@datorama/akita';
 
 /**
  * Interfaz que define el estado del trámite 110214.
- * 
+ *
  * Esta interfaz incluye las propiedades necesarias para gestionar el estado del trámite,
  * como el paso activo, la pestaña activa, los datos del productor, las mercancías,
  * los grupos representativos, las direcciones, los receptores, y los datos relacionados
  * con tratados y fracciones arancelarias.
  */
 export interface Tramite110214State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * Paso activo del trámite.
-   * 
+   *
    * Indica el número del paso actual en el flujo del trámite.
    */
   pasoActivo: number;
 
   /**
    * Pestaña activa del trámite.
-   * 
+   *
    * Indica el índice de la pestaña activa en el flujo del trámite.
    */
   pestanaActiva: number;
@@ -106,20 +109,20 @@ export interface Tramite110214State {
   grupoTratado: GrupoTratado;
 
   /**
-     * Información del operador.
-     */
-    grupoOperador: GrupoOperador;
+   * Información del operador.
+   */
+  grupoOperador: GrupoOperador;
   /**
    * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos
    * @description Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
-   * 
+   *
    * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
    */
   mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
   /**
    * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos
    * @description Lista de mercancías disponibles para ser mostradas en la tabla de datos.
-   * 
+   *
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
@@ -153,19 +156,20 @@ export interface Tramite110214State {
 
 /**
  * Función para crear el estado inicial del trámite 110214.
- * 
+ *
  * Esta función devuelve un objeto con los valores predeterminados para el estado del trámite.
- * 
+ *
  * @returns {Tramite110214State} El estado inicial del trámite.
  */
 export function createInitialState(): Tramite110214State {
   return {
+    idSolicitud: 0,
     pasoActivo: 1,
     pestanaActiva: 1,
     asignarProductor: null,
     productorMismoExportador: false,
     agregarDatosProductorFormulario: {
-      numeroRegistroFiscal: ''
+      numeroRegistroFiscal: '',
     },
     datosConfidencialesProductor: false,
     grupoRepresentativo: {
@@ -222,13 +226,13 @@ export function createInitialState(): Tramite110214State {
       fechaFinalInput: '',
       fechaInicialInput: '',
     },
-     grupoOperador: {
-       nombreTercerOperador: '',
-       primerApellidoTercerOperador: '',
-       segundoApellidoTercerOperador: '',
-       registroFiscalTercerOperador: '',
-       razonSocialTercerOperador: '',
-     },
+    grupoOperador: {
+      nombreTercerOperador: '',
+      primerApellidoTercerOperador: '',
+      segundoApellidoTercerOperador: '',
+      registroFiscalTercerOperador: '',
+      razonSocialTercerOperador: '',
+    },
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
     productoresExportador: [],
@@ -243,11 +247,10 @@ export function createInitialState(): Tramite110214State {
     },
     optionsTipoFactura: []
   };
- 
 }
 /**
  * Servicio para validar inicialmente los datos del certificado en el trámite 110214.
- * 
+ *
  * Este servicio proporciona métodos para obtener información necesaria para el trámite,
  * como idiomas, entidades federativas, representaciones federales, mercancías disponibles,
  * mercancías seleccionadas, productores por exportador, tratados y países.
@@ -257,19 +260,30 @@ export function createInitialState(): Tramite110214State {
 })
 @StoreConfig({ name: 'tramite110214', resettable: true })
 export class Tramite110214Store extends Store<Tramite110214State> {
-
   /**
- * Constructor del store.
- * 
- * Inicializa el estado del trámite 110214 con los valores predeterminados definidos en `createInitialState`.
- */
+   * Constructor del store.
+   *
+   * Inicializa el estado del trámite 110214 con los valores predeterminados definidos en `createInitialState`.
+   */
   constructor() {
     super(createInitialState());
   }
 
   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
    * Actualiza el paso activo del trámite.
-   * 
+   *
    * @param {number} pasoActivo - El número del paso activo en el flujo del trámite.
    */
   public setPasoActivo(pasoActivo: number): void {
@@ -281,7 +295,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la pestaña activa del trámite.
-   * 
+   *
    * @param {number} pestanaActiva - El índice de la pestaña activa en el flujo del trámite.
    */
   public setPestanaActiva(pestanaActiva: number): void {
@@ -293,7 +307,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la lista de productores asignados.
-   * 
+   *
    * @param {SeleccionadasTabla[]} asignarProductor - Lista de productores asignados.
    */
   public setAsignarProductor(asignarProductor: SeleccionadasTabla[]): void {
@@ -305,7 +319,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza si el productor es el mismo que el exportador.
-   * 
+   *
    * @param {boolean} productorMismoExportador - Indica si el productor es el mismo que el exportador.
    */
   public setProductorMismoExportador(productorMismoExportador: boolean): void {
@@ -317,22 +331,29 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el número de registro fiscal del productor en el formulario.
-   * 
+   *
    * @param {string} numeroRegistroFiscal - Número de registro fiscal del productor.
    */
-  public setAgregarDatosProductorNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
+  public setAgregarDatosProductorNumeroRegistroFiscal(
+    numeroRegistroFiscal: string
+  ): void {
     this.update((state) => ({
       ...state,
-      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, numeroRegistroFiscal },
+      agregarDatosProductorFormulario: {
+        ...state.agregarDatosProductorFormulario,
+        numeroRegistroFiscal,
+      },
     }));
   }
 
   /**
    * Actualiza si los datos del productor son confidenciales.
-   * 
+   *
    * @param {boolean} datosConfidencialesProductor - Indica si los datos del productor son confidenciales.
    */
-  public setDatosConfidencialesProductor(datosConfidencialesProductor: boolean): void {
+  public setDatosConfidencialesProductor(
+    datosConfidencialesProductor: boolean
+  ): void {
     this.update((state) => ({
       ...state,
       datosConfidencialesProductor,
@@ -341,7 +362,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el lugar del grupo representativo.
-   * 
+   *
    * @param {string} lugar - Lugar del grupo representativo.
    */
   public setGrupoRepresentativoLugar(lugar: string): void {
@@ -353,10 +374,12 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el nombre del exportador en el grupo representativo.
-   * 
+   *
    * @param {string} nombreExportador - Nombre del exportador.
    */
-  public setGrupoRepresentativoNombreExportador(nombreExportador: string): void {
+  public setGrupoRepresentativoNombreExportador(
+    nombreExportador: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo: { ...state.grupoRepresentativo, nombreExportador },
@@ -365,7 +388,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la empresa del grupo representativo.
-   * 
+   *
    * @param {string} empresa - Nombre de la empresa.
    */
   public setGrupoRepresentativoEmpresa(empresa: string): void {
@@ -377,7 +400,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el cargo del grupo representativo.
-   * 
+   *
    * @param {string} cargo - Cargo del grupo representativo.
    */
   public setGrupoRepresentativoCargo(cargo: string): void {
@@ -389,7 +412,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el teléfono del grupo representativo.
-   * 
+   *
    * @param {string} telefono - Teléfono del grupo representativo.
    */
   public setGrupoRepresentativoTelefono(telefono: string): void {
@@ -401,10 +424,12 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el correo electrónico del grupo representativo.
-   * 
+   *
    * @param {string} correoElectronico - Correo electrónico del grupo representativo.
    */
-  public setGrupoRepresentativoCorreoElectronico(correoElectronico: string): void {
+  public setGrupoRepresentativoCorreoElectronico(
+    correoElectronico: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo: { ...state.grupoRepresentativo, correoElectronico },
@@ -413,7 +438,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la ciudad del grupo de direcciones.
-   * 
+   *
    * @param {string} ciudad - Ciudad del grupo de direcciones.
    */
   public setGrupoDeDireccionesCiudad(ciudad: string): void {
@@ -425,7 +450,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la calle del grupo de direcciones.
-   * 
+   *
    * @param {string} calle - Calle del grupo de direcciones.
    */
   public setGrupoDeDireccionesCalle(calle: string): void {
@@ -435,10 +460,10 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     }));
   }
   /**
- * Actualiza el número o letra del grupo de direcciones.
- * 
- * @param {string} numeroLetra - Número o letra del grupo de direcciones.
- */
+   * Actualiza el número o letra del grupo de direcciones.
+   *
+   * @param {string} numeroLetra - Número o letra del grupo de direcciones.
+   */
   public setGrupoDeDireccionesNumeroLetra(numeroLetra: string): void {
     this.update((state) => ({
       ...state,
@@ -448,7 +473,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el teléfono del grupo de direcciones.
-   * 
+   *
    * @param {string} telefono - Teléfono del grupo de direcciones.
    */
   public setGrupoDeDireccionesTelefono(telefono: string): void {
@@ -460,10 +485,12 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el correo electrónico del grupo de direcciones.
-   * 
+   *
    * @param {string} correoElectronico - Correo electrónico del grupo de direcciones.
    */
-  public setGrupoDeDireccionesCorreoElectronico(correoElectronico: string): void {
+  public setGrupoDeDireccionesCorreoElectronico(
+    correoElectronico: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoDeDirecciones: { ...state.grupoDeDirecciones, correoElectronico },
@@ -472,7 +499,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza si hay un tercer operador involucrado.
-   * 
+   *
    * @param {boolean} tercerOperador - Indica si hay un tercer operador.
    */
   public setTercerOperador(tercerOperador: boolean): void {
@@ -484,7 +511,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el período del trámite.
-   * 
+   *
    * @param {string} blnPeriodo - Período del trámite.
    */
   public setPeriodo(blnPeriodo: string): void {
@@ -496,7 +523,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el nombre del grupo receptor.
-   * 
+   *
    * @param {string} nombre - Nombre del grupo receptor.
    */
   public setGrupoReceptorNombre(nombre: string): void {
@@ -508,7 +535,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el primer apellido del grupo receptor.
-   * 
+   *
    * @param {string} apellidoPrimer - Primer apellido del grupo receptor.
    */
   public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
@@ -520,7 +547,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el segundo apellido del grupo receptor.
-   * 
+   *
    * @param {string} apellidoSegundo - Segundo apellido del grupo receptor.
    */
   public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
@@ -532,7 +559,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el número fiscal del grupo receptor.
-   * 
+   *
    * @param {string} numeroFiscal - Número fiscal del grupo receptor.
    */
   public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
@@ -544,7 +571,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la razón social del grupo receptor.
-   * 
+   *
    * @param {string} razonSocial - Razón social del grupo receptor.
    */
   public setGrupoReceptorRazonSocial(razonSocial: string): void {
@@ -556,7 +583,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la representación federal seleccionada.
-   * 
+   *
    * @param {string} representacionFederal - Representación federal seleccionada.
    */
   public setRepresentacionFederal(representacionFederal: string): void {
@@ -568,7 +595,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza las observaciones relacionadas con el trámite.
-   * 
+   *
    * @param {string} observaciones - Observaciones del trámite.
    */
   public setObservaciones(observaciones: string): void {
@@ -580,7 +607,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la entidad federativa seleccionada.
-   * 
+   *
    * @param {string} entidadFederativa - Entidad federativa seleccionada.
    */
   public setEntidadFederativa(entidadFederativa: string): void {
@@ -592,7 +619,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el idioma seleccionado.
-   * 
+   *
    * @param {string} idioma - Idioma seleccionado.
    */
   public setIdioma(idioma: string): void {
@@ -604,31 +631,41 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la fracción arancelaria de la mercancía.
-   * 
+   *
    * @param {string} fraccionMercanciaArancelaria - Fracción arancelaria de la mercancía.
    */
-  public setFraccionMercanciaArancelaria(fraccionMercanciaArancelaria: string): void {
+  public setFraccionMercanciaArancelaria(
+    fraccionMercanciaArancelaria: string
+  ): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, fraccionMercanciaArancelaria },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        fraccionMercanciaArancelaria,
+      },
     }));
   }
 
   /**
    * Actualiza el nombre comercial de la mercancía.
-   * 
+   *
    * @param {string} nombreComercialDelaMercancia - Nombre comercial de la mercancía.
    */
-  public setNombreComercialDelaMercancia(nombreComercialDelaMercancia: string): void {
+  public setNombreComercialDelaMercancia(
+    nombreComercialDelaMercancia: string
+  ): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, nombreComercialDelaMercancia },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        nombreComercialDelaMercancia,
+      },
     }));
   }
 
   /**
    * Actualiza el nombre técnico de la mercancía.
-   * 
+   *
    * @param {string} nombreTecnico - Nombre técnico de la mercancía.
    */
   public setNombreTecnico(nombreTecnico: string): void {
@@ -640,7 +677,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el nombre en inglés de la mercancía.
-   * 
+   *
    * @param {string} nombreEnIngles - Nombre en inglés de la mercancía.
    */
   public setNombreEnIngles(nombreEnIngles: string): void {
@@ -652,31 +689,37 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el criterio de trato preferencial de la mercancía.
-   * 
+   *
    * @param {string} criterioTratoPreferencial - Criterio de trato preferencial.
    */
   public setCriterioTratoPreferencial(criterioTratoPreferencial: string): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, criterioTratoPreferencial },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        criterioTratoPreferencial,
+      },
     }));
   }
 
   /**
    * Actualiza el valor de contenido regional de la mercancía.
-   * 
+   *
    * @param {string} valorContenidoRegional - Valor de contenido regional.
    */
   public setValorContenidoRegional(valorContenidoRegional: string): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, valorContenidoRegional },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        valorContenidoRegional,
+      },
     }));
   }
 
   /**
    * Actualiza otras instancias relacionadas con la mercancía.
-   * 
+   *
    * @param {string} otrasInstancias - Otras instancias relacionadas.
    */
   public setOtrasInstancias(otrasInstancias: string): void {
@@ -688,7 +731,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la cantidad de la mercancía.
-   * 
+   *
    * @param {string} cantidad - Cantidad de la mercancía.
    */
   public setCantidad(cantidad: string): void {
@@ -700,7 +743,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el país relacionado con la mercancía.
-   * 
+   *
    * @param {string} pais - País relacionado con la mercancía.
    */
   public setPais(pais: string): void {
@@ -712,7 +755,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el valor de la mercancía.
-   * 
+   *
    * @param {string} valorDelaMercancia - Valor de la mercancía.
    */
   public setValorDelaMercancia(valorDelaMercancia: string): void {
@@ -722,20 +765,25 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     }));
   }
   /**
-  * Actualiza el complemento de la descripción de la mercancía.
-  * 
-  * @param {string} complementoDelaDescripcion - Complemento de la descripción de la mercancía.
-  */
-  public setComplementoDelaDescripcion(complementoDelaDescripcion: string): void {
+   * Actualiza el complemento de la descripción de la mercancía.
+   *
+   * @param {string} complementoDelaDescripcion - Complemento de la descripción de la mercancía.
+   */
+  public setComplementoDelaDescripcion(
+    complementoDelaDescripcion: string
+  ): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, complementoDelaDescripcion },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        complementoDelaDescripcion,
+      },
     }));
   }
 
   /**
    * Actualiza el número de factura de la mercancía.
-   * 
+   *
    * @param {string} numeroFactura - Número de factura de la mercancía.
    */
   public setNumeroFactura(numeroFactura: string): void {
@@ -747,7 +795,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el tipo de factura de la mercancía.
-   * 
+   *
    * @param {string} tipoFactura - Tipo de factura de la mercancía.
    */
   public setTipoFactura(tipoFactura: string): void {
@@ -759,7 +807,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la fecha relacionada con la mercancía.
-   * 
+   *
    * @param {string} fecha - Fecha relacionada con la mercancía.
    */
   public setFecha(fecha: string): void {
@@ -771,7 +819,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el número de serie de la mercancía.
-   * 
+   *
    * @param {string} numeroSerie - Número de serie de la mercancía.
    */
   public setNumeroSerie(numeroSerie: string): void {
@@ -783,7 +831,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el tratado del grupo tratado.
-   * 
+   *
    * @param {string} tratado - Tratado del grupo tratado.
    */
   public setGrupoTratadoTratado(tratado: string): void {
@@ -795,7 +843,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el país del grupo tratado.
-   * 
+   *
    * @param {string} pais - País del grupo tratado.
    */
   public setGrupoTratadoPais(pais: string): void {
@@ -807,7 +855,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el grupo tratado completo.
-   * 
+   *
    * @param {GrupoTratado} grupoTratado - Objeto completo del grupo tratado.
    */
   public setGrupoTratado(grupoTratado: GrupoTratado): void {
@@ -819,7 +867,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la fracción arancelaria del grupo tratado.
-   * 
+   *
    * @param {string} fraccionArancelaria - Fracción arancelaria del grupo tratado.
    */
   public setGrupoTratadoFraccionArancelaria(fraccionArancelaria: string): void {
@@ -831,7 +879,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el número de registro del grupo tratado.
-   * 
+   *
    * @param {string} numeroRegistro - Número de registro del grupo tratado.
    */
   public setGrupoTratadoNumeroRegistro(numeroRegistro: string): void {
@@ -843,7 +891,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza el nombre comercial del grupo tratado.
-   * 
+   *
    * @param {string} nombreComercial - Nombre comercial del grupo tratado.
    */
   public setGrupoTratadoNombreComercial(nombreComercial: string): void {
@@ -855,7 +903,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la fecha final del grupo tratado.
-   * 
+   *
    * @param {string} fechaFinalInput - Fecha final del grupo tratado.
    */
   public setGrupoTratadoFechaFinalInput(fechaFinalInput: string): void {
@@ -867,7 +915,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
 
   /**
    * Actualiza la fecha inicial del grupo tratado.
-   * 
+   *
    * @param {string} fechaInicialInput - Fecha inicial del grupo tratado.
    */
   public setGrupoTratadoFechaInicialInput(fechaInicialInput: string): void {
@@ -879,11 +927,11 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * @method setGrupoReceptor
    * @description Actualiza la información del receptor en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del receptor en el grupo receptor del estado.
-   * 
+   *
    * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
-   * 
+   *
    * @returns {void}
    */
   public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
@@ -895,11 +943,11 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * @method setGrupoDeDirecciones
    * @description Actualiza la información de las direcciones del receptor en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del grupo de direcciones en el estado del trámite.
-   * 
+   *
    * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
-   * 
+   *
    * @returns {void}
    */
   public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
@@ -911,30 +959,34 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * @method setGrupoRepresentativo
    * @description Actualiza la información representativa del trámite en el estado.
-   * 
+   *
    * Este método permite establecer los datos del grupo representativo en el estado del trámite.
-   * 
+   *
    * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene la información representativa a actualizar.
-   * 
+   *
    * @returns {void}
    */
-  public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+  public setGrupoRepresentativo(
+    grupoRepresentativo: GrupoRepresentativo
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo,
     }));
   }
   /**
-  * @method setMercanciaTablaDatos
-  * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
-  * 
-  * Este método permite establecer las mercancías seleccionadas por el usuario en la tabla de datos.
-  * 
-  * @param {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el estado.
-  * 
-  * @returns {void}
-  */
-  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+   * @method setMercanciaTablaDatos
+   * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
+   *
+   * Este método permite establecer las mercancías seleccionadas por el usuario en la tabla de datos.
+   *
+   * @param {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el estado.
+   *
+   * @returns {void}
+   */
+  public setMercanciaTablaDatos(
+    mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       mercanciaSeleccionadasTablaDatos,
@@ -943,14 +995,16 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * @method setMercanciaDisponsiblesTablaDatos
    * @description Actualiza la lista de mercancías disponibles en la tabla de datos del estado del trámite.
-   * 
+   *
    * Este método permite establecer las mercancías disponibles para ser seleccionadas por el usuario en la tabla de datos.
-   * 
+   *
    * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles a actualizar en el estado.
-   * 
+   *
    * @returns {void}
    */
-  public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+  public setMercanciaDisponsiblesTablaDatos(
+    mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       mercanciaDisponsiblesTablaDatos,
@@ -959,14 +1013,16 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * @method setProductoresExportador
    * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos de los productores asociados al exportador.
-   * 
+   *
    * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
-   * 
+   *
    * @returns {void}
    */
-  public setProductoresExportador(productoresExportador: HistoricoColumnas[]): void {
+  public setProductoresExportador(
+    productoresExportador: HistoricoColumnas[]
+  ): void {
     this.update((state) => ({
       ...state,
       productoresExportador,
@@ -975,77 +1031,86 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * @method setHistoricoMercanciaSeleccionadasTablaDatos
    * @description Actualiza el historial de mercancías seleccionadas en la tabla de datos del estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del historial de mercancías seleccionadas por el usuario.
-   * 
+   *
    * @param {SeleccionadasTabla[]} historicoMercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el historial.
-   * 
+   *
    * @returns {void}
    */
-  public setHistoricoMercanciaSeleccionadasTablaDatos(historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+  public setHistoricoMercanciaSeleccionadasTablaDatos(
+    historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       historicoMercanciaSeleccionadasTablaDatos,
     }));
-  }/**
- * Actualiza el nombre del tercer operador.
- * 
- * @param {string} nombreTercerOperador - Nombre del tercer operador.
- */
-public setNombreTercerOperador(nombreTercerOperador: string): void {
-  this.update((state) => ({
-    ...state,
-    nombreTercerOperador,
-  }));
-}
+  }
+  /**
+   * Actualiza el nombre del tercer operador.
+   *
+   * @param {string} nombreTercerOperador - Nombre del tercer operador.
+   */
+  public setNombreTercerOperador(nombreTercerOperador: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreTercerOperador,
+    }));
+  }
 
-/**
-* Actualiza el primer apellido del tercer operador.
-* 
-* @param {string} primerApellidoTercerOperador - Primer apellido del tercer operador.
-*/
-public setPrimerApellidoTercerOperador(primerApellidoTercerOperador: string): void {
-  this.update((state) => ({
-    ...state,
-    primerApellidoTercerOperador,
-  }));
-}
+  /**
+   * Actualiza el primer apellido del tercer operador.
+   *
+   * @param {string} primerApellidoTercerOperador - Primer apellido del tercer operador.
+   */
+  public setPrimerApellidoTercerOperador(
+    primerApellidoTercerOperador: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      primerApellidoTercerOperador,
+    }));
+  }
 
-/**
-* Actualiza el segundo apellido del tercer operador.
-* 
-* @param {string} segundoApellidoTercerOperador - Segundo apellido del tercer operador.
-*/
-public setSegundoApellidoTercerOperador(segundoApellidoTercerOperador: string): void {
-  this.update((state) => ({
-    ...state,
-    segundoApellidoTercerOperador,
-  }));
-}
+  /**
+   * Actualiza el segundo apellido del tercer operador.
+   *
+   * @param {string} segundoApellidoTercerOperador - Segundo apellido del tercer operador.
+   */
+  public setSegundoApellidoTercerOperador(
+    segundoApellidoTercerOperador: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      segundoApellidoTercerOperador,
+    }));
+  }
 
-/**
-* Actualiza el registro fiscal del tercer operador.
-* 
-* @param {string} registroFiscalTercerOperador - Registro fiscal del tercer operador.
-*/
-public setRegistroFiscalTercerOperador(registroFiscalTercerOperador: string): void {
-  this.update((state) => ({
-    ...state,
-    registroFiscalTercerOperador,
-  }));
-}
+  /**
+   * Actualiza el registro fiscal del tercer operador.
+   *
+   * @param {string} registroFiscalTercerOperador - Registro fiscal del tercer operador.
+   */
+  public setRegistroFiscalTercerOperador(
+    registroFiscalTercerOperador: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      registroFiscalTercerOperador,
+    }));
+  }
 
-/**
-* Actualiza la razón social del tercer operador.
-* 
-* @param {string} razonSocialTercerOperador - Razón social del tercer operador.
-*/
-public setRazonSocialTercerOperador(razonSocialTercerOperador: string): void {
-  this.update((state) => ({
-    ...state,
-    razonSocialTercerOperador,
-  }));
-}
+  /**
+   * Actualiza la razón social del tercer operador.
+   *
+   * @param {string} razonSocialTercerOperador - Razón social del tercer operador.
+   */
+  public setRazonSocialTercerOperador(razonSocialTercerOperador: string): void {
+    this.update((state) => ({
+      ...state,
+      razonSocialTercerOperador,
+    }));
+  }
 
 /**
 * Actualiza el grupo operador completo.
