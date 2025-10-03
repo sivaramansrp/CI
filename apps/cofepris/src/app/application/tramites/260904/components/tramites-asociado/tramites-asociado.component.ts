@@ -1,5 +1,5 @@
 // Importaciones necesarias de Angular y otros módulos.
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Asociados } from '../../modelos/tramites-asociados.model';
@@ -26,6 +26,9 @@ import { TramitesAsociadosService } from '../../services/tramites-asociados.serv
   styleUrl: './tramites-asociado.component.scss', // Ruta al archivo SCSS para los estilos.
 })
 export class TramitesAsociadoComponent implements OnInit, OnDestroy {
+    @Input() disabled: boolean = false;
+  @Input() tipoTramite?: string;
+
  
   /**
    * Configuración de las columnas de la tabla dinámica.
@@ -88,6 +91,17 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
       this.acuseTablaDatos = data; // Asigna los datos obtenidos a la tabla dinámica.
     });
   }
+
+ // eslint-disable-next-line class-methods-use-this
+public validateRequiredFields(): boolean {
+  // No required fields in this component
+  return true;
+}
+
+// eslint-disable-next-line class-methods-use-this
+public markAllFieldsTouched(): void {
+  // No fields to mark as touched in this component
+}
  
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.

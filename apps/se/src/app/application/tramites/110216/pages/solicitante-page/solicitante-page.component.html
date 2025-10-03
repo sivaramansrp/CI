@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <h3>Registro del codigo alfanumerico armonizado del transportista</h3>
+        <h3>Validar inicialmente el certificado de Japón</h3>
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
@@ -10,7 +10,7 @@
       @switch (indice) { @case (1) {
       <app-paso-uno></app-paso-uno>
       } @case (2) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110216" [procedureUrl]="'inicialmente-certificado-origen/solicitante'"></paso-firma>
       }
       }
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>

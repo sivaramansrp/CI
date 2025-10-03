@@ -16,6 +16,8 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
+import { TABLADECONFIGUACIONFUNCIONARIO, TABLADECONFIGUACIONSOLICITANTE } from '../../../core/enums/bandeja-de-solicitudes-funcionario-solicitante.enum';
+
 
 /**
  * Interfaz base para los elementos de la bandeja.
@@ -260,7 +262,10 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       ]);
     } else if(ORIGIN === 'CONFIRMAR_NOTIFICACION_RESOLUCION' && this.tramiteData[0].tramite === 130118 || ORIGIN === 'ConfirmarNotificacionRes') {
       this.router.navigate([`/${this.tramiteData[0].department}/confirmar-notificacion`]);
-    }else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
+    } else if(ORIGIN === 'CONFIRMAR_NOTIFICACION_REQUERIMIENTO' && this.tramiteData[0].tramite === 130118 || ORIGIN === 'ConfirmarNotificacionReq') {
+      this.router.navigate([`/${this.tramiteData[0].department}/confirmar-notificacion`]);
+    }
+    else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
       this.router.navigate(['/confirmar-notificacion']);
     } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION') {
       this.router.navigate(['/confirmar-resolucion']);
@@ -371,7 +376,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       }
 
     };
-
+    this.revisarTipoDeSolicitud();
     if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE) {
       BODY.rfc_usuario = RFC;
       BODY.roles = ["PersonaFisica"];
@@ -379,7 +384,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
         cert_serial_number: "20001000000100001815",
         tipo_certificado: "TIPCE.02"
       };
-
+      
       this.bandejaDeSolicitudeService.postBandejaTareas(BODY).pipe(
         map((datos: BandejaDeTareasPendientes[]) => {
           this.configuracionTablaDatos = datos as unknown as T[];
@@ -443,4 +448,41 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     this.hasValidForm = false;
     this.tieneConfiguracionTablaDatos = false;
   }
+
+
+  revisarTipoDeSolicitud(): void {
+    const TIPO_SOLICITUD = this.bandejaSolicitudeFormGroup?.controls['tipoSolicitud']?.value;
+
+    if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE || TIPO_SOLICITUD === TipoSolicitud.ADMIN) {
+      // Lógica para el tipo de solicitud "Solicitante y Admin"
+
+      this.configuracionTabla = TABLADECONFIGUACIONSOLICITANTE as unknown as ConfiguracionColumna<T>[];
+
+    } else if (TIPO_SOLICITUD === TipoSolicitud.FUNCIONARIO) {
+      // Lógica para el tipo de solicitud "Funcionario"
+      this.configuracionTabla = TABLADECONFIGUACIONFUNCIONARIO as unknown as ConfiguracionColumna<T>[];
+    } 
+  }
+
+  /**
+   * Filtra los datos de la tabla por el valor del folioTramite.
+   * Si el término de búsqueda está vacío, restaura los datos originales.
+   * @param $event El término de búsqueda ingresado.
+   */
+  onSearchChanged($event: string): void {
+    if (!$event || !$event.trim()) {
+      this.configuracionTablaDatos = [...this.duplicarDatos];
+      return;
+    }
+    const SEARCH_TERM = $event.trim().toLowerCase();
+    this.configuracionTablaDatos = this.duplicarDatos.filter((item: T) => {
+      // Busca solo por la propiedad 'folioTramite'
+      if (typeof item === 'object' && item !== null && 'folioTramite' in item) {
+        const FOLIO = (item as { folioTramite?: string }).folioTramite;
+        return FOLIO && FOLIO.toString().toLowerCase().includes(SEARCH_TERM);
+      }
+      return false;
+    });
+  }
+
 }

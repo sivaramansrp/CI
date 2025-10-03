@@ -284,14 +284,15 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
-      estadoDelTramite: this.guardarDatos?.estadoDeTramite
+      estadoDelTramite: this.guardarDatos?.estadoDeTramite,
+      tipoDeTramite: this.guardarDatos?.tipoDeTramite
     });
 
     /** 
       * Formulario reactivo para detalle observacion.
     */
     this.observacionForm = this.fb.group({
-      observacion: ['', Validators.required],
+      observacion: ['',],
     });
   }
 
@@ -1102,7 +1103,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   postTerminar(): void {
     const PAYLOAD: ObservacionRequest = {
-      id_accion: this.guardarDatos.id_solicitud,
+      id_accion: this.guardarDatos.action_id,
       observacion: this.observacionForm.get('observacion')?.value,
       cve_usuario: this.guardarDatos.current_user,
     };

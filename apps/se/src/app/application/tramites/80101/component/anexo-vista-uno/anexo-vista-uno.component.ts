@@ -1,6 +1,7 @@
 import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
-import { AnexoDosEncabezado, DatosComplimento } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, DatosComplimento, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, Input } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
@@ -10,7 +11,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RutaNombre } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
@@ -19,6 +19,7 @@ import { takeUntil } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vista/complementar-fraccion-vista.component';
 import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
 
@@ -264,6 +265,40 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   public anexoDosFormGroup!: FormGroup;
 
   /**
+   * Bandera que indica si actualmente hay datos en la tabla.
+   * Se utiliza para gestionar la lógica interna del componente relacionada con el contenido de la tabla.
+   */
+  tenerDatosDeTabla = false;
+
+  /**
+   * Identificador opcional de la tabla que contiene los datos del proveedor o cliente.
+   * 
+   * Esta propiedad puede ser utilizada para referenciar de manera única la tabla asociada
+   * a los datos de un proveedor o cliente en el componente.
+   */
+  proveedorClienteDatosTablaId?:string;
+
+   /**
+   * Observable que representa los datos de la tabla de complementos.
+   *
+   * @type {Observable<ProveedorClienteTabla[]>}
+   * @description Este observable contiene una lista de objetos de tipo `ProveedorClienteTabla`,
+   * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
+   * en la interfaz de usuario.
+   */
+  public proveedorClienteDatosTabla$!: Observable<ProveedorClienteTabla[]>;
+
+  /**
+   * Observable que representa los datos de la tabla de complementos.
+   *
+   * @type {Observable<ProveedorClienteTabla[]>}
+   * @description Este observable contiene una lista de objetos de tipo `ProveedorClienteTabla`,
+   * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
+   * en la interfaz de usuario.
+   */
+  public proveedorClienteDatosTablaDos$!: Observable<ProveedorClienteTabla[]>;
+
+  /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
    * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
@@ -276,6 +311,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     private store: Tramite80101Store,
     private query: Tramite80101Query,
     private fb: FormBuilder,
+    public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
   ) {}
 
   /**
@@ -310,10 +346,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
           this.anexoDosTablaLista = exportarTablsDatos;
         }
       });
-      this.inicializarFormularioDatosSubcontratista();
-     this.obtenerDatosDelAlmacen();
-         this.inicializarFormularioDatosDosSubcontratista();
-     this.obtenerDatosDosDelAlmacen();
+
+    this.proveedorClienteDatosTabla$ = this.query.selectProveedorClienteDatosTabla$;
+    this.proveedorClienteDatosTablaDos$ = this.query.selectProveedorClienteDatosTablaDos$;
+
+    this.inicializarFormularioDatosSubcontratista();
+    this.obtenerDatosDelAlmacen();
+    this.inicializarFormularioDatosDosSubcontratista();
+    this.obtenerDatosDosDelAlmacen();
   }
 
 
@@ -333,6 +373,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     }
 
 
+/**
+ * Obtiene los datos de complementos dos desde el almacén (store) y actualiza el formulario `anexoDosFormGroup` con dichos datos.
+ * 
+ * Se suscribe al observable `selectDatosComplimentosDos$` del store a través de la propiedad `query`, y utiliza el operador `takeUntil` para cancelar la suscripción cuando se emite `destroyNotifier$`.
+ * 
+ * @remarks
+ * Este método es útil para mantener sincronizados los datos del formulario con el estado global de la aplicación.
+ */
  obtenerDatosDosDelAlmacen(): void {
     this.query.selectDatosComplimentosDos$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -420,6 +468,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void {
     if (event && event.catagoria && event.id && event.datos) {
+      this.proveedorClienteDatosTablaId=event.id;
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
 
@@ -509,6 +558,29 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
         this.anexoDosTablaLista = [...this.anexoDosTablaLista];
     }
   }
+  }
+
+  /**
+   * Maneja el cambio en los datos de la tabla actualizando el estado local y notificando al servicio.
+   * Sincroniza el valor con el servicio `nuevoProgramaIndustrialService`.
+   */
+  datosDeLaTablaCambiados(value: boolean): void {
+    this.tenerDatosDeTabla = value;
+    this.nuevoProgramaIndustrialService.setTieneDatosDeTabla(value);
+  }
+
+/**
+ * Actualiza los datos de la tabla de proveedor/cliente en el store.
+ *
+ * @param event - Arreglo de objetos de tipo ProveedorClienteTabla que contiene los datos a establecer en la tabla.
+ */
+ public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
+  if(this.proveedorClienteDatosTablaId==='IMPORT'){
+       this.store.setProveedorClienteDatosTablaUno($event);
+  }else{
+       this.store.setProveedorClienteDatosTablaDos($event); 
+  }
+
   }
 
   /**

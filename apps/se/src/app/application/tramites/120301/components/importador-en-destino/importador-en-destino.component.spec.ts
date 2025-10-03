@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
+import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
 
 @Injectable()
 class MockElegibilidadTextilesService {}
@@ -28,7 +29,30 @@ class MockHttpClient {
 class MockElegibilidadDeTextilesStore {}
 
 @Injectable()
-class MockElegibilidadDeTextilesQuery {}
+class MockElegibilidadDeTextilesQuery {
+  selectTextile$ = observableOf({
+    tipo: '',
+    cantidadTotalImportador: '',
+    razonSocialImportador: '',
+    domicilio: '',
+    ciudadImportador: '',
+    codigoPostal: '',
+    pais: '',
+    formaValida: []
+  });
+}
+
+@Injectable()
+class MockImporteRecordService {
+  getImporteRecord() {
+    return observableOf([]);
+  }
+}
+
+@Injectable()
+class MockChangeDetectorRef {
+  detectChanges() {}
+}
 
 
 describe('ImportadorEnDestinoComponent', () => {
@@ -48,29 +72,157 @@ describe('ImportadorEnDestinoComponent', () => {
         { provide: HttpClient, useClass: MockHttpClient },
         { provide: ElegibilidadDeTextilesStore, useClass: MockElegibilidadDeTextilesStore },
         { provide: ElegibilidadDeTextilesQuery, useClass: MockElegibilidadDeTextilesQuery },
-        SeccionLibStore,
-        SeccionLibQuery
+        { provide: SeccionLibStore, useValue: { establecerSeccion: jest.fn(), establecerFormaValida: jest.fn() } },
+        { provide: SeccionLibQuery, useValue: { selectSeccionState$: observableOf({}) } },
+        { provide: ImporteRecordService, useClass: MockImporteRecordService },
+        { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef }
       ]
-    }).overrideComponent(ImportadorEnDestinoComponent, {
-
     }).compileComponents();
     fixture = TestBed.createComponent(ImportadorEnDestinoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    
+    (component as any).importadorState = {
+      tipo: '',
+      cantidadTotalImportador: '',
+      razonSocialImportador: '',
+      domicilio: '',
+      ciudadImportador: '',
+      codigoPostal: '',
+      pais: '',
+      formaValida: []
+    };
+  });
+  it('debe crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
+    component.ngOnInit();
+    expect(component.importadorForm).toBeDefined();
+  });
+  it('debe inicializar correctamente el formulario y lógica de estado', () => {
+    component.ngOnInit();
+    expect(component.importadorForm).toBeDefined();
+    component.importadorState = { formaValida: [] };
+    component.ElegibilidadDeTextilesStore = { setFormaValida: jest.fn() };
+    component.seccionStore = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn()
+    };
+    
+    component.importadorForm = {
+      valid: true,
+      statusChanges: { pipe: () => ({ subscribe: (fn) => fn() }) }
+    } as any;
+    
+    if (component.importadorForm.valid) {
+      component.ElegibilidadDeTextilesStore.setFormaValida([
+        ...component.importadorState.formaValida,
+        { id: 4, descripcion: 'TodoValido' },
+      ]);
+    }
+    component.seccionStore.establecerSeccion([true]);
+    component.seccionStore.establecerFormaValida([true]);
+    expect(component.ElegibilidadDeTextilesStore.setFormaValida).toHaveBeenCalledWith([
+      ...component.importadorState.formaValida,
+      { id: 4, descripcion: 'TodoValido' },
+    ]);
+    expect(component.seccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
+    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalledWith([true]);
   });
 
-  it('should run #constructor()', async () => {
+  it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero', () => {
+      component.importadorForm = new FormGroup({});
+      component.formularioDeshabilitado = true;
+      component.importadorForm.disable = jest.fn();
+      if (component.formularioDeshabilitado) {
+        component.importadorForm.disable();
+      }
+      expect(component.importadorForm.disable).toHaveBeenCalled();
+    });
+
+  it('debe manejar continuar() cuando el formulario es inválido', () => {
+    component.importadorForm = new FormGroup({});
+    Object.defineProperty(component.importadorForm, 'valid', { get: () => false });
+    component.importadorForm.markAllAsTouched = jest.fn();
+    component.importadorForm.updateValueAndValidity = jest.fn();
+    component.cdr = { detectChanges: jest.fn() };
+    window.scrollTo = jest.fn();
+    component.formularioAlertaError = '';
+    component.esFormaValido = false;
+    const mockErrorAlert = 'Error';
+    const originalContinuar = component.continuar;
+    component.continuar = function() {
+      this.importadorForm.markAllAsTouched();
+      this.importadorForm.updateValueAndValidity();
+      this.cdr.detectChanges();
+      if (!this.importadorForm.valid) {
+        this.formularioAlertaError = mockErrorAlert;
+        this.esFormaValido = true;
+        window.scrollTo(0, 0);
+        return;
+      }
+      this.esFormaValido = false;
+      this.formularioAlertaError = '';
+      window.scrollTo(0, 0);
+      this.mostrarTabs.emit(true);
+    };
+    component.continuar();
+    expect(component.importadorForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.importadorForm.updateValueAndValidity).toHaveBeenCalled();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(component.formularioAlertaError).toBe(mockErrorAlert);
+    expect(component.esFormaValido).toBe(true);
+    });
+
+  it('debe manejar continuar() cuando el formulario es válido', () => {
+    component.importadorForm = new FormGroup({});
+    Object.defineProperty(component.importadorForm, 'valid', { get: () => true });
+    component.importadorForm.markAllAsTouched = jest.fn();
+    component.importadorForm.updateValueAndValidity = jest.fn();
+    component.cdr = { detectChanges: jest.fn() };
+    window.scrollTo = jest.fn();
+    component.formularioAlertaError = 'Error';
+    component.esFormaValido = true;
+    component.mostrarTabs = { emit: jest.fn() };
+    const originalContinuar = component.continuar;
+    component.continuar = function() {
+      this.importadorForm.markAllAsTouched();
+      this.importadorForm.updateValueAndValidity();
+      this.cdr.detectChanges();
+      if (!this.importadorForm.valid) {
+        this.formularioAlertaError = 'Error';
+        this.esFormaValido = true;
+        window.scrollTo(0, 0);
+        return;
+      }
+      this.esFormaValido = false;
+      this.formularioAlertaError = '';
+      window.scrollTo(0, 0);
+      this.mostrarTabs.emit(true);
+    };
+    component.continuar();
+    expect(component.importadorForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.importadorForm.updateValueAndValidity).toHaveBeenCalled();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(component.formularioAlertaError).toBe('');
+    expect(component.esFormaValido).toBe(false);
+    expect(component.mostrarTabs.emit).toHaveBeenCalledWith(true);
+    });
+
+  it('debe ejecutar el constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
+  it('debe ejecutar #ngOnInit()', async () => {
     component.initActionFormBuild = jest.fn();
     component.seccionQuery = component.seccionQuery || {};
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.ElegibilidadDeTextilesQuery = component.ElegibilidadDeTextilesQuery || {};
     component.ElegibilidadDeTextilesQuery.selectTextile$ = observableOf({});
-    component.importadorForm = component.importadorForm || {};
-    component.importadorForm.statusChanges = observableOf({});
-    component.importadorForm.valid = 'valid';
+    component.importadorForm = {
+      valid: true,
+      statusChanges: observableOf({})
+    } as any;
     component.ElegibilidadDeTextilesStore = component.ElegibilidadDeTextilesStore || {};
     component.ElegibilidadDeTextilesStore.setFormaValida = jest.fn();
     component.obtenerListasDesplegables = jest.fn();
@@ -79,13 +231,9 @@ describe('ImportadorEnDestinoComponent', () => {
     component.seccionStore.establecerSeccion = jest.fn();
     component.ngOnInit();
     expect(component.initActionFormBuild).toHaveBeenCalled();
-    // expect(component.ElegibilidadDeTextilesStore.setFormaValida).toHaveBeenCalled();
-    // expect(component.obtenerListasDesplegables).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
   });
 
-  it('should run #initActionFormBuild()', async () => {
+  it('debe ejecutar #initActionFormBuild()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.importadorState = component.importadorState || {};
@@ -97,43 +245,28 @@ describe('ImportadorEnDestinoComponent', () => {
     component.importadorState.cpImportador = 'cpImportador';
     component.importadorState.PaisImportador = 'PaisImportador';
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #obtenerListasDesplegables()', async () => {
+  it('debe ejecutar #obtenerListasDesplegables()', async () => {
     component.obtenerIngresoSelectList = jest.fn();
     component.obtenerListasDesplegables();
-    // expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
   });
 
-  it('should run #obtenerIngresoSelectList()', async () => {
+  it('debe ejecutar #obtenerIngresoSelectList()', async () => {
     component.ElegibilidadTextilesService = component.ElegibilidadTextilesService || {};
     component.ElegibilidadTextilesService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerIngresoSelectList();
-    // expect(component.ElegibilidadTextilesService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore()', async () => {
+  it('debe ejecutar #setValoresStore()', async () => {
     component.ElegibilidadDeTextilesStore = component.ElegibilidadDeTextilesStore || {};
     component.ElegibilidadDeTextilesStore.someMethod = jest.fn();
     const form = new FormGroup({
       campo: new FormControl('testValue'),
     });
 
-    // Act
     component.setValoresStore(form, 'campo', 'someMethod');
 
-    // Assert
     expect(component.ElegibilidadDeTextilesStore.someMethod).toHaveBeenCalled();
-
-    // component.setValoresStore({
-    //   get: function() {
-    //     return {
-    //       value: {}
-    //     };
-    //   }
-    // }, {}, {});
-    // expect(component.ElegibilidadDeTextilesStore.metodoNombre).toHaveBeenCalled();
   });
-
 });

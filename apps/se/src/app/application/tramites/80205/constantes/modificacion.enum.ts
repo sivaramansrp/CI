@@ -5,7 +5,7 @@
  * que se utilizan para mostrar información relacionada con los domicilios y servicios IMMEX.
  */
 
-import { Servicio, ServicioInmex } from '../models/datos-info.model';
+import { EmpresasNacionales, Servicio, ServicioAmpliacion, ServicioAutorizado, ServicioInmex } from '../models/datos-info.model';
 
 /**
  * Configuración de los pasos del trámite.
@@ -49,28 +49,28 @@ export const PASOS = [
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
-    clave: (ele: ServicioInmex): string | undefined => ele.Servicio,
+    clave: (ele: EmpresasNacionales): string | undefined => ele.descripcionServicio,
     orden: 1,
   },
   {
     encabezado: 'Registro federal de contribuyentes',
-    clave: (ele: ServicioInmex): string | undefined =>
-      ele.RegistroContribuyentes,
+    clave: (ele: EmpresasNacionales): string | undefined =>
+      ele.rfc,
     orden: 2,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: ServicioInmex): string | undefined => ele.DenominaciónSocial,
+    clave: (ele: EmpresasNacionales): string | undefined => ele.razonSocial,
     orden: 3,
   },
   {
     encabezado: 'Número del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.NumeroIMMEX,
+    clave: (ele: EmpresasNacionales): string | undefined => ele.numeroPrograma,
     orden: 4,
   },
   {
     encabezado: 'Año del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.AñoIMMEX,
+    clave: (ele: EmpresasNacionales): string | undefined => ele.tiempoPrograma,
     orden: 5,
   },
 ];
@@ -87,12 +87,36 @@ export const CONFIGURACION_DOMICILIOS = [
 export const CONFIGURACION_SERVICIO_IMMEX = [
   {
     encabezado: 'Descripción del servicio',
-    clave: (ele: Servicio): string | undefined => ele.descripiónDelServicio,
+    clave: (ele: ServicioAmpliacion): string | undefined => ele.descripcion ?? undefined,
     orden: 1,
   },
   {
     encabezado: 'Tipo de servicio',
-    clave: (ele: Servicio): string | undefined => ele.tipode,
+    clave: (ele: ServicioAmpliacion): string | undefined => ele.descripcionTipo,
     orden: 2,
   },
 ];
+
+
+export const CONFIGURACION_SERVICIO_AUTORIZADO = [
+  {
+    encabezado: 'Descripción del servicio',
+    clave: (ele: ServicioAutorizado): string | undefined => ele.descripcion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Tipo de servicio',
+    clave: (ele: ServicioAutorizado): string | undefined => ele.descripcionTipo,
+    orden: 2,
+  },
+];
+
+
+export interface Catalogo {
+  /** Identificador único del catálogo. */
+  id: number;
+  /** Descripción del catálogo. */
+  descripcion: string;
+  /** Clave opcional del catálogo. */
+  tipode?: string;
+}

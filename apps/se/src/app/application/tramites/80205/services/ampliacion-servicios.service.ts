@@ -1,7 +1,8 @@
+import { AmpliacionServiciosState, ServicioAmpliacion, ServicioAutorizado } from '../models/datos-info.model';
 import {Observable,map } from 'rxjs';
-import { AmpliacionServiciosState } from '../models/datos-info.model';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { COMUN_URL } from '../../../core/server/api-router';
+import { Catalogo } from '../constantes/modificacion.enum';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Servicio } from '../models/datos-info.model';
@@ -13,10 +14,13 @@ import { Servicio } from '../models/datos-info.model';
   providedIn: 'root',
 })
 export class AmpliacionServiciosService {
+
+  host!: string;
+
   constructor(private readonly http: HttpClient,
     private tramite80205Store: AmpliacionServiciosStore
   ) {
-   // No se necesita lógica de inicialización adicional.
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
@@ -29,17 +33,7 @@ export class AmpliacionServiciosService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res.data));
 }
-   
-  /**
-   * Obtiene la lista de selección de ingreso desde un archivo JSON.
-   * @returns {Observable<any>} - Observable con los datos obtenidos.
-   */
-  obtenerIngresoSelectList(): Observable<Catalogo[]> {
-    return this.http
-    .get<Catalogo[]>("assets/json/80205/ampliacion-IMMEX-dropdown.json")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .pipe(map((res: any) => res.data));
-  }
+
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
    * @param DATOS - Objeto que contiene los datos a actualizar en el estado del formulario.
@@ -51,7 +45,9 @@ export class AmpliacionServiciosService {
     this.tramite80205Store.setNumeroPrograma(DATOS.numeroPrograma); 
     this.tramite80205Store.setRfcEmpresa(DATOS.rfcEmpresa);
     this.tramite80205Store.setTiempoPrograma(DATOS.tiempoPrograma);
-    this.tramite80205Store.setDatosImmex(DATOS.tablaDatosIMMEX);
+    this.tramite80205Store.setDatosImmex(
+      (DATOS.tablaDatosIMMEX as unknown as ServicioAmpliacion[])
+    );
     this.tramite80205Store.setDatos(DATOS.tablaDatos);
 
   }
@@ -63,8 +59,14 @@ export class AmpliacionServiciosService {
   getServiciosData(): Observable<AmpliacionServiciosState> {
     return this.http.get<AmpliacionServiciosState>('assets/json/80205/ampliacion-campo.json');
   }
+/**
+ * Obtiene la tabla de datos desde un archivo JSON.
+ * @return {Observable<ServicioAutorizado[]>} - Observable con la tabla de datos.
+ */
+  getTablaDatos(): Observable<ServicioAutorizado[]> {
+    return this.http.get<ServicioAutorizado[]>('assets/json/80205/ampliaciaon-autrazidos.json');
+  }
 
-  
 }
 
 

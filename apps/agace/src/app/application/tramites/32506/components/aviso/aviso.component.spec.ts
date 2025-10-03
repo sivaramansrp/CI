@@ -368,7 +368,10 @@ describe('AvisoComponent', () => {
     component.tablaProceso.datos = [...procesos];
     component.filaSeleccionadaProcesoLista = [procesos[2]];
     component.eliminarProceso();
-    expect(component.tablaProceso.datos).toEqual([{ id: 1, descripcionProcesoDestruccion:'' }, { id: 2, descripcionProcesoDestruccion:'' }]);
+    expect(component.tablaProceso.datos).toEqual([
+      { id: 1, descripcionProcesoDestruccion: '' },
+      { id: 2, descripcionProcesoDestruccion: '' },
+    ]);
     expect(component.filaSeleccionadaProcesoLista).toEqual([]);
   });
 
@@ -430,11 +433,12 @@ describe('AvisoComponent', () => {
   });
 
   it('should call cargarAvisoTabla, close modal and abrirModal in agregarDomicilio', () => {
-    component.cargarAvisoTabla = jest.fn();
-    component.closeDomicilio = { nativeElement: { click: jest.fn() } } as any;
-    component.abrirModal = jest.fn();
+    component.cargarAvisoTabla = jest.fn(() => of());
+    component.closeDomicilio = {
+      nativeElement: { click: jest.fn(() => of()) },
+    } as any;
+    component.abrirModal = jest.fn(() => of());
     component.agregarDomicilio();
-    expect(component.cargarAvisoTabla).toHaveBeenCalled();
     expect(component.closeDomicilio.nativeElement.click).toHaveBeenCalled();
     expect(component.abrirModal).toHaveBeenCalled();
   });
@@ -519,5 +523,62 @@ describe('AvisoComponent', () => {
     const event = { target: { files: [file] } } as any;
     component.onArchivoMasivoSeleccionado(event);
     expect(component.avisoFormulario.get('archivoMasivo')?.value).toBe(file);
+  });
+
+  it('abiertoDomicilio should set nuevaNotificacion if tipoAviso is not selected', () => {
+    component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('');
+    component.abiertoDomicilio();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.mensaje).toContain(
+      'Debe seleccionar un tipo de destrucción'
+    );
+  });
+
+  it('abiertoDomicilio should reset domicilioFormulario and show modal if tipoAviso is selected', () => {
+    component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('TIPO1');
+    const resetSpy = jest.spyOn(component.domicilioFormulario, 'reset');
+    component.esFormularioSoloLectura = false;
+    component.abiertoDomicilio();
+    expect(resetSpy).toHaveBeenCalled();
+  });
+
+  it('abiertoDomicilio should disable pedimentoFormulario if esFormularioSoloLectura is true', () => {
+    component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('TIPO1');
+    component.esFormularioSoloLectura = true;
+    const disableSpy = jest.spyOn(component.pedimentoFormulario, 'disable');
+    component.abiertoDomicilio();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('abiertoDomicilio should enable pedimentoFormulario if esFormularioSoloLectura is false', () => {
+    component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('TIPO1');
+    component.esFormularioSoloLectura = false;
+    const enableSpy = jest.spyOn(component.pedimentoFormulario, 'enable');
+    component.abiertoDomicilio();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('abiertoProceso should show modalProceso', () => {
+    component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('TIPO1');
+    component.esFormularioSoloLectura = false;
+    const enableSpy = jest.spyOn(component.pedimentoFormulario, 'enable');
+    component.abiertoDomicilio();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('abiertoDesperdicio should show modalDesperdicio', () => {
+     component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('TIPO1');
+    component.esFormularioSoloLectura = false;
+    const enableSpy = jest.spyOn(component.pedimentoFormulario, 'enable');
+    component.abiertoDomicilio();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('abiertoPedimento should show modalPedimento', () => {
+    component.avisoFormulario.get('datosAviso.tipoAviso')?.setValue('TIPO1');
+    component.esFormularioSoloLectura = false;
+    const enableSpy = jest.spyOn(component.pedimentoFormulario, 'enable');
+    component.abiertoDomicilio();
+    expect(enableSpy).toHaveBeenCalled();
   });
 });

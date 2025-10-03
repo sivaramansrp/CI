@@ -1,4 +1,4 @@
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, TipoPersona } from '@ng-mf/data-access-user';
 /**
  * Interfaz que representa los datos de un destinatario final.
  *
@@ -41,6 +41,9 @@ export interface DestinoFinal {
   segundoApellido?: string;
   estado?: string;
   tableindex?: number;
+  nacionalidad?: string;
+  id?: number;
+  lada?: string;  
 }
 
 
@@ -137,6 +140,12 @@ export interface Proveedor {
   estadoLocalidad: string;
   codigoPostal: string;
   tableIndex?: number;
+  tipoPersona?: TipoPersona;
+  nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  estado?: string;
+  id?: number;
 }
 
 /**

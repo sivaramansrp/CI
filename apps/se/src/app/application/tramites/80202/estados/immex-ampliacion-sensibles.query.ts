@@ -1,19 +1,31 @@
+import { ImmexAmpliacionSensiblesStore, ImmexRegistroState } from './immex-ampliacion-sensibles.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { ImmexAmpliacionSensiblesState } from './immex-ampliacion-sensibles.store';
-import { ImmexAmpliacionSensiblesStore } from './immex-ampliacion-sensibles.store';
-
 @Injectable({ providedIn: 'root' })
-export class ImmexAmpliacionSensiblesQuery extends Query<ImmexAmpliacionSensiblesState> {
+export class ImmexAmpliacionSensiblesQuery extends Query<ImmexRegistroState> {
   /**
    * Observable que selecciona el estado completo de la solicitud.
    * 
-   * @returns El estado actual de la solicitud.
+   * @returns El estado actual de la solicitud con importacion y exportacion.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
+
+  /**
+   * Observable que selecciona solo los datos de importación.
+   * 
+   * @returns Array de immexInfo con datos de importación.
+   */
+  selectImportacion$ = this.select(state => state.importacion);
+
+  /**
+   * Observable que selecciona solo los datos de exportación.
+   * 
+   * @returns Array de fraccionInfo con datos de exportación.
+   */
+  selectExportacion$ = this.select(state => state.exportacion);
 
   /**
    * Constructor de la clase que inicializa el store específico para 

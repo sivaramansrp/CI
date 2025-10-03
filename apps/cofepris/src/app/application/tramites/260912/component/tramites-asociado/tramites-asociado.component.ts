@@ -1,11 +1,11 @@
 // Importaciones necesarias de Angular y otros módulos.
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Asociados } from '../../modelos/tramites-asociados.model';
 import { CommonModule } from '@angular/common';
 import { TramitesAsociadosService } from '../../services/tramites-asociados.service';
-
+ 
 /**
  * Componente `TramitesAsociadoComponent`
  *
@@ -26,7 +26,10 @@ import { TramitesAsociadosService } from '../../services/tramites-asociados.serv
   styleUrl: './tramites-asociado.component.scss', // Ruta al archivo SCSS para los estilos.
 })
 export class TramitesAsociadoComponent implements OnInit, OnDestroy {
+    @Input() disabled: boolean = false;
+  @Input() tipoTramite?: string;
 
+ 
   /**
    * Configuración de las columnas de la tabla dinámica.
    * Define qué datos se mostrarán y en qué orden.
@@ -40,7 +43,7 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
     { encabezado: 'Estatus', clave: (item: Asociados) => item.estatus, orden: 4 },
     { encabezado: 'Fecha alta de registro', clave: (item: Asociados) => item.fechaAltaDeRegistro, orden: 5 },
   ];
-
+ 
   /**
    * Datos que se mostrarán en la tabla dinámica.
    * Inicialmente, la tabla está vacía.
@@ -48,12 +51,12 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    * @type {Asociados[]}
    */
   public acuseTablaDatos: Asociados[] = [];
-
+ 
  /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    */
   public destroyed$ = new Subject<void>();
-
+ 
   /**
    * Constructor del componente `TramitesAsociadoComponent`.
    *
@@ -64,7 +67,7 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
   constructor(private servicios: TramitesAsociadosService) {
     // Inicialización adicional no requerida.
   }
-
+ 
   /**
    * Método del ciclo de vida `ngOnInit()` de Angular.
    *
@@ -76,7 +79,7 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.obtenerListaDeAsociados();
   }
-
+ 
   /**
    * Método para obtener la lista de trámites asociados.
    * Llama al servicio `TramitesAsociadosService` y suscribe los datos obtenidos a la propiedad `acuseTablaDatos`.
@@ -89,6 +92,17 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
     });
   }
 
+ // eslint-disable-next-line class-methods-use-this
+public validateRequiredFields(): boolean {
+  // No required fields in this component
+  return true;
+}
+
+// eslint-disable-next-line class-methods-use-this
+public markAllFieldsTouched(): void {
+  // No fields to mark as touched in this component
+}
+ 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -97,3 +111,4 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 }
+ 

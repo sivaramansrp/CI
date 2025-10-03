@@ -23,6 +23,25 @@ export class SolicitudService {
     this.tramite32201Store.setRegimen_2(DATOS.regimen_2);
     this.tramite32201Store.setRegimen_3(DATOS.regimen_3);
     this.tramite32201Store.setManifiesto(DATOS.manifiesto);
+    this.tramite32201Store.setRadio_1(DATOS.radio_1);
+    this.tramite32201Store.setRadio_2(DATOS.radio_2);
+    this.tramite32201Store.setRadio_3(DATOS.radio_3);
+    this.tramite32201Store.setValorAduana(DATOS.valorAduana);
+    this.tramite32201Store.setTextoGenerico10(DATOS.textoGenerico10);
+    this.tramite32201Store.setTextoGenerico11(DATOS.textoGenerico11);
+    this.tramite32201Store.setTextoGenerico12(DATOS.textoGenerico12);
+    this.tramite32201Store.setTextoGenerico13(DATOS.textoGenerico13);
+    this.tramite32201Store.setTextoGenerico14(DATOS.textoGenerico14);
+    this.tramite32201Store.setTextoGenerico15(DATOS.textoGenerico15);
+    this.tramite32201Store.setTextoGenerico16(DATOS.textoGenerico16);
+    this.tramite32201Store.setTextoGenerico17(DATOS.textoGenerico17);
+    this.tramite32201Store.setTextoGenerico18(DATOS.textoGenerico18);
+    this.tramite32201Store.setTextoGenerico19(DATOS.textoGenerico19);
+    this.tramite32201Store.setTextoGenerico20(DATOS.textoGenerico20);
+    this.tramite32201Store.setTextoGenerico21(DATOS.textoGenerico21);
+    this.tramite32201Store.setTextoGenerico22(DATOS.textoGenerico22);
+    this.tramite32201Store.setTextoGenerico23(DATOS.textoGenerico23);
+    this.tramite32201Store.setTextoGenerico24(DATOS.textoGenerico24);
 
   }
   /**

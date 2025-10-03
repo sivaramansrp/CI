@@ -242,7 +242,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   obtenerDataSolicitud(): void {
     const FOLIO = this.consultaState.folioTramite;
-    this.consultaSolicitudService.getDetalleSolicitud(FOLIO).subscribe({
+    this.consultaSolicitudService.getDetalleSolicitud(Number(this.consultaState.procedureId), FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
           this.llenarFormularioDesdeRespuesta(response.datos);
@@ -415,21 +415,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
         regimenMercancia: [this.solicitudState?.regimenMercancia || null, Validators.required],
-        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || null, disabled: true }, Validators.required]
+        clasifiRegimen: [this.solicitudState?.clasifiRegimen || null , Validators.required]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(4000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
-        nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
-        unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
-        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
+        nico: [this.solicitudState?.nico || null, Validators.required],
+        unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria || null, Validators.required],
+        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(99999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(99999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
         precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
         paisOrigen: [this.solicitudState?.paisOrigen || null, Validators.required],
         paisDestino: [this.solicitudState?.paisDestino || null, Validators.required],
         lote: [this.solicitudState?.lote, [Validators.maxLength(60), Validators.required]],
         fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
-        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(4000)]],
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
@@ -438,11 +438,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
         apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
         razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.required, Validators.maxLength(250)]],
-        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000), Validators.required]]
+        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(4000), Validators.required]]
       }),
       registroFederal: this.fb.group({
         estado: [this.solicitudState?.estado || null, Validators.required],
-        representacionFederal: [{ value: this.solicitudState?.representacionFederal || null, disabled: true }, Validators.required]
+        representacionFederal: [this.solicitudState?.representacionFederal || null , Validators.required]
       })
     });
   }
@@ -850,28 +850,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.clasifiRegimen = response.datos || [];
 
-          if (!cveRegimen) {
-            if (this.clasifiRegimen.length > 0) {
-              CLASIFI_CONTROL?.enable();
-            } else {
-              CLASIFI_CONTROL?.disable();
-            }
-          }
-
+          
           const CLASIFI_GUARDADO = cveRegimen || this.solicitudState?.clasifiRegimen || null;
           CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         },
         error: (error) => {
           console.error('Error al obtener clasificación de régimen:', error);
           this.clasifiRegimen = [];
-          CLASIFI_CONTROL?.disable();
+         
           const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
           CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         }
       });
     } else {
       this.clasifiRegimen = [];
-      CLASIFI_CONTROL?.disable();
+     
       CLASIFI_CONTROL?.setValue(null); // <- aquí también ajustas
     }
   }
@@ -892,14 +885,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.representacionFederal = response.datos || [];
 
-          if (!cveEntidad) {
-            if (this.representacionFederal.length > 0) {
-              FEDERAL_CONTROL?.enable();
-            } else {
-              FEDERAL_CONTROL?.disable();
-            }
-          }
-
+         
           // Obtener valor guardado (si existe)
           const REPRESENTACION_GUARDADA = cveEntidad || this.solicitudState?.representacionFederal;
 
@@ -913,14 +899,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error al obtener representación federal:', error);
           this.representacionFederal = [];
-          FEDERAL_CONTROL?.setValue('-1');
-          FEDERAL_CONTROL?.disable();
+          FEDERAL_CONTROL?.setValue(null);
         }
       });
     } else {
       this.representacionFederal = [];
       FEDERAL_CONTROL?.setValue(null);
-      FEDERAL_CONTROL?.disable();
     }
   }
 
@@ -1012,7 +996,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.fraccionArancelariaService.getFraccionesCve(SELECTED_FRACCION).subscribe({
         next: (response) => {
           this.unidadMedidaTarifaria = response.datos || [];
-          const VALOR = cveUmt ?? this.solicitudState?.unidadMedidaTarifaria ?? null;
+          const VALOR = cveUmt ?? this.solicitudState?.unidadMedidaTarifaria ?? (this.unidadMedidaTarifaria.length > 0 ? this.unidadMedidaTarifaria[0].clave : null);
           const FORCE_DISABLE = Boolean(cveUmt);
           this.toggleControl(UMT_CONTROL, this.unidadMedidaTarifaria.length > 0, VALOR, FORCE_DISABLE);
         },
@@ -1039,14 +1023,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     control.setValue(value);
 
     if (forceDisable) {
-      control.disable();
+      control.setValue(value);
     } else {
-      if (enable) {
-        control.enable();
-      } else {
-        control.disable();
+      if (!enable) {
         control.setValue(null);
-      }
+      } 
     }
   }
 

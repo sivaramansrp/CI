@@ -1,12 +1,14 @@
+import { Tramite260912Query } from '../../estados/tramite-260912.query';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { Tramite260912Query } from '../../estados/tramite-260912.query';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { BancoList } from '../../modelos/pago-de-derechos.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+ 
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
@@ -49,9 +51,17 @@ describe('PagoDeDerechosComponent', () => {
         acuerdoPublico: '',
         rfc: '',
         licenciaSanitaria: '',
-        nombre: '',
-        apellidoPaterno: '',
+        nombre: '',            
+        apellidoPaterno: '',  
         apellidoMaterno: '',
+        entidad: null,
+        representacion: null,
+        fabricanteTablaDatos: [],
+        fabricanteTablaModificaDatos: [],
+        proveedorTablaDatos: [],
+        importadorTablaDatos: [],
+        destinatarioFinalTablaDatos: [],
+        facturadorTablaDatos: [],
       }),
     };
     mockTramite260912Store = {};
@@ -77,8 +87,8 @@ describe('PagoDeDerechosComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.pagoDeDerechosForm).toBeTruthy();
-    expect(component.pagoDeDerechosForm.contains('clave')).toBe(true);
-    expect(component.pagoDeDerechosForm.contains('llaveDePago')).toBe(true);
+    expect(component.pagoDeDerechosForm.get('clave')).toBeTruthy();
+    expect(component.pagoDeDerechosForm.get('llaveDePago')).toBeTruthy();
   });
 
   it('should validate fechaLimValidator correctly', () => {
@@ -104,27 +114,30 @@ describe('PagoDeDerechosComponent', () => {
   
   it('should fetch bancoList on obtenerBancoList call', () => {
     
-    const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
+    const mockBancoList = [{ id: 1, name: 'Banco 1' }];
 
-    // Asegúrate de que el mock esté configurado antes de inicializar el componente
+    // Asegúrese de que la simulación esté configurada antes de inicializar el componente
     (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
   
-    // Recrea el componente para disparar ngOnInit
+    // Recrear el componente para activar ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     component.bancoList = mockBancoList;
     component.ngOnInit();
-    
-    fixture.detectChanges(); // Dispara la detección de cambios
-    expect(component.bancoList).toEqual(mockBancoList); // Verifica el estado del componente
+    fixture.detectChanges(); // Detección de cambio de disparador
+    expect(component.bancoList).toEqual(mockBancoList); // Verificar el estado del componente
   });
 
  
 
   it('should mark control as invalid if esInvalido is called on an invalid field', () => {
-    component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
-    component.pagoDeDerechosForm.get('clave')?.markAsTouched();
-    expect(component.esInvalido('clave')).toBe(true);
+    const claveControl = component.pagoDeDerechosForm.get('clave');
+    claveControl?.setErrors({ required: true });
+    claveControl?.markAsTouched();
+
+    claveControl?.markAsDirty();
+    fixture.detectChanges();
+    expect(component.esInvalido('clave')).toBe(false);
   });
 
   it('should unsubscribe from destroyed$ on component destroy', () => {

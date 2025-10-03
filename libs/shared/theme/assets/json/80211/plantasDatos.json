@@ -4,9 +4,10 @@
     "datos": [
         {
             "id":1,
+            "idPlanta":1111,
             "calle":"AVENIDA PERIFERICO NORTE",
             "numeroExterio":"47B",
-            "numeroInterio":"",
+            "numeroInterio":"9666",
             "codiogoPostal":"31136",
             "colonia":"COMPLEJO INDUSTRIAL",
             "municipio": "CHIHUAHUA",
@@ -18,9 +19,10 @@
         },
         {
             "id":2,
+             "idPlanta":1112,
             "calle":"EMPRESA",
             "numeroExterio":"1627",
-            "numeroInterio":"",
+            "numeroInterio":"77777",
             "codiogoPostal":"32600",
             "colonia":"INFONAVIT CASAS GRANDES 1A SEC",
             "municipio": "JUAREZ ",

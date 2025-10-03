@@ -9,6 +9,12 @@ export const ALERT = {
 };
 
 /**
+ * @constant
+ * @description
+ * Identificador único del procedimiento correspondiente al trámite 260912.
+ */
+export const ID_PROCEDIMIENTO = 260912;
+/**
  * Arreglo de opciones para los botones de radio en el domicilio del establecimiento.
  * Cada objeto representa una opción con su etiqueta y valor correspondiente.
  * @property label Etiqueta que se muestra al usuario.

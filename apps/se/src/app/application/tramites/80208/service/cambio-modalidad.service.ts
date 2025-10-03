@@ -1,9 +1,11 @@
-import { CambioDeModalidadForm, CambioModalidadResponse, ServiciosState } from '../modelos/cambio-de-modalidad.model';
+import { CambioDeModalidadForm, CambioModalidadResponse, RespuestaCatalogos } from '../modelos/cambio-de-modalidad.model';
 import { CambioModalidadState, CambioModalidadStore,} from '../estados/tramite80208.store';
+import { Observable, map } from 'rxjs';
+import { CambioModalidadQuery } from '../estados/tramite80208.query';
+import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
  * @service CambioModalidadService
@@ -24,13 +26,25 @@ export class CambioModalidadService {
   private datosSimuladosUrl = '/assets/json/80208/';
 
   /**
+   * @property tramiteState - Estado del trámite de cambio de modalidad.
+   * @description
+   * Objeto que contiene el estado del trámite de cambio de modalidad, definido por la interfaz `CambioModalidadState`.
+   * Se inicializa como un objeto vacío y se utilizará para almacenar el estado del formulario y otros datos relevantes.
+   * @type {CambioModalidadState}
+   */
+
+  tramiteState:CambioModalidadState= {} as CambioModalidadState;
+
+  /**
    * @constructor
    * @description Constructor del servicio.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(
     private http: HttpClient,
+    public httpService: HttpCoreService,
     public cambioModalidadStore: CambioModalidadStore,
+    public cambioModalidadQuery: CambioModalidadQuery,
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -50,7 +64,9 @@ export class CambioModalidadService {
    * @returns {Observable<RespuestaCatalogos>} Observable que emite la respuesta de los catálogos.
    */
   getServiciosImmx(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`${this.datosSimuladosUrl}servicios-immex.json`);
+    return this.httpService.get<RespuestaCatalogos>(`${ENVIRONMENT.API_HOST}/api/catalogo/servicios-immex`, {}, false).pipe(map((res: RespuestaCatalogos) => {
+            return res;
+          }));
   }
 
   /**
@@ -59,7 +75,9 @@ export class CambioModalidadService {
    * @returns {Observable<CambioModalidadResponse>} Observable que emite la respuesta del cambio de modalidad.
    */
   getCambioDeModalidad(): Observable<CambioModalidadResponse> {
-    return this.http.get<CambioModalidadResponse>(`${this.datosSimuladosUrl}cambio-de-modalidad.json`);
+    return this.httpService.get<CambioModalidadResponse>(`${ENVIRONMENT.API_HOST}/api/catalogo/modalidad-immex`, {}, false).pipe(map((res: CambioModalidadResponse) => {
+            return res;
+          }));
   }
 
   /**
@@ -74,7 +92,7 @@ export class CambioModalidadService {
       folio: DATOS.folio,
       ano: DATOS.ano,
       seleccionaModalidad: DATOS.seleccionaModalidad,
-      cambioModalidad: DATOS.cambioModalidad,
+      cambioDeModalidad: DATOS.cambioDeModalidad,
       serviciosImmx: DATOS.serviciosImmx,
       rfcEmpresa: DATOS.rfcEmpresa,
       numeroPrograma: DATOS.numeroPrograma,
@@ -93,6 +111,24 @@ export class CambioModalidadService {
    */
   getDatosDeLaSolicitudData(): Observable<CambioModalidadState> {
     return this.http.get<CambioModalidadState>('assets/json/80208/cambio-de-modalidad-datos.json');
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<CambioModalidadState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<CambioModalidadState> {
+    return this.cambioModalidadQuery.allStoreData$;
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST para guardar la solicitud.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: CambioModalidadState): Observable<any> {
+    return this.httpService.post<any>(`${ENVIRONMENT.API_HOST}/api/solicitud/guardar`, { body: body });
   }
 
 } 

@@ -24,6 +24,7 @@ import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite2
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
 /**
  * Componente que gestiona los datos de la solicitud.
@@ -44,7 +45,8 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
     TituloComponent,
     CommonModule,
     NotificacionesComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    TooltipModule
 ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
@@ -146,6 +148,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Bandera que indica si se seleccionó el tipo de operación.
    */
   esTipoOperacionSeleccionado: boolean = true;
+
+  /** Indica si se debe mostrar la alerta del RFC. */
+  mostrarRfcAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public nuevaRfcNotificacion!: Notificacion;
 
   /**
    * Objeto CrossList para país de origen.
@@ -623,7 +631,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -774,10 +782,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Busca los datos del contribuyente usando el RFC y auto-llena los campos de nombre.
    */
-  public buscarRFC(): void {
+  buscarRFC(): void {
     const RFC_VALUE = this.datosDelEstablecimientoForm.get('rfc')?.value;
-    
     if (!RFC_VALUE) {
+      this.abrirRfcModal();
       return;
     }
 
@@ -797,6 +805,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.store.setApellidoPaterno(VALORES_ACTUALIZADOS.apellidoPaterno);
       this.store.setApellidoMaterno(VALORES_ACTUALIZADOS.apellidoMaterno);
     } 
+  }
+
+    /**
+   * Abre el modal de RFC y muestra una notificación de alerta.
+   */
+  abrirRfcModal(): void {
+    this.mostrarRfcAlerta = true;
+    this.nuevaRfcNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar el RFC.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**

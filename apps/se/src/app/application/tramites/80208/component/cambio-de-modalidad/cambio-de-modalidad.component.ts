@@ -302,25 +302,22 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @description Método de inicialización del componente.
    */
   ngOnInit(): void {      
-    this.inicializarForm();
-    this.getCargarDatos();
-    this.getCambioDeModalidad();
-    this.getServiciosImmx();      
+         
     this.cambioModalidadQuery.selectCambioModalidad$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.cambioDeModalidadForm.patchValue({
-            cambioDeModalidad: seccionState.cambioModalidad,
-
+            cambioDeModalidad: seccionState.cambioDeModalidad,
+            folio: seccionState.folio,
+            ano: seccionState.ano
           })
-          this.getCargarDatos();
           
-          if (Number(seccionState.cambioModalidad) > 0) {
+          if (Number(seccionState.cambioDeModalidad) > 0) {
             this.espectaculoServiciosImmx = true;
           }
 
-          this.serviciosImmxForm.patchValue({
+          this.cambioDeModalidadForm.patchValue({
             serviciosImmx: seccionState.serviciosImmx                       
           });
           this.rfcEmpresa = seccionState.rfcEmpresa;
@@ -332,6 +329,10 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.inicializarForm();
+      this.getCargarDatos();
+      this.getCambioDeModalidad();
+      this.getServiciosImmx(); 
 
     /**
      * @description
@@ -375,11 +376,11 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
           disabled: true,
         },
       ],
-      cambioDeModalidad: [{ value: this.tramiteState?.cambioModalidad, disabled: false }],
-    });
-
-    this.serviciosImmxForm = this.fb.group({
+      cambioDeModalidad: [{ value: this.tramiteState?.cambioDeModalidad, disabled: false }],
       serviciosImmx: [{ value: this.tramiteState?.serviciosImmx, disabled: false }],
+      rfcEmpresa: [{ value: this.tramiteState?.rfcEmpresa, disabled: false }],
+      numeroPrograma: [{ value: this.tramiteState?.numeroPrograma, disabled: false }],
+      tiempoPrograma: [{ value: this.tramiteState?.tiempoPrograma, disabled: false }],
     });
   }
 
@@ -430,14 +431,17 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
 
   agregarServiciosAmpliacion(): void {
-    const DESCRIPCION_VAL = this.serviciosImmxForm.get('serviciosImmx')?.value;
+    const DESCRIPCION_VAL = this.cambioDeModalidadForm.get('serviciosImmx')?.value;
   if( DESCRIPCION_VAL!=='-1') {
 
-  const SERVICIO_SELECCIONADO = this.serviciosImmx.find(servicio => servicio.id === Number(DESCRIPCION_VAL));
+  const SERVICIO_SELECCIONADO = this.serviciosImmx.find(servicio => servicio.clave === DESCRIPCION_VAL);
    const DESCRIPCION= SERVICIO_SELECCIONADO?.descripcion || 'SERVICIO NO ENCONTRADO';
 
-    const TIPO="tangible";
-    const ESTATUS= true;
+   const SERVICIO_VAL = this.cambioDeModalidadForm.get('cambioDeModalidad')?.value;
+   const SERVICIO_TIPO = this.cambioDeModalidad.find(servicio => servicio.id.toString() === SERVICIO_VAL);
+
+    const TIPO = SERVICIO_TIPO?.descripcion ?? '';
+    const ESTATUS = true;
   
     const NUEVO: ServicioInfo = {
       descripcionDelServicio: DESCRIPCION,
@@ -534,7 +538,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   getServiciosImmx(): void {
     this.modalidadService.getServiciosImmx().subscribe((data) => {
-      this.serviciosImmx = data.data;  
+      this.serviciosImmx = data.datos;
     });
   }
 
@@ -551,7 +555,10 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   getCambioDeModalidad(): void {
     this.modalidadService.getCambioDeModalidad().subscribe((data) => {
-      this.cambioDeModalidad = data.cambioModalidad.data;
+      this.cambioDeModalidad = data.datos.map((item: any) => ({
+      id: item.clave,
+      descripcion: item.descripcion
+    }));
       const SELECCIONADAID =
         this.cambioDeModalidadForm.get('cambioDeModalidad')?.value;
       if (SELECCIONADAID) {
@@ -582,7 +589,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     );
     this.espectaculoServiciosImmx =
       OPCIONSELECCIONADA?.descripcion?.toUpperCase() === 'SERVICIOS';
-    this.cambioModalidadStore.actualizarEstado({cambioModalidad:SELECCIONADAID});
+    this.cambioModalidadStore.actualizarEstado({cambioDeModalidad:SELECCIONADAID});
   }
 
   /**
@@ -597,10 +604,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   seleccionarDesplegable(): void {
    
-       this.toggleServiciosImmx(
-        this.cambioDeModalidadForm.value.cambioDeModalidad.toString());
+       this.toggleServiciosImmx(this.cambioDeModalidadForm.value.cambioDeModalidad.toString());
   this.cambioModalidadStore.actualizarEstado({
-        cambioModalidad: this.cambioDeModalidadForm.value.cambioDeModalidad.toString()
+        cambioDeModalidad: this.cambioDeModalidadForm.value.cambioDeModalidad.toString()
       });
 
        }
@@ -616,7 +622,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
 
   seleccionarDesplegableServicios(): void {
     this.cambioModalidadStore.actualizarEstado({
-      serviciosImmx: this.serviciosImmxForm.value.serviciosImmx.toString()
+      serviciosImmx: this.cambioDeModalidadForm.value.serviciosImmx.toString()
     });
   }
    /**
@@ -626,6 +632,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      */
     seleccionarDomicilios(domicilios: ServicioInfo): void {
       this.domiciliosSeleccionados = [{ ...domicilios }];
+      this.cambioModalidadStore.setDomiciliosSeleccionados(this.domiciliosSeleccionados);
     }
    /**
      * Elimina empresas nacionales.
@@ -690,6 +697,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      */
     seleccionarEmpresas(empresas: ServicioInmex): void {
     this.empresasSeleccionados = [{ ...empresas }];
+    this.cambioModalidadStore.setEmpresasSeleccionados(this.empresasSeleccionados);
     }
 
   /**
@@ -704,5 +712,20 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+    /**
+   * Establecer valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.s
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof CambioModalidadStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.cambioModalidadStore[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 }

@@ -17,7 +17,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueMateriales">
-                    <span class="danger">*</span>{{textos.etiqueta}}
+                    {{textos.etiqueta}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueMateriales" formControlName="indiqueMateriales" (change)="setValoresStore(seguridadFisicaForm,'indiqueMateriales')"></textarea>
             </div>
@@ -32,8 +32,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="queForma">
-                    <span class="danger">*</span>De qué forma se lleva a cabo la revisión y mantenimiento de la
-                    integridad de las estructuras.
+                    De qué forma se lleva a cabo la revisión y mantenimiento de la
+                    integridad de las estructuras<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="queForma" formControlName="queForma" (change)="setValoresStore(seguridadFisicaForm,'queForma')"></textarea>
             </div>
@@ -48,8 +48,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="personalResponsable">
-                    <span class="danger">*</span>Indique el personal o área responsable para realizar las tareas de
-                    inspección, mantenimiento y reparación de daños de las instalaciones.
+                    Indique el personal o área responsable para realizar las tareas de
+                    inspección, mantenimiento y reparación de daños de las instalaciones<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="personalResponsable" formControlName="personalResponsable" (change)="setValoresStore(seguridadFisicaForm,'personalResponsable')"></textarea>
             </div>
@@ -64,8 +64,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label class="alert-text">
-                    <span class="danger">*</span>Anexe un Plano de distribución o arquitectónico de conjunto, donde se
-                    puedan identificar los límites, rutas de acceso y la ubicación de los edificios.
+                    Anexe un Plano de distribución o arquitectónico de conjunto, donde se
+                    puedan identificar los límites, rutas de acceso y la ubicación de los edificios<span class="danger">*</span>:
                 </label>
             </div>
         </div>
@@ -84,8 +84,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueCuantas">
-                    <span class="danger">*</span>Indique cuantas puertas y/o accesos existen en las instalaciones, así
-                    como el horario de operación de cada una.
+                    Indique cuantas puertas y/o accesos existen en las instalaciones, así
+                    como el horario de operación de cada una<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueCuantas" formControlName="indiqueCuantas" (change)="setValoresStore(seguridadFisicaForm,'indiqueCuantas')"></textarea>
             </div>
@@ -100,8 +100,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueMonitoreadas">
-                    <span class="danger">*</span>Indique de qué forma son monitoreadas (en caso de tener personal de
-                    vigilancia asignado, indicar la cantidad).
+                    Indique de qué forma son monitoreadas (en caso de tener personal de
+                    vigilancia asignado, indicar la cantidad)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueMonitoreadas" formControlName="indiqueMonitoreadas" (change)="setValoresStore(seguridadFisicaForm,'indiqueMonitoreadas')"></textarea>
             </div>
@@ -116,8 +116,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="detalleExisten">
-                    <span class="danger">*</span>Detalle si existen puertas y/o accesos bloqueados, o permanentemente
-                    cerradas y su ubicación.
+                    Detalle si existen puertas y/o accesos bloqueados, o permanentemente
+                    cerradas y su ubicación<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="detalleExisten" formControlName="detalleExisten" (change)="setValoresStore(seguridadFisicaForm,'detalleExisten')"></textarea>
             </div>
@@ -132,9 +132,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaAcceso">
-                    <span class="danger">*</span>Describa cómo asegura que el acceso a las áreas sensibles este
+                    Describa cómo asegura que el acceso a las áreas sensibles este
                     restringido según la descripción del trabajo o las tareas asignadas (incluya el tipo de registros y
-                    controles que utiliza)
+                    controles que utiliza)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaAcceso" formControlName="describaAcceso" (change)="setValoresStore(seguridadFisicaForm,'describaAcceso')"></textarea>
             </div>
@@ -194,7 +194,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaAreas">
-                    <span class="danger">*</span>Describa que áreas se encuentran segregadas
+                    Describa que áreas se encuentran segregadas<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaAreas" formControlName="describaAreas" (change)="setValoresStore(seguridadFisicaForm,'describaAreas')"></textarea>
             </div>
@@ -209,7 +209,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for=senaleMismas>
-                    <span class="danger">*</span>Señale las características de las mismas (material, dimensiones, etc.).
+                    Señale las características de las mismas (material, dimensiones, etc.)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senaleMismas" formControlName="senaleMismas" (change)="setValoresStore(seguridadFisicaForm,'senaleMismas')"></textarea>
             </div>
@@ -224,8 +224,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="casoNoContar">
-                    <span class="danger">*</span>En caso de no contar con bardas, favor de justificar detalladamente la
-                    razón.
+                    En caso de no contar con bardas, favor de justificar detalladamente la
+                    razón<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="casoNoContar" formControlName="casoNoContar" (change)="setValoresStore(seguridadFisicaForm,'casoNoContar')"></textarea>
             </div>
@@ -240,9 +240,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="periodicidadVerifica">
-                    <span class="danger">*</span>Periodicidad con la que se verifica la integridad de las bardas
+                    Periodicidad con la que se verifica la integridad de las bardas
                     perimétricas, y los registros que se llevan a cabo con la finalidad de asegurar su integridad e
-                    identificar daños, mismos que deben repararse lo antes posible.
+                    identificar daños, mismos que deben repararse lo antes posible<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="periodicidadVerifica" formControlName="periodicidadVerifica" (change)="setValoresStore(seguridadFisicaForm,'periodicidadVerifica')"></textarea>
             </div>
@@ -257,9 +257,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueTareas">
-                    <span class="danger">*</span> Indique el personal o área responsable para realizar las tareas de
+                    Indique el personal o área responsable para realizar las tareas de
                     inspección y reparación de daños
-                    razón.
+                    razón<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueTareas" formControlName="indiqueTareas" (change)="setValoresStore(seguridadFisicaForm,'indiqueTareas')"></textarea>
             </div>
@@ -290,10 +290,10 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueSepara">
-                    <span class="danger">*</span> Indique cómo separa la mercancía nacional y la de comercio exterior, y
+                    Indique cómo separa la mercancía nacional y la de comercio exterior, y
                     si está identificada de manera adicional (Por ejemplo: empaque distinto; etiquetas; embalaje, entre
                     otros).
-                    razón.
+                    razón<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueSepara" formControlName="indiqueSepara" (change)="setValoresStore(seguridadFisicaForm,'indiqueSepara')"></textarea>
             </div>
@@ -334,8 +334,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaMonitoreo">
-                    <span class="danger">*</span> Describa el procedimiento para el control y monitoreo de los
-                    estacionamientos
+                    Describa el procedimiento para el control y monitoreo de los
+                    estacionamientos<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaMonitoreo" formControlName="describaMonitoreo" (change)="setValoresStore(seguridadFisicaForm,'describaMonitoreo')"></textarea>
             </div>
@@ -350,8 +350,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="responsablesControlar">
-                    <span class="danger">*</span>Responsables de controlar y monitorear el acceso a los
-                    estacionamientos.
+                    Responsables de controlar y monitorear el acceso a los
+                    estacionamientos<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="responsablesControlar" formControlName="responsablesControlar" (change)="setValoresStore(seguridadFisicaForm,'responsablesControlar')"></textarea>
             </div>
@@ -366,9 +366,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="estacionamientos">
-                    <span class="danger">*</span> Identificación de los estacionamientos (especificar si el
+                    Identificación de los estacionamientos (especificar si el
                     estacionamiento de visitantes, se encuentra separado de las áreas de almacenaje y manejo de
-                    mercancía).
+                    mercancía)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="estacionamientos" formControlName="estacionamientos" (change)="setValoresStore(seguridadFisicaForm,'estacionamientos')"></textarea>
             </div>
@@ -383,10 +383,10 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="llevaEntrada">
-                    <span class="danger">*</span>Cómo se lleva el control de entrada y salida de vehículos a las
+                    Cómo se lleva el control de entrada y salida de vehículos a las
                     instalaciones. (Indicar los registros que se realizan para el control del estacionamiento, y los
                     mecanismos de control existentes), (por ejemplo: tarjetones, tarjetas lectoras, corbatines, etc.
-                    etcétera), cómo se asignan y el área responsable de hacerlo.
+                    etcétera), cómo se asignan y el área responsable de hacerlo<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="llevaEntrada" formControlName="llevaEntrada" (change)="setValoresStore(seguridadFisicaForm,'llevaEntrada')"></textarea>
             </div>
@@ -401,8 +401,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="politicasMecanismos">
-                    <span class="danger">*</span>Políticas o mecanismos para no permitir el ingreso de vehículos
-                    privados a las áreas de almacenaje y manejo de mercancía.
+                    Políticas o mecanismos para no permitir el ingreso de vehículos
+                    privados a las áreas de almacenaje y manejo de mercancía<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="politicasMecanismos" formControlName="politicasMecanismos" (change)="setValoresStore(seguridadFisicaForm,'politicasMecanismos')"></textarea>
             </div>
@@ -427,15 +427,15 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueTodas">
-                    <span class="danger">*</span>Indique si todas las ventanas, puertas y cercas interiores y
-                    exteriores, de acuerdo a su análisis de riesgo, disponen de mecanismos de cierre o seguridad.
+                    Indique si todas las ventanas, puertas y cercas interiores y
+                    exteriores, de acuerdo a su análisis de riesgo, disponen de mecanismos de cierre o seguridad<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiqueTodas" (change)="setValoresStore(seguridadFisicaForm,'indiqueTodas')"></app-input-radio>
             </div>
 
             <div class="mt-4 alert-text">
-                <span class="danger">*</span>{{textos.paraca6}}
+                {{textos.paraca6}}<span class="danger">*</span>:
                 <div class="centered-list-wrapper">
                     <ol type="a">
                         <li>Responsables de administrar y controlar la seguridad de las llaves.</li>
@@ -473,8 +473,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="procedimientoOperacion">
-                    <span class="danger">*</span>Describa el procedimiento para la operación y mantenimiento del
-                    sistema de iluminación.
+                    Describa el procedimiento para la operación y mantenimiento del
+                    sistema de iluminación<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="procedimientoOperacion" formControlName="procedimientoOperacion" (change)="setValoresStore(seguridadFisicaForm,'procedimientoOperacion')"></textarea>
             </div>
@@ -489,8 +489,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="senaleEncuentran">
-                    <span class="danger">*</span>Señale qué áreas se encuentran iluminadas y cuáles cuentan con un
-                    sistema de respaldo.
+                    Señale qué áreas se encuentran iluminadas y cuáles cuentan con un
+                    sistema de respaldo<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senaleEncuentran" formControlName="senaleEncuentran" (change)="setValoresStore(seguridadFisicaForm,'senaleEncuentran')"></textarea>
             </div>
@@ -505,7 +505,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiquePlanta">
-                    <span class="danger">*</span>Indique si cuenta con una planta de poder auxiliar.
+                    Indique si cuenta con una planta de poder auxiliar<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiquePlanta" (change)="setValoresStore(seguridadFisicaForm,'indiquePlanta')"></app-input-radio>
@@ -513,8 +513,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="mencioneCuenta">
-                    <span class="danger">*</span>Mencione si cuenta con algún otro mecanismo para suministrar energía
-                    eléctrica en caso de alguna contingencia.
+                    Mencione si cuenta con algún otro mecanismo para suministrar energía
+                    eléctrica en caso de alguna contingencia<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="mencioneCuenta" formControlName="mencioneCuenta" (change)="setValoresStore(seguridadFisicaForm,'mencioneCuenta')"></textarea>
             </div>
@@ -529,7 +529,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="queManera">
-                    <span class="danger">*</span>{{textos.paraca8}}
+                    {{textos.paraca8}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="queManera" formControlName="queManera" (change)="setValoresStore(seguridadFisicaForm,'queManera')"></textarea>
             </div>
@@ -554,9 +554,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaContactar">
-                    <span class="danger">*</span>Describa el procedimiento que el personal debe realizar para contactar
+                    Describa el procedimiento que el personal debe realizar para contactar
                     al personal de seguridad de la empresa o, en su caso, de la autoridad correspondiente en caso de
-                    algún incidente de seguridad
+                    algún incidente de seguridad<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaContactar" formControlName="describaContactar" (change)="setValoresStore(seguridadFisicaForm,'describaContactar')"></textarea>
             </div>
@@ -571,7 +571,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueOperativo">
-                    <span class="danger">*</span>{{textos.etiqueta2}}
+                    {{textos.etiqueta2}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueOperativo" formControlName="indiqueOperativo" (change)="setValoresStore(seguridadFisicaForm,'indiqueOperativo')"></textarea>
             </div>
@@ -586,8 +586,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueAparatos">
-                    <span class="danger">*</span> Indique qué tipo de aparatos de comunicación utiliza el personal de
-                    seguridad en la empresa (teléfonos fijos, celulares, radios, sistema de alarma, etcétera)
+                    Indique qué tipo de aparatos de comunicación utiliza el personal de
+                    seguridad en la empresa (teléfonos fijos, celulares, radios, sistema de alarma, etcétera)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueAparatos" formControlName="indiqueAparatos" (change)="setValoresStore(seguridadFisicaForm,'indiqueAparatos')"></textarea>
             </div>
@@ -617,7 +617,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="politicasAparatos">
-                    <span class="danger">*</span>Políticas de asignación de aparatos de comunicación móvil.
+                    Políticas de asignación de aparatos de comunicación móvil<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="politicasAparatos" formControlName="politicasAparatos" (change)="setValoresStore(seguridadFisicaForm,'politicasAparatos')"></textarea>
             </div>
@@ -632,7 +632,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="programaMantenimiento">
-                    <span class="danger">*</span>Programa de mantenimiento de aparatos de comunicación fija y móvil.
+                    Programa de mantenimiento de aparatos de comunicación fija y móvil<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="programaMantenimiento" formControlName="programaMantenimiento" (change)="setValoresStore(seguridadFisicaForm,'programaMantenimiento')"></textarea>
             </div>
@@ -647,8 +647,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueRespaldo">
-                    <span class="danger">*</span>Indique si cuenta con aparatos de comunicación de respaldo, en caso de
-                    que el sistema permanente fallara, y, en su caso, detalle brevemente.
+                    Indique si cuenta con aparatos de comunicación de respaldo, en caso de
+                    que el sistema permanente fallara, y, en su caso, detalle brevemente<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueRespaldo" formControlName="indiqueRespaldo" (change)="setValoresStore(seguridadFisicaForm,'indiqueRespaldo')"></textarea>
             </div>
@@ -682,7 +682,7 @@
 
             <div class="col-md-12 text-container mt-2">
                 <label for="cuentaDocumentado">
-                    <span class="danger">*</span>{{textos.etiqueta3}}
+                    {{textos.etiqueta3}}<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="cuentaDocumentado" (change)="setValoresStore(seguridadFisicaForm,'cuentaDocumentado')"></app-input-radio>
@@ -690,8 +690,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiquePuertas">
-                    <span class="danger">*</span> Indique si todas las puertas y ventanas tienen sensores de alarma, así
-                    como las áreas donde se cuenta con sensores de movimiento.
+                    Indique si todas las puertas y ventanas tienen sensores de alarma, así
+                    como las áreas donde se cuenta con sensores de movimiento<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiquePuertas" (change)="setValoresStore(seguridadFisicaForm,'indiquePuertas')" ></app-input-radio>
@@ -699,7 +699,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaAlarma">
-                    <span class="danger">*</span>Describa el procedimiento a seguir en caso de activarse una alarma
+                    Describa el procedimiento a seguir en caso de activarse una alarma<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaAlarma" formControlName="describaAlarma" (change)="setValoresStore(seguridadFisicaForm,'describaAlarma')"></textarea>
             </div>
@@ -714,8 +714,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueUtilizan">
-                    <span class="danger">*</span>Indique el personal o área responsable de dar mantenimiento, cómo se
-                    reportan fallas y los registros que utilizan.
+                    Indique el personal o área responsable de dar mantenimiento, cómo se
+                    reportan fallas y los registros que utilizan<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueUtilizan" formControlName="indiqueUtilizan" (change)="setValoresStore(seguridadFisicaForm,'indiqueUtilizan')"></textarea>
             </div>
@@ -730,7 +730,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaSistemas">
-                    <span class="danger">*</span>{{textos.etiqueta4}}
+                    {{textos.etiqueta4}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaSistemas" formControlName="describaSistemas" (change)="setValoresStore(seguridadFisicaForm,'describaSistemas')"></textarea>
             </div>
@@ -745,7 +745,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indicarCamaras">
-                    <span class="danger">*</span>{{textos.etiqueta5}}
+                    {{textos.etiqueta5}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indicarCamaras" formControlName="indicarCamaras" (change)="setValoresStore(seguridadFisicaForm,'indicarCamaras')"></textarea>
             </div>
@@ -760,8 +760,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="mencioneInspeccion">
-                    <span class="danger">*</span>Mencione donde se lleva a cabo la inspección señalada en el
-                    sub-estándar 7.2).
+                    Mencione donde se lleva a cabo la inspección señalada en el
+                    sub-estándar 7.2)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="mencioneInspeccion" formControlName="mencioneInspeccion" (change)="setValoresStore(seguridadFisicaForm,'mencioneInspeccion')"></textarea>
             </div>
@@ -776,7 +776,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="senalarUbicacion">
-                    <span class="danger">*</span>{{textos.etiqueta6}}
+                    {{textos.etiqueta6}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senalarUbicacion" formControlName="senalarUbicacion" (change)="setValoresStore(seguridadFisicaForm,'senalarUbicacion')"></textarea>
             </div>
@@ -791,7 +791,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueHorarios">
-                    <span class="danger">*</span>{{textos.etiqueta7}}
+                    {{textos.etiqueta7}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueHorarios" formControlName="indiqueHorarios" (change)="setValoresStore(seguridadFisicaForm,'indiqueHorarios')"></textarea>
             </div>
@@ -806,8 +806,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueRevisan">
-                    <span class="danger">*</span>Indique de qué forma revisan las grabaciones (aleatoria, cada semana,
-                    eventos especiales, áreas restringidas, etcétera).
+                    Indique de qué forma revisan las grabaciones (aleatoria, cada semana,
+                    eventos especiales, áreas restringidas, etcétera)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueRevisan" formControlName="indiqueRevisan" (change)="setValoresStore(seguridadFisicaForm,'indiqueRevisan')"></textarea>
             </div>
@@ -822,8 +822,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueDesignado">
-                    <span class="danger">*</span>Indique quién es el personal designado y cómo la gerencia se involucra
-                    en las revisiones
+                    Indique quién es el personal designado y cómo la gerencia se involucra
+                    en las revisiones<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueDesignado" formControlName="indiqueDesignado" (change)="setValoresStore(seguridadFisicaForm,'indiqueDesignado')"></textarea>
             </div>
@@ -838,8 +838,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="comoDocumentan">
-                    <span class="danger">*</span>Cómo se documentan los resultados de las revisiones para incluir
-                    acciones correctivas para fines de auditoría
+                    Cómo se documentan los resultados de las revisiones para incluir
+                    acciones correctivas para fines de auditoría<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="comoDocumentan" formControlName="comoDocumentan" (change)="setValoresStore(seguridadFisicaForm,'comoDocumentan')"></textarea>
             </div>
@@ -854,8 +854,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueTiempo">
-                    <span class="danger">*</span>Indique por cuánto tiempo se mantienen estas grabaciones (debiendo ser
-                    por lo menos de un mes).
+                    Indique por cuánto tiempo se mantienen estas grabaciones (debiendo ser
+                    por lo menos de un mes)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueTiempo" formControlName="indiqueTiempo" (change)="setValoresStore(seguridadFisicaForm,'indiqueTiempo')"></textarea>
             </div>
@@ -870,7 +870,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueCerrado">
-                    <span class="danger">*</span>{{textos.etiqueta8}}
+                    {{textos.etiqueta8}}<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiqueCerrado" (change)="setValoresStore(seguridadFisicaForm,'indiqueCerrado')"></app-input-radio>
@@ -878,8 +878,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="contarPlanta">
-                    <span class="danger">*</span>En caso de no contar con una planta de poder eléctrica, mencione algún
-                    otro mecanismo para suministrar energía eléctrica, que garanticen su funcionamiento.
+                    En caso de no contar con una planta de poder eléctrica, mencione algún
+                    otro mecanismo para suministrar energía eléctrica, que garanticen su funcionamiento<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="contarPlanta" formControlName="contarPlanta" (change)="setValoresStore(seguridadFisicaForm,'contarPlanta')"></textarea>
             </div>
@@ -894,9 +894,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="estosSistemas">
-                    <span class="danger">*</span>Estos sistemas deberían de tener una función de alarma/notificación,
+                    Estos sistemas deberían de tener una función de alarma/notificación,
                     que indique una condición de falla en el funcionamiento y/o grabación, señale si sus sistemas tienen
-                    dicha función
+                    dicha función<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="estosSistemas" formControlName="estosSistemas" (change)="setValoresStore(seguridadFisicaForm,'estosSistemas')"></textarea>
             </div>
@@ -911,7 +911,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indicarCircuito">
-                    <span class="danger">*</span>{{textos.etiqueta9}}
+                    {{textos.etiqueta9}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indicarCircuito" formControlName="indicarCircuito" (change)="setValoresStore(seguridadFisicaForm,'indicarCircuito')"></textarea>
             </div>
@@ -926,7 +926,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaImplementado">
-                    <span class="danger">*</span>{{textos.etiqueta10}}
+                    {{textos.etiqueta10}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaImplementado" formControlName="describaImplementado" (change)="setValoresStore(seguridadFisicaForm,'describaImplementado')"></textarea>
             </div>
@@ -941,7 +941,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indicarCircuitoCerrado">
-                    <span class="danger">*</span>{{textos.etiqueta11}}
+                    {{textos.etiqueta11}}<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indicarCircuitoCerrado" (change)="setValoresStore(seguridadFisicaForm,'indicarCircuitoCerrado')"></app-input-radio>
@@ -949,8 +949,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="formaControlan">
-                    <span class="danger">*</span>Indique de qué forma se controlan los accesos y quién es el responsable
-                    de dicho monitoreo
+                    Indique de qué forma se controlan los accesos y quién es el responsable
+                    de dicho monitoreo<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="formaControlan" formControlName="formaControlan" (change)="setValoresStore(seguridadFisicaForm,'formaControlan')" ></textarea>
             </div>

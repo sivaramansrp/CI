@@ -1,6 +1,27 @@
 <div class="container">
     <form [formGroup]="formulario">
+         
+    @if(isProcesoTransformacion){
+        <ng-titulo titulo = "Proceso de Transformación (ACE-53/PAR-4)" />
+        <ng-alert [CONTENIDO]="mensajeDeSeleccion.MENSAJE"></ng-alert>
+        <div class="col-md-12">
+            <app-input-radio formControlName="procesoTransformacion" [radioOptions]="seleccionarTransformacion" [layout]="'horizontal'"></app-input-radio>
+        </div>
+    }
 
+    @if(isJuegosSurtidos){
+        <ng-titulo titulo = "Juegos o Surtidos" />
+        <label for="nombreJuegoSurtido" class="form-label">Descripción del juego o surtido*:</label>
+        <input type="text" id="nombreJuegoSurtido" 
+                class="form-control" 
+                formControlName="descripcionJuegoSurtido">
+        <label for="preguntaCondicion" class="form-label">¿Cumple con la condición de ser Juego o Surtido para el Acuerdo México-Perú?:</label>
+        <ng-alert [CONTENIDO]="condiciones.CONDICION"></ng-alert>
+        <div class="col-md-12">
+            <app-input-radio formControlName="juegoSurtido" [radioOptions]="opciones" [layout]="'horizontal'"></app-input-radio>
+        </div>
+    }
+    @if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_exportador_autorizado === true){
     <ng-titulo titulo="Información Opcional para UE y AELC" />
     <div class="row">
         <div class="col-md-8">
@@ -10,6 +31,7 @@
             </p>
         </div>
     </div>
+    
 
         <div class="row" *ngIf="formulario.get('exportadorAutorizado')?.value">
         <div class="col-md-12">
@@ -22,6 +44,7 @@
             </div>
         </div>
     </div>
+    
     
 
     <div class="row">
@@ -38,6 +61,7 @@
              <app-input-radio formControlName="informacionRadios" [radioOptions]="radioOpcions" [layout]="'radio-label-wrap'" (change)="setValoresStore(formulario, 'informacionRadios', 'setInformacionRadios')"></app-input-radio>
         </div>
     </div>
+   }
     
     
     <ng-titulo titulo="Representación federal" />
@@ -45,13 +69,13 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'" [required]="true"
                     name="entidad" formControlName="entidad" [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')">
+                    (selectionChange)="onRepresentacionFederal($event)">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="true"
                     name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')">
+                    (selectionChange)="onRepresentacionChange($event)">
                 </app-catalogo-select>
             </div>
         </div>
@@ -59,12 +83,14 @@
     <ng-titulo titulo="Protesto de Decir Verdad" />
     <div class="alert alert-info manifest-box">
         <div class="form-check">
-            <input class="form-check-input me-2" type="checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
-                [checked]="esFormularioSoloLectura || actualizacionCounsulta">
+            <input class="form-check-input me-2" type="checkbox" id="protesto_verdad" formControlName="protesto_verdad" [disabled]="esFormularioSoloLectura"
+                [checked]="esFormularioSoloLectura || actualizacionCounsulta"
+                (change)="setValoresStore(formulario, 'protesto_verdad', 'setProtesto')">
             <span class="form-check-label" for="protesta">
-                {{ TEXTOS.ADJUNTAR }}
+                {{ textos }}
             </span>
         </div>
+         <small *ngIf="formulario.get('protesto_verdad')?.touched && formulario.get('protesto_verdad')?.invalid">Este campo es obligatorio.</small>
     </div>
     </form>
 </div>

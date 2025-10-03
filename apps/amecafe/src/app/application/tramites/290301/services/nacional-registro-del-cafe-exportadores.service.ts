@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { BeneficiosData, BodegasData, CafeExportadoresData, RegionesData } from '../models/filadata.model';
 import { Solicitud290301State, Solicitud290301Store } from '../estados/tramite290301.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +62,31 @@ export class NacionalRegistroDelCafeExportadoresService {
  */
 getConsultaData(): Observable<Solicitud290301State> {
   return this.http.get<Solicitud290301State>('assets/json/290301/consulta.json');
+}
+/**
+ * Método para cargar el catálogo de estados desde un archivo JSON.
+ * 
+ * @returns Observable con la lista de estados disponibles en el catálogo.
+ */
+cargarEstadoCatalog() : Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/290301/estado.json');
+}
+
+/**
+ * Método para cargar el catálogo de clasificaciones (propia o alquilada) desde un archivo JSON.
+ * 
+ * @returns Observable con la lista de clasificaciones disponibles en el catálogo.
+ */
+cargarClasificacion() : Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/290301/propia-alquilada.json');
+}
+
+/**
+ * Método para cargar el catálogo de tipos de café desde un archivo JSON.
+ * 
+ * @returns Observable con la lista de tipos de café disponibles en el catálogo.
+ */
+cargarTipoDeCafe() : Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/290301/tipo-de-cafe.json');
 }
 }

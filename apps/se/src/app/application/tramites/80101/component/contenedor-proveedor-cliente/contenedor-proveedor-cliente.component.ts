@@ -1,5 +1,5 @@
 import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
 
@@ -32,6 +32,8 @@ export class ContenedorProveedorClienteComponent {
    */
   datosDelProveedor:ProveedorClienteTabla[]=[];
 
+  @Input() proveedorClienteDatosTabla!: ProveedorClienteTabla[];
+
   /**
    * Evento que se emite para cerrar el popup actual.
    * 
@@ -41,12 +43,21 @@ export class ContenedorProveedorClienteComponent {
   @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
+   * Emisor de eventos para los datos actualizados de proveedores y clientes.
+   * @type {EventEmitter<ProveedorClienteTabla[]>}
+   */
+  @Output() public datosActualizadosProveedorClient = new EventEmitter<
+    ProveedorClienteTabla[]
+  >();
+
+  /**
    * Método que actualiza los datos del proveedor o cliente con la información proporcionada.
    * 
    * @param $event - Arreglo de objetos de tipo `ProveedorClienteTabla` que contiene los datos actualizados.
    */
   public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
     this.datosDelProveedor = $event;
+    this.datosActualizadosProveedorClient.emit(this.datosDelProveedor);
   }
 
 }

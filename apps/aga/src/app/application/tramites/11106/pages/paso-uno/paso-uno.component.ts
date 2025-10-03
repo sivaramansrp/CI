@@ -5,10 +5,14 @@ import {
   ListaPasosWizard,
   SolicitanteComponent,
   WizardComponent,
-} from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+} from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CancelacionDonacionesService } from '../../services/cancelacion-donaciones.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11106/pasos.enum';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
@@ -40,7 +44,7 @@ interface AccionBoton {
     BtnContinuarComponent,
   ],
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Evento que se emite al continuar con el flujo del trámite.
    */
@@ -77,6 +81,21 @@ export class PasoUnoComponent {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+   * Indica si existen datos de respuesta para mostrar en el formulario.
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Estado actual de la consulta del trámite.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** 
+    Subject para notificar la destrucción del componente. 
+    */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Referencia al componente del wizard.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -90,6 +109,55 @@ export class PasoUnoComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+
+  /**
+   * @description
+   * Constructor de la clase `PasoUnoComponent`.
+   * @param consultaQuery - Query de Akita utilizado para consultar el estado de la consulta del trámite.
+   * @param cancelacionDonacionesService - Servicio que maneja las operaciones relacionadas con 
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private cancelacionDonacionesService: CancelacionDonacionesService
+  ) {
+
+  }
+
+     /**
+   * Método del ciclo de vida `ngOnInit`.
+   * Inicializa el componente y sus dependencias.
+   * Suscribe al observable del estado de consulta para obtener el estado actual desde el store.
+   * Si el estado indica que hay una actualización pendiente (`update`), llama al método para guardar los datos del formulario.
+   * En caso contrario, activa la bandera para mostrar los datos de respuesta.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.consultaState = seccionState;
+        if(this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+    })).subscribe();
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.cancelacionDonacionesService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.cancelacionDonacionesService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Selecciona la pestaña indicada por el índice.
@@ -119,5 +187,19 @@ export class PasoUnoComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+
+  /**
+   * Método del ciclo de vida `ngOnDestroy`.
+   * Se ejecuta cuando el componente es destruido.
+   * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
+   *
+   * @example
+   * // Angular llama automáticamente a este método al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

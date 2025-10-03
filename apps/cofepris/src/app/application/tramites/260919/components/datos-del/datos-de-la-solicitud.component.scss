@@ -1,0 +1,5 @@
+/* Reserve space for validation messages */
+.validation-container {
+  min-height: 40px; /* Adjust based on the number of validation messages */
+  line-height: 1.2;
+}

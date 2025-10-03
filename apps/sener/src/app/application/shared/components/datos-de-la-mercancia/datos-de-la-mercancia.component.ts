@@ -6,7 +6,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import {CatalogoSener } from '../../models/complimentos.model';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 /**
@@ -60,7 +60,7 @@ export class DatosDeLaMercanciaComponent {
   /**
    * @description Catálogo que contiene opciones de fracción.
    */
-  @Input() mercanciaCatalogoArray: Catalogo[][] = [];
+  @Input() mercanciaCatalogoArray: CatalogoSener [][] = [];
 
 
   /**
@@ -116,6 +116,23 @@ esValorNumerico(controlName: string): boolean {
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
   }
+
+  /**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+  formularioSolicitudValidacion(): boolean {
+    if (this.form.valid) {
+      return true;
+    }
+    this.form.markAllAsTouched();
+    return false;
+  }
+
+
   /**
    * @method alCambioDelCampo
    * @description Maneja el evento de cambio de un campo en el formulario.
@@ -128,6 +145,10 @@ esValorNumerico(controlName: string): boolean {
     // Se emite el evento con el valor seleccionado para que el componente padre lo procese.
     const METODO_NOMBRE = i === 0 ? 'setFraccion' : (i === 1 ? 'setUmt' : 'setNico');
     this.alCambioDelCampoValores.emit({ form, campo: controlName, metodoNombre: METODO_NOMBRE });
+    const SELECTED_NUM=Number(this.form.get('fraccion')?.value)
+const DESCRIPTION=this.mercanciaCatalogoArray[i][SELECTED_NUM]
+this.form.get('acotacion')?.setValue(DESCRIPTION.acotacion)
+this.setValoresStore(this.form, 'acotacion')
   }
 
   /**

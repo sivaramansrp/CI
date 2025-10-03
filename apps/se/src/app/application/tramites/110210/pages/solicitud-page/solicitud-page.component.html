@@ -4,7 +4,11 @@
       <div class="col-md-12">
         <h2>Trámites disponibles</h2>
       </div>
-
+      @if(esFormaValido){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+        }
       <app-wizard [listaPasos]="pasos"></app-wizard>
 
     </div>
@@ -12,17 +16,17 @@
     <div class="row">
       @switch (indice) {
       @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUno></app-paso-uno>
       }
       @case (2) {
       <app-paso-dos></app-paso-dos>
       }
       @case (3) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110210" [procedureUrl]="'tramites-disponibles/solicitud'"></paso-firma>
       }
     }
 
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"></btn-continuar>
 
        <div class="row">
           <ng-alert [CONTENIDO]="ADVERTENCIA.Aviso"></ng-alert>

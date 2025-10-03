@@ -401,7 +401,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         bloque: [this.seccionState?.bloque],
         usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
         justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
-        observaciones: [this.seccionState?.observaciones],
+        observaciones: [this.seccionState?.observaciones,Validators.maxLength(512)]
       });
       this.frmRepresentacionForm = this.fb.group({
         entidad: [this.seccionState?.entidad, Validators.required],

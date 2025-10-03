@@ -1,6 +1,6 @@
 <div class="container form-container">
     <form [formGroup]="asignacionForm" class="mt-5">
-        <ng-titulo titulo="Mecanismo de asignación directa" />
+        <ng-titulo titulo="Descripción del cupo" />
         <div class="row mb-3">
             <div class="col">
                 <div class="form-group">
@@ -26,16 +26,29 @@
             <div class="col-md-6">
                 <div class="form-group custom-clasifi-regimen-catalogo">
                     <label for="clasificacionRegimen">Número de oficio de asignación*:</label>
-                    <input type="text" class="form-control" formControlName="numTramite" id="numTramite"
+                    <input type="text" class="form-control" formControlName="numTramite" id="numTramite"  maxlength="30"
                         [class.is-invalid]="isInvalid('numTramite')"
                         (change)="setValoresStore(asignacionForm,'numTramite')">
                 </div>
+    @if(asignacionForm.controls['numTramite'].invalid && asignacionForm.controls['numTramite'].touched) {
+    <div class="d-grid">
+      @if(asignacionForm.controls['numTramite'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(asignacionForm.controls['numTramite'].errors?.['maxlength']) {
+        <span class="mensaje-error">El número de oficio no puede ser mayor a 30 caracteres</span>
+      }
+      @if(asignacionForm.controls['numTramite'].errors?.['pattern']) {
+        <span class="mensaje-error">Corrija los siguientes errores:<br>El valor {{ asignacionForm.controls['numTramite'].value }} debe ser un número válido</span>
+      }
+    </div>
+  }
             </div>
         </div>
         <div class="row mb-5">
             <div class="col-md-6"></div>
             <div class="col-md-6 text-end">
-                    <button class="btn btn-group btn-primary" type="button" (click)="buscar()">Buscar</button>
+                    <button class="btn btn-group btn-primary" type="button" (click)="buscar()" [disabled]="esFormularioSoloLectura">Buscar</button>
             </div>
         </div>
     </form>

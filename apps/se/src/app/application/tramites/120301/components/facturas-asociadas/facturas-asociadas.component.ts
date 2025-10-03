@@ -1,14 +1,6 @@
-/**
- * @component FormularioAsociacionFacturaComponent
- * @description Este componente es responsable de manejar las facturas asociadas.
- * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
- */
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+
 
 import {
   FormBuilder,
@@ -21,15 +13,16 @@ import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@ng-mf/data-access-user';
-
-import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+} from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import {
   AsociadasTableColumns,
@@ -40,8 +33,16 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
+import { FacturasTplAsociadaResponse } from '../../models/response/datos-factura-response.model';
+import { FacturasTplAsociadasRequest } from '../../models/request/facturas-tpl-asociadas-request.model';
+import { FacturasTplEliminarRequest } from '../../models/request/facturas-tpl-eliminar-request.model';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
+
+
 
 /**
  * @component FormularioAsociacionFacturaComponent
@@ -86,6 +87,8 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
+    NotificacionesComponent,
+    ModalModule,
   ],
 })
 export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
@@ -98,6 +101,18 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   @Input()
   formularioDeshabilitado: boolean = false;
 
+  @Input()
+  informacionFacturasAsociadas!: FacturasTplAsociadaResponse;
+  /**
+   * @property {FacturasTplAsociadaResponse} informacionFacturasAsociadas - Información de las facturas asociadas.
+   */
+  informacionFacturaAsociadas!: FacturasTplAsociadaResponse;
+
+  /**
+   * @property {boolean} visualizarEvaluacion - Indica si se debe mostrar la evaluación.
+   */
+  visualizarEvaluacion: boolean = true;
+
   /**
    * @property {FormGroup} formularioAsociacionFactura - El grupo de formularios para capturar los datos de las facturas asociadas.
    * Formulario reactivo principal que contiene todos los controles necesarios para la gestión
@@ -105,6 +120,31 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * Maneja validaciones y sincronización con el estado global de la aplicación.
    */
   formularioAsociacionFactura!: FormGroup;
+
+  /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
+  public formularioAlertaError: string = '';
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Bandera booleana que indica si el formulario tiene errores de validación.
+   * Si es `true`, se muestra el mensaje de error; si es `false`, el formulario es válido y no se muestra la alerta.
+   */
+  public esFormaValido: boolean = false;
+
+  /**
+ * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
+ * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
+ * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
+ * Permite la coordinación entre componentes para la navegación de la interfaz.
+ */
+  @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -119,6 +159,13 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * Mejora la experiencia de usuario permitiendo organizar la información en paneles colapsables.
    */
   colapsable: boolean = false;
+
+  /**
+   * @property {string} labelUnidad - Unidad de medida obtenida del servicio.
+   * Almacena la unidad de medida (kg, lt, etc.) obtenida al consultar los totales de facturas asociadas.
+   * Se utiliza para mostrar la unidad correcta junto a los valores en el formulario.
+   */
+  labelUnidad: string = '';
 
   /**
    * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
@@ -275,6 +322,62 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   facturasAsociadas: AsociadasTableColumns[] = [];
 
   /**
+    * @property {Solicitud120301State} solicitudState - Estado de la solicitud en el store de Akita.
+    * Almacena el estado completo de la solicitud según la arquitectura Akita,
+    * incluyendo todos los datos relevantes para el manejo del estado de la aplicación.
+    * Se actualiza mediante los correspondientes stores y queries de Akita.
+    */
+  public solicitudState!: Solicitud120301State;
+
+  /**
+   * @property {string} idFacturaExpedicion - Identificador único de la factura de expedición.
+   * Contiene el ID que identifica de manera única una factura de expedición específica.
+   * Se utiliza para operaciones de búsqueda, asociación y validación de facturas.
+   */
+  public idFacturaExpedicion!: string;
+
+  /**
+   * @property {CapturarColumns | undefined} filaSeleccionada - Fila seleccionada en la tabla de facturas.
+   * Almacena la referencia a la fila de factura seleccionada por el usuario en la interfaz.
+   * Contiene todos los datos de la factura seleccionada para operaciones posteriores.
+   * Es undefined cuando no hay ninguna factura seleccionada.
+   */
+  filaSeleccionada?: CapturarColumns;
+
+  /**
+   * @property {AsociadasTableColumns | undefined} filaSeleccionadaAsociada
+   * Fila seleccionada en la tabla de facturas asociadas.
+   * Contiene los datos de la factura que ya está vinculada a la expedición y que
+   * puede ser eliminada o modificada.
+   * Es `undefined` cuando no hay ninguna factura seleccionada en la tabla de asociadas.
+   */
+  filaSeleccionadaAsociada?: AsociadasTableColumns;
+
+  /**
+   * @property {boolean} mostrarTabla - Indica si se debe mostrar la tabla de facturas disponibles.
+   * Controla la visibilidad de la tabla de facturas disponibles en la interfaz.
+   * Se utiliza para alternar la visibilidad de la tabla según el estado de la aplicación.
+   */
+  mostrarTabla = true;
+  /**
+      * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+      * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+      */
+  nuevaNotificacion!: Notificacion;
+  /**
+   * @property {boolean} eliminarFacturaModal - Controla la visibilidad del modal de eliminación de factura.
+   */
+  eliminarFacturaModal: boolean = false;
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+
+  /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
    * Inyecta todas las dependencias requeridas para el manejo de formularios reactivos,
@@ -287,6 +390,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @param {SeccionLibStore} seccionStore - Store para manejar el estado específico de las secciones del módulo.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones.
    * @param {ElegibilidadTextilesService} elegibilidadTextilesService - Servicio de dominio para manejar la lógica de negocio de elegibilidad de textiles.
+   * @param {ChangeDetectorRef} cdr - Referencia al ChangeDetectorRef para manejar la detección de cambios en el componente.
    */
   constructor(
     private fb: FormBuilder,
@@ -294,7 +398,11 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private elegibilidadTextilesService: ElegibilidadTextilesService
+    private facturasAsociadasService: FacturasAsociadasService,
+    private tramite120301Query: Tramite120301Query,
+    private cd: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
+    private tramite120301: Tramite120301Store,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -310,6 +418,14 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
+    this.tramite120301Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -328,7 +444,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.recuperarDatos();
-    this.recuperarDatosAsociadas();
 
     this.formularioAsociacionFactura.statusChanges
       .pipe(
@@ -356,10 +471,41 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       this.seccionStore.establecerFormaValida([false]);
     }
     if (this.formularioDeshabilitado) {
+      this.informacionFacturaAsociadas = this.informacionFacturasAsociadas;
+      this.llenarTablaFacturasAsociadas(this.informacionFacturaAsociadas);
+      this.visualizarEvaluacion = false;
       this.formularioAsociacionFactura.disable();
     }
   }
 
+  /**
+   * Llena la información que se mostrará en la tabla de facturas asociadas.
+   * @param data - Datos de la respuesta que contiene la información de las facturas asociadas.
+   */
+  llenarTablaFacturasAsociadas(data: FacturasTplAsociadaResponse): void {
+    if (data.facturas_asociadas) {
+      this.facturasAsociadas = [
+        {
+          candidadAsociada: data.facturas_asociadas.cantidad_asociada.toString(),
+          numeroDeLaFactura: data.facturas_asociadas.factura_expedicion.num_factura,
+          razonSocial: data.facturas_asociadas.factura_expedicion.razon_social,
+          domicilio: data.facturas_asociadas.factura_expedicion.domicilio,
+          fechaExpedicionFactura: data.facturas_asociadas.factura_expedicion.fecha_expedicion,
+          cantidadTotal: data.facturas_asociadas.factura_expedicion.cantidad.toString(),
+          cantidadDisponible: data.facturas_asociadas.factura_expedicion.cantidad_disponible.toString(),
+          unidadMedida: data.facturas_asociadas.factura_expedicion.unidad_medida.descripcion,
+          valorDolares: data.facturas_asociadas.factura_expedicion.importe_dolares.toString(),
+          idFacturaExpedicion: data.facturas_asociadas.id_factura_expedicion,
+          idExpedicion: data.facturas_asociadas.id_expedicion
+        }
+      ];
+    }
+    if (data.resultado_equivalencia) {
+      this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.setValue(data.resultado_equivalencia.cantidad_factura);
+      this.formularioAsociacionFactura.get('metrosCuadradosEquivalentes')?.setValue(data.resultado_equivalencia.total_equivalente);
+      this.labelUnidad = data.resultado_equivalencia.unidad_label;
+    }
+  }
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo para capturar los datos de las facturas asociadas.
@@ -370,6 +516,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   initActionFormBuild(): void {
+    this.facturasAsociadas = this.facturasState.facturasAsociadas;
     this.formularioAsociacionFactura = this.fb.group({
       cantidadFacturas: [
         this.facturasState.cantidadFacturas,
@@ -397,13 +544,110 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService
-      .obtenerTablaDatos<CapturarColumns>('facturasDisponible.json')
+    this.facturasAsociadasService
+      .getFacturasTpl(
+        "AAL0409235E6",
+        this.solicitudState.idExpedicion,
+        this.solicitudState.identificadorRegimen
+      )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          this.facturasDisponible = response as CapturarColumns[];
+          if (response.codigo === '00' && response.datos?.content) {
+            this.facturasDisponible = response.datos.content.map((factura) => ({
+              numeroDeLaFactura: factura.num_factura,
+              razonSocial: factura.razon_social_consig_emisor,
+              domicilio: factura.direccion_consig_emisor,
+              fechaExpedicionFactura: factura.fecha_expedicion,
+              cantidadTotal: factura.cantidad_total.toString(),
+              cantidadDisponible: factura.cantidad_disponible.toString(),
+              unidadMedida: factura.descripcion,
+              valorDolares: factura.imp_dls.toString(),
+              idFacturaExpedicion: factura.id_factura_expedicion,
+              idExpedicion: this.solicitudState.idExpedicion,
+            }));
+          } else {
+            this.facturasDisponible = [];
+          }
         },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.facturasDisponible = [];
+        }
+      });
+  }
+
+  /**
+   * @method guardadoFila
+   * @description Almacena la fila seleccionada de la tabla de facturas disponibles.
+   * Recibe la fila seleccionada por el usuario y la asigna a la propiedad filaSeleccionada
+   * para su posterior uso en operaciones de asociación. Valida que la fila no sea nula o undefined
+   * antes de realizar la asignación.
+   * @param {CapturarColumns} fila - Objeto que representa la fila seleccionada con todos sus datos.
+   * @returns {void} No retorna ningún valor.
+  */
+  guardadoFila(fila: CapturarColumns): void {
+    if (!fila) {
+      return;
+    }
+    this.filaSeleccionada = fila;
+    this.tramite120301.setFacturaExpedicion(this.filaSeleccionada.idFacturaExpedicion ?? 0);
+  }
+
+  /**
+   * @method asociarEvaluate
+   * @description Realiza el proceso de asociación de una factura al trámite actual.
+   * Construye el payload con los datos necesarios (ID expedición, ID factura y cantidad)
+   * y realiza una petición POST al servicio de asociación. Si la respuesta es exitosa (código '00'),
+   * actualiza los datos disponibles y asociados. Maneja errores de conexión o validación.
+   * @returns {void} No retorna ningún valor.
+  */
+  asociarEvaluate(): void {
+    const PAYLOAD: FacturasTplAsociadasRequest = {
+      id_expedicion: this.filaSeleccionada?.idExpedicion,
+      id_factura_expedicion: this.filaSeleccionada?.idFacturaExpedicion,
+      cantidad_asociada: this.formularioAsociacionFactura.get('cantidadFacturas')?.value
+    };
+    if (!PAYLOAD.id_expedicion || !PAYLOAD.id_factura_expedicion || !PAYLOAD.cantidad_asociada) {
+      if (!PAYLOAD.cantidad_asociada) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar la cantidad asociada mayor a 0.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'La factura no puede ser asociada, debido a que la unidad de medida es diferente a la asociada a la constancia.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.facturasAsociadasService
+      .postFacturasAsociar(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.recuperarDatos();
+            this.recuperarDatosAsociadas();
+            this.setValoresCantidadTotal();
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
       });
   }
 
@@ -418,14 +662,142 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   recuperarDatosAsociadas(): void {
-    this.elegibilidadTextilesService
-      .obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json')
+    this.facturasAsociadasService
+      .getFacturasTplAsociadas(
+        this.solicitudState.idExpedicion,
+      )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          this.facturasAsociadas = response as AsociadasTableColumns[];
+          if (response.codigo === '00' && response.datos?.content) {
+            this.facturasAsociadas = response.datos.content.map((factura) => ({
+              candidadAsociada: factura.cantidad_asociada.toString(),
+              numeroDeLaFactura: factura.factura_expedicion.num_factura,
+              razonSocial: factura.factura_expedicion.razon_social,
+              domicilio: factura.factura_expedicion.domicilio,
+              fechaExpedicionFactura: factura.factura_expedicion.fecha_expedicion,
+              cantidadTotal: factura.factura_expedicion.cantidad.toString(),
+              cantidadDisponible: factura.factura_expedicion.cantidad_disponible.toString(),
+              unidadMedida: factura.factura_expedicion.unidad_medida.descripcion,
+              valorDolares: factura.factura_expedicion.importe_dolares.toString(),
+              idFacturaExpedicion: factura.id_factura_expedicion,
+              idExpedicion: factura.id_expedicion
+            }));
+            this.ElegibilidadDeTextilesStore.setFacturasAsociadas(this.facturasAsociadas);
+          } else {
+            this.facturasAsociadas = [];
+            this.ElegibilidadDeTextilesStore.setFacturasAsociadas(this.facturasAsociadas);
+          }
         },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.facturasAsociadas = [];
+        }
       });
+  }
+
+  /**
+   * @method setValoresCantidadTotal
+   * @description Obtiene los totales de facturas asociadas y metros cuadrados equivalentes
+   * desde el servicio y actualiza los valores en el formulario reactivo.
+   * Realiza una petición HTTP al servicio `getFacturaTplTotalUnida` utilizando `idExpedicion`
+   * como parámetro. Los valores recibidos se asignan a los controles `cantidadFacturasTotal`
+   * y `metrosCuadradosEquivalentes` del formulario.
+   * La suscripción se maneja con `takeUntil` para evitar fugas de memoria.
+   * @returns {void} No retorna ningún valor.
+ */
+  setValoresCantidadTotal(): void {
+    this.facturasAsociadasService
+      .getFacturaTplTotalUnida(this.solicitudState.idExpedicion)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00' && response.datos) {
+            this.labelUnidad = response.datos.unidad_label;
+            this.formularioAsociacionFactura.patchValue({
+              cantidadFacturasTotal: response.datos.cantidad_factura,
+              metrosCuadradosEquivalentes: response.datos.total_equivalente
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+  }
+
+  /**
+   * @method guardadoFilaAsociada
+   * @description Asigna la fila seleccionada de la tabla de facturas asociadas
+   * a la propiedad `filaSeleccionadaAsociada` para su posterior uso.
+   * Este método evita asignar un valor `null` o `undefined`.
+   * @param {AsociadasTableColumns} fila - Fila seleccionada de la tabla de facturas asociadas.
+   * @returns {void} No retorna ningún valor.
+   */
+  guardadoFilaAsociada(fila: AsociadasTableColumns): void {
+    if (!fila) {
+      return;
+    }
+    this.filaSeleccionadaAsociada = fila;
+  }
+
+  /**
+   * @method eliminarSeleccionado
+   * @description Elimina la fila de factura asociada actualmente seleccionada.
+   * Construye un payload con los IDs de expedición y factura y llama al servicio `deleteFacturaTpl`.
+   * La operación se realiza utilizando un arreglo de `FacturasTplEliminarRequest` aunque solo
+   * se elimine un elemento, para mantener compatibilidad con el endpoint que espera un array.
+   * La suscripción se maneja con `takeUntil` para evitar fugas de memoria.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSeleccionado(): void {
+    if (!this.filaSeleccionadaAsociada) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione el monto a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.eliminarFacturaModal = true;
+  }
+
+  aceptarEliminarFacturas(): void {
+    const PAYLOAD: FacturasTplEliminarRequest[] = [
+      {
+        id_expedicion: this.filaSeleccionadaAsociada?.idExpedicion,
+        id_factura_expedicion: this.filaSeleccionadaAsociada?.idFacturaExpedicion
+      }
+    ];
+    this.facturasAsociadasService.deleteFacturaTpl(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.facturasAsociadas = [];
+            this.facturasDisponible = [];
+            this.filaSeleccionada = undefined;
+            this.filaSeleccionadaAsociada = undefined;
+            this.recuperarDatos();
+            this.recuperarDatosAsociadas();
+            this.formularioAsociacionFactura.reset();
+
+            this.mostrarTabla = false;
+            this.cd.detectChanges();
+            this.mostrarTabla = true;
+            this.cerrarEliminarModal();
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+
   }
 
   /**
@@ -452,6 +824,28 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+   * Si es válido, limpia el error y permite continuar.
+   */
+  continuar(): void {
+    this.formularioAsociacionFactura.markAllAsTouched();
+    this.formularioAsociacionFactura.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.formularioAsociacionFactura.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+    this.esFormaValido = false;
+    this.formularioAlertaError = '';
+    window.scrollTo(0, 0);
+
+    this.mostrarTabs.emit(true);
+  }
+  /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
    * Implementa la limpieza necesaria para evitar fugas de memoria cancelando
@@ -464,5 +858,19 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+* Método que se ejecuta al ocultar el modal.
+*/
+  onHidden(): void {
+    this.mostrarModal = false;
+  }
+
+  cerrarEliminarModal(): void {
+    this.modal?.hide();
+    this.eliminarFacturaModal = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
   }
 }

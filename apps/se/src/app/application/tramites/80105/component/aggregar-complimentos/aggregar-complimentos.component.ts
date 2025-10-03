@@ -1,11 +1,12 @@
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
-import { Component } from '@angular/core';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
-import { Tramite80101Query } from '../../../80103/estados/tramite80101.query';
-import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 @Component({
   selector: 'app-aggregar-complimentos',
@@ -15,10 +16,20 @@ import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
   styleUrl: './aggregar-complimentos.component.scss',
 })
 export class AggregarComplimentosComponent {
+  /** Objeto que contiene los datos de los cumplimientos. */
   datosComplimentos!: DatosComplimentos;
+  /** Notificador para destruir suscripciones y evitar fugas de memoria. */
   private destroyNotifier$: Subject<void> = new Subject();
+  /** Observable que emite la tabla de datos de cumplimientos nacionales. */
   tablaDatosComplimentos$: Observable<SociaoAccionistas[]>;
+  /** Observable que emite la tabla de datos de cumplimientos extranjeros. */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
+
+  
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  @Input() consultaState!: ConsultaioState;
 
   constructor(
     private store: Tramite80101Store,

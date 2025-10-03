@@ -1,4 +1,9 @@
 <ng-container *ngIf="!esFormulario">
+    @if(registroForm.invalid && registroForm.touched){
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+      }
   <ng-titulo
     *ngIf="!cargarArchivo"
     titulo="Validación inicial del certificado de circulación de mercancías"
@@ -66,6 +71,11 @@
               formControlName="nombres"
               (change)="setValoresStore(validacionForm, 'nombres')"
               maxlength="250"
+                                  [ngClass]="{
+    'es-invalido': validacionForm.get('nombres')?.invalid &&
+                  (validacionForm.get('nombres')?.dirty ||
+                   validacionForm.get('nombres')?.touched)
+  }"
             />
             <div *ngIf="validacionForm.get('nombres')?.errors?.['required'] && (validacionForm.get('nombres')?.touched || validacionForm.get('nombres')?.dirty)" class="text-danger">
               <small>Este campo es obligatorio.</small>
@@ -87,6 +97,11 @@
                   'primerApellido' )
               "
               maxlength="30"
+                                  [ngClass]="{
+    'es-invalido': validacionForm.get('primerApellido')?.invalid &&
+                  (validacionForm.get('primerApellido')?.dirty ||
+                   validacionForm.get('primerApellido')?.touched)
+  }"
             />
             <div *ngIf="validacionForm.get('primerApellido')?.errors?.['required'] && (validacionForm.get('primerApellido')?.touched || validacionForm.get('primerApellido')?.dirty)" class="text-danger">
               <small>Este campo es obligatorio.</small>
@@ -126,6 +141,11 @@
                   'numeroDeRegistroFiscal'
                 )
               "
+                           [ngClass]="{
+    'es-invalido': validacionForm.get('numeroDeRegistroFiscal')?.invalid &&
+                  (validacionForm.get('numeroDeRegistroFiscal')?.dirty ||
+                   validacionForm.get('numeroDeRegistroFiscal')?.touched)
+  }"
             />
             <div *ngIf="validacionForm.get('numeroDeRegistroFiscal')?.errors?.['required'] && (validacionForm.get('numeroDeRegistroFiscal')?.touched || validacionForm.get('numeroDeRegistroFiscal')?.dirty)" class="text-danger">
               <small>Este campo es obligatorio.</small>
@@ -145,6 +165,11 @@
                   'razonSocial'
                 )
               "
+               [ngClass]="{
+    'es-invalido': validacionForm.get('razonSocial')?.invalid &&
+                  (validacionForm.get('razonSocial')?.dirty ||
+                   validacionForm.get('razonSocial')?.touched)
+  }"
             />
             <div *ngIf="validacionForm.get('razonSocial')?.errors?.['required'] && (validacionForm.get('razonSocial')?.touched || validacionForm.get('razonSocial')?.dirty)" class="text-danger">
               <small>Este campo es obligatorio.</small>
@@ -197,6 +222,11 @@
               class="form-control"
               id="fraccionArancelaria"
               formControlName="fraccionArancelaria"
+               [ngClass]="{
+    'es-invalido': validacionForm.get('fraccionArancelaria')?.invalid &&
+                  (validacionForm.get('fraccionArancelaria')?.dirty ||
+                   validacionForm.get('fraccionArancelaria')?.touched)
+  }"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -589,6 +619,7 @@
           [label]="''"
           [required]="true"
           id="tipoFactura"
+          [placeholder]="'Seleccione un valor'"
           formControlName="tipoFactura"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('tipoFactura')" class="text-danger">
@@ -603,7 +634,7 @@
         type="button"
         class="btn btn-primary ms-3"
         (click)="agregar()"
-        [disabled]="soloLectura|| mercanciaForm.get('validacionMercanciaForm')?.invalid"
+        [disabled]="soloLectura"
       >
         Agregar
       </button>

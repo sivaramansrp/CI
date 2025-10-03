@@ -28,6 +28,7 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
+      imports: [],
       declarations: [PasoUnoComponent],
       providers: [
         { provide: ConsultaioQuery, useValue: consultaQueryMock },
@@ -43,50 +44,53 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('debe establecer el índice cuando se llama a seleccionaTab', () => {
+      (component as any)['ElegibilidadDeTextilesStore'] = {
+        setPestanaActiva: jest.fn()
+      } as any;
+      component.seleccionaTab(3);
+      expect(component.indice).toBe(3);
+      expect((component as any)['ElegibilidadDeTextilesStore'].setPestanaActiva).toHaveBeenCalledWith(3);
   });
 
-  it('should set mostrarOtraPestana to true when onMostrarTabs is called with true', () => {
+  it('debe establecer mostrarOtraPestana en true cuando se llama a onMostrarTabs con true', () => {
     component.mostrarOtraPestana = false;
     component.onMostrarTabs(true);
     expect(component.mostrarOtraPestana).toBe(true);
   });
 
-  it('should not change mostrarOtraPestana when onMostrarTabs is called with false', () => {
+  it('no debe cambiar mostrarOtraPestana cuando se llama a onMostrarTabs con false', () => {
     component.mostrarOtraPestana = false;
     component.onMostrarTabs(false);
     expect(component.mostrarOtraPestana).toBe(false);
   });
 
-  it('should call guardarDatosFormulario and set formularioDeshabilitado to false if consultaState.update is true', () => {
+  it('debe llamar a guardarDatosFormulario y establecer formularioDeshabilitado en false si consultaState.update es true', () => {
     const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
     component.consultaState = { update: true, readonly: false } as ConsultaioState;
     component.formularioDeshabilitado = true;
-    // Simulate ngOnInit logic
     component.ngOnInit();
     expect(component.formularioDeshabilitado).toBe(false);
     expect(guardarDatosFormularioSpy).toHaveBeenCalled();
   });
 
-  it('should set formularioDeshabilitado to true if consultaState.readonly is true', () => {
+  it('debe establecer formularioDeshabilitado en true si consultaState.readonly es true', () => {
     (consultaQueryMock as any).selectConsultaioState$ = of({ update: false, readonly: true } as ConsultaioState);
     component.formularioDeshabilitado = false;
     component.ngOnInit();
     expect(component.formularioDeshabilitado).toBe(true);
   });
 
-  it('should call getPrefillDatos when guardarDatosFormulario is called', () => {
+  it('debe llamar a getPrefillDatos cuando se llama a guardarDatosFormulario', () => {
     component.guardarDatosFormulario();
     expect(elegibilidadTextilesServiceMock.getPrefillDatos).toHaveBeenCalled();
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debe completar destroyNotifier$ en ngOnDestroy', () => {
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();

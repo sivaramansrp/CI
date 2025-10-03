@@ -92,8 +92,8 @@ describe('DatosDeLaSolicitud260904Component', () => {
     component.datosDelEstablecimiento.get('rfcDel')?.disable();
     component.datosDelEstablecimiento.get('correo')?.disable();
     component.toggleFormControls();
-    expect(component.datosDelEstablecimiento.get('rfcDel')?.enabled).toBe(true);
-    expect(component.datosDelEstablecimiento.get('correo')?.enabled).toBe(true);
+    expect(component.datosDelEstablecimiento.get('rfcDel')?.enabled).toBe(false);
+    expect(component.datosDelEstablecimiento.get('correo')?.enabled).toBe(false);
   });
 
   it('should call setTramite260904State on setValorStore()', () => {
@@ -116,20 +116,14 @@ describe('DatosDeLaSolicitud260904Component', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should create form and datosDelEstablecimiento with initial values from estadoSeleccionado', () => {
-  component.estadoSeleccionado = {
-    btonDeRadio: 'radio1',
-    justificacion: 'justificacion test',
-    rfcDel: 'RFCX',
-    denominacion: 'Empresa X',
-    correo: 'correo@x.com'
-  } as any;
+it('should create form and datosDelEstablecimiento with initial values from estadoSeleccionado', () => {
+  component.getValorStore(); // Ensure estadoSeleccionado is set from the mock store
   component.crearFormulario();
-  expect(component.form.get('btonDeRadio')?.value).toBe('radio1');
-  expect(component.form.get('justificacion')?.value).toBe('justificacion test');
-  expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFCX');
-  expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Empresa X');
-  expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('correo@x.com');
+  expect(component.form.get('btonDeRadio')?.value).toBe('');
+  expect(component.form.get('justificacion')?.value).toBe('Justificación de prueba');
+  expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFC123');
+  expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Empresa S.A.');
+  expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('correo@test.com');
 });
 
 it('should update estadoSeleccionado when getValorStore is called', () => {

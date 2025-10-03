@@ -1,13 +1,17 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CategoriaMensaje,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
   TituloComponent
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosGrupos } from '../../models/permiso-importacion-modification.model';
@@ -15,6 +19,8 @@ import { FECHA_FACTURA } from '../../constants/permiso-importacion-modification.
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
+import { FormValidationService } from '../../services/formValidation.service';
 
 /**
  * @component DatosMercanciaComponent
@@ -73,6 +79,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   private DatosState!: DatosGrupos;
 
   /**
+    * Nueva notificación para mostrar mensajes de error o información al usuario.
+    */
+  nuevaNotificacion: Notificacion | null = null;
+
+  /**
    * @constructor
    * @param {FormBuilder} fb Constructor de formularios reactivos.
    * @param {PermisoImportacionStore} store Store para manejar el estado de permiso de importación.
@@ -87,7 +98,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     public query: Tramite130120Query,
     public consultaQuery: ConsultaioQuery,
     public permisoImportacionService: PermisoImportacionService,
-  ) {}
+    private catalogosService: CatalogosTramiteService,
+    private cdr: ChangeDetectorRef,
+    private formValidation: FormValidationService
+  ) { }
 
   /**
    * @method ngOnInit
@@ -103,15 +117,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     await this.initActionFormBuild();
-    this.ObtenerTipoEntradaOpcion();
     this.ObtenerFraccionOpcion();
-    this.obtenerNicoOpcion();
-    this.obtenerUmtOpcion();
-    this.obtenerUmcOpcion();
+    this.ObtenerTipoEntradaOpcion();
     this.obtenerMonedaComercializacionOpcion();
     this.obternerPaisExportadorOpcion();
     this.obtenerPaisOrigenOpcion();
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -120,8 +130,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    if(this.esFormularioSoloLectura) {
+    const CVEFRACCION = this.datosMercanica.get('fraccion')?.value;
+    if (CVEFRACCION) {
+      this.onFraccionArancelariaSeleccionada();
+    }
+    if (this.esFormularioSoloLectura) {
       this.datosMercanica.disable();
     }
   }
@@ -140,108 +153,247 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       umt: [this.DatosState.datosMercanica.umt, Validators.required],
       factura_numero: [this.DatosState.datosMercanica.factura_numero, Validators.required],
       factura_fecha: [this.DatosState.datosMercanica.factura_fecha, Validators.required],
-      umc: [this.DatosState.datosMercanica.umc, Validators.required],
+      umc: [this.DatosState.datosMercanica.umc , Validators.required],
       otro_umc: [{ value: this.DatosState.datosMercanica.otro_umc, disabled: true }, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc, Validators.required],
       factor_conversion: [{ value: this.DatosState.datosMercanica.factor_conversion, disabled: true }, Validators.required],
-      cantidad_umt: [this.DatosState.datosMercanica.cantidad_umt, Validators.required],
+      cantidad_umt: [{ value: this.DatosState.datosMercanica.cantidad_umt, disabled: true }, Validators.required],
       valor_factura: [this.DatosState.datosMercanica.valor_factura, Validators.required],
       moneda_comercializacion: [this.DatosState.datosMercanica.moneda_comercializacion, Validators.required],
-      valor_factura_usd: [this.DatosState.datosMercanica.valor_factura_usd, Validators.required],
-      precio_unitario_usd: [this.DatosState.datosMercanica.precio_unitario_usd, Validators.required],
+      valor_factura_usd: [{ value: this.DatosState.datosMercanica.valor_factura_usd, disabled: true }, Validators.required],
+      precio_unitario_usd: [{ value: this.DatosState.datosMercanica.precio_unitario_usd, disabled: true }, Validators.required],
       pais_exportador: [this.DatosState.datosMercanica.pais_exportador, Validators.required],
       pais_origen: [this.DatosState.datosMercanica.pais_origen, Validators.required],
       valor_total_factura: [this.DatosState.datosMercanica.valor_total_factura, Validators.required],
-      valor_total_factura_usd: [this.DatosState.datosMercanica.valor_total_factura_usd, Validators.required],
+      valor_total_factura_usd: [{ value: this.DatosState.datosMercanica.valor_total_factura_usd, disabled: true }, Validators.required],
     });
   }
 
   /** @method ObtenerTipoEntradaOpcion Carga las opciones del catálogo de tipo de entrada. */
   ObtenerTipoEntradaOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('tipo_entrada.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.tipoEntradaOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatTiposAduanas().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.tipoEntradaOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /** @method ObtenerFraccionOpcion Carga las opciones del catálogo de fracción arancelaria. */
   ObtenerFraccionOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('fraccion.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.fraccionOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatFraccionesArrancelarias().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.fraccionOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
+  }
+
+  /**
+   * @method onFraccionArancelariaSeleccionada Maneja la selección de una fracción arancelaria.
+   */
+  onFraccionArancelariaSeleccionada(): void {
+    const CVEFRACCION = this.datosMercanica.get('fraccion')?.value;
+    this.store.setFraccion(CVEFRACCION);
+    if (CVEFRACCION) {
+      this.obtenerUmtOpcion(CVEFRACCION);
+      this.obtenerNicoOpcion(CVEFRACCION);
+      this.obtenerUmcOpcion(CVEFRACCION);
+    } else {
+      this.umtOpcion = [];
+      this.datosMercanica.get('umt')?.reset();
+    }
   }
 
   /** @method obtenerNicoOpcion Carga las opciones del catálogo de NICO. */
-  obtenerNicoOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('fraccion.json')
+  obtenerNicoOpcion(cveFraccion: string): void {
+    this.catalogosService.getCatFraccionesArrancelariasSubdivisiones(cveFraccion)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.nicoOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.nicoOpcion = resp.datos;
+            this.datosMercanica.get('nico')?.enable();
+          } else {
+            this.nicoOpcion = [];
+            this.datosMercanica.get('nico')?.reset();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.nicoOpcion = [];
+          this.datosMercanica.get('nico')?.reset();
+        }
       });
   }
 
   /** @method obtenerUmtOpcion Carga las opciones del catálogo de unidad de medida tarifaria. */
-  obtenerUmtOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('umt.json')
+  obtenerUmtOpcion(cveFraccion: string): void {
+    this.catalogosService.getCatUnidadesMedidasTarifarias(cveFraccion)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.umtOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.umtOpcion = resp.datos;
+            this.datosMercanica.get('umt')?.enable();
+          } else {
+            this.umtOpcion = [];
+            this.datosMercanica.get('umt')?.reset();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.umtOpcion = [];
+          this.datosMercanica.get('umt')?.reset();
+        }
       });
   }
 
   /** @method obtenerUmcOpcion Carga las opciones del catálogo de unidad de medida comercial. */
-  obtenerUmcOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('umc.json')
+  obtenerUmcOpcion(cveFraccion: string): void {
+    this.catalogosService.getCatUnidadesMedida(cveFraccion)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.umcOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.umcOpcion = resp.datos;
+            this.datosMercanica.get('umc')?.enable();
+          } else {
+            this.umcOpcion = [];
+            this.datosMercanica.get('umc')?.reset();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.umcOpcion = [];
+          this.datosMercanica.get('umc')?.reset();
+        }
       });
   }
 
   /** @method obtenerMonedaComercializacionOpcion Carga las opciones del catálogo de moneda de comercialización. */
   obtenerMonedaComercializacionOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('moneda_comercializacion.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.monedaComercializacionOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatTiposMonedas().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.monedaComercializacionOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /** @method obternerPaisExportadorOpcion Carga las opciones del catálogo de país exportador. */
   obternerPaisExportadorOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('pais_exportador.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.paisExportadorOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatPaises().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.paisExportadorOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /** @method obtenerPaisOrigenOpcion Carga las opciones del catálogo de país de origen. */
   obtenerPaisOrigenOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('pais_exportador.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.paisOrigenOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatPaises().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.paisOrigenOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /**
@@ -257,7 +409,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /** @method setTotalMercanciaImportar Calcula y actualiza el valor total de la factura en USD. */
   setTotalMercanciaImportar(): void {
     const DATOSMERCANICA = this.datosMercanica;
-    const VALORTOTALFACTURA = parseFloat(DATOSMERCANICA.get('valor_total_factura')?.value);
+    const VALARTOTALFACTURACONTROL = DATOSMERCANICA.get('valor_total_factura');
+    const VALORTOTALFACTURA = parseFloat(VALARTOTALFACTURACONTROL && VALARTOTALFACTURACONTROL.value ? VALARTOTALFACTURACONTROL.value : '0');
     const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
     let RESULTADO;
     if (Number(MONDEDACOMERCIALIZACION?.value) === 2) {
@@ -278,13 +431,14 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
     const PRECIOUNITARIOUSDCONTROL = DATOSMERCANICA.get('precio_unitario_usd');
     let valorFacturaUsd = VALOR_FACTURA;
-    let precioUnitarioUsd;
     if (Number(MONDEDACOMERCIALIZACION?.value) === 2) {
-      valorFacturaUsd = VALOR_FACTURA * 3.32;
-      precioUnitarioUsd = DATOSMERCANICA.get('cantidad_umc')?.value ? (valorFacturaUsd / DATOSMERCANICA.get('cantidad_umc')?.value) : 0;
+      valorFacturaUsd = VALOR_FACTURA ? VALOR_FACTURA * 3.32 : 0;
     } else {
       valorFacturaUsd = Number(VALOR_FACTURA) * 1;
     }
+    const PRECIOUNITARUSD = (DATOSMERCANICA.get('cantidad_umc')?.value && valorFacturaUsd)
+      ? Number((valorFacturaUsd / DATOSMERCANICA.get('cantidad_umc')?.value).toFixed(2))
+      : 0;
     const VALORFACTURAUSDCONTROL = DATOSMERCANICA.get('valor_factura_usd');
     if (VALORFACTURAUSDCONTROL) {
       VALORFACTURAUSDCONTROL.setValue(valorFacturaUsd, { emitEvent: false });
@@ -292,7 +446,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       VALORFACTURAUSDCONTROL.markAsTouched();
     }
     if (PRECIOUNITARIOUSDCONTROL) {
-      PRECIOUNITARIOUSDCONTROL.setValue(precioUnitarioUsd, { emitEvent: false });
+      PRECIOUNITARIOUSDCONTROL.setValue(PRECIOUNITARUSD, { emitEvent: false });
       PRECIOUNITARIOUSDCONTROL.markAsDirty();
       PRECIOUNITARIOUSDCONTROL.markAsTouched();
     }
@@ -358,6 +512,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof PermisoImportacionStore): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  validarFormulario(): boolean {
+    this.formValidation.marcarFormularioComoTocado(this.datosMercanica);
+    this.cdr.detectChanges();
+    return this.datosMercanica.valid;
   }
 
   /**

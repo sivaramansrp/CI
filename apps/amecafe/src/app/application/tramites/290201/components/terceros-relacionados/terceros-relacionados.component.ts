@@ -181,7 +181,13 @@ public coloniaData: CatalogosSelect = {
   primerOpcion: 'Seleccione una opción',
   catalogos: [],
 };
-
+/**
+ * @propiedad {string} placeholderDomicilio
+ * @descripción Texto de marcador de posición para el campo de domicilio.
+ * Este texto indica el formato esperado: "Calle, No Ext, No Int, Ciudad, C.P."
+ * @valor 'Calle, No Ext, No Int, Ciudad, C.P.'
+ */
+placeholderDomicilio: string = 'Calle, No Ext, No Int, Ciudad, C.P.';
  /**
    * Bandera para verificar si los datos del catálogo de países están cargados.
    */
@@ -258,10 +264,10 @@ this.getDestinatarioData().then(() => {
       datosDelTramiteRealizar: this.fb.group({
         tipoPersona: [ this.destinatarioState?.tipoPersona,[Validators.required]],
         denominacion: [ this.destinatarioState?.denominacion, [Validators.required]],
-        nombre: [ this.destinatarioState?.nombre,],
-        primerApellido: [this.destinatarioState?.primerApellido,],
-        segundoApellido: [ this.destinatarioState?.segundoApellido],
-        domicilio: [this.destinatarioState?.domicilio, [Validators.required,Validators.pattern('^[a-zA-Z0-9]*$')]],
+        nombre: [ this.destinatarioState?.nombre,[Validators.required]],
+        primerApellido: [this.destinatarioState?.primerApellido,[Validators.required]],
+        segundoApellido: [ this.destinatarioState?.segundoApellido,],
+        domicilio: [this.destinatarioState?.domicilio, [Validators.required,Validators.maxLength(5),Validators.pattern('^[a-zA-Z0-9\\s,]*$')]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
@@ -289,8 +295,11 @@ get selectedTipoPersona(): string | undefined {
    * @param value Valor seleccionado (cadena o número).
    */
   setTipoPersona(value: string | number): void {
-    this.tipoPersonaSeleccionada = value.toString();
+  this.tipoPersonaSeleccionada = value.toString();
+  if (this.filaSeleccionada) {
+    this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona = this.tipoPersonaSeleccionada;
   }
+}
   /**
  * @method getEntidadFederativaData
  * @descripcion
@@ -391,6 +400,47 @@ get selectedTipoPersona(): string | undefined {
  */
 enEnviar(): void {
   const FORM_DATA = this.destinatarioForm.value;
+const IS_MODIFYING = Boolean(this.filaSeleccionada);
+
+  if (IS_MODIFYING) {
+    // Clear validators for fields not in the table data
+    this.destinatarioForm.get('datosDelTramiteRealizar.tipoPersona')?.clearValidators();
+    this.destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.clearValidators();
+      this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.clearValidators(); // Clear validation for 'nombre'
+    this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.clearValidators(); // Clear validation for 'primerApellido'
+    this.destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.clearValidators();
+    this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.clearValidators();
+    this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.clearValidators();
+    this.destinatarioForm.get('datosDelTramiteRealizar.telefono')?.clearValidators();
+    this.destinatarioForm.get('datosDelTramiteRealizar.correoelectronico')?.clearValidators();
+     this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.updateValueAndValidity();
+    this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.updateValueAndValidity();
+  } else {
+    this.destinatarioForm.get('datosDelTramiteRealizar.tipoPersona')?.setValidators([Validators.required]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.setValidators([Validators.required]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.setValidators([Validators.required]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.setValidators([Validators.required]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.setValidators([Validators.required]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.setValidators([Validators.required]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.setValidators([
+      Validators.required,
+      Validators.maxLength(12),
+      Validators.pattern('^[0-9]*$'),
+    ]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.telefono')?.setValidators([
+      Validators.required,
+      Validators.maxLength(30),
+      Validators.pattern('^[a-zA-Z0-9]*$'),
+    ]);
+    this.destinatarioForm.get('datosDelTramiteRealizar.correoelectronico')?.setValidators([
+      Validators.required,
+      Validators.email,
+    ]);
+  }
+
+   this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.updateValueAndValidity();
+  this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.updateValueAndValidity();
+    this.destinatarioForm.updateValueAndValidity();
 
   if (!this.destinatarioForm.valid) {
       this.destinatarioForm.markAllAsTouched();
@@ -409,6 +459,10 @@ enEnviar(): void {
   FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
 
   if (this.filaSeleccionada) {
+    this.filaSeleccionada.datosDelTramiteRealizar = {
+      ...this.filaSeleccionada.datosDelTramiteRealizar,
+      ...FORM_DATA.datosDelTramiteRealizar,
+    };
     const INDEX = this.tableData.findIndex((row) => row.id === this.filaSeleccionada?.id);
     if (INDEX !== -1) {
       this.tableData[INDEX] = { ...this.tableData[INDEX], ...FORM_DATA, id: this.filaSeleccionada.id };
@@ -549,10 +603,17 @@ onTabSwitch(): void {
  */
 private populateFormWithSelectedRow(): void {
   if (this.filaSeleccionada) {
+
     this.destinatarioForm.patchValue({
       datosDelTramiteRealizar: {
-        tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona,
-        denominacion: this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
+        tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
+
+    denominacion: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona === 'moral'
+          ? this.filaSeleccionada.datosDelTramiteRealizar.denominacion
+          : '',
+                  nombre: this.filaSeleccionada.datosDelTramiteRealizar.nombre,
+        primerApellido: this.filaSeleccionada.datosDelTramiteRealizar.primerApellido,
+        segundoApellido: this.filaSeleccionada.datosDelTramiteRealizar.segundoApellido,
         domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
         pais: this.paisData.catalogos.find(
           (item: Catalogo) =>
@@ -566,6 +627,16 @@ private populateFormWithSelectedRow(): void {
       },
     });
 
+    this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral';
+
+    if (this.tipoPersonaSeleccionada === 'moral') {
+      this.destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.setValidators([Validators.required]);
+    } else {
+      this.destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.clearValidators();
+    }
+    this.destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.updateValueAndValidity();
+
+
     this.esFormularioVisible = true; 
   } 
 }
@@ -573,12 +644,19 @@ private populateFormWithSelectedRow(): void {
    * Método para modificar los datos de una fila seleccionada.
    */
   enModificar(): void {
+
   this.esFormularioVisible = true; 
 
-  const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
-  if (!MODAL_ELEMENT) {
-    return;
-  }
+   setTimeout(() => {
+    const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
+    if (!MODAL_ELEMENT) {
+      console.error('Modal element not found.');
+      return;
+    }
+
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.show();
+  });
 
   if (!this.isPaisdatoscargados) {
     return;
@@ -588,8 +666,6 @@ private populateFormWithSelectedRow(): void {
     return;
   }
 
-  const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-  MODAL_INSTANCE.show();
 
   const PAIS_ID = this.paisData.catalogos.find(
     (item: Catalogo) =>
@@ -597,10 +673,15 @@ private populateFormWithSelectedRow(): void {
       String(item.id) === String(this.filaSeleccionada?.datosDelTramiteRealizar?.pais)
   )?.id;
 
+
   this.destinatarioForm.patchValue({
     datosDelTramiteRealizar: {
       tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
-      denominacion: this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
+denominacion: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona === 'moral'
+        ? this.filaSeleccionada.datosDelTramiteRealizar.denominacion
+        : '',
+        nombre: this.filaSeleccionada.datosDelTramiteRealizar.nombre, 
+      primerApellido: this.filaSeleccionada.datosDelTramiteRealizar.primerApellido,
       domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
       pais: PAIS_ID || '',
       codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
@@ -609,7 +690,7 @@ private populateFormWithSelectedRow(): void {
     },
   });
 
-  this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona;
+  this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral';
 
   this.changeDetectorRef.detectChanges();
 }

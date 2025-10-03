@@ -7,19 +7,24 @@
       <div class="col-md-12">
         <h2>Validar por motivos técnicos el certificado SGP </h2>
       </div>
+      @if(esFormaValido){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+        }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
     <div class="row">
       @switch (indice) {
       @case (1) {
-        <app-capturar-solicitud [indice]="capturarTapIndice" (modificarEventCapturar)="showMercancia($event,0)"></app-capturar-solicitud>
+        <app-capturar-solicitud #pasoUno [indice]="capturarTapIndice" (modificarEventCapturar)="showMercancia($event,0)"></app-capturar-solicitud>
       }
       @case (2) {
-       <app-firmar-solicitud></app-firmar-solicitud>
+       <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110209" [procedureUrl]="'certificado-sgp/solicitud'"></paso-firma>
       }
       }
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"></btn-continuar>
     </div>
   }
   @else{

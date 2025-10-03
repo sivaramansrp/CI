@@ -60,6 +60,24 @@ export interface Catalogo {
   relacionadaAcotacionId?: number;
   /** Decripcion del titulo del select, cuando se requiera. */
   title?: string;
+  /** Decripcion del titulo del bloque, cuando se requiera. */
+  bloque?: string;
+  /** Descripción del NICO, cuando se requiera. */
+  nicoDescription?: string;
+}
+
+
+/**
+ * Representa la estructura de una respuesta JSON que contiene datos de catálogo.
+ *
+ * @property codigo - El código de respuesta que indica el estado de la solicitud.
+ * @property datos - Un arreglo de objetos `Catalogo` que contiene los datos del catálogo.
+ * @property mensaje - Un mensaje que proporciona información adicional sobre la respuesta.
+ */
+export interface JsonResponseCatalogo {
+  codigo: string
+  datos: Catalogo[]
+  mensaje: string
 }
 
 /**

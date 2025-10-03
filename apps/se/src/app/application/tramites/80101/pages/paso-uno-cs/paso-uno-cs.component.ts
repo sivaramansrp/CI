@@ -4,7 +4,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { SECCIONES_TRAMITE_80101 } from '../../constantes/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-
+import mostrar from '@libs/shared/theme/assets/json/shared/mostrar.json';
 /**
  * Componente Angular para gestionar el primer paso del proceso de autorización de un nuevo programa industrial.
  * Este componente se encarga de mostrar y gestionar las secciones del formulario, así como de manejar el estado
@@ -26,6 +26,12 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  public esFormularioUpdate: boolean = false;
+
+  /**
    * @property {Subject<void>} destroyNotifier$ - Subject para notificar la destrucción del componente.
    * Utilizado para cancelar suscripciones y evitar fugas de memoria.
    */
@@ -42,6 +48,8 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
    * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
    */
   public consultaState!: ConsultaioState;
+
+  private mostrarDummyData = mostrar;
 
   /**
    * Constructor de la clase PasoUnoCsComponent.
@@ -64,8 +72,9 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.consultaState = seccionState;
+          this.consultaState = {...seccionState, id_solicitud: '202734892', idSolicitudSeleccionada: "67890"};
           this.formularioDeshabilitado = seccionState.readonly;
+          this.esFormularioUpdate = seccionState.update;
           if (this.consultaState.update) {
             this.guardarDatosFormulario();
           }
@@ -78,12 +87,22 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
+    const PAYLOAD = {
+      idSolicitud: Number(this.consultaState.id_solicitud),
+      idSolicitudSeleccionada: this.consultaState.idSolicitudSeleccionada ?? ''
+    }
     this.autorizacionProgrmaNuevoService
-      .getRegistroTomaMuestrasMercanciasData()
+      .fetchMostrarDatos(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
-        if (resp) {
-          this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(resp);
+      .subscribe({
+        next: () => {
+          // response from next
+        },
+        error: () => {
+          this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(this.mostrarDummyData);
+        },
+        complete: () => {
+          // complete
         }
       });
   }

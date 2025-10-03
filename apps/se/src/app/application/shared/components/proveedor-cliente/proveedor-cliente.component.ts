@@ -10,12 +10,13 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import {
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  Output,
+  OnInit, Output,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -23,9 +24,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { Location } from '@angular/common';
-import { PAIS_DESTINO_CATALOG } from '../../constantes/proveedor-cliente.enum';
 import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tres.enum';
 
 @Component({
@@ -44,7 +47,7 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
 /**
  * Componente para gestionar los datos de proveedores y clientes.
  */
-export class ProveedorClienteComponent implements OnChanges {
+export class ProveedorClienteComponent implements OnChanges, OnInit {
   /**
    * Datos de la fracción seleccionada en la tabla.
    * @type {AnexoUnoEncabezado | AnexoDosEncabezado}
@@ -69,13 +72,13 @@ export class ProveedorClienteComponent implements OnChanges {
    * Catálogo de países de destino.
    * @type {Catalogo[]}
    */
-  public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
+  public paisDestinoCatalog: Catalogo[] = [];
 
   /**
    * Datos de la tabla de proveedores y clientes.
    * @type {ProveedorClienteTabla[]}
    */
-  public proveedorClienteTablsDatos: ProveedorClienteTabla[] = [];
+  @Input() proveedorClienteTablsDatos: ProveedorClienteTabla[] = [];
 
   /**
    * Lista de proveedores y clientes seleccionados.
@@ -104,13 +107,62 @@ export class ProveedorClienteComponent implements OnChanges {
   @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
+    *  * compodoc
+   * @property {Subject<void>} destroyNotifier$
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public complementarState!: ComplementarState;
+
+  /**
    * Constructor de la clase ProveedorClienteComponent.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
-  constructor(private fb: FormBuilder, private ubicaccion: Location) {
+  constructor(private fb: FormBuilder,
+    private ubicaccion: Location,
+    private complimentosService: ComplimentosService,
+    private complementarStore: ComplementarStore,
+    private complementarQuery: ComplementarQuery) {
     this.inicializarFormularioProveedorCliente();
   }
+
+  /**
+ * Inicializa el componente, suscribe al estado de la solicitud y carga las opciones de país si es necesario.
+ */
+  ngOnInit(): void {
+    this.complementarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.complementarState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
+          
+    if (!(this.complementarState.paisOptions.length)) {
+      this.obtenerPaisOptions();
+    } else {
+      this.paisDestinoCatalog = [...this.complementarState.paisOptions];
+    }
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de pais desde el servicio. */
+  obtenerPaisOptions(): void {
+      this.complimentosService.getPais()
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((res) => {
+        this.complementarStore.setPaisOptions(res.datos);
+        this.paisDestinoCatalog = res.datos;
+      });
+    }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando se detectan cambios en las propiedades de entrada.

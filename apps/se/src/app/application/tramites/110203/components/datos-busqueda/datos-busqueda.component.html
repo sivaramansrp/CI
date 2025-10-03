@@ -1,4 +1,5 @@
 <div class="container">
+    <h2>Trámites disponibles</h2>
     <ng-titulo titulo="Datos de la búsqueda"></ng-titulo>
     <form [formGroup]="datosBusquedaFormulario">
         <div class="row mb-3">
@@ -18,11 +19,11 @@
         </div>
         <div class="row mb-3" *ngIf="valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque'">
             <div class="col-md-8">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" [label]="'Tratado / Acuerdo'"
+                <app-catalogo-select [catalogo]="tratadoAcuerdo" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="Tratado / Acuerdo" formControlName="tratadoAcuerdo"></app-catalogo-select>
             </div>
             <div class="col-md-8">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" [label]="'País / Bloque'"
+                <app-catalogo-select [catalogo]="paisBloque" [label]="'País / Bloque'"
                     [required]="true" name="País / Bloque" formControlName="paisBloque"></app-catalogo-select>
             </div>
         </div>

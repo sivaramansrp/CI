@@ -16,12 +16,12 @@ export interface CapacidadInstalada {
 
 export const CAPACIDAD_INSTALADA = [
   {
-    encabezado: 'Planta',
+    encabezado: '#Planta',
     clave: (ele: CapacidadInstalada): string => ele.PLANTA,
     orden: 1,
   },
   {
-    encabezado: 'Fracción arancelaria de producto',
+    encabezado: 'Fracción arancelaria de producto terminado',
     clave: (ele: CapacidadInstalada): string =>
       ele.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO,
     orden: 2,

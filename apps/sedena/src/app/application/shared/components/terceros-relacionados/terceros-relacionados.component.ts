@@ -89,6 +89,8 @@ export class TercerosRelacionadosComponent implements OnInit{
 
   @Output() openModal = new EventEmitter<string>();
 
+  @Output () eliminarProveedorContenedoraFinalEvent = new EventEmitter<Proveedor>();
+
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
    * Cuando es verdadero, los campos del formulario no pueden ser editados.
@@ -138,7 +140,29 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @returns {void}
    */
   irAAcciones(accionesPath: string): void {
+    this.destinarioTablaSeleccionada = [];
+    this.proveedorTablaSeleccionada = [];
     this.openModal.emit(accionesPath)
+  }
+
+  /**
+   * Maneja el evento de selección de filas en la tabla de destinatarios.
+   * @method destinarioTablaSeleccionadaEvent
+   * @param {DestinoFinal[]} event - Lista de destinatarios seleccionados.
+   * @returns {void}
+   */
+  destinarioTablaSeleccionadaEvent(event: DestinoFinal[]): void {
+    this.destinarioTablaSeleccionada = event;
+  }
+
+  /**
+   * Maneja el evento de selección de filas en la tabla de proveedores.
+   * @method proveedorTablaSeleccionadaEvent
+   * @param {Proveedor[]} event - Lista de proveedores seleccionados.
+   * @returns {void}
+   */
+  proveedorTablaSeleccionadaEvent(event: Proveedor[]): void {
+    this.proveedorTablaSeleccionada = event;
   }
 
   /**

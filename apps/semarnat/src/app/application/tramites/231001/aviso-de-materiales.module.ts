@@ -1,19 +1,21 @@
+import {
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  NotificacionesComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AdministrarResiduosComponent } from './components/administrar-residuos/administrar-residuos.component';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { AvisodematerialesRoutingModule } from './aviso-de-materiales-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
-import { PantallasComponent } from './pages/pantallas/pantallas.component';
-
-
-import { BtnContinuarComponent, CatalogoSelectComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-
 import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
 import { DatosDelGeneradorDeResiduosComponent } from './components/datos-del-generador-de-residuos/datos-del-generador-de-residuos.component';
-
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/solicitante-datos-tabs.component';
 import { ToastrService } from 'ngx-toastr';
@@ -31,7 +33,6 @@ import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
     CommonModule,
     AvisodematerialesRoutingModule,
     ReactiveFormsModule,
-    WizardComponent,
     TituloComponent,
     AdministrarResiduosComponent,
     DatosDeLosResiduosComponent,
@@ -40,9 +41,11 @@ import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
     BtnContinuarComponent,
     AlertComponent,
     SolicitanteComponent,
+    WizardComponent,
     PasoDosComponent,
-    PasoTresComponent
+    PasoTresComponent,
+    NotificacionesComponent,
   ],
-  providers : [ToastrService]
+  providers: [ToastrService],
 })
 export class AvisodematerialesModule {}

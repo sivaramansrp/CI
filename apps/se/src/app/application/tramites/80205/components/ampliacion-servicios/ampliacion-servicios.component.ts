@@ -1,14 +1,22 @@
 import {
   CONFIGURACION_DOMICILIOS,
+  CONFIGURACION_SERVICIO_AUTORIZADO,
   CONFIGURACION_SERVICIO_IMMEX,
 } from '../../constantes/modificacion.enum';
 import {
-  Catalogo,
+  
+  CatalogoServices,
+  CategoriaMensaje,
   ConsultaioQuery,
-  FormularioDinamico,
   TablaDinamicaComponent,
   TablaSeleccion,
+  TipoNotificacionEnum,
 } from '@ng-mf/data-access-user';
+import {
+  EmpresasNacionales,
+  ServicioAmpliacion,
+  ServicioAutorizado,
+} from '../../models/datos-info.model';
 import {
   FormBuilder,
   FormGroup,
@@ -17,24 +25,23 @@ import {
   Validators,
 } from '@angular/forms';
 import { Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  Servicio,
-  ServicioInmex,
-  Servicios,
-} from '../../models/datos-info.model';
-import { Subject,Subscription,map,takeUntil} from 'rxjs';
+import { Subject,Subscription,filter,map,shareReplay,takeUntil} from 'rxjs';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosState } from '../../estados/tramite80205.store';
 import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
 import { ApiResponse } from '../../models/datos-info.model';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { Catalogo } from '../../constantes/modificacion.enum';
 import {CatalogoSelectComponent} from'@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-import { HttpClient } from '@angular/common/http';
-
+import { Notificacion } from '@ng-mf/data-access-user';
+import { NotificacionesComponent } from '@ng-mf/data-access-user';
+import { ServicioItemResponse } from '../../../../shared/models/modelo-interface.model';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
+import {ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-ampliacion-servicios',
@@ -45,11 +52,46 @@ import { HttpClient } from '@angular/common/http';
     CatalogoSelectComponent,
     FormsModule,
     TablaDinamicaComponent,
+    NotificacionesComponent,
+    
   ],
   templateUrl: './ampliacion-servicios.component.html',
   styleUrl: './ampliacion-servicios.component.scss',
 })
 export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Lista de identificadores de mercancías seleccionadas.
+   *
+   * Este arreglo almacena los IDs de las mercancías que el usuario ha elegido,
+   * ya sea para registrar, modificar o visualizar en el contexto del formulario.
+   *
+   * @type {number[]}
+   */
+  mercanciasSeleccionados: number[] = [];
+  /**
+   * 
+   * Lista de identificadores de la segunda tabla seleccionados.
+   * Este arreglo almacena los IDs de los elementos que el usuario ha elegido
+   */
+
+  tablaDosSeleccionados: number[] = [];
+
+  /**
+ * Referencia a la tabla dinámica A.
+ * @property {TablaDinamicaComponent<ServicioAmpliacion>} tablaA
+ */
+@ViewChild('tablaA') tablaA!: TablaDinamicaComponent<ServicioAmpliacion>;
+/**
+ * Referencia a la tabla dinámica B.
+ * @property {TablaDinamicaComponent<ServicioAutorizado>} tablaB
+ */
+@ViewChild('tablaB') tablaB!: TablaDinamicaComponent<ServicioAutorizado>;
+/**
+ * Referencia a la tabla dinámica C.
+ * @property {TablaDinamicaComponent<EmpresasNacionales>} tablaC
+ */
+@ViewChild('tablaC') tablaC!: TablaDinamicaComponent<EmpresasNacionales>;
   /**
    * Índice de la pestaña.
    * @property {number} tabindex
@@ -66,30 +108,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {FormGroup} formulario
    */
   formulario: FormGroup;
-
-  /**
-   * Tipo de persona seleccionada.
-   * @property {number} tipoPersona
-   */
-  tipoPersona!: number;
-
-  /**
-   * Lista de campos dinámicos para el formulario de domicilio fiscal.
-   * @property {FormularioDinamico[]} domicilioFiscal
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Servicios disponibles en el dropdown.
-   * @property {string} serviciosDropDown
-   */
-  serviciosDropDown: string = '';
-
-  /**
-   * Datos recibidos desde un componente hijo.
-   * @property {Servicio[]} recibioDatos
-   */
-  recibioDatos: Servicio[] = [];
 
   /**
    * Formulario para la información de registro.
@@ -138,47 +156,104 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de columnas para la tabla de domicilios.
-   * @property {ConfiguracionColumna<ServicioInmex>[]} configuracionTabla
+   * @property {ConfiguracionColumna<EmpresasNacionales[]>} configuracionTabla
    */
-  configuracionTabla: ConfiguracionColumna<ServicioInmex>[] =
+  configuracionTabla: ConfiguracionColumna<EmpresasNacionales>[] =
     CONFIGURACION_DOMICILIOS;
 
   /**
    * Configuración de columnas para la tabla de servicios IMMEX.
    * @property {ConfiguracionColumna<Servicio>[]} configuracionTablaServicio
    */
-  configuracionTablaServicio: ConfiguracionColumna<Servicio>[] =
+  configuracionTablaServicio: ConfiguracionColumna<ServicioAmpliacion>[] =
     CONFIGURACION_SERVICIO_IMMEX;
 
+  configuracionTablaServicioAutorizado: ConfiguracionColumna<ServicioAutorizado>[] =
+    CONFIGURACION_SERVICIO_AUTORIZADO;
+
   /**
-   * Datos de empresas nacionales.
-   * @property {ServicioInmex[]} datos
+   * Lista de empresas relacionadas con IMMEX.
+   * @property {EmpresasNacionales[]} empresas
    */
-  datos: ServicioInmex[] = [];
+  empresas: EmpresasNacionales[] = [];
 
   /**
    * Datos de servicios IMMEX.
    * @property {Servicio[]} datosImmex
    */
-  datosImmex: Servicio[] = [];
+  datosImmex: ServicioAmpliacion[] = [];
+
+  datosAutorizados:ServicioAutorizado[]=[];
+
+   /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+   public nuevaNotificacion!: Notificacion;
 
   /**
    * Domicilios seleccionados.
-   * @property {Servicio[]} domiciliosSeleccionados
+   * @property {ServicioAmpliacion[]} domiciliosSeleccionados - Selected services with ampliacion data
    */
-  domiciliosSeleccionados: Servicio[] = [];
+  domiciliosSeleccionados: ServicioAmpliacion[] = [];
+ /**
+  * Autorizados seleccionados.
+  * @property {Servicio[]} autorizadosSeleccionados
+  */
+  autorizadosSeleccionados: ServicioAutorizado[] = [];
 
   /**
    * Empresas seleccionadas.
-   * @property {ServicioInmex[]} empresasSeleccionados
+   * @property {EmpresasNacionales[]} empresasSeleccionados
    */
-  empresasSeleccionados: ServicioInmex[] = [];
+  empresasSeleccionados: EmpresasNacionales[] = [];
 
   /**
-   * Formulario auxiliar.
-   * @property {FormGroup} forma
+ * @property {boolean} esHabilitarElDialogo
+ * Indica si el diálogo de confirmación para agregar servicios está habilitado y visible.
+ */
+
+  esHabilitarElDialogo: boolean = false;
+  /**
+   * Indica si el diálogo de confirmación para eliminar servicios está habilitado y visible.
+   * @property {boolean} esEliminar
    */
-  forma!: FormGroup;
+  esEliminar: boolean = false;
+  /**
+   * Indica si el diálogo de confirmación para eliminar empresas nacionales está habilitado y visible.
+   * @property {boolean} esEliminar
+   */
+
+  esAgregarDos: boolean = false;
+
+  /**
+   * Indica si el diálogo de confirmación para eliminar empresas nacionales está habilitado y visible.
+   * @property {boolean} esEliminar
+   */
+
+  esEliminarDos: boolean = false;
+  /**
+   * Indica si se han recibido datos de respuesta.
+   * @property {boolean} esDatosRespuesta
+   */
+
+  rowNotSeleccionada: boolean = false;
+
+  /**
+   * Indica si se han recibido datos de respuesta.
+   * @property {boolean} esDatosRespuesta
+   * */
+
+  noRowSelected: boolean = false;
+
+   /**
+   * Indica si se han recibido datos de respuesta.
+   * @property {boolean} esDatosRespuesta
+   * */
+   noRowSelectedTablaC: boolean = false;
+
 
   /**
    * Lista de aduanas de ingreso.
@@ -192,37 +267,37 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   predeterminado=-1;
 
   /**
-   * Datos del cuerpo de autorizados.
-   * @property {[]} autorizadosBodyData
-   */
-  autorizadosBodyData: [] = [];
-
-  /**
-   * Información del registro de servicios.
-   * @property {Servicios} infoRegistro
-   */
-  infoRegistro!: Servicios;
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
   
+  tramiteID:string ='80205';
+
+  serviciosImmexServId!:string;
 
   /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para obtener datos de ampliación de servicios.
-   * @param {HttpClient} httpServicios - Servicio HTTP para realizar peticiones.
    */
   constructor(
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
+    private catalogoServices: CatalogoServices,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private ampliacionServiciosStore: AmpliacionServiciosStore,
-    private readonly httpServicios: HttpClient,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private serviciosService: ServiciosService
   ) {
+       /**
+     * Inicializa el formulario principal del componente con los campos necesarios.
+     * @method inicializarFormularioPrincipal
+     */
+    this.formulario = this.fb.group({
+      entidadFederativa: [{ value:""}, Validators.required],
+    });
+    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -232,14 +307,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     
-    
-    /**
-     * Inicializa el formulario principal del componente con los campos necesarios.
-     * @method inicializarFormularioPrincipal
-     */
-    this.formulario = this.fb.group({
-      entidadFederativa: [{ value:this.tramiteState.aduanaDeIngresoSelecion}, Validators.required],
-    });
     /**
      * Suscripción al observable `selectAduanaDeIngresoSelecion$` del query `ampliacionServiciosQuery`.
      *
@@ -285,13 +352,13 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-    this.obtenerIngresoSelectList();
+    this.obtenerIngresoSelectList(this.tramiteID);
     this.getDatos();
+    this.inicializarEstadoFormulario();
     this.suscribirseADatosImmex();
     this.suscribirseADatos();
     this.suscribirseAFields();
-    
+    this.getTablaDatos();
 
   }
   /**
@@ -323,11 +390,95 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   suscribirseADatos(): void {
     this.subscription.add(
-      this.ampliacionServiciosQuery.selectDatos$.subscribe((datos) => {
-        this.datos = datos; // Update local `datos` array when store data changes
+      this.ampliacionServiciosQuery.select('empresas').subscribe((empresas) => {
+        this.empresas = empresas; // Update local empresas array when store data changes
       })
     );
   }
+ /**
+  * Actualiza el grid de empresas nacionales.
+  * @method actualizaGridEmpresasNacionales
+  * 
+  * @return {void}
+  */
+  getTablaDatos(): void {
+    this.ampliacionServiciosService.getTablaDatos()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        shareReplay(1)
+      )
+      .subscribe({
+        next: (data) => {
+          const DATOS = data as ServicioAutorizado[];
+          this.datosAutorizados = DATOS;
+          this.ampliacionServiciosStore.datosAutorizados(DATOS);
+        },
+        error: (_error) => {
+          // Handle error appropriately
+        }
+      });
+  }
+
+    /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+   
+    this.esHabilitarElDialogo = false;
+  }
+  /**
+   * Método para cerrar el modal de eliminación.
+   * @param {boolean} evento - Indica si se debe proceder con la eliminación.
+   * @return {void}
+   */
+  cerrarModalEliminar(evento:boolean): void {
+    if(evento===true){
+    this.eliminarServiciosGrid();
+    }
+    this.esEliminar=false;
+  }
+/**
+ * Actualiza el grid de empresas nacionales.
+ * @method actualizaGridEmpresasNacionales
+ * @return {void}
+ * 
+ */
+  cerrarModalAgregar(): void {
+    this.esAgregarDos=false;
+  }
+
+  /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+
+  cerrarEliminarDos(evento:boolean): void {
+    if(evento===true){
+    this.eliminarEmpresasNacionales();}
+    this.esEliminarDos=false;
+    
+  }
+  /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+  cerrarNoRow(): void {
+    this.noRowSelected=false;
+  }
+  /**
+   * Cierra la notificación de fila no seleccionada.
+   * @method cerrarNotSeleccainda
+   * @return {void}
+   * 
+   */
+  cerrarNotSeleccainda(): void {
+    
+    this.rowNotSeleccionada=false;
+  }
+
   /**
    * Suscribe a los campos seleccionados del estado de `ampliacionServiciosQuery`
    * y actualiza las propiedades locales del componente con los valores obtenidos.
@@ -369,15 +520,24 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @returns {void} Este método no retorna ningún valor.
    */
   getDatos(): void {
-    this.subscription.add(
-      this.ampliacionServiciosService.getDatos().subscribe((respuesta) => {
-        const RESPONSE = respuesta as unknown as ApiResponse;
-        if (RESPONSE) {
-          this.ampliacionServiciosStore.setInfoRegistro(RESPONSE.infoServicios);
-          this.initializeFormFromStore();
+    this.ampliacionServiciosService.getDatos()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        shareReplay(1)
+      )
+      .subscribe({
+        next: (respuesta) => {
+          const RESPONSE = respuesta as unknown as ApiResponse;
+          if (RESPONSE) {
+            this.ampliacionServiciosStore.setInfoRegistro(RESPONSE.infoServicios);
+            this.initializeFormFromStore();
+
+          }
+        },
+        error: (_error) => {
+          // Handle error appropriately
         }
-      })
-    );
+      });
   }
   /**
    * Se suscribe al observable `selectDatosImmex$` del store para obtener los datos de IMMEX
@@ -483,7 +643,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * Obtiene la lista de selección de ingreso.
    * @method obtenerIngresoSelectList
    */
-  obtenerIngresoSelectList(): void {
+  obtenerIngresoSelectList(tramite:string): void {
     /**
      * Obtiene la lista de selección de ingreso desde el servicio `ampliacionServiciosService`
      * y actualiza el estado global con los datos obtenidos.
@@ -491,23 +651,22 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
      * @method obtenerIngresoSelectList
      * @returns {void} Este método no retorna ningún valor.
      */
-    this.subscription.add(
-      this.ampliacionServiciosService
-        .obtenerIngresoSelectList()
-        .subscribe((data) => {
-          const DATOS = data as Catalogo[];
-
-          // Actualiza el estado global con la lista de aduanas de ingreso.
-          this.ampliacionServiciosStore.setAduanaDeIngreso(DATOS);
-
-          // Suscribe al observable para mantener actualizada la lista local de aduanas.
-          this.ampliacionServiciosQuery.selectAduanaDeIngreso$.subscribe(
-            (aduanaDeIngreso) => {
-              this.aduanaDeIngreso = aduanaDeIngreso;
-            }
-          );
-        })
-    );
+    this.catalogoServices
+      .immexCatalogo(tramite)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        shareReplay(1)
+      )
+      .subscribe({
+        next: (data) => {
+          const DATOS = data.datos as Catalogo[];
+          this.aduanaDeIngreso = DATOS;
+          this.formulario.get('entidadFederativa')?.setValue(this.tramiteState.aduanaDeIngresoSelecion.id || this.predeterminado);
+        },
+        error: (error) => {
+          console.error('Error loading immexCatalogo:', error);
+        }
+      });
   }
   
   /**
@@ -534,57 +693,235 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   eliminarServiciosGrid(): void {
     const INDICE = this.datosImmex.findIndex(
-      (item: Servicio) =>
-        item.descripiónDelServicio ===
-        this.domiciliosSeleccionados[0]?.['descripiónDelServicio']
+      (item: ServicioAmpliacion) =>
+        item.idServicio ===
+        this.domiciliosSeleccionados[0]?.['idServicio']
     );
     if (INDICE !== -1) {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
       DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
       this.ampliacionServiciosStore.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
+      this.domiciliosSeleccionados = [];
+      this.tablaA?.clearSelection();
+     
     }
   }
+  /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+  cerrarNoRowTablaC(): void {
+    this.noRowSelectedTablaC=false;
+  }
+  /**
+   * Muestra una notificación de confirmación al intentar agregar un servicio duplicado.
+   * @method doConfirmAgregar
+   * @returns {void} Este método no retorna ningún valor.
+   */
+ 
+  doConfirmAgregar(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'El servicio que intenta ingresar ya ha sido registrado anteriormente.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.esHabilitarElDialogo = true;
+  }
+ /**
+  * Muestra una notificación de confirmación al intentar eliminar un servicio.
+  * @method doConfirmEliminar
+  * @return {void} Este método no retorna ningún valor.
+  */
+  doConfirmEliminar(): void {
+    if(this.domiciliosSeleccionados[0]?.idServicio===undefined || this.domiciliosSeleccionados.length === 0){
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Debe seleccionar el Servicio que desea eliminar',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.noRowSelected = true;
+
+    }
+    else{
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: '¿Esta seguro de eliminar el(los) servicio(s) seleccionado(s)?',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.esEliminar = true;}}
+  /**
+   * Muestra una notificación de confirmación al intentar agregar un servicio.
+   * @method doAgregarDos
+   * @return {void} Este método no retorna ningún valor.
+   *  
+   * */
+    doAgregarDos(): void {
+      if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.idServicio===undefined&&this.autorizadosSeleccionados[0]?.idServicio===undefined)){
+        this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ALERTA,
+          modo: 'modal',
+          titulo: '',
+          mensaje: 'Debe seleccionar un Servicio.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.rowNotSeleccionada = true;
+      } else{
+
+        this.actualizaGridEmpresasNacionales();
+      // this.nuevaNotificacion = {
+      //   tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      //   categoria: CategoriaMensaje.ALERTA,
+      //   modo: 'modal',
+      //   titulo: '',
+      //   mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
+      //   cerrar: false,
+      //   txtBtnAceptar: 'Aceptar',
+      //   txtBtnCancelar: '',
+      // };
+      // this.esAgregarDos = true;
+    }
+    }
+    /**
+     * Muestra una notificación de confirmación al intentar eliminar un servicio.
+     * @method doEliminarDos
+     * @return {void} Este método no retorna ningún valor.
+     * */
+    doEliminarDos(): void {
+      if(this.empresasSeleccionados.length===0){
+        this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ALERTA,
+          modo: 'modal',
+          titulo: '',
+          mensaje: 'Selecciona un registro.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+          this.noRowSelectedTablaC = true;
+      }
+      else{
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Está seguro de eliminar el servicio seleccionado?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.esEliminarDos = true;}}
+    
 
  /**
    * Agrega servicios a la ampliación.
    * @method agregarServiciosAmpliacion
    */
 
-  agregarServiciosAmpliacion(): void {
-    const descripcion = this.recibioDatos[0]?.descripcion;
-    const tipode = this.recibioDatos[0]?.tipode;
-  
-    if (!descripcion || !tipode || descripcion === '-1' || tipode === '-1') {
+  agregarServiciosAmpliacion(event?: Event): void {
+    // Prevent event propagation to avoid triggering parent form validation
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
+    // Verificar si se ha seleccionado un servicio
+    if (!this.serviciosImmexServId) {
       return;
     }
-  
-    const CUERPODATOS = {
-      descripiónDelServicio: descripcion,
-      tipode: tipode,
+
+    const ID = this.serviciosImmexServId;
+    
+    // Verificar duplicados ANTES de realizar la llamada API
+    const ISDUPLICATE = this.datosImmex.some(item => item.idServicio === ID);
+    if (ISDUPLICATE) {
+      this.doConfirmAgregar();
+      return; 
+    }
+
+    const PAYLOAD = {
+      servicio: ID,
+      servicioSeleccionado: [ // No obligatorio
+        {
+            idServicio: 1,
+            claveServicio: 1
+        }
+      ],
+      modalidad: this.tramiteID,
+      idPrograma: "105834"
     };
-  
-    this.ampliacionServiciosStore.setDatosImmex([
-      ...this.datosImmex,
-      CUERPODATOS,
-    ]);
+
+    this.serviciosService.postServiciosImmexTabla(this.tramiteID, PAYLOAD).pipe(
+      map((data: BaseResponse<Partial<ServicioItemResponse[]>>) => {
+        return (data.datos ?? [])
+          .filter((item): item is ServicioItemResponse => item !== undefined && item.descripcion !== null)
+          .map(item => ({
+            idServicio: String(item.idServicio), // Convertir a string para coincidir con la interfaz
+            descripcion: item.descripcion,
+            tipoServicio: item.tipoServicio,
+            descripcionTipo: item.descripcionTipo,
+            claveServicio: item.claveServicio
+          })) as unknown as ServicioAmpliacion[];
+      }),
+      filter((datosImmex: ServicioAmpliacion[]) => datosImmex.length > 0)
+    ).subscribe({
+      next: (datosImmex: ServicioAmpliacion[]) => {
+        const CUERPODATOS: ServicioAmpliacion = {
+          idServicio: String(datosImmex[0]?.idServicio || ID), // Convertir a string
+          descripcion: datosImmex[0]?.descripcion,
+          tipoServicio: datosImmex[0]?.tipoServicio,
+          descripcionTipo: datosImmex[0]?.descripcionTipo,
+          claveServicio: datosImmex[0]?.claveServicio,
+        };
+
+        // Actualizar el store con los nuevos datos
+        this.ampliacionServiciosStore.setDatosImmex([
+          ...this.datosImmex,
+          CUERPODATOS,
+        ]);
+      }
+    });
   }
-  
 
   /**
    * Elimina empresas nacionales.
    * @method eliminarEmpresasNacionales
    */
   eliminarEmpresasNacionales(): void {
-    const INDICE = this.datos.findIndex(
-      (item: ServicioInmex) =>
-        item.RegistroContribuyentes ===
-        this.empresasSeleccionados[0]?.RegistroContribuyentes
+    const INDICE = this.empresas.findIndex(
+      (item: EmpresasNacionales) =>
+        item.descripcionServicio ===
+        this.empresasSeleccionados[0]?.descripcionServicio
     );
     if (INDICE !== -1) {
-      const DATOSACTUALIZADOS = [...this.datos];
-      DATOSACTUALIZADOS.splice(INDICE, 1);
-      this.ampliacionServiciosStore.setDatos(DATOSACTUALIZADOS);
+      const EMPRESAS_ACTUALIZADAS = [...this.empresas];
+      EMPRESAS_ACTUALIZADAS.splice(INDICE, 1);
+      this.ampliacionServiciosStore.setEmpresas(EMPRESAS_ACTUALIZADAS);
+      this.empresasSeleccionados = [];
+      this.tablaC?.clearSelection();
     }
+    
   }
 
   /**
@@ -599,17 +936,23 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     ) {
       return; 
     }
+
+    const SERVICIO_DATOS=(this.domiciliosSeleccionados[0]?.descripcion!==undefined)?this.domiciliosSeleccionados[0]?.descripcion:this.autorizadosSeleccionados[0]?.descripcion;
+    const DENOMINACION_DATOS=(this.domiciliosSeleccionados[0]?.descripcionTipo!==undefined)?this.domiciliosSeleccionados[0]?.descripcionTipo:this.autorizadosSeleccionados[0]?.descripcionTipo;
   
-    const CUERPODATOS = {
-      Servicio: 'Auditoría de sistemas de seguridad',
-      RegistroContribuyentes: this.rfcEmpresa,
-      DenominaciónSocial: 'AAL970927390',
-      NumeroIMMEX: this.numeroPrograma,
-      AñoIMMEX: this.tiempoPrograma,
+    const CUERPODATOS: EmpresasNacionales = {
+      idCompuestoEmpresa: "",
+      idServicioAutorizado: "",
+      idServicio: "1",
+      descripcionServicio: SERVICIO_DATOS,
+      rfc: this.rfcEmpresa,
+      razonSocial: DENOMINACION_DATOS,
+      numeroPrograma: this.numeroPrograma,
+      tiempoPrograma: this.tiempoPrograma
     };
   
-    const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];
-    this.ampliacionServiciosStore.setDatos(DATOSACTUALIZADOS);
+    const DATOSACTUALIZADOS = [...this.empresas, CUERPODATOS];
+    this.ampliacionServiciosStore.setEmpresas(DATOSACTUALIZADOS);
 
     this.rfcEmpresa = '';
     this.numeroPrograma = '';
@@ -638,9 +981,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @param {any} data - Datos recibidos.
    */
   procesarDatosDelHijo(): void {
-    const SELECTED_DATOS= this.aduanaDeIngreso.find(item => item.id == this.formulario.value.entidadFederativa);
-    const DATOS={id: this.formulario.value.entidadFederativa,descripcion:"abcd"};
-    this.recibioDatos= [{ descripcion:SELECTED_DATOS?.descripcion, tipode:"Servicio" }];
+    const ID= this.formulario.value.entidadFederativa;
+    const SELECTED_DATOS = this.aduanaDeIngreso.find((item: any) => item.clave === ID);
+    const DATOS = { id: ID, descripcion: SELECTED_DATOS?.descripcion ?? '' };
+    this.serviciosImmexServId = ID;
     this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(DATOS as Catalogo);
   }
 
@@ -649,8 +993,33 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method seleccionarDomicilios
    * @param {any} domicilios - Domicilios seleccionados.
    */
-  seleccionarDomicilios(domicilios: Servicio): void {
-    this.domiciliosSeleccionados = [{ ...domicilios }];
+  seleccionarDomicilios(servicio: ServicioAmpliacion): void {
+    if (!servicio) {
+      this.domiciliosSeleccionados = [];
+      this.mercanciasSeleccionados = [];
+      return;
+    }
+    
+    this.domiciliosSeleccionados = [servicio];
+    this.mercanciasSeleccionados = [Number(servicio.idServicio)];
+    this.tablaB?.clearSelection();
+  }
+  /**
+   * Selecciona autorizados.
+   * @method seleccionarAutorizados
+   * @param {any} autorizados - Autorizados seleccionados.
+   */
+
+  seleccionarAutorizados(autorizados: ServicioAutorizado): void {
+    if (!autorizados) {
+      this.autorizadosSeleccionados = [];
+      this.tablaDosSeleccionados = [];
+      return;
+    }
+    
+    this.autorizadosSeleccionados= [{ ...autorizados }];
+    this.tablaDosSeleccionados = [Number(autorizados.idServicio)];
+    this.tablaA?.clearSelection();
   }
 
   /**
@@ -658,7 +1027,12 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method seleccionarEmpresas
    * @param {any} empresas - Empresas seleccionadas.
    */
-  seleccionarEmpresas(empresas: ServicioInmex): void {
+  seleccionarEmpresas(empresas: EmpresasNacionales): void {
+    if (!empresas) {
+      this.empresasSeleccionados = [];
+      return;
+    }
+    
     this.empresasSeleccionados = [{ ...empresas }];
   }
 }

@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, Usuario } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { PeximService } from '../../services/pexim.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 /**
  * Este componente se muestra en PasaDos
  */
@@ -22,6 +20,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
  * @type {EventEmitter<void>}
  */
   @Input() cargaArchivosEvento!: EventEmitter<void>;
+
+  @Input() idTipoTRamite!: string;
   /**
    * Textos utilizados en el componente.
    */
@@ -31,13 +31,13 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Evento que se emite para reenviar la solicitud de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de carga de documentos.
    */
-  @Output() reenviarEvento = new EventEmitter<void>();
+  reenviarEvento = new EventEmitter<void>();
 
   /**
    * Evento que se emite para regresar a la sección de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
    */
-  @Output() reenviarRegresarSeccion = new EventEmitter<void>();
+  reenviarRegresarSeccion = new EventEmitter<void>();
 
   /**
    * Clase CSS para la alerta de información.
@@ -78,6 +78,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   @Output() reenviarEventoCarga = new EventEmitter<boolean>();
 
   /**
+   * Servicio para gestionar los catálogos.
+   */
+  @Input() datosUsuario!: Usuario;
+
+  /**
    * Constructor del componente.
    * 
    * @param catalogosServices Servicio para gestionar los catálogos.
@@ -99,14 +104,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(
-        takeUntil(this.destroyed$),
-        map(() => {
-          this.reenviarRegresarSeccion.emit();
-        })
-      )
-      .subscribe();
+    // this.regresarSeccionCargarDocumentoEvento
+    //   .pipe(
+    //     takeUntil(this.destroyed$),
+    //     map(() => {
+    //       this.reenviarRegresarSeccion.emit();
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   /**

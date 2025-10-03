@@ -683,7 +683,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="domicilioDespacho"
-            >Indica el domicilio*:</label
+            >Indica el domicilio<span [ngClass]="isRequired(despacho, 'domicilioDespacho') ? 'required' : ''">*</span>:</label
           >
           <textarea
             class="form-control h-25"

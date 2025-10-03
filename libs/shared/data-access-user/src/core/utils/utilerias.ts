@@ -258,3 +258,67 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
       });
     }
 
+    /**
+     * Formatea una fecha en formato 'yyyy-MM-dd' a 'dd/MM/yyyy'.
+     * 
+     * @param fecha - La fecha en formato 'yyyy-MM-dd' como string.
+     * @returns La fecha formateada en 'dd/MM/yyyy' como string.
+     */
+    export function formatearFechaDdMmYyyy(fecha: string): string {
+        if (!fecha || typeof fecha !== 'string') {
+            return '';
+        }
+        const [YEAR, MONTH, DAY] = fecha.split('-');
+        if (!YEAR || !MONTH || !DAY) {
+            return '';
+        }
+        return `${DAY.padStart(2, '0')}/${MONTH.padStart(2, '0')}/${YEAR}`;
+    }
+
+/**
+   * Formatea una fecha a un string en el formato 'YYYY-MM-DD HH:mm:ss'.
+   * @param fecha - Fecha a formatear, puede ser un string o un objeto Date.
+   * @returns String formateado de la fecha.
+   */
+export function formatFecha(fecha: string | Date): string {
+    const DATE_OBJ = new Date(fecha);
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+
+    const YYYY = DATE_OBJ.getFullYear();
+    const MM = PAD(DATE_OBJ.getMonth() + 1);
+    const DD = PAD(DATE_OBJ.getDate());
+    const HH = PAD(DATE_OBJ.getHours());
+    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
+    const SS = PAD(DATE_OBJ.getSeconds());
+
+    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
+}
+
+/**
+     * Formatea una fecha en formato 'dd/MM/yyyy' a 'yyyy-MM-dd'.
+     * 
+     * @param input - La fecha en formato 'dd/MM/yyyy' como string.
+     * @returns La fecha formateada en 'yyyy-MM-dd' como string.
+     */
+export function formatearFechaYyyyMmDd(
+  input: string,
+  override?: { year?: string | number; month?: string | number; day?: string | number }
+): string {
+  if (input) {
+    const [DAY, MONTH, YEAR] = input.split("/");
+    const YYYY = override?.year ?? YEAR;
+    const MM = override?.month ?? MONTH;
+    const DD = override?.day ?? DAY; 
+    return `${YYYY}-${String(MM).padStart(2, "0")}-${String(DD).padStart(2, "0")}`;
+  }
+  return '';
+}
+
+export function parseToString(value: unknown): string {
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  return value.toString();
+}
+    
+

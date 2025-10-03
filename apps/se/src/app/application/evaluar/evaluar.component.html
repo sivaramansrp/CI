@@ -16,30 +16,29 @@
             </div>
             <div class="row margin-top">
                 <ul class="nav nav-tabs justify-content-center">
-                    <li *ngIf="tieneOpcion('Generar un dictamen')" [ngClass]="indice === 1 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
-                            (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
-                    </li>
-
-                    <li *ngIf="tieneOpcion('Generar requerimiento de información')" [ngClass]="indice === 2 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-                            (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de
-                            información</a>
-                    </li>
-
-                    <li *ngIf="tieneOpcion('Solicitar opinión')" [ngClass]="indice === 3 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
-                            (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
-                    </li>
+                    <ng-container *ngFor="let tabsEvaluacion of tabsOpcionEvaluacion">
+                        <li *ngIf="tieneOpcion(tabsEvaluacion.nombre)" [ngClass]="indice === tabsEvaluacion.id ? 'active' : ''">
+                        <a data-toggle="tab"
+                            (click)="seleccionaTab(tabsEvaluacion.id)"
+                            (keydown.enter)="seleccionaTab(tabsEvaluacion.id)"
+                            (keydown.space)="seleccionaTab(tabsEvaluacion.id)"
+                            role="button"
+                            tabindex="{{tabsEvaluacion.id}}">
+                            {{ tabsEvaluacion.nombre }}
+                        </a>
+                        </li>
+                    </ng-container>
                 </ul>
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
-                    <app-generar-dictamen [isAntecedentes]="false" 
+                    <app-generar-dictamen [isAntecedentes]="config.isAntecedentes" 
                     [conformidad]="conformidadDictamen"
                     [dataIniciarDictamen]="dataIniciarDictamen"
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
-                    (enviarEvento)="enviarEvento($event)">
+                    (enviarEvento)="enviarEvento($event)"
+                    [habilitarFechasPorAceptacion]="config.habilitarFechas"
+                    [anexo222se]="config.anexo222se">
                     </app-generar-dictamen>
                     }
                     @case (2) {
@@ -77,7 +76,7 @@
                         }
                     </ng-container>
                     <div class="d-flex justify-content-lg-end h3">
-                        <button type="button" class="btn btn-default ms-2">Guardar y Firmar</button>
+                        <button type="button" class="btn btn-default ms-2" (click)="mostrarFirmarRequerimiento()">Guardar y Firmar</button>
                         <button class="btn  btn-primary ms-2" type="button" (click)="guardarRequerimiento()">Guardar</button>
                         <button type="button" class="btn btn-default ms-2" (click)="cancelar()">Cancelar</button>
                     </div>
@@ -98,7 +97,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal"
+                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal || cadenaOriginalRequerimiento"
                         (datosFirma)="obtieneFirma($event)"></firma-electronica>
                 </div>
             </div>

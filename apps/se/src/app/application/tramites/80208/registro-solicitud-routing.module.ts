@@ -1,4 +1,4 @@
-
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src/core/resolvers/iniciar-tramite.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -6,6 +6,12 @@ import { SolicitudModalidadPageComponent } from './pages/solicitud-modalidad-pag
 
 export const ROUTES_SOLICITUD: Routes = [
   {
+    canActivate: [IniciarTramiteResolver],
+      data: {
+        iniciarConfig: {
+          procedureId: '80208'
+        }
+      },
     path: 'modalidad',
     component: SolicitudModalidadPageComponent,
   },
@@ -13,7 +19,7 @@ export const ROUTES_SOLICITUD: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: 'modalidad',
-  },
+  }
 ];
 
 @NgModule({

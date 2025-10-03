@@ -1,10 +1,16 @@
 import {
+  AnexoDosEncabezado,
+  AnexoUnoEncabezado,
   Catalogo,
   ComplimentarFraccion,
   ComplimentarFraccionResoponse,
 } from '../../models/nuevo-programa-industrial.model';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -68,34 +74,104 @@ export class ComplementarFraccionComponent implements OnInit {
   @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
+   * Fila seleccionada del tipo AnexoUnoEncabezado.
+   * Se utiliza para almacenar y manipular la fila actualmente activa o seleccionada en la tabla.
+   */
+  selectedRow: AnexoUnoEncabezado | null = null;
+
+  /**
+   * Fila seleccionada del tipo AnexoDosEncabezado.
+   * Permite gestionar la fila activa o seleccionada dentro de la tabla correspondiente al Anexo Dos.
+   */
+  selectedDosRow: AnexoDosEncabezado | null = null;
+
+  /**
+    *  * compodoc
+   * @property {Subject<void>} destroyNotifier$
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+     * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+     */
+    public complementarState!: ComplementarState;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param ubicaccion Servicio de ubicación para navegación.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private ubicaccion: Location) {}
+  constructor(
+    private fb: FormBuilder,
+    private ubicaccion: Location,
+    private complimentosService: ComplimentosService,
+    private complementarStore: ComplementarStore,
+    private complementarQuery: ComplementarQuery
+  ) {}
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+  this.complementarQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.complementarState = seccionState as ComplementarState;
+      })
+    )
+    .subscribe();
+
+ this.complimentosService.anexoUnoFilaSeleccionada$.subscribe(row => {
+   this.selectedRow = row;
+   this.crearFormularioComplimentar();
+   if (this.formularioDeshabilitado) {
+     this.complimentarForm.disable();
+   }
+ });
+
+   this.complimentosService.anexoDosFilaSeleccionada$.subscribe(row => {
+    this.selectedDosRow = row;
     this.crearFormularioComplimentar();
     if (this.formularioDeshabilitado) {
       this.complimentarForm.disable();
     }
+  });
+
+  if (!(this.complementarState.tipoCategoriaOptions.length)) {
+    this.obtenertipoCatagoriaOptions('ENU_TIPO_CATEGORIA');
+  } else {
+    this.catagoriaSeleccionDatos = [...this.complementarState.tipoCategoriaOptions];
+  }
+}
+
+/** Obtiene y actualiza las opciones del catálogo de tipo de categoría desde el servicio. */
+  obtenertipoCatagoriaOptions(tipo: string): void {
+    this.complimentosService.getTipoCategoria(tipo)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoCategoriaOptions(res.datos);
+      this.catagoriaSeleccionDatos = res.datos;
+    });
   }
 
   /**
    * Crea el formulario del Anexo Uno.
    */
   crearFormularioComplimentar(): void {
+    const ROW = this.selectedRow || this.selectedDosRow;
     this.complimentarForm = this.fb.group({
       catagoria: [
         this.complimentarFraccionDatos.catagoria,
         Validators.required,
       ],
       descripcion: [
-        this.complimentarFraccionDatos.descripcion,
+        { value: ROW?.encabezadoDescripcionComercial, disabled: true },
         Validators.required,
       ],
       monedaNacionalMensual: [
@@ -131,4 +207,6 @@ export class ComplementarFraccionComponent implements OnInit {
   regresar(): void {
     this.cerrarPopup.emit();
   }
+
+  
 }

@@ -2,6 +2,7 @@ import {
   CategoriaMensaje,
   Notificacion,
   NotificacionesComponent,
+  REGEX_CORREO_ELECTRONICO_EXPORTADOR,
   TipoNotificacionEnum,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -147,7 +148,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.representante = this.fb.group({
       representanteRegistro: [
         this.solicitudState.representanteRegistro,
-        [ Validators.pattern(REG_X.RFC_13_ALFANUM)],
+        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM), Validators.maxLength(15)],
       ],
       representanteRfc: [
         { value: this.solicitudState.representanteRfc, disabled: true },
@@ -170,7 +171,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       representanteTelefono: [this.solicitudState.representanteTelefono],
       representanteCorreo: [
         this.solicitudState.representanteCorreo,
-        [Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR), Validators.maxLength(320)],
       ],
     });
   }

@@ -6,15 +6,16 @@ import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/c
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130121State, Tramite130121Store } from '../../estados/tramites/tramites130121.store';
-
+import {DatosDeLaMercanciaComponent} from'../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import {DatosDelTramiteComponent} from'../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import acotacionOptions from '@libs/shared/theme/assets/json/130121/acotacion.json';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
+import {PartidasDeLaMercanciaComponent} from'../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-
 import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
@@ -25,6 +26,7 @@ import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130121/datos-fr
 import nicoCatalogoVal from '@libs/shared/theme/assets/json/130121/nico.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130121/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130121/unidad-medida.json';
+
 
 /**
  * Componente de Solicitud para gestionar la solicitud de exportación de minerales de hierro.
@@ -69,12 +71,43 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {FormGroup} Formulario que contiene la información relacionada con el país.
    */
   paisForm!: FormGroup;
+    /**
+    * Componente de Datos de la Solicitud.
+    * Referencia al componente hijo que maneja los datos específicos de la solicitud.
+    */
+  @ViewChild(DatosDelTramiteComponent)
+      datosDeLaSolicitudComponent!: DatosDelTramiteComponent;
+   
+ /**
+    * Componente de Datos de la Solicitud.
+    * Referencia al componente hijo que maneja los datos específicos de la solicitud.
+    */
+ @ViewChild(DatosDeLaMercanciaComponent)
+ datosDeLaMercanciaComponent!:DatosDeLaMercanciaComponent;
+
+ /**
+    * Componente de Datos de la Solicitud.
+    * Referencia al componente hijo que maneja los datos específicos de la solicitud.
+    */
+ @ViewChild(PartidasDeLaMercanciaComponent)
+ partidasDeLaMercanciaComponent!:PartidasDeLaMercanciaComponent;
+
+ 
+
+
 
   /**
    * Formulario de representación.
    * @type {FormGroup} Formulario utilizado para representar los datos de la mercancía.
    */
   frmRepresentacionForm!: FormGroup;
+  /**
+   * Identificador del procedimiento.
+   * @type {number} Valor numérico que representa el ID del procedimiento.
+   * Este ID se utiliza para identificar el trámite específico en el sistema.
+   */
+
+  idProcedominto: number = 130121;
 
    /**
    * Formulario reactivo para capturar el estado del manifiesto de aceptación (checkbox).
@@ -340,6 +373,30 @@ tituloParte = TITULO_ORIGEN;
   }
 
   /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
+    const IS_SOLICITUD_VALID = this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion();
+    const MERCANCIA_VALID = this.datosDeLaMercanciaComponent?.formularioSolicitudValidacion();
+    const PAIS_VALID = this.paisDeOrigenComponent?.formularioSolicitudValidacion();
+    const PARTIDAS_VALID = this.partidasDeLaMercanciaComponent?.formularioSolicitudValidacion();
+    return (
+      IS_SOLICITUD_VALID ?? false) && (MERCANCIA_VALID ?? false) && (PAIS_VALID ?? false) && (PARTIDAS_VALID ?? false
+     );
+  }
+
+  /**
    * Método para inicializar los formularios del trámite, mercancia, partidas de la mercancia, 
    * pais y representación. Cada formulario se construye utilizando el FormBuilder 
    * de Angular con validadores para asegurar que los campos tengan los valores correctos 
@@ -387,7 +444,7 @@ tituloParte = TITULO_ORIGEN;
         this.seccionState?.descripcion,
         [
           Validators.required,
-          Validators.minLength(10),
+         
           Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS),
         ],
       ],
@@ -462,9 +519,7 @@ tituloParte = TITULO_ORIGEN;
       cantidadModificar: [
         this.seccionState?.cantidadModificar,
         [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.maxLength(18),
+             
         ],
       ],
      
@@ -474,7 +529,7 @@ tituloParte = TITULO_ORIGEN;
        */
       descripcionModificar: [
         this.seccionState?.descripcionModificar,
-        [Validators.required, Validators.maxLength(1000)],
+        
       ],
       
       /**
@@ -484,10 +539,7 @@ tituloParte = TITULO_ORIGEN;
       valorPartidaUSDPartidasDeLaMercancia: [
         this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
         [
-          Validators.required,
-          Validators.min(0),
-          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
-          Validators.maxLength(20),
+          
         ],
       ],
     });
@@ -504,19 +556,19 @@ tituloParte = TITULO_ORIGEN;
        * Uso específico del país relacionado con la mercancía.
        * Es obligatorio.
        */
-      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+      usoEspecifico: [this.seccionState?.usoEspecifico,[ Validators.required, Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS),
+      ]],
 
       /**
        * Justificación de la importación o exportación.
        * Es obligatorio.
        */
-      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
-
+      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required,Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS)]],
       /**
        * Observaciones adicionales sobre el país.
        * Es un campo opcional.
        */
-      observaciones: [this.seccionState?.observaciones],
+      observaciones: [this.seccionState?.observaciones,Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS)],
     });
 
     // Formulario para la representación legal relacionada con el trámite

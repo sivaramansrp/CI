@@ -18,11 +18,11 @@
  * - enviarFormularioMercancia: Envía el formulario de mercancía y agrega los datos a la tabla.
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CONFIGURACION_TABLA_MERCANCIA, ConfiguracionItem } from '../../enum/mercancia.enum';
 import { CROSLISTA_ENTRADA, CROSSLIST_BOTONS, CrosslistBoton } from '../../enum/crossList-botons.enum';
 import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud230902State, Tramite230902Store} from '../../estados/tramite230902.store';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs';
@@ -155,6 +155,49 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
   /** Suscripción general para manejar y limpiar las suscripciones del componente. Se utiliza para evitar fugas de memoria. */
   private subscription: Subscription = new Subscription();
+  /**
+   * @property {boolean} sinRegistro
+   * @description
+   * Indica si no hay registros seleccionados al intentar modificar un elemento.
+   * Controla la visualización de mensajes de alerta cuando no se ha seleccionado
+   * ningún registro para modificar.
+   */
+  sinRegistro: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionModificar
+   * @description
+   * Objeto que almacena la configuración de la notificación que se muestra
+   * cuando hay errores al intentar modificar un registro (por ejemplo, cuando
+   * se seleccionan múltiples registros o ninguno).
+   */
+  public nuevaNotificacionModificar!: Notificacion;
+
+  /**
+   * @property {boolean} sinEliminar
+   * @description
+   * Indica si no hay registros seleccionados al intentar eliminar elementos.
+   * Controla la visualización de mensajes de alerta cuando no se ha seleccionado
+   * ningún registro para eliminar.
+   */
+  sinEliminar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionEliminar
+   * @description
+   * Objeto que almacena la configuración de la notificación que se muestra
+   * cuando hay errores al intentar eliminar registros (por ejemplo, cuando
+   * no se ha seleccionado ningún registro).
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
+  /**
+   * @property {boolean} tablaError
+   * @description
+   * Indica si hay un error relacionado con la tabla de mercancías.
+   * Se establece a `true` cuando se intenta validar el formulario pero la tabla de datos está vacía,
+   * mostrando un mensaje de error para indicar que se requiere al menos una mercancía en la tabla.
+   */
+  tablaError: boolean = false;
 
   /**
    * Constructor del componente.
@@ -228,6 +271,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.storeCrosslistaDatos();
       });
+    this.nuevaNotificacionModificar = {} as Notificacion;
   }
 
   /**
@@ -330,12 +374,12 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       fraccionArancelaria: [DEFAULT_DATA.fraccionArancelaria, Validators.required],
       fraccionDescripcion: [DEFAULT_DATA.fraccionDescripcion],
       otraFraccion: [DEFAULT_DATA.otraFraccion],
-      descripcion: [DEFAULT_DATA.descripcion, Validators.required],
-      rendimientoProducto: [DEFAULT_DATA.rendimientoProducto],
+      descripcion: [DEFAULT_DATA.descripcion, [Validators.required, Validators.maxLength(1000)]],
+      rendimientoProducto: [DEFAULT_DATA.rendimientoProducto, [Validators.maxLength(1000)]],
       clasificacionTaxonomica: [DEFAULT_DATA.clasificacionTaxonomica, Validators.required],
       nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
       nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
-      marca: [DEFAULT_DATA.marca, Validators.required],
+      marca: [DEFAULT_DATA.marca, [Validators.required, DatosSolicitudComponent.noSpecialCharactersValidator]],
       cantidad: [DEFAULT_DATA.cantidad, [Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)]],
       unidadMedida: [DEFAULT_DATA.unidadMedida, Validators.required],
       paisOrigen: [DEFAULT_DATA.paisOrigen, Validators.required],
@@ -475,7 +519,22 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Actualiza los datos del formulario con los valores de la fila seleccionada.
    */
   modficarMercanciaItem(): void {
+    if(this.tablaDatos.length === 0) {
+      this.sinRegistro = true;
+      this.nuevaNotificacionModificar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
     if (this.listaFilaSeleccionadaMercancia.length < 2) {
+      this.sinRegistro = false;
       const GET_INDEX = (array: Catalogo[], value: string): number =>
         array.findIndex((item) => item.descripcion === value) + 1;
 
@@ -610,6 +669,20 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Abre el popup de confirmación si hay elementos seleccionados.
    */
   confirmEliminarMercanciaItem(): void {
+    if(this.tablaDatos.length === 0) {
+      this.sinEliminar = true;
+      this.nuevaNotificacionEliminar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
     if (this.listaFilaSeleccionadaMercancia.length === 0) {
       return;
     }
@@ -751,7 +824,76 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
     const VALOR = form.get(campo)?.value;
     this.tramite230902Store.establecerDatos({ [campo]: VALOR });
   }
+  /**
+   * @method cerrarSinRegistro
+   * @description
+   * Cierra la notificación de alerta que se muestra cuando no hay registros seleccionados para modificar.
+   * Establece la propiedad `sinRegistro` a `false` para ocultar el mensaje de alerta correspondiente.
+   * 
+   * @returns {void}
+   */
+  cerrarSinRegistro(): void {
+    this.sinRegistro = false;
+  }
 
+  /**
+   * @method cerrarSinEliminar
+   * @description
+   * Cierra la notificación de alerta que se muestra cuando no hay registros seleccionados para eliminar.
+   * Establece la propiedad `sinEliminar` a `false` para ocultar el mensaje de alerta correspondiente.
+   * 
+   * @returns {void}
+   */
+  cerrarSinEliminar(): void {
+    this.sinEliminar = false;
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida los formularios de solicitud y mercancía del componente.
+   * Verifica que ambos formularios sean válidos antes de permitir el envío o avance.
+   * Si algún formulario es inválido:
+   * - Establece `tablaError` basándose en si existen datos en la tabla
+   * - Marca todos los controles como "tocados" para mostrar los errores de validación
+   * - Retorna `false` para indicar que la validación falló
+   * 
+   * @returns {boolean} `true` si ambos formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.formSolicitud.valid) {
+      if(this.tablaDatos.length > 0) {
+        return true;
+      }
+    }
+    this.tablaError = this.tablaDatos.length === 0 ? true : false;
+    this.formSolicitud.markAllAsTouched();
+    if(this.formMercancia) {
+      this.formMercancia.markAllAsTouched();
+    }
+    return false
+  }
+  /**
+   * @method noSpecialCharactersValidator
+   * @description
+   * Validador personalizado estático que verifica si un campo contiene caracteres especiales no permitidos.
+   * Utiliza una expresión regular para detectar caracteres como: !"#$%/()=?=)(/&%$#""#$%$#"#$&
+   * Si se detectan caracteres especiales, retorna un error de validación que puede ser usado para mostrar
+   * el mensaje "Ingresa datos validos." en la interfaz de usuario.
+   * 
+   * @param {AbstractControl} control - El control de formulario que se está validando.
+   * @returns {ValidationErrors | null} Objeto con el error 'hasSpecialCharacters' si hay caracteres especiales, null si la validación pasa.
+   * @static
+   */
+  static noSpecialCharactersValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+    
+    const SPECIALCHARACTERREGEX = /[!"#$%/()=?=)(/&%$#""#$%$#"#$&]/;
+    const HASSPECIALCHAR = SPECIALCHARACTERREGEX.test(control.value);
+
+    return HASSPECIALCHAR ? { hasSpecialCharacters: true } : null;
+  }
   /**
    * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.

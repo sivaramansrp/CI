@@ -3,11 +3,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SolicitudDatosService } from './solicitud-datos.service';
 import { Solicitud260910Store } from '../estados/tramites260910.store';
 import { ConsultaDatos } from '../models/solicitud-datos.model';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('SolicitudDatosService', () => {
   let service: SolicitudDatosService;
   let solicitudStoreMock: jest.Mocked<Solicitud260910Store>;
-
+  let httpClient: jest.Mocked<HttpClient>;
+  
   beforeEach(() => {
     // Create a fully mocked store with all required methods
     const mockStore = {
@@ -95,6 +98,9 @@ describe('SolicitudDatosService', () => {
 
     service = TestBed.inject(SolicitudDatosService);
     solicitudStoreMock = TestBed.inject(Solicitud260910Store) as jest.Mocked<Solicitud260910Store>;
+    httpClient = TestBed.inject(HttpClient) as jest.Mocked<HttpClient>;
+
+    httpClient.get = jest.fn().mockReturnValue(of({}));
   });
 
   it('should update the store with all provided data', () => {
@@ -184,9 +190,6 @@ describe('SolicitudDatosService', () => {
       domiciliTelefono: '3123456',
       domiciliCorreoElectronioco: 'administracion@farmaceuticassureste.com.mx',
       destinatarioDatos: [{
-        nombre: 'HOSPITAL GENERAL DE CUERNAVACA',
-        rfc: 'HGC861012ABC',
-        curp: 'HGC861012HDFNPL01',
         telefono: '7771234567',
         correoElectronico: 'compras@hospitalcuernavaca.gob.mx',
         calle: 'Av. Plan de Ayala',
@@ -194,16 +197,17 @@ describe('SolicitudDatosService', () => {
         numeroInterior: '',
         pais: 'México',
         colonia: 'Centro',
-        municipio: 'Cuernavaca',
         localidad: 'Cuernavaca',
-        estado: 'Morelos',
-        estado2: 'Morelos',
-        codigo: '62000'
+        codigoPostaloEquivalente: '62000',
+        tipoPersona: '',
+        estadoLocalidad: '',
+        municipioAlcaldia: '',
+        entidadFederativa: '',
+        coloniaoEquivalente: '',
+        lada: ''
       }],
       fabricanteDatos: [{
         nombre: 'LABORATORIOS FARMACOL SA DE CV',
-        rfc: 'LFA861012ABC',
-        curp: 'LFA861012HDFNPL02',
         telefono: '5556789012',
         correoElectronico: 'produccion@farmacol.com.mx',
         calle: 'Calzada de Tlalpan',
@@ -211,45 +215,44 @@ describe('SolicitudDatosService', () => {
         numeroInterior: 'Piso 3',
         pais: 'México',
         colonia: 'Portales',
-        municipio: 'Benito Juárez',
         localidad: 'Ciudad de México',
-        estado: 'Ciudad de México',
-        estado2: 'CDMX',
-        codigo: '03300'
+        codigoPostaloEquivalente: '03300',
+        tercerosNacionalidad: '',
+        tipoPersona: '',
+        primerApellido: '',
+        segundoApellido: '',
+        extranjeroEstado: '',
+        estadoLocalidad: '',
+        municipioAlcaldia: '',
+        entidadFederativa: '',
+        coloniaoEquivalente: '',
+        lada: ''
       }],
       proveedorDatos: [{
-        nombre: 'DISTRIBUIDORA MÉDICA NACIONAL SA DE CV',
-        rfc: 'DMN861012ABC',
-        curp: 'DMN861012HDFNPL03',
         telefono: '5551234567',
         correoElectronico: 'ventas@dismedna.com.mx',
         calle: 'Eje Central Lázaro Cárdenas',
         numeroExterior: '789',
         numeroInterior: '401',
         pais: 'México',
-        colonia: 'Nápoles',
-        municipio: 'Benito Juárez',
-        localidad: 'Ciudad de México',
+        coloniaoEquivalente: 'Nápoles',
         estado: 'Ciudad de México',
-        estado2: 'CDMX',
-        codigo: '03810'
+        codigoPostaloEquivalente: '03810',
+        tipoPersona: '',
+        lada: ''
       }],
       facturadorDatos: [{
-        nombre: 'SERVICIOS FISCALES INTEGRALES SC',
-        rfc: 'SFI861012ABC',
-        curp: 'SFI861012HDFNPL04',
         telefono: '5552345678',
         correoElectronico: 'facturacion@sfiscal.com.mx',
         calle: 'Paseo de la Reforma',
         numeroExterior: '222',
         numeroInterior: 'Piso 10',
         pais: 'México',
-        colonia: 'Juárez',
-        municipio: 'Cuauhtémoc',
-        localidad: 'Ciudad de México',
+        coloniaoEquivalente: 'Juárez',
         estado: 'Ciudad de México',
-        estado2: 'CDMX',
-        codigo: '06600'
+        codigoPostaloEquivalente: '06600',
+        tipoPersona: '',
+        lada: ''
       }],
       claveDeReferencia: 'REF-2024-06-20-001',
       cadenaDeDependencia: 'FARMACOL>DISMEDNA>FARMASURESTE>HOSPITALCUERNAVACA',
@@ -336,5 +339,45 @@ describe('SolicitudDatosService', () => {
     expect(solicitudStoreMock.setImporteDePago).toHaveBeenCalledWith(mockData.importeDePago);
     expect(solicitudStoreMock.setFolioDeDesistimiento).toHaveBeenCalledWith(mockData.folioDeDesistimiento);
     expect(solicitudStoreMock.setFolioOriginal).toHaveBeenCalledWith(mockData.folioOriginal);
+  });
+
+  it('should call correct URL for obtenerDatosDeSolicitud', () => {
+    service.obtenerDatosDeSolicitud().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/solicitud-datos.json'
+    );
+  });
+
+  it('should call correct URL for obtenerSolicitud', () => {
+    service.obtenerSolicitud().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/solicitud.json'
+    );
+  });
+
+  it('should call correct URL for obtenerRegimenDestinaraListo', () => {
+    service.obtenerRegimenDestinaraListo().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/regimen-destinaran.json'
+    );
+  });
+
+  it('should call correct URL for obtenerAduanaListo', () => {
+    service.obtenerAduanaListo().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/aduana.json'
+    );
+  });
+
+  it('should call correct URL for obtenerEstadoCatalogo', () => {
+    service.obtenerEstadoCatalogo().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/estado-catalogo.json'
+    );
   });
 });

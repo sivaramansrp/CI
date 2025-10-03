@@ -8,7 +8,7 @@
             formControlName="entidadFederaliva"
             [label]="'Entidad federaliva'"
             [required]="false"
-            [placeholder]="'Seleccione un valor'"
+            [placeholder]="'Seleccione una opción'"
             (change)="alCambiarEntidadFederaliva($event)"
             >
     </app-catalogo-select>
@@ -18,6 +18,7 @@
     </form>
   </div>
 <div class="col-md-12"> 
+    <h5 class="mb-1">Instalaciones:</h5>
     <app-tabla-dinamica
     [tipoSeleccionTabla]="tipoSeleccionTabla"
     [configuracionTabla]="ParqueVehicular"

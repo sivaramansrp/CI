@@ -26,9 +26,13 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
   */
    configuracionDosDatos: ConfiguracionColumna<FraccionArancelariaDescripcion>[] =CONFIGURACION_DOS_DATOS
 
-
-
+  /*
+  * Almacena la configuración de las pestañas del primer paso.
+  */
   indice: number = 1;
+
+  /** Indica si el formulario está deshabilitado. */
+  public formularioDeshabilitado: boolean = false;
 
 
   constructor(private seccionStore: SeccionLibStore, private solocitud80105Service: Solocitud80105Service,
@@ -59,8 +63,6 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
         FORMA_VALIDA.push(false);
       }
     }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
  /** Inicializa el componente suscribiéndose al estado de consulta.  a
  *  Ejecuta lógica según si se requiere actualización o solo visualización. */

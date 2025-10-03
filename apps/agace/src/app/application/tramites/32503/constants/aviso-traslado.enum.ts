@@ -34,10 +34,12 @@ export const PASOS = [
  * en la interfaz del usuario.
  */
 export const TEXTOS = {
-  TIPO_CARGO: ` Datos de la Plantilla de Carga Masiva<span class="">*</span><br />
-     <label><a href="javascript:;" target="_blank"> Descargar plantilla</a></label>
+  TIPO_CARGO: ` El archivo no debe exceder los 10,000 registros, para descargar plantilla del archivo de excel de click<span class="">*</span><br />
+     <label style="color: black;">Descargar plantilla</label>
         `,
   TERCEROS_TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202767903 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
+
+  SOLICITANTE_TEXTO_DE_ALERTA : 'Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.',
 };
 /**
  * Configuración para la fecha de ingreso.
@@ -143,23 +145,14 @@ export const TABLA_DE_MERCANCIA = [
     clave: (ele: MercanciaTabla): string => ele.valorUSD,
     orden: 5,
   },
-  {
-    encabezado: 'Descripción de la Mercancía',
-    clave: (ele: MercanciaTabla): string => ele.descripcionMercancia,
-    orden: 6,
-  },
-  {
-    encabezado: 'Proceso llevará',
-    clave: (ele: MercanciaTabla): string => ele.descripcionProceso,
-    orden: 6,
-  }, {
-    encabezado: 'Número de exportación',
+ {
+    encabezado: 'Número de pedimento de exportación por parte de quien transfiere la mercancia',
     clave: (ele: MercanciaTabla): string => ele.numPedimentoExportacion,
     orden: 6,
   },
   {
-    encabezado: 'Número de importación',
+    encabezado: 'Número de pedimento de importación temporal por parte de quien recibe la mercancía',
     clave: (ele: MercanciaTabla): string => ele.numPedimentoImportacion,
-    orden: 6,
+    orden: 7,
   }
 ];

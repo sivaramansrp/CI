@@ -8,11 +8,11 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
   REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
@@ -33,9 +33,11 @@ import {
 } from '@angular/core';
 import {
   PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
+  PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
   STR_NACIONAL,
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
@@ -185,6 +187,13 @@ export class AgregarFabricanteComponent
   mostarColoniaOEquivalente = false;
 
   /**
+   * Indica si se ha realizado la verificación de validación al intentar guardar.
+   * Esta bandera se utiliza para controlar la visualización de mensajes de error o advertencia
+   * cuando el usuario intenta guardar el formulario sin cumplir con los requisitos de validación.
+   */
+  chequeoValidacionAlGuardar =false;
+
+ /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben estar deshabilitados en el formulario.
@@ -275,6 +284,10 @@ export class AgregarFabricanteComponent
   ngOnInit(): void {
     this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
+      this.chequeoValidacionAlGuardar =
+      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
+        ? true
+        :false;
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
     this.changeNacionalidad();
@@ -283,6 +296,11 @@ export class AgregarFabricanteComponent
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
         : false;
+
+       if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
+    this.agregarFabricanteForm.get('tipoPersona')?.disable();
+  }
+  this.forzarDeshabilitarPais()
   }
 
   /**
@@ -363,14 +381,19 @@ export class AgregarFabricanteComponent
   crearAgregarFormularioFabricante(): void {
     this.agregarFabricanteForm = this.fb.group({
       nacionalidad: [this.obtenerValor('nacionalidad'), Validators.required],
-      tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
+      tipoPersona: [
+        {
+          value: this.obtenerValor('tipoPersona'),
+          disabled: this.chequeoValidacionAlGuardar,
+        },
+        Validators.required
+      ],
       rfc: [
         this.obtenerValor('rfc'),
-        [Validators.required, Validators.maxLength(13)],
       ],
       curp: [
         this.obtenerValor('curp'),
-        this.estaOculto ? [] : Validators.required,
+        this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -391,11 +414,11 @@ export class AgregarFabricanteComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '2'
+            ? ''
             : this.obtenerValor('pais'),
-          disabled: this.elementosDeshabilitados.includes('pais'),
+          disabled: this.elementosDeshabilitados.includes('pais') || this.idProcedimiento === 260911,
         },
-        Validators.required,
+        [Validators.required],
       ],
       estado: [
         {
@@ -404,7 +427,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('estadoLocalidad'),
           disabled: this.elementosDeshabilitados.includes('estado'),
         },
-        Validators.required,
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       municipio: [
         {
@@ -413,7 +436,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('municipioAlcaldia'),
           disabled: this.elementosDeshabilitados.includes('municipio'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       localidad: [
         this.obtenerValor('localidad'),
@@ -423,9 +446,11 @@ export class AgregarFabricanteComponent
       ],
       codigoPostal: [
         this.obtenerValor('codigoPostal'),
-        !this.elementosNoRequeridos.includes('codigoPostal')
-          ? [Validators.required]
-          : [],
+        this.idProcedimiento === 260911 
+        ? [] 
+        :!this.elementosNoRequeridos.includes('codigoPostal')
+        ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
+        : [],
       ],
       colonia: [
         this.obtenerValor('colonia'),
@@ -436,7 +461,7 @@ export class AgregarFabricanteComponent
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
         this.obtenerValor('numeroExterior'),
-        Validators.required,
+        [Validators.required],
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
@@ -462,6 +487,31 @@ export class AgregarFabricanteComponent
     });
   }
 
+    /**
+   * @private
+   * Fuerza la deshabilitación del campo 'pais' en el formulario de agregar destinatario final.
+   * 
+   * Si la variable `chequeoValidacionAlGuardar` es verdadera, deshabilita el control 'pais'
+   * dentro del formulario reactivo `agregarDestinatarioFinal`.
+   * 
+   * Útil para evitar que el usuario modifique el país cuando ciertas condiciones de validación se cumplen al guardar.
+   */
+private forzarDeshabilitarPais(): void {
+  if (this.chequeoValidacionAlGuardar) {
+    this.agregarFabricanteForm.get('pais')?.disable();
+  }
+  if (
+    this.idProcedimiento === 260912 &&
+    this.agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+    (
+      this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
+      this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.MORAL
+    )
+  ) {
+    this.agregarFabricanteForm.get('pais')?.enable();
+  }
+}
+
   /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -482,7 +532,14 @@ export class AgregarFabricanteComponent
       case 260214:
         this.elementosDeshabilitados = ['pais'];
         break;
-      default:
+       case 260911:
+        this.elementosDeshabilitados = []; 
+        this.elementosNoRequeridos = ['colonia'];
+        break;
+        case 260912:
+        this.elementosNoRequeridos = ['localidad', 'colonia', 'codigoPostal'];
+        break;
+        default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
     }
@@ -493,6 +550,17 @@ export class AgregarFabricanteComponent
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
+    if(this.chequeoValidacionAlGuardar){
+      if (this.agregarFabricanteForm.invalid) {
+            // Marca todos los controles como tocados para mostrar errores de validación
+          Object.values(this.agregarFabricanteForm.controls).forEach(control => {
+            control.markAsTouched();
+            control.updateValueAndValidity();
+          });
+            // NO redirigir ni emitir nada si el formulario es inválido
+          return;
+        }
+    }
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
     let nombreRazonSocial: string;
@@ -778,6 +846,10 @@ export class AgregarFabricanteComponent
           }
         }
       );
+      // Cuando chequeoValidacionAlGuardar es verdadero, deshabilita tipoPersona hasta que se seleccione nacionalidad
+   if (this.chequeoValidacionAlGuardar) {
+      this.agregarFabricanteForm.get('tipoPersona')?.disable();
+    }
     } else if (
       this.agregarFabricanteForm?.get('nacionalidad')?.value ===
         this.nacionalStr ||
@@ -795,102 +867,118 @@ export class AgregarFabricanteComponent
           }
         }
       );
+      // Asegura que tipoPersona esté habilitado cuando se selecciona nacionalidad (anula chequeoValidacionAlGuardar)
+    this.agregarFabricanteForm.get('tipoPersona')?.enable();
     }
+    this.forzarDeshabilitarPais();
   }
 
-  changeTipoPersona(): void {
+  /**
+   * @method changeTipoPersona
+   * @description Cambia el estado de los controles del formulario según el tipo de persona seleccionado.
+   * Si el tipo de persona es física, habilita el campo RFC; si es moral, lo deshabilita.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+changeTipoPersona(): void {
+  const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+
+  const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+  if (RFC_CONTROL) {
+    RFC_CONTROL.setValidators([
+      Validators.required,
+      AgregarFabricanteComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+    ]);
+    RFC_CONTROL.markAsTouched();
+    RFC_CONTROL.updateValueAndValidity();
+  }
+  const HAS_NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+
+  if (this.isTipoPersonaEmpty()) {
+    this.disableExcept(['nacionalidad', 'tipoPersona']);
+    //Solo deshabilitar tipoPersona si chequeoValidacionAlGuardar es verdadero y no hay nacionalidad
+    if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD) {
+      this.agregarFabricanteForm.get('tipoPersona')?.disable();
+    }
+  } else if (this.isContribuyenteFisicaMoral()) {
+    this.disableExcept(['nacionalidad', 'tipoPersona', 'rfc']);
+  } else if (this.isContribuyenteNoContribuyente()) {
+    this.disableExcept(['nacionalidad', 'tipoPersona', 'curp']);
+  } else {
+    if (this.agregarFabricanteForm?.get('tipoPersona')?.value) {
+      this.resetExcept(['nacionalidad', 'tipoPersona']);
+    }
     if (
-      this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
-      this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined
+      this.agregarFabricanteForm?.get('nacionalidad')?.value &&
+      this.agregarFabricanteForm?.get('tipoPersona')?.value
     ) {
       Object.keys(this.agregarFabricanteForm.controls).forEach(
         (controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
+          this.agregarFabricanteForm.get(controlName)?.enable();
+          this.estaDeshabilitadoDesplegable = false;
         }
       );
-    } else if (
-      this.habilitarContribuyente === true &&
-      this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-        this.nacionalStr &&
-      (this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-        this.tipoPersona.FISICA ||
-        this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-          this.tipoPersona.MORAL)
-    ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          if (
-            controlName === 'nacionalidad' ||
-            controlName === 'tipoPersona' ||
-            controlName === 'rfc'
-          ) {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        }
-      );
-    } else if (
-      this.habilitarContribuyente === true &&
-      this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-        this.nacionalStr &&
-      this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-        this.tipoPersona.NO_CONTRIBUYENTE
-    ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          if (
-            controlName === 'nacionalidad' ||
-            controlName === 'tipoPersona' ||
-            controlName === 'curp'
-          ) {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        }
-      );
-    } else {
-      if (this.agregarFabricanteForm?.get('tipoPersona')?.value) {
-        Object.keys(this.agregarFabricanteForm.controls).forEach(
-          (controlName) => {
-            if (
-              controlName !== 'nacionalidad' &&
-              controlName !== 'tipoPersona'
-            ) {
-              this.agregarFabricanteForm.get(controlName)?.reset();
-            }
-          }
-        );
-      }
-      if (
-        this.agregarFabricanteForm?.get('nacionalidad')?.value &&
-        this.agregarFabricanteForm?.get('tipoPersona')?.value
-      ) {
-        Object.keys(this.agregarFabricanteForm.controls).forEach(
-          (controlName) => {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-            this.estaDeshabilitadoDesplegable = false;
-          }
-        );
-      }
+    }
 
-      if (
-        (this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-          this.nacionalStr &&
-          this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-            this.tipoPersona.FISICA) ||
+    if (
+      (this.agregarFabricanteForm?.get('nacionalidad')?.value ===
+        this.nacionalStr &&
         this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-          this.tipoPersona.MORAL
-      ) {
-        this.estaDeshabilitadoDesplegable = true;
-        this.agregarFabricanteForm.patchValue({
-          pais: 2,
-        });
-      }
+          this.tipoPersona.FISICA) ||
+      this.agregarFabricanteForm?.get('tipoPersona')?.value ===
+        this.tipoPersona.MORAL
+    ) {
+      this.estaDeshabilitadoDesplegable = true;
+      this.agregarFabricanteForm.patchValue({
+        pais: 2,
+      });
     }
   }
+  // Solo deshabilitar tipoPersona bajo condiciones muy específicas
+  if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
+    this.agregarFabricanteForm.get('tipoPersona')?.disable();
+  }
+  this.forzarDeshabilitarPais();
+}
+
+private isTipoPersonaEmpty(): boolean {
+  const TIPO_PERSONA_VALUE = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+  return TIPO_PERSONA_VALUE === '' || TIPO_PERSONA_VALUE === undefined;
+}
+
+private isContribuyenteFisicaMoral(): boolean {
+  return (
+    this.habilitarContribuyente === true &&
+    this.agregarFabricanteForm?.get('nacionalidad')?.value === this.nacionalStr &&
+    (this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
+      this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.MORAL)
+  );
+}
+
+private isContribuyenteNoContribuyente(): boolean {
+  return (
+    this.habilitarContribuyente === true &&
+    this.agregarFabricanteForm?.get('nacionalidad')?.value === this.nacionalStr &&
+    this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.NO_CONTRIBUYENTE
+  );
+}
+
+private disableExcept(enabledControls: string[]): void {
+  Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+    this.agregarFabricanteForm.get(controlName)?.disable();
+    if (enabledControls.includes(controlName)) {
+      this.agregarFabricanteForm.get(controlName)?.enable();
+    }
+  });
+}
+
+private resetExcept(excludedControls: string[]): void {
+  Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+    if (!excludedControls.includes(controlName)) {
+      this.agregarFabricanteForm.get(controlName)?.reset();
+    }
+  });
+}
 
     /**
    * Elimina un elemento de la tabla de pedimento, si se confirma la acción.

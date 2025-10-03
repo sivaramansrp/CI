@@ -1,7 +1,19 @@
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT, PASOS } from "../../constantes/modificacion.enum";
+import {
+  AVISO_CONTRNIDO,
+  DatosPasos,
+  ListaPasosWizard,
+  SeccionLibStore,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/modificacion.enum';
+import { Subject, takeUntil } from 'rxjs';
+import {
+  Tramite110204Store,
+  TramiteState,
+} from '../../estados/tramite110204.store';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite110204Query } from '../../estados/tramite110204.query';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -26,7 +38,17 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  * Este componente gestiona los pasos de un asistente de solicitud (wizard).
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+  /**
+   * Estado actual de la solicitud.
+   * @property {TramiteState} solicitudState - Almacena el estado de la solicitud.
+   */
+  public solicitudState!: TramiteState;
 
   /**
    * Lista de pasos del asistente.
@@ -42,14 +64,29 @@ export class SolicitudPageComponent {
   public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Índice del paso actual.
    * Este valor se utiliza para determinar qué paso está activo en el wizard.
    * Inicialmente se establece en 1, que corresponde al primer paso.
    */
-
-  constructor(private seccionStore: SeccionLibStore){
-    
+  constructor(
+    private seccionStore: SeccionLibStore,
+    private tramiteQuery: Tramite110204Query,
+    private tramiteStore: Tramite110204Store
+  ) {
+    this.tramiteQuery.selectPexim$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
   }
+
   indice: number = 1;
 
   /**
@@ -58,7 +95,7 @@ export class SolicitudPageComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-    /**
+  /**
    * @property {PasoUnoComponent} pasoUnoComponent
    * @description
    * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
@@ -92,15 +129,21 @@ export class SolicitudPageComponent {
   public infoAlert = 'alert-info';
 
   /**
-   * Una constante que contiene el valor del objeto 'PAGO_DE_DERECHOS'.
-   * Esta constante se usa para almacenar textos y valores relacionados con el pago de derechos.
+   * Contiene el texto del aviso de privacidad simplificado.
+   *
+   * @constant {string} avisoContrnido
+   * Se inicializa con la propiedad `aviso` del objeto `AVISO_CONTRNIDO`.
+   *
+   * Uso:
+   * - Mostrar el aviso de privacidad en la interfaz de usuario.
+   * - Reutilizar el contenido del aviso en distintos componentes.
    */
-  TEXTOS = PAGO_DE_DERECHOS;
+  avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   /**
    * Selecciona una pestaña del asistente (wizard).
    * Este método actualiza el índice del paso seleccionado y, por lo tanto, cambia el paso que se está mostrando.
-   * 
+   *
    * @param i Índice de la pestaña a seleccionar (paso).
    */
   seleccionaTab(i: number): void {
@@ -111,20 +154,19 @@ export class SolicitudPageComponent {
   /**
    * Obtiene el valor del índice de la acción del botón.
    * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   * 
+   *
    * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   * 
+   *
    * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
-    
     this.esFormaValido = false;
-    
+
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        return; 
+        return;
       }
     }
 
@@ -137,7 +179,6 @@ export class SolicitudPageComponent {
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
@@ -149,7 +190,7 @@ export class SolicitudPageComponent {
       }
     }
   }
-/**
+  /**
    * @method validarTodosFormulariosPasoUno
    * @description
    * Valida todos los formularios del componente `PasoUnoComponent`.
@@ -170,4 +211,17 @@ export class SolicitudPageComponent {
     return true;
   }
 
+  /**
+   * Notificador para gestionar la destrucción de suscripciones RxJS.
+   *
+   * Es un `Subject<void>` que se utiliza en combinación con el operador `takeUntil`
+   * para finalizar las suscripciones activas cuando el componente se destruye.
+   *
+   * @type {Subject<void>}
+   * @private
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

@@ -1,6 +1,5 @@
-import { Catalogo, ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, Input, Output} from '@angular/core';
-import { COMPLEMENTAR_FRACCION_CATALOGO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { COMPLEMENTAR_FRACCION_DATOS } from '../../constantes/nuevo-programa.enum';
 import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
@@ -28,12 +27,6 @@ export class ComplementarFraccionVistaComponent {
    * @public
    */
   public complimentarDatos!: ComplimentarFraccionResoponse;
-  /**
-   * Datos seleccionados de la categoría que se utilizan para complementar la fracción.
-   * Esta propiedad almacena un arreglo de objetos del tipo `Catalogo`, 
-   * inicializado con los datos definidos en `COMPLEMENTAR_FRACCION_CATALOGO_DATOS`.
-   */
-  public catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
   /**
    * Datos utilizados para complementar la fracción en el componente.
    * 

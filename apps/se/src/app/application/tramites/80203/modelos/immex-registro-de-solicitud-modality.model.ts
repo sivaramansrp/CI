@@ -6,7 +6,7 @@
  * @description Interfaz que define la estructura del formulario de registro IMMEX (Industria Manufacturera, Maquiladora y de Servicios de Exportación).
  * Esta interfaz contiene todos los campos necesarios para el registro de solicitudes IMMEX, incluyendo información sobre
  * productos, fracciones arancelarias, capacidades de producción y datos comerciales.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -21,6 +21,8 @@ export interface immexRegistroform {
    * @required
    */
   candidadPorPeriodo: string;
+
+  productoImportacion: string;
 
   /**
    * @description Capacidad máxima de producción disponible durante un periodo determinado.
@@ -92,7 +94,16 @@ export interface immexRegistroform {
    * @example 12345
    * @required
    */
-  permisoImmexDatos: number;
+  permisoImmexDatos: string;
+
+  /**
+   * @description Código de fracción arancelaria específico para productos de importación.
+   * Código numérico de clasificación arancelaria aplicable a los productos que serán importados.
+   * @type {string}
+   * @example "6205.20.01"
+   * @required
+   */
+  fraccionArancelaria: string;
 
   /**
    * @description Código de fracción arancelaria específico para productos de exportación.
@@ -128,7 +139,7 @@ export interface immexRegistroform {
    * @example "520100"
    * @required
    */
-  Nico: string;
+  nico: string;
 
   /**
    * @description Identificador numérico de los datos de la fracción arancelaria.
@@ -209,7 +220,7 @@ export interface immexRegistroform {
  * Define la estructura y orden de visualización de la información relacionada con permisos IMMEX,
  * incluyendo números de permiso, fracciones arancelarias, descripciones TIGIE y períodos de vigencia.
  * Cada elemento contiene el encabezado de la columna, la función para extraer el valor y el orden de presentación.
- * 
+ *
  * @type {Array<{encabezado: string, clave: Function, orden: number}>}
  * @readonly
  * @author Sistema VUCEM 3.0
@@ -223,18 +234,18 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna de numeración secuencial
      * @type {string}
      */
-    encabezado: 'No.',
+    encabezado: 'No.', 
     /**
      * @description Función extractora para obtener el número secuencial del elemento
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número secuencial del registro
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_1,
+    clave: (ele: PermisoImmexGridDatos) => ele.consecutivo,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 1
+    orden: 1,
   },
   {
     /**
@@ -244,15 +255,15 @@ export const IMMEX_SERVICIO = [
     encabezado: 'Número permiso',
     /**
      * @description Función extractora para obtener el número oficial del permiso IMMEX
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número oficial del permiso otorgado por la Secretaría de Economía
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_2,
+    clave: (ele: PermisoImmexGridDatos) => ele.numeroPrograma,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 2
+    orden: 2,
   },
   {
     /**
@@ -262,15 +273,15 @@ export const IMMEX_SERVICIO = [
     encabezado: 'Fracción arancelaria',
     /**
      * @description Función extractora para obtener el código de fracción arancelaria
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Código de fracción arancelaria según la TIGIE
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_3,
+    clave: (ele: PermisoImmexGridDatos) => ele.fraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 3
+    orden: 3,
   },
   {
     /**
@@ -280,15 +291,15 @@ export const IMMEX_SERVICIO = [
     encabezado: 'Descripción de la TIGIE',
     /**
      * @description Función extractora para obtener la descripción oficial de la TIGIE
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_4,
+    clave: (ele: PermisoImmexGridDatos) => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 4
+    orden: 4,
   },
   {
     /**
@@ -298,15 +309,15 @@ export const IMMEX_SERVICIO = [
     encabezado: 'UMT',
     /**
      * @description Función extractora para obtener la Unidad de Medida Técnica
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Unidad de Medida Técnica aplicable al producto
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_5,
+    clave: (ele: PermisoImmexGridDatos) => ele.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 5
+    orden: 5,
   },
   {
     /**
@@ -316,15 +327,15 @@ export const IMMEX_SERVICIO = [
     encabezado: 'Cantidad por periodo #',
     /**
      * @description Función extractora para obtener la cantidad autorizada por periodo
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Cantidad autorizada para el periodo especificado
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_6,
+    clave: (ele: PermisoImmexGridDatos) => ele.cantidadAutorizada,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 6
+    orden: 6,
   },
   {
     /**
@@ -334,15 +345,15 @@ export const IMMEX_SERVICIO = [
     encabezado: 'Fecha inicio vigencia',
     /**
      * @description Función extractora para obtener la fecha de inicio de vigencia del permiso
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de inicio de vigencia en formato establecido
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_7,
+    clave: (ele: PermisoImmexGridDatos) => ele.fechaInicio,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 7
+    orden: 7,
   },
   {
     /**
@@ -352,114 +363,17 @@ export const IMMEX_SERVICIO = [
     encabezado: 'Fecha fin vigencia',
     /**
      * @description Función extractora para obtener la fecha de fin de vigencia del permiso
-     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de fin de vigencia en formato establecido
      */
-    clave: (ele: immexInfo) => ele.IMMEX_Columna_8,
+    clave: (ele: PermisoImmexGridDatos) => ele.fechaFin,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 8
-  }
-]
-
-/**
- * @interface immexInfo
- * @description Interfaz que define la estructura de la información de IMMEX para visualización en tabla.
- * Representa los datos de un permiso IMMEX específico con todas sus características y detalles técnicos
- * necesarios para la presentación en formato tabular dentro del sistema VUCEM.
- * 
- * @author Sistema VUCEM 3.0
- * @version 1.0.0
- * @since 2025
- * @module Tramites.IMMEX.Interfaces
- */
-export interface immexInfo {
-  /**
-   * @description Número secuencial o identificador único del registro en la tabla.
-   * Proporciona un identificador numérico secuencial para facilitar la referencia y ordenamiento de los registros.
-   * @type {string}
-   * @example "1"
-   * @required
-   */
-  IMMEX_Columna_1: string;
-
-  /**
-   * @description Número oficial del permiso IMMEX otorgado por la Secretaría de Economía.
-   * Identificador único del permiso bajo el programa de Industria Manufacturera, Maquiladora y de Servicios de Exportación.
-   * @type {string}
-   * @example "IMX-2023-001234"
-   * @required
-   */
-  IMMEX_Columna_2: string;
-
-  /**
-   * @description Código de fracción arancelaria según la Tarifa de Importación y Exportación.
-   * Clasificación numérica oficial que identifica el tipo de mercancía conforme a la nomenclatura internacional.
-   * @type {string}
-   * @example "6205.20.01"
-   * @required
-   */
-  IMMEX_Columna_3: string;
-
-  /**
-   * @description Descripción oficial de la mercancía según la Tarifa de la Ley de los Impuestos Generales de Importación y Exportación (TIGIE).
-   * Texto descriptivo oficial que especifica las características de la mercancía según la clasificación arancelaria vigente.
-   * @type {string}
-   * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
-   * @required
-   */
-  IMMEX_Columna_4: string;
-
-  /**
-   * @description Unidad de Medida Técnica (UMT) aplicable al producto o mercancía.
-   * Especifica la unidad de medida oficial utilizada para cuantificar la mercancía en operaciones de comercio exterior.
-   * @type {string}
-   * @example "Pieza"
-   * @required
-   */
-  IMMEX_Columna_5: string;
-
-  /**
-   * @description Cantidad autorizada para importar o exportar durante un periodo específico.
-   * Volumen o cantidad máxima permitida bajo el permiso IMMEX para el periodo de vigencia establecido.
-   * @type {string}
-   * @example "10000"
-   * @required
-   */
-  IMMEX_Columna_6: string;
-
-  /**
-   * @description Fecha de inicio de vigencia del permiso IMMEX en formato establecido.
-   * Fecha a partir de la cual el permiso IMMEX es válido y puede ser utilizado para operaciones de comercio exterior.
-   * @type {string}
-   * @format date
-   * @example "2023-01-15"
-   * @required
-   */
-  IMMEX_Columna_7: string;
-
-  /**
-   * @description Fecha de fin de vigencia del permiso IMMEX en formato establecido.
-   * Fecha hasta la cual el permiso IMMEX es válido y puede ser utilizado para operaciones de comercio exterior.
-   * @type {string}
-   * @format date
-   * @example "2025-01-15"
-   * @required
-   */
-  IMMEX_Columna_8: string;
-
-  /**
-   * @description Indicador del estado activo (true) o inactivo (false) del registro.
-   * Bandera booleana que determina si el registro está habilitado para operaciones o ha sido desactivado.
-   * @type {boolean}
-   * @default true
-   * @example true
-   * @required
-   */
-  estatus: boolean;
-}
+    orden: 8,
+  },
+];
 
 /**
  * @constant FRACCION_EXPORTACION
@@ -467,7 +381,21 @@ export interface immexInfo {
  * Define la estructura de visualización de información relacionada con fracciones arancelarias de exportación,
  * incluyendo códigos de fracción, mercancías de importación relacionadas, unidades de medida y descripciones comerciales.
  * Facilita la presentación ordenada de datos para procesos de exportación bajo el régimen IMMEX.
- * 
+ *
+ * @type {Array<{encabezado: string, clave: Function, orden: number}>}
+ * @readonly
+ * @author Sistema VUCEM 3.0
+ * @version 1.0.0
+ * @since 2025
+ * @module Tramites.IMMEX.Tablas.Exportacion
+ */
+/**
+ * @constant FRACCION_EXPORTACION
+ * @description Configuración de las columnas de la tabla para la fracción de exportación.
+ * Define la estructura de visualización de información relacionada con fracciones arancelarias de exportación,
+ * incluyendo códigos de fracción, mercancías de importación relacionadas, unidades de medida y descripciones comerciales.
+ * Facilita la presentación ordenada de datos para procesos de exportación bajo el régimen IMMEX.
+ *
  * @type {Array<{encabezado: string, clave: Function, orden: number}>}
  * @readonly
  * @author Sistema VUCEM 3.0
@@ -487,12 +415,12 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Número secuencial del registro de fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_1,
+    clave: (ele: fraccionInfo) => ele.idFraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 1
+    orden: 1,
   },
   {
     /**
@@ -505,12 +433,12 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Código de fracción arancelaria según nomenclatura internacional
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_2,
+    clave: (ele: fraccionInfo) => ele.clave,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 2
+    orden: 2,
   },
   {
     /**
@@ -523,12 +451,12 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción de la mercancía importada relacionada con esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_3,
+    clave: (ele: fraccionInfo) => ele.fraccionPadre,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 3
+    orden: 3,
   },
   {
     /**
@@ -541,12 +469,12 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Unidad de Medida Técnica aplicable a esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_4,
+    clave: (ele: fraccionInfo) => ele.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 4
+    orden: 4,
   },
   {
     /**
@@ -559,39 +487,57 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_5,
+    clave: (ele: fraccionInfo) => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 5
+    orden: 5,
   },
   {
     /**
      * @description Encabezado para la columna de descripción comercial de exportación
      * @type {string}
      */
-    encabezado: 'Descripción comercial de la exportación',
+    encabezado: 'Descripción comercial del producto de exportación',
     /**
      * @description Función extractora para obtener la descripción comercial del producto de exportación
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción comercial específica del producto destinado a exportación
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_6,
+    clave: (ele: fraccionInfo) => ele.descripcionUsuario,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 6
+    orden: 6,
+  },
+  {
+    /**
+     * @description Encabezado para la columna de solicitud de baja de fracción
+     * @type {string}
+     */
+    encabezado: 'Solicita baja',
+    /**
+     * @description Función extractora para obtener información de solicitud de baja
+     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
+     * @returns {string} Información de solicitud de baja asociada a la fracción
+     */
+    clave: (ele: fraccionInfo) => ele.solicitaBaja,
+    /**
+     * @description Orden de presentación de la columna en la tabla
+     * @type {number}
+     */
+    orden: 7,
   }
-]
+];
 
 /**
  * @interface fraccionInfo
  * @description Interfaz que define la estructura de la información de la fracción de exportación.
  * Contiene los datos específicos de una fracción arancelaria para productos de exportación bajo el régimen IMMEX,
  * incluyendo clasificaciones, descripciones comerciales y unidades de medida técnica.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -605,7 +551,7 @@ export interface fraccionInfo {
    * @example "1"
    * @required
    */
-  FRACCION_Columna_1: string;
+  idFraccion: string;
 
   /**
    * @description Código oficial de la fracción arancelaria según la nomenclatura internacional.
@@ -614,7 +560,7 @@ export interface fraccionInfo {
    * @example "6205.20.01"
    * @required
    */
-  FRACCION_Columna_2: string;
+  clave: string;
 
   /**
    * @description Descripción de la mercancía de importación relacionada con esta fracción de exportación.
@@ -623,7 +569,7 @@ export interface fraccionInfo {
    * @example "Telas de algodón sin confeccionar"
    * @required
    */
-  FRACCION_Columna_3: string;
+  fraccionPadre: string;
 
   /**
    * @description Unidad de Medida Técnica (UMT) aplicable a la mercancía de esta fracción.
@@ -632,7 +578,7 @@ export interface fraccionInfo {
    * @example "Metro cuadrado"
    * @required
    */
-  FRACCION_Columna_4: string;
+  umt: string;
 
   /**
    * @description Descripción oficial según la Tarifa de la Ley de los Impuestos Generales de Importación y Exportación (TIGIE).
@@ -641,7 +587,7 @@ export interface fraccionInfo {
    * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
    * @required
    */
-  FRACCION_Columna_5: string;
+  descripcion: string;
 
   /**
    * @description Descripción comercial específica del producto destinado a exportación.
@@ -650,7 +596,16 @@ export interface fraccionInfo {
    * @example "Camisas de vestir para caballero marca Premium"
    * @required
    */
-  FRACCION_Columna_6: string;
+  descripcionUsuario: string;
+
+  /**
+   * @description Campo adicional para información específica de la fracción arancelaria.
+   * Puede utilizarse para almacenar datos complementarios, observaciones o referencias asociadas a la fracción.
+   * @type {string}
+   * @example "Observaciones adicionales"
+   * @optional
+   */
+  solicitaBaja: string;
 
   /**
    * @description Indicador del estado activo (true) o inactivo (false) del registro de fracción.
@@ -669,7 +624,7 @@ export interface fraccionInfo {
  * Define la estructura de visualización para códigos NICO y sus descripciones correspondientes,
  * facilitando la identificación y clasificación de materias primas y productos básicos en el comercio internacional.
  * Esta configuración es esencial para la correcta presentación de datos de commodities en el sistema VUCEM.
- * 
+ *
  * @type {Array<{encabezado: string, clave: Function, orden: number}>}
  * @readonly
  * @author Sistema VUCEM 3.0
@@ -689,12 +644,12 @@ export const NICO_TABLA = [
      * @param {nicoInfo} ele - Objeto con información del código NICO
      * @returns {string} Código NICO único que identifica el commodity
      */
-    clave: (ele: nicoInfo) => ele.NICO_Columna_1,
+    clave: (ele: nicoInfo) => ele.claveNico,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 1
+    orden: 1,
   },
   {
     /**
@@ -707,21 +662,21 @@ export const NICO_TABLA = [
      * @param {nicoInfo} ele - Objeto con información del código NICO
      * @returns {string} Descripción completa del commodity asociado al código NICO
      */
-    clave: (ele: nicoInfo) => ele.NICO_Columna_2,
+    clave: (ele: nicoInfo) => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 2
-  }
-]
+    orden: 2,
+  },
+];
 
 /**
  * @interface nicoInfo
  * @description Interfaz que define la estructura de la información de NICO (Nomenclatura de Identificación de Commodities).
  * Representa los datos de clasificación de materias primas y productos básicos utilizados en el comercio internacional,
  * proporcionando una base estandarizada para la identificación de commodities en operaciones IMMEX.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -735,7 +690,7 @@ export interface nicoInfo {
    * @example "520100"
    * @required
    */
-  NICO_Columna_1: string;
+  claveNico: string;
 
   /**
    * @description Descripción detallada del commodity asociado al código NICO.
@@ -744,32 +699,22 @@ export interface nicoInfo {
    * @example "Algodón sin cardar ni peinar"
    * @required
    */
-  NICO_Columna_2: string;
-
-  /**
-   * @description Indicador del estado activo (true) o inactivo (false) del código NICO.
-   * Bandera booleana que determina si el código NICO está vigente y disponible para su uso en operaciones comerciales.
-   * @type {boolean}
-   * @default true
-   * @example true
-   * @required
-   */
-  estatus: boolean;
+  descripcion: string;
 }
 
 /**
- * @interface PermisoImmexDato
+ * @interface PermisoImmexGridDatos
  * @description Interfaz que define la estructura de datos para un permiso IMMEX específico.
  * Contiene toda la información detallada de un permiso individual del programa IMMEX,
  * incluyendo identificadores, fracciones arancelarias, descripciones y períodos de vigencia.
  * Esta interfaz es fundamental para el manejo de datos de permisos en el sistema VUCEM.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
  * @module Tramites.IMMEX.Interfaces.Permiso
  */
-export interface PermisoImmexDato {
+export interface PermisoImmexGridDatos {
   /**
    * @description Número secuencial o identificador único del permiso en el sistema.
    * Proporciona un identificador numérico secuencial para facilitar la organización y referencia de permisos.
@@ -777,7 +722,7 @@ export interface PermisoImmexDato {
    * @example "001"
    * @required
    */
-  IMMEX_Columna_1: string;
+  consecutivo: string;
 
   /**
    * @description Número oficial del permiso IMMEX asignado por la autoridad competente.
@@ -786,7 +731,7 @@ export interface PermisoImmexDato {
    * @example "IMX-2023-001234"
    * @required
    */
-  IMMEX_Columna_2: string;
+  numeroPrograma: string;
 
   /**
    * @description Código de fracción arancelaria aplicable al permiso.
@@ -795,7 +740,7 @@ export interface PermisoImmexDato {
    * @example "6205.20.01"
    * @required
    */
-  IMMEX_Columna_3: string;
+  fraccion: string;
 
   /**
    * @description Descripción oficial de la mercancía según la TIGIE (Tarifa de Importación y Exportación).
@@ -804,7 +749,7 @@ export interface PermisoImmexDato {
    * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
    * @required
    */
-  IMMEX_Columna_4: string;
+  descripcion: string;
 
   /**
    * @description Unidad de Medida Técnica (UMT) correspondiente al producto.
@@ -813,7 +758,7 @@ export interface PermisoImmexDato {
    * @example "Pieza"
    * @required
    */
-  IMMEX_Columna_5: string;
+  umt: string;
 
   /**
    * @description Cantidad autorizada para el periodo especificado en el permiso.
@@ -822,7 +767,7 @@ export interface PermisoImmexDato {
    * @example "10000"
    * @required
    */
-  IMMEX_Columna_6: string;
+  cantidadAutorizada: string;
 
   /**
    * @description Fecha de inicio de vigencia del permiso IMMEX.
@@ -832,7 +777,7 @@ export interface PermisoImmexDato {
    * @example "2023-01-15"
    * @required
    */
-  IMMEX_Columna_7: string;
+  fechaInicio: string;
 
   /**
    * @description Estado de activación del permiso (true: activo, false: inactivo).
@@ -843,74 +788,8 @@ export interface PermisoImmexDato {
    * @required
    */
   estatus: boolean;
-}
 
-/**
- * @interface FraccionDato
- * @description Interfaz que define la estructura de datos para información de fracciones arancelarias.
- * Representa los datos específicos de una fracción arancelaria utilizada en procesos de exportación,
- * incluyendo códigos de clasificación, descripciones de mercancías y unidades de medida.
- * Esta interfaz es esencial para el manejo de datos de clasificación arancelaria en operaciones IMMEX.
- * 
- * @author Sistema VUCEM 3.0
- * @version 1.0.0
- * @since 2025
- * @module Tramites.IMMEX.Interfaces.FraccionDato
- */
-export interface FraccionDato {
-  /**
-   * @description Número secuencial o identificador único de la fracción arancelaria.
-   * Proporciona un identificador numérico para ordenar y referenciar los registros de fracciones arancelarias.
-   * @type {string}
-   * @example "001"
-   * @required
-   */
-  FRACCION_Columna_1: string;
-
-  /**
-   * @description Código oficial de la fracción arancelaria según la nomenclatura internacional.
-   * Clasificación numérica estandarizada que identifica de manera única el tipo de mercancía para efectos arancelarios.
-   * @type {string}
-   * @example "6205.20.01"
-   * @required
-   */
-  FRACCION_Columna_2: string;
-
-  /**
-   * @description Descripción de la mercancía de importación asociada a esta fracción.
-   * Especifica las características de la materia prima o insumo importado que se relaciona con esta fracción de exportación.
-   * @type {string}
-   * @example "Telas de algodón para confección"
-   * @required
-   */
-  FRACCION_Columna_3: string;
-
-  /**
-   * @description Unidad de Medida Técnica (UMT) aplicable a los productos de esta fracción.
-   * Especifica la unidad oficial utilizada para cuantificar la mercancía clasificada bajo esta fracción arancelaria.
-   * @type {string}
-   * @example "Metro cuadrado"
-   * @required
-   */
-  FRACCION_Columna_4: string;
-
-  /**
-   * @description Descripción oficial según la Tarifa de la Ley de los Impuestos Generales de Importación y Exportación.
-   * Texto descriptivo oficial conforme a la TIGIE que define las características técnicas de la mercancía.
-   * @type {string}
-   * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
-   * @required
-   */
-  FRACCION_Columna_5: string;
-
-  /**
-   * @description Descripción comercial detallada del producto destinado a exportación.
-   * Especificación comercial que describe el producto final que será exportado tras su procesamiento o manufactura.
-   * @type {string}
-   * @example "Camisas de vestir para caballero marca Premium"
-   * @required
-   */
-  FRACCION_Columna_6: string;
+  fechaFin: string;
 }
 
 /**
@@ -919,7 +798,7 @@ export interface FraccionDato {
  * Representa la información básica de clasificación de materias primas y productos básicos
  * utilizados en operaciones de comercio exterior bajo el régimen IMMEX.
  * Esta interfaz proporciona la estructura fundamental para el manejo de datos de commodities.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -952,13 +831,21 @@ export interface NicoDato {
  * incluyendo permisos, fracciones arancelarias y códigos NICO en una estructura unificada.
  * Esta interfaz facilita el manejo conjunto de datos para procesos de importación y exportación,
  * proporcionando una estructura integral para el intercambio de información IMMEX.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
  * @module Tramites.IMMEX.Interfaces.TablaJson
  */
 export interface ImmexTablaJson {
+  /**
+   * @description Identificador único del permiso IMMEX.
+   * Código alfanumérico que clasifica de manera única cada permiso IMMEX.
+   * @type {string}
+   * @example "IMX-2023-001234"
+   * @required
+   */
+  permisoImmex: string;
   /**
    * @description Array de datos de permisos IMMEX con toda la información de autorizaciones.
    * Contiene la colección completa de permisos IMMEX registrados, incluyendo números de permiso,
@@ -967,7 +854,7 @@ export interface ImmexTablaJson {
    * @example [{ IMMEX_Columna_1: "001", IMMEX_Columna_2: "IMX-2023-001234", ... }]
    * @required
    */
-  permisoImmexDatos: PermisoImmexDato[];
+  permisoImmexGridDatos: PermisoImmexGridDatos[];
 
   /**
    * @description Array de datos de fracciones arancelarias para clasificación de mercancías.
@@ -977,15 +864,5 @@ export interface ImmexTablaJson {
    * @example [{ FRACCION_Columna_1: "001", FRACCION_Columna_2: "6205.20.01", ... }]
    * @required
    */
-  fraccionDatos: FraccionDato[];
-
-  /**
-   * @description Array de códigos NICO para identificación de commodities y materias primas.
-   * Colección de códigos de Nomenclatura de Identificación de Commodities con sus descripciones
-   * correspondientes, utilizados para clasificar materias primas en operaciones de comercio exterior.
-   * @type {NicoDato[]}
-   * @example [{ NICO_Columna_1: "520100", NICO_Columna_2: "Algodón sin cardar ni peinar" }]
-   * @required
-   */
-  nicoDatos: NicoDato[];
+  fraccionGridDatos: fraccionInfo[];
 }

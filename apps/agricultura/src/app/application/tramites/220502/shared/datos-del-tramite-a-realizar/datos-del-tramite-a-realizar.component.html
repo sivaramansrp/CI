@@ -10,6 +10,7 @@
           [required]="certificadosAutorizados.required"
           formControlName="certificadosAutorizados"
           [isDisabled]="formularioDeshabilitado"
+          [markTouched]="grupoFormularioPadre.get(this.claveDeControl)?.get('certificadosAutorizados')?.touched ?? false"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
       </div>
@@ -21,7 +22,7 @@
             formControlName="fechaInspeccion"
             [datos]="configuracionFechaInspeccion"
             (valorCambiado)="cambioFechaInspeccion($event)"
-            [isDisabled]="true"
+            [isDisabled]="procedimiento === 220502 ? false : true"
             [setFecha]="solicitud220502State.fechaInspeccion"
           ></input-fecha>
         </div>
@@ -36,6 +37,7 @@
           [required]="horaDeInspeccion.required"
           formControlName="horaDeInspeccion"
           [isDisabled]="formularioDeshabilitado"
+          [markTouched]="grupoFormularioPadre.get(this.claveDeControl)?.get('horaDeInspeccion')?.touched ?? false"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
@@ -74,6 +76,7 @@
           [label]="puntoDeInspeccion.labelNombre"
           [required]="puntoDeInspeccion.required"
           formControlName="puntoDeInspeccion"
+          [markTouched]="grupoFormularioPadre.get(this.claveDeControl)?.get('puntoDeInspeccion')?.touched ?? false"
           [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setPuntoDeInspeccion($event)"
         ></app-catalogo-select>

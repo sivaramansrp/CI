@@ -28,7 +28,7 @@
         [disabled]="!filaSeleccionada || esFormularioSoloLectura"
         (click)="enModificar()"
         data-bs-toggle="modal"
-        data-bs-target="#tercerosRelacionadosModal"
+       
       >
         Modificar
       </button>
@@ -80,7 +80,7 @@
                 <div class="col-md-6">
                   <app-input-radio
                     [radioOptions]="tipoPersonaRadioOptions"
-                    [selectedValue]="tipoDePublicos"
+                    [selectedValue]="tipoPersonaSeleccionada"
                     [isRequired]="true"
                     (valueChange)="setTipoPersona($event)"
                     formControlName="tipoPersona"
@@ -229,7 +229,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="form-label" for="segundoApellido"
-                      >Segundo apellido*:</label
+                      >Segundo apellido:</label
                     >
                     <input
                       type="text"
@@ -263,7 +263,9 @@
                       height="50"
                       style="height: 100px"
                       formControlName="domicilio"
-                      placeholder="Calle, No Ext, No Int, Ciudad, C.P."
+                     [placeholder]="placeholderDomicilio"
+  (focus)="placeholderDomicilio = ''"
+  (blur)="placeholderDomicilio = 'Calle, No Ext, No Int, Ciudad, C.P.'"
                       (change)="
                         setValoresStore(
                           datosDelTramiteRealizar,
@@ -272,25 +274,39 @@
                         )
                       "
                       [disabled]="esFormularioSoloLectura"
-                      [ngClass]="{
-                        'is-invalid':
-                          destinatarioForm.get(
-                            'datosDelTramiteRealizar.domicilio'
-                          )?.touched &&
-                          destinatarioForm.get(
-                            'datosDelTramiteRealizar.domicilio'
-                          )?.invalid
-                      }"
+                     [ngClass]="{
+        'is-invalid': destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched &&
+                          destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.invalid
+
+      }"
                     ></textarea>
-                    <div
-                      *ngIf="
-                        datosDelTramiteRealizar.get('domicilio')?.touched &&
-                        datosDelTramiteRealizar.get('domicilio')?.invalid
-                      "
-                      class="text-danger validation-message"
-                    >
-                      Este campo es obligatorio.
-                    </div>
+                     <div
+    *ngIf="
+      destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched &&
+      destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.hasError('pattern')
+    "
+    class="text-danger validation-message"
+  >
+    Existen datos incorrectos que no cumplen con el formato esperado.
+  </div>
+                   <div
+      *ngIf="
+        destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched &&
+        destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.hasError('pattern')
+      "
+      class="text-danger validation-message"
+    >
+      Por favor, no uses caracteres especiales.
+    </div>
+    <div
+      *ngIf="
+        destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched &&
+        destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.hasError('required')
+      "
+      class="text-danger validation-message"
+    >
+    Existen datos incorrectos que no cumplen con el formato esperado.
+    </div>
                   </div>
                 </div>
               </div>
@@ -303,6 +319,8 @@
                       [catalogo]="paisData.catalogos"
                       [label]="'País*'"
                       [placeholder]="paisData.primerOpcion"
+                      [markTouched]="datosDelTramiteRealizar.get('pais')?.touched??false"
+  
                       (change)="
                         setValoresStore(
                           datosDelTramiteRealizar,
@@ -310,6 +328,7 @@
                           'setPais'
                         )
                       "
+                    
                       [disabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                     @if(isPaisRequired){
@@ -327,7 +346,7 @@
               <div class="row">
                 <div class="col-md-4 mb-3">
   <div class="form-group">
-    <label class="form-label" for="codigopostal">Codigo postal*:</label>
+    <label class="form-label" for="codigopostal">Codigo postal:</label>
     <input
       class="form-control"
       id="codigopostal"
@@ -357,7 +376,7 @@
 
               <div class="row">
                 <div class="col-md-4 mb-3">
-                  <label class="form-label" for="telefono">Telefono*:</label>
+                  <label class="form-label" for="telefono">Telefono:</label>
                   <input
                     class="form-control"
                     id="telefono"
@@ -392,7 +411,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoelectronico"
-                    >Correo electronico*:</label
+                    >Correo electronico:</label
                   >
                   <input
                     class="form-control"

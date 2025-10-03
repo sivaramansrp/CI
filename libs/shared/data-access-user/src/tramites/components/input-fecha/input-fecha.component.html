@@ -1,9 +1,7 @@
 <div class="form-group" [ngClass]="{'has-error': isInvalid()}">
-  <label for="input_fecha" class="form-label" >
-    {{datos.labelNombre}}
-    @if(datos.required){<span class="require">*</span>}
+  <label for="input_fecha" class="form-label">
+    {{datos.labelNombre}}<span *ngIf="datos.required" class="require">*</span><span *ngIf="datos.required">:</span><span *ngIf="soloDosPuntosRequeridos">:</span>
     @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" tooltip="{{tooltipQuestionCircleText ? tooltipQuestionCircleText : datos.labelNombre}}"></span>}
-    <span *ngIf="datos.required">:</span>
   </label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
     <div class="input-group-text" id="input_fecha" [ngClass]="{'disabled-div': isDisabled, 'has-error': isInvalid()}" (click)="mostrarCalendario()">
@@ -42,11 +40,16 @@
       </div>
       <ol>
         <li *ngFor="let dia of semana" class="day-name"> {{dia | slice:0:3}}</li>
-        <li (click)="!isFutureDate(day) && clickDay(day)" *ngFor="let day of mountSelect; let first = first"
-          [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" class="day"
-          [class.activo]="day?.value === this.Formulario.get('dia')?.value" [class.disabled]="isFutureDate(day)">
-          <span>{{ day?.value }}</span>
-        </li>
+        <li
+  (click)="!isDisabledDay(day) && clickDay(day)"
+  *ngFor="let day of mountSelect; let first = first"
+  [style.gridColumnStart]="first ? day?.indexWeek : 'auto'"
+  class="day"
+  [class.activo]="day?.value === this.Formulario.get('dia')?.value"
+  [class.disabled]="isDisabledDay(day)">
+  <span>{{ day?.value }}</span>
+</li>
+
       
       </ol>
     </div>

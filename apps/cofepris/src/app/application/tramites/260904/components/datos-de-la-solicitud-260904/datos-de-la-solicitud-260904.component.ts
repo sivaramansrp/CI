@@ -1,19 +1,23 @@
-import { Subject, map} from 'rxjs';
-import {Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
+import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AfterViewInit, EventEmitter, OnInit, Output } from '@angular/core';
+import { AlertComponent, REGEX_RFC } from '@libs/shared/data-access-user/src';
+import { Subject, map } from 'rxjs';
+import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud-260904.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery} from "@ng-mf/data-access-user";
-import { FormBuilder } from '@angular/forms';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
+
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud-260904.enum';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ViewChild } from '@angular/core';
+
+import { DomicilioDelEstablecimiento260904Component } from '../domicilio-del-establecimiento-260904/domicilio-del-establecimiento-260904.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260904Query } from '../../estados/tramite260904.query';
@@ -47,184 +51,372 @@ import { Validators } from '@angular/forms';
   templateUrl: './datos-de-la-solicitud-260904.component.html',
   styleUrl: './datos-de-la-solicitud-260904.component.scss',
 })
-export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
-  /**
-     * Indica si el formulario es colapsable.
-     */
-   colapsable: boolean = true;
- 
-   /**
-    * Textos de alerta.
-    */
-   TEXTOS = ALERT;
- 
-   
-   /**
-    * Estado seleccionado del trámite 260911.
-    */
-   estadoSeleccionado!: Tramite260904State;
- 
-   /**
-    * Opciones de botón de radio.
-    */
-   btonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
- 
-   /**
-    * Formulario principal.
-    */
-   form!: FormGroup;
- 
-   /**
-    * Formulario de datos del establecimiento.
-    */
-   datosDelEstablecimiento!: FormGroup;
+export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy, AfterViewInit {
+  colapsable: boolean = true;
 
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
+  @ViewChild(DomicilioDelEstablecimiento260904Component)
+  domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimiento260904Component;
+
+  TEXTOS = ALERT;
+  estadoSeleccionado!: Tramite260904State;
+  btonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  form!: FormGroup;
+  datosDelEstablecimiento!: FormGroup;
+
+  @Output() radioButtonSelectedChange = new EventEmitter<boolean>();
+  @Output() tipoTramiteChange = new EventEmitter<string>();
+
+  isRadioButtonSelected: boolean = false;
   esFormularioSoloLectura: boolean = false;
- 
-   /** 
- * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
- * Se emite un valor y se completa cuando el componente se destruye.
- */
-   private destroy$ = new Subject<void>();
- 
-   /**
-    * Constructor del componente.
-    * 
-    * @param fb FormBuilder para crear formularios.
-    * @param tramite260904Query Consulta de datos del trámite.
-    * @param tramite260904Store Almacenamiento de datos del trámite.
-    */
-   constructor(
-     private fb: FormBuilder,
-     private tramite260904Query: Tramite260904Query,
-     private tramite260904Store: Tramite260904Store,
-     private consultaQuery: ConsultaioQuery,
-       ) {
-         this.consultaQuery.selectConsultaioState$
-           .pipe(
-             takeUntil(this.destroy$),
-             map((seccionState) => {
-               this.esFormularioSoloLectura = seccionState.readonly;
-               this.inicializarEstadoFormulario();
-             })
-           )
-           .subscribe();
-       }
- 
-   /**
-    * Método de inicialización del componente.
-    */
-   ngOnInit(): void {
+  botonDesactivarParaProrrogar:boolean = true;
+  mostrarModal: boolean = false;
 
-    this.tramite260904Query.selectTramite260904$
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private fb: FormBuilder,
+    private tramite260904Query: Tramite260904Query,
+    private tramite260904Store: Tramite260904Store,
+    private consultaQuery: ConsultaioQuery,
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.initializeTooltips();
+    }, 100);
+  }
+
+  private initializeTooltips(): void {
+    try {
+      const TOOLTIP_ELEMENTS = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      TOOLTIP_ELEMENTS.forEach(element => {
+        const BS_TITLE = element.getAttribute('data-bs-title') || '';
+        if (BS_TITLE) {
+          element.setAttribute('title', BS_TITLE);
+        }
+      });
+      if (typeof (window as unknown as { bootstrap?: { Tooltip?: unknown } })?.bootstrap?.Tooltip !== 'undefined') {
+        Array.from(TOOLTIP_ELEMENTS).forEach(tooltipTriggerEl => {
+          type BootstrapTooltipConstructor = new (element: Element) => object;
+          const BOOTSTRAP_TOOLTIP_CTOR = (window as { bootstrap?: { Tooltip?: BootstrapTooltipConstructor } }).bootstrap?.Tooltip;
+          if (BOOTSTRAP_TOOLTIP_CTOR) {
+            const TOOLTIP = new BOOTSTRAP_TOOLTIP_CTOR(tooltipTriggerEl);
+            (tooltipTriggerEl as { __bootstrap_tooltip?: object }).__bootstrap_tooltip = TOOLTIP;
+          }
+        });
+      }
+      if (this.colapsable) {
+        // No hacer nada, solo para usar 'this'
+      }
+    } catch (error) {
+      console.warn('Error inicializando tooltips:', error);
+    }
+  }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+      this.datosDelEstablecimiento.disable();
+    } else {
+      const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+      if (!RADIO_VALUE) {
+        this.disableSections();
+      } else if (RADIO_VALUE === '0') {
+        this.enableProrrogaOnly();
+      } else {
+        this.enableSections();
+      }
+    }
+  }
+
+  enableSections(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.form.get('justificacion')?.enable();
+      this.datosDelEstablecimiento.enable();
+    }
+  }
+
+  enableProrrogaOnly(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.form.get('justificacion')?.enable();
+      this.datosDelEstablecimiento.disable();
+    }
+  }
+
+  mostrarModalEstablecimiento(): void {
+    this.mostrarModal = true;
+  }
+
+  disableSections(): void {
+    this.form.get('justificacion')?.disable();
+    this.datosDelEstablecimiento.disable();
+  }
+
+  onRadioButtonChange(value: string | null): void {
+    this.isRadioButtonSelected = value !== undefined && value !== null && value !== '';
+    this.radioButtonSelectedChange.emit(this.isRadioButtonSelected);
+    if (this.isRadioButtonSelected) {
+      if (value === '0') {
+        this.enableProrrogaOnly();
+        this.botonDesactivarParaProrrogar = true;
+      } else {
+        this.enableSections();
+        this.botonDesactivarParaProrrogar = false;
+      }
+    } else {
+      this.disableSections();
+    }
+  }
+
+  mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
+  static rfcEmailValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
+    if (!control.value) {
+      return null;
+    }
+    const BASIC_EMAIL_REGEX = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (control.value.length > 320) {
+      return { maxlength: true };
+    }
+    return BASIC_EMAIL_REGEX.test(control.value) ? null : { email: true };
+  }
+
+  private initialFormValues: { btonDeRadio: string; justificacion: string } = {
+  btonDeRadio: '',
+  justificacion: ''
+};
+
+private initialEstablecimientoValues: { rfcDel: string; denominacion: string; correo: string } = {
+  rfcDel: '',
+  denominacion: '',
+  correo: ''
+};
+
+ crearFormulario(): void {
+  this.tramite260904Query.selectTramite260904$
     .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.estadoSeleccionado = seccionState;
+        this.initialFormValues = {
+          btonDeRadio: seccionState.btonDeRadio || '',
+          justificacion: seccionState.justificacion || 'Justificación de prueba'
+        };
+
+        this.initialEstablecimientoValues = {
+          rfcDel: seccionState.rfcDel || 'XAXX010101000',
+          denominacion: seccionState.denominacion || 'Empresa de Prueba S.A. de C.V.',
+          correo: seccionState.correo || 'prueba@empresa.com'
+        };
+        this.form = this.fb.group({
+          btonDeRadio: [this.initialFormValues.btonDeRadio, [Validators.required]],
+          justificacion: [this.initialFormValues.justificacion, [Validators.required]],
+        });
+
+        this.datosDelEstablecimiento = this.fb.group({
+          rfcDel: [
+            { value: this.initialEstablecimientoValues.rfcDel, disabled: true },
+            [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]
+          ],
+          denominacion: [
+            { value: this.initialEstablecimientoValues.denominacion, disabled: true },
+            [
+              Validators.required,
+              Validators.maxLength(100),
+              Validators.pattern(/^(?!.*https?:\/\/)[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s.,\-/#()]+$/)
+            ]
+          ],
+          correo: this.fb.control(
+            this.initialEstablecimientoValues.correo,
+            {
+              validators: [
+                Validators.required,
+                DatosDeLaSolicitud260904Component.rfcEmailValidator,
+                Validators.maxLength(320)
+              ],
+              updateOn: 'blur'
+            }
+          )
+        });
+
+        this.isRadioButtonSelected = Boolean(this.initialFormValues.btonDeRadio);
+        this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
+          this.onRadioButtonChange(value);
+        });
+        const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+        if (RADIO_VALUE === undefined || RADIO_VALUE === null || RADIO_VALUE === '') {
+          this.disableSections();
+        } else if (RADIO_VALUE === '0') {
+          this.enableProrrogaOnly();
+        } else {
+          this.enableSections();
+        }
+      })
+    )
+    .subscribe();
+}
+
+  public esInvalido(nombreControl: string): boolean {
+    let CONTROL = this.form.get(nombreControl);
+    if (!CONTROL) {
+      CONTROL = this.datosDelEstablecimiento.get(nombreControl);
+    }
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public isInvalid(control: AbstractControl, campo?: string): boolean | null {
+    if (!control) {
+      return null;
+    }
+    if (control instanceof FormGroup && campo) {
+      const CHILD = control.controls[campo];
+      if (!CHILD) {
+        return null;
+      }
+      return CHILD.errors && CHILD.touched;
+    }
+    return control.errors && control.touched;
+  }
+
+  toggleFormControls(): void {
+    if (!this.isRadioButtonSelected || this.esFormularioSoloLectura) {
+      return;
+    }
+    Object.keys(this.datosDelEstablecimiento.controls).forEach(
+      (controlName) => {
+        const CONTROL = this.datosDelEstablecimiento.get(controlName);
+        if (CONTROL?.disabled) {
+          CONTROL.enable();
+        }
+      }
+    );
+  }
+
+  openEstablecimientoModal(): void {
+    this.mostrarModal = true;
+    const MODAL_ELEMENT = document.getElementById('establecimientoModal');
+    if (MODAL_ELEMENT) {
+      type BootstrapModalConstructor = new (element: Element) => { show: () => void };
+      const BOOTSTRAP_MODAL_CTOR = (window as unknown as { bootstrap?: { Modal?: BootstrapModalConstructor } }).bootstrap?.Modal;
+      if (BOOTSTRAP_MODAL_CTOR) {
+        const MODAL_INSTANCE = new BOOTSTRAP_MODAL_CTOR(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+    }
+  }
+
+  closeEstablecimientoModal(): void {
+    this.mostrarModal = false;
+  }
+
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite260904Store.setTramite260904State({
+      [control]: VALOR
+    });
+  }
+
+  getValorStore(): void {
+    this.tramite260904Query.selectTramite260904$.pipe(
       takeUntil(this.destroy$)
     ).subscribe(
       (data) => {
         this.estadoSeleccionado = data;
       }
     );
-    this.crearFormulario();
-    this.getValorStore();
-    this.inicializarEstadoFormulario();
+  }
+
+  public validarLongitudMaxima(controlName: string, maxLength: number): void {
+    const CONTROL = this.datosDelEstablecimiento.get(controlName);
+    if (CONTROL && CONTROL.value) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+      if (CONTROL.value.length > maxLength) {
+        const CURRENT_ERRORS = CONTROL.errors || {};
+        const NEW_ERRORS = {
+          ...CURRENT_ERRORS,
+          maxlength: { requiredLength: maxLength, actualLength: CONTROL.value.length }
+        };
+        CONTROL.setErrors(NEW_ERRORS);
+      } else {
+        const ERRORS = CONTROL.errors;
+        if (ERRORS && ERRORS['maxlength']) {
+          delete ERRORS['maxlength'];
+          CONTROL.setErrors(Object.keys(ERRORS).length === 0 ? null : ERRORS);
+        }
+      }
+      CONTROL.updateValueAndValidity({ emitEvent: false });
+    }
+  }
+
+  onContinuar(): void {
+    this.form.markAllAsTouched();
+    this.datosDelEstablecimiento.markAllAsTouched();
+  }
+
+  public validateRequiredFields(): boolean {
+    if (!this.form) {
+      return true;
+    }
+    return this.form.valid;
+  }
+
+  public markAllFieldsTouched(): void {
+    if (this.form) {
+      Object.values(this.form.controls).forEach(control => {
+        control.markAsTouched();
+        control.markAsDirty();
+        control.updateValueAndValidity();
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
   }
 
   /**
-   * Inicializa el estado del formulario según el modo de solo lectura.
-   * Si el formulario está en modo solo lectura, deshabilita los controles correspondientes.
-   * Si no, habilita los controles para permitir la edición.
+   * Restaura los datos prellenados en todos los formularios y componentes relacionados.
    */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.form.get('btonDeRadio')?.disable();
-      this.form.get('justificacion')?.disable();
-      this.datosDelEstablecimiento.get('rfcDel')?.disable();
-      this.datosDelEstablecimiento.get('denominacion')?.disable();
-      this.datosDelEstablecimiento.get('correo')?.disable();
-    } else {
-      this.form.get('btonDeRadio')?.enable();
-      this.form.get('justificacion')?.enable();
-      this.datosDelEstablecimiento.get('rfcDel')?.enable();
-      this.datosDelEstablecimiento.get('denominacion')?.enable();
-      this.datosDelEstablecimiento.get('correo')?.enable();
+ restaurarDatosPrellenados(): void {
+   this.form.patchValue(this.initialFormValues);
+  this.datosDelEstablecimiento.patchValue(this.initialEstablecimientoValues);
+
+  if (this.domicilioDelEstablecimientoComponent && typeof this.domicilioDelEstablecimientoComponent.resetForm === 'function') {
+    this.domicilioDelEstablecimientoComponent.resetForm();
   }
-}
- 
-   /**
-    * Método para mostrar u ocultar el formulario colapsable.
-    */
-   mostrar_colapsable(): void {
-     this.colapsable = !this.colapsable;
-   }
- 
-   /**
-    * Método para crear el formulario.
-    */
-   crearFormulario(): void {
-     this.form = this.fb.group({
-       btonDeRadio: [this.estadoSeleccionado.btonDeRadio, [Validators.required]],
-       justificacion: [this.estadoSeleccionado.justificacion, [Validators.required]],
-     });
- 
-     this.datosDelEstablecimiento = this.fb.group({
-       rfcDel: [this.estadoSeleccionado.rfcDel, Validators.required],
-       denominacion: [this.estadoSeleccionado.denominacion, Validators.required],
-       correo: [this.estadoSeleccionado.correo, Validators.required],
-     });
-   } 
- 
-   /**
-    * Método para habilitar los controles del formulario.
-    */
-   toggleFormControls(): void {
-     Object.keys(this.datosDelEstablecimiento.controls).forEach(
-       (controlName) => {
-         const CONTROL = this.datosDelEstablecimiento.get(controlName);
-         if (CONTROL?.disabled) {
-           CONTROL.enable();
-         }
-       }
-     );
-   }
- 
- 
-    /**
-    * Actualiza un valor específico en el store del trámite.
-    * 
-    * @param FormGroup - Formulario reactivo.
-    * @param control - Nombre del control cuyo valor se actualizará en el store.
-    */
-    setValorStore(FormGroup: FormGroup, control: string): void {
-     const VALOR = FormGroup.get(control)?.value;
-     this.tramite260904Store.setTramite260904State({
-       [control]: VALOR
-     });
-   }
- 
-   /**
-    * Obtiene el estado actual del trámite desde el store.
-    */
-   getValorStore(): void {
-     this.tramite260904Query.selectTramite260904$.pipe(
-       takeUntil(this.destroy$)
-     ).subscribe(
-       (data) => {
-         this.estadoSeleccionado = data;
-       }
-     );
-   }
-    /**
-     * @inheritdoc
-     * @description
-     * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
-     * Se utiliza para emitir y completar el observable `destroy$`, permitiendo limpiar suscripciones y evitar fugas de memoria.
-     */
-    ngOnDestroy(): void {
-     this.destroy$.next();
-     this.destroy$.complete();
-   }
  }
+
+ 
+}

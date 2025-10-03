@@ -18,15 +18,9 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-8">
-            <app-catalogo-select
-              [catalogo]="aduana"
-              [label]="'Aduana por la que ingresará la mercancía'"
-              formControlName="aduana"
-              [placeholder]="'Seleccione una opción'"
-              [isDisabled]="esFormularioSoloLectura"
-              (change)="aduanaSeleccion()"
-              name="aduana"
-            >
+            <app-catalogo-select [catalogo]="aduana" [label]="'Aduana por la que ingresará la mercancía'"
+              formControlName="aduana" [placeholder]="'Seleccione una opción'" [isDisabled]="esFormularioSoloLectura"
+              (change)="aduanaSeleccion()" name="aduana">
             </app-catalogo-select>
           </div>
         </div>
@@ -40,7 +34,7 @@
           [datos]="mercanciaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura" 
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
             (click)="modificar()">Modificar</button>
           <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"
             (click)="eliminar()">Eliminar</button>
@@ -50,7 +44,6 @@
           </button>
         </div>
       </div>
-
       <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
         aria-hidden="true" #modalAgregarMercancias>
         <div class="modal-dialog modal-dialog-centered">
@@ -62,16 +55,20 @@
                 </div>
                 <ng-titulo titulo="Datos de la mercancía" />
                 <label class="mb-5">Fines a los que se destinará la mercancía*:</label>
-                <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons" formControlName="fechasSeleccionadas"
-                  [fechasSeleccionadas]="solicitudState.fechasSeleccionadas" [isDisabled]="esFormularioSoloLectura"
-                  (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
-                  <div *ngIf="isInvalid('fechasSeleccionadas')" class="mensaje-error">
-                      Este campo es obligatorio.
-                  </div>
+                <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons"
+                  formControlName="fechasSeleccionadas" [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+                  [isDisabled]="esFormularioSoloLectura" (fechasSeleccionadasChange)="changeCrosslist($event)">
+                </crosslist>
+                <div *ngIf="isInvalid('fechasSeleccionadas')" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
                 <ng-container formGroupName="datosMercancia">
                   <div class="row mt-5">
                     <div class="col-md-12">
-                      <label>Tipo de mercancía*:</label>
+                      <label>Tipo de mercancía
+                        <span [ngClass]="agregarMercanciasForm.get('datosMercancia.tipoMercancia')?.invalid && 
+              agregarMercanciasForm.get('datosMercancia.tipoMercancia')?.touched ? 'text-danger' : ''">*</span>:
+                      </label>
                       <input type="text" width:140 required="true" class="form-control" id="tipoMercancia"
                         formControlName="tipoMercancia" (change)="
                           setValoresStore(
@@ -79,9 +76,10 @@
                             'tipoMercancia',
                             'setTipoMercancia'
                           )
-                        " [disabled]="esFormularioSoloLectura" />
+                        " [ngClass]="{'is-invalid': isInvalid('tipoMercancia')}"
+                        [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="isInvalid('tipoMercancia')" class="mensaje-error">
-                          Este campo es obligatorio.
+                        Este campo es obligatorio.
                       </div>
                     </div>
                   </div>
@@ -89,7 +87,10 @@
                 <ng-container formGroupName="datosMercancia">
                   <div class="row mt-3">
                     <div class="col-md-4">
-                      <label>Uso específico de la mercancía*:</label>
+                      <label>Uso específico de la mercancía
+                        <span [ngClass]="agregarMercanciasForm.get('datosMercancia.usoEspecifico')?.invalid && 
+              agregarMercanciasForm.get('datosMercancia.usoEspecifico')?.touched ? 'text-danger' : ''">*</span>:
+                      </label>
                       <input type="text" required="true" class="form-control" id="usoEspecifico"
                         formControlName="usoEspecifico" (change)="
                           setValoresStore(
@@ -97,9 +98,10 @@
                             'usoEspecifico',
                             'setUsoEspecifico'
                           )
-                        " [disabled]="esFormularioSoloLectura" />
+                        " [ngClass]="{'is-invalid': isInvalid('usoEspecifico')}"
+                        [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="isInvalid('usoEspecifico')" class="mensaje-error">
-                          Este campo es obligatorio.
+                        Este campo es obligatorio.
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -109,13 +111,11 @@
                         formControlName="condicion"
                         [placeholder]="'Seleccione una opción'"
                         [required]="true"
+                        [markTouched]="agregarMercanciasForm.get('datosMercancia.condicion')?.touched??false"
                         (change)="condicionSeleccion()"
                         name="condicion"
                         [isDisabled]="esFormularioSoloLectura">
                       </app-catalogo-select>
-                      <div *ngIf="isInvalid('condicion')" class="mensaje-error">
-                        Este campo es obligatorio.
-                      </div>
                     </div>
                     <div class="col-md-4">
                       <label>Marca:</label>
@@ -126,191 +126,132 @@
                   </div>
                   <div class="row mt-3">
                     <div class="col-md-4">
-                      <app-catalogo-select
-                          [catalogo]="ano"
-                          [label]="'Año'"
-                          formControlName="ano"
-                          [placeholder]="'Seleccione una opción'"
-                          [isDisabled]="esFormularioSoloLectura"
-                          (change)="anoSeleccion()"
-                          name="ano"
-                        >
-                        </app-catalogo-select>
+                      <app-catalogo-select [catalogo]="ano" [label]="'Año'" formControlName="ano"
+                        [placeholder]="'Seleccione una opción'" [isDisabled]="esFormularioSoloLectura"
+                        (change)="anoSeleccion()" name="ano">
+                      </app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                       <label>Modelo:</label>
-                      <input type="text" class="form-control" id="modelo" formControlName="modelo" [ngClass]="
-                  isValid(datosMercancia, 'modelo') ? 'required' : ''
-                " (change)="
+                      <input type="text" class="form-control" id="modelo" formControlName="modelo" (change)="
                   setValoresStore(datosMercancia, 'modelo', 'setModelo')
                 " [disabled]="esFormularioSoloLectura" />
                     </div>
                     <div class="col-md-4">
                       <label>Número de serie:</label>
-                      <input type="text" class="form-control" id="serie" formControlName="serie" [ngClass]="
-                  isValid(datosMercancia, 'serie') ? 'required' : ''
-                " (change)="
+                      <input type="text" class="form-control" id="serie" formControlName="serie" (change)="
                   setValoresStore(datosMercancia, 'serie', 'setSerie')
                 " [disabled]="esFormularioSoloLectura" />
                     </div>
                   </div>
                 </ng-container>
-
                 <div class="col-md-12 mt-5 mb-5 d-flex justify-content-end">
                   <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
                     (click)="limpiarMercancias()">Limpiar</button>
                   <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura"
                     data-bs-dismiss="modal" #closeModal>Cancelar</button>
                   <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura"
-                    (click)="agregarMercancia()">
-                    Agregar
-                  </button>
+                    (click)="agregarMercancia()"> Agregar </button>
                 </div>
               </form>
             </div>
           </div>
         </div>
       </div>
-
       <ng-titulo titulo="Datos del donante extranjero" />
       <ng-container formGroupName="importadorExportador">
         <div class="row">
           <div class="col-md-8">
             <label>Nombre*:</label>
-            <input type="text" required="true" class="form-control" id="nombre" formControlName="nombre" [ngClass]="
-                isValid(importadorExportador, 'nombre') ? 'required' : ''
-              " (change)="
-                setValoresStore(importadorExportador, 'nombre', 'setNombre')
-              " [disabled]="esFormularioSoloLectura" />
+            <input type="text" required="true" class="form-control" id="nombre" formControlName="nombre"
+              [ngClass]=" isValid(importadorExportador, 'nombre') ? 'required' : '' "
+              (change)=" setValoresStore(importadorExportador, 'nombre', 'setNombre') "
+              [disabled]="esFormularioSoloLectura" />
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-md-8">
             <label>Calle*:</label>
             <input type="text" required="true" class="form-control" maxlength="100" id="calle" formControlName="calle"
-              [ngClass]="
-                isValid(importadorExportador, 'calle') ? 'required' : ''
-              " (change)="
-                setValoresStore(importadorExportador, 'calle', 'setCalle')
-              " [disabled]="esFormularioSoloLectura" />
+              [ngClass]=" isValid(importadorExportador, 'calle') ? 'required' : '' "
+              (change)=" setValoresStore(importadorExportador, 'calle', 'setCalle') "
+              [disabled]="esFormularioSoloLectura" />
           </div>
           <div class="col-md-4">
             <label>Número exterior*:</label>
             <input type="text" required="true" maxlength="55" class="form-control" id="numeroExterior"
-              formControlName="numeroExterior" [ngClass]="
-                isValid(importadorExportador, 'numeroExterior')
-                  ? 'required'
-                  : ''
-              " (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'numeroExterior',
-                  'setNumeroExterior'
-                )
-              " [disabled]="esFormularioSoloLectura" />
+              formControlName="numeroExterior"
+              [ngClass]=" isValid(importadorExportador, 'numeroExterior') ? 'required' : '' "
+              (change)=" setValoresStore( importadorExportador, 'numeroExterior', 'setNumeroExterior' ) "
+              [disabled]="esFormularioSoloLectura" />
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
             <label>Número interior:</label>
             <input type="text" class="form-control" maxlength="55" id="numeroInterior" formControlName="numeroInterior"
-              [ngClass]="
-                isValid(importadorExportador, 'numeroInterior')
-                  ? 'required'
-                  : ''
-              " (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'numeroInterior',
-                  'setNumeroInterior'
-                )
-              " [disabled]="esFormularioSoloLectura" />
+              [ngClass]=" isValid(importadorExportador, 'numeroInterior') ? 'required' : '' "
+              (change)=" setValoresStore( importadorExportador, 'numeroInterior', 'setNumeroInterior' ) "
+              [disabled]="esFormularioSoloLectura" />
           </div>
-
           <div class="col-md-4">
             <label>Teléfono:</label>
-            <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="30" [ngClass]="
-                isValid(importadorExportador, 'telefono') ? 'required' : ''
-              " (change)="
-                setValoresStore(importadorExportador, 'telefono', 'setTelefono')
-              " [disabled]="esFormularioSoloLectura" />
+            <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="30"
+              [ngClass]=" isValid(importadorExportador, 'telefono') ? 'required' : '' "
+              (change)=" setValoresStore(importadorExportador, 'telefono', 'setTelefono') "
+              [disabled]="esFormularioSoloLectura" />
           </div>
           <div class="col-md-4">
             <label>Correo electrónico:</label>
             <input type="email" class="form-control" maxlength="50" id="correoElectronico"
-              formControlName="correoElectronico" [ngClass]="
-                isValid(importadorExportador, 'correoElectronico')
-                  ? 'required'
-                  : ''
-              " (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'correoElectronico',
-                  'setCorreoElectronico'
-                )
-              " [disabled]="esFormularioSoloLectura" />
+              formControlName="correoElectronico"
+              [ngClass]=" isValid(importadorExportador, 'correoElectronico') ? 'required' : '' "
+              (change)=" setValoresStore( importadorExportador, 'correoElectronico', 'setCorreoElectronico' ) "
+              [disabled]="esFormularioSoloLectura" />
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="pais"
-                [label]="'País'"
-                formControlName="pais"
-                [placeholder]="'Seleccione una opción'"
-                [isDisabled]="esFormularioSoloLectura"
-                (change)="paisSeleccion()"
-                name="pais"
-              >
-              </app-catalogo-select>
+            <app-catalogo-select [catalogo]="pais" [label]="'País'" formControlName="pais"
+              [placeholder]="'Seleccione una opción'" [isDisabled]="esFormularioSoloLectura" (change)="paisSeleccion()"
+              name="pais">
+            </app-catalogo-select>
           </div>
           <div class="col-md-4">
             <label>Código postal*:</label>
             <input type="text" required="true" class="form-control" id="codigoPostal" formControlName="codigoPostal"
-              [ngClass]="
-                isValid(importadorExportador, 'codigoPostal') ? 'required' : ''
-              " (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'codigoPostal',
-                  'setCodigoPostal'
-                )
-              " [disabled]="esFormularioSoloLectura" />
+              [ngClass]=" isValid(importadorExportador, 'codigoPostal') ? 'required' : '' "
+              (change)=" setValoresStore( importadorExportador, 'codigoPostal', 'setCodigoPostal' ) "
+              [disabled]="esFormularioSoloLectura" />
           </div>
           <div class="col-md-4">
             <label>Estado*:</label>
-            <input type="text" required="true" class="form-control" id="estado" formControlName="estado" [ngClass]="
-                isValid(importadorExportador, 'estado') ? 'required' : ''
-              " (change)="
-                setValoresStore(importadorExportador, 'estado', 'setEstado')
-              " [disabled]="esFormularioSoloLectura" />
+            <input type="text" required="true" class="form-control" id="estado" formControlName="estado"
+              [ngClass]=" isValid(importadorExportador, 'estado') ? 'required' : '' "
+              (change)=" setValoresStore(importadorExportador, 'estado', 'setEstado') "
+              [disabled]="esFormularioSoloLectura" />
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
             <label>Colonia*:</label>
-            <input type="text" required="true" class="form-control" id="colonia" formControlName="colonia" [ngClass]="
-                isValid(importadorExportador, 'colonia') ? 'required' : ''
-              " (change)="
-                setValoresStore(importadorExportador, 'colonia', 'setColonia')
-              " [disabled]="esFormularioSoloLectura" />
+            <input type="text" required="true" class="form-control" id="colonia" formControlName="colonia"
+              [ngClass]=" isValid(importadorExportador, 'colonia') ? 'required' : '' "
+              (change)=" setValoresStore(importadorExportador, 'colonia', 'setColonia') "
+              [disabled]="esFormularioSoloLectura" />
           </div>
         </div>
-
         <div class="row mt-5">
-          <label required="true">Señale si la mercancía formará parte del patrimonio de su
-            representada*:</label>
+          <label required="true">Señale si la mercancía formará parte del patrimonio de su representada*:</label>
           <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado"
             (valueChange)="cambiarRadio($event)" id="opcion" formControlName="opcion"
             (change)="setValoresStore(importadorExportador, 'opcion', 'setOpcion')"
-            [disabled]="esFormularioSoloLectura">
-          </app-input-radio>
+            [disabled]="esFormularioSoloLectura"></app-input-radio>
         </div>
       </ng-container>
     </div>
   </form>
 </div>
-
 <div id="modalConfirmacion" aria-labelledby="modalConfirmacionLabel" class="modal fade" tabindex="-1" role="dialog"
   #modalConfirmacion>
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -319,7 +260,22 @@
         <p>La mercancía fue <br />agregada correctamente.</p>
       </div>
       <div class="modal-footer" style="justify-content: center">
-        <button type="button" class="btn btn-primary" #closeModalConfirmacion data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" #closeModalConfirmacion data-bs-dismiss="modal"> Acceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalModificar" aria-labelledby="modalModificarLabel" class="modal fade" tabindex="-1" role="dialog"
+  #modalModificar>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <label>Selecciona un registro.</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-primary" #closeModalModificar data-bs-dismiss="modal">
           Acceptar
         </button>
       </div>

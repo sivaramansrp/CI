@@ -26,6 +26,7 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
+       <div *ngIf="!isInspeccionOcularSelected">
         <label class="form-label">Requisito*: </label>
         <input
           type="text"
@@ -46,6 +47,7 @@
         </div>
         }
       </div>
+     </div>
       <div class="col-md-4 form-group">
         <label class="form-label"
           >Número de certificado internacional*:
@@ -61,6 +63,7 @@
           class="form-control"
           formControlName="numeroCertificadoInternacional"
           maxlength="50"
+          title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó &quot;N/A&quot;."
           [ngClass]="
             mercanciaForm.get('numeroCertificadoInternacional')?.invalid &&
             mercanciaForm.get('numeroCertificadoInternacional')?.touched
@@ -88,6 +91,7 @@
           name="fraccionArancelaria"
           [isDisabled]="mercanciaForm.disabled"
           [markTouched]="mercanciaForm.get('fraccionArancelaria')?.touched || false"
+          (selectionChange)="fraccionArancelariaSeleccionada($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -105,8 +109,23 @@
           class="form-control"
           formControlName="descripcionFraccion"
           maxlength="1000"
+          [ngClass]="
+            (mercanciaForm.get('descripcionFraccion')?.invalid &&
+            mercanciaForm.get('descripcionFraccion')?.touched) ||
+            (formSubmissionAttempted && mercanciaForm.get('descripcionFraccion')?.disabled && 
+            (!mercanciaForm.get('descripcionFraccion')?.value || mercanciaForm.get('descripcionFraccion')?.value === ''))
+              ? 'required'
+              : ''
+          "
         />
-        @if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
+        @if ((mercanciaForm.get('descripcionFraccion')?.hasError('required') &&
+        mercanciaForm.get('descripcionFraccion')?.touched) || 
+        (formSubmissionAttempted && mercanciaForm.get('descripcionFraccion')?.disabled && 
+        (!mercanciaForm.get('descripcionFraccion')?.value || mercanciaForm.get('descripcionFraccion')?.value === ''))) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        } @else if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
         mercanciaForm.get('descripcionFraccion')?.touched){
         <div class="text-danger">
           Por favor, no escribas más de 1000 caracteres
@@ -125,6 +144,7 @@
           name="nico"
           [isDisabled]="mercanciaForm.disabled"
           [markTouched]="mercanciaForm.get('nico')?.touched || false"
+          (selectionChange)="nicoSeleccionado($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -153,7 +173,7 @@
           class="form-control"
           style="height: 60%; resize: none"
           formControlName="descripcion"
-          maxlength="1000"
+          maxlength="250"
           [ngClass]="
             mercanciaForm.get('descripcion')?.invalid &&
             mercanciaForm.get('descripcion')?.touched
@@ -187,7 +207,14 @@
               : ''
           "
          />
-        @if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
+        @if ( mercanciaForm.get('cantidadUMT')?.hasError('pattern') &&
+        mercanciaForm.get('cantidadUMT')?.touched){
+        <div class="text-danger">
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
+        </div>
+        } @else if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
         mercanciaForm.get('cantidadUMT')?.touched){
         <div class="text-danger">
           <small
@@ -222,7 +249,24 @@
             >
             </span>
           </label>
-          <input type="text" class="form-control" formControlName="umt" />
+          <input type="text" class="form-control" formControlName="umt" 
+            [ngClass]="
+            (mercanciaForm.get('umt')?.invalid &&
+            mercanciaForm.get('umt')?.touched) ||
+            (formSubmissionAttempted && mercanciaForm.get('umt')?.disabled && 
+            (!mercanciaForm.get('umt')?.value || mercanciaForm.get('umt')?.value === ''))
+              ? 'required'
+              : ''
+            "
+          />
+          @if ((mercanciaForm.get('umt')?.hasError('required') &&
+          mercanciaForm.get('umt')?.touched) || 
+          (formSubmissionAttempted && mercanciaForm.get('umt')?.disabled && 
+          (!mercanciaForm.get('umt')?.value || mercanciaForm.get('umt')?.value === ''))) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
 
@@ -236,6 +280,17 @@
               : ''
           "
          />
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('pattern') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
+        </div>
         <div
           *ngIf="
             mercanciaForm.get('cantidadUMC')?.hasError('maxDecimals') &&
@@ -336,7 +391,7 @@
         <app-catalogo-select
           [catalogo]="catalogosDatos.paisDeProcedenciaList"
           formControlName="paisDeProcedencia"
-          [label]="'País de Procedencia'"
+          [label]="'País de procedencia'"
           [required]="true"
           name="paisDeProcedencia"
           [isDisabled]="mercanciaForm.disabled"
@@ -373,7 +428,7 @@
         >
           Limpiar
         </button>
-        <button type="button" class="btn btn-default ms-3" (click)="cancelar()">
+        <button type="button" class="btn btn-danger ms-3" (click)="cancelar()">
           Cancelar
         </button>
         <button

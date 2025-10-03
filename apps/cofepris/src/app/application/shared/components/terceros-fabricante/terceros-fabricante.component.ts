@@ -36,6 +36,7 @@ import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
@@ -271,6 +272,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     public solicitudState!: TercerosFabricanteState;
 
+    /**
+   * Formulario reactivo principal para gestionar los datos de terceros relacionados.
+   */
+    public tercerosForm: FormGroup = new FormGroup({});
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -285,7 +291,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     private tercerosFabricanteQuery: TercerosFabricanteQuery,
     @Inject(TercerosFabricanteService)
     private service: TercerosFabricanteService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -376,6 +383,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.initializeAgregarProveedorFormGroup();
 
     this.inicializarEstadoFormulario();
+    this.servicioDeFormularioService.registerForm('tercerosForm', this.tercerosForm);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'tercerosForm') {
+        this.tercerosForm.markAllAsTouched();
+      }
+    })
   }
 
   /**
@@ -437,38 +450,38 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({ value: '', disabled: true }),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del tercero.
        */
@@ -499,15 +512,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
   }
 
@@ -549,17 +562,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({value:'',disabled:true}, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({value:'',disabled:true}, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({value:'',disabled:true}, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
@@ -570,77 +583,77 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({ value: '', disabled: true }),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
   }
 
@@ -665,29 +678,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.enable();
       }
-      formGroup.get('denominacionRazonSocial')?.enable();
-      formGroup.get('nombre')?.enable();
-      formGroup.get('primerApellido')?.enable();
-      formGroup.get('segundoApellido')?.enable();
-      formGroup.get('calle')?.enable();
-      formGroup.get('numeroExterior')?.enable();
-      formGroup.get('numeroInterior')?.enable();
-      formGroup.get('lada')?.enable();
-      formGroup.get('telefono')?.enable();
-      formGroup.get('correoElectronico')?.enable();
-    } else {
-      formGroup.get('rfc')?.disable();
-      formGroup.get('curp')?.disable();
-      formGroup.get('denominacionRazonSocial')?.disable();
-      formGroup.get('nombre')?.disable();
-      formGroup.get('primerApellido')?.disable();
-      formGroup.get('segundoApellido')?.disable();
-      formGroup.get('calle')?.disable();
-      formGroup.get('numeroExterior')?.disable();
-      formGroup.get('numeroInterior')?.disable();
-      formGroup.get('lada')?.disable();
-      formGroup.get('telefono')?.disable();
-      formGroup.get('correoElectronico')?.disable();
     }
   }
 
@@ -729,17 +719,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
@@ -750,77 +740,77 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({ value: '', disabled: true }),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
   }
 
@@ -905,10 +895,32 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.fisica = true;
       this.moral = false;
       this.noContribuyente = false;
+      if(this.extranjero){
+        this.agregarFormuladorFormGroup.enable();
+        this.agregarProveedorFormGroup.enable();
+      }else{
+        this.agregarFormuladorFormGroup.disable();
+        this.agregarProveedorFormGroup.disable();
+        this.agregarFormuladorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarFormuladorFormGroup.get('tipoPersona')?.enable();
+        this.agregarProveedorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarProveedorFormGroup.get('tipoPersona')?.enable();
+      }
     } else if (checkBoxName === 'moral') {
       this.fisica = false;
       this.moral = true;
       this.noContribuyente = false;
+      if(this.extranjero){
+        this.agregarFormuladorFormGroup.enable();
+        this.agregarProveedorFormGroup.enable();
+      }else{
+        this.agregarFormuladorFormGroup.disable();
+        this.agregarProveedorFormGroup.disable();
+        this.agregarFormuladorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarFormuladorFormGroup.get('tipoPersona')?.enable();
+        this.agregarProveedorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarProveedorFormGroup.get('tipoPersona')?.enable();
+      }
     } else {
       this.noContribuyente = true;
       this.fisica = false;
@@ -975,7 +987,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarFabricanteFormGroup.value.localidad
-    )?.descripcion;
+    )?.descripcion || this.agregarFabricanteFormGroup.get('localidad')?.value;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
@@ -983,7 +995,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const MUNICIPIO_VALOR = this.municipioDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
-    )?.descripcion;
+    )?.descripcion || this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
@@ -992,7 +1004,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       (item: Catalogo) =>
         item.id ===
         this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
-    )?.descripcion;
+    )?.descripcion || this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
@@ -1000,7 +1012,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarFabricanteFormGroup.value.colonia
-    )?.descripcion;
+    )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value;
 
     /**
      * Crea una nueva fila para la tabla de fabricantes.
@@ -1017,49 +1029,47 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         /**
          * Denominación o razón social del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.denominacionRazonSocial,
+        this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value,
 
         /**
          * RFC del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.rfc,
+        this.agregarFabricanteFormGroup.get('rfc')?.value,
 
         /**
          * CURP del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.curp,
+        this.agregarFabricanteFormGroup.get('curp')?.value,
 
         /**
          * Teléfono del fabricante, incluyendo lada.
          */
-        this.agregarFabricanteFormGroup.value.lada +
-          '-' +
-          this.agregarFabricanteFormGroup.value.telefono,
+        this.agregarFabricanteFormGroup.get('telefono')?.value,
 
         /**
          * Correo electrónico del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.correoElectronico,
+        this.agregarFabricanteFormGroup.get('correoElectronico')?.value,
 
         /**
          * Calle del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.calle,
+        this.agregarFabricanteFormGroup.get('calle')?.value,
 
         /**
          * Número exterior del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.numeroExterior,
+        this.agregarFabricanteFormGroup.get('numeroExterior')?.value,
 
         /**
          * Número interior del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.numeroInterior,
+        this.agregarFabricanteFormGroup.get('numeroInterior')?.value,
 
         /**
          * País del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.pais,
+        this.agregarFabricanteFormGroup.get('pais')?.value,
 
         /**
          * Colonia del fabricante.
@@ -1079,12 +1089,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         /**
          * Entidad federativa del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.entidadFederativa,
+        this.agregarFabricanteFormGroup.get('entidadFederativa')?.value,
 
         /**
          * Estado o localidad del fabricante.
          */
-        this.agregarFabricanteFormGroup.value.estadoLocalidad,
+        this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value,
 
         /**
          * Código postal del fabricante.
@@ -1123,7 +1133,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarFormuladorFormGroup.value.localidad
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('localidad')?.value;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
@@ -1131,7 +1141,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const MUNICIPIO_VALOR = this.municipioDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarFormuladorFormGroup.value.municipioAlcaldia
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('municipioAlcaldia')?.value;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
@@ -1140,7 +1150,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       (item: Catalogo) =>
         item.id ===
         this.agregarFormuladorFormGroup.value.codigoPostaloEquivalente
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('codigoPostaloEquivalente')?.value;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
@@ -1148,7 +1158,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarFormuladorFormGroup.value.colonia
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('colonia')?.value;
 
     /**
      * Crea una nueva fila para la tabla de formuladors.
@@ -1165,49 +1175,47 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         /**
          * Denominación o razón social del formulador.
          */
-        this.agregarFormuladorFormGroup.value.denominacionRazonSocial,
+        this.agregarFormuladorFormGroup.get('denominacionRazonSocial')?.value,
 
         /**
          * RFC del formulador.
          */
-        this.agregarFormuladorFormGroup.value.rfc,
+        this.agregarFormuladorFormGroup.get('rfc')?.value,
 
         /**
          * CURP del formulador.
          */
-        this.agregarFormuladorFormGroup.value.curp,
+        this.agregarFormuladorFormGroup.get('curp')?.value,
 
         /**
          * Teléfono del formulador, incluyendo lada.
          */
-        this.agregarFormuladorFormGroup.value.lada +
-          '-' +
-          this.agregarFormuladorFormGroup.value.telefono,
+        this.agregarFormuladorFormGroup.get('telefono')?.value,
 
         /**
          * Correo electrónico del formulador.
          */
-        this.agregarFormuladorFormGroup.value.correoElectronico,
+        this.agregarFormuladorFormGroup.get('correoElectronico')?.value,
 
         /**
          * Calle del formulador.
          */
-        this.agregarFormuladorFormGroup.value.calle,
+        this.agregarFormuladorFormGroup.get('calle')?.value,
 
         /**
          * Número exterior del formulador.
          */
-        this.agregarFormuladorFormGroup.value.numeroExterior,
+        this.agregarFormuladorFormGroup.get('numeroExterior')?.value,
 
         /**
          * Número interior del formulador.
          */
-        this.agregarFormuladorFormGroup.value.numeroInterior,
+        this.agregarFormuladorFormGroup.get('numeroInterior')?.value,
 
         /**
          * País del formulador.
          */
-        this.agregarFormuladorFormGroup.value.pais,
+        this.agregarFormuladorFormGroup.get('pais')?.value,
 
         /**
          * Colonia del formulador.
@@ -1227,12 +1235,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         /**
          * Entidad federativa del formulador.
          */
-        this.agregarFormuladorFormGroup.value.entidadFederativa,
+        this.agregarFormuladorFormGroup.get('entidadFederativa')?.value,
 
         /**
          * Estado o localidad del formulador.
          */
-        this.agregarFormuladorFormGroup.value.estadoLocalidad,
+        this.agregarFormuladorFormGroup.get('estadoLocalidad')?.value,
 
         /**
          * Código postal del formulador.
@@ -1271,7 +1279,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarProveedorFormGroup.value.localidad
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('localidad')?.value;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
@@ -1279,7 +1287,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const MUNICIPIO_VALOR = this.municipioDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarProveedorFormGroup.value.municipioAlcaldia
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('municipioAlcaldia')?.value;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
@@ -1288,7 +1296,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       (item: Catalogo) =>
         item.id ===
         this.agregarProveedorFormGroup.value.codigoPostaloEquivalente
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('codigoPostaloEquivalente')?.value;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
@@ -1296,7 +1304,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarProveedorFormGroup.value.colonia
-    )?.descripcion;
+    )?.descripcion || this.agregarFormuladorFormGroup.get('colonia')?.value;
 
     /**
      * Crea una nueva fila para la tabla de proveedor.
@@ -1313,49 +1321,47 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         /**
          * Denominación o razón social del proveedor.
          */
-        this.agregarProveedorFormGroup.value.denominacionRazonSocial,
+        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.value,
 
         /**
          * RFC del proveedor.
          */
-        this.agregarProveedorFormGroup.value.rfc,
+        this.agregarProveedorFormGroup.get('rfc')?.value,
 
         /**
          * CURP del proveedor.
          */
-        this.agregarProveedorFormGroup.value.curp,
+        this.agregarProveedorFormGroup.get('curp')?.value,
 
         /**
          * Teléfono del proveedor, incluyendo lada.
          */
-        this.agregarProveedorFormGroup.value.lada +
-          '-' +
-          this.agregarProveedorFormGroup.value.telefono,
+        this.agregarProveedorFormGroup.get('telefono')?.value,
 
         /**
          * Correo electrónico del proveedor.
          */
-        this.agregarProveedorFormGroup.value.correoElectronico,
+        this.agregarProveedorFormGroup.get('correoElectronico')?.value,
 
         /**
          * Calle del proveedor.
          */
-        this.agregarProveedorFormGroup.value.calle,
+        this.agregarProveedorFormGroup.get('calle')?.value,
 
         /**
          * Número exterior del proveedor.
          */
-        this.agregarProveedorFormGroup.value.numeroExterior,
+        this.agregarProveedorFormGroup.get('numeroExterior')?.value,
 
         /**
          * Número interior del proveedor.
          */
-        this.agregarProveedorFormGroup.value.numeroInterior,
+        this.agregarProveedorFormGroup.get('numeroInterior')?.value,
 
         /**
          * País del proveedor.
          */
-        this.agregarProveedorFormGroup.value.pais,
+        this.agregarProveedorFormGroup.get('pais')?.value,
 
         /**
          * Colonia del proveedor.
@@ -1375,12 +1381,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         /**
          * Entidad federativa del proveedor.
          */
-        this.agregarProveedorFormGroup.value.entidadFederativa,
+        this.agregarProveedorFormGroup.get('entidadFederativa')?.value,
 
         /**
          * Estado o localidad del proveedor.
          */
-        this.agregarProveedorFormGroup.value.estadoLocalidad,
+        this.agregarProveedorFormGroup.get('estadoLocalidad')?.value,
 
         /**
          * Código postal del proveedor.
@@ -1489,6 +1495,36 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line class-methods-use-this
   public limpiar(forma: FormGroup): void {
     forma.reset();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  buscar(form: FormGroup): void {
+    if (form.get('rfc')?.valid) {
+      form.patchValue({
+        curp: 'MAVL621207HDGRLS06',
+        nombre: 'Juan Pérez',
+        primerApellido: 'Gómez',
+        segundoApellido: 'López',
+        denominacionRazonSocial: 'Razón Social Ejemplo',
+        pais: 'México',
+        estadoLocalidad: 'Estado Ejemplo',
+        municipioAlcaldia: 'Municipio Ejemplo',
+        localidad: 'Localidad Ejemplo',
+        entidadFederativa: 'Entidad Federativa Ejemplo',
+        codigoPostaloEquivalente: 'Código Postal Ejemplo',
+        colonia: 'Colonia Ejemplo',
+        coloniaoEquivalente: 'Colonia Equivalente Ejemplo',
+        calle: 'Calle Ejemplo',
+        numeroExterior: 'Número Exterior Ejemplo',
+        numeroInterior: '',
+        lada: '',
+        telefono: '618-256-2532',
+        correoElectronico: '',
+        extranjeroCodigo: 'Código del Extranjero Ejemplo',
+        extranjeroEstado: 'Estado del Extranjero Ejemplo',
+        extranjeroColonia: 'Colonia del Extranjero Ejemplo',
+      })
+    }
   }
 
   /**

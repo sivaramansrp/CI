@@ -1,7 +1,6 @@
 import {
   CODIGO_POSTAL,
   Catalogo,
-  CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
@@ -26,11 +25,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Facturador } from '../../models/terceros-relacionados.model';
+import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar un facturador (persona física o moral) al trámite actual.
@@ -60,6 +62,13 @@ export class AgregarFacturadorComponent
    */
   @Input()
   idProcedimiento!: number;
+
+   /**
+   * Indica si se ha realizado la verificación de validación al intentar guardar.
+   * Esta bandera se utiliza para controlar la visualización de mensajes de error o advertencia
+   * cuando el usuario intenta guardar el formulario sin cumplir con los requisitos de validación.
+   */
+  chequeoValidacionAlGuardar =false;
   /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
@@ -139,6 +148,10 @@ export class AgregarFacturadorComponent
     this.cargarDatos();
     this.crearAgregarFormularioFacturador();
     this.changeNacionalidad();
+     this.chequeoValidacionAlGuardar =
+      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
+        ? true
+        :false;
   }
 
   /**
@@ -165,10 +178,12 @@ export class AgregarFacturadorComponent
         this.obtenerValor('estadoLocalidad'),
         [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
-      codigoPostal: [
-        this.obtenerValor('codigoPostal'),
-        [Validators.pattern(CODIGO_POSTAL)],
-      ],
+     codigoPostal: [
+      this.obtenerValor('codigoPostal'),
+      this.idProcedimiento === 260911
+        ? [Validators.required, Validators.pattern(CODIGO_POSTAL)]
+        : [Validators.pattern(CODIGO_POSTAL)]
+    ],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), [Validators.required]],
       numeroExterior: [
@@ -263,6 +278,17 @@ export class AgregarFacturadorComponent
    * Después, limpia el formulario y regresa a la vista anterior.
    */
   guardarFacturador(): void {
+    if(this.chequeoValidacionAlGuardar){
+      if (this.agregarFacturadorForm.invalid) {
+            // Marca todos los controles como tocados para mostrar errores de validación
+          Object.values(this.agregarFacturadorForm.controls).forEach(control => {
+            control.markAsTouched();
+            control.updateValueAndValidity();
+          });
+            // NO redirigir ni emitir nada si el formulario es inválido
+          return;
+        }
+    }
     const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
 
     let nombreRazonSocial: string;

@@ -12,6 +12,7 @@
  * @since 2025
  * @namespace ElegibilidadTextiles
  */
+import { FacturasTplCapturaResponse } from '../models/response/facturas-tpl-captura-response.model';
 
 /**
  * Configuración de los pasos del trámite de elegibilidad de textiles.
@@ -208,7 +209,7 @@ export const EXPEDICION_FACTURA_FECHA = {
      * @property {boolean} habilitado
      * Controla si el campo está habilitado para interacción del usuario.
      */
-    habilitado: false,
+    habilitado: true,
 };
 
 /**
@@ -347,4 +348,49 @@ export const VALIDO = 'TodoValido'
  *
  * @constant {string}
  */
-export const REPRESENTACION_FEDERAL_NOTA = 'El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional';
+export const REPRESENTACION_FEDERAL_NOTA = '*El monto mostrado es de carácter informativo no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional.';
+
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que Corrija los siguientes errores
+ * antes de poder continuar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_ALERT = `
+      <p class="m-0">Corrija los siguientes errores:</p>
+      <p class="text-danger m-0">Debe seleccionar una constancia de registro.</p>
+`;
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que Corrija los siguientes errores
+ * antes de poder buscar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_ANO = `
+    <p class="m-0">Corrija los siguientes errores:</p>
+
+    <div class="d-flex align-items-center">
+    <span class="text-danger text-start me-2">1.</span>
+    <p class="text-danger m-0 flex-grow-1 text-center">
+        (Año del oficio de asignación) es un campo requerido
+    </p>
+    </div>
+  </div>
+</div>
+`;
+
+/**
+ * Configuración de los encabezados de la tabla de facturas en el trámite de elegibilidad de textiles.
+ *
+ * Cada encabezado está representado por un objeto que contiene las siguientes propiedades:
+ */
+export const CONFIGURACION_ENCABEZADO_FACTURAS = [
+    { encabezado: 'Número de la factura', clave: (item: FacturasTplCapturaResponse): string => item.num_factura, orden: 1 },
+    { encabezado: 'Razón social', clave: (item: FacturasTplCapturaResponse): string => item.razon_social_consig_emisor, orden: 2 },
+    { encabezado: 'Domicilio', clave: (item: FacturasTplCapturaResponse): string => item.direccion_consig_emisor, orden: 3 },
+    { encabezado: 'Fecha de expedición de la factura', clave: (item: FacturasTplCapturaResponse): string => item.fecha_expedicion, orden: 4 },
+    { encabezado: 'Cantidad total', clave: (item: FacturasTplCapturaResponse): string => item.cantidad_total !== undefined && item.cantidad_total !== null ? String(item.cantidad_total) : '', orden: 5 },
+    { encabezado: 'Cantidad disponible', clave: (item: FacturasTplCapturaResponse): string => item.cantidad_disponible !== undefined && item.cantidad_disponible !== null ? String(item.cantidad_disponible) : '', orden: 6 },
+    { encabezado: 'Unidad de medida', clave: (item: FacturasTplCapturaResponse): string => item.descripcion ?? '', orden: 7 },
+    { encabezado: 'Valor en dólares', clave: (item: FacturasTplCapturaResponse): string => item.imp_dls !== undefined && item.imp_dls !== null ? String(item.imp_dls) : '', orden: 8 },
+]

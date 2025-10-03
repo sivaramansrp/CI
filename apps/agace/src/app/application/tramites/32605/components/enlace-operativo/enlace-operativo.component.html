@@ -54,27 +54,11 @@
         </div>
       </div>
     </div>
- 
+
     <div class="row">
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-            <button
-            class="btn btn-default me-2"
-            type="button"
-            [disabled]="esFormularioSoloLectura"
-            (click)="confirmeliminarEnlaceItem()"
-          >
-            Eliminar
-          </button>
           <button
-            class="btn btn-danger me-2"
-            type="button"
-            [disabled]="esFormularioSoloLectura"
-            (click)="modificarItemEnlace()"
-          >
-            Modificar
-          </button>
-            <button
             type="button"
             class="btn btn-primary me-2"
             [disabled]="esFormularioSoloLectura"
@@ -82,12 +66,28 @@
           >
             Agregar
           </button>
+          <button
+            class="btn btn-default me-2"
+            type="button"
+            [disabled]="esFormularioSoloLectura"
+            (click)="modificarItemEnlace()"
+          >
+            Modificar
+          </button>
+          <button
+            class="btn btn-danger me-2"
+            type="button"
+            [disabled]="esFormularioSoloLectura"
+            (click)="confirmeliminarEnlaceItem()"
+          >
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
   </form>
 </div>
- 
+
 <div
   class="modal fade"
   id="enlaceOperativoElemento"
@@ -102,7 +102,7 @@
       <div class="modal-body">
         <form [formGroup]="enlaceOperativoForm">
           <h6>
-            <span class="require">*</span>Registro Federal de Contribuyentes:
+            Registro Federal de Contribuyentes<span class="require">*</span>:
           </h6>
           <div class="row">
             <div class="col-md-4">
@@ -117,12 +117,20 @@
               @if ( enlaceOperativoForm.controls['registro'].touched &&
               enlaceOperativoForm.controls['registro'].hasError('required') ) {
               <div class="mensaje-error">Este campo es obligatorio.</div>
+              } @if ( enlaceOperativoForm.controls['registro'].touched &&
+              enlaceOperativoForm.controls['registro'].hasError('maxlength') ) {
+              <div class="mensaje-error">
+                Por favor, no escriba más de 15 caracteres.
+              </div>
+              }@else if ( enlaceOperativoForm.controls['registro'].touched &&
+              enlaceOperativoForm.controls['registro'].hasError('pattern') ) {
+              <div class="mensaje-error">Por favor, ingrese un RFC válido.</div>
               }
             </div>
             <div class="col-md-8">
               <div class="btn-group">
                 <button
-                  class="btn btn-default"
+                  class="btn btn-primary"
                   type="button"
                   (click)="botonBuscar()"
                 >
@@ -199,10 +207,11 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="cargo">Cargo o Puesto</label>
+                <label class="form-label" for="cargo">Cargo o Puesto:</label>
                 <input
                   class="form-control"
                   id="cargo"
+                  maxlength="50"
                   formControlName="cargo"
                   type="text"
                 />
@@ -216,6 +225,7 @@
                 <input
                   class="form-control"
                   id="telefono"
+                  maxlength="15"
                   formControlName="telefono"
                   type="text"
                 />
@@ -237,14 +247,21 @@
                   type="text"
                 />
               </div>
-              @if(enlaceOperativoForm.controls['correoElectronico'].invalid &&
-              enlaceOperativoForm.controls['correoElectronico'].touched) {
-              <div class="mensaje-error">Este campo es obligatorio.</div>
+              @if(enlaceOperativoForm.controls['correoElectronico'].hasError('pattern')
+              && enlaceOperativoForm.controls['correoElectronico'].touched) {
+              <div class="mensaje-error">
+                Por favor, escriba una dirección de correo válida.
+              </div>
+              }@else if(enlaceOperativoForm.controls['correoElectronico'].hasError('maxlength')
+              && enlaceOperativoForm.controls['correoElectronico'].touched) {
+              <div class="mensaje-error">
+                Por favor, no escriba más de 320 caracteres.
+              </div>
               }
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="suplente">Suplente</label>
+                <label class="form-label" for="suplente">Suplente:</label>
                 <div class="form-check-input-container">
                   <input
                     class="form-check-input"
@@ -265,7 +282,7 @@
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-danger"
             (click)="modalCancelar()"
           >
             Cancelar
@@ -283,28 +300,28 @@
     </div>
   </div>
 </div>
- 
+
 <lib-notificaciones
   *ngIf="confirmEliminarPopupAbierto"
   [notificacionInput]="nuevaNotificacion"
   (confirmacionModal)="eliminarEnlaceItem($event)"
 >
 </lib-notificaciones>
- 
+
 <lib-notificaciones
   *ngIf="tieneValorRfc"
   [notificacionInput]="nuevaNotificacion"
   (confirmacionModal)="botonBuscar()"
 >
 </lib-notificaciones>
- 
+
 <lib-notificaciones
   *ngIf="esFilaSeleccionada"
   [notificacionInput]="nuevaNotificacion"
   (confirmacionModal)="modificarItemEnlace()"
 >
 </lib-notificaciones>
- 
+
 <lib-notificaciones
   *ngIf="multipleSeleccionPopupAbierto"
   [notificacionInput]="nuevaNotificacion"

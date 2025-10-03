@@ -26,14 +26,7 @@ export class InputFechaComponent implements OnInit, OnChanges {
    * Indica si se deben mostrar los mensajes de error en el input-fecha.
    */
   @Input() mostrarErrores: boolean = true;
-  /**
-   * Verifica si el campo de fecha es inválido y ha sido tocado.
-   * @returns {boolean} true si es requerido, está vacío y ha sido tocado.
-   */
-  isInvalid(): boolean {
-    const CONTROL = this.Formulario?.get('fechaString');
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
-  }
+
   /**
    * Emite el valor seleccionado cuando cambia.
    */
@@ -50,6 +43,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
   @Input({ required: true }) datos!: InputFecha;
 
   /**
+   * Indica si sólo se requiere el campo "colón".
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() soloDosPuntosRequeridos: boolean = false;
+
+  /**
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
    */
   @Input() tooltipQuestionCircle: boolean = false;
@@ -61,6 +62,12 @@ export class InputFechaComponent implements OnInit, OnChanges {
 
   @Input() deshabilitarFuturas: boolean = false;
 
+/**
+ * Indica si se deben deshabilitar las fechas pasadas en el calendario.
+ * Si es `true`, el usuario no podrá seleccionar fechas anteriores a la fecha actual.
+ * Valor por defecto: `false`.
+ */
+  @Input() deshabilitarPasadas: boolean = false;
 
   /**
    * Arreglo con los nombres de los meses.
@@ -138,7 +145,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
       }
     }
   }
-
+  /**
+   * Verifica si el campo de fecha es inválido y ha sido tocado.
+   * @returns {boolean} true si es requerido, está vacío y ha sido tocado.
+   */
+  isInvalid(): boolean {
+    const CONTROL = this.Formulario?.get('fechaString');
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
+  }
 
   /**
  * Método del ciclo de vida `ngOnInit` de Angular.
@@ -375,5 +389,24 @@ export class InputFechaComponent implements OnInit, OnChanges {
 
     return FECHADIA.isAfter(HOY);
   }
+
+  isPastDate(day: { value: number; indexWeek: number }): boolean {
+  if (!this.deshabilitarPasadas){
+    return false;
+  } 
+
+  const SELECTED_YEAR = this.Formulario.get('anio')?.value;
+  const SELECTMONTH = this.Formulario.get('mes')?.value;
+  const DAYVALUE = day.value;
+
+  const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
+  const HOY = moment().startOf('day');
+
+  return FECHADIA.isBefore(HOY);
+}
+
+isDisabledDay(day: { value: number; indexWeek: number }): boolean {
+  return this.isFutureDate(day) || this.isPastDate(day);
+}
 
 }

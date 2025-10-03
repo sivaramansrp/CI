@@ -152,24 +152,133 @@ export interface ImportadorForm {
 
 /**
  * @interface HistoricoFabricantesForm
- * @description Modelo para el formulario del historial de fabricantes de productos textiles.
+ * @description 
+ * Modelo para el formulario del historial de fabricantes de productos textiles.
+ * Esta interfaz define la estructura de datos necesaria para capturar información
+ * sobre los fabricantes de los productos textiles importados, incluyendo la relación
+ * entre exportador y fabricante, así como los datos de registro fiscal del fabricante.
+ * 
+ * Es utilizada en el componente HistoricoFabricantesComponent para validar y procesar
+ * la información relacionada con la cadena de producción y fabricación de textiles.
+ * 
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author Sistema VUCEM 3.0
+ * 
+ * @example
+ * ```typescript
+ * // Inicialización del formulario
+ * const historicoForm: HistoricoFabricantesForm = {
+ *   exportadorFabricanteMismo: 'SI',
+ *   numeroRegistroFiscal: 'RFC123456789'
+ * };
+ * ```
+ * 
+ * @example
+ * ```typescript
+ * // Uso en reactive forms
+ * this.historicoFabricantesForm = this.fb.group({
+ *   exportadorFabricanteMismo: ['', Validators.required],
+ *   numeroRegistroFiscal: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]+$/)]]
+ * });
+ * ```
+ * 
+ * @example
+ * ```typescript
+ * // Validación condicional
+ * if (form.exportadorFabricanteMismo === 'NO') {
+ *   // Requerir información adicional del fabricante
+ *   form.numeroRegistroFiscal = ''; // Limpiar si no aplica
+ * }
+ * ```
+ * 
+ * @see {@link HistoricoFabricantesComponent} - Componente que utiliza esta interfaz
+ * @see {@link ImportadorForm} - Interfaz relacionada para datos del importador
+ * 
  * @property {string} exportadorFabricanteMismo - Indica si la empresa exportadora es la misma que fabrica el producto (Sí/No).
+ *                                               Valores válidos: 'SI', 'NO'. Determina si se requiere información
+ *                                               adicional del fabricante independiente.
  * @property {string} numeroRegistroFiscal - Número de registro fiscal del fabricante en su país de origen.
+ *                                          Formato alfanumérico que identifica oficialmente al fabricante
+ *                                          ante las autoridades fiscales correspondientes.
  */
 export interface HistoricoFabricantesForm {
-  /** Indica si exportador y fabricante son la misma entidad */
+  /** 
+   * Indica si la empresa exportadora es la misma entidad que fabrica el producto textil.
+   * Valores aceptados: 'SI' cuando exportador y fabricante son la misma empresa,
+   * 'NO' cuando son entidades diferentes que requieren documentación por separado.
+   * Esta información es crucial para determinar los requisitos de trazabilidad.
+   * 
+   * @example 'SI' - El exportador también es el fabricante
+   * @example 'NO' - El exportador y fabricante son entidades diferentes
+   */
   exportadorFabricanteMismo: string;
-  /** Número de registro fiscal del fabricante */
+  
+  /** 
+   * Número de registro fiscal oficial del fabricante en su país de origen.
+   * Identificador único que permite verificar la legitimidad y registro legal
+   * del fabricante ante las autoridades fiscales del país donde se produce el textil.
+   * Debe ser un código alfanumérico válido según las normas del país de origen.
+   * 
+   * @example 'RFC123456789' - Registro fiscal del fabricante mexicano
+   * @example 'TAX987654321' - Registro fiscal del fabricante extranjero
+   */
   numeroRegistroFiscal: string;
 }
 
 /**
  * @interface FormularioAsociacionFactura
- * @description Modelo para el formulario de asociación de facturas en el trámite de elegibilidad de textiles.
+ * @description 
+ * Modelo para el formulario de asociación de facturas en el trámite de elegibilidad de textiles.
+ * Esta interfaz define la estructura de datos utilizada para capturar y validar la información
+ * sobre la cantidad de facturas comerciales que se asociarán al trámite de importación.
+ * Es fundamental para establecer la relación entre las facturas comerciales y el permiso
+ * de importación solicitado.
+ * 
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author Sistema VUCEM 3.0
+ * 
+ * @example
+ * ```typescript
+ * // Inicialización del formulario
+ * const formularioAsociacion: FormularioAsociacionFactura = {
+ *   cantidad: '5' // Asociar 5 facturas al trámite
+ * };
+ * ```
+ * 
+ * @example
+ * ```typescript
+ * // Uso en reactive forms
+ * this.formularioAsociacionFactura = this.fb.group({
+ *   cantidad: ['', [Validators.required, Validators.min(1)]]
+ * });
+ * ```
+ * 
+ * @example
+ * ```typescript
+ * // Validación de datos
+ * if (formulario.cantidad && parseInt(formulario.cantidad) > 0) {
+ *   // Proceder con la asociación de facturas
+ * }
+ * ```
+ * 
+ * @see {@link FormularioAsociacionFacturaComponent} - Componente que utiliza esta interfaz
+ * @see {@link FacturaForm} - Interfaz relacionada para datos individuales de facturas
+ * 
  * @property {string} cantidad - Cantidad de facturas que serán asociadas al trámite de importación actual.
+ *                               Debe ser un número entero positivo representado como string.
+ *                               Valor mínimo: "1", valor máximo: depende de las reglas de negocio.
  */
 export interface FormularioAsociacionFactura {
-  /** Número de facturas a asociar al trámite */
+  /** 
+   * Número de facturas comerciales a asociar al trámite de elegibilidad de textiles.
+   * Representa la cantidad total de facturas que respaldarán la importación solicitada.
+   * Debe ser un valor numérico positivo en formato string para compatibilidad con formularios web.
+   * 
+   * @example "5" - Para asociar cinco facturas al trámite
+   * @example "1" - Para asociar una sola factura al trámite
+   */
   cantidad: string;
 }
 
@@ -302,11 +411,50 @@ export interface ElegibilidadDeTextiles {
 
 /**
  * @interface ElegibilidadDeTextilesState
- * @description Modelo para el estado global del trámite de elegibilidad de textiles en el store de la aplicación.
+ * @description 
+ * Modelo para el estado global del trámite de elegibilidad de textiles en el store de la aplicación.
+ * Esta interfaz define la estructura del estado que se mantiene en el store de Redux/Akita
+ * para gestionar toda la información relacionada con el proceso de solicitud de elegibilidad
+ * de productos textiles. Permite centralizar y coordinar el estado entre todos los componentes
+ * del módulo.
+ * 
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author Sistema VUCEM 3.0
+ * 
+ * @example
+ * ```typescript
+ * // Uso en el store service
+ * const initialState: ElegibilidadDeTextilesState = {
+ *   textileSolicitudCargaUtil: {
+ *     solicitante: { rfc: '', nombreRazonSocial: '', aPaterno: '', correo: '' },
+ *     // ... otros datos del trámite
+ *   }
+ * };
+ * ```
+ * 
+ * @example
+ * ```typescript
+ * // Actualización del estado
+ * updateState(partialState: Partial<ElegibilidadDeTextilesState>) {
+ *   this.store.update(partialState);
+ * }
+ * ```
+ * 
+ * @see {@link ElegibilidadDeTextiles} - Estructura de datos contenida en textileSolicitudCargaUtil
+ * @see {@link ElegibilidadDeTextilesStore} - Store que utiliza esta interfaz
+ * 
  * @property {ElegibilidadDeTextiles} textileSolicitudCargaUtil - Payload con todos los datos del trámite de textiles.
+ *                                                               Contiene información completa de la solicitud incluyendo
+ *                                                               datos del solicitante, productos, facturas, y certificaciones.
  */
 export interface ElegibilidadDeTextilesState {
-  /** Payload con los datos completos del trámite */
+  /** 
+   * Payload con los datos completos del trámite de elegibilidad de textiles.
+   * Incluye toda la información necesaria para procesar la solicitud: datos del solicitante,
+   * información de productos textiles, facturas asociadas, documentación requerida,
+   * y estado del proceso de validación.
+   */
   textileSolicitudCargaUtil: ElegibilidadDeTextiles;
 }
 
@@ -339,6 +487,20 @@ export interface CapturarColumns {
   unidadMedida: string;
   /** Valor en dólares estadounidenses */
   valorDolares: string;
+  /** TAX ID del emisor */
+  taxId?: string;
+  /** Calle del domicilio fiscal */
+  calle?: string;
+  /** Ciudad del domicilio fiscal */
+  ciudad?: string;
+  /** Código postal del domicilio fiscal */
+  cp?: string;
+  /** País del domicilio fiscal */
+  pais?: string;
+  /** ID único de la expedición */
+  idExpedicion: number;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion?: number;
 }
 
 /**
@@ -373,6 +535,10 @@ export interface AsociadasTableColumns {
   unidadMedida: string;
   /** Valor proporcional en dólares */
   valorDolares: string;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion: number;
+  /** ID único de la expedición asociada */
+  idExpedicion: number;
 }
 
 /**

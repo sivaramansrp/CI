@@ -11,10 +11,10 @@
     <div class="w-100 p-2">
       <div class="form-group">
         <label class="form-label text-left">
-          <span class="text-danger">*</span> Señale si ha realizado operaciones
+          Señale si ha realizado operaciones
           de comercio exterior durante los últimos dos años anteriores a su
           solicitud e indique la fecha de inicio de operaciones de comercio
-          exterior
+          exterior<span class="text-danger">*</span>:
         </label>
         <app-input-radio
           [radioOptions]="opcionDeBotonDeRadio"
@@ -60,9 +60,9 @@
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left">
-            <span class="text-danger">*</span> Señale si forma parte de un mismo
+            Señale si forma parte de un mismo
             grupo, siempre que las empresas de grupo hayan efectuado operaciones
-            de comercio exterior en el plazo referido.
+            de comercio exterior en el plazo referido<span class="text-danger">*</span>:
           </label>
           <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
@@ -88,10 +88,10 @@
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left empresaExtranjeraIMMEX">
-            <span class="text-danger">*</span> Agregue un diagrama de la
+            Agregue un diagrama de la
             estructura accionaria y corporativa, así como copia de las
             escrituras públicas, en las que conste la participación accionaria
-            de las empresas que formen parte del grupo.
+            de las empresas que formen parte del grupo<span class="text-danger">*</span>:
           </label>
         </div>
 
@@ -153,14 +153,14 @@
             Agregar
           </button>
           <button
-            class="btn btn-danger me-2"
+            class="btn btn-default me-2"
             type="button"
             (click)="modificarEmpresa()"
           >
             Modificar
           </button>
           <button
-            class="btn btn-default"
+            class="btn btn-danger"
             type="button"
             (click)="eliminarEmpresa()"
           >
@@ -174,10 +174,10 @@
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left">
-            <span class="text-danger">*</span> Señale si su constitución resultó
+            Señale si su constitución resultó
             de una fusión o escisión, siempre que las empresas fusionantes o, en
             su caso, la sociedad escindente, hayan efectuado operaciones de
-            comercio exterior.
+            comercio exterior<span class="text-danger">*</span>:
           </label>
           <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
@@ -201,20 +201,20 @@
 
     <div class="form-group" *ngIf="importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.value === '1'">
       <label class="form-label text-left empresaExtranjeraIMMEX">
-        <span class="text-danger">*</span> Anexe copia certificada del documento
+        Anexe copia certificada del documento
         en el que conste la fusión o escisión de la sociedad, o bien, que
         acrediten que forman parte del mismo grupo, conforme a los establecido
-        en la regla 7.1.7.
+        en la regla 7.1.7<span class="text-danger">*</span>:
       </label>
     </div>
     <div class="row" *ngIf="importadorExportadorForm.get('comercioExteriorRealizado')?.value === '0'">
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left">
-            <span class="text-danger">*</span> Señale si previo a su
+            Señale si previo a su
             constitución ha operado durante los últimos 2 años como empresa
             extranjera al amparo de otra empresa con Programa IMMEX en la
-            modalidad de albergue.
+            modalidad de albergue<span class="text-danger">*</span>:
           </label>
           <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
@@ -238,15 +238,15 @@
 
     <div class="form-group" *ngIf="importadorExportadorForm.get('empresaExtranjeraIMMEX')?.value === '1'">
       <label class="form-label text-left empresaExtranjeraIMMEX">
-        <span class="text-danger">*</span> Declaración bajo protesta de decir la
+        Declaración bajo protesta de decir la
         verdad, firmada por el representante legal de la empresa, que indique el
         número de personas que indiquen que cuentan con experiencia en materia
-        de comercio exterior.
+        de comercio exterior<span class="text-danger">*</span>:
       </label>
       <label class="form-label text-left empresaExtranjeraIMMEX">
-        <span class="text-danger">*</span> Contrato celebrado por un minimo de 2
+        Contrato celebrado por un minimo de 2
         años con la empresa que cuenta con el programa IMMEX bajo la modalidad
-        de albergue.
+        de albergue<span class="text-danger">*</span>:
       </label>
     </div>
 
@@ -255,11 +255,11 @@
         <div class="w-100 p-2">
           <div class="form-group">
             <label class="form-label text-left">
-              <span class="text-danger">*</span> Señale si ha efectuado el pago
+              Señale si ha efectuado el pago
               del derecho correspondiente a la fecha de presentación de la
               solicitud, a que se refiere el artículo 40, inciso m) de la LFD,
               en relación con el Anexo 19 de la RMF vigente a la fecha de
-              presentación de la solicitud del registro.
+              presentación de la solicitud del registro<span class="text-danger">*</span>:
             </label>
           </div>
         </div>
@@ -372,9 +372,9 @@
           </div>
       <div class="form-group mt-5">
         <label class="form-label text-left estructura-accionaria-corporativa">
-          <span class="text-danger">*</span> Reportar el nombre y clave en el
+          Reportar el nombre y clave en el
           RFC de las empresas transportistas autorizadas para efectuar el
-          traslado de las mercancías de comercio exterior.
+          traslado de las mercancías de comercio exterior<span class="text-danger">*</span>:
         </label>
       </div>
       <app-agregar-transportistas #agregarTransportistasRef></app-agregar-transportistas>
@@ -383,14 +383,14 @@
       </div>
       <div class="form-group mt-5">
         <label class="form-label text-left">
-          <span class="text-danger">*</span> La adopción de México de las normas
+          La adopción de México de las normas
           establecidas en el Marco Normativo SAFE de la OMA para Asegurar y
           Facilitar el Comercio Global publicado por la OMA, donde se incorporan
           prácticas y normas en materia de seguridad, tiene como uno de sus
           objetivos, alcanzar el Reconocimiento Mutuo" con aquellos países que
           cuentan con un programa similar en materia de seguridad, que cumplen
           con la condición de Operadores Económicos Autorizados de acuerdo al
-          "Marco SAFE" y la legislación de cada país.
+          "Marco SAFE" y la legislación de cada país<span class="text-danger">*</span>:
         </label>
         <label class="form-label text-start"
           >Por lo tanto, como parte de la estrategia para evitar la duplicación
@@ -472,7 +472,7 @@
   <div class="modal-body">
     <form [formGroup]="agregarEnlaceOperativoForm">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> RFC
+        RFC<span class="text-danger">*</span>:
       </label>
       <div class="row">
         <div class="col-md-4">
@@ -493,7 +493,7 @@
         </div>
         <div class="col-md-8">
           <div class="btn-group">
-            <button class="btn btn-default" type="button" (click)="buscarRFC()">
+            <button class="btn btn-primary" type="button" (click)="buscarRFC()">
               Buscar
             </button>
           </div>
@@ -559,7 +559,7 @@
       class="btn btn-primary"
       (click)="aceptarEnlaceOperativo()"
     >
-      {{ isEditMode ? 'Modificar' : 'Aceptar' }}
+      Aceptar
     </button>
     <button type="button" class="btn btn-primary" (click)="limpiarFormulario()">
       Limpiar

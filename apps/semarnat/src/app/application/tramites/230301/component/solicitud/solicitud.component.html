@@ -5,16 +5,16 @@
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label class="control-label" for="desistimientoFolio">Folio:</label>
-              <input [disabled]="true" class="form-control mb-4" id="desistimientoFolio" placeholder="" type="text" formControlName="desistimientoFolio">
+              <label class="form-label" for="desistimientoFolio">Folio:</label>
+              <input class="form-control mb-4" id="desistimientoFolio" placeholder="" type="text" formControlName="desistimientoFolio">
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
             <div class="form-group my-4">
-              <label class="control-label" for="solicitudTipo">Tipo de solicitud:</label>
-              <textarea [disabled]="true" rows="6"  class="mb-4 h-20 w-100" name="solicitudTipo" id="solicitudTipo"  placeholder="" formControlName="solicitudTipo">
+              <label class="form-label" for="solicitudTipo">Tipo de solicitud:</label>
+              <textarea class="form-control mb-4 ht" rows="6"  name="solicitudTipo" id="solicitudTipo"  placeholder="" formControlName="solicitudTipo">
               </textarea>
             </div>
           </div>
@@ -22,9 +22,20 @@
         <div class="row">
              <div class="col-md-12">
                 <div class="form-group my-4" >
-                    <label class="control-label" for="desistimientoMotivo">Motivo de desistimiento*:</label>
-                    <textarea (change)="onDescripcionChange()" rows="6" class="mb-4 h-20 w-100" name="desistimientoMotivo" id="desistimientoMotivo"  placeholder="" formControlName="desistimientoMotivo">
+                    <label class="form-label" for="desistimientoMotivo">Motivo de desistimiento*:</label>
+                    <textarea 
+                      (change)="onDescripcionChange()" 
+                      rows="6" 
+                      class="mb-4 ht" 
+                      [ngStyle]="formDesistimiento.get('desistimientoMotivo')?.touched && formDesistimiento.get('desistimientoMotivo')?.errors?.['required'] ? {'border': '1px solid red'} : {}"
+                      name="desistimientoMotivo" 
+                      id="desistimientoMotivo"  
+                      placeholder="" 
+                      formControlName="desistimientoMotivo">
                     </textarea>
+                    <div *ngIf="formDesistimiento.get('desistimientoMotivo')?.touched && formDesistimiento.get('desistimientoMotivo')?.invalid">
+                  <small *ngIf="formDesistimiento.get('desistimientoMotivo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                </div>
                 </div>
             </div>
         </div>

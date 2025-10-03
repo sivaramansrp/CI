@@ -124,9 +124,7 @@ export class CatalogosService {
    */
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
     const BASE_URL = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(BASE_URL).pipe(
-      map(response => response.data)
-    );
+    return this.http.get<Catalogo[]>(BASE_URL);
   }
 
   /**

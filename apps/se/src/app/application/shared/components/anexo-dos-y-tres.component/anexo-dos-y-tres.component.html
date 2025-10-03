@@ -50,7 +50,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
-                    <input class="form-control min-hgt" maxlength="100" id="fraccionArancelaria"
+                    <input class="form-control min-hgt" maxlength="10" id="fraccionArancelaria"
                         formControlName="fraccionArancelaria" type="text">
                 </div>
             </div>
@@ -82,7 +82,7 @@
                 (listaDeFilaSeleccionada)="setAnexoTresLista($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
         </div>
-        <button class="btn btn-primary mt-5 pull-right"  [disabled]="formularioDeshabilitado">Guardar</button>
+      
     </form>
 </div>
 @if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {

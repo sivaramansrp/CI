@@ -94,7 +94,7 @@
   <div class="modal-body">
     <form [formGroup]="transportistaCertificacionForm">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> RFC
+        RFC<span class="text-danger">*</span>:
       </label>
       <div class="row">
         <div class="col-md-4">
@@ -115,7 +115,7 @@
         </div>
         <div class="col-md-8">
           <div class="btn-group">
-            <button class="btn btn-default" type="button" (click)="buscarRFC()">
+            <button class="btn btn-primary" type="button" (click)="buscarRFC()">
               Buscar
             </button>
           </div>
@@ -138,7 +138,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="denominacionRazonsocial"
-              >Denominación o razón social</label
+              >Denominación o razón social:</label
             >
             <input
               class="form-control"
@@ -152,7 +152,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label class="form-label" for="domicilio">Domicilio</label>
+            <label class="form-label" for="domicilio">Domicilio:</label>
             <input
               class="form-control"
               id="domicilio"
@@ -165,7 +165,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="ccat">Registro CAAT vigente</label>
+            <label class="form-label" for="ccat">Registro CAAT vigente:</label>
             <input
               class="form-control"
               id="ccat"
@@ -180,19 +180,20 @@
   <div class="modal-footer d-flex justify-content-end">
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn"
+      [ngClass]="{'btn-primary': !isEditMode, 'btn-default': isEditMode}"
       (click)="aceptarTransportista()"
     >
       {{ isEditMode ? 'Modificar' : 'Aceptar' }}
     </button>
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-default"
       (click)="limpiarTransportista()"
     >
       Limpiar
     </button>
-    <button type="button" class="btn btn-danger" (click)="cancelarModal()">
+    <button type="button" class="btn btn-default" (click)="cancelarModal()">
       Cancelar
     </button>
   </div>
@@ -282,7 +283,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-danger"
       (click)="cerrarModalConfirmacionEliminacion()"
     >
       Cancelar

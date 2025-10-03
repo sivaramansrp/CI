@@ -79,7 +79,7 @@ Herramientas, equipos y accesorios de investigación, de seguridad industrial y 
  * estructurada sobre los elementos que forman parte del proceso de exportación.
  */
 export const ANEXO_UNO_ALERTA = `<p>
-Materiales primas, partes, componentes, materiales auxiliares, envases, material de empaque, etiquetas, folletos, combustibles y lubricantes que se utilicen en el proceso de producción o de servicios de las mercancías de exportación.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Materiales primas, partes, componentes, materiales auxiliares, envases, material de empaque, etiquetas, folletos, combustibles y lubricantes que se utilicen en el proceso de producción o de servicios de las mercancías de exportación.
 </p>`;
 
 /**
@@ -106,7 +106,7 @@ Materiales primas, partes, componentes, materiales auxiliares, envases, material
  */
 export const ANEXO_I_SERVICIO = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoFraccion,
     orden: 1,
   },
@@ -186,7 +186,7 @@ export const ANEXO_I_SERVICIO = [
  */
 export const ANEXO_IMPORTACION_SERVICIO = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoDosEncabezado): string => ele.encabezadoFraccion,
     orden: 1,
   },

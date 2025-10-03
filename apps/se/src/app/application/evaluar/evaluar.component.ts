@@ -53,6 +53,12 @@ import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
 import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/shared/dictamen-form.model';
 import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
+import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firmar-requerimiento-request.model';
+import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firmarRequermiento.service';
+import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
+import { ServiceConfig } from '../shared/models/service-config.model';
+import { TramiteConfig } from '../shared/models/tramite-config.model';
+import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 /**
  * @component
@@ -150,6 +156,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   indiceDictamen: number = 1;
 
+  /** Cadena original del requerimiento a firmar */
+  cadenaOriginalRequerimiento!: string;
+
   /** Datos de respuesta al iniciar un requerimiento */
   dataIniciarRequerimiento!: IniciarRequerimientoResponse;
 
@@ -176,7 +185,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @property {string} conformidadDictamen
    * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
    */
-  conformidadDictamen!: CriteriosResponse;
+  conformidadDictamen: CriteriosResponse = {} as CriteriosResponse;
 
   /** 
    * @property {GuardarDictamenRequest} guardarDictamenRequest
@@ -299,6 +308,24 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   tabs!: TabsResponse;
 
   /**
+   * @property {Array<{id: number, nombre: string}>} tabsOpcionEvaluacion
+   * @description Almacena las opciones de evaluación disponibles para las pestañas.
+ */
+  tabsOpcionEvaluacion: { id: number; nombre: string }[] = [];
+
+  /**
+   * @property {TramiteConfig} config
+   * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
+   */
+  config!: TramiteConfig;
+
+  /**
+   * @property {ServiceConfig} serviceConfig
+   * @description Configuración de servicios específicos del trámite, obtenida del servicio TramiteConfigService.
+   */
+  serviceConfig!: ServiceConfig;
+
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -321,7 +348,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private iniciarService: IniciarService,
     private guardarService: GuardarDictamenService,
     private guardarRequerimientoService: GuardarRequerimientoService,
-    private firmarDictamenService: FirmarDictamenService
+    private firmarDictamenService: FirmarDictamenService,
+    private firmarRequermientoService: FirmarRequermientoService,
+    private tramiteConfigService: TramiteConfigService,
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -342,10 +371,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.tramite = Number(this.guardarDatos?.procedureId);
+    this.config = this.tramiteConfigService.getConfig(this.tramite);
+    this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
-      estadoDelTramite: this.guardarDatos?.estadoDeTramite
+      estadoDelTramite: this.guardarDatos?.estadoDeTramite,
+      tipoDeTramite: this.guardarDatos?.tipoDeTramite
     });
   }
   /**
@@ -916,20 +948,21 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   opcionesEvaluacion(): void {
-
-    const FOLIOTRAMITE = '0201300101820251118000019';
     
     const PAYLOAD: OpcionesEvaluacionRequest = {
       cve_rol_capturista: this.guardarDatos.current_user,
-      considera_capturista: true,
-      estado_evaluacion: this.evaluacionTramite.estado_evaluacion
+      considera_capturista: true
     };
 
-    this.evaluarSolicitudService.postOpcionesEvaluacion(this.tramite, FOLIOTRAMITE, PAYLOAD)
+    this.evaluarSolicitudService.postOpcionesEvaluacion(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.opcionesDisponibles = response.datos ?? [];
+            this.tabsOpcionEvaluacion = this.opcionesDisponibles.map((opcion, i) => ({
+              id: i + 1,
+              nombre: opcion
+            }));
           } else {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -1054,7 +1087,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
           this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
-          this.obtenerCriterios();
+          if(this.serviceConfig.serviceCriterios){
+             this.obtenerCriterios();
+          }
         }
 
       },
@@ -1157,9 +1192,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
-      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
-      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen
+      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
+      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
+      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1235,9 +1270,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
-      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
-      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen,
+      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
+      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
+      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
       solicitante: {
         rfc: this.guardarDatos.current_user,
         nombre: 'PRUEBA',
@@ -1334,7 +1369,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     fechaFin: string;
   }): void {
     this.datosFirmaReales = datos;
-    this.firmaDictamen(datos.firma);
+    if (this.indice === 1) {
+      this.firmaDictamen(datos.firma);
+    } else if (this.indice === 2) {
+      this.firmarRequerimiento(datos.firma);
+    }
+
   }
 
   /**
@@ -1379,7 +1419,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmarDictamenService.postGuadarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
+    this.firmarDictamenService.postFirmarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
@@ -1503,8 +1543,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     const PAYLOAD: GuardarRequerimiento = {
       id_accion: this.guardarDatos.action_id,
+      cve_usuario: this.guardarDatos.current_user,
       justificacion: this.justificacion,
-      alcance_requerimiento: 'X0XX'
+      alcance_requerimiento: 'X0XX',
     };
 
     this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1512,6 +1553,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
             this.idRequerimiento = resp.datos?.id_requerimiento || 0;
+            this.getTabs();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.EXITO,
@@ -1523,6 +1566,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnCancelar: '',
             };
           } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -1539,7 +1583,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Ocurrió un error al guardar el requerimiento.';
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: 'error',
@@ -1552,6 +1597,171 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         }
       });
+  }
+
+  /**
+   * @method getMostrarFirma
+   * @description Prepara y muestra la interfaz de firma para el requerimiento
+   * 
+   * Construye el payload con los datos del solicitante y realiza una petición
+   * para mostrar la interfaz de firma. Maneja notificaciones de éxito o error.
+   * 
+   * @returns {void}
+ */
+  mostrarFirmarRequerimiento(): void {
+    const PAYLOAD: MostrarFirmarRequerimientoRequest = {
+      cve_usuario: this.guardarDatos.current_user,
+      id_accion: this.guardarDatos.action_id,
+      justificacion: this.justificacion,
+      alcance_requerimiento: '',
+      solicitante: {
+        nombre: 'Javier',
+        apellido_paterno: 'Chávez',
+        apellido_materno: 'Barrios',
+        rfc: this.guardarDatos.current_user,
+      }
+    };
+
+    this.guardarRequerimientoService.postMostrarFirma(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            this.firmar = true;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            this.cadenaOriginalRequerimiento = resp.datos?.cadena_original || '';
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al mostrar la firma.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Ocurrió un error al mostrar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al mostrar la firma';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+  /**
+   * Realiza la firma electrónica de un requerimiento.
+   *
+   * Valida que existan los datos necesarios, genera la firma en formato hexadecimal,
+   * construye el payload y envía la solicitud al servicio de firma.
+   * Muestra notificaciones de éxito o error según la respuesta del servicio.
+   *
+   * @param firma - Cadena base64 de la firma electrónica generada por el usuario.
+   */
+  firmarRequerimiento(firma: string): void {
+    if (!this.cadenaOriginalRequerimiento || !this.datosFirmaReales) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginalRequerimiento);
+    const FIRMAHEX = base64ToHex(firma);
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+
+    const PAYLOAD: FirmarRequerimientoRequest = {
+      id_accion: this.guardarDatos.action_id,
+      firma: {
+        cadena_original: CADENAHEX,
+        cert_serial_number: this.datosFirmaReales.certSerialNumber,
+        clave_usuario: this.datosFirmaReales.rfc,
+        fecha_firma: EvaluarComponent.formatFecha(new Date()),
+        clave_rol: 'Dictaminador',
+        sello: FIRMAHEX,
+      },
+      cve_usuario: this.guardarDatos.current_user,
+      requiere_autorizador: false
+    };
+
+    this.firmarRequermientoService.postFirmarRequerimiento(this.tramite, NUMFOLIO, PAYLOAD)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((firmaResponse: BaseResponse<null>) => {
+          if (firmaResponse.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else if (firmaResponse.codigo === CodigoRespuesta.EXITO) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Firma exitosa',
+              mensaje: 'La firma del dictamen se ha realizado correctamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+            this.router.navigate(['bandeja-de-tareas-pendientes']);
+          }
+
+        }),
+        catchError((error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   /**

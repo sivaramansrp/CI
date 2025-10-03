@@ -1,40 +1,50 @@
-/**
- * Importa módulos y utilidades de Angular necesarios para formularios reactivos, validación y observables
- * @packageDocumentation
- * @module PagoDeDerechosComponent
- */
-
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
+  ValidationErrors,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { ConsultaioQuery} from "@ng-mf/data-access-user";
-
+import { ConsultaioQuery, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO } from "@ng-mf/data-access-user";
 import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
-import { BancoList } from '../../modelos/pago-de-derechos.model';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260904Query } from '../../estados/tramite260904.query';
 
+import { ReactiveFormsModule } from '@angular/forms';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
- * Selector del componente
- * Habilita el uso independiente de este componente
- * Módulos necesarios
- * Proveedores de servicios para inyección de dependencias
- * Ruta del archivo HTML
- * Ruta del archivo CSS
+ * Interfaz que define la estructura de un banco en el catálogo.
+ * Basada en la estructura real que retorna el servicio.
+ */
+interface Banco {
+  /** Nombre del banco utilizado en el template */
+  name: string;
+  /** Propiedades adicionales que pueda tener el objeto banco */
+  [key: string]: unknown;
+}
+/**
+ * Componente para el manejo del formulario de pago de derechos del trámite 260904.
+ * 
+ * Este componente gestiona la captura, validación y persistencia de la información
+ * relacionada con los pagos de derechos para el trámite de modificación del permiso
+ * sanitario de importación. Incluye validaciones personalizadas para fechas y formatos
+ * de pago, así como integración con el store de estado del trámite.
+ * 
+ * Características principales:
+ * - Formulario reactivo con validaciones personalizadas
+ * - Integración con el store de estado del trámite
+ * - Validación de fechas límite y formatos de pago
+ * - Manejo de estados de solo lectura y habilitado/deshabilitado
+ * - Carga dinámica de catálogo de bancos
+ * 
+ * @author SuNombre
+ * @version 1.0
  */
 @Component({
   selector: 'app-pago-de-derechos',
@@ -42,273 +52,410 @@ import { Tramite260904Query } from '../../estados/tramite260904.query';
   imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   providers: [PagoDeDerechosService],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.scss',
+  styleUrls: ['./pago-de-derechos.component.scss'],
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+
   /**
-   * Formulario reactivo para manejar los campos de entrada del usuario.
+   * Indica si se deben mostrar los errores relacionados con el campo de pago.
+   * Cuando es `true`, los mensajes de error del campo de pago serán visibles en la interfaz.
    */
+   public mostrarErroresDeCampoPago: boolean = false;
+   
+
+  /** Formulario reactivo para la captura de datos de pago de derechos */
   public pagoDeDerechosForm!: FormGroup;
-
-  /**
-   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
-   */
+  
+  /** Subject para manejar la destrucción de suscripciones */
   public destroyed$ = new Subject<void>();
-
-   /**
-    * Estado seleccionado del trámite 260911.
-    */
+  
+  /** Estado seleccionado del trámite 260904 */
   estadoSeleccionado!: Tramite260904State;
-
-  /**
-   * Lista de datos relacionados con bancos obtenidos desde el servicio.
-   */
-  public bancoList!: BancoList[];
-
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
+  
+/** Lista de bancos disponibles para selección */
+  public bancoList: Banco[] = [];
+  
+  /** Bandera que indica si el formulario está en modo de solo lectura */
   esFormularioSoloLectura: boolean = false;
 
-  /**
-   * Indica si el campo de banco está deshabilitado.
-   * Cuando es `true`, el campo de selección de banco no se puede modificar.
-   */
-  disableBanco: boolean = false;
+  /** Propiedad de entrada que indica si el componente está deshabilitado */
+  @Input() disabled: boolean = false;
+  
+  /** Propiedad de entrada que especifica el tipo de trámite */
+  @Input() tipoTramite: string = '';
 
   /**
-   * @desc Sujeto utilizado para notificar la destrucción del componente.
-   * Se emplea comúnmente para cancelar suscripciones y evitar fugas de memoria
-   * cuando el componente se destruye.
-   * @type {Subject<void>}
-   */
-  destroyNotifier$: Subject<void> = new Subject<void>();
-
-  /**
-   * Constructor para inyectar los servicios y las tiendas necesarias.
-   * @param fb - FormBuilder para formularios reactivos.
-   * @param tramite260904Store - Tienda para gestionar el estado del formulario.
-   * @param tramite260904Query - Servicio de consulta para acceder a los datos del store.
-   * @param Servicio - Servicio para obtener la lista de bancos.
+   * Constructor del componente.
+   * @param fb - Constructor de formularios reactivos de Angular
+   * @param tramite260904Query - Query para consultar el estado del trámite 260904
+   * @param tramite260904Store - Store para actualizar el estado del trámite 260904
+   * @param servicio - Servicio para operaciones de pago de derechos
+   * @param consultaQuery - Query para consultar el estado general de la consulta
    */
   constructor(
-    public fb: FormBuilder,
+    private fb: FormBuilder,
     private tramite260904Query: Tramite260904Query,
     private tramite260904Store: Tramite260904Store,
-    private Servicio: PagoDeDerechosService,
-    private consultaQuery: ConsultaioQuery,
-  ) {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
+    private servicio: PagoDeDerechosService,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
-   * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
+   * Hook de inicialización del componente.
+   * Configura las suscripciones al estado de consulta y carga la lista de bancos.
    */
   ngOnInit(): void {
-
-    this.tramite260904Query.selectTramite260904$.pipe(
-      takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        if (data) {
-          this.estadoSeleccionado = data;
-        }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(state => {
+        this.esFormularioSoloLectura = state.readonly;
+        this.inicializarEstadoFormulario();
       });
 
-    this.crearForm();
-    this.getValorStore();
-    this.enPatchStoredFormData();
     this.getBancoList();
-    this.inicializarEstadoFormulario();
+    
   }
 
   /**
-   * Crea el formulario reactivo con las reglas de validación para cada control.
+   * Hook que se ejecuta cuando cambian las propiedades de entrada.
+   * Actualiza el estado del formulario basado en los cambios de entrada.
    */
-  crearForm(): void {
-    this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: [this.estadoSeleccionado.claveDeReferencia, [Validators.maxLength(50)]],
-      cadenaPagoDependencia: [this.estadoSeleccionado.cadenaPagoDependencia, [Validators.maxLength(50)]],
-      clave: [this.estadoSeleccionado.clave, Validators.required],
-      llaveDePago: [
-        this.estadoSeleccionado.llaveDePago,
-        [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')],
-      ],
-      fecPago: [
-        this.estadoSeleccionado.fecPago,
-        [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
-      ],
-      impPago: [
-        this.estadoSeleccionado.impPago,
-        [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()],
-      ],
-    });
-}
-
-/**
-   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
-   * Si el formulario es solo lectura, deshabilita los campos correspondientes.
-   * Si es editable, habilita los campos necesarios.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.disableBanco = true;
-      this.pagoDeDerechosForm.get('claveDeReferencia')?.disable();
-      this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.disable();
-      this.pagoDeDerechosForm.get('clave')?.disable();
-      this.pagoDeDerechosForm.get('llaveDePago')?.disable();
-      this.pagoDeDerechosForm.get('fecPago')?.disable();
-      this.pagoDeDerechosForm.get('impPago')?.disable();
-    } else {
-      this.disableBanco = false;
-      this.pagoDeDerechosForm.get('claveDeReferencia')?.enable();
-      this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.enable();
-      this.pagoDeDerechosForm.get('clave')?.enable();
-      this.pagoDeDerechosForm.get('llaveDePago')?.enable();
-      this.pagoDeDerechosForm.get('fecPago')?.enable();
-      this.pagoDeDerechosForm.get('impPago')?.enable();
+  ngOnChanges(): void {
+    
+    if (this.pagoDeDerechosForm) {
+      if (!this.esFormularioSoloLectura && !this.disabled) {
+        this.pagoDeDerechosForm.enable();
+      } else {
+        this.pagoDeDerechosForm.disable();
+      }
     }
   }
 
-/**
- * Método para validar que el campo de un formulario no contenga comas.
- * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
- *
- * @param {string} impPago - El nombre del campo de formulario que se validará.
- */
-public validarSinComas(impPago:string): void {
-  this.pagoDeDerechosForm.get(impPago)?.updateValueAndValidity({ emitEvent: false });
-}
-
-
-/**
- * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
- * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
- * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
- *
- * @param {string} fecPago - El nombre del campo de formulario que se validará.
- */
-public validarFechaFutura(fecPago:string): void {
-  this.pagoDeDerechosForm.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
-}
-
-
+  /**
+   * Inicializa el estado del formulario basado en las condiciones actuales.
+   * Crea el formulario y establece su estado de habilitado/deshabilitado.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.crearForm();
+      this.pagoDeDerechosForm.disable();
+    } else {
+      this.crearForm();
+      
+      if (!this.disabled && (this.tipoTramite === '1' || this.tipoTramite === '2')) {
+        this.pagoDeDerechosForm.enable();
+      } else {
+        this.pagoDeDerechosForm.disable();
+      }
+    }
+  }
 
   /**
-   * Validador para asegurar que la fecha seleccionada no sea en el futuro.
+   * Crea el formulario reactivo con los campos de pago de derechos.
+   * Configura las validaciones y se suscribe al estado del trámite para actualizar valores.
    */
-  public static fechaLimValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: unknown } | null => {
-      const LIM = control.value;
-      if (LIM) {
-        const [YEAR, MONTH, DAY] = LIM.split('-');
-        const FECHA = new Date(+Number(YEAR), +Number(MONTH) - 1, +Number(DAY));
-        const TODAY = new Date();
-        if (FECHA.getTime() > TODAY.getTime()) {
-          return { fechaLim: true }; // Retorna error si la fecha está en el futuro
+  crearForm(): void {
+    this.tramite260904Query.selectTramite260904$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(state => {
+        this.estadoSeleccionado = state;
+        
+        if (this.pagoDeDerechosForm) {
+          this.pagoDeDerechosForm.patchValue({
+            claveDeReferencia: state.claveDeReferencia,
+            cadenaPagoDependencia: state.cadenaPagoDependencia,
+            clave: state.clave,
+            llaveDePago: state.llaveDePago,
+            fecPago: state.fecPago,
+            impPago: state.impPago
+          });
+        }
+      });
+
+   this.pagoDeDerechosForm = this.fb.group(
+  {
+    claveDeReferencia: [
+      this.estadoSeleccionado?.claveDeReferencia ?? '',
+      [Validators.maxLength(50)]
+    ],
+    cadenaPagoDependencia: [
+      this.estadoSeleccionado?.cadenaPagoDependencia ?? '',
+      [Validators.maxLength(50)]
+    ],
+    clave: [
+      this.estadoSeleccionado?.clave ?? ''
+    ],
+    llaveDePago: [
+      this.estadoSeleccionado?.llaveDePago ?? '',
+      [Validators.pattern(REGEX_LLAVE_DE_PAGO)]
+    ],
+    fecPago: [
+      this.estadoSeleccionado?.fecPago ?? '',
+      [PagoDeDerechosComponent.fechaLimValidator()]
+    ],
+    impPago: [
+      this.estadoSeleccionado?.impPago ?? '',
+      [Validators.maxLength(30), Validators.pattern(REGEX_IMPORTE_PAGO), PagoDeDerechosComponent.noComaValidator()]
+    ]
+  },
+  {
+    validators: [PagoDeDerechosComponent.camposDependientesValidator()]
+  }
+);
+
+  }
+
+  /**
+ * Validador que obliga a completar todos los campos si al menos uno está lleno.
+ * Aplica el error 'required' solo si algún campo tiene valor y otros no.
+ */
+public static camposDependientesValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const FORM = group as FormGroup;
+    const FIELDS = [
+      'claveDeReferencia',
+      'cadenaPagoDependencia',
+      'clave',
+      'llaveDePago',
+      'fecPago',
+      'impPago'
+    ];
+
+    const ANY_FILLED = FIELDS.some(field => {
+      const VALUE = FORM.get(field)?.value;
+      return VALUE !== null && VALUE !== undefined && VALUE !== '';
+    });
+
+    if (!ANY_FILLED) {
+      FIELDS.forEach(field => {
+        const CONTROL = FORM.get(field);
+        if (CONTROL?.hasError('required')) {
+          const CURRENT_ERRORS = { ...CONTROL.errors };
+          delete CURRENT_ERRORS['required'];
+          CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length > 0 ? CURRENT_ERRORS : null);
+        }
+      });
+      return null;
+    }
+
+    // If any field is filled, all must be filled
+    let hasError = false;
+    FIELDS.forEach(field => {
+      const CONTROL = FORM.get(field);
+      const VALUE = CONTROL?.value;
+      if (VALUE === null || VALUE === undefined || VALUE === '') {
+        CONTROL?.setErrors({
+          ...CONTROL.errors,
+          required: true,
+          custom: 'Todos los campos de pago son requeridos'
+        });
+        hasError = true;
+      } else {
+        if (CONTROL?.hasError('required')) {
+          const CURRENT_ERRORS = { ...CONTROL.errors };
+          delete CURRENT_ERRORS['required'];
+          delete CURRENT_ERRORS['custom'];
+          CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length > 0 ? CURRENT_ERRORS : null);
         }
       }
-      return null; // Fecha válida
-    };
-  }
+    });
+
+    return hasError ? { required: true } : null;
+  };
+}
+
 
   /**
-   * Validador para asegurar que la entrada no contenga comas.
-   */
-  public static noComaValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: unknown } | null => {
-      const VALUE = control.value;
-      if (VALUE && VALUE.includes(',')) {
-        return { noComa: true }; // Retorna error si el valor contiene comas
-      }
-      return null; // Entrada válida
-    };
-  }
-
-  /**
-   * Obtiene la lista de bancos del servicio y la asigna a `bancoList`.
+   * Obtiene la lista de bancos disponibles desde el servicio.
+   * Se suscribe al servicio para recibir actualizaciones de la lista de bancos.
    */
   getBancoList(): void {
-    this.Servicio.onBancoList()
+    this.servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: BancoList[]) => {
-        this.bancoList = data;
+      .subscribe(data => {
+       this.bancoList = ((data as unknown) as Banco[]).map(item => ({
+         ...item
+       })) as Banco[];
       });
   }
 
-
   /**
-   * Actualiza el formulario con datos obtenidos desde la tienda.
+   * Validador personalizado para fechas límite.
+   * Valida que la fecha ingresada no sea posterior a la fecha actual.
+   * @returns Función validadora que retorna error si la fecha es futura
    */
-  public enPatchStoredFormData(): void {
-    this.tramite260904Query.selectTramite260904$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.pagoDeDerechosForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
+  public static fechaLimValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VAL = control.value;
+      if (VAL) {
+        const [YEAR, MONTH, DAY] = VAL.split('-').map((str: string) => Number(str));
+        const FECHA = new Date(YEAR, MONTH - 1, DAY);
+        const TODAY = new Date();
+        if (FECHA.getTime() > TODAY.getTime()) {
+          return { fechaLim: true };
+        }
+      }
+      return null;
+    };
   }
 
   /**
-   * Verifica si un control del formulario es inválido, tocado o modificado.
-   * @param {string} nombreControl - Nombre del control a verificar.
-   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   * Validador personalizado para evitar comas en campos de texto.
+   * Valida que el valor del campo no contenga comas.
+   * @returns Función validadora que retorna error si contiene comas
    */
-  public esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.pagoDeDerechosForm.get(nombreControl);
-    return CONTROL
-      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
-      : false;
+  public static noComaValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VAL = control.value;
+      if (VAL && typeof VAL === 'string' && VAL.includes(',')) {
+        return { noComa: true };
+      }
+      return null;
+    };
   }
 
+  /**
+   * Verifica si un control específico del formulario es inválido.
+   * @param controlName - Nombre del control a verificar
+   * @returns true si el control es inválido y ha sido tocado o modificado
+   */
+  public esInvalido(controlName: string): boolean {
+    const CTRL = this.pagoDeDerechosForm.get(controlName);
+    if (!CTRL) { return false; }
+    return CTRL.invalid && (CTRL.touched || CTRL.dirty);
+  }
 
   /**
-   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-   * @param form - El formulario reactivo.
-   * @param campo - El nombre del campo en el formulario.
-   * @param metodoNombre - El método en la tienda para actualizar el estado.
+   * Actualiza el store con el valor de un campo específico del formulario.
+   * @param form - Formulario que contiene el campo
+   * @param campo - Nombre del campo cuyo valor se actualizará en el store
    */
   public setValoresStore(form: FormGroup, campo: string): void {
-    const VALOR = form.get(campo)?.value;
-    this.tramite260904Store.setTramite260904State({
-      [campo]: VALOR
-    });
+    const CTRL = form.get(campo);
+    if (!CTRL) { return; }
+    const VALOR = CTRL.value;
+    this.tramite260904Store.setTramite260904State({ [campo]: VALOR });
+    this.mostrarErroresDeCampoPago = false;
+  }
+
+  /**
+   * Valida que un campo no contenga comas y actualiza su validez.
+   * @param field - Nombre del campo a validar
+   */
+  public validarSinComas(field: string): void {
+    const CTRL = this.pagoDeDerechosForm.get(field);
+    if (!CTRL) { return; }
+    CTRL.updateValueAndValidity({ emitEvent: false });
+  }
+
+  /**
+   * Valida que la fecha de un campo no sea futura y actualiza su validez.
+   * @param field - Nombre del campo de fecha a validar
+   */
+ 
+validarFechaFutura(controlName: string): void {
+  const CONTROL = this.pagoDeDerechosForm.get(controlName);
+  if (!CONTROL) {
+    return;
   }
   
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite260904Query.selectTramite260904$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
+  const VALOR = CONTROL.value;
+  if (VALOR) {
+    const FECHA_SELECCIONADA = new Date(VALOR);
+    const FECHA_ACTUAL = new Date();
+    FECHA_ACTUAL.setHours(0, 0, 0, 0); 
+    const CURRENT_ERRORS = CONTROL.errors || {};
+
+    if (FECHA_SELECCIONADA > FECHA_ACTUAL) {
+      CONTROL.setErrors({ ...CURRENT_ERRORS, custom: 'La fecha de pago debe ser menor o igual a la fecha actual.' });
+    } else {
+      if ('custom' in CURRENT_ERRORS) {
+        delete CURRENT_ERRORS['custom'];
+        CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length ? CURRENT_ERRORS : null);
       }
-    );
+    }
+  }
+}
+
+   /**
+   * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
+   * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
+   * Se invoca al hacer clic en el botón "Borrar datos del pago".
+   */
+
+public resetPagoDeDerechos(): void {
+  if (!this.pagoDeDerechosForm) { return; }
+  this.pagoDeDerechosForm.reset();
+  Object.values(this.pagoDeDerechosForm.controls).forEach(c => {
+    c.markAsPristine();
+    c.markAsUntouched();
+    c.updateValueAndValidity();
+  });
+  this.mostrarErroresDeCampoPago = false; // <-- Reset flag
+  this.tramite260904Store.setTramite260904State({
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    clave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: ''
+  });
+}
+
+  /**
+   * Verifica si todos los campos de pago están vacíos.
+   * @returns true si todos los campos están vacíos, false en caso contrario
+   */
+  public areAllPaymentFieldsEmpty(): boolean {
+    if (!this.pagoDeDerechosForm) { return true; }
+    const VALUES = this.pagoDeDerechosForm.value;
+    return Object.values(VALUES).every(v => v === null || v === '' || v === undefined);
   }
 
+  /**
+   * Verifica si algún campo de pago tiene información capturada.
+   * @returns true si al menos un campo tiene información, false si todos están vacíos
+   */
+  public hasAnyPaymentFieldFilled(): boolean {
+    if (!this.pagoDeDerechosForm) { return false; }
+    const VALUES = this.pagoDeDerechosForm.value;
+    return Object.values(VALUES).some(v => v !== null && v !== '' && v !== undefined);
+  }
+
+  /**
+   * Valida que el pago esté completo y sea válido.
+   * Marca todos los campos como tocados para mostrar errores de validación.
+   * @returns true si el pago está completo y válido, false en caso contrario
+   */
+ public validatePagoCompleto(): boolean {
+  if (!this.pagoDeDerechosForm) {
+    return false;
+  }
+
+  Object.values(this.pagoDeDerechosForm.controls).forEach(ctrl => {
+    ctrl.markAsTouched();
+    ctrl.markAsDirty();
+    ctrl.updateValueAndValidity();
+  });
+
+  // Trigger form-level validation
+  this.pagoDeDerechosForm.updateValueAndValidity();
+
+  return this.pagoDeDerechosForm.valid;
+}
 
 
   /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Determina si debe mostrarse el banner de error de campos de pago requeridos.
+   * @returns true si hay campos llenos pero el formulario es inválido
+   */
+  public showPagoRequiredErrorBanner(): boolean {
+    return this.hasAnyPaymentFieldFilled() && this.pagoDeDerechosForm.invalid;
+  }
+
+  /**
+   * Hook de destrucción del componente.
+   * Completa el subject para cancelar todas las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

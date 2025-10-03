@@ -11,13 +11,28 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
+        <label for="descripcion" class="form-label">Descripción de la mercancía<span 
+          [ngStyle]="{
+            color:
+              form.controls['descripcion'].invalid &&
+              form.controls['descripcion'].touched
+                ? 'red'
+                : 'black'
+          }"
+        >*</span>:</label>
         <textarea id="descripcion" class="form-control descripcion-text-box"
-          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion" [maxlength]="1000"
-          (change)="setValoresStore(form, 'descripcion')"></textarea>
+        [ngStyle]="{
+          borderColor:
+            form.controls['descripcion'].invalid &&
+            form.controls['descripcion'].touched
+              ? 'red'
+              : ''
+        }"
+          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion" 
+          (change)="setValoresStore(form, 'descripcion')" [maxlength]="250"></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
-            La descripción es obligatoria.
+            Este campo es obligatorio
           </small>
           <small *ngIf="form.controls['descripcion'].errors?.['minlength']">
             Debe tener al menos 10 caracteres.
@@ -64,9 +79,24 @@
     </div>
     <div class="row">
       <div class="col-md-6 form-group">
-        <label class="form-label" for="cantidad">Cantidad<span class="require">*</span>:</label>
-        <input class="form-control" id="cantidad" placeholder="" type="text" formControlName="cantidad"
-          (change)="setValoresStore(form, 'cantidad')" />
+        <label class="form-label" for="cantidad">Cantidad<span 
+          [ngStyle]="{
+            color:
+              form.controls['cantidad'].invalid &&
+              form.controls['cantidad'].touched
+                ? 'red'
+                : 'black'
+          }"
+        >*</span>:</label>
+        <input class="form-control" id="cantidad" placeholder="" type="text" formControlName="cantidad" [maxlength]="15"
+        [ngStyle]="{
+          borderColor:
+            form.controls['cantidad'].invalid &&
+            form.controls['cantidad'].touched
+              ? 'red'
+              : ''
+        }"
+         (change)="setValoresStore(form, 'cantidad')" />
         <div *ngIf="esInvalido('cantidad')" class="text-danger">
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
             Este campo es obligatorio.
@@ -83,8 +113,23 @@
         </div>
       </div>
       <div class="col-md-6 form-group">
-        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require">*</span>:</label>
-        <input class="form-control" id="valorFacturaUSD" placeholder="" type="text" formControlName="valorFacturaUSD"
+        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span 
+          [ngStyle]="{
+            color:
+              form.controls['valorFacturaUSD'].invalid &&
+              form.controls['valorFacturaUSD'].touched
+                ? 'red'
+                : 'black'
+          }"
+        >*</span>:</label>
+        <input class="form-control" id="valorFacturaUSD" placeholder="" type="text" formControlName="valorFacturaUSD"   [maxlength]="20"
+        [ngStyle]="{
+          borderColor:
+            form.controls['valorFacturaUSD'].invalid &&
+            form.controls['valorFacturaUSD'].touched
+              ? 'red'
+              : ''
+        }"
           (change)="setValoresStore(form, 'valorFacturaUSD')" />
         <div *ngIf="esInvalido('valorFacturaUSD')" class="text-danger">
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">

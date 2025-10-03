@@ -92,7 +92,7 @@
      
       } @case (3) {
          @if (esDatosRespuesta) {    
-      <app-anexo-uno-seccion></app-anexo-uno-seccion>
+      <app-anexo-uno-seccion (obtenerProveedorCliente)="obtenerProveedorCliente($event)" (obtenerProyectoImmexTablaLista)="setProyectoImmex($event)"></app-anexo-uno-seccion>
          }
       } @case (4) {
          @if (esDatosRespuesta) {    
@@ -111,7 +111,7 @@
         }
        @case (7){
          @if (esDatosRespuesta) {    
-    <app-anexo-tres  [configuracionDosDatos]="configuracionDosDatos"></app-anexo-tres>
+        <app-anexo-vista-dos-y-tres [formularioDeshabilitado]="formularioDeshabilitado"></app-anexo-vista-dos-y-tres>
       }} }
     </ng-container>
   </div>

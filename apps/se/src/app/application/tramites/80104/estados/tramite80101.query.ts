@@ -154,6 +154,14 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   );
 
   /**
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+
+  selectDatosFederatariosFormulario$ = this.select(
+    (state) => state.datosFederatarios
+  );
+
+  /**
    * Selecciona los datos de la tabla de cumplimientos extranjeros del estado.
    */
   selectTablaDatosComplimentosExtranjera$ = this.select(
@@ -187,6 +195,46 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   selectDatosFederatarios$ = this.select(
     (state) => state.tablaDatosFederatarios
   );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectEstadosOpciones$ = this.select(
+    (state) => state.estadosOpciones
+  );
+
+  /**
+   * Selecciona los datos de los fedatarios para el formulario del estado.
+   */
+  selectDatosPlantasImmex$ = this.select((state) => {
+    return state.plantasImmexTablaLista;
+  });
+
+  /** 
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+  selectDatosPlantasDisponibles$ = this.select((state) => {
+    return state.plantasDisponiblesTablaLista;
+  });
+
+  /**
+  * Observable selector for retrieving the entire state.
+  */
+  allStoreData$ = this.select((state) => state);
+
+    /**
+   * Selector observable para obtener la propiedad `datosAnexoTress` del estado de la aplicación.
+   * 
+   * @returns Un observable que emite el valor actual de `datosAnexoTress` desde el estado.
+   */
+  selectDatosAnexoTres$ = this.select((state) => state.datosAnexoTress);
+
+  /**
+   * Selector observable para obtener la propiedad `datosAnexoTress` del estado de la aplicación.
+   * 
+   * @returns Un observable que emite el valor actual de `datosAnexoTress` desde el estado.
+   */
+  selectDatosAnexoTressDos$ = this.select((state) => state.datosAnexoTressDos);
 
   /**
    * Constructor de la clase Tramite80101Query.

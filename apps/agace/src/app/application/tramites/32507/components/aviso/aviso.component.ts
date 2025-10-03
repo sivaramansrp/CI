@@ -1,9 +1,7 @@
 import { AvisoTabla,AvisoTablaDatos,Catalogo,CatalogoLista } from '../../models/aviso-traslado.model';
+import { CatalogoSelectComponent, InputRadioComponent, REGEX_IMPORTE_PAGO, REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { RADIO_OPCIONS, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
-
-import { CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, REGEX_IMPORTE_PAGO, REGEX_NUMEROS,REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -40,8 +38,8 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    InputRadioComponent,
     CatalogoSelectComponent,
+    InputRadioComponent
   ],
   standalone: true,
 })
@@ -227,6 +225,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
   }
 
   /**
@@ -237,7 +236,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
   inicializarAvisoFormulario(): void {
     if (this.soloLectura) {
       this.avisoFormulario.disable();
-      this.agregarMercancia();
     } else {
       this.avisoFormulario.enable();
     }
@@ -302,7 +300,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         ],
         peso: [
           this.tramiteState.avisoFormulario?.peso,
-          [Validators.required, Validators.pattern(REGEX_NUMEROS)],
+          [Validators.required],
         ],
         unidadMedida: [
           this.tramiteState.avisoFormulario?.unidadMedida,
@@ -437,13 +435,56 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @method agregarMercancia
    * @description Método para agregar mercancías a la tabla de mercancías.
    *
-   * - Carga los datos de la tabla de mercancías y cierra el modal de mercancía.
+   * - Valida el formulario de mercancías y agrega los datos a la tabla si es válido.
+   * - Cierra el modal de mercancía.
    *
    * @returns {void}
    */
   agregarMercancia(): void {
-    this.cargarMercanciaTabla();
-    this.closeMercancia.nativeElement.click();
+    if (this.adaceForm.valid) {
+      const FORM_VALUES = this.adaceForm.value;
+      
+      // Obtener la descripción de la unidad de medida desde el catálogo
+      const UNIDAD_SELECCIONADA = this.unidadMedida.find(
+        unidad => unidad.id === parseInt(FORM_VALUES.unidadMedida, 10)
+      );
+      
+      // Crear nuevo registro para la tabla
+      const NUEVO_REGISTRO: AvisoTabla = {
+        idTransaccionVUCEM: FORM_VALUES.transaccionId || '',
+        cantidad: FORM_VALUES.cantidad || '',
+        pesoKg: FORM_VALUES.peso || '',
+        descripcionUnidadMedida: UNIDAD_SELECCIONADA?.descripcion || '',
+        descripcion: FORM_VALUES.descripcion || ''
+      };
+      
+      // Agregar el nuevo registro a la tabla creando una nueva referencia del array
+      this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_REGISTRO];
+      
+      // Limpiar el formulario
+      this.adaceForm.reset();
+      
+      // Cerrar el modal
+      this.closeMercancia.nativeElement.click();
+      this.esPopupAbierto = false;
+    } else {
+      // Marcar todos los campos como tocados para mostrar errores de validación
+      Object.keys(this.adaceForm.controls).forEach(key => {
+        this.adaceForm.get(key)?.markAsTouched();
+      });
+    }
+  }
+
+  /**
+   * @method eliminarMercancia
+   * @description Método para eliminar las filas seleccionadas de la tabla de mercancías.
+   */
+  eliminarMercancia(): void {
+    // Crear una nueva referencia del array filtrado para que el componente detecte el cambio
+    this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter(
+      (ele) => !this.filaSeleccionadaLista.includes(ele)
+    );
+    this.filaSeleccionadaLista = [];
   }
 
   /**

@@ -377,7 +377,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       fraccionArancelaria: [{ value: [], disabled: true }],
       nombreComercial: [{ value: [[]], disabled: true }],
       nombreTecnico: [{ value: [[]], disabled: true }],
-      numeroDeRegistroFiscal: [],
+      numeroDeRegistroFiscal: ['',Validators.required],
       valorMercancia: [{ value: '', disabled: true }],
       complemento: [{ value: '', disabled: true }],
       numeroFactura: [{ value: [[]], disabled: true }],
@@ -389,7 +389,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   initAgregarDatosProductorFormulario(): void {
     this.agregarDatosProductorFormulario = this.fb.group({
-      numeroRegistroFiscal: [[Validators.required]],
+      numeroRegistroFiscal: ['', [Validators.required]],
       fax: [[Validators.pattern(REGEX_SOLO_DIGITOS)]]
     });
   }
@@ -424,7 +424,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.seleccionadoProductoresExportador = [];
     }
     else{
-      this.abrirModal();
+      this.abrirModal("Existen más productores que mercancías");
     }
   }
 
@@ -438,7 +438,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.seleccionadoAgregarProductoresExportador = [];
     }
     else{
-      this.abrirModal();
+      this.abrirModal("Debes seleccionar un productor");
     }
   }
 
@@ -446,15 +446,13 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Abre el modal para agregar datos del productor.
    */
   agregarDatosProductorPorExportador(): void {
-    if(this.seleccionadoProductoresExportador.length !== 0){
+   
     if (this.modalElement?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
-  }
-  else{
-    this.abrirModal();
-  }
+  
+ 
   }
 
   /**
@@ -532,7 +530,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       }
     }
     else {
-    this.abrirModal();
+    this.abrirModal("Es necesario agregar al menos un productor por exportador");
     }
   }
   /**
@@ -598,13 +596,13 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @see Notificacion
    * @see NotificacionesComponent
    */
-  public abrirModal(): void {
+  public abrirModal(message?:string): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: this.mensajeDeAlerta,
+      mensaje: message ? message : this.mensajeDeAlerta,
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',

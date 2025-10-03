@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="col-md-8">
-        <label class="form-label" for="nombre">Nombre de la empresa transportista * :</label>
+        <label class="form-label" for="nombre">Nombre de la empresa transportista*:</label>
         <input class="form-control" id="nombre" formControlName="nombre" placeholder="" type="text"
           (change)="setValoresStore()" [maxlength]="80" />
         <div *ngIf="movilizacionForm.get('nombre')?.invalid && movilizacionForm.get('nombre')?.touched">

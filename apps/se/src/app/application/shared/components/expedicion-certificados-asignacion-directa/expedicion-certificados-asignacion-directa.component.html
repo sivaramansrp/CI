@@ -13,6 +13,7 @@
           name="cveAniosAutorizacion"
           [isDisabled]="formularioDeshabilitado"
           [placeholder]="'Selecciona un año'"
+          [markTouched]="asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.touched ?? false"
           (change)="aniosAutorizacionSeleccion()"
         ></app-catalogo-select>
       </div>
@@ -49,7 +50,7 @@
         (asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.errors?.['required']
         && (asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.touched ||
         asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.dirty)) {
-        <small class="mensaje-error">Este campo es obligatorio.</small>
+        <small class="mensaje-error">Este campo es obligatorio</small>
         }
       </div>
     </div>
@@ -213,6 +214,7 @@
           [setFecha]="asignacionDatosForm.get('fechaInicio')?.value"
           [datos]="fechaInicioInput"
           [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Fecha de inicio vigencia de la asignación'"
           [isDisabled]="formularioDeshabilitado"
           (valorCambiado)="cambioFechaInicio($event)"
         ></input-fecha>
@@ -224,6 +226,7 @@
           "
           [datos]="fechaFinVigenciaAprobadaInput"
           [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Fecha de fin vigencia de la asignación'"
           [isDisabled]="formularioDeshabilitado"
           (valorCambiado)="cambioFechaFinVigenciaAprobada($event)"
         ></input-fecha>
@@ -512,11 +515,11 @@
         @if ((distribucionSaldoForm.get('montoExpedir')?.touched ||
         distribucionSaldoForm.get('montoExpedir')?.dirty) &&
         distribucionSaldoForm.get('montoExpedir')?.errors?.['required']) {
-        <small class="mensaje-error">Este campo es obligatorio.</small>
+        <small class="mensaje-error">Este campo es obligatorio</small>
         } @if ((distribucionSaldoForm.get('montoExpedir')?.touched ||
         distribucionSaldoForm.get('montoExpedir')?.dirty) &&
         distribucionSaldoForm.get('montoExpedir')?.errors?.['pattern']) {
-        <p class="mensaje-error m-0">Este campo es obligatorio.</p>
+        <p class="mensaje-error m-0">Este campo es obligatorio</p>
         <p class="mensaje-error">Por favor, escribe un número entero válido</p>
         }
       </div>

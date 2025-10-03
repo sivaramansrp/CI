@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -8,6 +8,8 @@ import { DatosGrupos } from '../../models/permiso-importacion-modification.model
 import { FECHA_DOCUMENTO } from '../../constants/permiso-importacion-modification.enum';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
+import { FormValidationService } from '../../services/formValidation.service';
 
 
 /**
@@ -88,7 +90,9 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public store: PermisoImportacionStore,
     public query: Tramite130120Query,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef,
+    private formValidation: FormValidationService
   ) {
   }
 
@@ -132,8 +136,8 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
       descripcionExportacion: [this.datosState.datosExporta.descripcionExportacion, [Validators.required, Validators.maxLength(4000)]],
       codigo_arancelario: [this.datosState.datosExporta.codigo_arancelario, Validators.required],
       cantidad_umt: [this.datosState.datosExporta.cantidad_umt, Validators.required],
-      valor_usd: [this.datosState.datosExporta.valor_usd, Validators.required],
-      precio_unitario_usd: [this.datosState.datosExporta.precio_unitario_usd, Validators.required],
+      valor_usd: [this.datosState.datosExporta.valor_usd, [Validators.required, Validators.pattern(/^(?:\d{1,14}|\d{1,14}\.\d{1,2})$/)]],
+      precio_unitario_usd: [this.datosState.datosExporta.precio_unitario_usd, [Validators.required, Validators.pattern(/^(?:\d{1,14}|\d{1,14}\.\d{1,2})$/)]],
     });
   }
 
@@ -165,6 +169,12 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: string) => void)(
       VALOR
     );
+  }
+
+  validarFormulario(): boolean {
+    this.formValidation.marcarFormularioComoTocado(this.datosExporta);
+    this.cdr.detectChanges();
+    return this.datosExporta.valid;
   }
 
   /**

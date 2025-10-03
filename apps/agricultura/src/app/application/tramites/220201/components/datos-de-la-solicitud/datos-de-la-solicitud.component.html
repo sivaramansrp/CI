@@ -9,7 +9,8 @@
                 <a aria-label="Repeat">
                   <i class="bi bi-repeat" aria-hidden="true"></i></a>
               </h4>
-              <button type="button" class="collpase-button collapsed"></button>
+             <button type="button" class="collpase-button collapsed" *ngIf="!colapsable"></button>
+            <button type="button" class="collpase-button" *ngIf="colapsable"></button>
             </div>
             @if(colapsable && !esFormularioSoloLectura){
             <div class="panel-collapse collapse in" id="panel-01">
@@ -22,7 +23,7 @@
                   <div class="col-md-12">
                     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                       [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud"
-                      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (filaClic)="onFilaClic($event)"></app-tabla-dinamica>
                   </div>
                 </div>
               </div>
@@ -84,7 +85,7 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="numeroGuia">Número de guia</label>
+          <label class="form-label" for="numeroGuia">Número de guía:</label>
           <input class="form-control" id="numeroGuia" formControlName="numeroGuia" placeholder="" type="text"
             libUppercase [maxlength]="50" (change)="setValoresStore()" />
         </div>
@@ -103,16 +104,19 @@
       <div class="row">
         <ng-titulo titulo="Tipo de Mercancía" />
         <div class="col-md-12">
-          <label for="certficacion_a">Captura de datos de mercancía</label>
+          <label for="certficacion_a">Captura de datos de mercancía<span [ngClass]="{'mensaje-error':datosDelaSolicitud.get('tipoMercancia')?.invalid && datosDelaSolicitud.get('tipoMercancia')?.touched}">*</span>:</label>
         </div>
         <div class="col-md-12">
           <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'" name="tipoMercancia"
             formControlName="tipoMercancia" (change)="radioBotonSeleccionado()" ></app-input-radio>
+          <div *ngIf="datosDelaSolicitud.get('tipoMercancia')?.invalid && datosDelaSolicitud.get('tipoMercancia')?.touched">
+            <small class="mensaje-error">Este campo es obligatorio.</small>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
-      @if(notificationCheck && !esFormularioSoloLectura){
+      @if(forma.value.datosDelaSolicitud.tipoMercancia === 'yes'){
       <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
       }
       <div class="row mt-5">
@@ -120,20 +124,23 @@
           <label for="mercancia">Mercancías</label>
         </div>
         <div class="col-md-12">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli" [configuracionTabla]="configuracionColumnasoli"
+          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [configuracionTabla]="configuracionColumnasoli"
             [datos]="cuerpoTabla" (listaDeFilaSeleccionada)="seleccionTabla($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+              <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
+            <small class="mensaje-error">Este campo es obligatorio.</small>
+          </div>
         </div>
       </div>
       @if(!esFormularioSoloLectura){
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="!notificationCheck || listSelectedView.length === 0"
+          <button type="button" class="btn btn-default" [disabled]="listSelectedView.length === 0  || cuerpoTabla.length === 0 "
             (click)="modificarMercancia()">Modificar</button>
           <button type="button" class="btn btn-danger ms-3"
-            [disabled]="!notificationCheck || listSelectedView.length === 0"
+            [disabled]="listSelectedView.length === 0 || cuerpoTabla.length === 0"
             (click)="eliminarMercancia()">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck"
+          <button type="button" class="btn btn-primary ms-3"  [disabled]="!datosDelaSolicitud.get('tipoMercancia')?.value"
             (click)="agregarMercancia()">Agregar</button>
         </div>
       </div>

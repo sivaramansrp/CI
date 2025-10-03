@@ -5,19 +5,17 @@
  * Cobertura compodoc 100%: cada clase, método, propiedad y evento está documentada.
  * @module AgregardestinatarioComponent
  */
-
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
-import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
+import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * @component
@@ -114,10 +112,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   constructor(
     public fb: FormBuilder,
     public tercerosrelacionadosService: TercerosrelacionadosService,
-    private router: Router,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
-    private route: ActivatedRoute
   ) { }
 
   /**
@@ -141,7 +137,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
-      correo: ['']
+      correo: [''],
+      planta:['']
     });
     this.certificadoZoosanitarioQuery.seleccionarTerceros$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -164,7 +161,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
             numeroInterior: DESTINATARIO.numeroInterior || '',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
-            correo: DESTINATARIO.correo || ''
+            correo: DESTINATARIO.correo || '',
+            planta: DESTINATARIO.planta || '',
           });
         }
       });

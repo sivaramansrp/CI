@@ -1,27 +1,17 @@
-<form
-  [formGroup]="cancelacionForm"
-  (ngSubmit)="validarDestinatarioFormulario()"
->
+<form [formGroup]="cancelacionForm" (ngSubmit)="validarDestinatarioFormulario()">
   <ng-container formGroupName="validacionForm">
     <ng-titulo titulo="Buscar certificado de origen" />
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Número de certificado de origen<span [ngClass]="validacionForm.get('numeroCertificado')?.invalid && validacionForm.get('numeroCertificado')?.touched ? 'text-danger' : ''">*</span>:</label>
-        <input
-          type="text"
-          required="true"
-          class="form-control"
-          formControlName="numeroCertificado"
-          maxlength="50"
-          (change)="onNumeroCertificadoChange($event)"
-          (input)="onNumeroCertificadoChange($event)"
-          [ngClass]="
+        <label>Número de certificado de origen<span
+            [ngClass]="validacionForm.get('numeroCertificado')?.invalid && validacionForm.get('numeroCertificado')?.touched ? 'text-danger' : ''">*</span>:</label>
+        <input type="text" required="true" class="form-control" formControlName="numeroCertificado" maxlength="50"
+          (change)="onNumeroCertificadoChange($event)" (input)="onNumeroCertificadoChange($event)" [ngClass]="
             validacionForm.get('numeroCertificado')?.invalid &&
             validacionForm.get('numeroCertificado')?.touched
               ? 'required'
               : ''
-          "
-        />
+          " />
         @if (validacionForm.get('numeroCertificado')?.hasError('required') &&
         validacionForm.get('numeroCertificado')?.touched ) {
         <div class="text-danger">
@@ -31,11 +21,7 @@
       </div>
       <div class="col-md-4"></div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
-        <button
-          type="button"
-          class="btn btn-primary ms-3"
-          (click)="alBuscarClic()"
-        >
+        <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()">
           Buscar Certificado
         </button>
       </div>
@@ -43,86 +29,53 @@
     <ng-titulo titulo="" />
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="paisCatalogo.catalogos"
-          [label]="'País / Bloque'"
-          [required]="false"
-          id="pais"
-          formControlName="pais"
-          (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="paisCatalogo.catalogos" [label]="'País / Bloque'" [required]="false" id="pais"
+          formControlName="pais" (change)="setValoresStore(validacionForm, 'pais', 'setPais')"></app-catalogo-select>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="tratadoCatalogo.catalogos"
-          [label]="'Tratado / Acuerdo'"
-          [required]="false"
-          id="tratado"
-          formControlName="tratado"
-          (change)="setValoresStore(validacionForm, 'tratado', 'setTratado')"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="tratadoCatalogo.catalogos" [label]="'Tratado / Acuerdo'" [required]="false"
+          id="tratado" formControlName="tratado"
+          (change)="setValoresStore(validacionForm, 'tratado', 'setTratado')"></app-catalogo-select>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <input-fecha
-          [setFecha]="cancelacionForm.get('validacionForm.fechaInicial')?.value"
-          [datos]="fechaInicialInput"
-          (valorCambiado)="cambioFechaInicial($event)"
-        ></input-fecha>
+        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaInicial')?.value" [datos]="fechaInicialInput"
+          (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha
-          [setFecha]="cancelacionForm.get('validacionForm.fechaFinal')?.value"
-          [datos]="fechaFinalInput"
-          (valorCambiado)="cambioFechaFinal($event)"
-        ></input-fecha>
+        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput"
+          (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscars">
-        <button
-          type="button"
-          class="btn btn-primary ms-3"
-          (click)="alBuscarClic()"
-        >
+        <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()">
           Buscar Certificado
         </button>
       </div>
     </div>
 
     <div class="row mt-5" style="text-align: center">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+      <h5>
+        <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+      </h5>
     </div>
     <div class="table-container centered-table-wrapper mt-5">
-      <ng-titulo titulo="Certificados disponibles" />
       @if (!estaBuscando && !mostrarErrores) {
-        <app-tabla-dinamica
-          (dblclick)="onTablaDblClick($event)"
-          [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-          [configuracionTabla]="headers"
-          [datos]="certificadoDisponsiblesTablaDatos"
-        ></app-tabla-dinamica>
+      <app-tabla-dinamica (dblclick)="onTablaDblClick($event)" [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+        [configuracionTabla]="headers" [datos]="certificadoDisponsiblesTablaDatos"></app-tabla-dinamica>
       } @else if (estaBuscando && mostrarErrores) {
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-          [configuracionTabla]="headers"
-        ></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+        [configuracionTabla]="headers"></app-tabla-dinamica>
       } @else if (!estaBuscando && mostrarErrores) {
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-          [configuracionTabla]="headers"
-        ></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+        [configuracionTabla]="headers"></app-tabla-dinamica>
       } @else if (estaBuscando && !mostrarErrores) {
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-          [configuracionTabla]="headers"
-        ></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+        [configuracionTabla]="headers"></app-tabla-dinamica>
       }
     </div>
   </ng-container>
 </form>
-<btn-continuar
-  [datos]="datosPasos"
-  (click)="emitirEventoClick()"
-></btn-continuar>
+<btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>

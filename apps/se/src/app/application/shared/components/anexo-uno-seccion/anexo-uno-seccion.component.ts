@@ -1,7 +1,7 @@
 /*
 /AnexoUnoSeccionComponent
 */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -44,10 +44,14 @@ import {
 } from '../../models/complimentos-seccion.model';
 import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
 import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
+import { CargaProveedoresClientesComponent } from '../carga-proveedores-clientes/carga-proveedores-clientes.component';
 
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * compodoc
@@ -67,7 +71,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     AlertComponent,
     NotificacionesComponent,
     CargaPorArchivoComponent,
-    CargaDeFraccionesComponent
+    CargaDeFraccionesComponent,
+    CargaProveedoresClientesComponent
   ],
   templateUrl: './anexo-uno-seccion.component.html',
   styleUrl: './anexo-uno-seccion.component.scss',
@@ -180,6 +185,59 @@ public mostrarProveedorPorArchivoPopup: boolean = false;
  */
 public mostrarCargaDeFraccionesPopup: boolean = false;
 
+/** Controla la visibilidad del modal de carga por archivo. */
+public mostrarCargaPorArchivoModal: boolean = false;
+
+/** Controla la visibilidad del popup de proveedores y clientes. */
+public mostrarProveedorClientesPopup: boolean = false;
+
+/** Evento que emite la lista de productos del Anexo Uno cuando se devuelve la llamada. */
+@Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<
+    AnexoUnoProducto[]
+  > = new EventEmitter<AnexoUnoProducto[]>(true);
+
+/** Evento que emite la lista de fracciones Anarelaria del Anexo Dos al devolver la llamada. */
+@Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
+  AnexoFraccionAnarelaria[]
+> = new EventEmitter<AnexoFraccionAnarelaria[]>(true);
+
+
+
+  /**
+   * Evento que emite una lista de objetos `ProyectoImmex` al componente padre.
+   * 
+   * @event
+   * @type {EventEmitter<ProyectoImmex[]>}
+   * @description
+   * Se dispara cuando se requiere enviar la lista actualizada de proyectos IMMEX
+   * desde este componente hacia el componente que lo contiene.
+   */
+  @Output() obtenerProyectoImmexTablaLista: EventEmitter<
+    ProyectoImmex[]
+  > = new EventEmitter<ProyectoImmex[]>(true);
+
+
+    /**
+     * Evento que emite información sobre proveedores o clientes obtenidos.
+     * 
+     * @event
+     * @typeParam data - Arreglo de objetos de tipo `ProveedorCliente` que contiene los proveedores o clientes obtenidos.
+     * @typeParam id - (Opcional) Identificador asociado a la obtención de los datos.
+     * 
+     * @remarks
+     * Este evento se dispara cuando se requiere enviar la información de proveedores o clientes seleccionados
+     * hacia el componente padre. El parámetro `id` es opcional y puede ser utilizado para identificar la fuente
+     * o contexto de la obtención.
+     */
+    @Output() obtenerProveedorCliente: EventEmitter<
+      {data:ProveedorCliente[], id?:string}
+    > = new EventEmitter<{data:ProveedorCliente[], id?:string}>(true);
+
+/**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public complementarState!: ComplementarState;
+
 /**
  * 
  * @constructor
@@ -188,8 +246,11 @@ public mostrarCargaDeFraccionesPopup: boolean = false;
  */
 constructor(private fb: FormBuilder,
   private complementosSeccionStore: ComplementosSeccionStore,
-      private complementosSeccionQuery: ComplementosSeccionQuery,
-        private consultaioQuery: ConsultaioQuery
+  private complementosSeccionQuery: ComplementosSeccionQuery,
+  private consultaioQuery: ConsultaioQuery,
+  private complimentosService: ComplimentosService,
+  private complementarStore: ComplementarStore,
+  private complementarQuery: ComplementarQuery
 ){ 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -208,8 +269,72 @@ constructor(private fb: FormBuilder,
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.complementarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.complementarState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
+
     this.inicializarCertificadoFormulario();
+
+    if (!(this.complementarState.tipoCategoriaOptions.length)) {
+      this.obtenertipoCatagoriaOptions('ENU_TIPO_CATEGORIA');
+    } else {
+      this.catagoriaSeleccionDatos = [...this.complementarState.tipoCategoriaOptions];
+    }
+    
+    if (!(this.complementarState.paisOptions.length)) {
+      this.obtenerPaisOptions();
+    } else {
+      this.paisDestinoCatalog = [...this.complementarState.paisOptions];
+    }
+
+    if (!(this.complementarState.tipoDocumentoOptions.length)) {
+      this.obtenerTipoDocumentoOptions(102);
+    } else {
+      this.tipoDeDocumenteCatalog = [...this.complementarState.tipoDocumentoOptions];
+    }
   }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de categoría desde el servicio. */
+  obtenertipoCatagoriaOptions(tipo: string): void {
+    this.complimentosService.getTipoCategoria(tipo)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoCategoriaOptions(res.datos);
+      this.catagoriaSeleccionDatos = res.datos;
+    });
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de pais desde el servicio. */
+  obtenerPaisOptions(): void {
+    this.complimentosService.getPais()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setPaisOptions(res.datos);
+      this.paisDestinoCatalog = res.datos;
+    });
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de documento desde el servicio. */
+  obtenerTipoDocumentoOptions(id: number): void {
+     this.complimentosService.getTipoDocumento(id)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoDocumentoOptions(res.datos);
+      this.tipoDeDocumenteCatalog = res.datos;
+    });
+  }
+
  /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
@@ -286,7 +411,7 @@ actualizarControl(formName: string, controlName: string): void {
 
   // Actualizar la tienda o el servicio con el valor actualizado
   this.complementosSeccionStore.update(UPDATED_VALUE);
-
+  this.complementosSeccionStore.setDynamicFieldValue(controlName, UPDATED_VALUE[controlName]);
   
 }
 /**
@@ -305,7 +430,7 @@ ngOnDestroy(): void {
  * @property {Catalogo[]} catagoriaSeleccionDatos
  * Datos del catálogo utilizados para la selección de categorías en la sección de complementos.
  */
-catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
+catagoriaSeleccionDatos: Catalogo[] = [];
 
 /**
  *  * compodoc
@@ -314,12 +439,8 @@ catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
  */
 proyectoImmexTablaLista: ProyectoImmex[] = [];
 
-/**
- *  * compodoc
- * @property {AnexoUnoProducto[]} anexoUnoTablaLista
- * Lista de productos del Anexo Uno que se muestran en la tabla dinámica.
- */
-anexoUnoTablaLista: AnexoUnoProducto[] = [];
+/** Lista de productos para el Anexo Uno que se muestra en la tabla. */
+@Input() anexoUnoTablaLista: AnexoUnoProducto[] = [];
 
 /**
  *  * compodoc
@@ -335,12 +456,17 @@ proveedorTablaLista: ProveedorCliente[] = [];
  */
 fracionArancelaria: AnexoUnoEncabezado[] = [];
 
+/** Lista de fracciones anarelaria para el Anexo Fracción. */
+@Input() anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
+
+
 /**
- *  * compodoc
- * @property {AnexoFraccionAnarelaria[]} anexoFraccionAnarelaria
- * Lista de datos relacionados con las fracciones arancelarias en el Anexo.
+ * Objeto que almacena los datos relacionados con proveedores o clientes.
+ * 
+ * @property {ProveedorCliente[]} data - Lista de objetos de tipo ProveedorCliente.
+ * @property {string} [id] - Identificador opcional asociado a los datos.
  */
-anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
+proveedorClienteDatos: {data: ProveedorCliente[], id?: string} = {data: [], id: ''};
 
 /**
  *  * compodoc
@@ -371,6 +497,7 @@ agregarAnexoUno(): void {
 
     this.anexoUnoTablaLista.push({ ...DEFAULTS, ...FORM_DATA });
     this.anexoUnoTablaLista = [...this.anexoUnoTablaLista];
+    this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
     this.anexoUnoFormGroup.reset();
   } else {
     this.abrirUnoModal();
@@ -485,17 +612,18 @@ agregarFraccionAnarelaria(): void {
       ...DEFAULTS,
       anexoFraccionExportacion: FORM_DATA.fraccionArancelarias,
       anexoDescripcionComercialExportacion: FORM_DATA.anexoDosDescripcion,
-      anexoFraccionImportacion: '', // Provide appropriate value or leave as empty string
-      anexoDescripcionComercialImportacion: '', // Provide appropriate value or leave as empty string
-      catagoria: '', // Provide appropriate value or leave as empty string
-      valorEnMonedaMensual: '', // Provide appropriate value or leave as 0
-      valorEnMonedaAnual: '', // Provide appropriate value or leave as 0
-      volumenMensual: '', // Provide appropriate value or leave as 0
-      volumenAnual: '' // Provide appropriate value or leave as 0
+      anexoFraccionImportacion: '', 
+      anexoDescripcionComercialImportacion: '', 
+      catagoria: '', 
+      valorEnMonedaMensual: '', 
+      valorEnMonedaAnual: '', 
+      volumenMensual: '',
+      volumenAnual: ''
     };
 
     this.anexoFraccionAnarelaria.push(ROW);
     this.anexoFraccionAnarelaria = [...this.anexoFraccionAnarelaria]
+    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoFraccionAnarelaria);
     this.anexoDosFormGroup.reset();
   } else {
     this.abrirDosModal();
@@ -618,16 +746,28 @@ guardarComplementarFraccion(): void {
   } 
 }
 
+
+
+
 /**
- * @method abrirProveedorClienteModal
- * @description Abre el modal de proveedor o cliente según el contexto especificado.
- * Establece el contexto actual y muestra el modal correspondiente si el elemento existe en el DOM.
+ * Abre el modal para seleccionar o ingresar datos de un proveedor o cliente, dependiendo del contexto proporcionado.
  * 
- * @param {'cliente' | 'proveedor'} context - Define si el modal es para cliente o proveedor.
+ * @param context Indica si el modal se abrirá en el contexto de 'cliente' o 'proveedor'.
+ * 
+ * Si existe información previa en `proveedorClienteDatos`, se actualiza el identificador con el contexto actual.
+ * 
+ * El modal solo se muestra si hay una fracción arancelaria seleccionada correspondiente al contexto:
+ * - Para 'cliente', se verifica `selectedFraccionRowUno`.
+ * - Para 'proveedor', se verifica `selectedFraccionRowDos`.
+ * 
+ * Si no hay una fracción seleccionada, se muestra una notificación de alerta indicando que es necesario seleccionar una fracción arancelaria para continuar.
  */
 abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
+  if (this.proveedorClienteDatos) {
+    this.proveedorClienteDatos.id = context;
 
- const SELECT_ROW =
+  }
+  const SELECT_ROW =
     context === 'cliente'
       ? Boolean(this.selectedFraccionRowUno)
       : Boolean(this.selectedFraccionRowDos);
@@ -661,7 +801,7 @@ abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
  */
 abrirProveedorPorArchivo(): void {
   if (this.selectedFraccionRowUno) {
-  this.mostrarProveedorPorArchivoPopup = true;
+  this.mostrarProveedorClientesPopup = true;
   } else {
      this.nuevaUnoNotificacion = {
       tipoNotificacion: 'alert',
@@ -678,11 +818,11 @@ abrirProveedorPorArchivo(): void {
 }
 
 /**
- * Método que habilita la visualización del popup para la carga de fracciones.
- * Establece la bandera correspondiente en `true` para mostrar el componente emergente.
+ * Método que habilita la visualización del modal para la carga por archivo.
+ * Establece la bandera correspondiente en `true` para mostrar el modal emergente.
  */
-abrirCargaDeFracciones(): void {
-  this.mostrarCargaDeFraccionesPopup = true;
+abrirCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = true;
 }
 
 /**
@@ -700,6 +840,31 @@ cerrarProveedorPorArchivo(): void {
  */
 cerrarCargaDeFracciones(): void {
   this.mostrarCargaDeFraccionesPopup = false;
+}
+
+/**
+ * Método que maneja la aceptación de la carga por archivo.
+ * Cierra el modal de carga por archivo y abre el popup de carga de fracciones.
+ */
+onAceptarCargaPorArchivo(): void{
+  this.mostrarCargaPorArchivoModal = false;
+  this.mostrarCargaDeFraccionesPopup = true;
+}
+
+/**
+ * Método que maneja la cancelación de la carga por archivo.
+ * Cierra el modal de carga por archivo estableciendo la bandera en false.
+ */
+onCancelarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+}
+
+/**
+ * Método que cierra el popup de proveedores y clientes.
+ * Establece la bandera correspondiente en false para ocultar el popup.
+ */
+cerrarProveedorClientesPopup(): void {
+  this.mostrarProveedorClientesPopup = false;
 }
 
 /**
@@ -808,6 +973,7 @@ agregarProyectoImmex(): void {
 
     // Agregar los datos transformados a la lista de proyectos IMMEX
     this.proyectoImmexTablaLista.push(TRANSFORMED_DATA);
+    this.setProyectoImmex();
 
     // Reiniciar el formulario
     this.proyectoForm.reset();
@@ -823,6 +989,13 @@ agregarProyectoImmex(): void {
  */
 agregarProveedorCliente(): void {
   if (this.formularioProveedorCliente.valid) {
+    if (this.proveedorClienteDatos) {
+      this.proveedorClienteDatos.data = this.proveedorTablaLista;
+      this.obtenerProveedorCliente.emit({
+        data: this.proveedorClienteDatos.data ?? [],
+        id: this.proveedorClienteDatos.id
+      });
+    }
     const FORM_DATA = this.formularioProveedorCliente.value;
 
     this.proveedorTablaLista.push(FORM_DATA);
@@ -876,14 +1049,14 @@ tablaProyectoImmex = TABLA_PROYECTO_IMMEX;
  * @property {Catalogo[]} paisDestinoCatalog
  * Catálogo que contiene los datos de los países de destino.
  */
-public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
+public paisDestinoCatalog: Catalogo[] = [];
 
 /**
  * compodoc
  * @property {Catalogo[]} tipoDeDocumenteCatalog
  * Catálogo que contiene los datos de los tipos de documentos disponibles.
  */
-public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
+public tipoDeDocumenteCatalog: Catalogo[] = [];
 
   /**
    * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
@@ -942,4 +1115,14 @@ public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
       twoPeriodVolume: [this.solicitudState['twoPeriodVolume'], Validators.required],
     });
   }
+
+
+  /**
+   * Emite el evento `obtenerProyectoImmexTablaLista` con la lista de proyectos IMMEX proporcionada.
+   *
+   * @param event - Arreglo de objetos `ProyectoImmex` que representa la lista de proyectos IMMEX seleccionados.
+   */
+  setProyectoImmex(): void {
+    this.obtenerProyectoImmexTablaLista.emit(this.proyectoImmexTablaLista);
+}
 }

@@ -180,9 +180,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const SECCION: number = 1;
     const FORMAS_VALIDADAS = this.seccion.formaValida;
     FORMAS_VALIDADAS[SECCION] = true;
-    this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
   }
-
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el estado del formulario de desistimiento.
+   * Si el formulario es válido, retorna true.
+   * Si no es válido, marca todos los campos como tocados para mostrar los mensajes de error y retorna false.
+   * 
+   * @returns {boolean} true si el formulario es válido, false si contiene errores de validación.
+   */
+  validarFormulario(): boolean {
+    if (this.formDesistimiento.valid) {
+      return true;
+    }
+    this.formDesistimiento.markAllAsTouched();
+    return false
+  }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores

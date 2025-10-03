@@ -1,97 +1,71 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModificarImmexProgramComponent } from './modificar-immex-program.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { of } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { EventEmitter } from '@angular/core';
 import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-} from '@libs/shared/data-access-user/src';
+  Domicilios,
+  DatosGeneralesDeLaSolicitudRadioLista,
+  DatosGeneralesDeLaSolicitudCatologo,
+} from '../../models/solicitud.model';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ModificarImmexProgramComponent', () => {
   let component: ModificarImmexProgramComponent;
   let fixture: ComponentFixture<ModificarImmexProgramComponent>;
-  let solicitudService: SolicitudService;
-  let solicitud31101Store: Solicitud31101Store;
-  let solicitud31101Query: Solicitud31101Query;
+  let solicitudServiceMock: any;
+  let solicitud31101StoreMock: any;
+  let solicitud31101QueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    const solicitudServiceMock = {
-      conseguirDatosGeneralesOpcionDeRadio: jest.fn().mockReturnValue(
-        of({
-          requisitos: {
-            radioOptions: [
-              {
-                label: 'Sí',
-                value: 1,
-              },
-              {
-                label: 'No',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-        })
-      ),
-      conseguirDatosGeneralesCatologo: jest.fn().mockReturnValue(
-        of({
-          tipoDeInstalacion: {
-            labelNombre: 'Tipo de instalación',
-            required: true,
-            primerOpcion: 'Selecciona un tipo de instalación',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'Planta Productiva',
-              },
-              {
-                id: 2,
-                descripcion: 'Planta Productiva -1',
-              },
-            ],
-          },
-        })
-      ),
+    solicitudServiceMock = {
+      conseguirDatosGeneralesOpcionDeRadio: jest
+        .fn()
+        .mockReturnValue(of({ requisitos: { radio: 'mock' } })),
+      conseguirDatosGeneralesCatologo: jest
+        .fn()
+        .mockReturnValue(of({ tipoDeInstalacion: { catalogo: 'mock' } })),
     };
-
-    const solicitud31101StoreMock = {
-      actualizarInstalacionesPrincipales: jest.fn(),
-      actualizarMunicipio: jest.fn(),
-      actualizarTipoDeInstalacion: jest.fn(),
-      actualizarFederativa: jest.fn(),
-      actualizarRegistroSE: jest.fn(),
-      actualizarDesceripe: jest.fn(),
-      actualizarCodigoPostal: jest.fn(),
-      actualizarProcesoProductivo: jest.fn(),
+    solicitud31101StoreMock = {
+      actualizarInstalacionesPrincipales: jest.fn(() => of()),
+      actualizarMunicipio: jest.fn(() => of()),
+      actualizarTipoDeInstalacion: jest.fn(() => of()),
+      actualizarFederativa: jest.fn(() => of()),
+      actualizarRegistroSE: jest.fn(() => of()),
+      actualizarDesceripe: jest.fn(() => of()),
+      actualizarCodigoPostal: jest.fn(() => of()),
+      actualizarProcesoProductivo: jest.fn(() => of()),
     };
-
-    const solicitud31101QueryMock = {
+    solicitud31101QueryMock = {
       selectSolicitud$: of({
-        instalacionesPrincipales: '',
-        municipio: '',
-        tipoDeInstalacion: '',
-        federativa: '',
-        registroSE: '',
-        desceripe: '',
-        codigoPostal: '',
-        procesoProductivo: '',
+        instalacionesPrincipales: 'inst',
+        municipio: 'mun',
+        tipoDeInstalacion: 'tipo',
+        federativa: 'fed',
+        registroSE: 'reg',
+        desceripe: 'desc',
+        codigoPostal: '12345',
+        procesoProductivo: 'proc',
       }),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
     };
 
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
         ReactiveFormsModule,
+        ModificarImmexProgramComponent,
+        CommonModule,
         CatalogoSelectComponent,
         InputRadioComponent,
-        ModificarImmexProgramComponent,
-        HttpClientTestingModule,
+        HttpClientTestingModule
       ],
       declarations: [],
       providers: [
@@ -99,14 +73,12 @@ describe('ModificarImmexProgramComponent', () => {
         { provide: SolicitudService, useValue: solicitudServiceMock },
         { provide: Solicitud31101Store, useValue: solicitud31101StoreMock },
         { provide: Solicitud31101Query, useValue: solicitud31101QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModificarImmexProgramComponent);
     component = fixture.componentInstance;
-    solicitudService = TestBed.inject(SolicitudService);
-    solicitud31101Store = TestBed.inject(Solicitud31101Store);
-    solicitud31101Query = TestBed.inject(Solicitud31101Query);
     fixture.detectChanges();
   });
 
@@ -114,100 +86,224 @@ describe('ModificarImmexProgramComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.modificarImmexProgramForm).toBeDefined();
+  it('should initialize the form with values from state', () => {
+    expect(component.modificarImmexProgramForm.value).toEqual({
+      instalacionesPrincipales: 'inst',
+      municipio: 'mun',
+      tipoDeInstalacion: 'tipo',
+      federativa: 'fed',
+      registroSE: 'reg',
+      desceripe: 'desc',
+      codigoPostal: '12345',
+      procesoProductivo: 'proc',
+    });
+  });
+
+  it('should call store update methods on ngOnChanges when seleccionarDomiciliosDatos changes', () => {
+    const domicilios: Domicilios[] = [
+      {
+        id: 1,
+        instalacionPrincipal: 'A',
+        municipioDelegacion: 'B',
+        tipoInstalacion: 'C',
+        entidadFederativa: 'D',
+        registroSESAT: 'E',
+        direccion: 'F',
+        codigoPostal: 'G',
+        procesoProductivo: 'H',
+      } as any,
+    ];
+
+    component.seleccionarDomiciliosDatos = domicilios;
+    component.ngOnChanges({
+      seleccionarDomiciliosDatos: {
+        currentValue: domicilios,
+        previousValue: undefined,
+        firstChange: true,
+        isFirstChange: () => true,
+      },
+    });
+
     expect(
-      component.modificarImmexProgramForm.controls['instalacionesPrincipales']
-    ).toBeDefined();
-  });
-
-  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
-    const spy = jest.spyOn(solicitudService, 'conseguirDatosGeneralesCatologo');
-    solicitudService.conseguirDatosGeneralesCatologo();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should emit modificarImmexValor when aceptarImmexProgram is called', () => {
-    const spy = jest.spyOn(component.modificarImmexValor, 'emit');
-    component.aceptarImmexProgram();
-    expect(spy).toHaveBeenCalledWith(true);
-  });
-
-  it('should return true if a form control is invalid and touched', () => {
-    component.modificarImmexProgramForm.controls[
-      'instalacionesPrincipales'
-    ].setErrors({ required: true });
-    component.modificarImmexProgramForm.controls[
-      'instalacionesPrincipales'
-    ].markAsTouched();
-    expect(component.noEsValido('instalacionesPrincipales')).toBe(true);
-  });
-
-  it('should call actualizarInstalacionesPrincipales in the store', () => {
-    const spy = jest.spyOn(
-      solicitud31101Store,
-      'actualizarInstalacionesPrincipales'
+      solicitud31101StoreMock.actualizarInstalacionesPrincipales
+    ).toHaveBeenCalledWith('A');
+    expect(solicitud31101StoreMock.actualizarMunicipio).toHaveBeenCalledWith(
+      'B'
     );
-    component.actualizarInstalacionesPrincipales('value');
-    expect(spy).toHaveBeenCalledWith('value');
+    expect(
+      solicitud31101StoreMock.actualizarTipoDeInstalacion
+    ).toHaveBeenCalledWith('C');
+    expect(solicitud31101StoreMock.actualizarFederativa).toHaveBeenCalledWith(
+      'D'
+    );
+    expect(solicitud31101StoreMock.actualizarRegistroSE).toHaveBeenCalledWith(
+      'E'
+    );
+    expect(solicitud31101StoreMock.actualizarDesceripe).toHaveBeenCalledWith(
+      'F'
+    );
+    expect(solicitud31101StoreMock.actualizarCodigoPostal).toHaveBeenCalledWith(
+      'G'
+    );
+    expect(
+      solicitud31101StoreMock.actualizarProcesoProductivo
+    ).toHaveBeenCalledWith('H');
   });
 
-  it('should call actualizarMunicipio in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarMunicipio');
-    const event = { target: { value: 'municipio' } } as unknown as Event;
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.modificarImmexProgramForm.disabled).toBe(true);
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.modificarImmexProgramForm.enabled).toBe(true);
+  });
+
+  it('should emit modificarImmexValor with correct value on aceptarImmexProgram', () => {
+    const domicilios: Domicilios[] = [{ id: 99 } as any];
+    component.DOMICILIOS = domicilios;
+    component.modificarImmexProgramForm.setValue({
+      instalacionesPrincipales: 'inst',
+      municipio: 'mun',
+      tipoDeInstalacion: 'tipo',
+      federativa: 'fed',
+      registroSE: 'reg',
+      desceripe: 'desc',
+      codigoPostal: '12345',
+      procesoProductivo: 'proc',
+    });
+    jest.spyOn(component.modificarImmexValor, 'emit');
+
+    component.aceptarImmexProgram();
+
+    expect(component.modificarImmexValor.emit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        instalacionPrincipal: 'inst',
+        municipioDelegacion: 'mun',
+        tipoInstalacion: 'tipo',
+        entidadFederativa: 'fed',
+        registroSESAT: 'reg',
+        direccion: 'desc',
+        codigoPostal: '12345',
+        procesoProductivo: 'proc',
+        id: 99,
+      })
+    );
+  });
+
+  it('should not emit modificarImmexValor if form is invalid on aceptarImmexProgram', () => {
+    component.modificarImmexProgramForm.reset();
+    jest.spyOn(component.modificarImmexValor, 'emit');
+    component.aceptarImmexProgram();
+    expect(component.modificarImmexValor.emit).not.toHaveBeenCalled();
+  });
+
+  it('should emit undefined and reset form on cancelarImmexProgram', () => {
+    jest.spyOn(component.modificarImmexValor, 'emit');
+    component.modificarImmexProgramForm.setValue({
+      instalacionesPrincipales: 'inst',
+      municipio: 'mun',
+      tipoDeInstalacion: 'tipo',
+      federativa: 'fed',
+      registroSE: 'reg',
+      desceripe: 'desc',
+      codigoPostal: '12345',
+      procesoProductivo: 'proc',
+    });
+    component.cancelarImmexProgram();
+    expect(component.modificarImmexValor.emit).toHaveBeenCalledWith(undefined);
+  });
+
+  it('noEsValido should return true if control is invalid and touched', () => {
+    const control = component.modificarImmexProgramForm.get('municipio');
+    control?.setValue('');
+    control?.markAsTouched();
+    expect(component.noEsValido('municipio')).toBe(true);
+  });
+
+  it('noEsValido should return undefined if control is valid or not touched', () => {
+    const control = component.modificarImmexProgramForm.get('municipio');
+    control?.setValue('mun');
+    control?.markAsTouched();
+    expect(component.noEsValido('municipio')).toBe(false);
+    control?.markAsUntouched();
+    expect(component.noEsValido('municipio')).toBe(false);
+  });
+
+  it('actualizarInstalacionesPrincipales should call store', () => {
+    component.actualizarInstalacionesPrincipales('valor');
+    expect(
+      solicitud31101StoreMock.actualizarInstalacionesPrincipales
+    ).toHaveBeenCalledWith('valor');
+  });
+
+  it('actualizarMunicipio should call store', () => {
+    const event = { target: { value: 'mun' } } as any;
     component.actualizarMunicipio(event);
-    expect(spy).toHaveBeenCalledWith('municipio');
+    expect(solicitud31101StoreMock.actualizarMunicipio).toHaveBeenCalledWith(
+      'mun'
+    );
   });
 
-  it('should call actualizarTipoDeInstalacion in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarTipoDeInstalacion');
-    component.actualizarTipoDeInstalacion({
-      id: 1,
-      descripcion: 'Test',
-    } as Catalogo);
-    expect(spy).toHaveBeenCalledWith(1);
+  it('actualizarTipoDeInstalacion should call store', () => {
+    component.actualizarTipoDeInstalacion({ id: 'tipo' } as any);
+    expect(
+      solicitud31101StoreMock.actualizarTipoDeInstalacion
+    ).toHaveBeenCalledWith('tipo');
   });
 
-  it('should call actualizarFederativa in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarFederativa');
-    const event = { target: { value: 'federativa' } } as unknown as Event;
+  it('actualizarFederativa should call store', () => {
+    const event = { target: { value: 'fed' } } as any;
     component.actualizarFederativa(event);
-    expect(spy).toHaveBeenCalledWith('federativa');
+    expect(solicitud31101StoreMock.actualizarFederativa).toHaveBeenCalledWith(
+      'fed'
+    );
   });
 
-  it('should call actualizarRegistroSE in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarRegistroSE');
-    const event = { target: { value: 'registroSE' } } as unknown as Event;
+  it('actualizarRegistroSE should call store', () => {
+    const event = { target: { value: 'reg' } } as any;
     component.actualizarRegistroSE(event);
-    expect(spy).toHaveBeenCalledWith('registroSE');
+    expect(solicitud31101StoreMock.actualizarRegistroSE).toHaveBeenCalledWith(
+      'reg'
+    );
   });
 
-  it('should call actualizarDesceripe in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarDesceripe');
-    const event = { target: { value: 'desceripe' } } as unknown as Event;
+  it('actualizarDesceripe should call store', () => {
+    const event = { target: { value: 'desc' } } as any;
     component.actualizarDesceripe(event);
-    expect(spy).toHaveBeenCalledWith('desceripe');
+    expect(solicitud31101StoreMock.actualizarDesceripe).toHaveBeenCalledWith(
+      'desc'
+    );
   });
 
-  it('should call actualizarCodigoPostal in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarCodigoPostal');
-    const event = { target: { value: '12345' } } as unknown as Event;
+  it('actualizarCodigoPostal should call store', () => {
+    const event = { target: { value: '12345' } } as any;
     component.actualizarCodigoPostal(event);
-    expect(spy).toHaveBeenCalledWith('12345');
+    expect(solicitud31101StoreMock.actualizarCodigoPostal).toHaveBeenCalledWith(
+      '12345'
+    );
   });
 
-  it('should call actualizarProcesoProductivo in the store', () => {
-    const spy = jest.spyOn(solicitud31101Store, 'actualizarProcesoProductivo');
-    component.actualizarProcesoProductivo('value');
-    expect(spy).toHaveBeenCalledWith('value');
+  it('actualizarProcesoProductivo should call store', () => {
+    component.actualizarProcesoProductivo('proc');
+    expect(
+      solicitud31101StoreMock.actualizarProcesoProductivo
+    ).toHaveBeenCalledWith('proc');
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const spy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+  it('should clean up destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should set sinoOpcion and tipoDeInstalacion from service observables', () => {
+    expect(component.sinoOpcion).toEqual({});
+    expect(component.tipoDeInstalacion).toEqual({});
   });
 });

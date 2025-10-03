@@ -6,7 +6,11 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  REG_X,
+} from '@ng-mf/data-access-user';
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 
 import {
@@ -187,6 +191,27 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
       this.solicitudForm.enable();
     }
   }
+
+  /**
+   * Maneja el cambio en el campo RFC.
+   *
+   * Este método se llama cuando el valor del campo RFC cambia y se encarga de
+   * validar el nuevo valor ingresado.
+   *
+   * @param $event - Evento de cambio del campo RFC.
+   */
+  rfcChange($event: Event): void {
+    const INPUT = ($event.target as HTMLInputElement).value;
+    if (INPUT.length === 13 && REG_X.RFC_13_ALFANUM.test(INPUT)) {
+      this.BUSCAR_EMPRESA_ERROR = '';
+      this.datosEmpresaBuscar.emit(false);
+    } else {
+      this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
+      this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
+      this.datosEmpresaBuscar.emit(true);
+    }
+  }
+
   /**
    * @method buscarEmpresa
    * @description Método para habilitar la visualización de los datos generales de la empresa.
@@ -198,15 +223,16 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
         ? GRUPO_EMPRESA_CONTROL.get('rfc')
         : null;
     const RFC: string = RFC_CONTROL ? RFC_CONTROL.value : null;
-    if (RFC?.length === 13) {
+    if (RFC?.length === 13 && REG_X.RFC_13_ALFANUM.test(RFC)) {
       this.fetchGetDatos();
       this.mostrarDatosGenerales = true;
       this.BUSCAR_EMPRESA_ERROR = '';
       this.datosEmpresaBuscar.emit(true);
+    } else {
+      this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
+      this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
+      this.datosEmpresaBuscar.emit(true);
     }
-    this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
-    this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
-    this.datosEmpresaBuscar.emit(true);
   }
 
   /**

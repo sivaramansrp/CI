@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
@@ -41,8 +42,12 @@ export interface ComplementarState {
   capacidadInstaladaAnual: string;
   calculoCapacidadInstalada: string;
   capacidadUtilizadaPct: string;
-  
-
+  tipoDocumentoOptions: Catalogo[];
+  tipoInversionOptions: Catalogo[];
+  tipoCategoriaOptions: Catalogo[];
+  paisOptions: Catalogo[];
+  rfcFirmante: string;
+  tipoFirmante: string;
 }
 
 /**
@@ -84,6 +89,12 @@ export function createInitialState(): ComplementarState {
   capacidadInstaladaAnual: '',
   calculoCapacidadInstalada: '',
   capacidadUtilizadaPct: '',
+  tipoDocumentoOptions: [],
+  tipoInversionOptions: [],
+  tipoCategoriaOptions: [],
+  paisOptions: [],
+  rfcFirmante: '',
+  tipoFirmante: '',
   };
 }
 /**
@@ -414,6 +425,72 @@ public setCapacidadUtilizadaPct(capacidadUtilizadaPct: string): void {
   }));
 }
 
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setTipoDocumentoOptions(tipoDocumentoOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    tipoDocumentoOptions,
+  }));
+}
 
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setTipoInversionOptions(tipoInversionOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    tipoInversionOptions,
+  }));
+}
+
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setTipoCategoriaOptions(tipoCategoriaOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    tipoCategoriaOptions,
+  }));
+}
+
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setPaisOptions(paisOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    paisOptions,
+  }));
+}
+
+/**
+ * Establece el RFC de la parte firmante del documento.
+ * @param rfcFirmante 
+ * Establece el RFC de la parte firmante del documento.
+ * Este valor es crucial para identificar legalmente a la entidad que suscribe el contrato.
+ */
+public setRfcFirmante(rfcFirmante: string): void {
+  this.update((state) => ({
+    ...state,
+    rfcFirmante,
+  }));
+}
+
+/**
+ * Establece el tipo de firmante del documento.
+ * @param tipoFirmante 
+ */
+public setTipoFirmante(tipoFirmante: string): void {
+  this.update((state) => ({
+    ...state,
+    tipoFirmante,
+  }));
+}
 
 }

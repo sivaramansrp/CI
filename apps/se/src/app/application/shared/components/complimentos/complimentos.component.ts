@@ -19,6 +19,7 @@ import {
   WEBPAGE,
 } from '@libs/shared/data-access-user/src';
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -57,9 +58,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 
 import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { CatalogoPaises } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TramiteStore } from '../../../estados/tramite.store';
-
 /**
  * Componente Complimentos.
  * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
@@ -87,6 +90,11 @@ import { TramiteStore } from '../../../estados/tramite.store';
  * Gestiona la lógica del componente Complimentos, incluyendo inicialización y limpieza.
  */
 export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  @Input() consultaState!: ConsultaioState;
+
 
   /**
    * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
@@ -103,12 +111,6 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @description Grupo de formularios para los complementos.
    */
   formaComplimentos!: FormGroup;
-
-  /**
-   * @type {FormGroup}
-   * @description Grupo de formularios para las obligaciones fiscales.
-   */
-  obligacionesFiscales!: FormGroup;
 
   /**
   * Constante para configurar el input de fecha.
@@ -322,6 +324,18 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * Stores the list of country catalog data used within the component.
+   * Each entry represents a country and its associated information.
+   */
+  paisDatos: CatalogoPaises[] = [];
+
+/**
+ * Notificación relacionada con accionistas extranjeros.
+ * Se utiliza para mostrar mensajes o alertas específicas en la interfaz.
+ */
+  public accionistasExtranjerosNotificacion!: Notificacion;
+
+  /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
@@ -333,7 +347,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private complimentosService: ComplimentosService,
     private consultaioQuery: ConsultaioQuery,
     private tramiteStore: TramiteStore,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private cdr: ChangeDetectorRef,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -342,25 +358,17 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.formularioDeshabilitado = seccionState.readonly;
-
-          this.inicializarCertificadoFormulario();
         })
       )
       .subscribe();
-  }
+      
+      if (this.datosSocioAccionistas) {
+        this.servicioDeFormularioService.registerArray('datosSocioAccionistas', this.datosSocioAccionistas);
+      }
 
-  /**
-    * Método para inicializar el formulario reactivo con los datos de la solicitud.
-    * 
-    * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
-    * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
-    */
-  inicializarCertificadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
+      if (this.datosSocioAccionistasExtrenjeros) {
+        this.servicioDeFormularioService.registerArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
+      }
   }
 
   /**
@@ -373,26 +381,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       this.formaComplimentos.patchValue({ fechaDeActa: fecha });
     }
   }
-
-  /**
- * @comdoc
- * Guarda los datos del formulario de combinación requerida.
- * 
- * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
- * - Si el formulario es de solo lectura, lo deshabilita.
- * - Si no es de solo lectura, lo habilita.
- * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
- */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-
-      this.formaComplimentos.disable();
-    } else {
-
-      this.formaComplimentos.enable();
-    }
-  }
+  
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    * 
@@ -408,15 +397,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 'SI', disabled: true }],
+        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
         nombreDelFederatario: ['', [Validators.required, Validators.maxLength(120)]],
-        nombreDeNotaria: ['', [Validators.required, Validators.maxLength(10)]],
+        nombreDeNotaria: ['', [Validators.required]],
         estado: ['', Validators.required],
-        nombreDeActa: ['', [Validators.required, Validators.maxLength(10)]],
+        nombreDeActa: ['', [Validators.required]],
         fechaDeActa: ['', Validators.required],
         rfc: ['', [
           Validators.required,
@@ -445,6 +434,74 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         this.aplicarDatosFormulario();
       }, 0);
     }
+
+    if (this.esFormularioSoloLectura) {
+      setTimeout(() => {
+        Object.keys(this.formaDatos.controls).forEach(controlName => {
+          this.formaDatos.get(controlName)?.disable();
+        });
+        this.cdr.detectChanges();
+      }, 0);
+    }
+
+    if (this.esFormularioSoloLectura) {
+      this.formaComplimentos.disable();
+    }
+
+    this.servicioDeFormularioService.registerForm('datosGeneralisForm', this.datosGeneralis);
+    this.servicioDeFormularioService.registerForm('obligacionesFiscalesForm', this.obligacionesFiscales);
+    this.servicioDeFormularioService.registerForm('formaModificacionesForm', this.formaModificaciones);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'datosGeneralisForm') {
+        this.formaComplimentos.get('datosGeneralis')?.markAllAsTouched();
+      } 
+      if (formName === 'obligacionesFiscalesForm') { 
+        this.formaComplimentos.get('obligacionesFiscales')?.markAllAsTouched();
+      } 
+      if (formName === 'formaModificacionesForm') {
+        this.formaComplimentos.get('formaModificaciones')?.markAllAsTouched();
+      }
+    })
+  }
+
+  onInputMaxLength(event: Event, maxLength: number): void { 
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
+}
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get datosGeneralis(): FormGroup {
+    return this.formaComplimentos.get('datosGeneralis') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get obligacionesFiscales(): FormGroup {
+    return this.formaComplimentos.get('obligacionesFiscales') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get formaModificaciones(): FormGroup {
+    return this.formaComplimentos.get('formaModificaciones') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get formaDatos(): FormGroup {
+    return this.formaComplimentos.get('formaSocioAccionistas.formaDatos') as FormGroup;
   }
 
   /**
@@ -473,13 +530,25 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     this.transformarValoresRadio(DATOS_TRANSFORMADOS);
 
+    if (
+      !DATOS_TRANSFORMADOS.obligacionesFiscales ||
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === undefined ||
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === null ||
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === '' ||
+      isNaN(Number(DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva))
+  ) {
+    if (!DATOS_TRANSFORMADOS.obligacionesFiscales) {
+      DATOS_TRANSFORMADOS.obligacionesFiscales = {};
+    }
+    DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva = 1;
+  }
 
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
-
+    const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
     this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
-
+    this.formaComplimentos.get('aceptarObligacionFiscal')?.setValue(ACEPTAR_OBLIGACION_FISCAL_VALUE, { emitEvent: false });
 
     if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
       this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
@@ -534,7 +603,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         apellidoMaterno: PRIMER_REGISTRO.apellidoMaterno || '',
         rfc: PRIMER_REGISTRO.rfc || ''
       };
-    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
+    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos ?? {})) {
       datos.formaSocioAccionistas.formaDatos = this.crearFormaDatosVacio();
     }
   }
@@ -547,7 +616,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.transformarFormaDatos(datos);
 
 
-    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
+    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas?.formaDatos;
 
 
     if (FORM_DATA_TO_APPLY) {
@@ -557,8 +626,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // Determine the correct form type based on radio values
-    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
-    const PERSONA_FISICA = datos.formaSocioAccionistas.tipoDePersona === 'true';
+    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas && datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
+    const PERSONA_FISICA = datos.formaSocioAccionistas && datos.formaSocioAccionistas.tipoDePersona === 'true';
 
     // Apply the appropriate form modification once
     if (NACIONALIDAD_MEXICANA) {
@@ -616,10 +685,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.inicializarCertificadoFormulario();
-    this.getCatalogoPaises();
+    //  this.getCatalogoPaises();
+    this.inicializarFormulario();
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
+    this.getPais();
+    this.obtenerEstados();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -651,6 +722,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       // Apply immediately for better user experience
       this.aplicarDatosFormulario();
     }
+
+    if (this.datosSocioAccionistas.length) {
+        this.servicioDeFormularioService.setArray('datosSocioAccionistas', this.datosSocioAccionistas);
+      }
+
+    if (this.datosSocioAccionistasExtrenjeros.length) {
+      this.servicioDeFormularioService.setArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
+    }
   }
 
   /**
@@ -663,45 +742,53 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     switch (tipoForma) {
       case TIPO_FORMA.DEFAULT:
         return this.fb.group({
-          taxId: ['', [Validators.required, Validators.maxLength(12)]],
-          razonSocial: ['', Validators.required],
-          pais: ['', Validators.required],
-          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
-          estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
+          taxId: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
+          razonSocial: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          pais: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          codigoPostal: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
+          estado: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          correoElectronico: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
         return this.fb.group({
-          taxId: ['', [Validators.required, Validators.maxLength(12)]],
-          nombre: ['', [Validators.required, Validators.maxLength(200)]],
-          pais: ['', Validators.required],
-          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
-          estado: ['', [Validators.required, Validators.maxLength(250)]],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
-          apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
+          taxId: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
+          nombre: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200)]),
+          pais: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          codigoPostal: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
+          estado: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(250)]),
+          correoElectronico: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
+          apellidoPaterno: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200)]),
         });
 
       case TIPO_FORMA.NATIONALIDAD_MEXICANA:
         return this.fb.group({
-          rfc: ['', [
+          rfc: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [
             Validators.required,
             Validators.minLength(12),
             Validators.maxLength(13),
             Validators.pattern(REGEX_RFC)
-          ]],
+          ]),
         });
 
       default:
-        return this.fb.group({
-          taxId: ['', [Validators.required, Validators.maxLength(12)]],
-          razonSocial: ['', Validators.required],
-          pais: ['', Validators.required],
-          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
-          estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
-        });
+        return this.createDefaultGroup();
     }
+  }
+
+   /**
+   * Obtiene el formulario de datos según el tipo de formulario.
+   * @returns {FormGroup} El formulario correspondiente.
+   */
+  createDefaultGroup(): FormGroup {
+    return this.fb.group({
+          taxId: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
+          razonSocial: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          pais: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          codigoPostal: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
+          estado: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
+          correoElectronico: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
+        });
   }
 
   /**
@@ -775,24 +862,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     ).contains('formaDatos');
   }
 
-  /**
-   * @description Obtiene el catálogo de países y actualiza las opciones de los campos del formulario.
-   * @returns {void}
-   */
-  getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
-        const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-        this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
-      });
-  }
+ 
 
   /**
   * method loadComboUnidadMedida
@@ -821,9 +891,11 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
         );
-        this.estados = datos;
+        
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
-        this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo){
+          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+        }
       });
   }
 
@@ -846,13 +918,27 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         VALUE = DATOS;
       }
       if (VALUE) {
-        
-        this.accionistasAgregados.emit(VALUE);
-        
 
+        this.accionistasAgregados.emit(VALUE);
+      }
+
+      if (VALUE.rfc) {
+        this.servicioDeFormularioService.pushToArray('datosSocioAccionistas', VALUE);
+      } else if (VALUE.taxId) {
+        this.servicioDeFormularioService.pushToArray('datosSocioAccionistasExtrenjeros', VALUE);
       }
     } else {
-      FORMADATOS_GROUP?.markAllAsTouched();
+    this.accionistasExtranjerosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Los campos marcados con (*) son requeridos.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      };
     }
   }
 
@@ -1055,6 +1141,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
       }
     }
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaSocioAccionistas: {
+          nationalidadMaxicana: VALUE.formaSocioAccionistas.nationalidadMaxicana,
+          tipoDePersona: VALUE.formaSocioAccionistas.tipoDePersona,
+        }
+      }
+    );
   }
 
   /**
@@ -1062,10 +1156,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * Actualiza el estado del almacén con la fecha de pago proporcionada.  
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.formaComplimentos.patchValue({
-      fechaExpedicion: nuevo_valor,
-    });
+    this.formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        obligacionesFiscales: {
+          fechaExpedicion: nuevo_valor
+        }
+      }
+    );
   }
 
   /**
@@ -1073,10 +1172,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
  * Actualiza el estado del almacén con la fecha de pago proporcionada.  
  */
   cambioFecha(nuevo_valor: string): void {
-    this.formaComplimentos.patchValue({
-      fechaDeActa: nuevo_valor,
-    });
+    this.formaComplimentos.get('formaModificaciones.fechaDeActa')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaDeActa(nuevo_valor);
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaModificaciones: {
+          fechaDeActa: nuevo_valor
+        }
+      }
+    );
   }
 
   /**
@@ -1313,6 +1417,23 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        datosGeneralis: {
+          paginaWWeb: UPPERCASEVALUE
+        }
+      }
+    );
+  }
+
+  /**
+   * Handles input change for Localización field and converts to uppercase
+   * @param event Input event
+        datosGeneralis: {
+          paginaWWeb: UPPERCASEVALUE
+        }
+      }
+    );
   }
 
   /**
@@ -1328,6 +1449,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        datosGeneralis: {
+          localizacion: UPPERCASEVALUE
+        }
+      }
+    );
   }
 
   /**
@@ -1390,5 +1518,52 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       CONTROL?.markAsDirty();
       CONTROL?.markAsTouched();
     }
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaSocioAccionistas: {
+          formaDatos: this.formaDatos.value
+        }
+      }
+    );
+  }
+
+
+  /**
+   * Obtiene la lista de países desde el servicio `complimentosService` y actualiza las opciones
+   * de los campos de formulario correspondientes con los datos recibidos.
+   * 
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza tanto el campo 'pais' en `camposFormularioDefault` como el campo correspondiente
+   * en `camposFormularioTipoPersona` con las opciones obtenidas.
+   */
+  getPais():void {
+    this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+   const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === 'pais'
+        );
+        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+          (ele) => ele.campo === PAIS
+        );
+        this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
+
+        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos
+          .filter((item: Catalogo) => item.clave !== undefined)
+          .map((item: Catalogo) => ({
+            ...item,
+            clave: Number(item.clave)
+          })) as CatalogoPaises[];
+    });
+    
+  }
+
+  /**
+ * Obtiene la lista de estados llamando al servicio `complimentosService`.
+ * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+ */
+obtenerEstados():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estados = res.datos;
+    }); 
   }
 }
