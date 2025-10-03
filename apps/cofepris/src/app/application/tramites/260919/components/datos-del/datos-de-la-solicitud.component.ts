@@ -928,8 +928,8 @@ this.tableData = [...this.tableData, FORM_DATA];
       };
       this.indiceFilaSeleccionada = null;
     } else {
-      this.mercanciasData.push(FORM_DATA);
-    }
+this.mercanciasData = [...this.mercanciasData, FORM_DATA];  
+  }
 
     this.tableData2 = [...this.mercanciasData];
     this.dataDeLaSolicitudForm.reset();
