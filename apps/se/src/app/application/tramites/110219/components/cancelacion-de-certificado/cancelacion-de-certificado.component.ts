@@ -5,6 +5,7 @@ import {
   CERTIFICATE_OF_ORIGIN_NUMBER,
   Catalogo,
   CatalogoSelectComponent,
+  CatalogoServices,
   CatalogosSelect,
   ConfiguracionColumna,
   ConsultaioQuery,
@@ -57,6 +58,14 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Estado de consulta de datos (readonly, etc).
    */
   consultaDatos!: ConsultaioState;
+
+ /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  tramites:string='110219';
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -220,7 +229,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -245,9 +255,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       fechaInicial: new FormControl(this.solicitudState?.fechaInicial, [Validators.required]),
       fechaFinal: new FormControl(this.solicitudState?.fechaFinal, [Validators.required]),
     });
+    this.obtenerPaisesBloque();
+    this.obtenerTratadoAcuerdo();
 
-    this.getTratadoData();
-    this.getPaisdata();
     this.getSolicitudesTabla();
     this.inicializarEstadoFormulario();
 
@@ -460,30 +470,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Obtiene los datos del catálogo de tratados.
-   */
-  getTratadoData(): void {
-    this.certificadoService
-      .getTratadoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp): void => {
-        this.tratadoCatalogo.catalogos = resp as Catalogo[];
-      });
-  }
-
-  /**
-   * Obtiene los datos del catálogo de países.
-   */
-  getPaisdata(): void {
-    this.certificadoService
-      .getTratadoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp): void => {
-        this.paisCatalogo.catalogos = resp as Catalogo[];
-      });
-  }
-
+ 
   /**
    * Obtiene los datos de la tabla de solicitudes.
    */
@@ -597,6 +584,41 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   private handleCertificadoDblClick(_cert: ColumnasTabla):void {
     // Aquí tu lógica: navegar, abrir modal, etc.
     // p.ej. this.router.navigate(['/detalle', cert.numeroCertificado]);
+  }
+
+
+
+  /**
+   * Obtiene el catálogo de tratados o acuerdos relacionados con el trámite actual.
+   * 
+   * Realiza una solicitud al servicio `catalogoService` para recuperar los datos de tratados/acuerdos,
+   * utilizando el identificador de trámite almacenado en `this.tramites`. Los resultados se asignan a
+   * la propiedad `this.tratadoAcuerdo`. La suscripción se gestiona para finalizar automáticamente cuando
+   * el componente se destruye, evitando fugas de memoria.
+   */
+  obtenerTratadoAcuerdo(): void {
+    this.catalogoService.tratadoAcuerdoCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (response) => {
+          this.tratadoCatalogo.catalogos = response?.datos ?? []
+        }
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de países por bloque relacionado con los trámites actuales.
+   * Realiza una solicitud al servicio de catálogo y actualiza la propiedad `paisBloque` con los datos recibidos.
+   * La suscripción se cancela automáticamente cuando el componente se destruye.
+   */
+  obtenerPaisesBloque(): void {
+    this.catalogoService.paisBloqueCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (response) => { 
+           this.paisCatalogo.catalogos = response?.datos ?? [];
+        }
+      });
   }
 
   /**
