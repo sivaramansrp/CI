@@ -397,7 +397,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
+        opinionPositiva: [{ value: 1, disabled: true }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
