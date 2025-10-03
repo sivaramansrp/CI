@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AlertComponent, ConsultaioQuery, ConsultaioState, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
@@ -16,14 +16,14 @@ import { DestinatarioDeComponent } from '../../components/destinatario-de/destin
     SolicitanteComponent,
     CertificadoOrigenComponent,
     DestinatarioDeComponent,
-    AlertComponent,
     DatosCertificadoComponent
-],
+  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
 
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+  @ViewChild(DestinatarioDeComponent) destinatarioDeComponent!: DestinatarioDeComponent;
 
   // Decorador ViewChild para acceder a la instancia del componente SolicitanteComponent
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
@@ -39,13 +39,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   // Índice para manejar la pestaña seleccionada
   indice: number = 1;
- /**
- * Evento que emite un valor booleano al componente padre.
- * Se activa cuando el subíndice del child componente cambia.
- * - true: el subíndice es 3 (mostrar alerta)
- * - false: cualquier otro valor de subíndice
- */
-   @Output() alertaEvento = new EventEmitter<boolean>();
+  /**
+  * Evento que emite un valor booleano al componente padre.
+  * Se activa cuando el subíndice del child componente cambia.
+  * - true: el subíndice es 3 (mostrar alerta)
+  * - false: cualquier otro valor de subíndice
+  */
+  @Output() alertaEvento = new EventEmitter<boolean>();
 
   /**
    * Clase CSS utilizada para mostrar alertas informativas.
@@ -58,9 +58,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Esta constante se usa para almacenar textos y valores relacionados con el pago de derechos.
    */
   TEXTOS = PAGO_DE_DERECHOS;
- /**
-   * Esta variable se utiliza para almacenar el índice del subtítulo.
-   */
+  /**
+    * Esta variable se utiliza para almacenar el índice del subtítulo.
+    */
   public consultaState!: ConsultaioState;
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
@@ -71,7 +71,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
 
-  constructor(private cdr: ChangeDetectorRef,private consultaQuery: ConsultaioQuery,
+  constructor(private cdr: ChangeDetectorRef, private consultaQuery: ConsultaioQuery,
     public certificadoValidacionService: CertificadoValidacionService) {
     // Constructor no realiza ninguna acción en este caso
   }
@@ -101,12 +101,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   seleccionaTab(indice: number): void {
     // Establece el índice de la pestaña seleccionada
     this.indice = indice;
-     /**
- * Verifica si el subíndice actual es 3 y emite un valor booleano al padre.
- * - true: mostrar alerta
- * - false: ocultar alerta
- */
-     this.alertaEvento.emit(this.indice === 3);
+    /**
+* Verifica si el subíndice actual es 3 y emite un valor booleano al padre.
+* - true: mostrar alerta
+* - false: ocultar alerta
+*/
+    this.alertaEvento.emit(this.indice === 3);
   }
   /**
    * @inheritdoc
@@ -133,6 +133,18 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
   }
+
+  /** Método público para validar todos los formularios del paso uno */
+  public validateAll(): boolean {
+    if (this.destinatarioDeComponent) {
+      return this.destinatarioDeComponent.validateAll();
+    }
+    if (this.datosCertificadoComponent) {
+      return this.datosCertificadoComponent.validateAll();
+    }
+    return true;
+  }
+
   /**
 * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
 * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -157,19 +169,5 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  }
-
-  /**
-   * @method seleccionaTab
-   * @description Selecciona una pestaña y actualiza el índice.
-   * @param {number} i - El índice de la pestaña seleccionada.
-   */
-
-    /** Método público para validar todos los formularios del paso uno */
-  public validateAll(): boolean {
-    if (this.datosCertificadoComponent) {
-      return this.datosCertificadoComponent.validateAll();
-    }
-    return true;
   }
 }

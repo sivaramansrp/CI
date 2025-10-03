@@ -1,7 +1,7 @@
 import { API_POST_SOLICITUD_TRATADOS_CONFIGURACION, API_POST_TRATADO_CRITERIO } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { CriterioConfiguracionRequest } from "../models/request/tratado-configuracion-request.model";
-import { CriterioConfiguracionResponse } from "../models/response/tratado-configuracion-request.model";
+import { CriterioConfiguracionResponse } from "../models/response/tratado-configuracion-response.model";
 import { CriterioTratadoResponse } from "../models/response/tratado-criterio-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";

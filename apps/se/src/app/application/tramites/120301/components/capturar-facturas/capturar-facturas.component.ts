@@ -436,7 +436,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     }
     this.esFormaValido = false;
     this.formularioAlertaError = '';
-    window.scrollTo(0, 0);
     this.mostrarTabs.emit(true);
   }
 
@@ -489,7 +488,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     if (!this.facturaForm.valid) {
       this.formularioAlertaError = ERROR_FORMA_ALERT;
       this.esFormaValido = true;
-      window.scrollTo(0, 0);
       return;
     }
     this.formularioAlertaError = '';
@@ -563,7 +561,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'Debe seleccionar una factura para modificar.',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -691,7 +689,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'Seleccione el monto a eliminar.',
+        mensaje: 'Seleccione factura a eliminar.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',

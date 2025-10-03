@@ -36,8 +36,8 @@ import {
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
+import { FacturasTplAsociadaResponse } from '../../models/response/datos-factura-response.model';
 import { FacturasTplAsociadasRequest } from '../../models/request/facturas-tpl-asociadas-request.model';
 import { FacturasTplEliminarRequest } from '../../models/request/facturas-tpl-eliminar-request.model';
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
@@ -100,6 +100,18 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   @Input()
   formularioDeshabilitado: boolean = false;
+
+  @Input()
+  informacionFacturasAsociadas!: FacturasTplAsociadaResponse;
+  /**
+   * @property {FacturasTplAsociadaResponse} informacionFacturasAsociadas - Información de las facturas asociadas.
+   */
+  informacionFacturaAsociadas!: FacturasTplAsociadaResponse;
+
+  /**
+   * @property {boolean} visualizarEvaluacion - Indica si se debe mostrar la evaluación.
+   */
+  visualizarEvaluacion: boolean = true;
 
   /**
    * @property {FormGroup} formularioAsociacionFactura - El grupo de formularios para capturar los datos de las facturas asociadas.
@@ -386,7 +398,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private elegibilidadTextilesService: ElegibilidadTextilesService,
     private facturasAsociadasService: FacturasAsociadasService,
     private tramite120301Query: Tramite120301Query,
     private cd: ChangeDetectorRef,
@@ -433,7 +444,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.recuperarDatos();
-    //this.recuperarDatosAsociadas();
 
     this.formularioAsociacionFactura.statusChanges
       .pipe(
@@ -461,10 +471,41 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       this.seccionStore.establecerFormaValida([false]);
     }
     if (this.formularioDeshabilitado) {
+      this.informacionFacturaAsociadas = this.informacionFacturasAsociadas;
+      this.llenarTablaFacturasAsociadas(this.informacionFacturaAsociadas);
+      this.visualizarEvaluacion = false;
       this.formularioAsociacionFactura.disable();
     }
   }
 
+  /**
+   * Llena la información que se mostrará en la tabla de facturas asociadas.
+   * @param data - Datos de la respuesta que contiene la información de las facturas asociadas.
+   */
+  llenarTablaFacturasAsociadas(data: FacturasTplAsociadaResponse): void {
+    if (data.facturas_asociadas) {
+      this.facturasAsociadas = [
+        {
+          candidadAsociada: data.facturas_asociadas.cantidad_asociada.toString(),
+          numeroDeLaFactura: data.facturas_asociadas.factura_expedicion.num_factura,
+          razonSocial: data.facturas_asociadas.factura_expedicion.razon_social,
+          domicilio: data.facturas_asociadas.factura_expedicion.domicilio,
+          fechaExpedicionFactura: data.facturas_asociadas.factura_expedicion.fecha_expedicion,
+          cantidadTotal: data.facturas_asociadas.factura_expedicion.cantidad.toString(),
+          cantidadDisponible: data.facturas_asociadas.factura_expedicion.cantidad_disponible.toString(),
+          unidadMedida: data.facturas_asociadas.factura_expedicion.unidad_medida.descripcion,
+          valorDolares: data.facturas_asociadas.factura_expedicion.importe_dolares.toString(),
+          idFacturaExpedicion: data.facturas_asociadas.id_factura_expedicion,
+          idExpedicion: data.facturas_asociadas.id_expedicion
+        }
+      ];
+    }
+    if (data.resultado_equivalencia) {
+      this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.setValue(data.resultado_equivalencia.cantidad_factura);
+      this.formularioAsociacionFactura.get('metrosCuadradosEquivalentes')?.setValue(data.resultado_equivalencia.total_equivalente);
+      this.labelUnidad = data.resultado_equivalencia.unidad_label;
+    }
+  }
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo para capturar los datos de las facturas asociadas.
@@ -568,12 +609,25 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       cantidad_asociada: this.formularioAsociacionFactura.get('cantidadFacturas')?.value
     };
     if (!PAYLOAD.id_expedicion || !PAYLOAD.id_factura_expedicion || !PAYLOAD.cantidad_asociada) {
+      if (!PAYLOAD.cantidad_asociada) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar la cantidad asociada mayor a 0.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'Debe seleccionar una factura y capturar la cantidad a asociar.',
+        mensaje: 'La factura no puede ser asociada, debido a que la unidad de medida es diferente a la asociada a la constancia.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -703,7 +757,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'Debe seleccionar al menos una factura a eliminar.',
+        mensaje: 'Seleccione el monto a eliminar.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',

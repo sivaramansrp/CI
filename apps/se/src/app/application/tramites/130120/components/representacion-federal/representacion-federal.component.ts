@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, Notificacion, SeccionLibState, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
@@ -10,6 +10,8 @@ import { DatosGrupos } from '../../models/permiso-importacion-modification.model
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
+import { FormValidationService } from '../../services/formValidation.service';
 
 /**
  * @component
@@ -114,7 +116,9 @@ export class RepresentacionFederalComponent implements OnInit {
     public query: Tramite130120Query,
     public consultaQuery: ConsultaioQuery,
     public permisoImportacionService: PermisoImportacionService,
-    private catalogosService: CatalogosTramiteService
+    private catalogosService: CatalogosTramiteService,
+    private cdr: ChangeDetectorRef,
+    private formValidation: FormValidationService
   ) {
   }
 
@@ -157,7 +161,7 @@ export class RepresentacionFederalComponent implements OnInit {
   initActionFormBuild(): void {
     this.datosFederal = this.fb.group({
       entidad_federativa: [this.datosState.datosFederal.entidad_federativa, Validators.required],
-      representacion_federal: [{ value: this.datosState.datosFederal.representacion_federal || null, disabled: true }, Validators.required]
+      representacion_federal: [this.datosState.datosFederal.representacion_federal, Validators.required]
     });
   }
 
@@ -205,7 +209,6 @@ export class RepresentacionFederalComponent implements OnInit {
     } else {
       this.representacionOpcion = [];
       this.datosFederal.get('representacion_federal')?.reset();
-      this.datosFederal.get('representacion_federal')?.disable();
     }
   }
 
@@ -224,16 +227,20 @@ export class RepresentacionFederalComponent implements OnInit {
           } else {
             this.representacionOpcion = [];
             this.datosFederal.get('representacion_federal')?.reset();
-            this.datosFederal.get('representacion_federal')?.disable();
           }
         },
         error: (err) => {
           console.error('Error al cargar clasificación de régimen', err);
           this.representacionOpcion = [];
           this.datosFederal.get('representacion_federal')?.reset();
-          this.datosFederal.get('representacion_federal')?.disable();
         }
       });
+  }
+
+  validarFormulario(): boolean {
+    this.formValidation.marcarFormularioComoTocado(this.datosFederal);
+    this.cdr.detectChanges();
+    return this.datosFederal.valid;
   }
 
   /**
