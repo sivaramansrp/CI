@@ -231,6 +231,29 @@ donanteDomicilio(): void {
   });
   this.inicializarEstadoFormulario();
 }
+/**
+ * Devuelve el FormGroup correspondiente al formulario del destinatario.
+ * Se utiliza para acceder fácilmente a los controles del formulario de destinatario.
+ */
+get destinatarioForm(): FormGroup {
+  return this.registroForm.get('destinatarioForm') as FormGroup;
+}
+
+/**
+ * Devuelve el FormGroup correspondiente al formulario de domicilio.
+ * Permite acceder a los controles del formulario de domicilio de manera sencilla.
+ */
+get domicilioForm(): FormGroup {
+  return this.registroForm.get('domicilioForm') as FormGroup;
+}
+
+/**
+ * Devuelve el FormGroup correspondiente al formulario del representante legal.
+ * Facilita el acceso a los controles del formulario del representante legal.
+ */
+get representanteLegalForm(): FormGroup {
+  return this.registroForm.get('representanteLegalForm') as FormGroup;
+}
 
 /**
  * Crea el formulario de destinatario.
