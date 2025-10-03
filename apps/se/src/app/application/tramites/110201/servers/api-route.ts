@@ -35,13 +35,9 @@ const PROCEDURE = '/sat-t110201';
  * Rutas de la API para el procedimiento 110201
  */
 export const PROC_110201 = {
-    ESTADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/estado`,
-    PAIS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/pais`,
-    POST_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/guardar`,
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
-    BUSCAR: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/solicitud/buscar-mercancias`,
-    TRATADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/tratado`,
-    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/registro-solicitud/guardar`,
-    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/consulta/${id}`,
-    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
+    BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };

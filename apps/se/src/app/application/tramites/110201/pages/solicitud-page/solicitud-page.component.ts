@@ -190,31 +190,19 @@ export class SolicitudPageComponent implements OnInit {
    * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
+ getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
-      
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.datosPasos.indice = 1;
         return;
       }
       this.obtenerDatosDelStore()
     }
     else if (e.valor > 0 && e.valor <= this.pasos.length) {
-      
-      // Actualizar el índice y datosPasos
-      this.indice = e.valor;
-      this.datosPasos.indice = e.valor;
-      if (e.valor > 0 && e.valor < 5) {
-        this.indice = e.valor;
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
-        }
-      }
+      this.pasoNavegarPor(e);
     }
   }
 
@@ -283,7 +271,7 @@ return arr.map((item: any) => ({
         fecha_fin: item.fechaInicial,
         mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
       },
-
+ 
       destinatario: {
         nombre: item.nombre,
         primer_apellido: item.apellidoPrimer,
@@ -302,7 +290,7 @@ return arr.map((item: any) => ({
         },
         medio_transporte: item.transporte
       },
-
+ 
       datos_del_certificado: {
         observaciones: item.observaciones,
         precisa: item.presica,
@@ -316,18 +304,26 @@ return arr.map((item: any) => ({
         justificacion: item.justificacion
       }
     };
-
-    this.registroService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-        this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
-        this.datosPasos.indice = 2;
-        this.indice = 2;
-         this.wizardComponent.siguiente();
-      }
-
-      return response;
+ 
+    this.registroService.guardarDatosPost(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+          this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
+          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+        }
+      },
     });
+  }
+ pasoNavegarPor(e: AccionBoton): void {
+    this.indice = e.valor;
+    this.datosPasos.indice = e.valor;
+    if (e.valor > 0 && e.valor < 5) {
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
 
   /**

@@ -8,7 +8,7 @@
       <ng-container *ngIf="!cargarArchivo">
         <div class="row">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="optionsTratado.catalogos || []" [label]="'Tratado/Acuerdo'"
+            <app-catalogo-select [catalogo]="optionsTratado.catalogos || []" [label]="'Tratado / Acuerdo'"
               [required]="true" id="tratado" formControlName="tratado" [isDisabled]="soloLectura"
               (change)=" setValoresStore(validacionForm, 'tratado', 'setTratado') "
               [placeholder]="optionsTratado.primerOpcion"
@@ -17,7 +17,7 @@
 
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="optionsPais.catalogos || []" [label]="'País/Bloque'" [required]="true"
+            <app-catalogo-select [catalogo]="optionsPais.catalogos || []" [label]="'País / Bloque'" [required]="true"
               id="pais" formControlName="pais" [isDisabled]="soloLectura"
               [placeholder]="optionsPais.primerOpcion"
               (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
