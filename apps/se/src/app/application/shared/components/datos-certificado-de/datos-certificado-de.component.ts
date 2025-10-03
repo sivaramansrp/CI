@@ -373,14 +373,14 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * @param event - Objeto Catalogo que representa la entidad seleccionada.
    */
   onChangeEntidad(event: Catalogo): void {
-    const SELECTED_ENTIDAD = event;
+    const ENTIDAD_SELECCIONADA = event;
     this.getRepresentacionDatos({
-      clave: SELECTED_ENTIDAD.clave ?? '',
-      descripcion: SELECTED_ENTIDAD.descripcion ?? ''
+      clave: ENTIDAD_SELECCIONADA.clave ?? '',
+      descripcion: ENTIDAD_SELECCIONADA.descripcion ?? ''
     });
     
     // Emit the event to parent component
-    this.entidadFederativaSeleccionEvent.emit(SELECTED_ENTIDAD);
+    this.entidadFederativaSeleccionEvent.emit(ENTIDAD_SELECCIONADA);
   }
 
   /**
@@ -390,11 +390,6 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * @param cveEntidad - Clave de la entidad para filtrar las representaciones federales.
    */
   getRepresentacionDatos(cveEntidad: { clave: string; descripcion: string }): void {
-    if (!this.idProcedimiento) {
-      console.warn('idProcedimiento is required to fetch representation data');
-      return;
-    }
-
     this.catalogoServices
       .representacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad.clave)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -417,16 +412,10 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
           ((items.descripcion ?? '').toString().trim().toLowerCase() !==
             DESCRIPCION_ENTIDAD)
         );
-
-        // Update the form control with the matched value
         this.formDatosCertificado
           .get('representacionFederalDates')
           ?.setValue(MATCHED ? MATCHED.clave : null);
-
-        // Update the representation federal data array
         this.representacionFederal$ = MATCHED ? [MATCHED, ...OTHERS] : OTHERS;
-
-        // Emit the form change event
         this.setValoresStore('', 'representacionFederalDates', '');
       });
   }
