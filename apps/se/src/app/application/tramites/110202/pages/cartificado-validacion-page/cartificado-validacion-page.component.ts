@@ -34,6 +34,7 @@ interface AccionBoton {
   styleUrl: './cartificado-validacion-page.component.scss'
 })
 export class CartificadoValidacionPageComponent {
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
   /**
    * Lista de pasos del asistente.
    * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
@@ -123,6 +124,14 @@ export class CartificadoValidacionPageComponent {
   getValorIndice(e: AccionBoton): void {
     // Verifica si el valor de la acción está en el rango adecuado
     if (e.valor > 0 && e.valor < 5) {
+      // Antes de avanzar, valida todos los formularios del paso uno si estamos en el primer paso
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        const isValid = this.pasoUnoComponent.validateAll();
+        if (!isValid) {
+          // No avanzar si hay errores
+          return;
+        }
+      }
       // Actualiza el índice del paso basado en el valor de la acción
       this.indice = e.valor;
 
