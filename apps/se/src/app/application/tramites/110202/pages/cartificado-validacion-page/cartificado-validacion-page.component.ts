@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import {DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
@@ -53,6 +53,13 @@ export class CartificadoValidacionPageComponent {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+    * @property {string} formErrorAlert
+    * @description
+    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+    */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
   ) {
     this.tramiteQuery.FormaValida$.pipe(
@@ -103,6 +110,22 @@ export class CartificadoValidacionPageComponent {
   TEXTOS = PAGO_DE_DERECHOS;
 
   /**
+  * @property {boolean} esFormaValido
+  * @description
+  * Indica si el formulario del paso actual es válido.
+  * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+  */
+  esFormaValido: boolean = false;
+
+  /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Selecciona una pestaña del asistente (wizard).
    * Este método actualiza el índice del paso seleccionado y, por lo tanto, cambia el paso que se está mostrando.
    * 
@@ -122,6 +145,15 @@ export class CartificadoValidacionPageComponent {
    * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
+        this.esFormaValido = false;
+
+        if (this.indice === 1 && e.accion === 'cont') {
+          const ISVALID = this.validarTodosFormulariosPasoUno();
+          if (!ISVALID) {
+            this.esFormaValido = true;
+            return;
+          }
+        }
     // Verifica si el valor de la acción está en el rango adecuado
     if (e.valor > 0 && e.valor < 5) {
       // Antes de avanzar, valida todos los formularios del paso uno si estamos en el primer paso
@@ -144,6 +176,27 @@ export class CartificadoValidacionPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+    /**
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validateAll();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 
 }
