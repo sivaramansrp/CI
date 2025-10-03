@@ -153,8 +153,6 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * Se utiliza para cargar los datos y suscribirse a los cambios del formulario.
    */
   ngOnInit(): void {
-    this.cargarIdioma(this.procedure);
-    this.cargarEntidadFederativa();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -199,88 +197,11 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Método que selecciona una entidad federativa y actualiza el estado en el store.
-   * También carga las representaciones federales correspondientes a la entidad seleccionada.
-   * @param estado El estado de la entidad federativa seleccionada.
-   */
-  entidadFederativaSeleccion(estado: Catalogo): void {
-    this.store.setEntidadFederativaSeleccion(estado);
-    if (estado && estado.clave) {
-      this.cargarRepresentacionFederal({ 
-        clave: estado.clave, 
-        descripcion: estado.descripcion || '' 
-      });
-    }
-  }
-
-  /**
    * Método que selecciona una representación federal y actualiza el estado en el store.
    * @param estado El estado de la representación federal seleccionada.
    */
   representacionFederalSeleccion(estado: Catalogo): void {
     this.store.setRepresentacionFederalDatosSeleccion(estado);
-  }
-
-  /**
-   * Método para cargar la lista de idiomas desde el servicio global.
-   */
-  cargarIdioma(tramite: string): void {
-    this.catalogoService
-      .catalogoIdioma(tramite)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data) => {
-          this.store.setIdiomaDatos(data.datos as Catalogo[]);
-        }
-      );
-  }
-
-  /**
-   * Método para cargar la lista de representaciones federales desde el servicio global.
-   */
-  cargarRepresentacionFederal(cveEntidad: { clave: string; descripcion: string }): void {
-    this.catalogoService
-      .representacionFederalCatalogo(this.procedure, cveEntidad.clave)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((res) => {
-        const DESCRIPCION_ENTIDAD: string = (cveEntidad.descripcion ?? '')
-          .toString()
-          .trim()
-          .toLowerCase();
-
-        const CATALOGOS = res.datos ?? [];
-
-        const MATCHED = CATALOGOS.find(
-          (item) =>
-          ((item.descripcion ?? '').toString().trim().toLowerCase() ===
-            DESCRIPCION_ENTIDAD)
-        );
-
-        const OTHERS = CATALOGOS.filter(
-          (items) =>
-          ((items.descripcion ?? '').toString().trim().toLowerCase() !==
-            DESCRIPCION_ENTIDAD)
-        );
-        this.store.setRepresentacionFederalDatos(MATCHED ? [MATCHED, ...OTHERS] : OTHERS);
-        if (this.datosCertificadoDeRef && this.datosCertificadoDeRef.formDatosCertificado) {
-          this.datosCertificadoDeRef.formDatosCertificado
-            .get('representacionFederalDates')?.setValue(MATCHED ? MATCHED.clave : null);
-        }
-      });
-  }
-
-  /**
-   * Método para cargar la lista de entidades federativas desde el servicio global.
-   */
-  cargarEntidadFederativa(): void {
-    this.catalogoService
-      .entidadesFederativasCatalogo(this.procedure)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data) => {
-          this.store.setEntidadFederativaDatos(data.datos as Catalogo[]);
-        }
-      );
   }
 
   /**
