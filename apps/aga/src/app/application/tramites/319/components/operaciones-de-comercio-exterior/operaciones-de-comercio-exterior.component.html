@@ -25,6 +25,7 @@
             [datos]="cuerpoSolicitarTablaFila"
             (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [styleCenter]="true"
           >
           </app-tabla-dinamica>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -43,6 +44,7 @@
         [tipoSeleccionTabla]="tipoPersonasSeleccion"
         [configuracionTabla]="configuracionPersonasColumnas"
         [datos]="cuerpoPersonasTablaFila"
+        [styleCenter]="true"
       >
       </app-tabla-dinamica>
    
