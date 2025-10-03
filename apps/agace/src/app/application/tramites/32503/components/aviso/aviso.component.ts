@@ -852,32 +852,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method showModal
-   * @description Helper method to safely show Bootstrap modals with compatibility handling.
+   * @description Helper method to show Bootstrap modals using Bootstrap's native API.
    * @param {ElementRef} modalElement - The modal element reference to show.
    * @returns {void}
    */
   private static showModal(modalElement: ElementRef): void {
     try {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      
       const MODAL_EL = modalElement.nativeElement;
-      
-      MODAL_EL.classList.add('show');
-      MODAL_EL.style.display = 'block';
-      MODAL_EL.setAttribute('aria-modal', 'true');
-      MODAL_EL.removeAttribute('aria-hidden');
-      
-      const BACKDROP = document.createElement('div');
-      BACKDROP.className = 'modal-backdrop fade show';
-      BACKDROP.onclick = (): void => {
-        AvisoComponent.hideModal(modalElement);
-      };
-      document.body.appendChild(BACKDROP);
-      
-      document.body.classList.add('modal-open');
-      
+      const MODAL_INSTANCE = new Modal(MODAL_EL);
+      MODAL_INSTANCE.show();
     } catch (error) {
       console.error('Error showing modal:', error);
     }
@@ -885,23 +868,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
   /**
    * @method hideModal
-   * @description Helper method to hide Bootstrap modals.
+   * @description Helper method to hide Bootstrap modals using Bootstrap's native API.
    * @param {ElementRef} modalElement - The modal element reference to hide.
    * @returns {void}
    */
   private static hideModal(modalElement: ElementRef): void {
     try {
       const MODAL_EL = modalElement.nativeElement;
-      
-      MODAL_EL.classList.remove('show');
-      MODAL_EL.style.display = 'none';
-      MODAL_EL.setAttribute('aria-hidden', 'true');
-      MODAL_EL.removeAttribute('aria-modal');
-      
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_EL) || new Modal(MODAL_EL);
+      MODAL_INSTANCE.hide();
     } catch (error) {
       console.error('Error hiding modal:', error);
     }
@@ -1005,8 +980,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   abiertoMercancia(esModificacion: boolean = false): void {
+
+    if (this.domicilioFormulario.invalid) {
+      Object.keys(this.domicilioFormulario.controls).forEach(key => {
+        this.domicilioFormulario.get(key)?.markAsTouched();
+      });
+      this.mostrarAlertaValidacionMercancia = true;
+      return;
+    }
+
     this.mostrarAlertaValidacionMercancia = false;
-    
+
     if (esModificacion && this.filaSeleccionadaMercanciaLista && this.filaSeleccionadaMercanciaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaMercanciaLista[0];
       this.precargarDatosMercancia(REGISTRO_SELECCIONADO);
@@ -1017,18 +1001,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
 
     if (this.modalMercancia) {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      
-      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
-      if (WIN.bootstrap && WIN.bootstrap.Modal) {
-        const MODAL_INSTANCE = new WIN.bootstrap.Modal(this.modalMercancia.nativeElement);
-        MODAL_INSTANCE.show();
-      } else {
-        const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
-        MODAL_INSTANCE.show();
-      }
+      AvisoComponent.showModal(this.modalMercancia);
     }
   }
   /**
@@ -1111,6 +1084,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarDomicilio(): void {
+
+    if (this.domicilioFormulario.invalid) {
+     Object.keys(this.domicilioFormulario.controls).forEach(key => {
+        this.domicilioFormulario.get(key)?.markAsTouched();
+      });
+    }
+
     if (this.domicilioFormulario.valid) {
       this.mostrarAlertaValidacionDomicilio = false;
       
@@ -1142,12 +1122,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
       this.domicilioFormulario.reset();
       this.closeDomicilio.nativeElement.click();
-    } else {
-      this.mostrarAlertaValidacionDomicilio = true;
-      
-      Object.keys(this.domicilioFormulario.controls).forEach(key => {
-        this.domicilioFormulario.get(key)?.markAsTouched();
-      });
     }
   }
   /**

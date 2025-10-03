@@ -56,3 +56,15 @@
         padding-right: 25px
     }
 }
+
+::ng-deep app-catalogo-select.required {
+    border: none !important;
+}
+
+::ng-deep app-catalogo-select.required .form-select {
+    border: #fe4a47 1px solid !important;
+}
+
+::ng-deep app-catalogo-select .form-label {
+    border: none !important;
+}
