@@ -1,7 +1,8 @@
 import { 
     API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION,
     API_GET_SOLICITUDES_NICO_DESCRIPCION,
-    API_GET_SOLICITUDES_RECENTES
+    API_GET_SOLICITUDES_RECENTES,
+    API_GET_SOLICITUDES_UNIDAD_MEDIDA
 } from '../../../../../core/server/api-router';
 import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../models/220201/capturar-solicitud.model';
@@ -79,6 +80,17 @@ export class RegistroSolicitudService {
         return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
     }
 
+    /**
+     * Obtiene la unidad de medida asociada a un trámite y fracción específica.
+     *
+     * @param tramite - El identificador numérico del trámite.
+     * @param cveFraccion - La clave de la fracción para la cual se solicita la unidad de medida.
+     * @returns Un observable que emite la respuesta base con el catálogo de unidades de medida.
+     */
+    obtieneUnidadMedida(tramite: number, cveFraccion: string): Observable<BaseResponse<Catalogo>> {
+        const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_UNIDAD_MEDIDA(tramite.toString(), cveFraccion)}`;
+        return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
+    }
 
 }
 

@@ -228,3 +228,15 @@ export const API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION = (TRAMITE: st
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-descripcion-nico
  */
 export const API_GET_SOLICITUDES_NICO_DESCRIPCION = (TRAMITE: string, cveFraccion: string,cveNico: string) : string => `sat-t${TRAMITE}/fraccion/${cveFraccion}/nico/${cveNico}/descripcion`;
+
+
+/**
+ * Generates the API endpoint URL for retrieving the unit of measurement associated with a specific tariff fraction.
+ *
+ * @param TRAMITE - The identifier of the procedure or process (trámite) to be used in the API path.
+ * @param cveFraccion - The code of the tariff fraction (fracción arancelaria) for which the unit of measurement is requested.
+ * @returns The constructed API endpoint URL as a string.
+ *
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-descripcion-umt-fraccion-arancelaria
+ */
+export const API_GET_SOLICITUDES_UNIDAD_MEDIDA = (TRAMITE: string, cveFraccion: string) : string => `sat-t${TRAMITE}/fraccion-arancelaria/${cveFraccion}/unidad-medida`;

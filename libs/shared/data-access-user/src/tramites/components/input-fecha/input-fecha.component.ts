@@ -115,6 +115,12 @@ export class InputFechaComponent implements OnInit, OnChanges {
    */
   @Input() isDisabled: boolean = false;
 
+  /**
+   * Etiqueta que se muestra sobre el control de fecha.
+   * Permite personalizar el texto que aparece encima del selector de fecha.
+   */
+  @Input() etiquetaSobreControlFecha: string = '';
+
   constructor(private fb: FormBuilder) {
     moment.locale('es');
     this.generaanios();

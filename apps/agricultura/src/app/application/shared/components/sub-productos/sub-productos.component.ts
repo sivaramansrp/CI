@@ -1,9 +1,10 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
 import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CommonModule } from '@angular/common';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
@@ -43,7 +44,9 @@ import { Subject } from 'rxjs';
     TituloComponent,
     InputRadioComponent,
     InputFechaComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './sub-productos.component.html',
   styleUrl: './sub-productos.component.scss',
@@ -147,6 +150,55 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   @Input() formularioSolicitud!: FilaSolicitud;
   @Output() cerrar = new EventEmitter<void>();
 
+
+  /**
+   * Configuración de las columnas sensibles para la tabla de sub-productos.
+   * Utiliza la configuración definida en `CONFIGURACION_DETALLAS_DATOS` para
+   * mostrar los datos detallados de los sub-productos en la interfaz.
+   *
+   * @type {ConfiguracionColumna<DetallasDatos>[]}
+   * @see CONFIGURACION_DETALLAS_DATOS
+   */
+  public configuracionSensiblesTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;  
+
+
+  /**
+   * Lista de objetos de tipo `DetallasDatos` que contiene los datos detallados
+   * para mostrar en la tabla de sub-productos.
+   * 
+   * @remarks
+   * Este input permite recibir desde el componente padre la información
+   * necesaria para renderizar los detalles en la tabla.
+   */
+  @Input() detalleTablaDatos: DetallasDatos[] = [];
+
+  /**
+   * Arreglo que almacena los detalles seleccionados en la tabla de sub-productos.
+   * Cada elemento es un objeto de tipo `DetallasDatos` que representa una fila seleccionada por el usuario.
+   * 
+   * @type {DetallasDatos[]}
+   */
+  public detalleTablaDatosSeleccionada: DetallasDatos[] = [];
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion | null;
+
+  /**
+   * Guarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
+   */
+  public procesoModal!: string;
+
+  /**
+   * Obtiene el grupo de formulario 'datosServicio' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormGroup} El grupo de formulario 'datosServicio'.
+   */
+  get datosServicio(): FormGroup {
+    return this.detalleForm?.get('detalleForm') as FormGroup;
+  }
+
   /**
    * Constructor del componente.
    * 
@@ -239,14 +291,20 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     });
 
     this.detalleForm = this.fb.group({
-      numeroLote: [''],
-      rangoDeFecha: ['no'],
+      numeroLote: ['', Validators.required],
+      rangoDeFecha: ['si'],
       procesoStart: [''],
       procesoEnd: [''],
       sacrificio: [''],
       sacrificioEnd: [''],
       caducidad: [''],
-      caducidadEnd: ['']
+      caducidadEnd: [''],
+      fechaElaboracionEmpaqueProceso: [null],
+      fechaProduccionSacrificio: [''],
+      fechaCaducidadProducto: [''],
+      fechaFinElaboracionEmpaqueProceso: [''],
+      fechaFinProduccionSacrificio: [''],
+      fechaFinCaducidadProducto: ['']
 
     });
     if (this.formularioSolicitud) {
@@ -303,6 +361,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.productosForm.reset();
     this.detalleForm.reset();
     this.detallasDatosTablaDatos = [];
+    this.detalleForm.get('rangoDeFecha')?.setValue('si');
   }
 
   /**
@@ -361,7 +420,17 @@ export class SubProductosComponent implements OnInit, OnDestroy {
           }
         }
       );
-      
+
+      this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
+        (response: BaseResponse<Catalogo>) => {
+          if (response && response.codigo === '00' && response.datos) {
+            this.productosForm.get('umt')?.setValue(response.datos.descripcion);
+          } else {
+            this.productosForm.get('umt')?.setValue('');
+          }
+        }
+      );
+
     }
 
     setValoresStoreFraccionNico(): void {
@@ -378,6 +447,82 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         );
     }
 
+   
+  /**
+   * Agrega un nuevo detalle a la tabla de datos utilizando los valores actuales del formulario.
+   * 
+   * - Crea un objeto `DETALLE` con los valores del formulario, asignando cada campo a su propiedad correspondiente.
+   * - Añade el objeto `DETALLE` al arreglo `detalleTablaDatos`.
+   * - Reinicia el formulario para permitir la captura de nuevos datos.
+   *
+   * @remarks
+   * Este método se utiliza para registrar los detalles de subproductos en la tabla de datos,
+   * asegurando que cada registro provenga de los valores ingresados en el formulario.
+   */
+  agregarDetalleTablaDatos(): void {    
+    if (
+      this.detalleForm.value.numeroLote === '' || 
+      this.detalleForm.value.numeroLote === null
+    ) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.detalleForm.get('numeroLote')?.markAsTouched();
+      return;
+    }
+
+    if (this.detalleForm.value.numeroLote !== '' ) {
+    const DETALLE: DetallasDatos = {
+      numeroDeLote: this.detalleForm.value.numeroLote,
+      fechaElaboracionEmpaqueProceso: this.detalleForm.value.fechaElaboracionEmpaqueProceso,
+      fechaProduccionSacrificio: this.detalleForm.value.fechaProduccionSacrificio,
+      fechaCaducidadProducto: this.detalleForm.value.fechaCaducidadProducto,
+      fechaFinElaboracionEmpaqueProceso: this.detalleForm.value.fechaFinElaboracionEmpaqueProceso,
+      fechaFinProduccionSacrificio: this.detalleForm.value.fechaFinProduccionSacrificio,
+      fechaFinCaducidadProducto: this.detalleForm.value.fechaFinCaducidadProducto,
+    };
+    this.detalleTablaDatos = [...this.detalleTablaDatos, DETALLE];
+    this.detalleForm.reset();
+  }
+    this.detalleForm.get('rangoDeFecha')?.setValue('si');
+  }
+
+
+  public seleccionaFecha(nuevo_valor: string, campo: string): void {
+    this.detalleForm.get(campo)?.setValue(nuevo_valor);
+    this.detalleForm.get(campo)?.markAsUntouched();
+  }
+
+  /**
+   * Elimina todos los elementos del arreglo `detalleTablaDatos`.
+   * 
+   * Esta función limpia la tabla de detalles, dejando el arreglo vacío.
+   */
+  eliminarDetalleTablaDatos(items: DetallasDatos[]): void {
+
+  if (!items || items.length === 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona al menos un registro para eliminar.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+    this.detalleTablaDatos = this.detalleTablaDatos.filter(detalle => !items.includes(detalle));
+  }
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
    * Emite una señal a través del observable `destroy$` para notificar a los suscriptores que deben limpiar recursos y cancelar suscripciones.
@@ -387,4 +532,21 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'lda_dd':
+        {
+          if (confirmar) {
+            this.eliminarDetalle();
+          }
+          this.procesoModal = '';
+          break;
+        }
+      default:
+        // No action required for other cases
+        break;
+    }
+  }
+
 }

@@ -512,7 +512,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   setValoresStore(): void {
     const VALOR = this.datosDelaSolicitud.value;
-    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
     this.obtenerSanidadAgropecuariaList(VALOR.aduanaIngreso);
   }
 

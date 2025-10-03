@@ -101,6 +101,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   destinatarioForm!: FormGroup;
 
+  plantaTifForm!: FormGroup;
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear el formulario reactivo.
@@ -168,6 +170,11 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
           });
         }
       });
+
+    this.plantaTifForm = this.fb.group({
+      nombreEstablecimiento: [''],
+      numeroEstablecimiento: ['']
+    });
 
   }
 
@@ -273,6 +280,16 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     } else {
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+    }
+  }
+
+  onLimpiar(): void {
+    this.plantaTifForm.reset();
+  }
+
+  onBuscar(): void {
+    if (this.plantaTifForm.valid) {      
+      // Implementar lógica de búsqueda
     }
   }
 }
