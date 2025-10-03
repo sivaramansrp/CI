@@ -111,18 +111,18 @@ export class ValidarInicialmenteCertificadoService {
   }
 
   /**
-     * Obtiene el catálogo de estados desde el servidor.
-     *
-     * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
-     * como un observable de tipo `JsonResponseCatalogo`.
-     *
-     * @returns Observable que emite la respuesta del catálogo de estados.
-     */
-    getTipoFactura(): Observable<JsonResponseCatalogo> {
-      return this.httpService.get<JsonResponseCatalogo>(
-        PROC_110222.TIPO_FACTURA,
-        {},
-        false
-      );
-    }
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getTipoFactura(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_110222.TIPO_FACTURA,
+      {},
+      false
+    );
+  }
 }
