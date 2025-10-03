@@ -32,12 +32,12 @@
  * ```
  */
 
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-datos-certificado-de',
@@ -231,6 +231,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
 
   constructor(
     private fb: FormBuilder,
+    private catalogoServices: CatalogoServices
   ) {
   }
   /**
@@ -364,6 +365,77 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   representacionFederalSeleccion(estado: Catalogo): void {
     this.representacionFederalSeleccionEvent.emit(estado);
+  }
+
+  /**
+   * Maneja el evento de cambio cuando se selecciona una nueva entidad federativa.
+   * Actualiza la lista de representaciones federales basándose en la entidad seleccionada.
+   * @param event - Objeto Catalogo que representa la entidad seleccionada.
+   */
+  onChangeEntidad(event: Catalogo): void {
+    const SELECTED_ENTIDAD = event;
+    this.getRepresentacionDatos({
+      clave: SELECTED_ENTIDAD.clave ?? '',
+      descripcion: SELECTED_ENTIDAD.descripcion ?? ''
+    });
+    
+    // Emit the event to parent component
+    this.entidadFederativaSeleccionEvent.emit(SELECTED_ENTIDAD);
+  }
+
+  /**
+   * Obtiene los datos del catálogo de representaciones federales basado en la clave de entidad proporcionada.
+   * Los datos recuperados se asignan a la propiedad `representacionFederal$`.
+   * La suscripción al observable se cancela automáticamente cuando el componente se destruye.
+   * @param cveEntidad - Clave de la entidad para filtrar las representaciones federales.
+   */
+  getRepresentacionDatos(cveEntidad: { clave: string; descripcion: string }): void {
+    if (!this.idProcedimiento) {
+      console.warn('idProcedimiento is required to fetch representation data');
+      return;
+    }
+
+    this.catalogoServices
+      .representacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad.clave)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        const DESCRIPCION_ENTIDAD: string = (cveEntidad.descripcion ?? '')
+          .toString()
+          .trim()
+          .toLowerCase();
+
+        const CATALOGOS = res.datos ?? [];
+
+        const MATCHED = CATALOGOS.find(
+          (item) =>
+          ((item.descripcion ?? '').toString().trim().toLowerCase() ===
+            DESCRIPCION_ENTIDAD)
+        );
+
+        const OTHERS = CATALOGOS.filter(
+          (items) =>
+          ((items.descripcion ?? '').toString().trim().toLowerCase() !==
+            DESCRIPCION_ENTIDAD)
+        );
+
+        // Update the form control with the matched value
+        this.formDatosCertificado
+          .get('representacionFederalDates')
+          ?.setValue(MATCHED ? MATCHED.clave : null);
+
+        // Update the representation federal data array
+        this.representacionFederal$ = MATCHED ? [MATCHED, ...OTHERS] : OTHERS;
+
+        // Emit the form change event
+        this.setValoresStore('', 'representacionFederalDates', '');
+      });
+  }
+
+   /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.formDatosCertificado) {
+      this.formDatosCertificado.markAllAsTouched();
+    }
   }
 
   /**

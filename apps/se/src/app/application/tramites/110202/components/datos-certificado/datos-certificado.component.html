@@ -1,4 +1,5 @@
 <app-datos-certificado-de [precisa]="precisa" [idioma]="idioma"  [presenta]="presenta" [idiomaDatos]="(idiomaDatos$ | async) || []" 
+  [idProcedimiento]="110204"
   (formDatosCertificadoEvent)="setValoresStore($event)" (idiomaSeleccionEvent)="idiomaSeleccion($event)"
   (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
   (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"

@@ -69,6 +69,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+
   constructor(private cdr: ChangeDetectorRef,private consultaQuery: ConsultaioQuery,
     public certificadoValidacionService: CertificadoValidacionService) {
     // Constructor no realiza ninguna acción en este caso
@@ -162,4 +164,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @description Selecciona una pestaña y actualiza el índice.
    * @param {number} i - El índice de la pestaña seleccionada.
    */
+
+    /** Método público para validar todos los formularios del paso uno */
+  public validateAll(): boolean {
+    if (this.datosCertificadoComponent) {
+      return this.datosCertificadoComponent.validateAll();
+    }
+    return true;
+  }
 }

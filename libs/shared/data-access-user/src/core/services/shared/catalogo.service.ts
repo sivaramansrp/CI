@@ -5,19 +5,19 @@ import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+ 
 @Injectable({
   providedIn: 'root'
 })
 export class CatalogoServices {
-  
+ 
   host: string;
-
+ 
   constructor(private http: HttpClient) {
     this.host = `${COMUN_URL.BASE_URL}`;
   }
-
-
+ 
+ 
   /*
    * Obtiene el catálogo de servicios IMMEX.
    * @param {string} tramite - El ID del trámite.
@@ -27,7 +27,7 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CATALOGO_IMMEX(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-
+ 
   /*
    * Obtiene el catálogo de estados.
    * @param {string} tramite - El ID del trámite.
@@ -37,7 +37,7 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CATALOGO_ESTADOS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-
+ 
   /*
    * Obtiene el catálogo de países.
    * @param {string} tramite - El ID del trámite.
@@ -47,7 +47,7 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-
+ 
   /*
    * Obtiene el catálogo de NICO.
    * @param {string} tramite - El ID del trámite.
