@@ -1,6 +1,6 @@
 import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS, NOTIFICACION_DE_TITULO } from "../../constantes/modificacion-aviso-seguro-global.enum";
+import { ERROR_FORMA_ALERT, NOTIFICACION_DE_TITULO, PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
