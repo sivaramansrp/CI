@@ -23,6 +23,7 @@ export class TramiteConfigService {
   private configs: Record<number, TramiteConfig> = {
     130118: { habilitarFechas: true, isAntecedentes: false, anexo222se: true },
     120301: { habilitarFechas: false, isAntecedentes: false, anexo222se: false },
+    110101: { habilitarFechas: false, isAntecedentes: false, anexo222se: false , descargaSolicitud: true},
   };
 
   /**
@@ -43,6 +44,7 @@ export class TramiteConfigService {
   private serviceConfig: Record<number, ServiceConfig> = {
     130118: { serviceCriterios: true },
     120301: { serviceCriterios: false },
+    110101: { serviceCriterios: false },
   }
 
   /**

@@ -29,6 +29,18 @@
                         </li>
                     </ng-container>
                 </ul>
+                 @if (config.descargaSolicitud) {
+                    <ng-container>
+                        <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <label class="form-label text-title" style="cursor: pointer; text-decoration: underline;"
+                                (click)="descargarSolicitud()">
+                            Descargar datos de la solicitud
+                            </label>
+                        </div>
+                        </div>
+                    </ng-container>
+                    }
                 <ng-container>
                     @switch (indice) {
                     @case (1) {

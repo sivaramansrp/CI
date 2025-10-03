@@ -219,6 +219,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
       this.getCatalogoCriterios(GETCATALOGO?.id_tratado_acuerdo.toString() ?? "");
         
     }
+    if(this.consultaState.create === true){
+        this.getCatalogoPaisBloques();
+    }
   }
 
   /**
@@ -251,7 +254,6 @@ export class TratadosComponent implements OnInit, OnDestroy {
       tratado: [ null, Validators.required],
       origen: [ null, Validators.required],
     });
-    this.getCatalogoPaisBloques();
   }
 
   /**
