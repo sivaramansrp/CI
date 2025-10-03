@@ -467,7 +467,6 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   onInputMaxLength(event: Event, maxLength: number): void { 
   const TARGET = event.target as HTMLInputElement;
   let value = TARGET.value;
-  // Remove non-digit characters and trim to maxLength
   value = value.replace(/\D/g, '').slice(0, maxLength);
   TARGET.value = value;
   this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
