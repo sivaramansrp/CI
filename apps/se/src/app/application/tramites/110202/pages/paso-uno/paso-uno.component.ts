@@ -136,13 +136,30 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /** Método público para validar todos los formularios del paso uno */
   public validateAll(): boolean {
+    let isValid = true;
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
     if (this.destinatarioDeComponent) {
-      return this.destinatarioDeComponent.validateAll();
+      if (!this.destinatarioDeComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
     }
     if (this.datosCertificadoComponent) {
-      return this.datosCertificadoComponent.validateAll();
+      if (!this.datosCertificadoComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
     }
-    return true;
+    return isValid;
   }
 
   /**

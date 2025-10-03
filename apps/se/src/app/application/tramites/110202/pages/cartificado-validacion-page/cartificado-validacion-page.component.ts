@@ -151,7 +151,11 @@ export class CartificadoValidacionPageComponent {
         this.esFormaValido = true;
         this.indice = 1;
         this.datosPasos.indice = 1;
+      } else {
+        this.indice = 2;
+        this.datosPasos.indice = 2;
       }
+
     } else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
