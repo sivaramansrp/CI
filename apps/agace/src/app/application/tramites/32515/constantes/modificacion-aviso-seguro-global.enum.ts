@@ -552,11 +552,11 @@ export const ERROR_FORMA_ALERT =
 `;
 
 /**
- * @constant TITLE_NOTIFICATION
+ * @constant NOTIFICACION_DE_TITULO
  * @description
  * Mensaje de advertencia que se muestra al usuario antes de culminar el trámite.
  * Informa que debe verificar todos los datos capturados y los documentos adjuntos,
  * ya que posteriormente a la firma no será posible modificar o eliminar la información.
  */
-export const TITLE_NOTIFICATION =
+export const NOTIFICACION_DE_TITULO =
   'Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.';
