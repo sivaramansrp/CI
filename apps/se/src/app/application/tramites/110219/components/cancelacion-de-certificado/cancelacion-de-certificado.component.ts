@@ -613,9 +613,23 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     // p.ej. this.router.navigate(['/detalle', cert.numeroCertificado]);
   }
 
+    /**
+   * Obtiene el catálogo de países por bloque relacionado con los trámites actuales.
+   * Realiza una solicitud al servicio de catálogo y actualiza la propiedad `paisBloque` con los datos recibidos.
+   * La suscripción se cancela automáticamente cuando el componente se destruye.
+   */
+  obtenerPaisesBloque(): void {
+    this.catalogoService.paisBloqueCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (response) => { 
+           this.paisCatalogo.catalogos = response?.datos ?? [];
+        }
+      });
+  }
+  
 
-
-  /**
+    /**
    * Obtiene el catálogo de tratados o acuerdos relacionados con el trámite actual.
    * 
    * Realiza una solicitud al servicio `catalogoService` para recuperar los datos de tratados/acuerdos,
@@ -629,21 +643,6 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.tratadoCatalogo.catalogos = response?.datos ?? []
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de países por bloque relacionado con los trámites actuales.
-   * Realiza una solicitud al servicio de catálogo y actualiza la propiedad `paisBloque` con los datos recibidos.
-   * La suscripción se cancela automáticamente cuando el componente se destruye.
-   */
-  obtenerPaisesBloque(): void {
-    this.catalogoService.paisBloqueCatalogo(this.tramites)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (response) => { 
-           this.paisCatalogo.catalogos = response?.datos ?? [];
         }
       });
   }
