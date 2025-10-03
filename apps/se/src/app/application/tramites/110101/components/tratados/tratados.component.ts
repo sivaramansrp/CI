@@ -13,6 +13,7 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
+import { DatosInsumosEmpaques } from '../../models/response/solicitud-insumos-empaques-response.model';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
@@ -152,6 +153,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   mostrarTabla = true;
 
+   /** Almacena las filas seleccionadas de la tabla */
+    public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
 
   public consultaState!: ConsultaioState;
     /**
@@ -989,6 +992,7 @@ onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) :void{
     this.formularioTratados.reset();
   }
 }
+
 /**
  * 
  * @returns boolean
@@ -1056,15 +1060,60 @@ eliminarTratado(): void {
   };
     this.elementoParaEliminar = i;
   }
+
   /**
    *              
    * @param borrar
    * @description Elimina un pedimento de la lista si el parámetro `borrar` es `true`. 
    */
-eliminarPedimento(borrar: boolean): void {
+  eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+  
+  /**
+   * @method InsumosEmpaques
+   * @description Consulta los insumos y/o empaques asociados a una solicitud a través del servicio.
+   * @returns {void}
+   */
+  insumosEmpaques(): void {
+    this.tratadosSolicitudService.getInsumosEmpaques(this.consultaState.id_solicitud, this.tratadoSeleccionado[0].id_tratado_acuerdo.toString(),
+      this.tratadoSeleccionado[0].id_bloque ?? 0, this.tratadoSeleccionado[0].cve_pais)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            //**TODO: Implementacion */
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error en la consulta de insumos empaques.',
+            mensaje: response?.causa || response?.mensaje || 'Error en la consulta de insumos empaques.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error en la consulta de insumos empaques.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
   }
 
   /**
@@ -1073,7 +1122,7 @@ eliminarPedimento(borrar: boolean): void {
    * Este método llama al servicio `evaluacionTratadosService.getEvaluarTratados` pasando el ID de la solicitud.
    * - Si la respuesta es exitosa (`CodigoRespuesta.EXITO`), actualiza `tratadosEvaluacionTablaDatos`.
    * - Si ocurre un error o la respuesta es incorrecta, muestra una notificación de error.
- */
+   */
   evaluacionTablaTratados(): void {
     this.evaluacionTratadosService.getEvaluarTratados(this.consultaState.id_solicitud)
       .pipe(takeUntil(this.destroy$))
@@ -1111,4 +1160,56 @@ eliminarPedimento(borrar: boolean): void {
         }
       });
   }
+
+  /**
+   * @method CriterioTratadoResumen
+   * @description Consulta el resumen de valores de un criterio tratado por su identificador.
+   * @returns {void}
+   */
+  criterioTratadoResumen(): void {
+    this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_tratado_acuerdo.toString())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            //**TODO: Implementacion */
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error en la consulta de resumen de criterio tratado.',
+            mensaje: response?.causa || response?.mensaje || 'Error en la consulta de resumen de criterio tratado.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error en la consulta de resumen de criterio tratado.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+  /**
+   * Maneja el cambio de selección de la tabla tratados.
+   * @param tratadoSeleccionado 
+   */
+  onSeleccionChangeEvaluacion(tratadoSeleccionado: EvaluarTratadosResponse[]) :void{
+    this.tratadoSeleccionado = [...tratadoSeleccionado];
+  }
+
 }

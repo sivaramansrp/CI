@@ -53,13 +53,17 @@
 @if(consultaState.create === false){
   <ng-titulo titulo="País/bloque-tratado/acuerdo seleccionados por el solicitante" />
 <div class="col-md-12">
-  <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosEvaluacionTablaDatos" [tipoSeleccionTabla]="tipoSeleccionTabla">
+  <app-tabla-dinamica 
+    [configuracionTabla]="tablaSeleccionada" 
+    [datos]="tratadosEvaluacionTablaDatos" 
+    [tipoSeleccionTabla]="tipoSeleccionTabla"
+    (listaDeFilaSeleccionada)="onSeleccionChangeEvaluacion($event)">
   </app-tabla-dinamica>
    <div class=" text-end mt-5">
-    <button class="btn btn-primary me-2"  >
+    <button class="btn btn-primary me-2" (click)="criterioTratadoResumen()">
       Resumen de valores
     </button>
-    <button class="btn btn-primary  me-2" >
+    <button class="btn btn-primary  me-2" (click)="insumosEmpaques()">
       Insumos
     </button>
     <button class="btn btn-primary  me-2" >

@@ -82,7 +82,7 @@ export class ProcesosComponent implements OnInit {
 
   /**
    * Maneja el cambio de selección en la tabla procesos.
-   * @param filaSeleccionadas - Array de registros seleccionados en la tabla.
+   * @param procesoSeleccionado - Array de registros seleccionados en la tabla.
    */
   onSeleccionChange(procesoSeleccionado: ProcesoSolicitado[]) :void{
       this.procesoSeleccionado = [...procesoSeleccionado]; 

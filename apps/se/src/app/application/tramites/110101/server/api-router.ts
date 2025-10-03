@@ -160,6 +160,17 @@ export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t110101/sol
  */
 export const API_GET_TRATADOS_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/tratado-acuerdo`;
 
+/**
+ * API para consultar los insumos y empaques de una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-insumos-empaques
+ */
+export const API_GET_INSUMOS_EMPAQUES = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/insumos-empaques`;
+
+/**
+ * API para consultar el resumen del criterio tratado.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-criterio-tratado-by-id 
+ */
+export const API_GET_CRITERIO_TRATADO_RESUMEN = (IDCRITERIOTRATADO: string): string => `sat-t110101/tramite/tratado/${IDCRITERIOTRATADO}/resumen`;
 
 /**
  *  URLs de evaluacion mercancia
