@@ -4,6 +4,11 @@
       <h1>Registro de solicitud IMMEX modalidad albergue</h1>
     </div>
 
+    @if (!esFormaValido && esFormaValido !== undefined) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+    }
     <app-wizard [listaPasos]="pasos"></app-wizard>
 
   </div>
@@ -31,6 +36,7 @@
         <btn-continuar
           [datos]="datosPasos"
           (continuarEvento)="getValorIndice($event)"
+          [dePadre]="padreBtn"
           [btnGuardar]="true" 
           [btnGuardarVisible]="btnGuardarVisible"
           (btnGuardarClicked)="obtenerDatosDelStore()"

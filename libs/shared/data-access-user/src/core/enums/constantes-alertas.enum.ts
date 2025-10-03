@@ -112,8 +112,12 @@ export const MENSAJE_ALERTA_TRATADOS = {
 `,
 };
 
-export const INSTANCIA_URUGUAY = {
-  ADJUNTAR: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+export const INSTANCIA = {
+  MENSAJE: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+};
+
+export const INSTANCIA_ALIANZA = {
+  MENSAJE: `<p>Seleccione la(s) opcion(es) por las cual(es) cumple el criterio de otras instacias.</p>`,
 };
 
 export const ELVALORALERTA = {
@@ -220,6 +224,19 @@ export const PASOS4 = [
 export const AVISO = {
   Aviso: `<p style="text-align: center; font-weight: bold;">Aviso de privacidad simplificado:</p>
   <p>El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio </p>`,
+  Alerta: `<p style="text-align: center; font-weight: bold;">Aviso de privacidad simplificado</p>
+  <p>El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se
+recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y
+transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones,
+exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme
+a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio exterior y/o consultar información sobre
+los procedimientos para la importación, exportación y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y
+restricciones no arancelarias, así como las notificaciones que se deriven de dichos trámites y serán protegidos, incorporados y tratados
+en el sistema de datos personales de la VUCEM, asimismo podrán ser transmitidos a las autoridades competentes establecidas en el
+Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, publicado en el Diario Oficial de la Federación el 14
+de enero de 2011, así como al propio titular de la información. El titular, en su caso, podrá manifestar su negativa para el tratamiento de
+sus datos personales para finalidades y transferencias de los mismos que requieran el consentimiento del titular. Si desea conocer
+nuestro aviso de privacidad integral, lo podrá consultar en el portal.</p><p style="text-align: center;"><a href="">Aviso de privacidad integral</a></p>`
 };
 
 export const AL_DAR = {
@@ -391,3 +408,51 @@ export const SELECCIONAR_DOCUMENTOS = {
   <p>-Para solicitar documentos adicionales, selecciona el documento y presiona "Agregar nuevo".</p>
   <p>-En caso de que no requieras algún documento, selecciónalo y elimínalo.</p>`,
 };
+
+/**
+ * Constante que contiene las condiciones para que los juegos o surtidos de mercancías califiquen como originarios.
+ *
+ * @constant
+ * @type {{ CONDICION: string }}
+ */
+export const CONDICIONES_JUEGOS_SURTIDOS = {
+  CONDICION: 
+  `<li><p> Los juegos o surtidos que se clasifiquen según lo dispuesto en la Regla 3 de las Reglas Generales 
+  para la Interpretación del Sistema Armonizado, así como las mercancías cuya descripción, conforme a la 
+  nomenclatura del Sistema Armonizado, sea específicamente la de un juego o surtido, calificarán como originarias, 
+  siempre que cada una de las mercancías contenidas en el juego o surtido cumpla con la regla de origen que se haya 
+  establecido para cada una de esas mercancías y las demás disposiciones aplicables de este Capítulo.<br></p></li>`+
+
+  `<li><p> No obstante lo dispuesto en el párrafo 1, un juego o surtido de mercancías se considerará originario, 
+  si el valor de transacción de todas las mercancías no originarias utilizadas en la formación del juego o surtido, 
+  ajustado sobre la base CIF, no excede del 10 por ciento del valor de transacción del juego o surtido, 
+  ajustado sobre la base FOB.</p></li>`
+}
+
+/**
+ * Constante que contiene el mensaje para seleccionar el proceso de transformación utilizado en la mercancía.
+ * @constant
+ * @type {{ MENSAJE: string }}
+ * @property {string} MENSAJE - Mensaje en formato HTML que indica al usuario que debe seleccionar el proceso de transformación utilizado en la mercancía.
+ */
+export const MENSAJE_DE_SELECCION = {
+  MENSAJE: `<p>Favor de seleccionar el proceso de transformación utilizado en la mercancía.</p>`,
+}
+
+/**
+  * @constant ERROR_FORMA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
+export const ERROR_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro!</strong> Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;

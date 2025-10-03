@@ -67,7 +67,7 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
   showPaymentModal: boolean = false;
   
   /** Almacena el último evento de continuar para procesarlo después del modal */
-  private lastContinueEvent: AccionBoton | null = null;
+  public lastContinueEvent: AccionBoton | null = null;
   
   /** Mensaje de error o información para mostrar al usuario */
   message: string | undefined;
@@ -91,7 +91,7 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * @param cdr - Servicio de detección de cambios de Angular
    * @param tramite260904Store - Store de estado específico para el trámite 260904
    */
-  constructor(private cdr: ChangeDetectorRef, private tramite260904Store: Tramite260904Store) {}
+  constructor(private cdr: ChangeDetectorRef, public tramite260904Store: Tramite260904Store) {}
 
   /**
    * Hook de ciclo de vida que se ejecuta después de inicializar las vistas.
@@ -122,7 +122,7 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * Método privado que actualiza la visibilidad del botón anterior.
    * También actualiza los datos de configuración de pasos.
    */
-  private updateAnteriorButtonVisibility(): void {
+  public updateAnteriorButtonVisibility(): void {
     this.ocultarBtnAnterior = this.indice === 1;
     this.datosPasos = {
       ...this.datosPasos,
@@ -168,39 +168,39 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * Maneja el evento de continuar, validando campos y mostrando modal de pago si es necesario.
    * @param event - Evento de acción del botón que contiene la información de navegación
    */
-  public onContinuar(event: AccionBoton): void {
-    if (event.valor === 4) {
-      this.handlePagoTabContinue(event);
-      return;
-    }
-
-    const IS_VALID = this.validateAllRequiredFields();
-    
-    if (!IS_VALID) {
-      this.message = '¡Error de registro! Faltan campos por capturer';
-    }
-
-    this.tramite260904Store._select((state: Tramite260904State) => state)
-      .pipe(take(1))
-      .subscribe(state => {
-        const PAYMENT_FIELDS = ModPermisoSanitarioImportacion260904Component.getPaymentFields(state);
-        const ALL_BLANK = PAYMENT_FIELDS.every(val => val === null || val === undefined || val === '');
-
-        if (ALL_BLANK && !this.hasTriedPagoValidation) {
-          this.showPaymentModal = true;
-          this.lastContinueEvent = event;
-          this.cdr.detectChanges();
-          return;
-        }
-
-        if (!IS_VALID) {
-          return;
-        }
-
-        this.message = undefined;
-        this.getValorIndice(event);
-      });
+ 
+public onContinuar(event: AccionBoton): void {
+  if (event.valor === 4) {
+    this.handlePagoTabContinue(event);
+    return;
   }
+  const IS_VALID = this.validateAllRequiredFields();
+  if (!IS_VALID) {
+    this.message = '¡Error de registro! Faltan campos por capturer';
+  }
+  this.tramite260904Store._select((state: Tramite260904State) => state)
+    .pipe(take(1))
+    .subscribe(state => {
+      const PAYMENT_FIELDS = ModPermisoSanitarioImportacion260904Component.getPaymentFields(state);
+      const ALL_BLANK = PAYMENT_FIELDS.every(val => val === null || val === undefined || val === '');
+      const ALL_FILLED = PAYMENT_FIELDS.every(val => val !== null && val !== undefined && val !== '');
+
+      if (!ALL_FILLED && !this.hasTriedPagoValidation) {
+        this.showPaymentModal = true;
+        this.lastContinueEvent = event;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      if (!IS_VALID) {
+        return;
+      }
+
+      this.message = undefined;
+      this.getValorIndice(event);
+    });
+}
+
 
   /**
    * Maneja específicamente el continuar desde la pestaña de pago.
@@ -225,6 +225,15 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
         this.pasoUnoComponent.markAllFieldsTouched?.();
       }
     }
+     const DOMICILIO_COMP = this.pasoUnoComponent?.getDomicilioDelEstablecimientoComponent?.();
+      if (DOMICILIO_COMP?.validateMercanciasTable) {
+        const MERCANCIA_VALID = DOMICILIO_COMP.validateMercanciasTable();
+        isValid = MERCANCIA_VALID && isValid;
+        if (!MERCANCIA_VALID && DOMICILIO_COMP.markMercanciasTableTouched) {
+          DOMICILIO_COMP.markMercanciasTableTouched();
+          this.cdr.detectChanges();
+        }
+      }
 
     return isValid;
   }
@@ -249,55 +258,71 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * Maneja la confirmación positiva del modal de pago.
    * Valida campos y procede con la navegación si todo es correcto.
    */
-  public onPaymentModalYes(): void {
-    const IS_VALID = this.validateAllRequiredFields();
-    
-    if (!IS_VALID) {
-      this.message = '¡Error de registro! Faltan campos por capturer';
-      this.hasTriedPagoValidation = false;
-      this.showPaymentModal = false;
-      return;
-    }
-    this.message = undefined;
-    this.hasTriedPagoValidation = true;
+
+public onPaymentModalYes(): void {
+  let pagoValid = true;
+  const PAGO_DE_DERECHOS_COMPONENT = this.pasoUnoComponent?.getPagoDeDerechosComponent();
+  const PAGO_DE_DERECHOS_FORM = PAGO_DE_DERECHOS_COMPONENT?.pagoDeDerechosForm;
+  if (PAGO_DE_DERECHOS_FORM) {
+    Object.values(PAGO_DE_DERECHOS_FORM.controls).forEach(ctrl => {
+      ctrl.updateValueAndValidity();
+    });
+    pagoValid = PAGO_DE_DERECHOS_FORM.valid &&
+      Object.values(PAGO_DE_DERECHOS_FORM.value).every(val => val !== null && val !== undefined && val !== '');
+  }
+  const OTHER_FIELDS_VALID = this.validateAllRequiredFields();
+
+  if (!OTHER_FIELDS_VALID) {
+    this.message = '¡Error de registro! Faltan campos por capturer';
+    this.hasTriedPagoValidation = false;
     this.showPaymentModal = false;
-    
-    if (this.lastContinueEvent) {
-      this.getValorIndice(this.lastContinueEvent);
-      this.lastContinueEvent = null;
-    }
+    return;
   }
 
+  if (!pagoValid) {
+    this.message = 'Todos los campos de pago son requeridos';
+    this.hasTriedPagoValidation = false;
+    this.showPaymentModal = false;
+    return;
+  }
+
+  this.message = undefined;
+  this.hasTriedPagoValidation = true;
+  this.showPaymentModal = false;
+
+  if (this.lastContinueEvent) {
+    this.getValorIndice(this.lastContinueEvent);
+    this.lastContinueEvent = null;
+  }
+}
   /**
    * Maneja la confirmación negativa del modal de pago.
    * Cierra el modal y navega a la pestaña de pago para completar la información.
    */
-  public onPaymentModalNo(): void {
-    this.showPaymentModal = false;
-    this.lastContinueEvent = null;
-    this.hasTriedPagoValidation = false;
-    this.subTabIndex = 4;
-    this.updateAnteriorButtonVisibility();
 
-    this.tramite260904Store._select((state: Tramite260904State) => state)
-      .pipe(take(1))
-      .subscribe(state => {
-        const PAYMENT_FIELDS = [
-          state.claveDeReferencia,
-          state.cadenaPagoDependencia,
-          state.clave,
-          state.llaveDePago,
-          state.fecPago,
-          state.impPago
-        ];
-        // const ALL_BLANK = PAYMENT_FIELDS.every(val => val === null || val === undefined || val === '');
-        // const ANY_BLANK = PAYMENT_FIELDS.some(val => val === null || val === undefined || val === '');
+public onPaymentModalNo(): void {
+  this.showPaymentModal = false;
+  this.lastContinueEvent = null;
+  this.hasTriedPagoValidation = false;
+  this.subTabIndex = 4;
+  this.updateAnteriorButtonVisibility();
 
-        // if (ANY_BLANK && !ALL_BLANK) {
-        //   this.forceMarkPagoFields('Todos los campos de pago son requeridos');
-        // }
+  setTimeout(() => {
+    const PAGO_DE_DERECHOS_COMPONENT = this.pasoUnoComponent?.getPagoDeDerechosComponent();
+    if (PAGO_DE_DERECHOS_COMPONENT) {
+      PAGO_DE_DERECHOS_COMPONENT.mostrarErroresDeCampoPago = true;
+      Object.values(PAGO_DE_DERECHOS_COMPONENT.pagoDeDerechosForm.controls).forEach(ctrl => {
+        ctrl.markAsTouched();
+        ctrl.markAsDirty();
+        ctrl.updateValueAndValidity();
       });
-  }
+    } else {
+      console.warn('PagoDeDerechosComponent reference is undefined!');
+    }
+    this.cdr.detectChanges();
+  }, 300);
+}
+
 
   /**
    * Fuerza el marcado de campos de pago como tocados y establece errores si están vacíos.
@@ -328,11 +353,15 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * Maneja el cambio de pestaña en el componente del paso uno.
    * @param tabIndex - Índice de la nueva pestaña seleccionada
    */
-  public onPasoUnoTabChanged(tabIndex: number): void {
-    this.subTabIndex = tabIndex;
-    this.updateAnteriorButtonVisibility();
-    this.datosPasos.txtBtnSig = 'Continuar';
-    this.showPaymentModal = false;
-    this.lastContinueEvent = null;
+ public onPasoUnoTabChanged(tabIndex: number): void {
+  this.subTabIndex = tabIndex;
+  this.updateAnteriorButtonVisibility();
+  this.datosPasos.txtBtnSig = 'Continuar';
+  this.showPaymentModal = false;
+  this.lastContinueEvent = null;
+  const PAGO_DE_DERECHOS_COMPONENT = this.pasoUnoComponent?.getPagoDeDerechosComponent();
+  if (PAGO_DE_DERECHOS_COMPONENT) {
+    PAGO_DE_DERECHOS_COMPONENT.mostrarErroresDeCampoPago = false;
   }
+}
 }

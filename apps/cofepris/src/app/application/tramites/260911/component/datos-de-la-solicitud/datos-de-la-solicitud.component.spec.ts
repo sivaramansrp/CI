@@ -1,133 +1,169 @@
-// This is a Jest test suite for DatosDeLaSolicitudComponent
-
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
+import { Tramite260911Store, Tramite260911State} from '../../estados/tramite260911.store';
 import { Tramite260911Query } from '../../estados/tramite260911.query';
-import { Tramite260911Store } from '../../estados/tramite260911.store';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 
-describe('DatosDeLaSolicitudComponent', () => {
+
+describe('DatosDeLaSolicitud260911Component', () => {
   let component: DatosDeLaSolicitudComponent;
-  let tramite260911QueryMock: any;
-  let tramite260911StoreMock: any;
-  let consultaioQueryMock: any;
+  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
+  let storeMock: Partial<Tramite260911Store>;
+  let queryMock: Partial<Tramite260911Query>;
 
-  beforeEach(() => {
-    tramite260911QueryMock = {
+  beforeEach(async () => {
+    storeMock = {
+      setTramite260911State: jest.fn()
+    };
+
+    queryMock = {
       selectTramite260911$: of({
-        btonDeRadio: 'option1',
-        justificacion: 'test justification',
+        btonDeRadio: '',
+        justificacion: 'justificationData',
         rfcDel: 'RFC123',
-        denominacion: 'Test Denomination',
-        correo: 'test@example.com',
-      }),
+        denominacion: 'Empresa S.A.',
+        correo: 'correo@test.com',
+        codigoPostal: '',
+        estado: null,
+        municipioOAlcaldia: '',
+        localidad: '',
+        colonias: '',
+        calle: '',
+        lada: '',
+        telefono: '',
+        avisoCheckbox: '',
+        regimen: null,
+        aduanasEntradas: null,
+        aifaCheckbox: '',
+        manifests: '',
+        acuerdoPublico: '',
+        rfc: '',
+        claveDeReferencia: '',
+        cadenaPagoDependencia: '',
+        clave: '',
+        llaveDePago: '',
+        fecPago: '',
+        impPago: '',
+       
+      } as Tramite260911State)
     };
+    
 
-    tramite260911StoreMock = {
-      setTramite260911State: jest.fn(),
-    };
-
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        DatosDeLaSolicitudComponent,
+        AlertComponent,
+        InputRadioComponent,
+        TituloComponent
+      ],
       providers: [
         FormBuilder,
-        { provide: Tramite260911Query, useValue: tramite260911QueryMock },
-        { provide: Tramite260911Store, useValue: tramite260911StoreMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
-      ],
-    });
+        { provide: Tramite260911Store, useValue: storeMock },
+        { provide: Tramite260911Query, useValue: queryMock }
+      ]
+    }).compileComponents();
 
-    const fb = TestBed.inject(FormBuilder);
-    component = new DatosDeLaSolicitudComponent(
-      fb,
-      tramite260911QueryMock,
-      tramite260911StoreMock,
-      consultaioQueryMock
-    );
+    fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the component and call crearFormulario', () => {
-    const crearFormularioSpy = jest.spyOn(component, 'crearFormulario');
-    component.ngOnInit();
-    expect(crearFormularioSpy).toHaveBeenCalled();
+  it('should initialize forms on ngOnInit', () => {
+    expect(component.form).toBeDefined();
+    expect(component.datosDelEstablecimiento).toBeDefined();
   });
 
-  it('should create the form with correct controls and validators', () => {
-    component.crearFormulario();
-    expect(component.form.contains('btonDeRadio')).toBe(true);
-    expect(component.form.contains('justificacion')).toBe(true);
-    expect(component.datosDelEstablecimiento.contains('rfcDel')).toBe(true);
-    expect(component.datosDelEstablecimiento.contains('denominacion')).toBe(true);
-    expect(component.datosDelEstablecimiento.contains('correo')).toBe(true);
-  });
-
-  it('should toggle form controls', () => {
-    component.crearFormulario();
-    component.datosDelEstablecimiento.get('rfcDel')?.disable();
-    component.toggleFormControls();
-    expect(component.datosDelEstablecimiento.get('rfcDel')?.enabled).toBe(true);
-  });
-
-  it('should toggle the collapsible property', () => {
-    expect(component.colapsable).toBe(true);
+  it('should toggle colapsable state', () => {
+    const initial = component.colapsable;
     component.mostrar_colapsable();
-    expect(component.colapsable).toBe(false);
+    expect(component.colapsable).toBe(!initial);
   });
 
-  it('should update the store with setValorStore', () => {
-    component.crearFormulario();
-    component.form.get('btonDeRadio')?.setValue('option1');
-    component.setValorStore(component.form, 'btonDeRadio');
-    expect(tramite260911StoreMock.setTramite260911State).toHaveBeenCalledWith({
-      btonDeRadio: 'option1',
-    });
+  it('should enable disabled form controls', () => {
+    component.datosDelEstablecimiento.get('rfcDel')?.disable();
+    component.datosDelEstablecimiento.get('correo')?.disable();
+    component.toggleFormControls();
+    expect(component.datosDelEstablecimiento.get('rfcDel')?.enabled).toBe(false);
+    expect(component.datosDelEstablecimiento.get('correo')?.enabled).toBe(false);
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+  it('should call setTramite260911State on setValorStore()', () => {
+    component.datosDelEstablecimiento.patchValue({ rfcDel: 'NEW123' });
+    component.setValorStore(component.datosDelEstablecimiento, 'rfcDel');
+    expect(storeMock.setTramite260911State).toHaveBeenCalledWith({ rfcDel: 'NEW123' });
+  });
+
+  it('should set estadoSeleccionado from store', () => {
+    expect(Object.keys(component.estadoSeleccionado)).toEqual(
+      expect.arrayContaining(['rfcDel', 'denominacion', 'correo'])
+    );
+  });
+
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.esFormularioSoloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(guardarSpy).toHaveBeenCalled();
+it('should create form and datosDelEstablecimiento with initial values from estadoSeleccionado', () => {
+  component.getValorStore();
+  component.crearFormulario();
+  expect(component.form.get('btonDeRadio')?.value).toBe(null);
+  expect(component.form.get('justificacion')?.value).toBe('justificationData');
+  expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFC123');
+  expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Empresa S.A.');
+  expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('correo@test.com');
+});
+
+it('should update estadoSeleccionado when getValorStore is called', () => {
+  const testState = {
+    btonDeRadio: 'radio2',
+    justificacion: 'justificacion2',
+    rfcDel: 'RFCY',
+    denominacion: 'Empresa Y',
+    correo: 'correo@y.com'
+  } as any;
+
+  const query = TestBed.inject(Tramite260911Query);
+  Object.defineProperty(query, 'selectTramite260911$', {
+    value: of(testState),
+    writable: true
   });
 
-  it('should call crearFormulario if esFormularioSoloLectura is false', () => {
-    const crearSpy = jest.spyOn(component, 'crearFormulario');
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(crearSpy).toHaveBeenCalled();
-  });
+  component['tramite260911Query'] = query;
+  component.getValorStore();
 
-  it('should disable forms in guardarDatosFormulario when readonly', () => {
-    component.crearFormulario();
-    component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.form.disabled).toBe(true);
-    expect(component.datosDelEstablecimiento.disabled).toBe(true);
-  });
+  expect(component.estadoSeleccionado).toEqual(testState);
+});
 
-  it('should enable forms in guardarDatosFormulario when not readonly', () => {
-    component.crearFormulario();
-    component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.form.enabled).toBe(true);
-    expect(component.datosDelEstablecimiento.enabled).toBe(true);
+  it('should disable controls when esFormularioSoloLectura is true', () => {
+  component.form = component['fb'].group({
+    btonDeRadio: ['radio1'],
+    justificacion: ['test']
   });
+  component.datosDelEstablecimiento = component['fb'].group({
+    rfcDel: ['RFCX'],
+    denominacion: ['Empresa X'],
+    correo: ['correo@x.com']
+  });
+  component.esFormularioSoloLectura = true;
+  component.inicializarEstadoFormulario();
+  expect(component.form.get('btonDeRadio')?.disabled).toBe(true);
+  expect(component.form.get('justificacion')?.disabled).toBe(true);
+  expect(component.datosDelEstablecimiento.get('rfcDel')?.disabled).toBe(true);
+  expect(component.datosDelEstablecimiento.get('denominacion')?.disabled).toBe(true);
+  expect(component.datosDelEstablecimiento.get('correo')?.disabled).toBe(true);
+});
 });

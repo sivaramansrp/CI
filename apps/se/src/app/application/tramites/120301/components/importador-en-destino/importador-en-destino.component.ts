@@ -20,13 +20,14 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { REGEX_CAPTURA_CBP, REGEX_CAPTURA_IRS, REGEX_CAPTURA_USDA } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClient } from '@angular/common/http';
+import { ImportadorDestinoResponse } from '../../models/response/importador-destino-response.model'
 import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -76,6 +77,21 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    */
   @Input()
   formularioDeshabilitado: boolean = false;
+
+  /**
+  * @property {ImportadorDestinoResponse} informacionImportador - Información del importador en destino.
+  * Propiedad de entrada que recibe un objeto con la información del importador en destino.
+  * Se utiliza para llenar el formulario cuando está en modo de solo lectura.
+  * Permite mostrar los datos existentes del importador sin posibilidad de edición.
+  * @input
+   */
+  @Input()
+  informacionImportador!: ImportadorDestinoResponse;
+
+  /**
+    * @property {ImportadorDestinoResponse} obtenerInformacionImportador - Información del importador en destino.
+   */
+  obtenerInformacionImportador!: ImportadorDestinoResponse;
 
   /**
    * @property {FormGroup} importadorForm - El grupo de formularios para capturar los datos del importador.
@@ -159,6 +175,11 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
   private seccionState!: SeccionLibState;
 
   /**
+   * @property {boolean} visualizarTipoIOR - Bandera para visualizar el campo de tipo IOR.
+   */
+  visualizarTipoIOR: boolean = true;
+
+  /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
    * Inyecta todas las dependencias requeridas para el manejo de formularios reactivos,
@@ -200,52 +221,106 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnInit}
    */
-    ngOnInit(): void {
-      this.seccionQuery.selectSeccionState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.seccionState = seccionState;
-          })
-        )
-        .subscribe();
+  ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
 
-      this.ElegibilidadDeTextilesQuery.selectTextile$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((state) => {
-            this.importadorState = state as TextilesState;
-          })
-        )
-        .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.importadorState = state as TextilesState;
+        })
+      )
+      .subscribe();
 
-      this.initActionFormBuild();
-      this.obtenerListasDesplegables();
+    this.initActionFormBuild();
+    this.obtenerListasDesplegables();
 
-      this.seccionStore.establecerFormaValida([false]);
+    this.seccionStore.establecerFormaValida([false]);
 
-      this.importadorForm.statusChanges
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(10),
-          tap((_value) => {
-            if (this.importadorForm.valid) {
-              this.ElegibilidadDeTextilesStore.setFormaValida([
-                ...this.importadorState.formaValida,
-                { id: 4, descripcion: 'TodoValido' },
-              ]);
-            }
-            this.seccionStore.establecerSeccion([true]);
-            this.seccionStore.establecerFormaValida([true]);
-          })
-        )
-        .subscribe();
+    this.importadorForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.importadorForm.valid) {
+            this.ElegibilidadDeTextilesStore.setFormaValida([
+              ...this.importadorState.formaValida,
+              { id: 4, descripcion: 'TodoValido' },
+            ]);
+          }
+          this.seccionStore.establecerSeccion([true]);
+          this.seccionStore.establecerFormaValida([true]);
+        })
+      )
+      .subscribe();
 
-      if (this.formularioDeshabilitado) {
-        this.importadorForm.disable();
-      }
+    this.importadorForm.get('tipo')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valorSeleccionado: string) => {
+        const CANTIDADCTRL = this.importadorForm.get('cantidadTotalImportador');
+        if (!CANTIDADCTRL) {
+          return;
+        }
+
+        switch (valorSeleccionado) {
+          case 'IOR.IRS':
+            CANTIDADCTRL.setValidators([
+              Validators.required,
+              Validators.pattern(REGEX_CAPTURA_IRS),
+            ]);
+            break;
+          case 'IOR.CBP':
+            CANTIDADCTRL.setValidators([
+              Validators.required,
+              Validators.pattern(REGEX_CAPTURA_CBP),
+            ]);
+            break;
+          case 'IOR.SSS':
+            CANTIDADCTRL.setValidators([
+              Validators.required,
+              Validators.pattern(REGEX_CAPTURA_USDA),
+            ]);
+            break;
+          default:
+            // Si no coincide, dejamos solo requerido
+            CANTIDADCTRL.setValidators([Validators.required]);
+            break;
+        }
+
+        CANTIDADCTRL.updateValueAndValidity();
+      });
+
+    if (this.formularioDeshabilitado) {
+      this.importadorForm.disable();
+      this.visualizarTipoIOR = false;
+      this.obtenerInformacionImportador = this.informacionImportador;
+      this.llenarInformacionFormulario(this.obtenerInformacionImportador);
     }
+  }
 
+  /**
+   * Llena el formulario con la información del importador.
+   * @param data ImportadorDestinoResponse
+   */
+  llenarInformacionFormulario(data: ImportadorDestinoResponse): void {
+    this.importadorForm.patchValue({
+      tipoIOR: data.tipoIor,
+      cantidadTotalImportador: data.valor,
+      razonSocialImportador: data.razon_social,
+      domicilio: data.domicilio,
+      ciudadImportador: data.ciudad,
+      cpImportador: data.cp,
+      PaisImportador: data.pais
+    });
+  }
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo para capturar los datos del importador.
@@ -258,15 +333,11 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    */
   initActionFormBuild(): void {
     this.importadorForm = this.fb.group({
+      tipoIOR: [{ value: "", disabled: true }],
       tipo: [this.importadorState.tipo, Validators.required],
       cantidadTotalImportador: [
         this.importadorState.cantidadTotalImportador,
-        [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.minLength(11),
-          Validators.maxLength(11)
-        ],
+        Validators.required, // Se ajustará dinámicamente
       ],
       razonSocialImportador: [
         this.importadorState.razonSocialImportador,
@@ -388,13 +459,13 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
 
     this.mostrarTabs.emit(true);
   }
-    /**
-   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
-   * Si el formulario es inválido, muestra una notificación de alerta.
-   * @returns {void}
-   */
+  /**
+  * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
+  * Si el formulario es inválido, muestra una notificación de alerta.
+  * @returns {void}
+  */
   enviada = false;
-    guardarFilaEditada(): void {
+  guardarFilaEditada(): void {
     this.enviada = true;
   }
   /**
@@ -409,8 +480,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnDestroy}
    */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

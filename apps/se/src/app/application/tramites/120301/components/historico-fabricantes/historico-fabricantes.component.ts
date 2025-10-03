@@ -1,19 +1,23 @@
-import { CommonModule } from '@angular/common';
-
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
+import { CATALOGOS, ERROR_FORMA_ALERT, VALIDO, } from '../../constantes/elegibilidad-de-textiles.enums';
 import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 import {
   CatalogosSelect,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
@@ -22,24 +26,22 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
-import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
+import radioOptionsNacional from '@libs/shared/theme/assets/json/120301/tipo-fabricantes-nacional.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import {
-  CATALOGOS,
-  ERROR_FORMA_ALERT,
-  VALIDO,
-} from '../../constantes/elegibilidad-de-textiles.enums';
-
-import {
-  ElegibilidadDeTextilesStore,
-  TextilesState,
-} from '../../estados/elegibilidad-de-textiles.store';
+  Solicitud120301State,
+  Tramite120301Store,
+} from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FabricanteResponse } from '../../models/response/fabricantes-response.model';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
+import { HistoricoFabricantesService } from '../../services/historicoFabricantes.service';
 
 
 /**
@@ -84,24 +86,30 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
   imports: [
     TituloComponent,
     CommonModule,
-    ReactiveFormsModule,
-    InputCheckComponent,
     InputRadioComponent,
-    TablaDinamicaComponent
-],
+    TablaDinamicaComponent,
+    ModalModule,
+    NotificacionesComponent,
+    ReactiveFormsModule,
+  ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
-   * Propiedad para almacenar el valor seleccionado en la UI (usado en pruebas)
+   * Información histórica de fabricantes proporcionada al componente.
+   * @input informacionHistorico
    */
-  selectedValue: string | number | null = null;
+  @Input()
+  informacionHistorico: FabricanteResponse[] = [];
 
   /**
-   * Método para manejar el cambio de valor (usado en pruebas)
+   * Almacena los fabricantes que serán evaluados.
    */
-  onValueChange(value: string | number): void {
-    this.selectedValue = value;
-  }
+  fabricantesEvaluar: FabricanteResponse[] = [];
+
+  /**
+   * Indica si se debe mostrar la evaluación de fabricantes.
+   */
+  visualizarEvaluacion: boolean = false;
 
   /**
    * Método para ver detalle de un fabricante (usado en pruebas)
@@ -151,14 +159,14 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       INSTANCIA_MODAL.show();
     }
   }
-        /**
-         * Indica si el botón de eliminar debe estar habilitado.
-         * El botón se habilita si hay al menos un fabricante seleccionado en la tabla de asociados.
-         * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
-         */
-        get puedeEliminar(): boolean {
-          return this.selectedFabricantes.length > 0;
-        }
+  /**
+   * Indica si el botón de eliminar debe estar habilitado.
+   * El botón se habilita si hay al menos un fabricante seleccionado en la tabla de asociados.
+   * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
+   */
+  get puedeEliminar(): boolean {
+    return this.selectedFabricantes.length > 0;
+  }
 
   /**
    * @method eliminarFabricantesAsociados
@@ -212,10 +220,10 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
   }
 
-      /**
-   * @method abrirModalAgregar
-   * @description Abre el modal para agregar fabricante, o muestra error si ya existe uno asociado.
-   */
+  /**
+* @method abrirModalAgregar
+* @description Abre el modal para agregar fabricante, o muestra error si ya existe uno asociado.
+*/
   abrirModalAgregar(): void {
     // Sólo proceder si se selecciona un registro
     if (!this.selectedFabricantesNacionales.length) {
@@ -274,18 +282,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   selectedFabricantes: HistoricoColumns[] = [];
   fabricantesAsociados: HistoricoColumns[] = [];
 
-  /**
-   * @method onSeleccionChange
-   * @description
-   * Maneja el cambio de selección en la tabla de fabricantes.
-   * Actualiza la propiedad selectedFabricantes con las filas seleccionadas por el usuario.
-   * @param {HistoricoColumns[]} _event - Arreglo de fabricantes seleccionados desde la tabla.
-   * @returns {void} No retorna ningún valor.
-   */
-  onSeleccionChange(_event: HistoricoColumns[]): void {
-    // El evento debe ser la matriz de filas seleccionadas de la tabla.
-    this.selectedFabricantes = Array.isArray(_event) ? _event : [];
-  }
 
   /**
    * @method alSeleccionarClick
@@ -347,14 +343,31 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    */
   historicoFabricantesForm!: FormGroup;
 
-    /**
-   * @property {string} formularioAlertaError
-   * @description
-   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
-   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
-   * Vacío cuando el formulario es válido.
-   */
+  /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
   public formularioAlertaError: string = '';
+
+  /**
+   * @property {HistoricoColumns[]} seleccionados
+   * Filas seleccionadas para eliminar de la lista
+   */
+  seleccionados: HistoricoColumns[] = [];
+
+  /**
+  * @property {HistoricoColumns[]} seleccionFabricantesNacionales
+  * Filas seleccionadas para eliminar de la lista
+  */
+  seleccionFabricantesNacionales: HistoricoColumns[] = [];
+
+  /**
+   * Recuperado de datos del state
+   */
+  public solicitudState!: Solicitud120301State;
 
   /**
    * @property {boolean} esFormaValido
@@ -370,7 +383,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
    * Permite la coordinación entre componentes para la navegación de la interfaz.
    */
-  @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();  
+  @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * Contiene las configuraciones y opciones disponibles para los controles de radio button
@@ -380,14 +393,52 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   radioOptions = radioOptionsData;
 
   /**
-   * @property {string | number} valorSeleccionado - Valor seleccionado del radio button.
+   * @property {any[]} radioOptionsNacional - Opciones de radio para el formulario de tipo de fabricante nacional.
+   * Contiene las configuraciones y opciones disponibles para los controles de radio button
+   * relacionados con el tipo de fabricante nacional. Se inicializa con datos estáticos
+   * importados desde un archivo JSON externo que define las opciones de selección.
+   */
+  radioOptionsNacional = radioOptionsNacional;
+
+  /**
+   * @property {CatalogosSelect[]} dropdownConfigs - Configuraciones de los dropdowns.
+   * Contiene las configuraciones necesarias para los controles de selección desplegable (dropdowns)
+   * utilizados en el formulario. Incluye información sobre las fuentes de datos,
+   * etiquetas y valores asociados a cada dropdown.
+   */
+  isNacional: boolean = false;
+
+  /**
+   * @property {boolean} isFabricantes - Indica si se muestran los fabricantes.
+   * Controla la visibilidad de la sección de fabricantes en la interfaz.
+   */
+  isFabricantes: boolean = true;
+
+  /**
+   * @property {boolean} isNacionalTabla - Indica si se muestran los fabricantes nacionales en la tabla.
+   * Controla la visibilidad de la tabla de fabricantes nacionales en la interfaz.
+   * Cuando es true, la tabla se muestra; cuando es false, la tabla está oculta.
+   */
+  isNacionalTabla: boolean = false;
+
+  /**
+   * @property {string | number} selectedValue - Valor seleccionado del radio button.
    * Almacena el valor actualmente seleccionado en los controles de radio button del formulario.
    * Puede ser de tipo string o number dependiendo del tipo de opción seleccionada.
    * Se actualiza cuando el usuario cambia la selección en los controles de radio.
-          alValorCambiar(nuevoValor: number | string): void {
-            this.valorSeleccionado = nuevoValor;
-            if (nuevoValor === 'No') {
-              this.mostrarOpcionNacional = true;
+   */
+  selectedValue: string | number = '';
+
+  /**
+   * @property {string | number} selectValueNacional - Valor seleccionado del radio button para fabricantes nacionales.
+   * Almacena el valor actualmente seleccionado en los controles de radio button
+   * relacionados con los fabricantes nacionales. Puede ser de tipo string o number
+   * dependiendo del tipo de opción seleccionada. Se actualiza cuando el usuario
+   * cambia la selección en los controles de radio.
+   */
+  selectValueNacional: string | number = '';
+
+  /**
    * @property {string | number} defaultSelect - Valor por defecto del control de selección.
    * Define el valor inicial que debe mostrarse en los controles de selección cuando
    * el componente se inicializa. Proporciona un estado predeterminado para la interfaz.
@@ -458,6 +509,14 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
    * Subject privado utilizado con el operador takeUntil para cancelar automáticamente
    * todas las suscripciones activas cuando el componente es destruido.
+   */
+  fabricante: HistoricoColumns[] = [];
+  fabricanteEvaluacion: HistoricoColumns[] = [];
+
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
+   * Subject privado utilizado con el operador takeUntil para cancelar automáticamente
+   * todas las suscripciones activas cuando el componente es destruido.
    * Implementa el patrón estándar para prevenir fugas de memoria en Angular.
    * @private
    */
@@ -481,6 +540,24 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    */
   private seccionState!: SeccionLibState;
 
+  registraNumeroRegistro: boolean = false;
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+  /**
+       * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+       * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+       */
+  nuevaNotificacion!: Notificacion;
+  /**
+   * @property {boolean} eliminarFabricanteModal - Indica si el modal de eliminación de fabricante está abierto.
+   */
+  eliminarFabricanteModal: boolean = false;
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
@@ -503,7 +580,9 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private elegibilidadTextilesService: ElegibilidadTextilesService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private historicoFabricantesService: HistoricoFabricantesService,
+    private tramiteStore: Tramite120301Store
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -519,6 +598,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
+    this.solicitudState = this.tramiteStore.getValue(); // Akita getValue()
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -536,7 +616,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionFormBuild();
-    this.recuperarDatos();
+
 
     // Asegúrese de que fabricantesAsociados esté en blanco inicialmente
     this.fabricantesAsociados = [];
@@ -571,7 +651,43 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
     if (this.formularioDeshabilitado) {
       this.historicoFabricantesForm.disable();
+      this.fabricantesEvaluar = this.informacionHistorico;
+      this.visualizarEvaluacion = true;
+      this.isFabricantes = false;
+      this.llenarTabla();
     }
+
+    if (this.historicoState.exportadorFabricanteMismo) {
+      this.isNacional = true;
+    }
+    if (this.historicoState.exportadorFabricanteNacional) {
+      const IDSOLICITUD = this.solicitudState.idSolicitud;
+      this.isNacionalTabla = true;
+
+      const TIPO_FABRICANTE = this.historicoFabricantesForm.get('exportadorFabricanteNacional')?.value === 'Nacional'
+        ? 'NACIONAL'
+        : this.historicoFabricantesForm.get('exportadorFabricanteNacional')?.value;
+
+      this.recuperarDatos(TIPO_FABRICANTE, IDSOLICITUD);
+    }
+
+    if (this.historicoState.listaFabricantes?.length > 0) {
+      this.fabricante = [...this.historicoState.listaFabricantes];
+      this.isFabricantes = true;
+    }
+  }
+
+  llenarTabla(): void {
+    this.informacionHistorico.forEach(fab => {
+      const FABRICANTE: HistoricoColumns = {
+        nombreFabricante: fab.nombre_fabricante ?? '',
+        numeroRegistroFiscal: fab.numero_registro_fiscal ?? '',
+        direccion: fab.direccion ?? '',
+        correoElectrónico: fab.correo_electronico ?? '',
+        telefono: fab.telefono ?? '',
+      };
+      this.fabricanteEvaluacion.push(FABRICANTE);
+    });
   }
 
   /**
@@ -587,6 +703,9 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     this.historicoFabricantesForm = this.fb.group({
       exportadorFabricanteMismo: [
         this.historicoState.exportadorFabricanteMismo,
+      ],
+      exportadorFabricanteNacional: [
+        this.historicoState.exportadorFabricanteNacional,
       ],
       numeroRegistroFiscal: [
         this.historicoState.numeroRegistroFiscal,
@@ -607,16 +726,36 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * nacional disponible en el sistema.
    * @returns {void} No retorna ningún valor.
    */
-  recuperarDatos(): void {
-    this.elegibilidadTextilesService
-      .obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json')
-      .pipe(takeUntil(this.destroyNotifier$))
+  recuperarDatos(tipoFabricante: string, idSolicitud: number): void {
+    this.historicoFabricantesService
+      .getFabricantes(tipoFabricante, idSolicitud)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      )
       .subscribe({
-        next: (response) => {
-          this.fabricantesNacionales = response as HistoricoColumns[];
+        next: (resp) => {
+          if (resp.codigo === '00' && resp.datos) {
+            const FABRICANTES = resp.datos.fabricante ?? [];
+
+            this.fabricantesNacionales = FABRICANTES.map((f) => ({
+              nombreFabricante: f.razon_social ?? '',
+              numeroRegistroFiscal: f.clave_fabricante ?? '',
+              direccion: f.direccion ?? '',
+              correoElectrónico: f.correo_electronico ?? '',
+              telefono: f.telefono ?? '',
+            }));
+          } else {
+            this.fabricantesNacionales = [];
+            console.error('Error al obtener fabricantes:', resp.mensaje);
+          }
         },
+        error: (err) => {
+          this.fabricantesNacionales = [];
+          console.error('Error de conexión:', err);
+        }
       });
   }
+
 
   /**
    * @property {string | number} valorSeleccionado - Valor seleccionado del radio button.
@@ -634,13 +773,94 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @param {string | number} nuevoValor - El nuevo valor seleccionado en el control de radio.
    * @returns {void} No retorna ningún valor.
    */
-  alValorCambiar(nuevoValor: number | string): void {
-    this.valorSeleccionado = nuevoValor;
-    if (nuevoValor === 'No') {
-      this.mostrarOpcionNacional = true;
-    } else {
-      this.mostrarOpcionNacional = false;
+  onValueChange(newValue: number | string): void {
+    this.historicoFabricantesForm.get('exportadorFabricanteMismo')?.setValue(newValue)
+    this.selectedValue = newValue;
+    this.isNacional = true;
+  }
+
+  /**
+   * @method onSeleccionFabricantesNacionales
+   * @description Maneja la selección de fabricantes nacionales desde un componente externo.
+   * Almacena la lista de fabricantes nacionales seleccionados en una propiedad de la clase
+   * para su posterior procesamiento. Este método actúa como callback para recibir datos
+   * de selección múltiple desde otros componentes.
+   * @param {HistoricoColumns[]} seleccion - Array de objetos HistoricoColumns que representan
+   * los fabricantes nacionales seleccionados por el usuario.
+   * @returns {void} No retorna ningún valor.
+   */
+  onSeleccionFabricantesNacionales(seleccion: HistoricoColumns[]): void {
+    this.seleccionFabricantesNacionales = seleccion;
+  }
+
+  /**
+   * @method seleccionarFabricantes
+   * @description Procesa y agrega los fabricantes nacionales previamente seleccionados
+   * a la lista principal de fabricantes. Valida que exista una selección previa y evita
+   * duplicados basándose en el número de registro fiscal. Al finalizar el proceso,
+   * limpia la selección temporal para prepararse para nuevas selecciones.
+   * @returns {void} No retorna ningún valor.
+   * @throws No lanza excepciones explícitas, pero retorna temprano si no hay selección.
+   */
+  seleccionarFabricantes(): void {
+    if (!this.seleccionFabricantesNacionales || this.seleccionFabricantesNacionales.length === 0) {
+      return;
     }
+
+    // Agregar seleccionados evitando duplicados
+    this.seleccionFabricantesNacionales.forEach(fab => {
+      const EXISTE = this.fabricante.some(f => f.numeroRegistroFiscal === fab.numeroRegistroFiscal);
+      if (!EXISTE) {
+        this.fabricante = [...this.fabricante, fab];
+      }
+    });
+
+    // Opcional: limpiar selección
+    this.seleccionFabricantesNacionales = [];
+  }
+
+  /**
+   * Selección del tipo de fabricante nacional.
+   * Maneja el cambio de valor del radio button para fabricantes nacionales.
+   * Actualiza la propiedad selectValueNacional con el nuevo valor seleccionado,
+   * establece la bandera isNacionalTabla a true y recupera los datos de fabricantes
+   * nacionales desde el servicio basado en el tipo seleccionado.
+   * @param newValue - El nuevo valor seleccionado en el control de radio.
+   */
+  onValueChangeNacional(newValue: number | string): void {
+    this.historicoFabricantesForm.get('exportadorFabricanteNacional')?.setValue(newValue);
+    this.selectValueNacional = newValue;
+
+    let tipoFabricante = '';
+    if (newValue === 'Nacional') {
+      tipoFabricante = 'NACIONAL';
+    }
+    const IDSOLICITUD = this.solicitudState.idSolicitud
+    this.isNacionalTabla = true;
+    this.recuperarDatos(tipoFabricante, IDSOLICITUD);
+
+  }
+
+  /**
+   * Muestra el formulario para agregar un nuevo fabricante.
+   * Cambia la bandera isFabricantes a false para mostrar el formulario
+   * y ocultar la lista de fabricantes existentes.
+   */
+  fabricanteNuevo(): void {
+    this.historicoFabricantesForm.get('numeroRegistroFiscal')?.setValue('');
+    this.registraNumeroRegistro = true;
+  }
+
+  /**
+   * Cancela la acción de agregar un nuevo fabricante.
+   * Cambia la bandera isFabricantes a true para ocultar el formulario
+   * y mostrar nuevamente la lista de fabricantes existentes.
+   */
+  cancelar(): void {
+    this.modal?.hide();
+    this.registraNumeroRegistro = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
   }
 
   /**
@@ -703,14 +923,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method continuar
-   * @description
-   * Método para continuar al siguiente paso del trámite, validando el formulario de fabricantes.
-   * Marca todos los campos como tocados y actualiza la validez del formulario.
-   * Si el formulario es inválido, muestra un mensaje de error y no permite avanzar.
-   * Si el formulario es válido, limpia el error y emite el evento para mostrar las pestañas siguientes.
-   * @returns {void} No retorna ningún valor.
-   */
+ * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+ * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+ * Si es válido, limpia el error y permite continuar.
+ */
+
   continuar(): void {
     this.historicoFabricantesForm.markAllAsTouched();
     this.historicoFabricantesForm.updateValueAndValidity();
@@ -728,7 +945,115 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
     this.mostrarTabs.emit(true);
   }
-  
+
+  /**
+   * @method onSubmitRfc
+   * @description Maneja la sumisión del formulario para buscar un fabricante por RFC.
+   * Valida el formulario y, si es válido, realiza una llamada al servicio para buscar
+   * un fabricante nacional utilizando el RFC proporcionado. Si la respuesta es exitosa
+   * y contiene datos, actualiza la interfaz para mostrar los fabricantes.
+   */
+  onSubmitRfc(): void {
+    if (this.historicoFabricantesForm.invalid) {
+      this.historicoFabricantesForm.markAllAsTouched();
+      return;
+    }
+
+    const RFC = this.historicoFabricantesForm.get('numeroRegistroFiscal')?.value;
+
+    this.historicoFabricantesService
+      .getFabricanteNacional(RFC)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === '00' && resp.datos) {
+            this.isFabricantes = true;
+            const FAB = resp.datos;
+            // Mapear respuesta → HistoricoColumns
+            const NUEVO_FABRICANTE: HistoricoColumns = {
+              nombreFabricante: FAB.razon_social
+                ? FAB.razon_social
+                : `${FAB.nombre ?? ''} ${FAB.apellido_paterno ?? ''} ${FAB.apellido_materno ?? ''}`.trim(),
+              numeroRegistroFiscal: FAB.rfc,
+              direccion: FAB.domicilio
+                ? `${FAB.domicilio.calle ?? ''} ${FAB.domicilio.num_exterior ?? ''}, ${FAB.domicilio.colonia ?? ''}, ${FAB.domicilio.entidad_federativa ?? ''}, ${FAB.domicilio.pais?.nombre ?? ''}`
+                : '',
+              correoElectrónico: FAB.correo_electronico ?? '',
+              telefono: FAB.telefono ?? '',
+            };
+            if (this.fabricante.length < 1) {
+              // Limpiar la tabla y agregar
+              this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
+              this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+              this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
+              this.cancelar();
+            }
+            else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'warning',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Ya existe un fabricante previamente seleccionado.',
+                cerrar: true,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
+          } else {
+            console.error('Error en la búsqueda:', resp.mensaje);
+          }
+        },
+        error: (err) => {
+          console.error('Error en la petición:', err);
+        },
+      });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onSeleccionChange(event: HistoricoColumns[]) {
+    this.seleccionados = event;
+  }
+
+  /**
+   * Eliminar filas seleccionadas de la tabla
+   */
+  eliminarSeleccionados(): void {
+    if (this.seleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar al menos un fabricante a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.eliminarFabricanteModal = true;
+  }
+
+  aceptarEliminar(): void {
+    if (this.seleccionados.length > 0) {
+      this.fabricante = this.fabricante.filter(
+        f => !this.seleccionados.some(sel => sel.numeroRegistroFiscal === f.numeroRegistroFiscal)
+      );
+      this.seleccionados = [];
+    }
+    this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+    this.cerrarEliminarModal();
+  }
+
+  cerrarEliminarModal(): void {
+    this.modal?.hide();
+    this.eliminarFabricanteModal = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
+
+  }
+
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
@@ -742,5 +1067,12 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+ * Método que se ejecuta al ocultar el modal.
+ */
+  onHidden(): void {
+    this.mostrarModal = false;
   }
 }

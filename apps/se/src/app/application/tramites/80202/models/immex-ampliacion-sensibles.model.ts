@@ -101,6 +101,7 @@ export interface TablaFraccionDeImportacion {
  * @module Tramites.IMMEX.Interfaces.NICO
  */
 export interface NicoInfo {
+  id?:number;
   /**
    * @description Código NICO único que identifica el tipo de commodity o materia prima.
    * Código alfanumérico estandarizado que clasifica de manera única cada tipo de commodity utilizado en comercio internacional.
@@ -145,6 +146,8 @@ export interface NicoInfo {
  * @module Tramites.IMMEX
  */
 export interface ImmexRegistroform {
+
+  
   Nicos:string;
   
   
@@ -383,10 +386,14 @@ export interface immexInfo {
 
   /** Cantidad por periodo # */
   cantidadPorPeriodo: number;
-
-  Nicos?:number;
-  
+  /** Nicos por periodo # */
+  nicos?:number | string;
+    /** productoDescExportacions por periodo # */
   productoDescExportacions?:string;
+  /** id por periodo # */
+  id?:number;
+
+  nicosTable?:NicoInfo[];
 }
 
 /**
@@ -544,69 +551,16 @@ export const IMMEX_SERVICIO = [
  * @module Tramites.IMMEX.Interfaces.Fraccion
  */
 export interface fraccionInfo {
-  /**
-   * @description Número secuencial o identificador único del registro de fracción en la tabla.
-   * Proporciona un identificador numérico para ordenar y referenciar los registros de fracciones arancelarias.
-   * @type {string}
-   * @example "1"
-   * @required
-   */
-  FRACCION_Columna_1: string;
+  id?:number;
+  fraccionImportacion?: string; 
+  umt?: string;                 
+  descripcionTigie?: string;   
+  fraccionExportacion?: string;      
+  descripcionComercialExport?: string;
+  nicos?:string | number;
+   nicosTable?:NicoInfo[];
+  numero:number;
 
-  /**
-   * @description Código oficial de la fracción arancelaria según la nomenclatura internacional.
-   * Clasificación numérica que identifica de manera única el tipo de mercancía para efectos arancelarios.
-   * @type {string}
-   * @example "6205.20.01"
-   * @required
-   */
-  FRACCION_Columna_2: string;
-
-  /**
-   * @description Descripción de la mercancía de importación relacionada con esta fracción de exportación.
-   * Especifica las características de la materia prima o insumo importado que se transforma en el producto de exportación.
-   * @type {string}
-   * @example "Telas de algodón sin confeccionar"
-   * @required
-   */
-  FRACCION_Columna_3: string;
-
-  /**
-   * @description Unidad de Medida Técnica (UMT) aplicable a la mercancía de esta fracción.
-   * Especifica la unidad oficial utilizada para cuantificar la mercancía en operaciones de comercio exterior.
-   * @type {string}
-   * @example "Metro cuadrado"
-   * @required
-   */
-  FRACCION_Columna_4: string;
-
-  /**
-   * @description Descripción oficial según la Tarifa de la Ley de los Impuestos Generales de Importación y Exportación (TIGIE).
-   * Texto descriptivo oficial que define las características técnicas de la mercancía conforme a la clasificación arancelaria.
-   * @type {string}
-   * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
-   * @required
-   */
-  FRACCION_Columna_5: string;
-
-  /**
-   * @description Descripción comercial específica del producto destinado a exportación.
-   * Especificación comercial detallada que describe el producto final que será exportado tras su procesamiento o manufactura.
-   * @type {string}
-   * @example "Camisas de vestir para caballero marca Premium"
-   * @required
-   */
-  FRACCION_Columna_6: string;
-
-  /**
-   * @description Indicador del estado activo (true) o inactivo (false) del registro de fracción.
-   * Bandera booleana que determina si la fracción está habilitada para operaciones o ha sido desactivada.
-   * @type {boolean}
-   * @default true
-   * @example true
-   * @required
-   */
-  estatus: boolean;
 }
 /**
  * @constant FRACCION_EXPORTACION
@@ -636,116 +590,43 @@ export interface fraccionInfo {
  * @since 2025
  * @module Tramites.IMMEX.Tablas.Exportacion
  */
-export const FRACCION_EXPORTACION = [
-  {
-    /**
-     * @description Encabezado para la columna de numeración secuencial de fracciones
-     * @type {string}
-     */
+export const FRACCION_EXPORTACION: {
+  encabezado: string;
+  clave: (ele: fraccionInfo, index?: number) => string | undefined;
+  orden: number;
+}[] = [
+ {
     encabezado: 'No.',
-    /**
-     * @description Función extractora para obtener el número secuencial de la fracción
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Número secuencial del registro de fracción
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_1,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
+    clave: (ele: fraccionInfo) => ele.numero.toString(),
     orden: 1,
   },
   {
-    /**
-     * @description Encabezado para la columna del código de fracción arancelaria
-     * @type {string}
-     */
     encabezado: 'Fracción de importación',
-    /**
-     * @description Función extractora para obtener el código oficial de fracción arancelaria
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Código de fracción arancelaria según nomenclatura internacional
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_2,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
+    clave: (ele: fraccionInfo) => ele.fraccionImportacion,
     orden: 2,
   },
   {
-    /**
-     * @description Encabezado para la columna de mercancía de importación relacionada
-     * @type {string}
-     */
     encabezado: 'Fracción de exportación',
-    /**
-     * @description Función extractora para obtener la descripción de mercancía de importación
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Descripción de la mercancía importada relacionada con esta fracción
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_3,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
+    clave: (ele: fraccionInfo) => ele.fraccionExportacion,
     orden: 3,
   },
   {
-    /**
-     * @description Encabezado para la columna de Unidad de Medida Técnica
-     * @type {string}
-     */
     encabezado: 'UMT',
-    /**
-     * @description Función extractora para obtener la Unidad de Medida Técnica de la fracción
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Unidad de Medida Técnica aplicable a esta fracción
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_4,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
+    clave: (ele: fraccionInfo) => ele.umt,
     orden: 4,
   },
   {
-    /**
-     * @description Encabezado para la columna de descripción TIGIE
-     * @type {string}
-     */
-    encabezado: 'Descripción de la TIGIE',
-    /**
-     * @description Función extractora para obtener la descripción oficial TIGIE
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_5,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
-    orden: 6,
+    encabezado: 'Descripción comercial del producto de exportación',
+    clave: (ele: fraccionInfo) => ele.descripcionComercialExport,
+    orden: 5,
   },
   {
-    /**
-     * @description Encabezado para la columna de descripción comercial de exportación
-     * @type {string}
-     */
-    encabezado: 'Descripción comercial del producto de exportación',
-    /**
-     * @description Función extractora para obtener la descripción comercial del producto de exportación
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Descripción comercial específica del producto destinado a exportación
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_6,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
-    orden: 5,
-  }
+    encabezado: 'Descripción de la TIGIE',
+    clave: (ele: fraccionInfo) => ele.descripcionTigie,
+    orden: 6,
+  },
 ];
+
 /**
  * @constant NICO_TABLA
  * @description Configuración de las columnas de la tabla para NICO (Nomenclatura de Identificación de Commodities).
@@ -798,6 +679,14 @@ export const NICO_TABLA = [
     orden: 2,
   },
 ];
+
+/**
+ * @interface nicoInfo
+ * @description Interfaz que define la estructura de la información de NICO (Nomenclatura de Identificación de Commodities).
+ * Representa los datos de clasificación de materias primas y productos básicos utilizados en el comercio internacional,
+ * proporcionando una base estandarizada para la identificación de commodities en operaciones IMMEX.
+ */
+
 export interface nicoInfo {
   /**
    * @description Código NICO único que identifica el tipo de commodity o materia prima.

@@ -1,11 +1,17 @@
 import {
   Catalogo,
   ConfiguracionColumna,
-  TablaDinamicaComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaSeleccion,
+  doDeepCopy,
+  esValidArray,
+  esValidObject,
+  TablaDinamicaComponent,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 import {
   DatosSubcontratista,
@@ -17,13 +23,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ContenedorComplementarPlantasComponent } from '../../../tramites/80101/component/contenedor-complementar-plantas/contenedor-complementar-plantas.component';
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 @Component({
   selector: 'app-gestionar-empresas-subfabricante',
   standalone: true,
@@ -33,7 +40,8 @@ import { Subject, takeUntil } from 'rxjs';
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ContenedorComplementarPlantasComponent
+    ContenedorComplementarPlantasComponent,
+    NotificacionesComponent
   ],
   templateUrl: './gestionar-empresas-subfabricante.component.html',
   styleUrl: './gestionar-empresas-subfabricante.component.scss',
@@ -43,7 +51,7 @@ import { Subject, takeUntil } from 'rxjs';
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class GestionarEmpresasSubfabricantesComponent implements OnInit {
+export class GestionarEmpresasSubfabricantesComponent implements OnInit, OnChanges {
   /**
    * Lista de estados del catálogo. Esta propiedad almacena los diferentes estados disponibles para ser seleccionados.
    * @property {Catalogo[]} _estadoCatalogo
@@ -194,8 +202,10 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
-  set formularioDatosSubcontratista(valor: FormGroup) {
-    this._formularioDatosSubcontratista.setValue(valor.value);
+  set formularioDatosSubcontratista(valor: FormGroup | null) {
+     if (valor && this._formularioDatosSubcontratista) {
+      this._formularioDatosSubcontratista.setValue(valor.value);
+    }
   }
 
   /**
@@ -273,6 +283,11 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
 
+  /**
+   * Lista de plantas subfabricantes.
+   */
+  plantasSubmanufactureras: PlantasSubfabricante[] = [];
+
 /**  
  * Indica si el modal complementario debe mostrarse.  
  * Valor booleano utilizado para controlar la visibilidad del modal.
@@ -288,12 +303,16 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
  */
 private modalRef: Modal | null = null;
 
+/** Notificación para mostrar mensajes al usuario.
+ */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder, private router: Router,private complimentosService: ComplimentosService) {
-    this.inicializarFormularioDatosSubcontratista();
+  constructor(private fb: FormBuilder, private router: Router,private complimentosService: ComplimentosService,
+    private servicioDeFormularioService: ServicioDeFormularioService, private validacionesService: ValidacionesFormularioService
+  ) {
   }
 
   /**
@@ -302,11 +321,22 @@ private modalRef: Modal | null = null;
    * desactiva el formulario de datos del subcontratista para evitar modificaciones.
    */
   ngOnInit(): void {
+    this.inicializarFormularioDatosSubcontratista();
     if (this.formularioDeshabilitado) {
       this._formularioDatosSubcontratista.disable();
     }
     this.obtenerEstados();
   }
+
+  /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.datosTablaSubfabricantesSeleccionadas.length === 0) {
+      this.servicioDeFormularioService.registerArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    } else {
+      this.servicioDeFormularioService.setArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    }
+  }
+
   /**
    * Inicializa el formulario de datos del subcontratista con los campos `rfc` y `estado`, ambos requeridos.
    * @method inicializarFormularioDatosSubcontratista
@@ -341,6 +371,18 @@ private modalRef: Modal | null = null;
     if (this.formularioDatosSubcontratista.get('rfc')?.value) {
       this.alCambiarEstado.emit(estadoSeleccionado);
     }
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: FormGroup, campo: string): boolean | null {
+    return this.validacionesService.isValid(formgroup, campo);
   }
 
   /**
@@ -409,9 +451,10 @@ private modalRef: Modal | null = null;
    * @param {PlantasSubfabricante[]} plantasSeleccionadas - Lista de plantas seleccionadas por el usuario.
    * @description Este método asigna las plantas seleccionadas a la propiedad `plantasSeleccionadas`.
    */
-  onPlantasSeleccionadas(plantasSeleccionadas: PlantasSubfabricante[]): void {
+  onPlantasSeleccionadas(plantasSeleccionadas: PlantasSubfabricante[]): void { 
     if (plantasSeleccionadas.length > 0) {
       this.plantasSeleccionadas = plantasSeleccionadas;
+      this.plantasSubmanufactureras = plantasSeleccionadas;
     }
   }
 
@@ -421,7 +464,28 @@ private modalRef: Modal | null = null;
    * @description Este método emite el evento `plantasPorEliminar` con las plantas seleccionadas para ser eliminadas.
    */
   eliminarPlantas(): void {
-    if (this.plantasSeleccionadas.length > 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.plantasSeleccionadas.length === 0
+          ? 'Selecciona la planta que desea eliminar.'
+          : 'Debe seleccionar un tipo de figura para continuar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: this.plantasSeleccionadas.length === 0 ? '' : 'Cancelar',
+      };
+  }
+/**
+ * 
+ * @param confirmacion - booleano que indica si se confirmó la eliminación.
+ * Si se confirma, se restauran las plantas seleccionadas a la lista de disponibles,
+ * se emite el evento `plantasPorEliminar` y se limpia la selección.
+ */
+  eliminarPedimentoDatos(confirmacion: boolean): void {
+    if (confirmacion) {
+     if (this.plantasSeleccionadas.length > 0) {
       // Agregar las plantas de vuelta a la lista de disponibles
       const PLANTAS_A_RESTAURAR = this.plantasSeleccionadas.filter(plantaSeleccionada => {
         // Verificar que la planta no esté ya en la lista de disponibles
@@ -445,9 +509,8 @@ private modalRef: Modal | null = null;
       // Limpiar la selección
       this.plantasSeleccionadas = [];
     }
+    }
   }
-
-
    /**
    * Emite el evento para complementar las plantas seleccionadas.
    * @returns {void}
@@ -475,7 +538,14 @@ private modalRef: Modal | null = null;
    */
   obtenerEstados():void {
       this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-        this.estadoCatalogo = res.datos;
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.estadoCatalogo = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
       });
       
     }

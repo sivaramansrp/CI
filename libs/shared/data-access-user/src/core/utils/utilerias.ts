@@ -293,5 +293,32 @@ export function formatFecha(fecha: string | Date): string {
 
     return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
 }
+
+/**
+     * Formatea una fecha en formato 'dd/MM/yyyy' a 'yyyy-MM-dd'.
+     * 
+     * @param input - La fecha en formato 'dd/MM/yyyy' como string.
+     * @returns La fecha formateada en 'yyyy-MM-dd' como string.
+     */
+export function formatearFechaYyyyMmDd(
+  input: string,
+  override?: { year?: string | number; month?: string | number; day?: string | number }
+): string {
+  if (input) {
+    const [DAY, MONTH, YEAR] = input.split("/");
+    const YYYY = override?.year ?? YEAR;
+    const MM = override?.month ?? MONTH;
+    const DD = override?.day ?? DAY; 
+    return `${YYYY}-${String(MM).padStart(2, "0")}-${String(DD).padStart(2, "0")}`;
+  }
+  return '';
+}
+
+export function parseToString(value: unknown): string {
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  return value.toString();
+}
     
 

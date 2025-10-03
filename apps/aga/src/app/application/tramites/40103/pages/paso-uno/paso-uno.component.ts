@@ -1,10 +1,18 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
-import {ConsultaioQuery, ConsultaioState, FormularioDinamico,SolicitanteComponent} from '@ng-mf/data-access-user';
-import {DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,PERSONA_MORAL_NACIONAL} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+
+import { ChoferesComponent } from '../../components/choferes/choferes.component';
+import { DirectorGeneralComponent } from '../../components/director-general/director-general.component';
+import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+import { VehiculosComponent } from '../../components/vehiculos/vehiculos.component';
+
 import { Chofer40103Service } from '../../estados/chofer40103.service';
+
+import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 
 @Component({
   selector: 'paso-uno',
@@ -13,11 +21,18 @@ import { Chofer40103Service } from '../../estados/chofer40103.service';
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
- * Referencia al componente hijo `SolicitanteComponent` dentro de la plantilla.
- * Permite acceder a las propiedades y métodos públicos del componente hijo.
- *
- * @type {SolicitanteComponent}
- */
+   * Referencias a los componentes hijo para validación.
+   */
+  @ViewChild('solicitanteComponent') solicitanteComponent!: SolicitanteComponent;
+  @ViewChild('directorGeneralComponent') directorGeneralComponent!: DirectorGeneralComponent;
+  @ViewChild('choferesComponent') choferesComponent!: ChoferesComponent;
+  @ViewChild('vehiculosComponent') vehiculosComponent!: VehiculosComponent;
+
+  /**
+   * Referencia al componente hijo `SolicitanteComponent` dentro de la plantilla.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo.
+   * @deprecated Use solicitanteComponent instead
+   */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
   /**
    * Representa el tipo de persona asociado.
@@ -83,11 +98,42 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
   }
   /**
+   * Estado de validación de cada sección
+   */
+  private validacionStates = {
+    solicitante: false,
+    directorGeneral: false
+  };
+
+  /**
    * Selecciona una pestaña.
    * @param i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
+    // Validar la pestaña actual antes de cambiar
+    this.validarTabActual();
     this.indice = i;
+  }
+
+  /**
+   * Valida la pestaña actual y guarda el estado de validación
+   */
+  private validarTabActual(): void {
+    switch (this.indice) {
+      case 1: // Solicitante
+        if (this.solicitanteComponent) {
+          this.validacionStates.solicitante = this.solicitanteComponent.validarFormularios();
+        }
+        break;
+      case 2: // Director General
+        if (this.directorGeneralComponent) {
+          this.validacionStates.directorGeneral = this.directorGeneralComponent.validarFormularios();
+        }
+        break;
+      default:
+        // No validation needed for other tabs
+        break;
+    }
   }
 
   /**
@@ -161,6 +207,45 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(response);
         this.esDatosRespuesta = true;
       });
+  }
+
+  /**
+   * Valida todos los formularios de los componentes del paso uno.
+   * @returns {object} Objeto con los estados de validación de cada formulario.
+   */
+  public validarTodosLosFormularios(): { formularioUnoValido: boolean; formularioDosValido: boolean } {
+    // Compruebe si todos los datos requeridos están cargados
+    if (!this.esDatosRespuesta) {
+      return {
+        formularioUnoValido: false,
+        formularioDosValido: true
+      };
+    }
+
+    // Validar la pestaña actual primero
+    this.validarTabActual();
+
+    // Ahora valide todos los componentes requeridos utilizando los estados almacenados y los componentes actuales
+    let SOLICITANTE_VALIDO = this.validacionStates.solicitante;
+    let DIRECTOR_GENERAL_VALIDO = this.validacionStates.directorGeneral;
+
+    // Si el componente actual está disponible, valídelo directamente
+    if (this.indice === 1 && this.solicitanteComponent) {
+      SOLICITANTE_VALIDO = this.solicitanteComponent.validarFormularios();
+    }
+    
+    if (this.indice === 2 && this.directorGeneralComponent) {
+      DIRECTOR_GENERAL_VALIDO = this.directorGeneralComponent.validarFormularios();
+    }
+
+    // Validación de Choferes y Vehículos eliminada - estas secciones ya no requieren validación para el botón Continuar
+
+    const TODOS_VALIDOS = SOLICITANTE_VALIDO && DIRECTOR_GENERAL_VALIDO;
+
+    return {
+      formularioUnoValido: TODOS_VALIDOS,
+      formularioDosValido: true // Se mantiene como true por compatibilidad
+    };
   }
 
   /**

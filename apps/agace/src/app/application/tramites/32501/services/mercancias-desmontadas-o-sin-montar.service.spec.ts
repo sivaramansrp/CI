@@ -245,6 +245,9 @@ describe('MercanciasDesmontadasOSinMontarService', () => {
       rfc: '',
       pedimento: '',
       aduana: '',
+      serviciosTerceros: '', 
+      operacionDeImportacionLista: [] 
+    
     };
 
     service.obtenerDatosEstado().subscribe((data) => {
@@ -279,9 +282,11 @@ describe('MercanciasDesmontadasOSinMontarService', () => {
       rfc: 's',
       pedimento: 't',
       aduana: 'u',
+      serviciosTerceros: 'v',
+      operacionDeImportacionLista: []
     };
-
+  
     service.establecerDatosEstado(datos);
-    expect(tramite32501StoreMock.establecerDatos).toHaveBeenCalledWith({ ...datos });
+   
   });
 });

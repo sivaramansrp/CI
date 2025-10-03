@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
+import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
+import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 110101
@@ -28,6 +30,13 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+   /**
+   * Representa el estado actual de la solicitud para el trámite 110101.
+   * Esta propiedad contiene toda la información relevante sobre la solicitud del solicitante,
+   * encapsulada en la interfaz `Solicitante110101State`.
+  */
+  public solicitudeState!: Solicitante110101State;
+
   /**
   * @property desactivado
   * @type {boolean}
@@ -45,7 +54,8 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private pantallasSvc: PantallasSvcService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private solicitanteQuery: Solicitante110101Query,
   ) {
 
   }
@@ -58,13 +68,30 @@ export class DatosComponent implements OnInit, OnDestroy {
    * - Asegura que la suscripción se limpie correctamente utilizando el observable `destroyNotifier$` para evitar fugas de memoria.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    }
-    this.checkParameterAndEnableTabs();
+    // Suscripción a consultaState
+  this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      tap((seccionState) => {
+        this.consultaState = seccionState;
+
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        }
+
+        this.checkParameterAndEnableTabs();
+      })
+    )
+    .subscribe();
+
+  this.solicitanteQuery.selectSolicitante$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      tap((seccionState) => {
+        this.solicitudeState = seccionState;
+      })
+    )
+    .subscribe();
   }
   /**
    * Este método se utiliza para verificar si el parámetro existe y habilitar las pestañas

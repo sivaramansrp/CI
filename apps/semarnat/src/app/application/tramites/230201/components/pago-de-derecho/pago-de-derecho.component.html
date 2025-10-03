@@ -39,7 +39,19 @@
               <label class="form-label" for="llaveDePago">Llave de pago*:</label>
               <input class="form-control" id="llaveDePago" formControlName="llaveDePago" type="text"
                 [ngClass]="isValid(pagodeDerechos,'llaveDePago') ? 'required' : ''"
-                (change)="setValoresStore(pagodeDerechos,'llaveDePago', 'setllaveDePago')" />
+                (input)="onLlaveDePagoInput($event)"
+                maxlength="8" />
+                @if (pagodeDerechos.get('llaveDePago')?.invalid && pagodeDerechos.get('llaveDePago')?.touched) {
+                <div class="text-danger">
+                  @if (pagodeDerechos.get('llaveDePago')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  } @else if (pagodeDerechos.get('llaveDePago')?.errors?.['formatoIncorrecto']) {
+                  <small>Debe capturar el formato correcto.</small>
+                  } @else if (pagodeDerechos.get('llaveDePago')?.errors?.['caracteresInvalidos']) {
+                  <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                  }
+                </div>
+                }
             </div>
           </div>
 
@@ -50,6 +62,10 @@
                 formControlName="fecPago" type="date"
                 [ngClass]="isValid(pagodeDerechos,'fecPago') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'fecPago', 'setFecPago')" />
+              <div *ngIf="pagodeDerechos.get('fecPago')?.touched && pagodeDerechos.get('fecPago')?.hasError('futureDateNotAllowed')" 
+                class="text-danger mt-1 small">
+                La fecha de pago debe ser menor o igual a la fecha actual.
+              </div>
             </div>
           </div>
 

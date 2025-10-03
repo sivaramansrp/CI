@@ -6,6 +6,7 @@ import {
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { COLONIA, DELEGACION_MUNICIPIO, ENTIDAD_FEDERATIVA, FECHA_INGRESO } from '../../enums/solicitud32501.enum';
 import {
+  
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
@@ -24,13 +25,20 @@ import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32501State, Solicitud32501Store } from '../../estados/solicitud32501.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CategoriaMensaje } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { ModalOperacionComponent } from '../modal-operacion/modal-operacion.component';
+import { Notificacion } from '@ng-mf/data-access-user';
+import { NotificacionesComponent } from '@ng-mf/data-access-user';
+import {OPCIONES_DE_BOTON_DE_RADIO} from '../../enums/solicitud32501.enum';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
+
+import { TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+
 
 
 /**
@@ -51,7 +59,8 @@ import { Solicitud32501Query } from '../../estados/solicitud32501.query';
     TituloComponent,
     TablaDinamicaComponent,
     ModalOperacionComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    NotificacionesComponent
 ],
   providers: [MercanciasDesmontadasOSinMontarService, BsModalService],
   templateUrl: './datos-solicitud.component.html',
@@ -71,6 +80,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Formulario para la gestión de avisos.
    */
   formAviso!: FormGroup;
+
+   /**
+     * Opciones de botón de radio.
+     */
+   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
+   showSuccessModal: boolean = false;
+
+
 
   /**
    * Opciones de radio para el tipo de aviso.
@@ -166,6 +184,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   modalRefabir?: BsModalRef;
 
   /**
+   * Instancia del modal para gestionar archivos.
+   *
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
+  modalInstances: Modal | null = null;
+
+  /**
    * Referencia al template del modal de selección requerida.
    * Se muestra cuando se requiere seleccionar un elemento de la tabla.
    */
@@ -213,6 +238,48 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Estado de la solicitud 32501.
    */
   solicitud32501State: Solicitud32501State = {} as Solicitud32501State;
+   /**
+   * Formulario para los datos de la operación de importación.
+   */
+   frmDatosOperacionImp!: FormGroup;
+
+   /**
+    * Opción seleccionada de aduana.
+    */
+   opcionAduana: CatalogosSelect = {} as CatalogosSelect;
+
+   /**
+   * Referencia al botón para cerrar el modal.
+   *
+   * Se utiliza para cerrar el modal de manera programada.
+   */
+@ViewChild('closeModal') closeModal!: ElementRef;
+
+modalOperacionModo: 'agregar' | 'modificar' = 'agregar';
+ 
+
+  /**
+     * Indica si el formulario es válido.
+     */
+    esValidoForma:boolean=false;
+ /**
+  * Indica si se debe eliminar un registro.
+  */
+    esEliminar: boolean = false;
+  /**
+   * Indica si el formulario ha sido enviado.
+   * Se utiliza para controlar la validación y el estado del formulario.
+   */
+
+    noRowSelected: boolean = false;
+  
+     /**
+       * @public
+       * @property {Notificacion} nuevaNotificacion
+       * @description Representa una nueva notificación que se utilizará en el componente.
+       * @command Este campo debe ser inicializado antes de su uso.
+       */
+     public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor de la clase `DatosSolicitudComponent`.
@@ -234,7 +301,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public solicitud32501Store: Solicitud32501Store,
     private consultaQuery: ConsultaioQuery,
     private modalService: BsModalService,
-  ) {}
+  ) {
+    this.obtenerAvisoDelCatalogoModal()
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -263,6 +332,23 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         }
         this.habilitarDeshabilitarFormulario();
       });
+
+      this.frmDatosOperacionImp = this.fb.group({
+        patente: [this.solicitud32501State.patente, [Validators.required,Validators.maxLength(4)]],
+        rfc: [this.solicitud32501State.rfc, [Validators.required,Validators.maxLength(13)]],
+        pedimento: [this.solicitud32501State.pedimento, [Validators.required,Validators.maxLength(7)]],
+        aduana: [this.solicitud32501State.aduana, [Validators.required]],
+      });
+  
+      this.solicitud32501Query.seleccionarSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((respuesta: Solicitud32501State) => {
+            this.solicitud32501State = respuesta;
+           
+          })
+        )
+        .subscribe();
   }
 
   /**
@@ -304,7 +390,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud32501State?.peso,
         [
           Validators.required,
-          Validators.pattern(REGEX_NUMEROS_USD),
+          Validators.pattern(/^\d+(\.\d{1,2})?$/),
           Validators.maxLength(16),
           Validators.max(9999999999999.99),
           Validators.min(0.01),
@@ -314,7 +400,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud32501State?.valorUSD,
         [
           Validators.required,
-          Validators.pattern(REGEX_NUMEROS_USD),
+          Validators.pattern(/^(?:\d+(\.\d{1,2})?)$/),
           Validators.maxLength(15),
           Validators.max(9999999999999.99),
           Validators.min(0.01),
@@ -357,7 +443,36 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(5),
         ],
       ],
+       serviciosTerceros:[this.solicitud32501State?.serviciosTerceros],
+     
     });
+  }
+  soloNumeros(event: Event): void {
+    const INPUT = event.target as HTMLInputElement | null;
+    if (INPUT) {
+      INPUT.value = INPUT.value.replace(/[^0-9]/g, '');
+      const VAL=this.formAviso.get('nico')?.value;
+    }
+  }
+
+  soloNumerosDecimal(event: Event): void {
+    const INPUT = event.target as HTMLInputElement | null;
+    if (INPUT) {
+      let VALUE = INPUT.value.replace(/[^0-9.]/g, ''); 
+      VALUE = VALUE.replace(/(\..*)\./g, '$1'); 
+      
+      const endsWithDecimal = VALUE.endsWith('.');
+      
+      VALUE = VALUE.replace(/^(\d*)(\.?\d{0,2}).*$/, '$1$2');
+       if (endsWithDecimal && !VALUE.includes('.')) {
+        VALUE = VALUE + '.';
+      } else if (endsWithDecimal && !VALUE.endsWith('.')) {
+        VALUE = VALUE.replace(/\.$/, ''); 
+        VALUE = VALUE + '.';
+      }
+      
+      this.formAviso.get('valorUSD')?.setValue(VALUE, { emitEvent: false });
+    }
   }
 
   /**
@@ -411,7 +526,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
+  } 
   /**
    * Obtiene un aviso del catálogo utilizando el servicio `mercanciasDesmontadasOSinMontarService`.
    * Se suscribe al observable y actualiza las opciones relacionadas con la fracción arancelaria,
@@ -465,7 +580,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (respuesta: AvisoOpcionesDeRadio) => {
-          this.avisoOpcionesDeRadio = respuesta;
+          this.avisoOpcionesDeRadio = respuesta;    
         },
       });
   }
@@ -500,6 +615,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tipoAviso = evento;
     this.solicitud32501Store.establecerDatos({ ideGenerica1: evento });
   }
+ /*
+  * Establece el ID de transacción basado en el evento proporcionado.
+  *
+  * @param evento - El evento que representa el ID de transacción, puede ser una cadena o un número.
+  */
+  setTransactionId(evento: string|number): void {
+    this.solicitud32501Store.establecerDatos({serviciosTerceros: evento });}
+
+
   /*
    * Establece los valores del formulario en el estado de la solicitud.
    *
@@ -530,23 +654,44 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.establecerValoresEnEstado(this.formAviso, 'fechaIniExposicion');
   }
 
-  /**
-   * Actualiza el número de valor en el estado de la solicitud basado en el evento del input.
-   * @param control - El nombre del control cuyo valor se actualizará.
-   * @param evento - El evento que contiene el nuevo valor del input.
-   */
-  actualizarNumeroValor(control: string, evento: Event): void {
-    const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
-    this.solicitud32501Store.establecerDatos({ [control]: VALOR });
-  }
-  /**
-   * Muestra el modal para modificar una operación de importación.
-   */
+ /**
+ * Actualiza el número de valor en el estado de la solicitud basado en el evento del input.
+ * Preserves exact input format and shows error messages for invalid formats.
+ * @param controlName - El nombre del control cuyo valor se actualizará.
+ * @param event - El evento que contiene el nuevo valor del input.
+ */
+actualizarNumeroValor(controlName: string, event: Event): void {
+  const RAW_VALUE = (event.target as HTMLInputElement).value;
+ 
+  let CLEANED = RAW_VALUE?.toString().trim();
+  
+  this.formAviso.get(controlName)?.setValue(CLEANED);
+  
+  this.establecerValoresEnEstado(this.formAviso, controlName);
+ 
+  this.formAviso.get(controlName)?.markAsTouched();
+  this.formAviso.get(controlName)?.updateValueAndValidity();
+}
+  
   modificarOperacionImp(): void {
+    if (!this.selectedOperacionDeImportacion) {
+      this.mensajeSeleccion = 'Debe seleccionar una fila para modificar.';
+      this.mostrarModalSeleccionRequerida();
+      return;
+    }
+    this.modalOperacionModo = 'modificar';
+    this.frmDatosOperacionImp.patchValue({
+      patente: this.selectedOperacionDeImportacion.agenteAduanal,
+      rfc: this.selectedOperacionDeImportacion.rfc,
+      pedimento: this.selectedOperacionDeImportacion.numeroDePedimento,
+      aduana: this.selectedOperacionDeImportacion.aduanaDeImportacion,
+    });
+  
     if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+      if (!this.modalInstances) {
+        this.modalInstances = new Modal(this.modalElement.nativeElement);
+      }
+      this.modalInstances.show();
     }
   }
 
@@ -554,10 +699,18 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Muestra el modal para agregar una nueva operación de importación.
    */
   agregarOperacionImp(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    this.modalOperacionModo = 'agregar';
+  
+  this.frmDatosOperacionImp.reset();
+
+  this.selectedOperacionDeImportacion = null;
+
+  if (this.modalElement) {
+    if (!this.modalInstances) {
+      this.modalInstances = new Modal(this.modalElement.nativeElement);
     }
+    this.modalInstances.show();
+  }
   }
 
   /**
@@ -592,13 +745,60 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarOperacionImp(): void {
     if (this.operacionDeImportacionLista.length === 0 || !this.selectedOperacionDeImportacion) {
-      this.mensajeSeleccion = 'Debe seleccionar un elemento';
-      this.mostrarModalSeleccionRequerida();
-      return;
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona el(los) registro(s) a eliminar',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.noRowSelected = true;
+
     }
-    this.mostrarModalConfirmacionEliminacion();
+    else{
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: '¿Esta seguro de eliminar el(los) servicio(s) seleccionado(s)?',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.esEliminar = true;}
+  
+    
+    }
+   
+
+    /**
+   * Método para cerrar el modal de eliminación.
+   * @param {boolean} evento - Indica si se debe proceder con la eliminación.
+   * @return {void}
+   */
+  cerrarModalEliminar(evento:boolean): void {
+    if(evento===true){
+   
+   this.confirmarEliminacionOperacionImportacion();
+    }
+    this.esEliminar=false;
   }
 
+   /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+   cerrarNoRow(): void {
+    this.noRowSelected=false;
+  }
+  
+  
+  
   /**
    * Muestra el modal cuando se requiere seleccionar un elemento.
    * Se usa cuando el usuario intenta realizar una acción sin seleccionar un transportista.
@@ -666,6 +866,150 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   cerrarModalConfirmacionEliminacion(): void {
     this.modalRefabir?.hide();
   }
+  /*
+  * Cierra el modal de datos de operación de importación.
+  */
+  cerrarModal():void{
+    this.esValidoForma=false;
+  }
+
+
+
+  /**
+   * Obtiene la información del aviso desde el catálogo.
+   */
+  obtenerAvisoDelCatalogoModal(): void {
+    this.mercanciasDesmontadasOSinMontarService
+      .obtenerAvisoDelCatalogo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (respuesta: AvisoCatalogo) => {
+          this.opcionAduana = respuesta.aduanaDeImportacion;
+        },
+      });
+  }
+/**
+   * Establece los valores del formulario en el estado de la solicitud.
+   * @param formulario Formulario reactivo que contiene los datos de la operación.
+   * @param campo Campo específico del formulario que se va a establecer en el estado.
+   */
+  establecerValoresEnEstadoModal(formulario: FormGroup, campo: string): void {
+    const VALOR = formulario.get(campo)?.value;
+    this.solicitud32501Store.establecerDatos({ [campo]: VALOR });
+  }
+
+  /**
+   * Verifica si un campo del formulario no es válido.
+   * @param id Identificador del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario undefined.
+   */
+  noEsValidoModal(id: string): boolean | undefined {
+    const CONTROL = this.frmDatosOperacionImp.get(id);
+    return CONTROL?.invalid && CONTROL?.touched;
+  }
+
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param field Nombre del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario false.
+   */
+  esValidoModal(field: string): boolean {
+    const CONTROL = this.frmDatosOperacionImp.get(field);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
+  }
+  
+  /*
+  * Guarda los datos de la operación de importación desde el formulario.
+  */
+  guardarDatosOperacionImp(): void {
+    this.frmDatosOperacionImp.markAllAsTouched();
+  
+    if (this.frmDatosOperacionImp.invalid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Faltan campos por capturar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.esValidoForma = true;
+      return;
+    }
+  
+    this.esValidoForma = false;
+  
+    const VAL = this.frmDatosOperacionImp.value;
+    const NUEVA_OPERACION: OperacionDeImportacion = {
+      agenteAduanal: VAL.patente,
+      rfc: VAL.rfc,
+      numeroDePedimento: VAL.pedimento,
+      aduanaDeImportacion: VAL.aduana,
+    };
+  
+    if (this.selectedOperacionDeImportacion) {
+   
+      const IDX = this.operacionDeImportacionLista.findIndex(
+        OP => OP === this.selectedOperacionDeImportacion
+      );
+      if (IDX > -1) {
+        const UPDATED_LIST = [...this.operacionDeImportacionLista];
+        UPDATED_LIST[IDX] = NUEVA_OPERACION;
+        this.operacionDeImportacionLista = UPDATED_LIST;
+      }
+      this.selectedOperacionDeImportacion = null;
+    } else {
+    
+      this.operacionDeImportacionLista = [
+        ...this.operacionDeImportacionLista,
+        NUEVA_OPERACION
+      ];
+    }
+  
+    this.solicitud32501Store.establecerDatos({
+      operacionDeImportacionLista: this.operacionDeImportacionLista
+    });
+  
+    this.frmDatosOperacionImp.reset();
+    this.cerrarModalForma();
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Se ha guardado correctamente.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.showSuccessModal = true;
+  }
+  /**
+   * Cierra el modal de éxito.
+   * @return {void}
+   */
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
+  
+  }
+  
+
+ /*
+  * Cierra el modal de datos de operación de importación y resetea el formulario.
+  */
+  cerrarModalForma(): void {
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+  
+    this.frmDatosOperacionImp.reset();
+  }
+
+
+
+  
 
   /**
    * Método de limpieza al destruir el componente.

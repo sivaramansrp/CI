@@ -14,10 +14,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
-
 /**
  * Componente para gestionar la página del solicitante.
- * 
+ *
  * Este componente permite al usuario navegar entre los pasos del wizard y gestionar
  * las acciones relacionadas con el trámite, como avanzar o retroceder entre los pasos.
  */
@@ -38,23 +37,23 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   esFormaValido: boolean = false;
 
   /**
-    * Lista de pasos del wizard.
-    * 
-    * Esta propiedad contiene un array de objetos `ListaPasosWizard` que representan
-    * los pasos del wizard.
-    */
+   * Lista de pasos del wizard.
+   *
+   * Esta propiedad contiene un array de objetos `ListaPasosWizard` que representan
+   * los pasos del wizard.
+   */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * Índice del paso activo en el wizard.
-   * 
+   *
    * Esta propiedad indica el paso actual en el wizard, comenzando desde 1.
    */
   indice: number = 1;
 
   /**
    * Textos utilizados en el componente.
-   * 
+   *
    * Esta propiedad contiene textos como instrucciones o mensajes que se muestran
    * en la interfaz del usuario.
    */
@@ -62,7 +61,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
-   * 
+   *
    * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
    * el componente se destruye.
    */
@@ -70,14 +69,14 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual del trámite.
-   * 
+   *
    * Esta propiedad almacena el estado del trámite obtenido desde el store.
    */
   public tramiteState!: Tramite110212State;
 
   /**
    * Referencia al componente `WizardComponent`.
-   * 
+   *
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
    * del wizard dentro de la plantilla.
    */
@@ -90,7 +89,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Datos relacionados con los pasos del wizard.
-   * 
+   *
    * Esta propiedad contiene información como el número total de pasos, el índice
    * del paso actual y los textos de los botones "Anterior" y "Continuar".
    */
@@ -102,19 +101,43 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
+   * Estado actual del trámite 110212.
+   *
+   * Esta propiedad mantiene la información de la solicitud en curso y
+   * se sincroniza de manera reactiva con el store correspondiente.
+   * Contiene los datos necesarios para representar y manipular
+   * la solicitud dentro del componente.
+   *
+   * @type {Tramite110212State}
+   * @public
+   */
+  public solicitudState!: Tramite110212State;
+  /**
    * Constructor del componente.
-   * 
+   *
    * @param {Tramite110212Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite110212Query} tramiteQuery - Query para obtener el estado del trámite.
    */
   constructor(
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query
-  ) { }
+  ) {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
+   *
    * Este método suscribe al estado del trámite y actualiza la propiedad `tramiteState`
    * con los datos obtenidos.
    */
@@ -130,35 +153,35 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Método para manejar las acciones de los botones del wizard.
-     * 
-     * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
-     * dependiendo de la acción recibida. También valida los formularios antes de permitir
-     * continuar al siguiente paso.
-     * 
-     * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
-     */
+   * Método para manejar las acciones de los botones del wizard.
+   *
+   * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
+   * dependiendo de la acción recibida. También valida los formularios antes de permitir
+   * continuar al siguiente paso.
+   *
+   * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
+   */
   getValorIndice(e: AccionBoton): void {
     // Si la acción es continuar, validar formularios del paso actual
     if (e.accion === 'cont') {
       let isValid = true;
-      
+
       // Validar formularios del paso 1 antes de continuar
       if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarTodosLosFormularios();
       }
-      
+
       // Si los formularios no son válidos, mostrar error y no continuar
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         return;
       }
-      
+
       this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-      
+
       // Avanzar al siguiente paso
       this.wizardComponent.siguiente();
       this.store.setPasoActivo(this.indice);
@@ -182,7 +205,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al destruir el componente.
-   * 
+   *
    * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
    * todas las suscripciones activas y evitar fugas de memoria.
    */
@@ -190,5 +213,4 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

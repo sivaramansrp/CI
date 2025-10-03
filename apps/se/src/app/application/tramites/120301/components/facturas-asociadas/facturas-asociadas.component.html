@@ -1,149 +1,103 @@
 <div class="container">
-    <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
-    <h6>Facturas disponibles</h6>
-    <form [formGroup]="formularioAsociacionFactura">
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="facturasDisponible" (listaDeFilaSeleccionada)="onSelectionChange($event)"></app-tabla-dinamica>
-      <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5 p-0">
-        <label for="message" class="form-label">Cantidad asociada<span [ngClass]="{'text-danger': formularioAsociacionFactura.get('cantidadFacturas')?.invalid && (formularioAsociacionFactura.get('cantidadFacturas')?.touched || formularioAsociacionFactura.get('cantidadFacturas')?.dirty)}">*</span>:</label>
-        <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturas"
-        (change)="
+  @if(visualizarEvaluacion){
+  <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
+  <h6>Facturas disponible</h6>
+  }
+  <form [formGroup]="formularioAsociacionFactura">
+    @if(visualizarEvaluacion){
+    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+      [configuracionTabla]="tableColumns" [datos]="facturasDisponible"
+      (filaSeleccionada)="guardadoFila($event)"></app-tabla-dinamica>
+    <div class="row col-4 mb-5">
+      <label>Cantidad asociada*:</label>
+      <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturas" (change)="
           setValoresStore(
           formularioAsociacionFactura,
           'cantidadFacturas',
           'setCantidadFacturas'
-          )"/>
-        <p *ngIf="seleccionadaFacturas?.length === 1">Kilogramo</p>
-        @if (formularioAsociacionFactura.get('cantidadFacturas')?.errors && (formularioAsociacionFactura.get('cantidadFacturas')?.touched || formularioAsociacionFactura.get('cantidadFacturas')?.dirty)) {
-          @if (formularioAsociacionFactura.get('cantidadFacturas')?.errors?.['required']) {
-            <small class="text-danger">Este campo es obligatorio</small>
-          } @else if (formularioAsociacionFactura.get('cantidadFacturas')?.errors?.['pattern']) {
-            <small class="text-danger">Por favor, escribe un número entero válido</small>
-          }
-        }
-      </div>
-  
-      <div class="container text-end mt-5">
-        <button class="btn btn-primary me-2" (click)="asociarFacturas()">Asociar</button>
-      </div>
-      <h6>Facturas asociadas</h6>
-  <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas" (listaDeFilaSeleccionada)="onSeleccionEliminar($event)"></app-tabla-dinamica>
-      <div class="row mb-5">
-        <div class="d-flex justify-content-end mt-3">
-            <button type="submit" class="btn btn-primary " (click)="abrirModalEliminar()">Eliminar seleccionado</button>
-        </div>
+          )" />
+      <p>{{filaSeleccionada?.unidadMedida}}</p>
     </div>
-      <div class="row mb-5">
-        <div class="col-6 ">
-          <label for="message" class="form-label">Cantidad total:</label>
-          <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturasTotal"
+    <div class="container text-end mt-5">
+      <button class="btn btn-default me-2" (click)="asociarEvaluate()">Asociar</button>
+    </div>
+    }
+    @if(!visualizarEvaluacion){
+    <h6>Facturas asociadas</h6>
+    <app-tabla-dinamica [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas"
+      (filaSeleccionada)="guardadoFilaAsociada($event)"></app-tabla-dinamica>
+    }
+    @if(visualizarEvaluacion){
+    <h6>Facturas asociadas</h6>
+    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+      [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas"
+      (filaSeleccionada)="guardadoFilaAsociada($event)"></app-tabla-dinamica>
+    <div class="row mb-5">
+      <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-danger" (click)="eliminarSeleccionado()">Eliminar seleccionado</button>
+      </div>
+    </div>
+    }
+    <div class="row mb-5">
+      <div class="col-6 ">
+        <label for="message" class="form-label">Cantidad total:</label>
+        <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturasTotal"
           (change)="
             setValoresStore(
             formularioAsociacionFactura,
             'cantidadFacturas',
             'setCantidadFacturas'
-            )"/>
-        </div>
-        <div class="col-6 ">
-          <label for="message" class="form-label">{{labelUnidad +'s'}} equivalentes:</label>
-          <input type="text" class="form-control" id="message" placeholder="" formControlName="metrosCuadradosEquivalentes"
-          (change)="
+            )" />
+      </div>
+      <div class="col-6 ">
+        <label for="message" class="form-label">{{labelUnidad +'s'}} equivalentes:</label>
+        <input type="text" class="form-control" id="message" placeholder=""
+          formControlName="metrosCuadradosEquivalentes" (change)="
             setValoresStore(
             formularioAsociacionFactura,
             'cantidadFacturas',
             'setCantidadFacturas'
-            )"/>
-        </div>
-      </div>
-    </form>
-    <!-- Confirmar Asociar Modal Seleccionar Solo un Registro-->
-    <div id="confirmarAsociar" class="modal fade" tabindex="-1"
-      aria-labelledby="confirmarAsociarLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <label>Debe seleccionar solo un registro.</label>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-primary"
-              data-bs-dismiss="modal">Aceptar</button>
-          </div>
-        </div>
+            )" />
       </div>
     </div>
-    <!-- Confirmar Asociar Modal Seleccione Un Registro.-->
-    <div id="confirmarUnRegistro" class="modal fade" tabindex="-1"
-      aria-labelledby="confirmarUnRegistroLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <label>Seleccione un registro.</label>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-primary"
-              data-bs-dismiss="modal">Aceptar</button>
-          </div>
+  </form>
+</div>
+
+@if(eliminarFacturaModal){
+<section>
+  <div [config]="{ show: true, backdrop: 'static' }" (onHidden)="onHidden()" bsModal #modal="bs-modal"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-auto-name" class="modal-title pull-left">
+            Eliminar facturas
+          </h4>
         </div>
-      </div>
-    </div>
-    <!-- Confirmar Asociar Kilogramo-->
-    <div id="confirmarCantidadAsociada" class="modal fade" tabindex="-1"
-      aria-labelledby="confirmarCantidadAsociadaLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <label>Debe capturar la cantidad asociada mayor a cero.</label>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-primary"
-              data-bs-dismiss="modal">Aceptar</button>
-          </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar las facturas seleccionadas?</p>
         </div>
-      </div>
-    </div>
-    <!-- Confirmar Eliminar Seleccion Modal-->
-    <div id="confirmarEliminarSeleccion" class="modal fade" tabindex="-1"
-      aria-labelledby="confirmarEliminarSeleccionLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <label>Seleccione el monto a eliminar.</label>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-primary"
-              data-bs-dismiss="modal">Aceptar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Confirmar Eliminación Modal -->
-    <div id="confirmarEliminar" class="modal fade" tabindex="-1"
-      aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
-      <div class="modal-dialog modal-md eliminar-modal" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <label>¿Está seguro que desea eliminar los registros marcados?</label>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary"
-              data-bs-dismiss="modal" (click)="eliminarFacturasAsociadas()">Aceptar</button>
+        <div class="modal-footer custom-footer mt-4 justify-content-end">
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-primary me-2" type="button" (click)="aceptarEliminarFacturas()">
+                Aceptar
+              </button>
+              <button class="btn btn-default me-2" type="button" data-bs-dismiss="modal"
+                (click)="cerrarEliminarModal()">
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</section>
+}
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

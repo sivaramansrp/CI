@@ -254,19 +254,46 @@ export const IDSOLICITUD = '{idSolicitud}';
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_ACUSE = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/guardar`;
+export const API_POST_GUARDAR_ACUSE = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/acuse/guardar`;
+
+/**
+ * API para guardar el recibo oficial de una solicitud.
+ * @param idSolicitud Identificador de la solicitud
+ * @param tramite Número de procedimiento
+ * @returns URL del endpoint para guardar el recibo oficial
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
+ */
+export const API_POST_GUARDAR_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/guardar`;
+
+/**
+ * API para guardar el certificado de una solicitud.
+ * @param idSolicitud Identificador de la solicitud
+ * @param tramite Número de procedimiento
+ * @returns URL del endpoint para guardar el certificado
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
+ */
+export const API_POST_VISTA_PREVIA_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/vista-previa`;
+
+
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
  */
-export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+export const API_POST_VISTA_PREVIA = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/acuse/vista-previa`;
 
 /**
  * API para obtener los documentos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
  */
 export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
+
+/**
+ *API para obtener los documentos del tramite 231001
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
+ */ 
+
+export const API_GET_DOCUMENTOS231001 = 'sat-t231001/solicitud/documentos';
 
 /**
  * Ruta de la API para obtener la información del contribuyente IDC.
@@ -523,9 +550,9 @@ export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) 
 
 /*
  * API para obtener el catálogo de immex
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/servicios-immex
  */
-export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/servicios-immex`;
 
 /*
  * API para obtener el catálogo de estados
@@ -541,10 +568,10 @@ export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/ca
 
 /*
  * API para obtener el catálogo de NICO
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80203/catalogo/nicos/producto-exportacion/72162101
+ 
  */
-export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
-
+export const CATALOGO_NICO = (TRAMITE: string, claveFraccion: string) : string => `sat-t${TRAMITE}/catalogo/nicos/producto-exportacion/${claveFraccion}`;
 /**
  * API para obtener el estado de la solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
@@ -555,3 +582,61 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number)
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+/*
+ * API para obtener la representación federal por clave de entidad
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/representacion-federal/{cveEntidad}
+ */
+export const CATALOGO_REPRESENTACION_FEDERAL = (TRAMITE: string, CVEENTIDAD: string): string =>
+  `sat-t${TRAMITE}/catalogo/representacion-federal/${CVEENTIDAD}`;
+
+/*
+ * API para obtener el tipo de factura
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tipo-factura
+ */
+export const CATALOGO_TIPO_FACTURA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-factura`;
+
+/*
+ * API para obtener la unidad de medida de la masa bruta
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/unidad-medida-masa-bruta
+ */
+export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/unidades-medidas`;
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
+ */
+export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
+
+
+/*
+ * API para obtener el catálogo de idiomas
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/idioma
+ */
+export const CATALOGO_IDIOMA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/idioma`;
+
+/*
+ * API para obtener el catálogo de medios de transporte
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/medio-transporte
+ */
+export const CATALOGO_MEDIO_TRANSPORTE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/medio-transporte`;
+
+/*
+ * API para obtener unidades de medida comercial
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/unidades-medida-comercial
+ */
+export const UNIDADES_MEDIDA_COMERCIAL = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/unidades-medida-comercial`;
+
+/*
+ * API para obtener el catálogo de entidades federativas
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/entidades-federativas
+ */
+export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/entidades-federativas`;
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
+ */
+export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;

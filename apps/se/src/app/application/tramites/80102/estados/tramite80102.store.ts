@@ -5,6 +5,8 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProveedorClienteTabla,
+  ProyectoImmexEncabezado,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -15,6 +17,7 @@ import {
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
 import { Catalogo, CatalogoPaises } from '@libs/shared/data-access-user/src';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import {
   DatosComplimentos,
   SociaoAccionistas,
@@ -26,6 +29,8 @@ import {
 } from '../../../shared/models/empresas-subfabricanta.model';
 import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
+import { Directos } from '../../../shared/constantes/empleados.enum';
 import { Injectable } from '@angular/core';
 
 /**
@@ -120,6 +125,35 @@ export interface Tramite80102State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+   /**
+   * Información detallada de plantas IMMEX.
+   */
+  proyectoImmexTablaLista: ProyectoImmexEncabezado[];
+
+    /**
+ * Información detallada de montos de inversión en la tabla.
+ */
+  montosDeInversionTablaDatos: MontoDeInversion[];
+
+  /**
+ * Información detallada de los empleados directos en la tabla.
+ */
+  empleadosTablaDatos: Directos[];
+
+  /**
+ * Información detallada de los complementos de planta en la tabla.
+ */
+  complementarPlantaDatos: ComplementoDePlanta[];
+
+  /**
+ * Información detallada del estado de firmantes de complementar planta en la tabla.
+ */
+  complementarFirmanteDatos: ComplementarPlantaState[];
+  /**
+ * así como información de proveedores y capacidad instalada.
+ */
+  tablaDatosCapacidadInstalada: CapacidadInstalada[];
 }
 
 /**
@@ -358,6 +392,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla: [],
+    proveedorClienteDatosTablaDos: [],
     seccionActiva: '',
   },
 
@@ -382,7 +418,12 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
     estadoTres: '',
   },
   idSolicitud: 0,
-
+proyectoImmexTablaLista: [],
+  montosDeInversionTablaDatos: [],
+  empleadosTablaDatos: [],
+  complementarPlantaDatos: [],
+  complementarFirmanteDatos: [],
+tablaDatosCapacidadInstalada: [],
 };
 
 
@@ -1003,6 +1044,18 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
+    /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setFederatariosCatalogo(datosFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      datosFederatarios,
+    }));
+  }
+
   /**
    * @method eliminarFederatarios
    * @description Elimina federatarios del estado actual de la tienda.
@@ -1091,4 +1144,107 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
+  /**
+ * Actualiza la lista de proyectos IMMEX en el estado agregando los elementos proporcionados.
+ *
+ * @param proyectoImmex - Arreglo de encabezados de proyectos IMMEX que se añadirán a la lista existente.
+ */
+setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
+    this.update((state) => ({
+      ...state,
+      proyectoImmexTablaLista: [...state.proyectoImmexTablaLista, ...proyectoImmex],
+    }));
+  }
+
+
+
+/**
+   * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTablaUno(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+  /**
+     * Actualiza la propiedad `proveedorClienteDatosTablaDos` dentro de `annexoUno` en el estado de la tienda.
+     *
+     * @param proveedorClienteDatosTablaDos - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+     */
+    setProveedorClienteDatosTablaDos(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+      this.update((state) => ({
+        ...state,
+        annexoUno: {
+          ...state.annexoUno,
+          proveedorClienteDatosTablaDos: proveedorClienteDatosTabla,
+        },
+      }));
+    }
+
+    /**
+     * Actualiza la lista de empleados directos en el estado agregando los nuevos empleados recibidos.
+     *
+     * @param empleados - Arreglo de objetos de tipo `Directos` para agregar a la lista existente.
+     */
+      setEmpleadosTablaDatos(empleados: Directos[]): void {
+      this.update((state) => ({
+        ...state,
+        empleadosTablaDatos: [...state.empleadosTablaDatos, ...empleados ],
+      }));
+    }
+    
+    /**
+     * Actualiza la lista de complementos de planta en el estado agregando los nuevos complementos recibidos.
+     *
+     * @param complementar - Arreglo de objetos de tipo `ComplementoDePlanta` para agregar a la lista existente.
+     */
+    setComplementarPlantaDatos(complementar: ComplementoDePlanta[]): void {
+      this.update((state) => ({
+        ...state,
+        complementarPlantaDatos: [...state.complementarPlantaDatos, ...complementar ],
+      }));
+    }
+    
+    /**
+     * Actualiza la lista de estados de firmantes de complementar planta en el estado agregando los nuevos datos recibidos.
+     *
+     * @param complementarPlantaDatos - Arreglo de objetos de tipo `ComplementarPlantaState` para agregar a la lista existente.
+     */
+    setComplementarPlantaState(complementarPlantaDatos: ComplementarPlantaState[]): void {
+      this.update((state) => ({
+        ...state,
+        complementarFirmanteDatos: [...state.complementarFirmanteDatos, ...complementarPlantaDatos ],
+      }));
+    }
+
+    /**
+     * Actualiza la lista de estados de firmantes de complementar planta en el estado agregando los nuevos datos recibidos.
+     *
+     * @param montos - Arreglo de objetos de tipo `MontoDeInversion` para agregar a la lista existente.
+     */
+      setMontosDeInversionTablaDatos(montos: MontoDeInversion[]): void {
+      this.update((state) => ({
+        ...state,
+        montosDeInversionTablaDatos: [...state.montosDeInversionTablaDatos, ...montos ],
+      }));
+    }
+
+    /**
+     * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
+     *
+     * @param CapacidadInstaladaTablaLista - Arreglo de objetos de tipo `CapacidadInstalada` que serán añadidos a la tabla de datos de capacidad instalada.
+     */
+    setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada[]): void {
+        this.update((state) => ({
+          ...state,
+          tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
+        }));
+      }
 }

@@ -55,6 +55,14 @@ interface Banco {
   styleUrls: ['./pago-de-derechos.component.scss'],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+
+  /**
+   * Indica si se deben mostrar los errores relacionados con el campo de pago.
+   * Cuando es `true`, los mensajes de error del campo de pago serán visibles en la interfaz.
+   */
+   public mostrarErroresDeCampoPago: boolean = false;
+   
+
   /** Formulario reactivo para la captura de datos de pago de derechos */
   public pagoDeDerechosForm!: FormGroup;
   
@@ -115,7 +123,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(): void {
     
     if (this.pagoDeDerechosForm) {
-      if (!this.esFormularioSoloLectura && !this.disabled && (this.tipoTramite === '1' || this.tipoTramite === '2')) {
+      if (!this.esFormularioSoloLectura && !this.disabled) {
         this.pagoDeDerechosForm.enable();
       } else {
         this.pagoDeDerechosForm.disable();
@@ -164,33 +172,98 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         }
       });
 
-    this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: [
-        this.estadoSeleccionado?.claveDeReferencia ?? '',
-        [Validators.maxLength(50)]
-      ],
-      cadenaPagoDependencia: [
-        this.estadoSeleccionado?.cadenaPagoDependencia ?? '',
-        [Validators.maxLength(50)]
-      ],
-      clave: [
-        this.estadoSeleccionado?.clave ?? '',
-        Validators.required
-      ],
-      llaveDePago: [
-        this.estadoSeleccionado?.llaveDePago ?? '',
-        [Validators.required, Validators.pattern(REGEX_LLAVE_DE_PAGO)]
-      ],
-      fecPago: [
-        this.estadoSeleccionado?.fecPago ?? '',
-        [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]
-      ],
-      impPago: [
-        this.estadoSeleccionado?.impPago ?? '',
-        [Validators.maxLength(30), Validators.pattern(REGEX_IMPORTE_PAGO), PagoDeDerechosComponent.noComaValidator()]
-      ]
-    });
+   this.pagoDeDerechosForm = this.fb.group(
+  {
+    claveDeReferencia: [
+      this.estadoSeleccionado?.claveDeReferencia ?? '',
+      [Validators.maxLength(50)]
+    ],
+    cadenaPagoDependencia: [
+      this.estadoSeleccionado?.cadenaPagoDependencia ?? '',
+      [Validators.maxLength(50)]
+    ],
+    clave: [
+      this.estadoSeleccionado?.clave ?? ''
+    ],
+    llaveDePago: [
+      this.estadoSeleccionado?.llaveDePago ?? '',
+      [Validators.pattern(REGEX_LLAVE_DE_PAGO)]
+    ],
+    fecPago: [
+      this.estadoSeleccionado?.fecPago ?? '',
+      [PagoDeDerechosComponent.fechaLimValidator()]
+    ],
+    impPago: [
+      this.estadoSeleccionado?.impPago ?? '',
+      [Validators.maxLength(30), Validators.pattern(REGEX_IMPORTE_PAGO), PagoDeDerechosComponent.noComaValidator()]
+    ]
+  },
+  {
+    validators: [PagoDeDerechosComponent.camposDependientesValidator()]
   }
+);
+
+  }
+
+  /**
+ * Validador que obliga a completar todos los campos si al menos uno está lleno.
+ * Aplica el error 'required' solo si algún campo tiene valor y otros no.
+ */
+public static camposDependientesValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const FORM = group as FormGroup;
+    const FIELDS = [
+      'claveDeReferencia',
+      'cadenaPagoDependencia',
+      'clave',
+      'llaveDePago',
+      'fecPago',
+      'impPago'
+    ];
+
+    const ANY_FILLED = FIELDS.some(field => {
+      const VALUE = FORM.get(field)?.value;
+      return VALUE !== null && VALUE !== undefined && VALUE !== '';
+    });
+
+    if (!ANY_FILLED) {
+      FIELDS.forEach(field => {
+        const CONTROL = FORM.get(field);
+        if (CONTROL?.hasError('required')) {
+          const CURRENT_ERRORS = { ...CONTROL.errors };
+          delete CURRENT_ERRORS['required'];
+          CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length > 0 ? CURRENT_ERRORS : null);
+        }
+      });
+      return null;
+    }
+
+    // If any field is filled, all must be filled
+    let hasError = false;
+    FIELDS.forEach(field => {
+      const CONTROL = FORM.get(field);
+      const VALUE = CONTROL?.value;
+      if (VALUE === null || VALUE === undefined || VALUE === '') {
+        CONTROL?.setErrors({
+          ...CONTROL.errors,
+          required: true,
+          custom: 'Todos los campos de pago son requeridos'
+        });
+        hasError = true;
+      } else {
+        if (CONTROL?.hasError('required')) {
+          const CURRENT_ERRORS = { ...CONTROL.errors };
+          delete CURRENT_ERRORS['required'];
+          delete CURRENT_ERRORS['custom'];
+          CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length > 0 ? CURRENT_ERRORS : null);
+        }
+      }
+    });
+
+    return hasError ? { required: true } : null;
+  };
+}
+
 
   /**
    * Obtiene la lista de bancos disponibles desde el servicio.
@@ -262,6 +335,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     if (!CTRL) { return; }
     const VALOR = CTRL.value;
     this.tramite260904Store.setTramite260904State({ [campo]: VALOR });
+    this.mostrarErroresDeCampoPago = false;
   }
 
   /**
@@ -278,34 +352,55 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * Valida que la fecha de un campo no sea futura y actualiza su validez.
    * @param field - Nombre del campo de fecha a validar
    */
-  public validarFechaFutura(field: string): void {
-    const CTRL = this.pagoDeDerechosForm.get(field);
-    if (!CTRL) { return; }
-    CTRL.updateValueAndValidity({ emitEvent: false });
+ 
+validarFechaFutura(controlName: string): void {
+  const CONTROL = this.pagoDeDerechosForm.get(controlName);
+  if (!CONTROL) {
+    return;
   }
+  
+  const VALOR = CONTROL.value;
+  if (VALOR) {
+    const FECHA_SELECCIONADA = new Date(VALOR);
+    const FECHA_ACTUAL = new Date();
+    FECHA_ACTUAL.setHours(0, 0, 0, 0); 
+    const CURRENT_ERRORS = CONTROL.errors || {};
+
+    if (FECHA_SELECCIONADA > FECHA_ACTUAL) {
+      CONTROL.setErrors({ ...CURRENT_ERRORS, custom: 'La fecha de pago debe ser menor o igual a la fecha actual.' });
+    } else {
+      if ('custom' in CURRENT_ERRORS) {
+        delete CURRENT_ERRORS['custom'];
+        CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length ? CURRENT_ERRORS : null);
+      }
+    }
+  }
+}
 
    /**
    * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
    * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
    * Se invoca al hacer clic en el botón "Borrar datos del pago".
    */
-  public resetPagoDeDerechos(): void {
-    if (!this.pagoDeDerechosForm) { return; }
-    this.pagoDeDerechosForm.reset();
-    Object.values(this.pagoDeDerechosForm.controls).forEach(c => {
-      c.markAsPristine();
-      c.markAsUntouched();
-      c.updateValueAndValidity();
-    });
-    this.tramite260904Store.setTramite260904State({
-      claveDeReferencia: '',
-      cadenaPagoDependencia: '',
-      clave: '',
-      llaveDePago: '',
-      fecPago: '',
-      impPago: ''
-    });
-  }
+
+public resetPagoDeDerechos(): void {
+  if (!this.pagoDeDerechosForm) { return; }
+  this.pagoDeDerechosForm.reset();
+  Object.values(this.pagoDeDerechosForm.controls).forEach(c => {
+    c.markAsPristine();
+    c.markAsUntouched();
+    c.updateValueAndValidity();
+  });
+  this.mostrarErroresDeCampoPago = false; // <-- Reset flag
+  this.tramite260904Store.setTramite260904State({
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    clave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: ''
+  });
+}
 
   /**
    * Verifica si todos los campos de pago están vacíos.
@@ -332,21 +427,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * Marca todos los campos como tocados para mostrar errores de validación.
    * @returns true si el pago está completo y válido, false en caso contrario
    */
-  public validatePagoCompleto(): boolean {
-    if (!this.pagoDeDerechosForm) { 
-      return false;
-    }
-    if (!this.hasAnyPaymentFieldFilled()) {
-    
-      return false;
-    }
-    Object.values(this.pagoDeDerechosForm.controls).forEach(ctrl => {
-      ctrl.markAsTouched();
-      ctrl.markAsDirty();
-      ctrl.updateValueAndValidity();
-    });
-    return this.pagoDeDerechosForm.valid;
+ public validatePagoCompleto(): boolean {
+  if (!this.pagoDeDerechosForm) {
+    return false;
   }
+
+  Object.values(this.pagoDeDerechosForm.controls).forEach(ctrl => {
+    ctrl.markAsTouched();
+    ctrl.markAsDirty();
+    ctrl.updateValueAndValidity();
+  });
+
+  // Trigger form-level validation
+  this.pagoDeDerechosForm.updateValueAndValidity();
+
+  return this.pagoDeDerechosForm.valid;
+}
+
 
   /**
    * Determina si debe mostrarse el banner de error de campos de pago requeridos.

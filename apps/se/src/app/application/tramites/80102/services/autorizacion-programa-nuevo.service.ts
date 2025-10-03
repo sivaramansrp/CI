@@ -1,6 +1,6 @@
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Catalogo, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
-import { Observable, map } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { ComplimentosService } from '../../../shared/services/complimentos.service';
@@ -25,6 +25,17 @@ export class AutorizacionProgrmaNuevoService {
    setProcedureNo(): void {
     this.complimentosService.setProcedureNo('80102');
   }
+  /**
+   * Subject que mantiene el estado actual sobre si la tabla tiene datos.
+   * Permite la suscripción reactiva a los cambios en la presencia de datos en la tabla.
+   */
+  private _tieneDatosDeTabla$ = new BehaviorSubject<boolean>(false);
+
+    /**
+   * Observable que expone el estado de si la tabla tiene datos.
+   * Se utiliza para que otros componentes puedan reaccionar a los cambios sin modificar el estado directamente.
+   */
+  public tieneDatosDeTabla$ = this._tieneDatosDeTabla$.asObservable();
 
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
@@ -178,5 +189,19 @@ getServicoImmex(): Observable<JsonResponseCatalogo> {
     false
   );
 }
+
+ /**
+   * Recupera una lista de países desde el API de catálogo.
+   *
+   * @returns Un Observable que emite la respuesta con un arreglo de países.
+   */
+  getPais(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_80102.PAIS,
+      {},
+      false
+    );
+  }
+
 
 }

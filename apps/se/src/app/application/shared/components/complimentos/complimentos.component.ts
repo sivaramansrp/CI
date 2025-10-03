@@ -61,6 +61,7 @@ import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '..
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TramiteStore } from '../../../estados/tramite.store';
 /**
  * Componente Complimentos.
@@ -110,12 +111,6 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @description Grupo de formularios para los complementos.
    */
   formaComplimentos!: FormGroup;
-
-  /**
-   * @type {FormGroup}
-   * @description Grupo de formularios para las obligaciones fiscales.
-   */
-  obligacionesFiscales!: FormGroup;
 
   /**
   * Constante para configurar el input de fecha.
@@ -353,7 +348,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private consultaioQuery: ConsultaioQuery,
     private tramiteStore: TramiteStore,
     private validacionesService: ValidacionesFormularioService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -365,6 +361,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         })
       )
       .subscribe();
+      
+      if (this.datosSocioAccionistas) {
+        this.servicioDeFormularioService.registerArray('datosSocioAccionistas', this.datosSocioAccionistas);
+      }
+
+      if (this.datosSocioAccionistasExtrenjeros) {
+        this.servicioDeFormularioService.registerArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
+      }
   }
 
   /**
@@ -393,7 +397,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }],
+        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
@@ -443,6 +447,45 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     if (this.esFormularioSoloLectura) {
       this.formaComplimentos.disable();
     }
+
+    this.servicioDeFormularioService.registerForm('datosGeneralisForm', this.datosGeneralis);
+    this.servicioDeFormularioService.registerForm('obligacionesFiscalesForm', this.obligacionesFiscales);
+    this.servicioDeFormularioService.registerForm('formaModificacionesForm', this.formaModificaciones);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'datosGeneralisForm') {
+        this.formaComplimentos.get('datosGeneralis')?.markAllAsTouched();
+      } 
+      if (formName === 'obligacionesFiscalesForm') { 
+        this.formaComplimentos.get('obligacionesFiscales')?.markAllAsTouched();
+      } 
+      if (formName === 'formaModificacionesForm') {
+        this.formaComplimentos.get('formaModificaciones')?.markAllAsTouched();
+      }
+    })
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get datosGeneralis(): FormGroup {
+    return this.formaComplimentos.get('datosGeneralis') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get obligacionesFiscales(): FormGroup {
+    return this.formaComplimentos.get('obligacionesFiscales') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get formaModificaciones(): FormGroup {
+    return this.formaComplimentos.get('formaModificaciones') as FormGroup;
   }
 
   /**
@@ -494,9 +537,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
-
+    const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
     this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
+    this.formaComplimentos.get('aceptarObligacionFiscal')?.setValue(ACEPTAR_OBLIGACION_FISCAL_VALUE, { emitEvent: false });
 
     if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
       this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
@@ -551,7 +595,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         apellidoMaterno: PRIMER_REGISTRO.apellidoMaterno || '',
         rfc: PRIMER_REGISTRO.rfc || ''
       };
-    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
+    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos ?? {})) {
       datos.formaSocioAccionistas.formaDatos = this.crearFormaDatosVacio();
     }
   }
@@ -564,7 +608,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.transformarFormaDatos(datos);
 
 
-    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
+    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas?.formaDatos;
 
 
     if (FORM_DATA_TO_APPLY) {
@@ -574,8 +618,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // Determine the correct form type based on radio values
-    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
-    const PERSONA_FISICA = datos.formaSocioAccionistas.tipoDePersona === 'true';
+    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas && datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
+    const PERSONA_FISICA = datos.formaSocioAccionistas && datos.formaSocioAccionistas.tipoDePersona === 'true';
 
     // Apply the appropriate form modification once
     if (NACIONALIDAD_MEXICANA) {
@@ -669,6 +713,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     if (this.formaComplimentos && this.datosFormaComplimentos) {
       // Apply immediately for better user experience
       this.aplicarDatosFormulario();
+    }
+
+    if (this.datosSocioAccionistas.length) {
+        this.servicioDeFormularioService.setArray('datosSocioAccionistas', this.datosSocioAccionistas);
+      }
+
+    if (this.datosSocioAccionistasExtrenjeros.length) {
+      this.servicioDeFormularioService.setArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
     }
   }
 
@@ -860,6 +912,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       if (VALUE) {
 
         this.accionistasAgregados.emit(VALUE);
+      }
+
+      if (VALUE.rfc) {
+        this.servicioDeFormularioService.pushToArray('datosSocioAccionistas', VALUE);
+      } else if (VALUE.taxId) {
+        this.servicioDeFormularioService.pushToArray('datosSocioAccionistasExtrenjeros', VALUE);
       }
     } else {
     this.accionistasExtranjerosNotificacion = {
@@ -1075,6 +1133,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
       }
     }
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaSocioAccionistas: {
+          nationalidadMaxicana: VALUE.formaSocioAccionistas.nationalidadMaxicana,
+          tipoDePersona: VALUE.formaSocioAccionistas.tipoDePersona,
+        }
+      }
+    );
   }
 
   /**
@@ -1084,6 +1150,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   cambioFechaFinal(nuevo_valor: string): void {
     this.formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        obligacionesFiscales: {
+          fechaExpedicion: nuevo_valor
+        }
+      }
+    );
   }
 
   /**
@@ -1093,6 +1166,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   cambioFecha(nuevo_valor: string): void {
     this.formaComplimentos.get('formaModificaciones.fechaDeActa')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaDeActa(nuevo_valor);
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaModificaciones: {
+          fechaDeActa: nuevo_valor
+        }
+      }
+    );
   }
 
   /**
@@ -1329,6 +1409,23 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        datosGeneralis: {
+          paginaWWeb: UPPERCASEVALUE
+        }
+      }
+    );
+  }
+
+  /**
+   * Handles input change for Localización field and converts to uppercase
+   * @param event Input event
+        datosGeneralis: {
+          paginaWWeb: UPPERCASEVALUE
+        }
+      }
+    );
   }
 
   /**
@@ -1344,6 +1441,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        datosGeneralis: {
+          localizacion: UPPERCASEVALUE
+        }
+      }
+    );
   }
 
   /**
@@ -1406,6 +1510,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       CONTROL?.markAsDirty();
       CONTROL?.markAsTouched();
     }
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaSocioAccionistas: {
+          formaDatos: this.formaDatos.value
+        }
+      }
+    );
   }
 
 

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
@@ -36,7 +36,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property certificadoDeOrigen - Referencia al componente `CertificadoDeOrigenComponent` para manejar la lógica y datos del certificado de origen.
    */
-  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigen!: CertificadoOrigenComponent;
 
   /**
    * @property historicoDeProductores - Referencia al componente `HistoricoDeProductoresComponent` para manejar la lógica y datos históricos de productores.
@@ -136,7 +136,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validatorCheck()) {
+      if (!this.certificadoDeOrigen.validarFormulario()) {
         isValid = false;
       } 
     } else {

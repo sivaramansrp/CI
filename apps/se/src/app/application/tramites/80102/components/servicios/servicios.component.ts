@@ -37,12 +37,13 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
-import { Input, OnDestroy, OnInit } from '@angular/core';
+import { Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 
 const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
 
@@ -69,7 +70,7 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
  *
  * @export ServiciosComponent
  */
-export class ServiciosComponent implements OnInit, OnDestroy {
+export class ServiciosComponent implements OnInit, OnDestroy,OnChanges {
   /**
        * @description
        * Objeto que representa una nueva notificación para RFC.
@@ -280,7 +281,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private Tramite80102Query: Tramite80102Query,
     private Tramite80102Store: Tramite80102Store,
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
-    private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery
+    private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {
    
     this.formulario = this.fb.group({
@@ -344,20 +346,43 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
+
+ngOnChanges(): void {
+    if (this.datosImmex.length === 0) {
+        this.servicioDeFormularioService.registerArray('serviciosImmex', this.datosImmex);
+    } else {
+        this.servicioDeFormularioService.setArray('serviciosImmex', this.datosImmex);
+    }
+    if (this.datos.length === 0) {
+      this.servicioDeFormularioService.registerArray('empresasNacionales', this.datos);
+    } else {
+        this.servicioDeFormularioService.setArray('empresasNacionales', this.datos);
+    }
+    if(this.datosEmpresaExtranjera.length === 0) {
+        this.servicioDeFormularioService.registerArray('empresasExtranjera', this.datosEmpresaExtranjera);
+    } else {
+        this.servicioDeFormularioService.setArray('empresasExtranjera', this.datosEmpresaExtranjera);
+    }
+  }
+
   /**
    * Obtiene el catálogo de países y actualiza las opciones del formulario.
    * @returns {void}
    */
   getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+    this.autorizacionProgrmaNuevoService
+      .getPais()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
+      .subscribe((res) => {
         const INDICE = this.camposFormulario.findIndex(
           (ele) => ele.campo === ENTIDADFEDERATIVA
         );
-        this.camposFormulario[INDICE].opciones = datos;
-        this.Tramite80102Store.setPaisesOrigen(datos);
+        const PAISES =res.datos.map((item: Catalogo) => ({
+          ...item,
+          clave: typeof item.clave === 'string' ? Number(item.clave) : (item.clave ?? 0)
+        }));
+        this.camposFormulario[INDICE].opciones = PAISES
+        this.Tramite80102Store.setPaisesOrigen(PAISES);
       })
   }
 
@@ -511,7 +536,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'warning',
       modo: 'action',
-      titulo: 'Confirmar adición',
+      titulo: '',
       mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
       cerrar: true,
       tiempoDeEspera: 2000,
@@ -545,10 +570,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   private ejecutarAgregarServicio(): void {
     const CUERPODATOS = {
       descripionDelServicio: this.recibioDatos[0].descripcion,
-      tipode: this.recibioDatos[0].tipode,
+      tipode: this.recibioDatos[0].tipode || this.recibioDatos[0].ide_tipo_servicio_immex,
+      clave: this.recibioDatos[0].clave,
     };
     this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-    this.mostrarNotificacionExito('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+    
   }
 
   /**
@@ -568,31 +594,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
 
       // Limpiar selección
       this.domiciliosSeleccionados = [];
-
-      this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
-  /**
-   * Muestra una notificación de éxito.
-   * @param {string} mensaje - Mensaje a mostrar.
-   * @returns {void}
-   */
-  private mostrarNotificacionExito(mensaje: string): void {
-    this.nuevaNotificacionRfc = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
-      modo: 'info',
-      titulo: 'Operación exitosa',
-      mensaje: mensaje,
-      ttl: '',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar'
-    };
-  }
-
-  /**
+  
+/**
    * Muestra una notificación de error.
    * @param {string} mensaje - Mensaje a mostrar.
    * @returns {void}

@@ -60,3 +60,68 @@ textarea.form-control {
   position: relative;
     top: 15%;
 }
+
+.seleccionar-desplegable {
+  ::ng-deep .form-label {
+    padding-top: 0 !important;
+  }
+}
+
+// Clases para modales personalizados
+.modal-content{
+  .modal-header{
+    padding: 20px;
+  }
+}
+.confirmar-modal-agregar {
+  display: none !important;
+}
+
+.confirmar-modal-small {
+  max-width: 350px !important;
+  margin: 5% auto !important;
+}
+
+.confirmar-modal-medium {
+  max-width: 450px !important;
+}
+
+.confirmar-modal-large {
+  max-width: 650px !important;
+}
+
+.modal-footer-centered {
+  justify-content: center!important;
+}
+
+.modal-vehiculo-confirmation {
+  z-index: 1070 !important;
+}
+
+::ng-deep .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.4) !important; 
+}
+
+::ng-deep .modal-backdrop.fade.show {
+  opacity: 0.5 !important;
+}
+
+// Clases para fondo personalizado de modales
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.custom-modal-backdrop.fade {
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+
+.custom-modal-backdrop.show {
+  opacity: 1;
+}

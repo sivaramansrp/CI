@@ -50,7 +50,14 @@
     </ng-container>
     <ng-titulo titulo="Datos de las mercancías destruídas" />
     <div class="row">
-      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" [disableSeleccionTablaCheckBox]="this.soloLectura" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
+      <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" 
+      [configuracionTabla]="tablaDeDatos.encabezadas" 
+      [datos]="tablaDeDatos.datos" 
+      [disableSeleccionTablaCheckBox]="this.soloLectura" 
+      (listaDeFilaSeleccionada)="filaSeleccionada($event)"
+      ></app-tabla-dinamica>
+
       <div class="mt-4 d-flex justify-content-end">
         <button type="button" class="btn btn-primary ms-3" (click)="datosDelAviso()" [disabled]="soloLectura"> Agregar </button>
         <button type="button" class="btn btn-danger ms-3" (click)="eliminarMercancia()" [disabled]="soloLectura" *ngIf="filaSeleccionadaLista && filaSeleccionadaLista.length > 0"> Eliminar </button>
@@ -72,23 +79,52 @@
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <label>Cantidad*:</label>
-                  <input type="text" class="form-control" id="cantidad" formControlName="cantidad" [ngClass]="isValid(adaceForm,'cantidad') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'cantidad', 'setAvisoFormularioCantidad')" />
+                  <input type="text" maxlength="13" class="form-control" id="cantidad" formControlName="cantidad" [ngClass]="isValid(adaceForm,'cantidad') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'cantidad', 'setAvisoFormularioCantidad')" />
+                  @if (adaceForm.get('cantidad')?.hasError('required') &&
+                    adaceForm.get('cantidad')?.touched) {
+                    <div class="text-danger">
+                      <small>Este campo es obligatorio</small>
+                    </div>
+                    }
+
                 </div>
                 <div class="col-md-4 mb-3">
                   <label>Peso (Kg)*:</label>
-                  <input type="text" class="form-control" id="peso" formControlName="peso" [ngClass]="isValid(adaceForm,'peso') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'peso', 'setAvisoFormularioPeso')" />
+                  <input type="text" maxlength="13" class="form-control" id="peso" formControlName="peso" [ngClass]="isValid(adaceForm,'peso') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'peso', 'setAvisoFormularioPeso')" />
+                  @if (adaceForm.get('peso')?.hasError('required') &&
+                    adaceForm.get('peso')?.touched) {
+                    <div class="text-danger">
+                      <small>Este campo es obligatorio</small>
+                    </div>
+                    }
                 </div>
                 <div class="col-md-4 ">
-                  <app-catalogo-select class="unidadMedida" [label]="'Unidad de medida'" [catalogo]="unidadMedida" [required]="true" id="unidadMedida" formControlName="unidadMedida" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'unidadMedida') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'cilindros', 'setAvisoFormularioUnidadMedida')"></app-catalogo-select>
+                  <app-catalogo-select 
+                  class="unidadMedida" 
+                  [label]="'Unidad de medida'" 
+                  [catalogo]="unidadMedida" 
+                  [required]="true" 
+                  id="unidadMedida" 
+                  formControlName="unidadMedida" 
+                  [isDisabled]="soloLectura" 
+                  [markTouched]="adaceForm.get('unidadMedida')?.touched || false"
+                  (change)="setValoresStore(adaceForm, 'unidadMedida', 'setAvisoFormularioUnidadMedida')"
+                  ></app-catalogo-select>
                 </div>
-                <div class="row">
-                  <div class="col-md-6 mb-6">
+              
+                  <div class="col-md-8 mb-6">
                     <div>
                       <label>Descripción*:</label>
-                      <input type="text" class="form-control" formControlName="descripcion" id="descripcion" maxlength="250" [ngClass]="isValid(adaceForm,'descripcion') ? 'required' : ''" (change)="setValoresStore(adaceForm,'descripcion', 'setAvisoFormularioDescripcion')">
+                      <input type="text" class="form-control" maxlength="25" formControlName="descripcion" id="descripcion" maxlength="250" [ngClass]="isValid(adaceForm,'descripcion') ? 'required' : ''" (change)="setValoresStore(adaceForm,'descripcion', 'setAvisoFormularioDescripcion')">
+                    @if (adaceForm.get('descripcion')?.hasError('required') &&
+                    adaceForm.get('descripcion')?.touched) {
+                    <div class="text-danger">
+                      <small>Este campo es obligatorio</small>
+                    </div>
+                    }
                     </div>
                   </div>
-                </div>
+                
               </div>
             </div>
             <div class="modal-footer custom-footer mt-4 justify-content-end">

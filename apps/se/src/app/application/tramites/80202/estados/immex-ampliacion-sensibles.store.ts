@@ -18,7 +18,7 @@
  */
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { ImmexRegistroform } from '../models/immex-ampliacion-sensibles.model';
+import { fraccionInfo, immexInfo } from '../models/immex-ampliacion-sensibles.model';
 
 /**
  * @interface ImmexRegistroState
@@ -46,16 +46,21 @@ import { ImmexRegistroform } from '../models/immex-ampliacion-sensibles.model';
  * @see {@link immexRegistroform} Para la definición completa de la estructura del formulario
  */
 export interface ImmexRegistroState {
-    /**
-     * @description Datos completos del formulario de registro IMMEX.
-     * Contiene toda la información necesaria para el trámite de cambio de modalidad,
-     * incluyendo datos del permiso, fracciones arancelarias, productos de importación
-     * y exportación, capacidades de producción y códigos de nomenclatura.
-     * 
-     * @type {immexRegistroform}
-     * @memberof ImmexRegistroState
-     */
-    immexRegistro: ImmexRegistroform;
+
+  /**
+   * @description Datos completos del formulario de registro IMMEX.
+   * Contiene toda la información necesaria para el trámite de cambio de modalidad,
+   * incluyendo datos del permiso, fracciones arancelarias, productos de importación
+   * y exportación, capacidades de producción y códigos de nomenclatura.
+   * 
+   * @type {immexRegistroform}
+   * @memberof ImmexRegistroState
+   */
+  importacion: immexInfo[];
+  /** Información sobre la fracción arancelaria de importación. */
+  exportacion: fraccionInfo[];
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
 }
 
 /**
@@ -82,57 +87,14 @@ export interface ImmexRegistroState {
  * @author Sistema VUCEM 3.0
  */
 export function createInitialState(): ImmexRegistroState {
-   return {
-    /**
-     * @description Estado inicial del formulario IMMEX con todos los campos
-     * configurados a valores predeterminados. Los números se inicializan en 0
-     * y las cadenas en ''.
-     */
-    immexRegistro: {
-        Nicos:'',
-        productoDescExportacions:'',
-      // Datos generales
-      permisoImmexDatos: 0,
-      numero: 0,
-
-      // Exportación
-      fraccionArancelariaExportacion: '',
-      productoDescExportacion: '',
-      productoArancelariaExportacion: 0,
-      exportacionDescExportacion: '',
-      FraccionDescExportacion: '',
-      fraccionArancelariaDesc: '',
-      Nico: '',
-
-      // Importación
-      productoImportacion: '',
-      commodityFraccionImportacion: 0,
-      commodityImportacion: 0,
-      commodityDescImportacion: '',
-      commodityNicoDescImportacion: '',
-      nicoDescImportacion: '',
-      nicoDatos: '',
-
-      // Capacidades / cantidades
-      commodityCandiadAnual: 0,
-      commodityCapacidadInstalda: '',
-      commodityCandidadPor: '',
-      candidadPorPeriodo: '',
-      capacidadPeriodo: '',
-      candiadAnual: '',
-      cantidadAnual: 0,
-      capacidadInstalada: 0,
-      cantidadPorPeriodo: 0,
-
-      // Fracciones
-      fraccionDatos: 0,
-      fraccionArancelaria: '',
-      umt: '',
-      descripcionTigie: '',
-      descripcion: '',
-    },
+  return {
+    importacion: [] as immexInfo[],
+    exportacion: [] as fraccionInfo[],
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+    idSolicitud: 0,
+  }
 }
-}
+
 
 /**
  * @class ImmexRegistroStore
@@ -172,95 +134,80 @@ export function createInitialState(): ImmexRegistroState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'cambio-modalidad' })
 export class ImmexAmpliacionSensiblesStore extends Store<ImmexRegistroState> {
-    /**
-     * @constructor
-     * @description
-     * Constructor de la clase ImmexRegistroStore que inicializa el store con el estado predeterminado.
-     * Llama al constructor padre de la clase Store pasando el estado inicial creado por la función
-     * createInitialState(), estableciendo así los valores por defecto para todo el formulario.
-     * 
-     * El constructor se ejecuta automáticamente cuando Angular inyecta el servicio y garantiza
-     * que el store esté listo para ser utilizado inmediatamente después de su instanciación.
-     * 
-     * @memberof ImmexRegistroStore
-     * @since 1.0.0
-     * 
-     * @example
-     * ```typescript
-     * // Angular se encarga de la instanciación automática
-     * // No es necesario llamar al constructor manualmente
-     * constructor(private store: ImmexRegistroStore) {
-     *   // El store ya está inicializado y listo para usar
-     * }
-     * ```
-     */
-    constructor() {
-        super(createInitialState());
-    }
+  /**
+   * @constructor
+   * @description
+   * Constructor de la clase ImmexRegistroStore que inicializa el store con el estado predeterminado.
+   * Llama al constructor padre de la clase Store pasando el estado inicial creado por la función
+   * createInitialState(), estableciendo así los valores por defecto para todo el formulario.
+   * 
+   * El constructor se ejecuta automáticamente cuando Angular inyecta el servicio y garantiza
+   * que el store esté listo para ser utilizado inmediatamente después de su instanciación.
+   * 
+   * @memberof ImmexRegistroStore
+   * @since 1.0.0
+   * 
+   * @example
+   * ```typescript
+   * // Angular se encarga de la instanciación automática
+   * // No es necesario llamar al constructor manualmente
+   * constructor(private store: ImmexRegistroStore) {
+   *   // El store ya está inicializado y listo para usar
+   * }
+   * ```
+   */
+  constructor() {
+    super(createInitialState());
+  }
+  /**
+   * @method updateImportacion
+   * @description
+   * Actualiza el array de información de importación en el estado del store.
+   * 
+   * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
+   * @memberof ImmexAmpliacionSensiblesStore
+   * @since 1.0.0
+   */
+  updateImportacion(importacion: immexInfo[]): void {
+    this.update({ importacion });
+  }
 
-    /**
-     * @method setImmexRegistro
-     * @description
-     * Método público para actualizar completamente el estado del formulario de registro IMMEX.
-     * Este método reemplaza todo el objeto `immexRegistro` en el estado con los nuevos valores
-     * proporcionados, manteniendo la inmutabilidad del estado mediante el operador spread.
-     * 
-     * La actualización es reactiva, lo que significa que todos los componentes suscritos al estado
-     * serán notificados automáticamente de los cambios y podrán actualizar sus vistas en consecuencia.
-     * 
-     * @param {immexRegistroform} immexRegistro - Objeto completo con todos los datos del formulario
-     * de cambio de modalidad. Debe incluir todas las propiedades requeridas por la interfaz
-     * immexRegistroform para mantener la consistencia del estado.
-     * 
-     * @returns {void} Este método no retorna ningún valor, pero actualiza el estado interno del store.
-     * 
-     * @memberof ImmexRegistroStore
-     * @public
-     * @since 1.0.0
-     * 
-     * @example
-     * ```typescript
-     * // Ejemplo de uso completo
-     * const datosFormulario: immexRegistroform = {
-     *   permisoImmexDatos: 12345,
-     *   fraccionArancelariaExportacion: '6205.20.01',
-     *   productoDescExportacion: 'Camisas de vestir para caballero',
-     *   productoArancelariaExportacion: 620520,
-     *   Nico: '520100',
-     *   fraccionDatos: 1001,
-     *   commodityCandiadAnual: 50000,
-     *   commodityCapacidadInstalda: 'Planta textil con capacidad de 1000 toneladas mensuales',
-     *   commodityCandidadPor: '4166.67 kg/mes',
-     *   commodityFraccionImportacion: 520100,
-     *   commodityImportacion: 2001,
-     *   commodityDescImportacion: 'Algodón en rama sin procesar',
-     *   nicoDescImportacion: 'Algodón sin cardar ni peinar',
-     *   exportacionDescExportacion: 'Prendas de vestir confeccionadas',
-     *   FraccionDescExportacion: 'Camisas de algodón para hombre',
-     *   fraccionArancelariaDesc: 'Camisas de fibras sintéticas o artificiales',
-     *   candidadPorPeriodo: '1000',
-     *   capacidadPeriodo: 'Mensual',
-     *   candiadAnual: '12000',
-     *   commodityNicoDescImportacion: 'Algodón sin cardar ni peinar',
-     *   nicoDatos: '520100'
-     * };
-     * 
-     * // Actualizar el estado
-     * this.immexRegistroStore.setImmexRegistro(datosFormulario);
-     * 
-     * // Los componentes suscritos serán notificados automáticamente
-     * ```
-     * 
-     * @throws {Error} Puede lanzar errores si el objeto proporcionado no cumple con la estructura
-     * requerida por la interfaz immexRegistroform.
-     * 
-     * @see {@link immexRegistroform} Para la estructura completa del objeto requerido
-     * @see {@link ImmexRegistroState} Para el contexto del estado completo
-     */
-    public setImmexRegistro(immexRegistro: ImmexRegistroform): void {
-        this.update((state) => ({
-            ...state,
-            immexRegistro,
-        }));
-    }
+  /**
+   * @method updateExportacion
+   * @description
+   * Actualiza el array de información de exportación en el estado del store.
+   * 
+   * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
+   * @memberof ImmexAmpliacionSensiblesStore
+   * @since 1.0.0
+   */
+  updateExportacion(exportacion: fraccionInfo[]): void {
+    this.update({ exportacion });
+  }
+  /**
+   * @method updateImportacionAndExportacion
+   * @description
+   * Actualiza tanto el array de información de importación como el de exportación en una sola operación.
+   * 
+   * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
+   * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
+   * @memberof ImmexAmpliacionSensiblesStore
+   * @since 1.0.0
+   */
+  updateImportacionAndExportacion(importacion: immexInfo[], exportacion: fraccionInfo[]): void {
+    this.update({ importacion, exportacion });
+  }
+
+  /**
+  * Guarda el ID de la solicitud en el estado.
+  *
+  * @param idSolicitud - El ID de la solicitud que se va a guardar.
+  */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
 }
