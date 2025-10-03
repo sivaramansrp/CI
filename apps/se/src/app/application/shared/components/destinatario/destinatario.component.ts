@@ -3,9 +3,9 @@ import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
+import { DestinatarioService } from '../../services/destinatario.service';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
-import { DestinatarioService } from '../../services/destinatario.service';
 
 
 
@@ -255,11 +255,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   getPaisDestino(): void {
-    this.destinatarioService.getPaisDestino('110202', 'TITRAC.TA').subscribe((data) => {
+    this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
       this.paisDestinDestinatario = data as Catalogo[];
     });
-    console.log(this.paisDestinDestinatario, 'paisDestinDestinatario');
-
   }
 
   /**
