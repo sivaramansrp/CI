@@ -1,4 +1,12 @@
-import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoDeDomicilio, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110217/models/certificado-origen.model';
+import {
+  AgregarDatosProductorFormulario,
+  DisponiblesTabla,
+  FormularioMercancia,
+  GrupoDeDomicilio,
+  GrupoTratado,
+  HistoricoColumnas,
+  SeleccionadasTabla,
+} from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeDirecciones } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoOperador } from '../../tramites/110217/models/certificado-origen.model';
@@ -9,11 +17,14 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 /**
  * Interfaz que define el estado inicial del trámite 110217.
- * 
+ *
  * Esta interfaz contiene todas las propiedades necesarias para gestionar el estado
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite110217State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * Observaciones generales del trámite.
    */
@@ -103,17 +114,17 @@ export interface Tramite110217State {
    * Información del formulario de mercancía.
    */
   formularioMercancia: FormularioMercancia;
-  
+
   /**
    * Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
-   * 
+   *
    * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
    */
   mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
-  
+
   /**
    * Lista de mercancías disponibles para ser mostradas en la tabla de datos.
-   * 
+   *
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
@@ -121,11 +132,12 @@ export interface Tramite110217State {
 
 /**
  * Función que crea el estado inicial del trámite 110217.
- * 
+ *
  * @returns {Tramite110217State} El estado inicial del trámite.
  */
 export function createInitialState(): Tramite110217State {
   return {
+    idSolicitud: 0,
     observaciones: '',
     pasoActivo: 1,
     pestanaActiva: 2,
@@ -136,7 +148,7 @@ export function createInitialState(): Tramite110217State {
     productorMismoExportador: false,
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
-      fax: ''
+      fax: '',
     },
     grupoReceptor: {
       nombre: '',
@@ -214,12 +226,12 @@ export function createInitialState(): Tramite110217State {
       numeroFactura: '',
     },
     mercanciaSeleccionadasTablaDatos: [],
-    mercanciaDisponsiblesTablaDatos: []
+    mercanciaDisponsiblesTablaDatos: [],
   };
 }
 /**
  * Servicio para gestionar el estado del trámite 110217.
- * 
+ *
  * Este servicio utiliza Akita para manejar el estado del trámite, permitiendo
  * actualizaciones y consultas de las propiedades definidas en el estado.
  */
@@ -229,19 +241,31 @@ export function createInitialState(): Tramite110217State {
 @StoreConfig({ name: 'tramite110217', resettable: true })
 export class Tramite110217Store extends Store<Tramite110217State> {
   /**
- * Constructor de la clase Tramite110217Store.
- * 
- * Inicializa el estado del trámite utilizando la función `createInitialState`.
- */
+   * Constructor de la clase Tramite110217Store.
+   *
+   * Inicializa el estado del trámite utilizando la función `createInitialState`.
+   */
   constructor() {
     super(createInitialState());
   }
 
   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
    * Actualiza el paso activo en el flujo del trámite.
-   * 
+   *
    * Este método permite establecer el paso actual en el flujo del trámite.
-   * 
+   *
    * @param {number} pasoActivo - El número del paso activo a establecer.
    */
   public setPasoActivo(pasoActivo: number): void {
@@ -253,9 +277,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la pestaña activa en el flujo del trámite.
-   * 
+   *
    * Este método permite establecer la pestaña activa en el flujo del trámite.
-   * 
+   *
    * @param {number} pestanaActiva - El número de la pestaña activa a establecer.
    */
   public setPestanaActiva(pestanaActiva: number): void {
@@ -267,9 +291,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza las observaciones generales del trámite.
-   * 
+   *
    * Este método permite establecer las observaciones relacionadas con el trámite.
-   * 
+   *
    * @param {string} observaciones - Las observaciones a establecer.
    */
   public setObservaciones(observaciones: string): void {
@@ -281,9 +305,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el idioma seleccionado para el trámite.
-   * 
+   *
    * Este método permite establecer el idioma seleccionado en el trámite.
-   * 
+   *
    * @param {Catalogo} idioma - El idioma a establecer.
    */
   public setIdioma(idioma: string): void {
@@ -295,9 +319,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la entidad federativa seleccionada para el trámite.
-   * 
+   *
    * Este método permite establecer la entidad federativa seleccionada en el trámite.
-   * 
+   *
    * @param {Catalogo} entidadFederativa - La entidad federativa a establecer.
    */
   public setEntidadFederativa(entidadFederativa: string): void {
@@ -309,9 +333,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la representación federal seleccionada para el trámite.
-   * 
+   *
    * Este método permite establecer la representación federal seleccionada en el trámite.
-   * 
+   *
    * @param {Catalogo} representacionFederal - La representación federal a establecer.
    */
   public setRepresentacionFederal(representacionFederal: string): void {
@@ -323,12 +347,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza si los datos del productor son confidenciales.
-   * 
+   *
    * Este método permite establecer si los datos del productor son confidenciales.
-   * 
+   *
    * @param {boolean} datosConfidencialesProductor - Valor booleano que indica si los datos son confidenciales.
    */
-  public setDatosConfidencialesProductor(datosConfidencialesProductor: boolean): void {
+  public setDatosConfidencialesProductor(
+    datosConfidencialesProductor: boolean
+  ): void {
     this.update((state) => ({
       ...state,
       datosConfidencialesProductor,
@@ -337,9 +363,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza si el productor es el mismo que el exportador.
-   * 
+   *
    * Este método permite establecer si el productor es el mismo que el exportador.
-   * 
+   *
    * @param {boolean} productorMismoExportador - Valor booleano que indica si el productor es el mismo que el exportador.
    */
   public setProductorMismoExportador(productorMismoExportador: boolean): void {
@@ -349,38 +375,46 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
   /**
- * Actualiza el fax del productor en el formulario de agregar datos.
- * 
- * Este método permite establecer el valor del fax en el formulario de agregar datos del productor.
- * 
- * @param {string} fax - El número de fax a establecer.
- */
+   * Actualiza el fax del productor en el formulario de agregar datos.
+   *
+   * Este método permite establecer el valor del fax en el formulario de agregar datos del productor.
+   *
+   * @param {string} fax - El número de fax a establecer.
+   */
   public setAgregarDatosProductorFax(fax: string): void {
     this.update((state) => ({
       ...state,
-      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, fax },
+      agregarDatosProductorFormulario: {
+        ...state.agregarDatosProductorFormulario,
+        fax,
+      },
     }));
   }
 
   /**
    * Actualiza el número de registro fiscal del productor en el formulario de agregar datos.
-   * 
+   *
    * Este método permite establecer el número de registro fiscal en el formulario de agregar datos del productor.
-   * 
+   *
    * @param {string} numeroRegistroFiscal - El número de registro fiscal a establecer.
    */
-  public setAgregarDatosProductorNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
+  public setAgregarDatosProductorNumeroRegistroFiscal(
+    numeroRegistroFiscal: string
+  ): void {
     this.update((state) => ({
       ...state,
-      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, numeroRegistroFiscal },
+      agregarDatosProductorFormulario: {
+        ...state.agregarDatosProductorFormulario,
+        numeroRegistroFiscal,
+      },
     }));
   }
 
   /**
    * Actualiza el nombre del receptor en el grupo receptor.
-   * 
+   *
    * Este método permite establecer el nombre del receptor en el grupo receptor.
-   * 
+   *
    * @param {string} nombre - El nombre del receptor a establecer.
    */
   public setGrupoReceptorNombre(nombre: string): void {
@@ -392,9 +426,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el primer apellido del receptor en el grupo receptor.
-   * 
+   *
    * Este método permite establecer el primer apellido del receptor en el grupo receptor.
-   * 
+   *
    * @param {string} apellidoPrimer - El primer apellido del receptor a establecer.
    */
   public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
@@ -406,9 +440,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el segundo apellido del receptor en el grupo receptor.
-   * 
+   *
    * Este método permite establecer el segundo apellido del receptor en el grupo receptor.
-   * 
+   *
    * @param {string} apellidoSegundo - El segundo apellido del receptor a establecer.
    */
   public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
@@ -420,9 +454,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el número fiscal del receptor en el grupo receptor.
-   * 
+   *
    * Este método permite establecer el número fiscal del receptor en el grupo receptor.
-   * 
+   *
    * @param {string} numeroFiscal - El número fiscal del receptor a establecer.
    */
   public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
@@ -434,9 +468,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la razón social del receptor en el grupo receptor.
-   * 
+   *
    * Este método permite establecer la razón social del receptor en el grupo receptor.
-   * 
+   *
    * @param {string} razonSocial - La razón social del receptor a establecer.
    */
   public setGrupoReceptorRazonSocial(razonSocial: string): void {
@@ -448,9 +482,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la ciudad en el grupo de direcciones.
-   * 
+   *
    * Este método permite establecer la ciudad en el grupo de direcciones del receptor.
-   * 
+   *
    * @param {string} ciudad - La ciudad a establecer.
    */
   public setGrupoDeDireccionesCiudad(ciudad: string): void {
@@ -460,12 +494,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
   /**
- * Actualiza la calle en el grupo de direcciones.
- * 
- * Este método permite establecer la calle en el grupo de direcciones del receptor.
- * 
- * @param {string} calle - La calle a establecer.
- */
+   * Actualiza la calle en el grupo de direcciones.
+   *
+   * Este método permite establecer la calle en el grupo de direcciones del receptor.
+   *
+   * @param {string} calle - La calle a establecer.
+   */
   public setGrupoDeDireccionesCalle(calle: string): void {
     this.update((state) => ({
       ...state,
@@ -475,9 +509,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el número o letra en el grupo de direcciones.
-   * 
+   *
    * Este método permite establecer el número o letra en el grupo de direcciones del receptor.
-   * 
+   *
    * @param {string} numeroLetra - El número o letra a establecer.
    */
   public setGrupoDeDireccionesNumeroLetra(numeroLetra: string): void {
@@ -489,9 +523,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la lada en el grupo de direcciones.
-   * 
+   *
    * Este método permite establecer la lada en el grupo de direcciones del receptor.
-   * 
+   *
    * @param {string} lada - La lada a establecer.
    */
   public setGrupoDeDireccionesLada(lada: string): void {
@@ -503,9 +537,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el teléfono en el grupo de direcciones.
-   * 
+   *
    * Este método permite establecer el teléfono en el grupo de direcciones del receptor.
-   * 
+   *
    * @param {string} telefono - El teléfono a establecer.
    */
   public setGrupoDeDireccionesTelefono(telefono: string): void {
@@ -517,9 +551,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el fax en el grupo de direcciones.
-   * 
+   *
    * Este método permite establecer el fax en el grupo de direcciones del receptor.
-   * 
+   *
    * @param {string} fax - El fax a establecer.
    */
   public setGrupoDeDireccionesFax(fax: string): void {
@@ -531,12 +565,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el correo electrónico en el grupo de direcciones.
-   * 
+   *
    * Este método permite establecer el correo electrónico en el grupo de direcciones del receptor.
-   * 
+   *
    * @param {string} correoElectronico - El correo electrónico a establecer.
    */
-  public setGrupoDeDireccionesCorreoElectronico(correoElectronico: string): void {
+  public setGrupoDeDireccionesCorreoElectronico(
+    correoElectronico: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoDeDirecciones: { ...state.grupoDeDirecciones, correoElectronico },
@@ -545,9 +581,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el lugar en el grupo representativo.
-   * 
+   *
    * Este método permite establecer el lugar en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} lugar - El lugar a establecer.
    */
   public setGrupoRepresentativoLugar(lugar: string): void {
@@ -559,12 +595,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el nombre del exportador en el grupo representativo.
-   * 
+   *
    * Este método permite establecer el nombre del exportador en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} nombreExportador - El nombre del exportador a establecer.
    */
-  public setGrupoRepresentativoNombreExportador(nombreExportador: string): void {
+  public setGrupoRepresentativoNombreExportador(
+    nombreExportador: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo: { ...state.grupoRepresentativo, nombreExportador },
@@ -573,9 +611,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la empresa en el grupo representativo.
-   * 
+   *
    * Este método permite establecer la empresa en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} empresa - La empresa a establecer.
    */
   public setGrupoRepresentativoEmpresa(empresa: string): void {
@@ -585,12 +623,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
   /**
- * Actualiza el cargo en el grupo representativo.
- * 
- * Este método permite establecer el cargo en el grupo representativo del trámite.
- * 
- * @param {string} cargo - El cargo a establecer.
- */
+   * Actualiza el cargo en el grupo representativo.
+   *
+   * Este método permite establecer el cargo en el grupo representativo del trámite.
+   *
+   * @param {string} cargo - El cargo a establecer.
+   */
   public setGrupoRepresentativoCargo(cargo: string): void {
     this.update((state) => ({
       ...state,
@@ -600,9 +638,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la lada en el grupo representativo.
-   * 
+   *
    * Este método permite establecer la lada en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} lada - La lada a establecer.
    */
   public setGrupoRepresentativoLada(lada: string): void {
@@ -614,9 +652,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el teléfono en el grupo representativo.
-   * 
+   *
    * Este método permite establecer el teléfono en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} telefono - El teléfono a establecer.
    */
   public setGrupoRepresentativoTelefono(telefono: string): void {
@@ -628,9 +666,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el fax en el grupo representativo.
-   * 
+   *
    * Este método permite establecer el fax en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} fax - El fax a establecer.
    */
   public setGrupoRepresentativoFax(fax: string): void {
@@ -642,12 +680,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el correo electrónico en el grupo representativo.
-   * 
+   *
    * Este método permite establecer el correo electrónico en el grupo representativo del trámite.
-   * 
+   *
    * @param {string} correoElectronico - El correo electrónico a establecer.
    */
-  public setGrupoRepresentativoCorreoElectronico(correoElectronico: string): void {
+  public setGrupoRepresentativoCorreoElectronico(
+    correoElectronico: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo: { ...state.grupoRepresentativo, correoElectronico },
@@ -656,9 +696,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el puerto de embarque en el grupo de transporte.
-   * 
+   *
    * Este método permite establecer el puerto de embarque en el grupo de transporte del trámite.
-   * 
+   *
    * @param {string} puertoEmbarque - El puerto de embarque a establecer.
    */
   public setgrupoDeTransportePuertoEmbarque(puertoEmbarque: string): void {
@@ -670,12 +710,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el puerto de desembarque en el grupo de transporte.
-   * 
+   *
    * Este método permite establecer el puerto de desembarque en el grupo de transporte del trámite.
-   * 
+   *
    * @param {string} puertoDesembarque - El puerto de desembarque a establecer.
    */
-  public setgrupoDeTransportePuertoDesembarque(puertoDesembarque: string): void {
+  public setgrupoDeTransportePuertoDesembarque(
+    puertoDesembarque: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoDeTransporte: { ...state.grupoDeTransporte, puertoDesembarque },
@@ -684,9 +726,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el puerto de tránsito en el grupo de transporte.
-   * 
+   *
    * Este método permite establecer el puerto de tránsito en el grupo de transporte del trámite.
-   * 
+   *
    * @param {string} puertoTransito - El puerto de tránsito a establecer.
    */
   public setgrupoDeTransportePuertoTransito(puertoTransito: string): void {
@@ -698,12 +740,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el nombre de la embarcación en el grupo de transporte.
-   * 
+   *
    * Este método permite establecer el nombre de la embarcación en el grupo de transporte del trámite.
-   * 
+   *
    * @param {string} nombreEmbarcacion - El nombre de la embarcación a establecer.
    */
-  public setgrupoDeTransporteNombreEmbarcacion(nombreEmbarcacion: string): void {
+  public setgrupoDeTransporteNombreEmbarcacion(
+    nombreEmbarcacion: string
+  ): void {
     this.update((state) => ({
       ...state,
       grupoDeTransporte: { ...state.grupoDeTransporte, nombreEmbarcacion },
@@ -712,9 +756,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el número de vuelo en el grupo de transporte.
-   * 
+   *
    * Este método permite establecer el número de vuelo en el grupo de transporte del trámite.
-   * 
+   *
    * @param {string} numeroVuelo - El número de vuelo a establecer.
    */
   public setgrupoDeTransporteNumeroVuelo(numeroVuelo: string): void {
@@ -726,9 +770,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza si hay un tercer operador involucrado.
-   * 
+   *
    * Este método permite establecer si hay un tercer operador involucrado en el trámite.
-   * 
+   *
    * @param {boolean} tercerOperador - Valor booleano que indica si hay un tercer operador.
    */
   public setTercerOperador(tercerOperador: boolean): void {
@@ -740,9 +784,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el nombre del operador en el grupo operador.
-   * 
+   *
    * Este método permite establecer el nombre del operador en el grupo operador del trámite.
-   * 
+   *
    * @param {string} nombre - El nombre del operador a establecer.
    */
   public setGrupoOperadorNombre(nombre: string): void {
@@ -754,9 +798,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el primer apellido del operador en el grupo operador.
-   * 
+   *
    * Este método permite establecer el primer apellido del operador en el grupo operador del trámite.
-   * 
+   *
    * @param {string} apellidoPrimer - El primer apellido del operador a establecer.
    */
   public setGrupoOperadorApellidoPrimer(apellidoPrimer: string): void {
@@ -766,12 +810,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
   /**
- * Actualiza el segundo apellido del operador en el grupo operador.
- * 
- * Este método permite establecer el segundo apellido del operador en el grupo operador del trámite.
- * 
- * @param {string} apellidoSegundo - El segundo apellido del operador a establecer.
- */
+   * Actualiza el segundo apellido del operador en el grupo operador.
+   *
+   * Este método permite establecer el segundo apellido del operador en el grupo operador del trámite.
+   *
+   * @param {string} apellidoSegundo - El segundo apellido del operador a establecer.
+   */
   public setGrupoOperadorSegundo(apellidoSegundo: string): void {
     this.update((state) => ({
       ...state,
@@ -781,9 +825,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el número fiscal del operador en el grupo operador.
-   * 
+   *
    * Este método permite establecer el número fiscal del operador en el grupo operador del trámite.
-   * 
+   *
    * @param {string} numeroFiscal - El número fiscal del operador a establecer.
    */
   public setGrupoOperadorNumeroFiscal(numeroFiscal: string): void {
@@ -795,9 +839,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la razón social del operador en el grupo operador.
-   * 
+   *
    * Este método permite establecer la razón social del operador en el grupo operador del trámite.
-   * 
+   *
    * @param {string} razonSocial - La razón social del operador a establecer.
    */
   public setGrupoOperadorRazonSocial(razonSocial: string): void {
@@ -809,9 +853,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el país en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer el país en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} pais - El país a establecer.
    */
   public setGrupoDeDomicilioPais(pais: string): void {
@@ -823,9 +867,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la ciudad en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer la ciudad en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} ciudad - La ciudad a establecer.
    */
   public setGrupoDeDomicilioCiudad(ciudad: string): void {
@@ -837,9 +881,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la calle en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer la calle en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} calle - La calle a establecer.
    */
   public setGrupoDeDomicilioCalle(calle: string): void {
@@ -851,9 +895,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el número o letra en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer el número o letra en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} numeroLetra - El número o letra a establecer.
    */
   public setGrupoDeDomicilioNumeroLetra(numeroLetra: string): void {
@@ -865,9 +909,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la lada en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer la lada en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} lada - La lada a establecer.
    */
   public setGrupoDeDomicilioLada(lada: string): void {
@@ -879,9 +923,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el teléfono en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer el teléfono en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} telefono - El teléfono a establecer.
    */
   public setGrupoDeDomicilioTelefono(telefono: string): void {
@@ -893,9 +937,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el fax en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer el fax en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} fax - El fax a establecer.
    */
   public setGrupoDeDomicilioFax(fax: string): void {
@@ -907,9 +951,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el correo electrónico en el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer el correo electrónico en el grupo de domicilio del trámite.
-   * 
+   *
    * @param {string} correoElectronico - El correo electrónico a establecer.
    */
   public setGrupoDeDomicilioCorreoElectronico(correoElectronico: string): void {
@@ -921,9 +965,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza todo el grupo de domicilio.
-   * 
+   *
    * Este método permite establecer todos los valores del grupo de domicilio del trámite.
-   * 
+   *
    * @param {GrupoDeDomicilio} grupoDeDomicilio - El objeto que contiene los valores del grupo de domicilio a establecer.
    */
   public setGrupoDeDomicilio(grupoDeDomicilio: GrupoDeDomicilio): void {
@@ -934,12 +978,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
   }
 
   /**
- * Actualiza el tratado en el grupo tratado.
- * 
- * Este método permite establecer el tratado en el grupo tratado del trámite.
- * 
- * @param {string} tratado - El tratado a establecer.
- */
+   * Actualiza el tratado en el grupo tratado.
+   *
+   * Este método permite establecer el tratado en el grupo tratado del trámite.
+   *
+   * @param {string} tratado - El tratado a establecer.
+   */
   public setGrupoTratadoTratado(tratado: string): void {
     this.update((state) => ({
       ...state,
@@ -949,9 +993,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el país en el grupo tratado.
-   * 
+   *
    * Este método permite establecer el país en el grupo tratado del trámite.
-   * 
+   *
    * @param {string} pais - El país a establecer.
    */
   public setGrupoTratadoPais(pais: string): void {
@@ -963,9 +1007,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza todo el grupo tratado.
-   * 
+   *
    * Este método permite establecer todos los valores del grupo tratado del trámite.
-   * 
+   *
    * @param {GrupoTratado} grupoTratado - El objeto que contiene los valores del grupo tratado a establecer.
    */
   public setGrupoTratado(grupoTratado: GrupoTratado): void {
@@ -977,9 +1021,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la fracción arancelaria en el grupo tratado.
-   * 
+   *
    * Este método permite establecer la fracción arancelaria en el grupo tratado del trámite.
-   * 
+   *
    * @param {string} fraccionArancelaria - La fracción arancelaria a establecer.
    */
   public setGrupoTratadoFraccionArancelaria(fraccionArancelaria: string): void {
@@ -991,9 +1035,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el número de registro en el grupo tratado.
-   * 
+   *
    * Este método permite establecer el número de registro en el grupo tratado del trámite.
-   * 
+   *
    * @param {string} numeroRegistro - El número de registro a establecer.
    */
   public setGrupoTratadoNumeroRegistro(numeroRegistro: string): void {
@@ -1005,9 +1049,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el nombre comercial en el grupo tratado.
-   * 
+   *
    * Este método permite establecer el nombre comercial en el grupo tratado del trámite.
-   * 
+   *
    * @param {string} nombreComercial - El nombre comercial a establecer.
    */
   public setGrupoTratadoNombreComercial(nombreComercial: string): void {
@@ -1019,9 +1063,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la fecha final en el grupo tratado.
-   * 
+   *
    * Este método permite establecer la fecha final en el grupo tratado del trámite.
-   * 
+   *
    * @param {string} fechaFinalInput - La fecha final a establecer.
    */
   public setGrupoTratadoFechaFinalInput(fechaFinalInput: string): void {
@@ -1033,9 +1077,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la fecha inicial en el grupo tratado.
-   * 
+   *
    * Este método permite establecer la fecha inicial en el grupo tratado del trámite.
-   * 
+   *
    * @param {string} fechaInicialInput - La fecha inicial a establecer.
    */
   public setGrupoTratadoFechaInicialInput(fechaInicialInput: string): void {
@@ -1047,37 +1091,47 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la fracción arancelaria de la mercancía en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer la fracción arancelaria de la mercancía en el formulario.
-   * 
+   *
    * @param {string} fraccionMercanciaArancelaria - La fracción arancelaria de la mercancía a establecer.
    */
-  public setFraccionMercanciaArancelaria(fraccionMercanciaArancelaria: string): void {
+  public setFraccionMercanciaArancelaria(
+    fraccionMercanciaArancelaria: string
+  ): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, fraccionMercanciaArancelaria },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        fraccionMercanciaArancelaria,
+      },
     }));
   }
 
   /**
    * Actualiza el nombre comercial de la mercancía en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el nombre comercial de la mercancía en el formulario.
-   * 
+   *
    * @param {string} nombreComercialDelaMercancia - El nombre comercial de la mercancía a establecer.
    */
-  public setNombreComercialDelaMercancia(nombreComercialDelaMercancia: string): void {
+  public setNombreComercialDelaMercancia(
+    nombreComercialDelaMercancia: string
+  ): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, nombreComercialDelaMercancia },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        nombreComercialDelaMercancia,
+      },
     }));
   }
 
   /**
    * Actualiza el nombre técnico de la mercancía en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el nombre técnico de la mercancía en el formulario.
-   * 
+   *
    * @param {string} nombreTecnico - El nombre técnico de la mercancía a establecer.
    */
   public setNombreTecnico(nombreTecnico: string): void {
@@ -1089,9 +1143,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el nombre en inglés de la mercancía en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el nombre en inglés de la mercancía en el formulario.
-   * 
+   *
    * @param {string} nombreEnIngles - El nombre en inglés de la mercancía a establecer.
    */
   public setNombreEnIngles(nombreEnIngles: string): void {
@@ -1103,9 +1157,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza las otras instancias relacionadas con la mercancía en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer las otras instancias relacionadas con la mercancía en el formulario.
-   * 
+   *
    * @param {string} otrasInstancias - Las otras instancias a establecer.
    */
   public setOtrasInstancias(otrasInstancias: string): void {
@@ -1117,23 +1171,26 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el criterio para conferir en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el criterio para conferir en el formulario de mercancía.
-   * 
+   *
    * @param {string} criterioParaConferir - El criterio para conferir a establecer.
    */
   public setCriterioParaConferir(criterioParaConferir: string): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, criterioParaConferir },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        criterioParaConferir,
+      },
     }));
   }
 
   /**
    * Actualiza la cantidad de la mercancía en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer la cantidad de la mercancía en el formulario.
-   * 
+   *
    * @param {string} cantidad - La cantidad de la mercancía a establecer.
    */
   public setCantidad(cantidad: string): void {
@@ -1144,12 +1201,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
   }
 
   /**
- * Actualiza el valor de la mercancía en el formulario de mercancía.
- * 
- * Este método permite establecer el valor de la mercancía en el formulario.
- * 
- * @param {string} valorDelaMercancia - El valor de la mercancía a establecer.
- */
+   * Actualiza el valor de la mercancía en el formulario de mercancía.
+   *
+   * Este método permite establecer el valor de la mercancía en el formulario.
+   *
+   * @param {string} valorDelaMercancia - El valor de la mercancía a establecer.
+   */
   public setValorDelaMercancia(valorDelaMercancia: string): void {
     this.update((state) => ({
       ...state,
@@ -1159,23 +1216,28 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el complemento de la descripción en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el complemento de la descripción de la mercancía en el formulario.
-   * 
+   *
    * @param {string} complementoDelaDescripcion - El complemento de la descripción a establecer.
    */
-  public setComplementoDelaDescripcion(complementoDelaDescripcion: string): void {
+  public setComplementoDelaDescripcion(
+    complementoDelaDescripcion: string
+  ): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, complementoDelaDescripcion },
+      formularioMercancia: {
+        ...state.formularioMercancia,
+        complementoDelaDescripcion,
+      },
     }));
   }
 
   /**
    * Actualiza el número de factura en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el número de factura en el formulario.
-   * 
+   *
    * @param {string} numeroFactura - El número de factura a establecer.
    */
   public setNumeroFactura(numeroFactura: string): void {
@@ -1187,9 +1249,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el tipo de factura en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el tipo de factura en el formulario.
-   * 
+   *
    * @param {string} tipoFactura - El tipo de factura a establecer.
    */
   public setTipoFactura(tipoFactura: string): void {
@@ -1201,9 +1263,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza la fecha en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer la fecha en el formulario.
-   * 
+   *
    * @param {string} fecha - La fecha a establecer.
    */
   public setFecha(fecha: string): void {
@@ -1215,9 +1277,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
 
   /**
    * Actualiza el país en el formulario de mercancía.
-   * 
+   *
    * Este método permite establecer el país relacionado con la mercancía en el formulario.
-   * 
+   *
    * @param {string} pais - El país a establecer.
    */
   public setPais(pais: string): void {
@@ -1227,26 +1289,27 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
 
-
   /**
    *  Actualiza el estado del trámite con los datos del formulario de mercancía.
    *  Este método permite establecer los datos del formulario de mercancía en el estado del trámite.
    *  @param {FormularioMercancia} formularioMercancia - Objeto que contiene los datos del formulario de mercancía.
    */
-    public setGrupoOperador(grupoOperador: GrupoOperador): void {
+  public setGrupoOperador(grupoOperador: GrupoOperador): void {
     this.update((state) => ({
       ...state,
       grupoOperador,
     }));
   }
 
-    /**
+  /**
    * Actualiza el grupo representativo en el estado del trámite.
    *  Este método permite establecer los datos del grupo representativo en el estado del trámite.
    * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene los datos del grupo representativo.
    *  @returns {void}
    */
-   public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+  public setGrupoRepresentativo(
+    grupoRepresentativo: GrupoRepresentativo
+  ): void {
     this.update((state) => ({
       ...state,
       grupoRepresentativo,
@@ -1259,7 +1322,9 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * @param {FormularioMercancia} formularioMercancia - Objeto que contiene los datos del formulario de mercancía.
    *  @returns {void}
    */
-    public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+  public setMercanciaTablaDatos(
+    mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       mercanciaSeleccionadasTablaDatos,
@@ -1272,14 +1337,16 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles en la tabla de datos.
    *  @returns {void}
    */
-    public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+  public setMercanciaDisponsiblesTablaDatos(
+    mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
       mercanciaDisponsiblesTablaDatos,
     }));
   }
 
-   /**
+  /**
    * Actualiza el grupo de transporte en el estado del trámite.
    *  Este método permite establecer los datos del grupo de transporte del trámite.
    * @param {GrupoDeTransporte} grupoDeTransporte - Objeto que contiene los datos del grupo de transporte.
@@ -1294,42 +1361,44 @@ export class Tramite110217Store extends Store<Tramite110217State> {
   /**
    * @method setProductoresExportador
    * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos de los productores asociados al exportador.
-   * 
+   *
    * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
-   * 
+   *
    * @returns {void}
    */
-  public setProductoresExportador(productoresExportador: HistoricoColumnas[]): void {
+  public setProductoresExportador(
+    productoresExportador: HistoricoColumnas[]
+  ): void {
     this.update((state) => ({
       ...state,
       productoresExportador,
     }));
   }
-    
+
   /**
    * Actualiza el estado del trámite con los datos del grupo receptor.
    *  Este método permite establecer los datos del grupo receptor en el estado del trámite.
    * @param {GrupoReceptor} grupoReceptor - Objeto que contiene los datos del grupo receptor.
    *  @returns {void}
    */
-    public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+  public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
     this.update((state) => ({
       ...state,
       grupoReceptor,
     }));
   }
 
-   /**
+  /**
    * Actualiza la información del grupo de direcciones en el estado del trámite.
-   * 
+   *
    * Este método permite establecer los datos del grupo de direcciones del receptor.
-   * 
+   *
    * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
    * @returns {void}
    */
-    public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+  public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
     this.update((state) => ({
       ...state,
       grupoDeDirecciones,

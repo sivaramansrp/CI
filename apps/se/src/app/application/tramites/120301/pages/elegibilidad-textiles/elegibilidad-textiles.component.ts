@@ -276,6 +276,11 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild(PasoUnoComponent) validacionPasos!: PasoUnoComponent;
+
+  /**
    * @property {DatosPasos} datosPasos
    * @description Objeto que contiene la configuración y datos necesarios para
    * el funcionamiento del wizard. Incluye información sobre el número total
@@ -366,8 +371,10 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     // Si la acción es continuar, validar formularios del paso actual
     if (e.accion === 'cont') {
       const ISVALID = true;
-       this.guardarSolicitudCompleta();
-
+      // const ISVALID = this.validacionPasos.validarTodosLosFormularios();
+      if (ISVALID) {
+        this.guardarSolicitudCompleta();
+      }
       // Si los formularios no son válidos, mostrar error y no continuar
       if (!ISVALID) {
         this.esFormaValido = true;
@@ -403,15 +410,15 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
         next: (resp) => {
           if (resp.codigo !== '00') {
             this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
-            modo: 'action',
-            titulo: '',
-            mensaje: resp.error || 'Error al guardar la solicitud.',
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje: resp.error || 'Error al guardar la solicitud.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
         error: (err) => {
@@ -518,7 +525,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     this.asignarSecciones();
     this.iniciar();
     this.tramiteQuery.selectSeccionState$
-      .pipe(takeUntil(this.destroyNotifier$)) 
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
         this.solicitudState = state;
       });
@@ -587,7 +594,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     return {
       id_solicitud: STATE_SOLICITUD.idSolicitud,
       id_asignacion: STATE_SOLICITUD.id_asignacion,
-      id_factura_expedicion:STATE_SOLICITUD.id_factura_expedicion,
+      id_factura_expedicion: STATE_SOLICITUD.id_factura_expedicion,
       boolean_generico: Boolean(HISTORICO_STATE.exportadorFabricanteMismo),
       ide_generica_1: HISTORICO_STATE.exportadorFabricanteMismo,
       descripcion_generica_2: HISTORICO_STATE.tipo,
@@ -597,7 +604,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       solicitante: {
         rfc: 'AAL0409235E6',
         certificado_serial_number: '',
-        nombre:'PRUEBA',
+        nombre: 'PRUEBA',
         es_persona_moral: true
       },
 

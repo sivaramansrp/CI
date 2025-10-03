@@ -13,6 +13,8 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 110207.
  */
 export interface Solicitud110207State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
   /** Lista de tratados disponibles. */
   tratado: Catalogo[]
   /** Lista de países disponibles. */
@@ -118,6 +120,7 @@ export interface Solicitud110207State {
  */
 export function createInitialState(): Solicitud110207State {
   return {
+    idSolicitud: 0,
     tratado: [],
     pais: [],
     fraccionArancelaria: '',
@@ -178,6 +181,19 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
   constructor() {
     super(createInitialState());
   }
+
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
   /**
    * Establece el valor de la casilla de verificación.
    * @param siCasilla Indica si la casilla está marcada.

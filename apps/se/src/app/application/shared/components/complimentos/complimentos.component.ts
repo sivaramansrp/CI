@@ -61,8 +61,8 @@ import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '..
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
-import { TramiteStore } from '../../../estados/tramite.store';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { TramiteStore } from '../../../estados/tramite.store';
 /**
  * Componente Complimentos.
  * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
@@ -403,9 +403,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       }),
       formaModificaciones: this.fb.group({
         nombreDelFederatario: ['', [Validators.required, Validators.maxLength(120)]],
-        nombreDeNotaria: ['', [Validators.required, Validators.maxLength(10)]],
+        nombreDeNotaria: ['', [Validators.required]],
         estado: ['', Validators.required],
-        nombreDeActa: ['', [Validators.required, Validators.maxLength(10)]],
+        nombreDeActa: ['', [Validators.required]],
         fechaDeActa: ['', Validators.required],
         rfc: ['', [
           Validators.required,
@@ -463,6 +463,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       }
     })
   }
+
+  onInputMaxLength(event: Event, maxLength: number): void { 
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
+}
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
@@ -537,9 +545,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
-
+    const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
     this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
+    this.formaComplimentos.get('aceptarObligacionFiscal')?.setValue(ACEPTAR_OBLIGACION_FISCAL_VALUE, { emitEvent: false });
 
     if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
       this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
@@ -594,7 +603,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         apellidoMaterno: PRIMER_REGISTRO.apellidoMaterno || '',
         rfc: PRIMER_REGISTRO.rfc || ''
       };
-    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
+    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos ?? {})) {
       datos.formaSocioAccionistas.formaDatos = this.crearFormaDatosVacio();
     }
   }
@@ -607,7 +616,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.transformarFormaDatos(datos);
 
 
-    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
+    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas?.formaDatos;
 
 
     if (FORM_DATA_TO_APPLY) {
@@ -617,8 +626,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // Determine the correct form type based on radio values
-    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
-    const PERSONA_FISICA = datos.formaSocioAccionistas.tipoDePersona === 'true';
+    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas && datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
+    const PERSONA_FISICA = datos.formaSocioAccionistas && datos.formaSocioAccionistas.tipoDePersona === 'true';
 
     // Apply the appropriate form modification once
     if (NACIONALIDAD_MEXICANA) {

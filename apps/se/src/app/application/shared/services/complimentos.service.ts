@@ -135,6 +135,36 @@ export class ComplimentosService {
     );
   }
   /**
+   * Obtiene el catálogo de países y bloques desde el servidor.
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/paises/bloques` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de países y bloques.
+   */
+  getPaisBloque(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      this.apiRoutes.paisesBloques,
+      {},
+      false
+    );
+  }
+
+  /**
+   * Obtiene el catálogo de tratados y acuerdos desde el servidor.
+   * Realiza una petición HTTP GET al endpoint `/api/TITRAC.TA/tratados-acuerdos` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de tratados y acuerdos.
+   */
+  getTratadoAcuerdo(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      this.apiRoutes.tratadosAcuerdos,
+      {},
+      false
+    );
+  }
+
+  /**
    * Obtiene el catálogo de estados desde el servidor.
    *
    * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta

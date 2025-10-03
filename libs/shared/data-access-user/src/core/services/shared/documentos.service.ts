@@ -1,16 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_POST_GUARDAR_ACUSE, API_POST_VISTA_PREVIA, COMUN_URL, IDSOLICITUD } from '../../servers/api-router';
+import {
+  API_POST_GUARDAR_ACUSE,
+  API_POST_VISTA_PREVIA,
+  COMUN_URL,
+} from '../../servers/api-router';
 import { Observable, catchError, throwError } from 'rxjs';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { DocumentoResponse } from '../../models/shared/documentos-request.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentosService {
-
   /**
    * URL base del servicio
    */
@@ -29,12 +32,18 @@ export class DocumentosService {
    * @param idSolicitud Identificador de la solicitud
    * @returns Observable con la respuesta del servidor
    */
-  guardarAcuse(idSolicitud: string, procedure: number): Observable<BaseResponse<null>> {
-    const ENDPOINT = `${this.host}` + API_POST_GUARDAR_ACUSE(idSolicitud, procedure);
+  guardarAcuse(
+    idSolicitud: string,
+    procedure: number
+  ): Observable<BaseResponse<null>> {
+    const ENDPOINT =
+      `${this.host}` + API_POST_GUARDAR_ACUSE(idSolicitud, procedure);
 
     return this.http.post<BaseResponse<null>>(ENDPOINT, null).pipe(
       catchError(() => {
-        const ERROR = new Error(`Error al obtener la cadena original en ${ENDPOINT}`);
+        const ERROR = new Error(
+          `Error al obtener la cadena original en ${ENDPOINT}`
+        );
         return throwError(() => ERROR);
       })
     );
@@ -45,15 +54,20 @@ export class DocumentosService {
    * @param idSolicitud Identificador de la solicitud
    * @returns Observable con la respuesta del servidor que contiene el documento
    */
-  vistaPrevia(idSolicitud: string, procedure: number): Observable<BaseResponse<DocumentoResponse>> {
-    const ENDPOINT = `${this.host}` + API_POST_VISTA_PREVIA(idSolicitud, procedure);
+  vistaPrevia(
+    idSolicitud: string,
+    procedure: number
+  ): Observable<BaseResponse<DocumentoResponse>> {
+    const ENDPOINT =
+      `${this.host}` + API_POST_VISTA_PREVIA(idSolicitud, procedure);
 
     return this.http.post<BaseResponse<DocumentoResponse>>(ENDPOINT, null).pipe(
       catchError(() => {
-        const ERROR = new Error(`Error al obtener la cadena original en ${ENDPOINT}`);
+        const ERROR = new Error(
+          `Error al obtener la cadena original en ${ENDPOINT}`
+        );
         return throwError(() => ERROR);
       })
     );
   }
-
 }
