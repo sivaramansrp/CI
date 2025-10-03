@@ -25,14 +25,10 @@ export class DestinatarioService {
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 
-     getTransporte(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    getTransporte(tramite: string): Observable<BaseResponse<Catalogo[]>> {
         const ENDPOINT = `${this.host}${CATALOGO_MEDIO_TRANSPORTE(tramite)}`;
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-      }
+    }
 
-    //  nicosCatalogo(tramite: string, claveFraccion: string): Observable<BaseResponse<Catalogo[]>> {
-    //     const ENDPOINT = `${this.host}${CATALOGO_NICO(tramite, claveFraccion)}`;
-    //     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-    //   }
 
 }
