@@ -48,7 +48,7 @@
           <div class="col-md-6">
             <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Entidad federativa'" [catalogo]="entidadFederativaDatos || []" 
             [required]="true" name="estado" formControlName="EntidadFederativaDates"
-            (selectionChange)="entidadFederativaSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
+            (selectionChange)="onChangeEntidad($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
             @if(formDatosCertificado.get('EntidadFederativaDates')?.invalid && (formDatosCertificado.get('EntidadFederativaDates')?.touched || formDatosCertificado.get('EntidadFederativaDates')?.dirty)) {
             <div class="d-grid">
               @if(formDatosCertificado.get('EntidadFederativaDates')?.errors?.['required']) {
@@ -58,7 +58,7 @@
             }
           </div>
           <div class="col-md-6">
-            <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"  [catalogo]="representacionFederalDatos || []" 
+            <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"  [catalogo]="representacionFederal$ || []" 
             [required]="true" name="estado" formControlName="representacionFederalDates"
             (selectionChange)="representacionFederalSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','representacionFederalDates','setFormDatosCertificado')"></app-catalogo-select>
             @if(formDatosCertificado.get('representacionFederalDates')?.invalid && (formDatosCertificado.get('representacionFederalDates')?.touched || formDatosCertificado.get('representacionFederalDates')?.dirty)) {

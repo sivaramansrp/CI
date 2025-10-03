@@ -69,6 +69,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+
   constructor(private cdr: ChangeDetectorRef, private consultaQuery: ConsultaioQuery,
     public certificadoValidacionService: CertificadoValidacionService) {
     // Constructor no realiza ninguna acción en este caso
@@ -137,6 +139,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.destinatarioDeComponent) {
       return this.destinatarioDeComponent.validateAll();
     }
+    if (this.datosCertificadoComponent) {
+      return this.datosCertificadoComponent.validateAll();
+    }
     return true;
   }
 
@@ -165,10 +170,4 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-  /**
-   * @method seleccionaTab
-   * @description Selecciona una pestaña y actualiza el índice.
-   * @param {number} i - El índice de la pestaña seleccionada.
-   */
 }
