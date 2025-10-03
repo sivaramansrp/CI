@@ -122,7 +122,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.cargarPaisDestin();
     this.cargarMedioDeTransporte();
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -203,7 +202,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    */
   iniciarFormulario(): void {
     this.destinatarioForm = this.fb.group({
-      medioDeTransporte: [''], // No longer required
+      medioDeTransporte: [''],
     });
   }
 
@@ -330,21 +329,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.store.setPaisDestinSeleccion(estado);
   }
 
-  /**
-   * Carga los países de destino desde el servicio y los actualiza en el estado.
-   */
-  cargarPaisDestin(): void {
-    this.destinatarioService
-      .getPaisDestino('110202')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => response.datos || [])
-      )
-      .subscribe((datos: Catalogo[]) => {
-        this.store.setPaisDestinatario(datos);
-      });
-  }
-
+  
   /**
    * Carga los medios de transporte desde el servicio y los actualiza en el estado.
    */

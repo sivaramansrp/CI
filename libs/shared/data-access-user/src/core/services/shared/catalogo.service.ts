@@ -43,8 +43,8 @@ export class CatalogoServices {
    * @param {string} tramite - El ID del trámite.
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
-  paisesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite)}`;
+  paisesCatalogo(tramite: string, paisDestino: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite, paisDestino)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
