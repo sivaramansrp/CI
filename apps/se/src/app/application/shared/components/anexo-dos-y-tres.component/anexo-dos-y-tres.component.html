@@ -87,13 +87,13 @@
 </div>
 @if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {
 <section>
-    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="eliminarAnexoDos()">
+    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="confirmarEliminacionDos()">
     </lib-notificaciones>
 </section>
 }
 @if (nuevaTresNotificacion && nuevaTresNotificacion.cerrar) {
 <section>
-    <lib-notificaciones [notificacionInput]="nuevaTresNotificacion" (confirmacionModal)="eliminarAnexoTres()">
+    <lib-notificaciones [notificacionInput]="nuevaTresNotificacion" (confirmacionModal)="confirmarEliminacionTres()">
     </lib-notificaciones>
 </section>
 }

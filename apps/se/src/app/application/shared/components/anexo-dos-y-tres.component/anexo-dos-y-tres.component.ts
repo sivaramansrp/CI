@@ -240,18 +240,26 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
    * Elimina elementos del Anexo Dos que no tienen estatus
    */
   eliminarAnexoDos(): void {
+    // Si hay elementos seleccionados, mostrar popup de confirmación
+    if (this.seleccionarDosTablaData.length > 0) {
+      // Si el popup no está abierto, abrirlo
+      if (!this.nuevaDosNotificacion || !this.nuevaDosNotificacion.cerrar) {
+        this.abrirDosModal();
+        return;
+      }
+    }
+
+    // Proceder con la eliminación
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
       return !idx.estatus;
     });
+    
     if (this.nuevaDosNotificacion) {
       this.nuevaDosNotificacion.cerrar = false;
     }
 
-
     if (this.seleccionarDosTablaData.length > 0) {
-
       this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
-
         return !this.seleccionarDosTablaData.some(selectedItem =>
           selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
           selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
@@ -287,11 +295,11 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       modo: 'action',
       titulo: '',
       mensaje:
-        '¿Estás seguro de que deseas eliminar?',
+        '¿Está seguro de eliminar el registro de los anexos?',
       cerrar: true,
       tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnAceptar: ' Cancelar',
+      txtBtnCancelar: 'Aceptar',
     };
   }
 
@@ -349,18 +357,26 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
    * Elimina elementos del Anexo Tres que no tienen estatus
    */
   eliminarAnexoTres(): void {
+    // Si hay elementos seleccionados, mostrar popup de confirmación
+    if (this.seleccionarTresTablaData.length > 0) {
+      // Si el popup no está abierto, abrirlo
+      if (!this.nuevaTresNotificacion || !this.nuevaTresNotificacion.cerrar) {
+        this.abrirTresModal();
+        return;
+      }
+    }
+
+    // Proceder con la eliminación
     this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
       return !idx.estatus;
     });
+    
     if (this.nuevaTresNotificacion) {
       this.nuevaTresNotificacion.cerrar = false;
     }
 
-
     if (this.seleccionarTresTablaData.length > 0) {
-
       this.anexoTresTablaLista = this.anexoTresTablaLista.filter(item => {
-
         return !this.seleccionarTresTablaData.some(selectedItem =>
           selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
           selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
@@ -419,19 +435,61 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
    * @param formulario Tipo de formulario ('anexoDos' o 'anexoTres')
    */
   convertirAMayusculas(event: Event, formulario: 'anexoDos' | 'anexoTres'): void {
-    const target = event.target as HTMLTextAreaElement;
-    const valorMayuscula = target.value.toUpperCase();
-    
+    const TARGET = event.target as HTMLTextAreaElement;
+    const VALORMAYUSCULA = TARGET.value.toUpperCase();
+
     if (formulario === 'anexoDos') {
-      this.anexoDosFormGroup.get('descripcion')?.setValue(valorMayuscula, { emitEvent: false });
+      this.anexoDosFormGroup.get('descripcion')?.setValue(VALORMAYUSCULA, { emitEvent: false });
     } else if (formulario === 'anexoTres') {
-      this.anexoTresFormGroup.get('descripcion')?.setValue(valorMayuscula, { emitEvent: false });
+      this.anexoTresFormGroup.get('descripcion')?.setValue(VALORMAYUSCULA, { emitEvent: false });
     }
     
     // Mantener la posición del cursor
-    const cursorPosition = target.selectionStart;
+    const CURSORPOSITION = TARGET.selectionStart;
     setTimeout(() => {
-      target.setSelectionRange(cursorPosition, cursorPosition);
+      TARGET.setSelectionRange(CURSORPOSITION, CURSORPOSITION);
     });
+  }
+
+  /**
+   * Confirma la eliminación del Anexo Dos después de la confirmación del modal
+   */
+  confirmarEliminacionDos(): void {
+    // Cerrar el modal
+    this.nuevaDosNotificacion.cerrar = false;
+    
+    // Proceder con la eliminación
+    if (this.seleccionarDosTablaData.length > 0) {
+      this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
+        return !this.seleccionarDosTablaData.some(selectedItem =>
+          selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
+          selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
+        );
+      });
+
+      this.seleccionarDosTablaData = [];
+      this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+    }
+  }
+
+  /**
+   * Confirma la eliminación del Anexo Tres después de la confirmación del modal
+   */
+  confirmarEliminacionTres(): void {
+    // Cerrar el modal
+    this.nuevaTresNotificacion.cerrar = false;
+    
+    // Proceder con la eliminación
+    if (this.seleccionarTresTablaData.length > 0) {
+      this.anexoTresTablaLista = this.anexoTresTablaLista.filter(item => {
+        return !this.seleccionarTresTablaData.some(selectedItem =>
+          selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
+          selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
+        );
+      });
+
+      this.seleccionarTresTablaData = [];
+      this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+    }
   }
 }
