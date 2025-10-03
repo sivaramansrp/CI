@@ -867,6 +867,18 @@ export interface ImmexTablaJson {
   fraccionGridDatos: fraccionInfo[];
 }
 
+/**
+ * @description Payload utilizado para buscar solicitudes en el sistema.
+ * Contiene información relevante como el tipo de solicitud, el identificador del proyecto y el RFC del solicitante.
+ *
+ * @interface
+ * @property {string} tipoSolicitud - Tipo de la solicitud que se está buscando.
+ * @property {string} idProyecto - Identificador único del proyecto relacionado con la solicitud.
+ * @property {string} rfcSolicitante - RFC del solicitante que realiza la búsqueda.
+ *
+ * @author
+ * @since
+ */
 export interface BuscarPayload {
     tipoSolicitud: string;
     idProyecto: string;

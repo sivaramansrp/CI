@@ -704,14 +704,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
     return;
   }
 
-  // Reset alerts
   this.espectaculoAlertaAgregar = false;
   this.espectaculoAlerta = false;
   
-  // Call the API to get data
   this.obtenerpermisoImmexDatos();
   
-  // Show both tables (they will be populated by the API response)
   this.showTableExport = true;
   this.showTableFractionExp = true;
 }
@@ -762,7 +759,6 @@ obtenerpermisoImmexDatos(): void {
               txtBtnCancelar: '',
             };
             
-            // Clear both tables
             this.immexTableDatos = [];
             this.fraccionTablaDatos = [];
             this.immexRegistroStore.establecerDatos({ 
@@ -775,7 +771,6 @@ obtenerpermisoImmexDatos(): void {
           if (esValidObject(API_DATOS.datos)) {
             let totalRecords = 0;
             
-            // Process datosConsultaProgramaDtos for immex table
             if (esValidArray(API_DATOS.datos.datosConsultaProgramaDtos)) {
               const IMMEX_RESPONSE: PermisoImmexGridDatos[] = this.permisoImmexDatosService
                 .mapApiResponseToPermisoImmexGridDatos(API_DATOS.datos.datosConsultaProgramaDtos);
@@ -784,7 +779,6 @@ obtenerpermisoImmexDatos(): void {
               totalRecords += IMMEX_RESPONSE.length;
             }
 
-            // Process productoExportacionDtoList for fraction table
             if (esValidArray(API_DATOS.datos.productoExportacionDtoList)) {
               const FRACCION_RESPONSE: fraccionInfo[] = this.permisoImmexDatosService
                 .mapApiResponseToFraccionExportacion(API_DATOS.datos.productoExportacionDtoList);
@@ -793,13 +787,11 @@ obtenerpermisoImmexDatos(): void {
               totalRecords += FRACCION_RESPONSE.length;
             }
 
-            // Update store with both datasets
             this.immexRegistroStore.establecerDatos({ 
               immexTableDatos: this.immexTableDatos,
               fraccionTablaDatos: this.fraccionTablaDatos
             });
             
-            // Show success notification
             this.espectaculoAlerta = true;
             this.nuevaNotificacion = {
               tipoNotificacion: 'success',

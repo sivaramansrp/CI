@@ -73,6 +73,14 @@ export class PermisoImmexDatosService {
   actualizarEstadoFormulario(DATOS: immexRegistroform): void {
     this.tramite80203Store.setImmexRegistro(DATOS);
   }
+  /**
+   * @desc Obtiene el permiso IMMEX realizando una petición POST al endpoint correspondiente.
+   * @param body Objeto de tipo `BuscarPayload` que contiene los datos necesarios para la búsqueda del permiso IMMEX.
+   * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+   * @throws Error si ocurre algún problema al obtener la lista de plantas.
+   *
+   * @see [Compodoc](https://compodoc.app/)
+   */
    getPermisoImmex(body: BuscarPayload): Observable<JSONResponse> {
       return this.httpClient.post<JSONResponse>(API_ROUTES('/sat-t80203','80203').buscarPermisoImmex, body).pipe(
         map((response) => response),
@@ -83,6 +91,17 @@ export class PermisoImmexDatosService {
       );
     }
 
+    /**
+     * @summary Mapea la respuesta de la API a un arreglo de objetos PermisoImmexGridDatos.
+     * 
+     * @description
+     * Esta función toma un arreglo de respuestas de la API y lo transforma en un arreglo de objetos
+     * del tipo PermisoImmexGridDatos, asignando valores formateados y realizando conversiones necesarias.
+     * El campo `consecutivo` se genera automáticamente con formato de tres dígitos.
+     * 
+     * @param apiResponse Arreglo de objetos recibidos desde la API.
+     * @returns Un arreglo de objetos PermisoImmexGridDatos con los datos mapeados y formateados.
+     */
     // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
     mapApiResponseToPermisoImmexGridDatos(apiResponse: any[]): PermisoImmexGridDatos[] {
       // eslint-disable-next-line complexity
@@ -101,21 +120,21 @@ export class PermisoImmexDatosService {
       });
     }
     // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-mapApiResponseToFraccionExportacion(apiResponse: any[]): fraccionInfo[] {
-  // eslint-disable-next-line complexity
-    return apiResponse.map((item, index) => {
-      const FRACCION_ARANCELARIA = item.fraccionArancelaria || {};
-      
-      return {
-        idFraccion: (index + 1).toString(),
-        clave: FRACCION_ARANCELARIA.cveFraccion || item.cveFraccion ,
-        fraccionPadre: item.fraccionPadre || FRACCION_ARANCELARIA.fraccionPadre,
-        umt: FRACCION_ARANCELARIA.umt || item.umt,
-        descripcion: FRACCION_ARANCELARIA.descripcion || item.descripcion,
-        descripcionUsuario: FRACCION_ARANCELARIA.descripcionUsuario || item.descripcionUsuario,
-        solicitaBaja: item.testado,
-        estatus: item.estatus !== undefined ? item.estatus : ''
-      };
-    });
-  }
+    mapApiResponseToFraccionExportacion(apiResponse: any[]): fraccionInfo[] {
+    // eslint-disable-next-line complexity
+      return apiResponse.map((item, index) => {
+        const FRACCION_ARANCELARIA = item.fraccionArancelaria || {};
+        
+        return {
+          idFraccion: (index + 1).toString(),
+          clave: FRACCION_ARANCELARIA.cveFraccion || item.cveFraccion ,
+          fraccionPadre: item.fraccionPadre || FRACCION_ARANCELARIA.fraccionPadre,
+          umt: FRACCION_ARANCELARIA.umt || item.umt,
+          descripcion: FRACCION_ARANCELARIA.descripcion || item.descripcion,
+          descripcionUsuario: FRACCION_ARANCELARIA.descripcionUsuario || item.descripcionUsuario,
+          solicitaBaja: item.testado,
+          estatus: item.estatus !== undefined ? item.estatus : ''
+        };
+      });
+    }
 }
