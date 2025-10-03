@@ -8,11 +8,13 @@ import {
   HttpCoreService,
   JSONResponse,
   JsonResponseCatalogo,
+  parseToString,
 } from '@ng-mf/data-access-user';
-import { PlantasSubfabricante, PlantsEmpresaSubfabricante } from '../models/empresas-subfabricanta.model';
+import { BuscarPayload, PlantasSubfabricante } from '../models/empresas-subfabricanta.model';
 import { API_ROUTES } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PlantasDisponibles } from '../models/federatarios-y-plantas.model';
 
 @Injectable({
   providedIn: 'root',
@@ -132,6 +134,36 @@ export class ComplimentosService {
       false
     );
   }
+  /**
+   * Obtiene el catálogo de países y bloques desde el servidor.
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/paises/bloques` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de países y bloques.
+   */
+  getPaisBloque(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      this.apiRoutes.paisesBloques,
+      {},
+      false
+    );
+  }
+
+  /**
+   * Obtiene el catálogo de tratados y acuerdos desde el servidor.
+   * Realiza una petición HTTP GET al endpoint `/api/TITRAC.TA/tratados-acuerdos` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de tratados y acuerdos.
+   */
+  getTratadoAcuerdo(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      this.apiRoutes.tratadosAcuerdos,
+      {},
+      false
+    );
+  }
+
   /**
    * Obtiene el catálogo de estados desde el servidor.
    *
@@ -307,11 +339,26 @@ export class ComplimentosService {
      * @method getSubfabricantesDisponibles
      * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
      */
-    getSubfabricantesDisponibles(body: PlantsEmpresaSubfabricante): Observable<JSONResponse> {
+    getSubfabricantesDisponibles(body: BuscarPayload): Observable<JSONResponse> {
       return this.http.post<JSONResponse>(API_ROUTES().buscarPlantas, body).pipe(
         map((response) => response),
         catchError(() => {
           const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES().buscarPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    /**
+     * Obtiene la lista de plantas disponibles.
+     * @method getPlantasDisponibles
+     * @returns {Observable<TableData>} Observable con la lista de plantas disponibles.
+     */
+    getPlantasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES().buscarPlantasImmex, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES().buscarPlantasImmex}`);
           return throwError(() => ERROR);
         })
       );
@@ -366,6 +413,100 @@ private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string
         domicilioFiscal: this.buildDomicilioFiscal(DOMICILIO, EMPRESA_DOMICILIO),
         razonSocial: EMPRESA.razonSocial || item.razonSocial || ''
       };
+    });
+  }
+
+
+
+    /**
+   * Mapea la respuesta de la API a un arreglo de objetos PlantasSubfabricante.
+   * @param apiResponse - Respuesta de la API que contiene los datos de las plantas subfabricantes.
+   * @returns Arreglo de objetos PlantasSubfabricante mapeados.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  mapApiResponseToPlantasDisponibles(apiResponse: any[]): PlantasDisponibles[] {
+    // eslint-disable-next-line complexity
+    if (!Array.isArray(apiResponse) || apiResponse.length === 0) {
+      return [];
+    }
+
+    // eslint-disable-next-line complexity
+    return apiResponse.map((item) => {
+      // Extract nested objects safely
+      const DOMICILIO = item.domicilioDto || {};
+      const EMPRESA = item.empresaDto || {};
+      const EMPRESA_DOMICILIO = EMPRESA.domicilioSolicitud || {};
+      const ENTIDAD_FEDERATIVA =
+        DOMICILIO.entidadFederativa ||
+        EMPRESA_DOMICILIO.entidadFederativa ||
+        {};
+      const PAIS = DOMICILIO.pais || EMPRESA_DOMICILIO.pais || {};
+
+      const MAPPED_PLANTA: PlantasDisponibles = {
+        calle:
+          DOMICILIO.calle ||
+          EMPRESA_DOMICILIO.calle ||
+          '',
+
+        numeroExterior: parseToString(
+          DOMICILIO.numExterior ||
+            EMPRESA_DOMICILIO.numExterior || ''
+        ),
+
+        numeroInterior: parseToString(
+          DOMICILIO.numInterior ||
+            EMPRESA_DOMICILIO.numInterior || ''
+        ),
+
+        codigoPostal: parseToString(
+          DOMICILIO.codigoPostal ||
+            EMPRESA_DOMICILIO.codigoPostal || ''
+        ),
+
+        localidad: parseToString(
+          DOMICILIO.cveLocalidad ||
+            DOMICILIO.localidad ||
+            EMPRESA_DOMICILIO.localidad ||
+            ''
+        ),
+
+        colonia:
+          DOMICILIO.colonia ||
+          DOMICILIO.descUbicacion ||
+          EMPRESA_DOMICILIO.colonia ||
+          '',
+
+        municipioODelegacion:
+          DOMICILIO.municipio ||
+          DOMICILIO.delegacionMunicipio ||
+          EMPRESA_DOMICILIO.municipio ||
+          EMPRESA_DOMICILIO.delegacionMunicipio ||
+          '',
+
+        entidadFederativa:
+          ENTIDAD_FEDERATIVA.nombre ||
+          DOMICILIO.cveEntidad ||
+          EMPRESA_DOMICILIO.cveEntidad ||
+          '',
+
+        pais:
+          PAIS.nombre ||
+          item.empresaPais || '',
+
+        registroFederalDeContribuyentes:
+          EMPRESA.rfc || '',
+
+        domicilioFiscalDelSolicitante: this.buildDomicilioFiscal(
+          DOMICILIO,
+          EMPRESA_DOMICILIO
+        ),
+
+        razonSocial:
+          EMPRESA.razonSocial ||
+          '',
+      };
+
+      return MAPPED_PLANTA;
     });
   }
 }

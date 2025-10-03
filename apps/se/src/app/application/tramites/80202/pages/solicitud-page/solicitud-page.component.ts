@@ -1,8 +1,27 @@
-import { Component, ViewChild } from '@angular/core';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import {
+  DatosPasos,
+  RegistroSolicitudService,
+  Usuario,
+  esValidObject,
+  getValidDatos,
+} from '@ng-mf/data-access-user';
+import {
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+  PASOS,
+  USUARIO_INFO,
+} from '../../constants/immex-ampliacion-sensibles.enums';
+import { Subject, takeUntil } from 'rxjs';
+import { GuardarService } from '../../services/guardar.service';
+import { ImmexAmpliacionSensiblesQuery } from '../../estados/immex-ampliacion-sensibles.query';
+import { ImmexAmpliacionSensiblesService } from '../../services/immex-ampliacion-sensibles.service';
+import { ImmexAmpliacionSensiblesStore } from '../../estados/immex-ampliacion-sensibles.store';
+import { ImmexRegistroState } from '../../estados/immex-ampliacion-sensibles.store';
 import { ListaPasosWizard } from '../../models/immex-ampliacion-sensibles.model';
+import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { buildGuardarPayload } from '../../mappers/guardar.mapper';
 
 /**
  * Interfaz para la acción de los botones
@@ -15,63 +34,76 @@ interface AccionBoton {
  * Componente principal para el formulario de solicitud IMMEX modalidad ampliación sensibles.
  */
 
+/**
+ * @component SolicitudPageComponent
+ * @description Componente principal para el formulario de solicitud IMMEX modalidad ampliación sensibles. Gestiona los pasos, carga de documentos y guardado de datos.
+ * @author Ultrasist
+ * @date 2025-09-30
+ */
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
+  providers: [ToastrService],
 })
-export class SolicitudPageComponent {
-  /**
-   * Título del mensaje principal.
-   * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
-   */
-  tituloMensaje: string | null =
-    'Registro de solicitud IMMEX modalidad ampliación sensibles';
+export class SolicitudPageComponent implements OnInit {
+  /** Información del usuario actual. */
+  datosUsuario: Usuario = USUARIO_INFO;
+  /** Evento para cargar archivos en el formulario. */
+  cargarArchivosEvento = new EventEmitter<void>();
+  /** Indica si el botón de carga de archivos está activo. */
+  activarBotonCargaArchivos: boolean = false;
+  /** Indica si la sección de carga de documentos está visible. */
+  seccionCargarDocumentos: boolean = true;
+  /** Indica si la carga está en progreso. */
+  cargaEnProgreso: boolean = true;
 
-
-  /**
-   * Mensaje de éxito para el primer paso.
-   * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
-   *
-   */
+  /** Título principal del formulario. */
+  tituloMensaje: string | null = 'Registro de solicitud IMMEX modalidad ampliación sensibles';
+  /** Estado actual de la solicitud. */
+  public solicitudState!: ImmexRegistroState;
+  /** Mensaje de éxito para el primer paso. */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
-
-  /**
-   * Array de pasos del asistente.
-   * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
-   *
-   */
+  /** Pasos del asistente de la solicitud. */
   pasos: ListaPasosWizard[] = PASOS;
-
-  /**
-   * Índice actual del paso.
-   * @property {number} indice - Índice del paso actual en el que se encuentra el usuario.
-   *
-   */
+  /** Índice del paso actual. */
   indice: number = 1;
-
-  /**
-   * Componente Wizard.
-   * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.
-   *
-   */
-
+  /** Referencia al componente Wizard para navegación. */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
-   * Datos para la configuración de los botones del asistente.
-   * @property {DatosPasos} datosPasos - Configuración para los botones "Anterior" y "Siguiente".
-   *
-   */
+  /** Subject para manejar la desuscripción de observables. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /** Estado interno del registro IMMEX. */
+  private immexRegistroState!: ImmexRegistroState;
+  /** Configuración de los botones del asistente. */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /** Folio temporal del trámite. */
+  public folioTemporal: number = 0;
 
-  seleccionaTab(i: number): void {
-    this.indice = i;
+  /** Constructor con inyección de servicios. */
+  constructor(
+    private immexRegistroStore: ImmexAmpliacionSensiblesStore,
+    private Query: ImmexAmpliacionSensiblesQuery,
+    private registroService: PermisoImmexDatosService,
+    public registroSolicitudService: RegistroSolicitudService,
+    private immexAmpliacionSensiblesService: ImmexAmpliacionSensiblesService,
+    private guardarService: GuardarService,
+    private toastrService: ToastrService
+  ) { }
+
+  /**
+   * Mantiene la suscripción al estado de CambioModalidadQuery para tener siempre el estado actualizado.
+   */
+  ngOnInit(): void {
+    this.Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state: ImmexRegistroState) => {
+        this.solicitudState = state;
+      });
   }
 
   /**
@@ -83,6 +115,7 @@ export class SolicitudPageComponent {
    * @param {AccionBoton} e - The action button object containing the `valor` and `accion` properties.
    */
   getValorIndice(e: AccionBoton): void {
+
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
@@ -148,5 +181,76 @@ export class SolicitudPageComponent {
         this.tituloMensaje = 'Zoosanitario para importación';
         break;
     }
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(e: AccionBoton): void {
+    const PAYLOAD = buildGuardarPayload(this.solicitudState);
+    let shouldNavigate = false;
+    this.registroSolicitudService
+      .postGuardarDatos('80202', PAYLOAD)
+      .subscribe((response) => {
+        shouldNavigate = response.codigo === '00';
+        if (shouldNavigate) {
+          if (esValidObject(response) && esValidObject(response.datos)) {
+            const DATOS = response.datos as { id_solicitud?: number };
+            if (getValidDatos(DATOS.id_solicitud)) {
+              this.immexRegistroStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
+            } else {
+              this.immexRegistroStore.setIdSolicitud(0);
+            }
+            if (e.valor > 0 && e.valor < 5) {
+              this.indice = e.valor;
+              this.tituloMensaje =
+                SolicitudPageComponent.obtenerNombreDelTítulo(e.valor);
+
+              if (e.valor > 0 && e.valor < 5) {
+                this.indice = e.valor;
+                this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
+                  e.valor
+                );
+
+                if (e.accion === 'cont') {
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.wizardComponent.atras();
+                }
+              }
+            }
+          }
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
+  }
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+  /**
+   * Método para manejar el evento de cambio en la carga en progreso.
+   * Actualiza el estado de la carga en progreso.
+   * carga - Indica si la carga está en progreso o no.
+   * {void} No retorna ningún valor.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

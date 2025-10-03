@@ -12,78 +12,78 @@ import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoIm
  *  @type {string}
  */
 export const FORMA_COMPLIMENTOS_SOLICITUDE = [
-    {
-      id: 'modalidad',
-      labelNombre: 'Modalidad',
-      campo: 'modalidad',
-      clase: 'col-md-4',
-      tipoInput: 'text',
-      desactivado: true,
-      soloLectura: false,
-      validadores: [
-        { tipo: 'required' }
-      ],
-      marcadorDePosicion: 'Selecciona un valor',
-      marginTop: 0,
-    },
-    
-  ];
-  /**
-   * Constantes para la sección de complementos
-   */
-   export const FORMA_COMPLIMENTOS_PROGRAMA = [
-    {
-      id: 'preOperativo',
-      labelNombre: ' Trámite IMMEX Pre operativo',
-      campo: 'preOperativo',
-      clase: 'col-md-12',
-      tipoInput: 'checkbox',
-      desactivado: false,
-      marcador_de_posicion: '',
-      marginTop: 0,
-    },
-   ]
-   /**
-    * Constantes para la sección de complementos
-    * @constant
-    */
-   export const FORMA_DATOS_GENERALES = [
-    {
-      id: 'paginaWWeb',
-      labelNombre: 'Página web',
-      campo: 'paginaWWeb',
-      clase: 'col-md-8',
-      tipoInput: 'text',
-      desactivado: false,
-      soloLectura: false,
-     
-      marcadorDePosicion: 'Selecciona un valor',
-      marginTop: 0,
-    },
-    {
-      id: '',
-      labelNombre: '',
-      campo: '',
-      clase: 'col-md-4',
-      tipoInput: '',
-      desactivado: false,
-      soloLectura: false,
-     
-      marcadorDePosicion: '',
-      marginTop: 0,
-    },
-    {
-        id: 'localizacion',
-        labelNombre: 'localización',
-        campo: 'localizacion',
-        clase: 'col-md-8',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-       
-        marcadorDePosicion: 'Selecciona un valor',
-        marginTop: 0,
-      }
+  {
+    id: 'modalidad',
+    labelNombre: 'Modalidad',
+    campo: 'modalidad',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0,
+  },
+
+];
+/**
+ * Constantes para la sección de complementos
+ */
+export const FORMA_COMPLIMENTOS_PROGRAMA = [
+  {
+    id: 'preOperativo',
+    labelNombre: ' Trámite IMMEX Pre operativo',
+    campo: 'preOperativo',
+    clase: 'col-md-12',
+    tipoInput: 'checkbox',
+    desactivado: false,
+    marcador_de_posicion: '',
+    marginTop: 0,
+  },
+]
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
+export const FORMA_DATOS_GENERALES = [
+  {
+    id: 'paginaWWeb',
+    labelNombre: 'Página web',
+    campo: 'paginaWWeb',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0,
+  },
+  {
+    id: '',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-4',
+    tipoInput: '',
+    desactivado: false,
+    soloLectura: false,
+
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'localizacion',
+    labelNombre: 'localización',
+    campo: 'localizacion',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0,
+  }
 ]
 
 /**
@@ -101,23 +101,23 @@ export const OBLIGACIONES_FISCALES = [
     soloLectura: false,
     marcadorDePosicion: 'Selecciona un valor',
     marginTop: 0,
-  }, 
+  },
   {
     id: 'fecha_inicio',
-      labelNombre: 'Fecha inicio',
-      campo: 'fecha_inicio',
-      clase: 'col-md-4',
-      tipoInput: 'date',
-      desactivado: false,
-      soloLectura: false,
-      validadores: [
-          { tipo: 'required' }
-      ],
-      marcadorDePosicion: '',
-      valorPredeterminado: '',
-      marginTop: 0,
-      habilitado: true
-  }, 
+    labelNombre: 'Fecha inicio',
+    campo: 'fecha_inicio',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true
+  },
   {
     id: '',
     labelNombre: '',
@@ -142,7 +142,7 @@ export const MANIFIESTOS_DECLARACION = {
  * Constantes para la sección de complementos
  * @constant
  */
-export const FORMA_MODIFICACIONES_SOLICITUDE =[
+export const FORMA_MODIFICACIONES_SOLICITUDE = [
   {
     id: 'nombreDelFederatario',
     labelNombre: 'Nombre del federatario que expide el documento',
@@ -271,7 +271,7 @@ export const FORMA_MODIFICACIONES_SOLICITUDE =[
  * @constant
  */
 
-export const FORMA_NACIONALIDAA_MAXICANA =[
+export const FORMA_NACIONALIDAA_MAXICANA = [
   {
     id: 'taxId',
     labelNombre: 'Tax ID',
@@ -376,7 +376,7 @@ export const FORMA_NACIONALIDAA_MAXICANA =[
   * @constant
   */
 
-export const FORMA_SI_NACIONALIDAA_MAXICANA=[
+export const FORMA_SI_NACIONALIDAA_MAXICANA = [
   {
     id: 'rfc_de_contri',
     labelNombre: 'Registro Federal de Contribuyentes ',
@@ -396,7 +396,7 @@ export const FORMA_SI_NACIONALIDAA_MAXICANA=[
  * Constantes para la sección de complementos
  * @constant
  */
-export const FORMA_PERSONA_FISICA_FORM_DATA =[
+export const FORMA_PERSONA_FISICA_FORM_DATA = [
   {
     id: 'Nombre',
     labelNombre: 'Nombre',
@@ -592,7 +592,7 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
  * @type {Array}
  */
 
-export const TABLA_ANEXO_PRODUCTO_FRACCION =[
+export const TABLA_ANEXO_PRODUCTO_FRACCION = [
   {
     encabezado: '#Fracción',
     clave: (ele: AnexoUnoProducto): string | undefined => ele.fraccion,
@@ -635,19 +635,19 @@ export const TABLA_ANEXO_PRODUCTO_FRACCION =[
       ele.valorModedaMensual,
     orden: 7,
   },
-   {
+  {
     encabezado: 'Valor en moneda anual',
     clave: (ele: AnexoUnoProducto): string | undefined =>
       ele.valorModedaAnual,
     orden: 8,
   },
-   {
+  {
     encabezado: 'Volumen mensual',
     clave: (ele: AnexoUnoProducto): string | undefined =>
       ele.valorMensual,
     orden: 9,
   },
-   {
+  {
     encabezado: 'Volumen anual',
     clave: (ele: AnexoUnoProducto): string | undefined =>
       ele.valorAnual,
@@ -659,8 +659,8 @@ export const TABLA_ANEXO_PRODUCTO_FRACCION =[
  * @constant
  * @type {Array}
  */
-export const TABLE_PROVEEDOR_CLIENTE =[
-   {
+export const TABLE_PROVEEDOR_CLIENTE = [
+  {
     encabezado: 'Fracción',
     clave: (ele: ProveedorCliente): string | undefined => ele.fraccion,
     orden: 1,
@@ -703,38 +703,38 @@ export const TABLE_PROVEEDOR_CLIENTE =[
   * @type {Array}
   */
 
-export const ANEXO_I_SERVICIO_CATALOGO:Catalogo[]=[
-   {
-      id: 1,
-      descripcion: 'Materia Prima',
-    },
-    {
-      id: 2,
-      descripcion: 'Producto terminado',
-    },
+export const ANEXO_I_SERVICIO_CATALOGO: Catalogo[] = [
+  {
+    id: 1,
+    descripcion: 'Materia Prima',
+  },
+  {
+    id: 2,
+    descripcion: 'Producto terminado',
+  },
 ]
 /**
  * Constantes para la sección de complementos
  * @constant
  * @type {Array}
  */
-export const PAIS_DESTINO_CATALOG:Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'Mexico',
-    },
-    {
-      id: 2,
-      descripcion: 'USA',
-    },
-  ];
+export const PAIS_DESTINO_CATALOG: Catalogo[] = [
+  {
+    id: 1,
+    descripcion: 'Mexico',
+  },
+  {
+    id: 2,
+    descripcion: 'USA',
+  },
+];
 /**
  * Constantes para la sección de complementos
  * @constant
  */
 
-  export const TABLA_PROYECTO_IMMEX=[
-     {
+export const TABLA_PROYECTO_IMMEX = [
+  {
     encabezado: 'Fracción',
     clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoFraccion,
     orden: 1,
@@ -770,12 +770,12 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
     clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoRazonFirmante,
     orden: 7,
   }
-  ]
-  /*
-  * Constantes para la sección de complementos
-  */
-  export const ANEXO_FRACION_ANARELARIA=[
-    {
+]
+/*
+* Constantes para la sección de complementos
+*/
+export const ANEXO_FRACION_ANARELARIA = [
+  {
     encabezado: 'Fracción',
     clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccion,
     orden: 1,
@@ -795,7 +795,7 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
     clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccionImportacion,
     orden: 4,
   },
-   {
+  {
     encabezado: 'Descripción comercial',
     clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoDescripcionComercialImportacion,
     orden: 5,
@@ -840,7 +840,7 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
     clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.volumenAnual,
     orden: 13,
   },
-  ]
+]
 /*
   * Constantes para la sección de complementos
   * @constant
@@ -848,11 +848,11 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
   */
 
 
-  export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [ {
-      id: 1,
-      descripcion: 'option1',
-    },
-    {
-      id: 2,
-      descripcion: 'option2',
-    },];
+export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [{
+  id: 1,
+  descripcion: 'option1',
+},
+{
+  id: 2,
+  descripcion: 'option2',
+},];

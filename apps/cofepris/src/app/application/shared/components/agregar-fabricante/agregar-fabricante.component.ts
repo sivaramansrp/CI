@@ -496,9 +496,19 @@ export class AgregarFabricanteComponent
    * 
    * Útil para evitar que el usuario modifique el país cuando ciertas condiciones de validación se cumplen al guardar.
    */
-  private forzarDeshabilitarPais(): void {
+private forzarDeshabilitarPais(): void {
   if (this.chequeoValidacionAlGuardar) {
     this.agregarFabricanteForm.get('pais')?.disable();
+  }
+  if (
+    this.idProcedimiento === 260912 &&
+    this.agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+    (
+      this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
+      this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.MORAL
+    )
+  ) {
+    this.agregarFabricanteForm.get('pais')?.enable();
   }
 }
 
@@ -526,7 +536,10 @@ export class AgregarFabricanteComponent
         this.elementosDeshabilitados = []; 
         this.elementosNoRequeridos = ['colonia'];
         break;
-      default:
+        case 260912:
+        this.elementosNoRequeridos = ['localidad', 'colonia', 'codigoPostal'];
+        break;
+        default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
     }

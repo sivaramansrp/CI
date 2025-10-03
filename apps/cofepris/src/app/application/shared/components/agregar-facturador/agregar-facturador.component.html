@@ -175,7 +175,9 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado*:</label>
+        <label class="form-label">Estado<span 
+              [ngClass]="{'text-danger': agregarFacturadorForm.get('estado')?.touched && agregarFacturadorForm.get('estado')?.invalid}"
+            >*</span>:</label>
         <input
           type="text"
           class="form-control"

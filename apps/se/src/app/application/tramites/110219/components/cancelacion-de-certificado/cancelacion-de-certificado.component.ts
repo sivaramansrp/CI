@@ -23,6 +23,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ReplaySubject,map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { CatalogoServices } from '@ng-mf/data-access-user';
 import { CertificadoService } from '../../services/certificado.service';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from "@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
@@ -57,6 +58,26 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Estado de consulta de datos (readonly, etc).
    */
   consultaDatos!: ConsultaioState;
+
+ /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  tramiteId: string = '110219';
+
+   /**
+     * Lista de objetos de tipo Catalogo que representa los tratados o acuerdos disponibles para la búsqueda.
+     * Se utiliza para mostrar las opciones en el componente de datos de búsqueda.
+     */
+    tratadoAcuerdo: Catalogo[] = [];
+  
+    /**
+     * Lista de objetos de tipo Catalogo que representa los países disponibles para seleccionar en el bloque correspondiente.
+     * Se utiliza para mostrar opciones de países en el componente de búsqueda.
+     */
+    paisBloque: Catalogo[] = [];
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -220,7 +241,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices,
+
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -237,6 +260,16 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el componente, el formulario y carga catálogos y datos de la tabla.
    */
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Inicializa el formulario `cancelacionForm` con los valores actuales del estado de la solicitud y validadores requeridos.
+   * - Obtiene los datos necesarios para los campos de tratado y país utilizando el `tramiteId`.
+   * - Recupera las solicitudes para la tabla.
+   * - Inicializa el estado del formulario.
+   * - Se suscribe a los cambios del estado de la solicitud para mantener sincronizado el formulario.
+   * - Llama al método para obtener el domicilio del donante.
+   */
   ngOnInit(): void {
     this.cancelacionForm = new FormGroup({
       numeroCertificado: new FormControl(this.solicitudState?.numeroCertificado, [Validators.required]),
@@ -245,9 +278,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       fechaInicial: new FormControl(this.solicitudState?.fechaInicial, [Validators.required]),
       fechaFinal: new FormControl(this.solicitudState?.fechaFinal, [Validators.required]),
     });
+   
 
-    this.getTratadoData();
-    this.getPaisdata();
+    this.getTratadoData(this.tramiteId);
+    this.getPaisdata(this.tramiteId);
     this.getSolicitudesTabla();
     this.inicializarEstadoFormulario();
 
@@ -263,8 +297,31 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
+   * Inicializa el estado del formulario según el modo de consulta (lectura/edición).
+   *
+   * Este método evalúa el estado actual de la consulta para determinar si el formulario
+   * debe estar en modo de solo lectura o en modo de edición. Dependiendo del estado,
+   * ejecuta las acciones correspondientes para configurar correctamente el formulario.
+   *
+   * @returns void - No retorna valor, pero configura el estado del formulario
+   * 
+   * @example
+   * ```typescript
+   * this.inicializarEstadoFormulario();
+   * // El formulario se configura según el estado de consulta actual
+   * ```
+   * 
+   * @remarks
+   * - Si `soloLectura` es true, llama a `guardarDatosFormulario()` para cargar datos existentes
+   * - Si `soloLectura` es false, llama a `donanteDomicilio()` para inicializar el formulario vacío
+   * - Se ejecuta durante la inicialización del componente y cuando cambia el estado de consulta
+   * - Es crucial para mantener la consistencia del estado del formulario
+   * 
+   * @see guardarDatosFormulario
+   * @see donanteDomicilio
+   * @see ConsultaioState
+   * @since 1.0.0
+   * @author Sistema VUCEM
    */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
@@ -460,32 +517,112 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     }
   }
 
+ 
   /**
-   * Obtiene los datos del catálogo de tratados.
+   * Obtiene los datos del catálogo de tratados/acuerdos para un trámite específico.
+   * 
+   * Este método realiza una consulta al servicio de catálogos para recuperar información
+   * sobre tratados comerciales y acuerdos internacionales disponibles para el trámite especificado.
+   * Los datos obtenidos se utilizan para poblar el selector de tratados en el formulario.
+   * 
+   * @param tramiteId - Identificador único del trámite (ej: '110219') para el cual se consultan
+   *                    los datos del catálogo de tratados y acuerdos comerciales
+   * 
+   * @returns void - No retorna valor, pero actualiza la propiedad `tratadoCatalogo.catalogos`
+   *                 con los datos obtenidos del servicio
+   * 
+   * @throws Error - Puede lanzar errores si la consulta al servicio falla
+   * 
+   * @example
+   * ```typescript
+   * this.getTratadoData('110219');
+   * // Después de la ejecución, tratadoCatalogo.catalogos contendrá los tratados disponibles
+   * ```
+   * 
+   * @see CatalogoServices.tratadoAcuerdoCatalogo
+   * @see Catalogo
+   * @since 1.0.0
+   * @author Sistema VUCEM
    */
-  getTratadoData(): void {
-    this.certificadoService
-      .getTratadoData()
+  getTratadoData(tramiteId: string): void {
+    this.catalogoServices
+    .tratadoAcuerdoCatalogo(tramiteId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp): void => {
-        this.tratadoCatalogo.catalogos = resp as Catalogo[];
+        this.tratadoCatalogo.catalogos = resp.datos as Catalogo[];
+      });
+  }
+
+ 
+  /**
+   * Obtiene el catálogo de países y bloques comerciales asociados a un trámite específico.
+   *
+   * Este método consulta el servicio de catálogos para recuperar la lista de países y bloques
+   * comerciales disponibles para el trámite especificado. Los datos se utilizan para poblar
+   * el selector de países en el formulario de cancelación de certificados.
+   *
+   * @param tramiteId - Identificador único del trámite (ej: '110219') para el cual se requiere
+   *                    obtener el catálogo de países y bloques comerciales
+   * 
+   * @returns void - No retorna valor, pero actualiza la propiedad `paisCatalogo.catalogos`
+   *                 con los datos de países obtenidos del servicio
+   * 
+   * @throws Error - Puede lanzar errores si la consulta al servicio de catálogos falla
+   * 
+   * @example
+   * ```typescript
+   * this.getPaisdata('110219');
+   * // Después de la ejecución, paisCatalogo.catalogos contendrá los países disponibles
+   * ```
+   * 
+   * @remarks
+   * - La suscripción se gestiona automáticamente con `takeUntil(this.destroyed$)`
+   * - Se cancela automáticamente cuando el componente se destruye para evitar memory leaks
+   * - Los datos incluyen tanto países individuales como bloques comerciales
+   * 
+   * @see CatalogoServices.paisBloqueCatalogo
+   * @see Catalogo
+   * @since 1.0.0
+   * @author Sistema VUCEM
+   */
+  getPaisdata(tramiteId: string): void {
+    this.catalogoServices
+      .paisBloqueCatalogo(tramiteId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.paisCatalogo.catalogos = resp.datos as Catalogo[];
       });
   }
 
   /**
-   * Obtiene los datos del catálogo de países.
-   */
-  getPaisdata(): void {
-    this.certificadoService
-      .getTratadoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp): void => {
-        this.paisCatalogo.catalogos = resp as Catalogo[];
-      });
-  }
-
-  /**
-   * Obtiene los datos de la tabla de solicitudes.
+   * Obtiene y carga los datos de la tabla de certificados disponibles para cancelación.
+   *
+   * Este método consulta el servicio de certificados para recuperar la lista de certificados
+   * disponibles que pueden ser cancelados. Los datos se muestran en una tabla dinámica
+   * que permite al usuario seleccionar el certificado que desea cancelar.
+   *
+   * @returns void - No retorna valor, pero actualiza la propiedad `certificadoDisponsiblesTablaDatos`
+   *                 con los datos de certificados obtenidos del servicio
+   * 
+   * @throws Error - Puede lanzar errores si la consulta al servicio de certificados falla
+   * 
+   * @example
+   * ```typescript
+   * this.getSolicitudesTabla();
+   * // Después de la ejecución, certificadoDisponsiblesTablaDatos contendrá los certificados
+   * ```
+   * 
+   * @remarks
+   * - Los datos incluyen información como número de certificado, país, tratado, fechas, etc.
+   * - La suscripción se gestiona automáticamente con `takeUntil(this.destroyed$)`
+   * - Se ejecuta durante la inicialización del componente
+   * - Los datos se utilizan para poblar la tabla de certificados disponibles
+   * 
+   * @see CertificadoService.getSolicitudesTabla
+   * @see ColumnasTabla
+   * @see TablaDinamicaComponent
+   * @since 1.0.0
+   * @author Sistema VUCEM
    */
   public getSolicitudesTabla(): void {
     this.certificadoService.getSolicitudesTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
@@ -572,13 +709,24 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     const TABLE = TR.closest('table');
     if (!TABLE) { return; }
     
+    /**
+     * @desc Referencia al elemento `<tbody>` dentro de la tabla especificada por la constante `TABLE`.
+     * @type {HTMLTableSectionElement | null}
+     * @see https://developer.mozilla.org/es/docs/Web/API/HTMLTableSectionElement
+     *
+     * @remarks
+     * Utilizado para manipular dinámicamente las filas del cuerpo de la tabla en el componente de cancelación de certificado.
+     *
+     * @author
+     * Generado automáticamente por GitHub Copilot.
+     */
     const TBODY = TABLE.querySelector('tbody');
     if (!TBODY) { return; }
     
     const ROWS = Array.from(TBODY.querySelectorAll('tr'));
     const ROW_INDEX = ROWS.indexOf(TR as HTMLTableRowElement);
     
-    // Find the matching certificate data by row index
+    
     if (ROW_INDEX >= 0 && ROW_INDEX < this.certificadoDisponsiblesTablaDatos.length) {
       const MATCH = this.certificadoDisponsiblesTablaDatos[ROW_INDEX];
       

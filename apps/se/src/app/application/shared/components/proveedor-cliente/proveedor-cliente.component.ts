@@ -78,7 +78,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * Datos de la tabla de proveedores y clientes.
    * @type {ProveedorClienteTabla[]}
    */
-  public proveedorClienteTablsDatos: ProveedorClienteTabla[] = [];
+  @Input() proveedorClienteTablsDatos: ProveedorClienteTabla[] = [];
 
   /**
    * Lista de proveedores y clientes seleccionados.
