@@ -80,6 +80,8 @@ export interface Solicitud130102State {
   lista_fracciones_prosec?: FraccionesProsecRequest[];
 
   paises?: string[]; // Lista de países involucrados en la solicitud.
+
+  cadenaOriginal: string;
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -115,7 +117,8 @@ export function createInitialState(): Solicitud130102State {
     solicitud : '', // Indica que la solicitud no está activa por defecto.
     partidas_tabla: [], // Lista de partidas vacía por defecto.
     lista_fracciones_prosec: [], // Lista de usos específicos vacía por defecto.;
-    paises: [] // Lista de países vacía por defecto.
+    paises: [], // Lista de países vacía por defecto.
+    cadenaOriginal: '',
   };
 }
 
@@ -439,6 +442,18 @@ public setCriterioDictamen(criterioDictamen: string):void {
       solicitud,
     }));
   }
+
+  /**
+   *  Actualiza el estado con el valor de la cadena original 
+   * @param cadenaOriginal  texto de la cadena original
+   */
+  public setCadenaOriginal(cadenaOriginal: string):void { 
+    this.update((state) => ({
+      ...state,
+      cadenaOriginal,
+    }));
+  }
+
 
   /**
    * Limpia todos los datos de la solicitud, restaurándolos a su estado inicial.

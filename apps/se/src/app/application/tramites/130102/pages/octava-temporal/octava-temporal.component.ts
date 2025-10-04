@@ -325,8 +325,10 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
+            console.log('cadena original ', this.solicitudState.cadenaOriginal)
             return;
           }
+          this.tramite130102Store.setCadenaOriginal(resp.datos);
           this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
         },
         error: (error: any) => {

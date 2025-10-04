@@ -159,7 +159,7 @@ export const API_GET_FRACCIONES_DIVISIONES = 'sat-t130102/exportacion/fracciones
  * @param idSolicitud 
  * @returns 
  */
-export const API_POST_FIRMA = (idSolicitud: string) : string => `sat-t130102/solicitud/${idSolicitud}/firmar`;
+export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t130102/solicitud/${IDSOLICITUD}/firmar`;
 
 /**
  *  Id de la solicitud

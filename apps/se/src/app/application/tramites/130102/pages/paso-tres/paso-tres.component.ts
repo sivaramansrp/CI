@@ -101,7 +101,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     private cadena: CadenaOriginal130102Service,
     private firma: Firma130102Service,
     private documentoService: DocumentoService,
-    private tramite130118Query: Tramite130102Query,
+    private tramite130102Query: Tramite130102Query,
     private tramiteStore: TramiteFolioStore,
     private documentosQuery: DocumentosQuery,
     private tramiteFolioQuery: TramiteFolioQueries) { }
@@ -121,11 +121,13 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       .subscribe();
 
     // Suscribirse a los cambios en el estado del trámite 130118
-    this.tramite130118Query.selectSeccionState$
+    this.tramite130102Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.cadenaOriginal = seccionState.cadenaOriginal;
+          console.log(this.cadenaOriginal)
         })
       ).subscribe();
 
@@ -201,6 +203,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     fechaFin: string;
   }): void {
     this.datosFirmaReales = datos;
+    console.log(datos)
     this.obtieneFirma(datos.firma);
   }
 
@@ -210,6 +213,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    * @param firma - La firma en formato base64 que se desea procesar.
    */
   obtieneFirma(firma: string): void {
+    this.cadenaOriginal = this.solicitudState.cadenaOriginal;
+
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       console.error('Faltan datos para completar la firma');
       this.nuevaNotificacion = {
@@ -241,7 +246,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: PasoTresComponent.formatFecha(this.datosFirmaReales.fechaFin),
-            documentos_requeridos: response.datos?.documentos_requeridos || [],
+            documentos_requeridos:  [],
           };
 
           return this.firma.enviarFirma<string>(String(this.solicitudState.idSolicitud), PAYLOAD);
@@ -293,6 +298,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
 
 
   /**
