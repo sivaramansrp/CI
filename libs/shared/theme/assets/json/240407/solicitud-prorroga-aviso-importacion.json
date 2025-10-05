@@ -69,7 +69,10 @@
     "usoFinal": "Comercialización",
     "aduanasSeleccionadas": ["Aduana 1", "Aduana 2"],
     "paisDestino": "Estados Unidos",
-    "fechaPago": "16/05/2025"
+    "fechaPago": "16/05/2025",
+    "unoSemestre":"unoSemestre",
+    "anoEnCurso":true,
+    "informacionConfidencial":true
   },
   "justificacionTramiteFormState" :{
       "justificacion": "valor"
