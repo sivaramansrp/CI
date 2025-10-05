@@ -3,22 +3,6 @@
  * @description Este componente es responsable de manejar el formulario del certificado de registro.
  * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
  */
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import { Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
-
-import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
-
-import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
-
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -30,25 +14,35 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, REPRESENTACION_FEDERAL_NOTA } from '../../constantes/elegibilidad-de-textiles.enums';
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
-
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 import { AnioConstanciaService } from '../../services/catalogos/anio-constancia.service';
-
-import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, REPRESENTACION_FEDERAL_NOTA } from '../../constantes/elegibilidad-de-textiles.enums';
-
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { CommonModule } from '@angular/common';
+import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { GuardadoService } from '../../services/guardado.service';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { ParcialRequest } from '../../models/request/parcialRequest.model';
 import { TplDetalleRequest } from '../../models/request/tpl-detalle-request.model';
+import { TplDetalleResponse } from '../../models/response/tpl-detalle-response.model';
 import { TplRequest } from '../../models/request/tpl-request.model';
 import { TplService } from '../../services/Tpl.service';
 import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
+import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 
 /**
  * @component ConstanciaDelRegistroComponent
@@ -112,6 +106,14 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   @Input()
   formularioDeshabilitado: boolean = false;
 
+  /**
+   * @property {TplDetalleResponse} descripcionCupo - Detalle del cupo fitosanitario.
+   */
+  descripcionCupo!: TplDetalleResponse;
+
+
+  @Input()
+  numeroFolio: string = '';
   /**
    * @property {boolean} enviada - Indica si el formulario ha sido enviado para mostrar errores.
    */
@@ -279,6 +281,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    */
   public representacionFederalNota = REPRESENTACION_FEDERAL_NOTA;
 
+  visualizarEvaluacion: boolean = true;
+
   /**
    * @property {EventEmitter<boolean>} errorValidacion - Emite un valor booleano para indicar errores de validación.
    * EventEmitter que comunica al componente padre cuándo hay errores de validación en el formulario.
@@ -313,7 +317,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     private tplService: TplService,
     private guardadoService: GuardadoService,
     private tramite120301: Tramite120301Store,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
   ) {
     // Lógica del constructor si es necesario
   }
@@ -382,7 +387,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.ElegibilidadDeTextilesQuery.selectTextile$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -415,21 +419,24 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         }
       });
 
-  // Obtenga el estado actual de solo lectura inmediatamente
-  // Se eliminó el filtrado por cambio de entrada; ahora solo filtra al hacer clic en el botón Buscar
+    // Obtenga el estado actual de solo lectura inmediatamente
+    // Se eliminó el filtrado por cambio de entrada; ahora solo filtra al hacer clic en el botón Buscar
     const CURRENT_STATE = this.consultaioQuery.getValue();
     this.formularioDeshabilitado = CURRENT_STATE.readonly;
-
+    if (this.numeroFolio && this.numeroFolio !== '') {
+      this.llenarFormularioConDatos(this.numeroFolio);
+      this.guardarBandera = true;
+      this.visualizarEvaluacion = false;
+    }
     // Aplicar el estado del formulario inicial según el valor de solo lectura actual
     if (this.formularioDeshabilitado) {
       this.fitosanitarioForm.disable();
     } else {
-      this.fitosanitarioForm.enable();
+      this.fitosanitarioForm.disable();
       this.fitosanitarioForm.get('flexRadioRegistro')?.enable();
       this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
       this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
     }
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -440,7 +447,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
             if (consultaState.readonly) {
               this.fitosanitarioForm.disable();
             } else {
-              this.fitosanitarioForm.enable();
+              this.fitosanitarioForm.disable();
               this.fitosanitarioForm.get('flexRadioRegistro')?.enable();
               this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
               this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
@@ -454,6 +461,57 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     this.seccionStore.establecerFormaValida([false]);
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([true]);
+  }
+
+  /**
+   * @param datos - Datos del tipo TplDetalleResponse para llenar el formulario.
+   * @description Llena el formulario con los datos proporcionados.
+   */
+  llenarFormularioConDatos(idFolio: string): void {
+    this.evaluacionSolicitud.getDetallesCupo(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.descripcionCupo = response.datos ?? {} as TplDetalleResponse;
+            this.fitosanitarioForm.patchValue({
+              fraccionArancelaria: this.descripcionCupo.fraccion_arancelaria,
+              descripcionProducto: this.descripcionCupo.descripcion_producto,
+              tratado: this.descripcionCupo.tratado_bloque,
+              subproducto: this.descripcionCupo.clasificacion_subproducto,
+              mecanismo: this.descripcionCupo.mecanismo_asignacion,
+              typoCategoria: this.descripcionCupo.categoria_textil,
+              typoRegimen: this.descripcionCupo.regimen,
+              descripcionCategoriaTextil: this.descripcionCupo.descripcion_categoria_textil,
+              PaisDestino: this.descripcionCupo.pais_origen_destino,
+              unidadMedidaCategoriaTextil: this.descripcionCupo.unidad_medida,
+              factorConversionCategoriaTextil: this.descripcionCupo.factor_conversion,
+              fechaInicioVigencia: this.descripcionCupo.fecha_inicio_vigencia,
+              fechaFinVigencia: this.descripcionCupo.fecha_fin_vigencia
+            });
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+    // this.fitosanitarioForm.patchValue({
+    //   fraccionArancelaria: datos.fraccion_arancelaria,
+    //   descripcionProducto: datos.descripcion_producto,
+    //   tratado: datos.tratado_bloque,
+    //   subproducto: datos.clasificacion_subproducto,
+    //   mecanismo: datos.mecanismo_asignacion,
+    //   typoCategoria: datos.categoria_textil,
+    //   typoRegimen: datos.regimen,
+    //   descripcionCategoriaTextil: datos.descripcion_categoria_textil,
+    //   PaisDestino: datos.pais_origen_destino,
+    //   unidadMedidaCategoriaTextil: datos.unidad_medida,
+    //   factorConversionCategoriaTextil: datos.factor_conversion,
+    //   fechaInicioVigencia: datos.fecha_inicio_vigencia,
+    //   fechaFinVigencia: datos.fecha_fin_vigencia
+    // });
   }
 
   /**
@@ -709,7 +767,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
         this.tramite120301.setPaisOrigenDestino(DATOS.pais_origen_destino);
         this.tramite120301.setUnidadMedida(DATOS.unidad_medida);
-         this.tramite120301.setIdMecanismo(DATOS.id_mecanismo_asignacion);
+        this.tramite120301.setIdMecanismo(DATOS.id_mecanismo_asignacion);
         this.tramite120301.setClavePais(DATOS.codigo_pais);
       }
 
@@ -799,14 +857,14 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
         return;
       }
-      
+
       // Si el año es válido, borre cualquier error de validación anterior.
       this.errorValidacion.emit(false);
-      
+
       // Si el año es válido, continúe con la validación del número de certificado
       const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
       NUMEROCONTROL?.markAsTouched();
-      
+
       // Para modo Específico, valide que también se proporcione el número de certificado
       if (NUMEROCONTROL?.invalid) {
         // No emitir ERROR_FORMA_ANO aquí, solo marcar el campo para mostrar su error específico
@@ -814,7 +872,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
         return;
       }
-      
+
       // Cargar datos de la tabla después de pasar la validación
       // Para modo Específico, use datos basados en archivos con filtrado
       this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(

@@ -3,6 +3,7 @@
  */
 
 import { Catalogo, HttpCoreService } from '@libs/shared/data-access-user/src';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -16,7 +17,12 @@ export class BuscarCertificadoDeOrigenService {
    * @constructor
    * {HttpCoreService} http - Servicio HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpCoreService) { }
+  constructor(private http: HttpCoreService,
+    private complimentosService:ComplimentosService
+  ) { 
+    this.setProcedure();
+    this.setProcedureNo();
+  }
   
   /**
    * @method getPaisBloque
@@ -34,5 +40,26 @@ export class BuscarCertificadoDeOrigenService {
    */
   getTratadoAcuerdo(): Observable<Catalogo[]> {
     return this.http.get('./assets/json/110210/tratado-acuerdo.json');
+  }
+
+  /**
+ * Establece el procedimiento actual para la gestión de trámites industriales.
+ * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+  setProcedure():void{
+    const PROCEDURE='sat-t110210';
+    this.complimentosService.setProcedure(PROCEDURE);
+  }
+
+  /**
+ * Establece el número de procedimiento actual para la gestión de trámites industriales.
+ * Asigna el número de procedimiento '80101' y lo configura en el servicio de cumplimientos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+  setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('110210');
   }
 }
