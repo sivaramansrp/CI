@@ -178,6 +178,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         });
       }
     }
+    modificarMercanciasDatos(event: MercanciaDetalle): void {
+        const RANDOM_ID = Math.floor(Math.random() * 1000000);
+  this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+          data: { ...event, id: RANDOM_ID },
+        });
+    }
   
     /**
      * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
