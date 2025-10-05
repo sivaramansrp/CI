@@ -50,12 +50,12 @@
       "estado": "Activo"
     }
   ],
-  "pagoDerechos": {
+   "pagoDerechos": {
     "claveReferencia": "REF123456",
     "cadenaDependencia": "CADENA123",
     "banco": "1",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-05",
+    "fechaPago": "16/05/2025",
     "importePago": "1500.00"
   },
   "merccancialTablaDatos": [
