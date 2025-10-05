@@ -14,13 +14,12 @@
   [formularioDeshabilitado]="esFormularioSoloLectura || isFabricanteTablaDatosDisabled || isDestinatarioFinalTablaDatosDisabled || isProveedorTablaDatosDisabled || isFacturadorTablaDatosDisabled"
 ></app-terceros-relacionados>
 
-<!-- Modal for Agregar Fabricante -->
-<div class="modal fade" id="modalAgregarFabricante" tabindex="-1" aria-labelledby="modalAgregarFabricanteLabel" aria-hidden="true">
+<!-- Modal para Agregar Fabricante -->
+<div class="modal fade" id="modalAgregarFabricante" tabindex="-1" aria-labelledby="modalAgregarFabricanteLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-xl" style="max-width: 98vw;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalAgregarFabricanteLabel">Agregar Fabricante</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body" style="overflow-y: auto; max-height: 80vh;">
         <app-agregar-fabricante-contenedora

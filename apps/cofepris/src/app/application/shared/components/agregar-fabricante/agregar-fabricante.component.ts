@@ -318,7 +318,7 @@ export class AgregarFabricanteComponent
        if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
-  this.forzarDeshabilitarPais()
+  this.forzarDeshabilitarPais();
   }
 
   /**
@@ -342,7 +342,8 @@ export class AgregarFabricanteComponent
       this.fabricantes = Array.isArray(this.fabricanteTablaDatos) ? [...this.fabricanteTablaDatos] : [];
     }
 
-    if (currentValue['datoSeleccionado'].currentValue?.length > 0) {
+    // Fix: Only access currentValue if datoSeleccionado exists in SimpleChanges and is defined
+    if (currentValue['datoSeleccionado'] && currentValue['datoSeleccionado'].currentValue?.length > 0) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
       setTimeout(() => {
         if (
@@ -374,6 +375,28 @@ export class AgregarFabricanteComponent
           correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
           coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
         });
+        const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
+        const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
+        const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
+        const TIPO_PERSONA_VALUE = this.datoSeleccionado?.[0]?.tipoPersona;
+        if (this.chequeoValidacionAlGuardar) {
+          if (TIPO_PERSONA_VALUE === this.tipoPersona.MORAL) {
+            RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+          } else {
+            RAZON_SOCIAL_CONTROL?.clearValidators();
+          }
+          RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
+          // nombres & primerApellido for Fisica only
+          if (TIPO_PERSONA_VALUE === this.tipoPersona.FISICA) {
+            NOMBRES_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+            PRIMER_APELLIDO_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+          } else {
+            NOMBRES_CONTROL?.clearValidators();
+            PRIMER_APELLIDO_CONTROL?.clearValidators();
+          }
+          NOMBRES_CONTROL?.updateValueAndValidity();
+          PRIMER_APELLIDO_CONTROL?.updateValueAndValidity();
+        }
       }, 100);
     } else {
       this.agregarFabricanteForm?.reset();
@@ -431,7 +454,7 @@ export class AgregarFabricanteComponent
       ],
       razonSocial: [
         this.obtenerValor('razonSocial'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [] // Set validator dynamically below
       ],
       pais: [
         {
@@ -507,18 +530,33 @@ export class AgregarFabricanteComponent
         { value: this.obtenerValor('coloniaEquivalente'), disabled: true },
       ],
     });
-
-    if(this.chequeoValidacionAlGuardar){
-       this.agregarFabricanteForm.get('tipoPersona')?.valueChanges.subscribe(tipo => {
-      const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
-      if (tipo === this.tipoPersona.MORAL) {
-        RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
-      } else {
-        RAZON_SOCIAL_CONTROL?.clearValidators();
+    const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
+    const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
+    const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
+    const TIPO_PERSONA_CONTROL = this.agregarFabricanteForm.get('tipoPersona');
+    const SET_STRICT_VALIDATORS = (tipo: TipoPersona) => {
+      if (this.chequeoValidacionAlGuardar) {
+        if (tipo === this.tipoPersona.MORAL) {
+          RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+        } else {
+          RAZON_SOCIAL_CONTROL?.clearValidators();
+        }
+        RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
+        if (tipo === this.tipoPersona.FISICA) {
+          NOMBRES_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+          PRIMER_APELLIDO_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+        } else {
+          NOMBRES_CONTROL?.clearValidators();
+          PRIMER_APELLIDO_CONTROL?.clearValidators();
+        }
+        NOMBRES_CONTROL?.updateValueAndValidity();
+        PRIMER_APELLIDO_CONTROL?.updateValueAndValidity();
       }
-      RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
+    };
+    SET_STRICT_VALIDATORS(TIPO_PERSONA_CONTROL?.value);
+    TIPO_PERSONA_CONTROL?.valueChanges.subscribe(tipo => {
+      SET_STRICT_VALIDATORS(tipo);
     });
-    }
   }
 
     /**
@@ -720,7 +758,20 @@ private forzarDeshabilitarPais(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
-    this.agregarFabricanteForm.reset();
+    if (this.chequeoValidacionAlGuardar) {
+      this.agregarFabricanteForm.reset();
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+      if (!this.agregarFabricanteForm.get('nacionalidad')?.value) {
+        this.agregarFabricanteForm.get('tipoPersona')?.disable();
+      }
+    } else {
+      this.agregarFabricanteForm.reset();
+    }
   }
   /**
    * @method cancelar
@@ -729,13 +780,13 @@ private forzarDeshabilitarPais(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-   if (this.chequeoValidacionAlGuardar) {
-    this.limpiarFormulario();
-    this.datoSeleccionado = [];
-    this.cancelarmodal.emit();
-  } else {
-    this.ubicaccion.back();
-  }
+    if (this.chequeoValidacionAlGuardar) {
+      this.limpiarFormulario();
+      this.datoSeleccionado = [];
+      this.cancelarmodal.emit();
+    } else {
+      this.ubicaccion.back();
+    }
   }
 
   /**
