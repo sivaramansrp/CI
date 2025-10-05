@@ -53,7 +53,6 @@
               isCantidadFocused = false;
               obtenerLetraCantidad(materiaPrimaForm.get('cantidad')?.value)
             "
-
           />
           <div
             *ngIf="
@@ -155,15 +154,37 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select
-            (change)="changeSubPartidaFraccion()"
-            formControlName="subPartidaFraccion"
-            [catalogo]="comboSubPartidaFraccion"
-            [label]="'Sub partida'"
-            [required]="true"
-            [isDisabled]="esFormularioSoloLectura"
-          >
-          </app-catalogo-select>
+          <div class="form-group">
+            <label class="form-label">Sub Partida<span>*</span>:</label>
+
+            <select
+              class="form-control form-select"
+              formControlName="subPartidaFraccion"
+              (change)="changeSubPartidaFraccion()"
+              [ngClass]="{ required: materiaPrimaForm.get('subPartidaFraccion')?.errors?.['required'] && 
+              materiaPrimaForm.get('subPartidaFraccion')?.touched}"
+            >
+              <option [ngValue]="null" disabled selected hidden>
+                Seleccione una opción
+              </option>
+              <option [ngValue]="''" disabled selected hidden>
+                Seleccione una opción
+              </option>
+              <option
+                *ngFor="let partidaFraccion of comboSubPartidaFraccion"
+                [title]="partidaFraccion.descripcion"
+                [value]="partidaFraccion.clave"
+              >
+                {{ partidaFraccion.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="materiaPrimaForm.get('subPartidaFraccion')?.errors?.['required'] && materiaPrimaForm.get('subPartidaFraccion')?.touched"
+              class="mensaje-error"
+            >
+              Este campo es obligatorio.
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-8">
@@ -173,8 +194,7 @@
             [catalogo]="comboFraccionArancelariaParametros"
             [label]="'Fracción arancelaria'"
             [required]="true"
-            [isDisabled]="esFormularioSoloLectura"
-          >
+            [isDisabled]="esFormularioSoloLectura">
           </app-catalogo-select>
         </div>
       </div>

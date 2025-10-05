@@ -5,10 +5,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud324State, Tramite324Store } from '../state/Tramite324.store';
 import { AccesosTabla } from '../models/tecnologicos.model';
+import { CategoriaMensaje } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { TecnologicosService } from '../service/tecnologicos.service';
+import {TipoNotificacionEnum} from '@ng-mf/data-access-user';
 import { Tramite324Query } from '../state/Tramite324.query';
+
 
 /**
  * Componente para gestionar la configuración de accesos en el trámite 324.
@@ -85,6 +88,8 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
    * */
   public pedimentos: Array<Pedimento> = [];
 
+  private modalInstanceAccesos!: Modal;
+
   /**
    *  Índice del pedimento marcado para eliminación.
    * */
@@ -95,6 +100,10 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false; 
+
+  accesosTablaDatosSeleccionados: AccesosTabla[] = [];
+
+
   
   /**
    * Constructor del componente.
@@ -207,28 +216,59 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
       });
   }
 
+ 
+
   /**
    * Abre el modal para gestionar accesos.
    */
   abrirAccesos(): void {
     if (this.modalElementAccesos) {
-      const MODAL_INSTANCE_ACCESOS = new Modal(this.modalElementAccesos.nativeElement);
-      MODAL_INSTANCE_ACCESOS.show();
+      // Create the modal only once
+      if (!this.modalInstanceAccesos) {
+        this.modalInstanceAccesos = new Modal(this.modalElementAccesos.nativeElement, {
+          backdrop: 'static',
+          keyboard: false
+        });
+      }
+      this.modalInstanceAccesos.show();
     }
+  }
+  
+  obtenerRegistroSeleccionado(event: AccesosTabla[]): void {
+    // Actualizar la colección de registros seleccionados
+    this.accesosTablaDatosSeleccionados = event;
   }
 
   /**
    * Agrega un nuevo acceso a la tabla si el formulario es válido.
    */
   agregarAccesos(): void {
+    if(this.accesosForm.invalid){
+      this.accesosForm.markAllAsTouched();
+     return;
+    }
     if (this.accesosForm.valid) {
       const NUEVO_ACCESO = this.accesosForm.value;
-      this.accesosTablaDatos.push(NUEVO_ACCESO);
+      this.accesosTablaDatos = [...this.accesosTablaDatos, NUEVO_ACCESO];
       this.accesosForm.reset();
-    }
+      this.cerrarModal();
+  setTimeout(() => {
+  
     this.abrirModal();
+  }, 300);
+    
+    }
+  
   }
-  // Elimina un pedimento si se confirma la acción.
+  /**
+ * Cierra el modal de accesos.
+ */
+  cerrarModal(): void {
+    if (this.modalInstanceAccesos) {
+      this.modalInstanceAccesos.hide();
+    }
+  }
+ 
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
@@ -237,8 +277,8 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   // Abre el modal y configura la notificación para eliminar un pedimento.
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
       modo: 'action',
       titulo: '',
       mensaje: 'El acceso se agrego correctamente.',
@@ -268,6 +308,51 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   esValido(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
+
+  /**
+ * Elimina las filas seleccionadas de la tabla de accesos
+ * Verifica que haya al menos una fila seleccionada antes de eliminar
+ */
+eliminarAccesos(): void {
+  const DATOS_SELECCIONADOS = this.accesosTablaDatosSeleccionados?.length || 0;
+
+  if (!this.accesosTablaDatos || this.accesosTablaDatos.length === 0) {
+     this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Sin información.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+  if (!this.accesosTablaDatosSeleccionados || this.accesosTablaDatosSeleccionados.length === 0) {
+   
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona un registro.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+  const DATOS_ACTUALIZADOS = this.accesosTablaDatos.filter(
+    item => !this.accesosTablaDatosSeleccionados.includes(item)
+  );
+ 
+  this.accesosTablaDatos = DATOS_ACTUALIZADOS;
+ 
+  this.accesosTablaDatosSeleccionados = [];
+}
 
   /**
    * Actualiza un valor en el estado global utilizando el almacén.
@@ -300,5 +385,9 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+
+    if (this.modalInstanceAccesos) {
+      this.modalInstanceAccesos.dispose();
+    }
   }
 }

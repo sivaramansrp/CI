@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CARGA_MERCANCIA_SELECCIONADAS_LIST, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, MERCANCIA_SELECCIONADAS_LIST, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -493,7 +493,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder,private service: CertificadoValidacionService) {
+  constructor(private fb: FormBuilder,private service: CertificadoValidacionService,private validacionesService: ValidacionesFormularioService) {
 
     this.actualizarDatosFormularioSolicitud();
   }
@@ -519,20 +519,20 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
       nombreComercialForm: ['', [Validators.maxLength(200)]],
       fechaInicioInput: [''],
       fechaFinalInput: [''],
-      nombres: ['', [Validators.maxLength(20)]],
-      primerApellido: ['', [Validators.maxLength(20)]],
+      nombres: ['', [Validators.required,Validators.maxLength(20)]],
+      primerApellido: ['', [Validators.required,Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.required, Validators.maxLength(30)]],
-      razonSocial: [''],
-      calle: ['', [Validators.maxLength(90)]],
-      numeroLetra: ['', [Validators.maxLength(30)]],
-      numeroLetras: ['', [Validators.maxLength(30)]],
+      razonSocial: ['',Validators.required],
+      calle: ['', [Validators.required,Validators.maxLength(90)]],
+      numeroLetra: ['', [Validators.required,Validators.maxLength(30)]],
+      numeroLetras: ['', [Validators.required,Validators.maxLength(30)]],
       pais: [''],
-      ciudad: [''],
-      lada: [''],
-      telefono: [''],
+      ciudad: ['',Validators.required],
+      lada: ['',Validators.required],
+      telefono: ['',Validators.required],
       fax: [''],
-      correo: [''],
+      correo: ['',Validators.required],
       correoElectronico: [''],
       // Nuevos controles de formulario para el procedimiento 110222
       calle1: ['',Validators.required],
@@ -573,7 +573,16 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
     CALLE.updateValueAndValidity();
     NUMERO_LETRA.updateValueAndValidity();
   }
-
+  /**
+   * Valida un campo del formulario.
+   * 
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
    /**
    * method loadComboUnidadMedida
    * description Carga la lista de derechos desde el servicio.

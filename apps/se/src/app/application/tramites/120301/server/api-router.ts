@@ -138,3 +138,35 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMAR = (IDSOLICITUD: string) : string => `sat-t120301/solicitud/${IDSOLICITUD}/firmar`;
+
+/**
+ * API para obtener los detalles del cupo del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t120301/swagger-ui/index.html#/Servicios-Consulta/obtenerDetallesCupo
+ * @param NUMFOLIOTRAMITE Número de folio del trámite.
+ * @returns 
+ */
+export const API_GET_DETALLES_CUPO = (NUMFOLIOTRAMITE: string) : string => `sat-t120301/tramite/${NUMFOLIOTRAMITE}/solicitud/datos`;
+
+/**
+ * API para obtener las facturas asociadas por folio del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t120301/swagger-ui/index.html#/Servicios-Consulta/buscarFacturasAsociadasPorFolio
+ * @param NUMFOLIOTRAMITE Número de folio del trámite.
+ * @returns 
+ */
+export const API_GET_FACTURAS_ASOCIADAS_POR_FOLIO = (NUMFOLIOTRAMITE: string) : string => `sat-t120301/tramite/${NUMFOLIOTRAMITE}/solicitud/datos-factura`;
+
+/**
+ * API para obtener los datos del fabricante por folio del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t120301/swagger-ui/index.html#/Servicios-Consulta/get-datos-fabricante
+ * @param NUMFOLIOTRAMITE Número de folio del trámite.
+ * @returns 
+ */
+export const API_GET_DATOS_FABRICANTE = (NUMFOLIOTRAMITE: string) : string => `sat-t120301/tramite/${NUMFOLIOTRAMITE}/solicitud/fabricante`;
+
+/**
+ * API para obtener los datos del importador destino por folio del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t120301/swagger-ui/index.html#/Servicios-Consulta/get-datos-fabricante
+ * @param NUMFOLIOTRAMITE Número de folio del trámite.
+ * @returns 
+ */
+export const API_GET_DATOS_IMPORTADOR_DESTINO = (NUMFOLIOTRAMITE: string) : string => `sat-t120301/tramite/${NUMFOLIOTRAMITE}/solicitud/importador-destino`;

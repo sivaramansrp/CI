@@ -1,14 +1,15 @@
 import { CAPACIDAD_INSTALADA, CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {Subject,map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
 import { ComplementosSeccionState } from '../../../estados/tramites/complementos-seccion.store';
 import { Location } from '@angular/common';
+import { d } from '@datorama/akita-ngdevtools';
 
 /**
  * Componente para la capacidad instalada
@@ -21,53 +22,64 @@ import { Location } from '@angular/common';
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    TablaDinamicaComponent,FormsModule,
+    TablaDinamicaComponent, FormsModule,
     ReactiveFormsModule
   ],
   templateUrl: './capacidad-instalada.component.html',
   styleUrl: './capacidad-instalada.component.css',
 })
 export class CapacidadInstaladaComponent implements OnInit {
-   /**
-   * Formulario reactivo que gestiona los datos relacionados con el pago de derechos, como clave, dependencia, banco,
-   * llave, fecha e importe.
-   */
+  /**
+  * Formulario reactivo que gestiona los datos relacionados con el pago de derechos, como clave, dependencia, banco,
+  * llave, fecha e importe.
+  */
   capacidadForm!: FormGroup;
-   /**
-     * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
-     */
-    public solicitudState!: ComplementarState;
-    /**
-     * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
+  /**
+    * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+    */
+  public solicitudState!: ComplementarState;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Evento que se emite al cerrar el popup.
    * 
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
-    @Output() cerrarPopup = new EventEmitter<void>();
+  @Output() cerrarPopup = new EventEmitter<void>();
 
-    /**
-   * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
-   */
+  /**
+ * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
+ */
   public complementosSeccionState!: ComplementosSeccionState;
-    
+
+  /**
+   * Evento que emite la lista de objetos de tipo `CapacidadInstalada` para la tabla de capacidad instalada.
+   * 
+   * @event
+   * @type {EventEmitter<CapacidadInstalada[]>}
+   * @remarks
+   * Este evento se dispara cuando hay cambios en la lista de capacidad instalada, permitiendo que componentes padres reciban la información actualizada.
+   */
+  @Output() obtenerCapacidadInstaladaTablaList: EventEmitter<
+    CapacidadInstalada[]
+  > = new EventEmitter<CapacidadInstalada[]>(true);
 
   /**
    * Constructor de la clase CapacidadInstaladaComponent
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador
    */
-  constructor(private ubicaccion: Location, private fb: FormBuilder,private complementarStore: ComplementarStore,
-      private complementarQuery: ComplementarQuery, private complementosSeccionQuery: ComplementosSeccionQuery,) {
-    
+  constructor(private ubicaccion: Location, private fb: FormBuilder, private complementarStore: ComplementarStore,
+    private complementarQuery: ComplementarQuery, private complementosSeccionQuery: ComplementosSeccionQuery,) {
+
   }
-   /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * 
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
-   */
+  /**
+  * Método que se ejecuta cuando el componente es inicializado.
+  * 
+  * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+  */
   ngOnInit(): void {
     this.complementosSeccionQuery.selectSolicitud$
       .pipe(
@@ -88,7 +100,7 @@ export class CapacidadInstaladaComponent implements OnInit {
       )
       .subscribe();
     this.inicializarFormulario();
-    if(!this.capacidadInstaladaDatos){
+    if (!this.capacidadInstaladaDatos) {
       this.capacidadInstaladaDatos = [];
     }
   }
@@ -132,84 +144,94 @@ export class CapacidadInstaladaComponent implements OnInit {
   }
   /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
  *  Asigna el estado actual al modelo local del componente. */
-   inicializarFormulario(): void {
+  inicializarFormulario(): void {
     this.complementarQuery.selectSolicitud$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.solicitudState = seccionState as ComplementarState;
-            })
-          )
-          .subscribe();
-   this.capacidadForm = this.fb.group({
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
+    this.capacidadForm = this.fb.group({
       fraccionArancelariaProductoTerminado: [this.solicitudState.fraccionArancelariaProductoTerminado, Validators.required],
       umt: [this.solicitudState.umt, Validators.required],
       descripcionComercialProductoTerminado: [this.solicitudState.descripcionComercialProductoTerminado, Validators.required],
-      turnos: [this.solicitudState.turnos, Validators.required],
-      horasPorTurno: [this.solicitudState.horasPorTurno, Validators.required],
-      cantidadEmpleados: [this.solicitudState.cantidadEmpleados, Validators.required],
-      cantidadMaquinaria: [this.solicitudState.cantidadMaquinaria, Validators.required],
-      descripcionMaquinaria: [this.solicitudState.descripcionMaquinaria, Validators.required],
-      capacidadInstaladaMensual: [this.solicitudState.capacidadInstaladaMensual, Validators.required],
-      capacidadInstaladaAnual: [this.solicitudState.capacidadInstaladaAnual, Validators.required],
-      calculoCapacidadInstalada: [this.solicitudState.calculoCapacidadInstalada, Validators.required],
+      turnos: [this.solicitudState.turnos, [Validators.required, Validators.maxLength(3), Validators.pattern('^\\d{1,3}$')]],
+      horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required, Validators.maxLength(2), Validators.pattern('^\\d{1,2}$')]],
+      cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      cantidadMaquinaria: [this.solicitudState.cantidadMaquinaria, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      descripcionMaquinaria: [this.solicitudState.descripcionMaquinaria, [Validators.required, Validators.maxLength(300)]],
+      capacidadInstaladaMensual: [this.solicitudState.capacidadInstaladaMensual, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      capacidadInstaladaAnual: [this.solicitudState.capacidadInstaladaAnual, [Validators.required, Validators.maxLength(16)]],
+      calculoCapacidadInstalada: [{ value: this.solicitudState.calculoCapacidadInstalada, disabled: true }, Validators.required],
       capacidadUtilizadaPct: [this.solicitudState.capacidadUtilizadaPct, Validators.required]
     });
+
   }
-   /**
-   * Método que actualiza el store con los valores del formulario.
-   * 
-   * @param form - Formulario reactivo con los datos actuales.
-   * @param campo - El campo que debe actualizarse en el store.
-   * @param metodoNombre - El nombre del método en el store que se debe invocar.
-   */
+
+  /**
+  * Método que se ejecuta cuando el campo capacidadUtilizadaPct pierde el foco (blur).
+  * Autopopula el valor de calculoCapacidadInstalada con el valor actual de capacidadUtilizadaPct.
+  */
+  alPerderFocoCapacidadUtilizadaPct(): void {
+    const VAL = this.capacidadForm.get('capacidadUtilizadaPct')?.value;
+    this.capacidadForm.get('calculoCapacidadInstalada')?.setValue(VAL, { emitEvent: false });
+  }
+  /**
+  * Método que actualiza el store con los valores del formulario.
+  * 
+  * @param form - Formulario reactivo con los datos actuales.
+  * @param campo - El campo que debe actualizarse en el store.
+  * @param metodoNombre - El nombre del método en el store que se debe invocar.
+  */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
     const VALOR = form.get(campo)?.value;
     (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
- 
-/**
- * Agrega una nueva capacidad instalada al arreglo `capacidadInstaladaDatos` 
- * basado en los valores proporcionados en el formulario `capacidadForm`.
- * 
- * Este método crea un objeto de tipo `CapacidadInstalada` con los datos 
- * ingresados en el formulario, lo agrega al arreglo y luego limpia el formulario.
- * 
- * @remarks
- * - Asegúrese de que los campos del formulario estén correctamente mapeados 
- *   a las propiedades del objeto `CapacidadInstalada`.
- * - Este método también llama al método `limpiar` para restablecer los valores 
- *   del formulario después de agregar los datos.
- * 
- * @example
- * // Ejemplo de uso:
- * componente.agregar();
- * 
- * @throws
- * Este método no lanza excepciones explícitas, pero puede fallar si los valores 
- * del formulario no están definidos o no son válidos.
- */
- agregar(): void {
-  const CAPACIDAD: CapacidadInstalada = {
-    PLANTA: this.capacidadForm.value.fraccionArancelariaProductoTerminado, // Adjust field mapping as needed
-    FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO: this.capacidadForm.value.fraccionArancelariaProductoTerminado,
-    UMT: this.capacidadForm.value.umt,
-    DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO: this.capacidadForm.value.descripcionComercialProductoTerminado,
-    TURNOS: this.capacidadForm.value.turnos,
-    HORAS_POR_TURNO: this.capacidadForm.value.horasPorTurno,
-    CANTIDAD_EMPLEADOS: this.capacidadForm.value.cantidadEmpleados,
-    CANTIDAD_MAQUINARIA: this.capacidadForm.value.cantidadMaquinaria,
-    DESCRIPCION_MAQUINARIA: this.capacidadForm.value.descripcionMaquinaria,
-    CAPACIDAD_INSTALADA_MENSUAL: this.capacidadForm.value.capacidadInstaladaMensual,
-    CAPACIDAD_INSTALADA_ANUAL: this.capacidadForm.value.capacidadInstaladaAnual,
-    CAPACIDAD_EFECTIVAMENTE_UTILIZADA: this.capacidadForm.value.capacidadUtilizadaPct,
-    CALCULO_CAPACIDAD_INSTALADA: this.capacidadForm.value.calculoCapacidadInstalada,
-  };
 
-  this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos, CAPACIDAD];
-  this.limpiar();
-}
+  /**
+   * Agrega una nueva capacidad instalada al arreglo `capacidadInstaladaDatos` 
+   * basado en los valores proporcionados en el formulario `capacidadForm`.
+   * 
+   * Este método crea un objeto de tipo `CapacidadInstalada` con los datos 
+   * ingresados en el formulario, lo agrega al arreglo y luego limpia el formulario.
+   * 
+   * @remarks
+   * - Asegúrese de que los campos del formulario estén correctamente mapeados 
+   *   a las propiedades del objeto `CapacidadInstalada`.
+   * - Este método también llama al método `limpiar` para restablecer los valores 
+   *   del formulario después de agregar los datos.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * componente.agregar();
+   * 
+   * @throws
+   * Este método no lanza excepciones explícitas, pero puede fallar si los valores 
+   * del formulario no están definidos o no son válidos.
+   */
+  agregar(): void {
+    const CAPACIDAD: CapacidadInstalada = {
+      PLANTA: this.capacidadForm.value.fraccionArancelariaProductoTerminado, // Adjust field mapping as needed
+      FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO: this.capacidadForm.value.fraccionArancelariaProductoTerminado,
+      UMT: this.capacidadForm.value.umt,
+      DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO: this.capacidadForm.value.descripcionComercialProductoTerminado,
+      TURNOS: this.capacidadForm.value.turnos,
+      HORAS_POR_TURNO: this.capacidadForm.value.horasPorTurno,
+      CANTIDAD_EMPLEADOS: this.capacidadForm.value.cantidadEmpleados,
+      CANTIDAD_MAQUINARIA: this.capacidadForm.value.cantidadMaquinaria,
+      DESCRIPCION_MAQUINARIA: this.capacidadForm.value.descripcionMaquinaria,
+      CAPACIDAD_INSTALADA_MENSUAL: this.capacidadForm.value.capacidadInstaladaMensual,
+      CAPACIDAD_INSTALADA_ANUAL: this.capacidadForm.value.capacidadInstaladaAnual,
+      CAPACIDAD_EFECTIVAMENTE_UTILIZADA: this.capacidadForm.value.capacidadUtilizadaPct,
+      CALCULO_CAPACIDAD_INSTALADA: this.capacidadForm.value.calculoCapacidadInstalada,
+    };
+
+    this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos, CAPACIDAD];
+    this.limpiar();
+  }
 
   /**
    * Método invocado cuando ocurre un cambio en la fracción arancelaria.
@@ -225,23 +247,23 @@ export class CapacidadInstaladaComponent implements OnInit {
     this.setValoresStore(this.capacidadForm, 'fraccionArancelariaProductoTerminado', 'setFraccionArancelariaProductoTerminado');
   }
 
-/**
- * Restablece el formulario de capacidad a su estado inicial.
- *
- * Este método realiza las siguientes acciones en el formulario `capacidadForm`:
- * - Restablece todos los valores del formulario a sus valores iniciales mediante `reset()`.
- * - Marca el formulario como "prístino" (sin cambios) utilizando `markAsPristine()`.
- * - Marca el formulario como "no tocado" utilizando `markAsUntouched()`.
- * - Actualiza el estado de validez del formulario llamando a `updateValueAndValidity()`.
- *
- * Útil para limpiar el formulario y prepararlo para un nuevo ingreso de datos.
- */
-limpiar(): void {
-  this.capacidadForm.reset();
-  this.capacidadForm.markAsPristine();
-  this.capacidadForm.markAsUntouched();
-  this.capacidadForm.updateValueAndValidity();
-}
+  /**
+   * Restablece el formulario de capacidad a su estado inicial.
+   *
+   * Este método realiza las siguientes acciones en el formulario `capacidadForm`:
+   * - Restablece todos los valores del formulario a sus valores iniciales mediante `reset()`.
+   * - Marca el formulario como "prístino" (sin cambios) utilizando `markAsPristine()`.
+   * - Marca el formulario como "no tocado" utilizando `markAsUntouched()`.
+   * - Actualiza el estado de validez del formulario llamando a `updateValueAndValidity()`.
+   *
+   * Útil para limpiar el formulario y prepararlo para un nuevo ingreso de datos.
+   */
+  limpiar(): void {
+    this.capacidadForm.reset();
+    this.capacidadForm.markAsPristine();
+    this.capacidadForm.markAsUntouched();
+    this.capacidadForm.updateValueAndValidity();
+  }
 
 
   /**
@@ -268,15 +290,15 @@ limpiar(): void {
    * de objetos comparables mediante igualdad estricta (`===`).
    */
   eliminarCapacidadInstalada(): void {
-   if (this.SelectedInstaladaDatos?.length > 0) {
+    if (this.SelectedInstaladaDatos?.length > 0) {
       this.SelectedInstaladaDatos.forEach(planta => {
         const INDEX = this.capacidadInstaladaDatos.findIndex(row => row === planta);
         if (INDEX !== -1) {
           this.capacidadInstaladaDatos.splice(INDEX, 1);
         }
-    });
-    this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];
-  }
+      });
+      this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];
+    }
   }
 
 }

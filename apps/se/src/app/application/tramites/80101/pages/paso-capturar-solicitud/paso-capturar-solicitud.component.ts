@@ -1,9 +1,9 @@
-import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, WizardService } from '@ng-mf/data-access-user';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery,ConsultaioState,ERROR_FORMA_ALERT,JSONResponse,WizardService, doDeepCopy } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
+import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
@@ -132,7 +132,6 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   /**
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private complimentosBase = complimentos;
 
   /**
@@ -343,12 +342,13 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       take(1),
       switchMap(data => this.guardar(data)),
       map(response => {
+        const DATOS = doDeepCopy(response);
         const OK = response.codigo === '00';
         if (OK) {
-          this.toastrService.success(response.mensaje);
+          this.toastrService.success(DATOS.mensaje);
         } else {
           this.padreBtn = true;
-          this.toastrService.error(response.mensaje);
+          this.toastrService.error(DATOS.mensaje);
         }
         return OK;
       })
@@ -365,7 +365,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         this.guardar(data);
       });
   }
-
+ 
   /**
  * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
  * utilizando un objeto base como plantilla y datos complementarios para completar
@@ -398,12 +398,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
       capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
       numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion),
       nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
-
+ 
     };
   }
-
+ 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
@@ -416,7 +416,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     ];
     return RESULT;
   }
-
+ 
   /**
  * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
  * utilizando un objeto base como plantilla y datos complementarios para completar
@@ -453,10 +453,10 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         codigoPostal: item['codigoPostal'] ?? '',
       }
     });
-
+ 
     return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
   }
-
+ 
   /**
  * Build plantasControladoras by taking the base array
  * and appending the length of each key in empresasSeleccionadas
@@ -469,7 +469,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   static buildComplementosTablaPayload(array: any[], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-
+ 
     array.forEach(arr => {
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
@@ -490,42 +490,105 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     });
     return RESULT;
   }
-
+ 
   /**
    * Construye un arreglo de objetos de plantas basado en una estructura base común.
-   * 
+   *
    * @param arr Arreglo de datos de entrada para cada planta.
    * @param base Objeto base que se combina con los datos específicos de cada planta.
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): any {
+    // eslint-disable-next-line complexity
+    const mapCapacidadInstalada = (item: any) => ({
+      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
+      umt: item.UMT ?? "",
+      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
+      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
+      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
+      turnos: (item.TURNOS ?? "").toString(),
+      horasTurno: (item.HORAS_POR_TURNO ?? "").toString(),
+      cantidadEmpleados: (item.CANTIDAD_EMPLEADOS ?? "").toString(),
+      cantidadMaquinaria: (item.CANTIDAD_MAQUINARIA ?? "").toString(),
+      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
+      capacidadMensual: (item.CAPACIDAD_INSTALADA_MENSUAL ?? "").toString(),
+      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
+      testado: "1",
+    });
+
+    const MAP_MONTOS_INVERSION = (item: any) => ({
+      idPlantaM: item.PLANTA ?? "",
+      tipo: item.TIPO ?? "",
+      cantidad: item.CANTIDAD ?? "",
+      descripcion: item.DESCRIPCION ?? "",
+      monto: item.MONTO ?? "",
+    })
+
+    const MAP_EMPLEADOS = (item: any) => ({
+      idPlantaE: item.PLANTA ?? '',
+      totalEmpleados: item.TOTAL ?? '',
+      directos: item.DIRECTOS ?? '',
+      cedula: item.CEDULA_DE_CUOTAS ?? '',
+      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
+      indirectos: item.INDIRECTOS ?? '',
+      contrato: item.CONTRATO ?? '',
+      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
+      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
+      rfcEmpresa: item.RFC ?? '',
+      razonEmpresa: item.RAZON_SOCIAL ?? '',
+    })
+
+    const MAP_COMPLEMENTAR = (item: any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+    })
+
+    const MAP_FIRMANTES = (item:any) => ({
+      tipoFirmante: item.tipoFirmante ?? '',
+    })
+
+    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
+    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
+    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
+    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
+ 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+    let RESULT: any[] = [];
     array.forEach(arr => {
+      // eslint-disable-next-line complexity
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      idPlanta: arr.planta ?? '',
-      calle: arr.calle ?? '',
-      numeroExterior: arr.numeroExterior ?? '',
-      numeroInterior: arr.numeroInterior ?? '',
-      codigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.localidad ?? '',
-      colonia: arr.colonia ?? '',
-      delegacionMunicipio: arr.delegacionMunicipio ?? '',
-      entidadFederativa: arr.entidadFederativa ?? '',
-      pais: arr.pais ?? '',
-      rfc: arr.registroFederalDeContribuyentes ?? '',
-      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-      razonSocial: arr.razonSocial ?? '',
+          idPlanta: arr.planta ?? '',
+          calle: arr.calle ?? '',
+          numeroExterior: arr.numeroExterior ?? '',
+          numeroInterior: arr.numeroInterior ?? '',
+          codigoPostal: arr.codigoPostal ?? '',
+          localidad: arr.localidad ?? '',
+          colonia: arr.colonia ?? '',
+          delegacionMunicipio: arr.delegacionMunicipio ?? '',
+          entidadFederativa: arr.entidadFederativa ?? '',
+          pais: arr.pais ?? '',
+          rfc: arr.registroFederalDeContribuyentes ?? '',
+          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+          razonSocial: arr.razonSocial ?? '',
         });
       });
     });
-    return RESULT;
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
+    return RESULT_DATA;
   }
-
+ 
   /**
    * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
    *
@@ -541,21 +604,21 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      nombreNotario: arr.nombre ?? '',
-      apellidoMaterno: arr.segundoApellido ?? '',
-      apellidoPaterno: arr.primerApellido ?? '',
-      numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: arr.fechaInicioInput ?? '',
-      numeroNotaria: arr.numeroDeNotaria ?? '',
-      entidadFederativa: arr.estado ?? '',
-      delegacionMunicipio: arr.estadoOptions ?? '',
+          nombreNotario: arr.nombre ?? '',
+          apellidoMaterno: arr.segundoApellido ?? '',
+          apellidoPaterno: arr.primerApellido ?? '',
+          numeroActa: arr.numeroDeActa ?? '',
+          fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
+          numeroNotaria: arr.numeroDeNotaria ?? '',
+          entidadFederativa: arr.estado ?? '',
+          delegacionMunicipio: arr.estadoOptions ?? '',
         });
       });
     });
     return RESULT;
   }
-
-
+ 
+ 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
   /**
    * Construye el objeto `anexo` a partir de los datos proporcionados.
@@ -578,7 +641,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       contadorGrid: null,
       descripcionTestado: item.encabezadoDescripcion,
     });
-
+ 
     const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
@@ -592,7 +655,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       idProductoP: item.idProductoP,
       descTestado: item.descTestado,
     });
-
+ 
     const buildDatosParaNavegar = (datos: any) => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
@@ -607,7 +670,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       fecFinVigencia: null,
       volumenAnualSolicitado: null,
     });
-
+ 
     const buildAnexoDos = (item: any) => ({
       fraccionExportacion: item.encabezadoFraccionExportacion,
       fraccionImportacion: item.encabezadoFraccionImportacion,
@@ -617,29 +680,31 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
       fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
       fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+      fraccionVolumenMensual: item?.encabezadoValorEnMonedaMensual,
+      fraccionVolumenAnual: item?.encabezadoVolumenAnual,
       categoriaFraccion: item.encabezadoCategoria,
       tipoFraccion: item.encabezadoTipo,
       umt: item.encabezadoUmt,
     });
-
+ 
     const proyectoImmexDatos = (item: any) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
-      fechaFirma:  item.encabezadoFechaFirma,
-      fechaVigencia:  item.encabezadoFechaVigencia,
-      rfcFirmante:  item.encabezadoRfc,
-      razonFirmante:  item.encabezadoRazonFirmante,
+      fechaFirma: item.encabezadoFechaFirma,
+      fechaVigencia: item.encabezadoFechaVigencia,
+      rfcFirmante: item.encabezadoRfc,
+      razonFirmante: item.encabezadoRazonFirmante,
       testado: true,
-      fecFinVigencia:  item.encabezadoFechaVigencia,
+      fecFinVigencia: item.encabezadoFechaVigencia,
     });
-
+ 
     /**
      * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
      *
      * @param item - Objeto que contiene la información del proveedor y cliente.
      * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
      */
-     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+    const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
       razonProveedor: item.razonProveedor,
@@ -649,20 +714,20 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       domicilio: item.domicilio,
       descTestado: item.descTestado,
     });
-
+ 
     return {
       anexo: {
         ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
         ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
         proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.importarDatosTabla[0] || {}),
         tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
         proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
-       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
+        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
     };
   }
-
+ 
   /**
    * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
    *
@@ -702,23 +767,29 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     });
     return RESULT;
   }
-
+ 
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns void
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): Promise<any> {
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
-    const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
-    const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
-    const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
-    const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-    const ANEXO_ALL = this.buildAnexo(data);
-    const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
-    
+  guardar(data: Tramite80101State): Promise<JSONResponse> {
+    const PLANTAS = this.nuevoProgramaIndustrialService.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
+    const PLANTAS_SUBMANUFACTURERAS = this.nuevoProgramaIndustrialService.buildPlantasSubmanufactureras(
+      Array.isArray(this.plantasSubmanufacturerasBase) ? this.plantasSubmanufacturerasBase : [this.plantasSubmanufacturerasBase],
+      Array.isArray(data.empressaSubFabricantePlantas?.plantasSubfabricantesAgregar) ? data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar : []
+    );
+    const SOLICITUD = this.nuevoProgramaIndustrialService.buildComplimentos(data as unknown as Record<string, unknown>, this.complimentosBase);
+    const DECLARACION_SOLICUTUD_ENTRIES = this.nuevoProgramaIndustrialService.buildDeclaracionSolicitudEntries(data as unknown as Record<string, unknown>);
+    const NOTARIOS = this.nuevoProgramaIndustrialService.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
+    const ANEXO_ALL = this.nuevoProgramaIndustrialService.buildAnexo(data);
+    const SOCIOS_ACCIONISTAS = this.nuevoProgramaIndustrialService.buildSociosAccionistas(
+      Array.isArray(data.tablaDatosComplimentos) ? data.tablaDatosComplimentos : [],
+      Array.isArray(data.tablaDatosComplimentosExtranjera) ? data.tablaDatosComplimentosExtranjera : [],
+      Array.isArray(this.sociosAccionistas) ? this.sociosAccionistas[0] : this.sociosAccionistas
+    );
+
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
@@ -741,30 +812,30 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "solicitante": {
 
       },
-      "planta": [...PLANTAS],
-      "notario": [...NOTARIOS],
-      "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
-      "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
+      "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
+      "notarios": [...NOTARIOS],
+      "anexoII": Array.isArray(ANEXO_ALL.anexo['ANEXOII']) ? [...ANEXO_ALL.anexo['ANEXOII']] : [],
+      "anexoIII": Array.isArray(ANEXO_ALL.anexo['ANEXOIII']) ? [...ANEXO_ALL.anexo['ANEXOIII']] : [],
       "mercanciaImportacion": [
         {
           "listaProveedores": [
-            ...ANEXO_ALL.anexo.proveedorCliente
+            ...(Array.isArray(ANEXO_ALL.anexo['proveedorCliente']) ? ANEXO_ALL.anexo['proveedorCliente'] : [])
           ],
           "complemento": {
-            ...ANEXO_ALL.anexo.datosParaNavegar
+            ...(typeof ANEXO_ALL.anexo['datosParaNavegar'] === 'object' && ANEXO_ALL.anexo['datosParaNavegar'] !== null ? ANEXO_ALL.anexo['datosParaNavegar'] : {})
           },
-          "anexoI": [...ANEXO_ALL.anexo.tableDos]
+          "anexoI": Array.isArray(ANEXO_ALL.anexo['tableDos']) ? [...ANEXO_ALL.anexo['tableDos']] : []
         },
       ],
       "fraccionArancelaria":[
         {
-          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+          "listaProveedores": Array.isArray(ANEXO_ALL.anexo['proveedorClienteDos']) ? [...ANEXO_ALL.anexo['proveedorClienteDos']] : []
         }
       ],
 
       "productoExportacionDtoList": [
         {
-          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+          "proyectosImmex": Array.isArray(ANEXO_ALL.anexo['proyectoimex']) ? [...ANEXO_ALL.anexo['proyectoimex']] : []
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
@@ -774,9 +845,10 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     }
     return new Promise((resolve, reject) => {
       this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-        if(esValidObject(response) && esValidObject(response.datos)) {
-          if(getValidDatos(response.datos.id_solicitud)) {
-            this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud);
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+          if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+            this.tramite80101Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
           } else {
             this.tramite80101Store.setIdSolicitud(0);
           }

@@ -78,32 +78,43 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Índice de la fila pendiente de eliminación (para el modal de confirmación).
+        * Índices de las filas pendientes de eliminación (para el modal de confirmación).
    *
-   * @type {number | null}
+   * @type {number[]}
    */
-  filaPendienteEliminar: number | null = null;
+  filasPendientesEliminar: number[] = [];
 
   /**
-   * Prepara la fila para su eliminación almacenando su índice antes de mostrar el modal de confirmación.
+   * Prepara las filas para su eliminación almacenando sus índices antes de mostrar el modal de confirmación.
    *
-   * @param {number | null} index Índice de la fila a eliminar.
    * @returns {void}
    */
-  prepararEliminarFila(index: number | null): void {
-    this.filaPendienteEliminar = index;
+  prepararEliminarFila(): void {
+    this.filasPendientesEliminar = [...this.filasSeleccionadas];
   }
 
   /**
-   * Elimina la fila después de la confirmación desde el modal.
+   * Elimina las filas después de la confirmación desde el modal.
    *
    * @returns {void}
    */
   eliminarMercancias(): void {
-    if (this.filaPendienteEliminar !== null && this.filaPendienteEliminar >= 0 && this.filaPendienteEliminar < this.mercanciaBodyData.length) {
-      this.eliminarFila(this.filaPendienteEliminar);
+    if (this.filasPendientesEliminar.length > 0) {
+      // Ordenar los índices en orden descendente para evitar problemas al eliminar
+      const INDICES_ORDENADOS = [...this.filasPendientesEliminar].sort((a, b) => b - a);
+      
+      // Eliminar cada fila empezando por la última
+      INDICES_ORDENADOS.forEach(index => {
+        if (index >= 0 && index < this.mercanciaBodyData.length) {
+          this.eliminarFila(index);
+        }
+      });
+      
+      // Limpiar la selección después de eliminar
+      this.filasSeleccionadas = [];
+      this.filaSeleccionada = null;
     }
-    this.filaPendienteEliminar = null;
+    this.filasPendientesEliminar = [];
   }
   /**
    * Agrega la mercancía a la tabla después de aceptar en el modal de confirmación y cierra el modal.
@@ -132,7 +143,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
       ELEMENTO_MODAL.classList.add('confirmar-modal-agregar');
       ELEMENTO_MODAL.setAttribute('aria-hidden', 'true');
       
-      // Remover backdrop
+      // Quitar fondo
       const FONDO_MODAL = document.querySelector('[data-modal-id="confirmarModalAgregar"]');
       if (FONDO_MODAL) {
         FONDO_MODAL.remove();
@@ -165,24 +176,27 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
       const CTRL = DATOS.get(CAMPO);
       return CTRL && CTRL.value !== null && CTRL.value !== '';
     });
-    // Si el checkbox de vehículo está seleccionado, agregar directamente y cerrar el modal
-    if (VEHICULO_SELECCIONADO && this.agregarMercanciasForm.valid) {
-      this.agregarMercancias();
-      // Cerrar el modal de agregar mercancías
-      if (this.modalElement && this.modalElement.nativeElement) {
-      const WIN = window as { bootstrap?: { Modal: unknown } };
-        if (WIN.bootstrap) {
-          const CLASE_MODAL = WIN.bootstrap.Modal as typeof Modal;
-          const MODAL_AGREGAR_MERCANCIAS = CLASE_MODAL.getInstance(this.modalElement.nativeElement) || new CLASE_MODAL(this.modalElement.nativeElement);
-          MODAL_AGREGAR_MERCANCIAS.hide();
-        } else {
-          this.modalElement.nativeElement.style.display = 'none';
+
+    // Validar campos específicos de vehículo si está seleccionado
+    let CAMPOS_VEHICULO_VALIDOS = true;
+    if (VEHICULO_SELECCIONADO) {
+      const CAMPOS_VEHICULO = ['marca', 'ano', 'modelo', 'serie'];
+      CAMPOS_VEHICULO_VALIDOS = CAMPOS_VEHICULO.every(CAMPO => {
+        const CTRL = DATOS.get(CAMPO);
+        return CTRL && CTRL.value !== null && CTRL.value !== '';
+      });
+    }
+
+    // Si los campos principales son válidos y (si es vehículo, también los campos de vehículo), mostrar el modal de confirmación
+    if (CAMPOS_VALIDOS && CAMPOS_VEHICULO_VALIDOS) {
+      // Cerrar solo el modal de agregar mercancías sin afectar el estado general de los modales
+      if (this.modalElement) {
+        const INSTANCIA_MODAL = Modal.getInstance(this.modalElement.nativeElement);
+        if (INSTANCIA_MODAL) {
+          INSTANCIA_MODAL.hide();
         }
       }
-      return;
-    }
-    // Si NO es vehículo y los campos principales son válidos, mostrar el modal de confirmación
-    if (!VEHICULO_SELECCIONADO && CAMPOS_VALIDOS) {
+      
       // Usar implementación manual sin Bootstrap para evitar conflictos de focus
       if (this.confirmarModalAgregarElement && this.confirmarModalAgregarElement.nativeElement) {
         const ELEMENTO_MODAL = this.confirmarModalAgregarElement.nativeElement;
@@ -195,7 +209,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
         
         // Agregar backdrop manualmente
         const FONDO_MODAL = document.createElement('div');
-        FONDO_MODAL.className = 'modal-backdrop fade show';
+        FONDO_MODAL.className = 'custom-modal-backdrop fade show';
         FONDO_MODAL.setAttribute('data-modal-id', 'confirmarModalAgregar');
         document.body.appendChild(FONDO_MODAL);
         document.body.classList.add('modal-open');

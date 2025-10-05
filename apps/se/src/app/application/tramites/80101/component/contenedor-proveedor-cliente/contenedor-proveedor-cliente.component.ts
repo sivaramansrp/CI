@@ -1,5 +1,5 @@
 import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
 
@@ -31,6 +31,8 @@ export class ContenedorProveedorClienteComponent {
    * Este arreglo se utiliza para gestionar y mostrar la información relacionada con los proveedores.
    */
   datosDelProveedor:ProveedorClienteTabla[]=[];
+
+  @Input() proveedorClienteDatosTabla!: ProveedorClienteTabla[];
 
   /**
    * Evento que se emite para cerrar el popup actual.

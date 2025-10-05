@@ -265,7 +265,7 @@ export interface AmpliacionServiciosState {
 
 
 export interface ServicioAmpliacion {
-  idServicio: number;
+  idServicio: string;
   descripcion: string;
   tipoServicio: string;
   descripcionTipo: string;

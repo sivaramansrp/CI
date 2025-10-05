@@ -79,9 +79,10 @@
           name="estado"
           id="estado"
           formControlName="estado"
-          [catalogo]="registroSolicitudService.estados"
+          [catalogo]="optionsEstado"
           [label]="'Estado'"
           [required]="true"
+          [markTouched]="empresasForm.get('estado')?.touched??false"
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>

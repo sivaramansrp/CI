@@ -9,9 +9,12 @@
                     [isDisabled]="productosForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.requisitoList" formControlName="requisito"
-                    [label]="'Requisito'" [required]="true" name="requisito"
-                    [isDisabled]="productosForm.disabled"></app-catalogo-select>
+                <label class="form-label">Requisito*:</label>
+                <input type="text" class="form-control" formControlName="requisito" name="requisito" [maxlength]="50" />
+                <div *ngIf="productosForm.get('requisito')?.invalid && productosForm.get('requisito')?.touched"
+                    class="text-danger">
+                    <small class="text-danger"> Este campo es obligatorio</small>
+                </div>
             </div>
             <div class="col-md-4 form-group">
                 <label class="form-label">Número de certificado internacional*</label>
@@ -24,24 +27,20 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.fraccionArancelariaList"
                     formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
-                    name="fraccionArancelaria" [isDisabled]="productosForm.disabled"></app-catalogo-select>
+                    name="fraccionArancelaria" [isDisabled]="productosForm.disabled" (change)="setValoresStoreFraccion()"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción de la fracción arancelaria*:</label>
                 <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
                     [title]="'Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos'"></i>
-                <input type="text" class="form-control" formControlName="descripcionFraccion" maxlength="1000" />
-                <div *ngIf="productosForm.get('descripcionFraccion')?.hasError('maxlength') && productosForm.get('descripcionFraccion')?.touched"
-                    class="text-danger">
-                    Por favor, no escribas más de 1000 caracteres
-                </div>
+                <input type="text" class="form-control" formControlName="descripcionFraccion" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.nicoList" formControlName="nico" [label]="'Nico'"
-                    [required]="true" name="nico" [isDisabled]="productosForm.disabled"></app-catalogo-select>
+                    name="nico" [isDisabled]="productosForm.disabled" (change)="setValoresStoreFraccionNico()"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción Nico*:</label>
@@ -73,9 +72,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.umtList" formControlName="umt" [label]="'UMT'"
-                    [required]="true" name="umt" [isDisabled]="true" [tooltipQuestionCircle]="true"
-                    [tooltipQuestionCircleText]="'check'"></app-catalogo-select>
+                <label class="form-label">UMT:*</label>
+                <input type="text" class="form-control" formControlName="umt" />
             </div>
         </div>
         <div class="row">
@@ -160,30 +158,43 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <label class="form-label form-group">Número de lote:</label>
+                    <label class="form-label form-group">Número de lote<span [ngClass]="{'mensaje-error':detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched}">*</span>:</label>
                     <input type="text" class="form-control" formControlName="numeroLote" />
+                    <div
+                        *ngIf="detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched">
+                        <small class="mensaje-error">Este campo es obligatorio.</small>
+                    </div>
                 </div>
+                
                 <div class="col-md-6">
                     <div class="col-md-12">
                         <label for="certficacion_a">Rango de fechas:</label>
                     </div>
                     <div class="col-md-12">
-                        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'" name="rangoDeFecha"
+                        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" 
+                            [layout]="'vertical'" name="rangoDeFecha"
                             formControlName="rangoDeFecha" (change)="radioBotonSeleccionado()"></app-input-radio>
                     </div>
                 </div>
-            </div>
+            </div>            
+
             <div class="row">
                 <div class="col-md-6 mt-3">
                     <label class="form-label">Fecha de elaboración o empaque o proceso</label>
                 </div>
-                <div class="col-md-3">
-                    <input-fecha [setFecha]="detalleForm.get('procesoStart')?.value" [datos]="fechaInicioInput"
-                        name="procesoStart"></input-fecha>
+                <div class="col-md-3">                    
+                    <input-fecha 
+                        [setFecha]="detalleForm.get('fechaElaboracionEmpaqueProceso')?.value" 
+                        [datos]="fechaInicioInput"
+                        (valorCambiado)="seleccionaFecha($event, 'fechaElaboracionEmpaqueProceso')"
+                        [etiquetaSobreControlFecha]="'Desde'"></input-fecha>
                 </div>
                 <div class="col-md-3" *ngIf="detalleForm.get('rangoDeFecha')?.value === 'si'">
-                    <input-fecha [setFecha]="detalleForm.get('procesoEnd')?.value" [datos]="fechaInicioInput"
-                        name="procesoEnd"></input-fecha>
+                    <input-fecha 
+                        [setFecha]="detalleForm.get('fechaFinElaboracionEmpaqueProceso')?.value" 
+                        [datos]="fechaInicioInput"
+                        (valorCambiado)="seleccionaFecha($event, 'fechaFinElaboracionEmpaqueProceso')"
+                        [etiquetaSobreControlFecha]="'Hasta'"></input-fecha>
                 </div>
             </div>
             <div class="row">
@@ -191,12 +202,18 @@
                     <label class="form-label">Fecha de producción o sacrificio</label>
                 </div>
                 <div class="col-md-3">
-                    <input-fecha [setFecha]="detalleForm.get('sacrificio')?.value" [datos]="fechaInicioInput"
-                        name="sacrificio"></input-fecha>
+                    <input-fecha 
+                    [setFecha]="detalleForm.get('fechaProduccionSacrificio')?.value" 
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="seleccionaFecha($event, 'fechaProduccionSacrificio')"
+                    name="sacrificio"></input-fecha>
                 </div>
                 <div class="col-md-3" *ngIf="detalleForm.get('rangoDeFecha')?.value === 'si'">
-                    <input-fecha [setFecha]="detalleForm.get('sacrificioEnd')?.value" [datos]="fechaInicioInput"
-                        name="sacrificioEnd"></input-fecha>
+                    <input-fecha 
+                    [setFecha]="detalleForm.get('fechaFinProduccionSacrificio')?.value" 
+                    [datos]="fechaInicioInput"               
+                    (valorCambiado)="seleccionaFecha($event, 'fechaFinProduccionSacrificio')"     
+                    name="fechaFinProduccionSacrificio"></input-fecha>
                 </div>
             </div>
             <div class="row">
@@ -204,14 +221,36 @@
                     <label class="form-label">Fecha de caducidad del producto o consumo preferente</label>
                 </div>
                 <div class="col-md-3">
-                    <input-fecha [setFecha]="detalleForm.get('caducidad')?.value" [datos]="fechaInicioInput"
-                        name="caducidad"></input-fecha>
+                    <input-fecha 
+                    [setFecha]="detalleForm.get('fechaCaducidadProducto')?.value" 
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="seleccionaFecha($event, 'fechaCaducidadProducto')"
+                    name="fechaCaducidadProducto"></input-fecha>
                 </div>
                 <div class="col-md-3" *ngIf="detalleForm.get('rangoDeFecha')?.value === 'si'">
-                    <input-fecha [setFecha]="detalleForm.get('caducidadEnd')?.value" [datos]="fechaInicioInput"
-                        name="caducidadEnd"></input-fecha>
+                    <input-fecha 
+                    [setFecha]="detalleForm.get('fechaFinCaducidadProducto')?.value" 
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="seleccionaFecha($event, 'fechaFinCaducidadProducto')"
+                    name="fechaFinCaducidadProducto"></input-fecha>
                 </div>
             </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-default ms-3" (click)="eliminarDetalleTablaDatos(detalleTablaDatosSeleccionada)">Eliminar Detalle</button>
+                <button type="button" class="btn btn-primary ms-3" (click)="agregarDetalleTablaDatos()">Agregar Detalle</button>                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mt-3">
+                <label class="form-label">Detalle</label>
+            </div>
+        </div>
+        <div class="row my-5">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSensiblesTabla"
+            [datos]="detalleTablaDatos" [showPagination]="true" [mode]="'client'" [totalItems]="detalleTablaDatos.length" [itemsPerPage]="5"
+            (listaDeFilaSeleccionada)="detalleTablaDatosSeleccionada = $event"></app-tabla-dinamica>
         </div>
     </form>
 
@@ -223,3 +262,14 @@
         </div>
     </div>
 </div>
+
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        [forma]="datosServicio"
+        (confirmacionModal)="confirmacionModal($event)"
+    >
+    </lib-notificaciones>
+</section>
+}

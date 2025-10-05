@@ -4,12 +4,14 @@ import { Injectable } from '@angular/core';
 
 import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 
-
 /**
  * @interface Solicitud110218State
  * @description Define la estructura del estado para el trámite 110218.
  */
 export interface Solicitud110218State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /** Puerto de embarque de la mercancía */
   puertodeEmbarque: string;
 
@@ -122,6 +124,7 @@ export interface Solicitud110218State {
  */
 export function createInitialState(): Solicitud110218State {
   return {
+    idSolicitud: 0,
     puertodeEmbarque: '',
     puertodeDesembarque: '',
     puertodeTransito: '',
@@ -155,7 +158,7 @@ export function createInitialState(): Solicitud110218State {
     numeroSolicitud: '',
     fechaSolicitud: '',
     estado: '',
-    solicitante: ''
+    solicitante: '',
   };
 }
 
@@ -183,13 +186,25 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
   }
 
   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
    * @method setTramite110218State
    * @description
    * Actualiza el estado del trámite con los valores proporcionados.
    * Solo se actualizan las propiedades que estén definidas en el objeto recibido.
    *
    * @param {Partial<Solicitud110218State>} valores - Objeto parcial con las propiedades a actualizar.
-   * 
+   *
    * @example
    * ```ts
    * tramite110218Store.setTramite110218State({ ciudad: 'Monterrey', estado: 'Nuevo León' });
