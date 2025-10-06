@@ -48,7 +48,9 @@ export class AgregarProveedorContenedoraComponent {
    *
    * @param tramite240123Store - Store que administra el estado del trámite.
    */
-  constructor(public tramite240123Store: Tramite240123Store) {}
+  constructor(public tramite240123Store: Tramite240123Store) {
+
+  }
 
   /**
    * Actualiza los datos de la tabla de proveedores en el store del trámite.
