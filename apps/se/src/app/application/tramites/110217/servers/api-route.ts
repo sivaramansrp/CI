@@ -17,8 +17,8 @@ const API_VERSION = ENVIRONMENT.API_VERSION;
 /**
  * Procedimiento de la API
  */
-const PROCEDURE = '/sat-t110216';
+const PROCEDURE = '/sat-t110217';
 
-export const PROC_110216 = {
+export const PROC_110217 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`
 }

@@ -1,9 +1,8 @@
 import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
-import { HttpCoreService, JsonResponseCatalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PROC_110216 } from '../servers/api-route';
 import { ProductorExportador } from '../models/certificado-origen.model';
 
 /**
@@ -129,21 +128,5 @@ export class CertificadosOrigenService {
    */
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/110216/consulta-110216.json`);
-  }
-
-  /**
-   * Obtiene el catálogo de estados desde el servidor.
-   *
-   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
-   * como un observable de tipo `JsonResponseCatalogo`.
-   *
-   * @returns Observable que emite la respuesta del catálogo de estados.
-   */
-  getTipoFactura(): Observable<JsonResponseCatalogo> {
-    return this.httpService.get<JsonResponseCatalogo>(
-      PROC_110216.TIPO_FACTURA,
-      {},
-      false
-    );
   }
 }
