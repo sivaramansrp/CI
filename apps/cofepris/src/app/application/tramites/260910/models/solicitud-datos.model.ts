@@ -129,7 +129,10 @@ export interface Solicitud {
   apellidoPaterno: string;
 
   /** Apellido materno del solicitante. */
-  apellidoMeterno: string;
+  apellidoMaterno: string;
+
+  /** Manifesto de la mercancía. */
+  manifesto: boolean;
 }
 
 /**
@@ -186,7 +189,7 @@ export interface ConsultaDatos {
     rfc: string;
     legalRazonSocial: string;
     apellidoPaterno: string;
-    apellidoMeterno: string;
+    apellidoMaterno: string;
     mercanciasDatos: Mercancia[];
     SCIANDatos: SCIAN[];
     manifesto: boolean;
