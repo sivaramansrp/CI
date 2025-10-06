@@ -4,6 +4,8 @@ import {
   CatalogoServices,
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -53,9 +55,16 @@ import { Tramites80207Store } from '../../estados/tramite80207.store';
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
+    NotificacionesComponent
   ],
 })
 export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
+    /**
+     * Representa una nueva notificación que será utilizada en el componente.
+     * @type {Notificacion}
+     */
+    /** Nueva notificación para mostrar en el componente. */
+    public nuevaNotificacion!: Notificacion;
   /**
    * Formulario para la información de registro.
    * @property {FormGroup} formularioInfoRegistro
@@ -175,6 +184,9 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
     private subscription: Subscription = new Subscription();
    
     tramiteId: string = '80207';
+
+    /** Indica si se muestra el mensaje de eliminación en exportación. */
+  public deleteMessageExportacion: boolean = false;
  
 
   /**
@@ -419,6 +431,10 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
                    const API_DATOS = doDeepCopy(response);
                   if(esValidArray(API_DATOS.datos)) {
                     const RESPONSE:SubfabricanteDireccionModelo[] = this.subfabricanteDatosService.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
+                    this.formularioDatosSubcontratista.patchValue({
+                      rfc: '',
+                      estado: '-1'
+                    });
                     this.store.setPlantasBuscadas(RESPONSE);
                   } 
                 }
@@ -444,17 +460,54 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
    * @method realizarBusqueda
    */
   realizarBusqueda(): void {
-  const RFC_VALUE = (this.formularioDatosSubcontratista.get('rfc')?.value ?? '').trim();
-  const ESTADO_RAW = this.formularioDatosSubcontratista.get('estado')?.value;
-
-  const ESTADO_VALUE = (ESTADO_RAW ?? '').toString().trim();
-
+  const RFC_VALUE = (this.formularioDatosSubcontratista.get('rfc')?.value ?? null).trim();
+  const ESTADO_RAW = this.formularioDatosSubcontratista.get('estado')?.value ?? null;
+if(RFC_VALUE && ESTADO_RAW) {
+   const ESTADO_VALUE = (ESTADO_RAW ?? '').toString().trim();
   if (RFC_VALUE && ESTADO_VALUE !== '' && ESTADO_VALUE !== '-1') {
     this.store.setDatosContr(this.formularioDatosSubcontratista.value);
     this.obtenerSubfabricantesDisponibles();
   }
+  else{
+   if(!RFC_VALUE || RFC_VALUE.length === 0 ){
+      this.mostrarNotificacion('Debe introducir el RFC');
+  }
+  else if(RFC_VALUE.length > 0 && ESTADO_RAW === '-1' ){
+   this.mostrarNotificacion('El RFC de la empresa submanufacturera no está registrado');
+  }
+  else {
+      this.mostrarNotificacion('Debe introducir el RFC');
+  }
+  }
 }
-
+else{
+  if(!RFC_VALUE || RFC_VALUE.trim().length === 0 ){
+      this.mostrarNotificacion('Debe introducir el RFC');
+  }
+  else if(RFC_VALUE && ESTADO_RAW === "-1" ){
+   this.mostrarNotificacion('El RFC de la empresa submanufacturera no está registrado');
+  }
+  else {
+      this.mostrarNotificacion('Debe introducir el RFC');
+  }
+}
+ 
+}
+  
+  private mostrarNotificacion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.deleteMessageExportacion=false;
+  }
 
   /**
    * Agrega plantas a la lista de subfabricantes seleccionados.
@@ -477,6 +530,9 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
             this.store.addPlantas(DATOS);
           }
         });
+    }
+    else{
+      this.mostrarNotificacion('Selecciona al menos una planta donde se realizarán las operaciones IMMEX.');
     }
   }
 
@@ -507,13 +563,11 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
    */
   eliminarPlantas(): void {
     const DATOS = this.listaDeSubfabricantesPorEliminar?.length || 0;
-  
-    if (DATOS === 0) { return }
-    const DATOSRES = [...this.datosPlantasParaSerAgregados];
-    DATOSRES.splice(0, DATOS);
-    this.datosPlantasParaSerAgregados = DATOSRES;
-    this.store.setPlantas(DATOSRES);
-    this.listaDeSubfabricantesPorEliminar= [];
+
+    if (DATOS === 0) { this.mostrarNotificacion('Selecciona la planta que desea eliminar.'); return; }
+    
+    this.deleteMessageExportacion = true;
+    this.mostrarNotificacion('¿Está seguro de eliminar la(s) planta(s) seleccionada(s)?');
   }
   
     /**
@@ -526,6 +580,17 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
       return CONTROL
         ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
         : false;
+    }
+    eliminarPedimentoDatoss(event: boolean): void {
+      if (event) {
+    const DATOS = this.listaDeSubfabricantesPorEliminar?.length || 0;
+    const DATOSRES = [...this.datosPlantasParaSerAgregados];
+    DATOSRES.splice(0, DATOS);
+    this.datosPlantasParaSerAgregados = DATOSRES;
+    this.store.setPlantas(DATOSRES);
+    this.listaDeSubfabricantesPorEliminar= [];
+      }
+      this.deleteMessageExportacion = false;
     }
 
   /**
