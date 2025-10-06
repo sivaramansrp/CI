@@ -208,7 +208,7 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    * 
    * @command Actualiza el estado del store con los valores proporcionados.
    */
-  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: string | number | boolean | null, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }

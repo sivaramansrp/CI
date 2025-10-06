@@ -203,6 +203,7 @@ export interface Tramite110222State {
    */
   formulario: { [key: string]: unknown};
 
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
 }
 

@@ -254,6 +254,7 @@ export interface Tramite110221State {
     
   /** Lista de catálogos que representan unidades de medida comercial (UMCs). */
   umcs: Catalogo[];
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
 }
 

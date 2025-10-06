@@ -11,10 +11,6 @@ const BASE_URL = ENVIRONMENT.API_HOST;
  */
 const API = ENVIRONMENT.API;
 /**
- * versión de la API
- */
-const API_VERSION = ENVIRONMENT.API_VERSION;
-/**
  * Catálogo de la API
  */
 const CATALOGO = ENVIRONMENT.CATALOGO_URL;
@@ -23,6 +19,10 @@ const CATALOGO = ENVIRONMENT.CATALOGO_URL;
  */
 const PROCEDURE = '/sat-t110222';
 
+/**
+ * Rutas de la API para el procedimiento 110223.
+ * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
+ */
 export const PROC_110222 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,

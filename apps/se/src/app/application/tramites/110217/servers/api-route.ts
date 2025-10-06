@@ -11,14 +11,14 @@ const BASE_URL = ENVIRONMENT.API_HOST;
  */
 const API = ENVIRONMENT.API;
 /**
- * versión de la API
- */
-const API_VERSION = ENVIRONMENT.API_VERSION;
-/**
  * Procedimiento de la API
  */
 const PROCEDURE = '/sat-t110217';
 
+/**
+ * Rutas de la API para el procedimiento 110223.
+ * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
+ */
 export const PROC_110217 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`
 }

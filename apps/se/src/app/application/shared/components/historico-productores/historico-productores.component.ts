@@ -201,7 +201,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  * Propiedad de salida que emite el valor del formulario cuando se actualiza.
  * @type {EventEmitter<undefined>}
  */
-  @Output() agregarDatosProductorFormularioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
+  @Output() agregarDatosProductorFormularioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: string | number | boolean | null; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: string | number | boolean | null; storeStateName: string }>();
 
   /**
  * Configuración de la tabla de selección.
@@ -512,7 +512,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   * @param {string} storeStateName - Nombre del estado del store para actualizar.
   */
   setValoresStoreAgregarForm(formGroupName: string, campo: string, storeStateName?: string): void {
-    const VALOR = this.agregarDatosProductorFormulario.get(campo)?.value;
+    const VALOR = this.agregarDatosProductorFormulario.get(campo)?.value ?? null;
     this.formaValida.emit(this.agregarDatosProductorFormulario.valid);
     this.agregarDatosProductorFormularioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName: storeStateName || '' });
 

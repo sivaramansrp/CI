@@ -65,6 +65,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   */
   public esFormularioSoloLectura: boolean = false;
 
+  /** Indica si el formulario es válido. */
   public isFormValid: boolean = false;
 
   /**
@@ -144,7 +145,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * 
    * @command Actualiza el estado del store con los valores proporcionados.
    */
-  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: string | number | boolean | null, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }
@@ -160,6 +161,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
     this.isFormValid = event;
   }
