@@ -302,7 +302,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
+      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value?.toUpperCase() || '',
       estatus: false,
     };
     if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
@@ -384,7 +384,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
+      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value?.toUpperCase() || '',
       estatus: false,
     };
     if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
