@@ -1,11 +1,13 @@
 import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
+import { Tramite110202Store, TramiteState } from '../../estados/tramite110202.store';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -84,6 +86,12 @@ export class CartificadoValidacionPageComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  
+  /**
+   * URL de la página actual.
+   */
+  public solicitudState!: TramiteState;
+
   /**
    * Datos de los pasos del asistente.
    * Incluye el número total de pasos, el índice del paso actual y los textos de los botones de navegación (Anterior, Continuar).
@@ -115,6 +123,10 @@ export class CartificadoValidacionPageComponent {
   */
   esFormaValido: boolean = false;
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
+    private certificadoValidacionService: CertificadoValidacionService,
+    private tramite110202Store:Tramite110202Store
+
+
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -191,6 +203,126 @@ export class CartificadoValidacionPageComponent {
       return false;
     }
     return true;
+  }
+   /**
+  * Obtiene los datos del store y los guarda utilizando el servicio.
+  */
+  obtenerDatosDelStore(): void {
+    this.certificadoValidacionService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+        
+      });
+  }
+  
+buildMercanciaSeleccionadas(arr: any[]): any[] {
+return arr.map((item: any) => ({
+  id: item.id,
+  fraccion_arancelaria: item.fraccionArancelaria,
+  cantidad: item.cantidad,
+  unidad_medida: item.unidadMedida,
+  valor_mercancia: item.valorMercancia,
+  nombreTecnico: item.nombreTecnico,
+  nombre_comercial: item.nombreComercial,
+  registro_producto: item.numeroRegistroProducto,
+  fechaExpedicion: item.fechaExpedicion,
+  fechaVencimiento: item.fechaVencimiento,
+  tipo_factura: item.tipoFactura,
+  num_factura: item.numFactura,
+  complemento_descripcion: item.complementoDescripcion,
+  fecha_factura: item.fechaFactura,
+  umc:item.umc,
+}));
+
+}
+
+  /**
+   * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+   * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+   *
+   * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+   *
+   * @remarks
+   * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
+   * La llamada al servicio actualmente está comentada.
+   */
+  guardar(item: any): void {
+    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
+    const PAYLOAD = {
+      rfc_solicitante: 'AAL0409235E6',
+      idSolicitud: this.solicitudState.idSolicitud || 0,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        nombre: "ACEROS ALVARADO S.A. DE C.V.",
+        actividad_economica: "Fabricación de productos de hierro y acero",
+        correo_electronico: "contacto@acerosalvarado.com",
+        domicilio: {
+          pais: "México",
+          codigo_postal: "06700",
+          estado: "Ciudad de México",
+          municipio_alcaldia: "Cuauhtémoc",
+          localidad: "Centro",
+          colonia: "Roma Norte",
+          calle: "Av. Insurgentes Sur",
+          numero_exterior: "123",
+          numero_interior: "Piso 5, Oficina A",
+          lada: "",
+          telefono: "123456"
+        }
+      },
+      certificado: {
+        tratado_acuerdo: item.tratado || '',
+        pais_bloque: item.pais,
+        fraccion_arancelaria: item.fraccionArancelaria,
+        registro_producto: item.registroProducto,
+        nombre_comercial: item.nombreComercial,
+        fecha_inicio: item.fechaFinal,
+        fecha_fin: item.fechaInicial,
+        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
+      },
+ 
+      destinatario: {
+        nombre: item.nombre,
+        primer_apellido: item.apellidoPrimer,
+        segundo_apellido: item.apellidoSegundo,
+        numero_registro_fiscal: item.numeroFiscal,
+        razon_social: item.razonSocial,
+        domicilio: {
+          ciudad_poblacion_estado_provincia: item.ciudad,
+          calle: item.calle,
+          numero_letra: item.numeroLetra,
+          lada: item.lada,
+          telefono: item.telefono,
+          fax: item.fax,
+          correo_electronico: item.correoElectronico,
+          pais_destino: item.nacion
+        },
+        medio_transporte: item.transporte
+      },
+ 
+      datos_del_certificado: {
+        observaciones: item.observaciones,
+        precisa: item.presica,
+        presenta: item.presenta,
+        idioma: item.idioma,
+        representacion_federal: {
+          entidad_federativa: item.entidad,
+          representacion_federal: item.representacion
+        },
+        desea_obtener_certificado: item.casillaVerificacion,
+        justificacion: item.justificacion
+      }
+    };
+ 
+    this.certificadoValidacionService.guardarDatosPost(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+          this.tramite110202Store.setIdSolicitud(response.datos.id_solicitud || 0);
+          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+        }
+      },
+    });
   }
 
 }

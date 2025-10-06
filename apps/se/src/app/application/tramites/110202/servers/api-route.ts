@@ -45,10 +45,8 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     RepresentacionFederal: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     TipoDocumento: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-documento/${procedureNo}`,
     municipiosMax: `${BASE_URL}${API}/${procedure}${CATALOGO}/municipio-mex`,
-    tipoCategoria: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-categoria`,
-    servicoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/servicios-immex`,
-    tipoInversion: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-inversion`,
     estadoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
-    buscarPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-submanufactureras/buscar-datos-grid-plantas`,
-    buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
+    GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
+    BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
 });

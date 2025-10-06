@@ -23,7 +23,7 @@
 
     <ng-container>
       <solicitante #Solicitante [hidden]="indice !==1" [tabindex]="1"></solicitante>
-      <app-certificado-origen [hidden]="indice !== 2" [tabindex]="2"></app-certificado-origen>
+      <app-certificado-origen [hidden]="indice !== 2" [active]="indice === 2" [tabindex]="2"></app-certificado-origen>
       <app-destinatario-de [hidden]="indice !== 3" [tabindex]="3"></app-destinatario-de>
       <app-datos-certificado [hidden]="indice !== 4" [tabindex]="4"></app-datos-certificado>
     </ng-container>

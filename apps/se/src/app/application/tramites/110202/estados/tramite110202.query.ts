@@ -175,6 +175,12 @@ export class Tramite110202Query extends Query<TramiteState> {
   selectDestinatarioForm$ = this.select((state) => {
     return state.destinatarioForm;
   });
+  /**
+   * Selecciona todo el estado de la solicitud.
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
 
   /**
    * Constructor del servicio TramiteQuery.
