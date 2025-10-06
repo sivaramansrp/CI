@@ -218,11 +218,11 @@ getAllState(): Observable<Solicitud110201State> {
     );
   }
 buscarMercanciasCert(body: any): Observable<any> {
-  return this.httpService.post<any>(
-    'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
-    { body: body }
-  );
-  //  return this.httpService.post<any>(PROC_110201.BUSCAR, { body: body });
+  // return this.httpService.post<any>(
+  //   'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
+  //   { body: body }
+  // );
+   return this.httpService.post<any>(PROC_110201.BUSCAR, { body: body });
 }
 
 /**
