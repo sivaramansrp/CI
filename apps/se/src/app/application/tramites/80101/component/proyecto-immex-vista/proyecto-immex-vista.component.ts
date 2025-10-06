@@ -1,7 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Catalogo } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { DOCUMENTO_CATALOGO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { Observable } from 'rxjs';
 import { PROYECTO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
