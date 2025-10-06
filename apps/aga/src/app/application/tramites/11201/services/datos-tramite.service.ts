@@ -28,11 +28,7 @@ export class DatosTramiteService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar peticiones a APIs o archivos JSON.
    */
-  constructor(
-    private http: HttpClient
-    // eslint-disable-next-line no-empty-function
-  ) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Obtener una lista de Contenedores

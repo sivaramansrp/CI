@@ -186,7 +186,6 @@ describe('ContenedorComponent', () => {
     expect(result).toBe(false);
   });
   it('should validate fields and call abrirModalArchivo when adjuntarArchivo is called with valid fields', () => {
-    // Mock DOM element for modal
     const mockModalElement = document.createElement('div');
     mockModalElement.id = 'modalArchivoCsv';
     jest.spyOn(document, 'getElementById').mockReturnValue(mockModalElement);
