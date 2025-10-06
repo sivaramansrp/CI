@@ -140,10 +140,6 @@
   <lib-notificaciones [notificacionInput]="nuevaNotificacion"
     (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
   }
-  @if(eliminarPlantasConfirmacion) {
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
-  }
   @if(espectaculoAlerta) {
   <lib-notificaciones [notificacionInput]="nuevaNotificacion"
     (confirmacionModal)="mostrarDomicilios()"></lib-notificaciones>

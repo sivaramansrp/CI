@@ -13,6 +13,10 @@ import { Plantas } from '../modelos/registro-solicitud-immex.model';
 export interface Tramites80210State {
   /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
   idSolicitud: number | null;
+
+  modalidad: string;
+  folio: string;
+  ano: string;
   /**
    * Lista de identificadores de plantas disponibles.
    */
@@ -50,8 +54,11 @@ export interface Tramites80210State {
 export function createInitialState(): Tramites80210State {
   return {
     idSolicitud: 0,
-    plantasDisponibles: [],
-    plantasSeleccionadas: [],
+    modalidad: '',
+    folio: '',
+    ano: '',
+    plantasDisponibles: [] as Plantas[],
+    plantasSeleccionadas: [] as Plantas[],
     showPlantas: false,
     rfc: '',
     estado: [],
@@ -94,6 +101,26 @@ export class Tramite80210Store extends Store<Tramites80210State> {
     this.update((state) => ({
       ...state,
       ...values,
+    }));
+  }
+
+  /**
+   * Establece las plantas buscadas para el subfabricante.
+   *
+   * @param plantasBuscadas - Una lista de objetos de tipo `PlantasSubfabricante`
+   * que representan las plantas buscadas.
+   */
+  setPlantasBuscadas(plantasDisponibles: Plantas[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponibles: plantasDisponibles,
+    }));
+  }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

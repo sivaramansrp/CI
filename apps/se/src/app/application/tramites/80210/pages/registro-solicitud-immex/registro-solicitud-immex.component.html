@@ -20,7 +20,7 @@
     (cargaEnProgreso)="onCargaEnProgreso($event)"
     ></app-paso-carga-documento>
       } @case (3) {
-     <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="80210" [procedureUrl]="'registro-solicitud-immex/confirmacion'"></paso-firma>
+     <paso-firma [idSolicitud]="idSolicitudState" [procedure]="80210" [procedureUrl]="'registro-solicitud-immex/confirmacion'"></paso-firma>
       } }
      <div class="row">
       <div class="col-md-12">

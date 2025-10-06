@@ -1,11 +1,25 @@
-import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { Tramites80210State } from '../../estados/tramites80210.store';
+import {
+  AVISO,
+  DatosPasos,
+  RegistroSolicitudService,
+} from '@ng-mf/data-access-user';
+import { Component, EventEmitter } from '@angular/core';
+import {
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { Observable, Subject, throwError } from 'rxjs';
+import {
+  Tramite80210Store,
+  Tramites80210State,
+} from '../../estados/tramites80210.store';
+import { catchError, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite80210Query } from '../../estados/tramites80210.query';
 import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { createInitialState } from '../../estados/tramites80210.store';
 
 /**
  * Interfaz que representa el botón de acción.
@@ -35,7 +49,18 @@ interface AccionBoton {
   templateUrl: './registro-solicitud-immex.component.html',
   styleUrl: './registro-solicitud-immex.component.scss',
 })
-export class registroSolicitudImmexComponent implements OnInit {
+export class registroSolicitudImmexComponent {
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Notificador para destruir las suscripciones.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */
@@ -81,23 +106,19 @@ export class registroSolicitudImmexComponent implements OnInit {
    * @type {Tramites80210State}
    * @memberof registroSolicitudImmexComponent
    */
-  idTipoTRamite: string = '80101';
+  idTipoTRamite: string = '80210';
 
   /**
    * Identificador numérico de la solicitud actual.
    * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
    */
-  idSolicitud: number = 0;
+  idSolicitudState: number | null = 0;
 
   /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
    */
   cargarArchivosEvento = new EventEmitter<void>();
-
-  ngOnInit(): void {
-    this.solicitudState = createInitialState();
-  }
 
   /**
    * Indica si la sección de carga de documentos está activa.
@@ -115,6 +136,26 @@ export class registroSolicitudImmexComponent implements OnInit {
    * Este método es ignorado por Compodoc.
    */
   cargaEnProgreso: boolean = true;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = true;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert!: string;
+
+  constructor(
+    private registroSolicitudService: RegistroSolicitudService,
+    private tramiteStore: Tramite80210Store,
+    private tramiteQuery: Tramite80210Query
+  ) {
+    this.tramiteQuery.selectTramite80210$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+    });
+  }
 
   /**
    * Emite un evento para cargar archivos.
@@ -177,11 +218,115 @@ export class registroSolicitudImmexComponent implements OnInit {
   }
 
   /**
-   * Maneja la navegación entre los pasos del asistente según las acciones de los botones.
-   * @param e - La acción del botón que contiene el tipo de acción y el valor del índice.
+   * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
+   * y enviar los datos al servidor.
+   * @returns {Observable<{ exito: boolean; [key: string]: any }>}
    */
-  getValorIndice(evento: AccionBoton): void {
-    this.indice = evento.valor;
-    this.wizardComponent[evento.accion === 'cont' ? 'siguiente' : 'atras']();
+  onGuardar(): Observable<any> {
+    return this.tramiteQuery.selectTramite80210$.pipe(
+      take(1), // Tomar solo el primer valor para evitar loops
+      map((ESTADO_ACTUAL) =>
+        AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)
+      ),
+      switchMap((FORM_PAYLOAD) => {
+        return this.registroSolicitudService.postGuardarDatos(
+          this.idTipoTRamite,
+          FORM_PAYLOAD
+        );
+      }),
+      catchError((error) => {
+        console.error('Error al guardar:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getValorIndice(e: AccionBoton): void {
+    if (this.indice === 1) {
+      const FORM_VALIDO =
+        this.pasoUnoComponent?.validarTodosLosFormularios() ?? false;
+      this.esFormaValido = FORM_VALIDO;
+
+      // if (!this.esFormaValido) {
+      //   this.datosPasos.indice = 1;
+      //   this.formErrorAlert =
+      //     registroSolicitudImmexComponent.generarAlertaDeError(
+      //       ERROR_SERVICIO_ALERT
+      //     );
+      //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      //   return;
+      // }
+
+      this.onGuardar()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
+            // if (respuesta.codigo !== '00') {
+            //   const ERROR_MESSAGE =
+            //     respuesta.error || 'Error desconocido en la solicitud';
+            //   this.formErrorAlert =
+            //     registroSolicitudImmexComponent.generarAlertaDeError(
+            //       ERROR_MESSAGE
+            //     );
+            //   this.esFormaValido = false;
+            //   this.indice = 1;
+            //   this.wizardComponent.indiceActual = 1;
+            //   setTimeout(
+            //     () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+            //     0
+            //   );
+            //   return;
+            // }
+            this.esFormaValido = true;
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+            this.wizardComponent.siguiente();
+            if (respuesta.datos?.id_solicitud) {
+              this.idSolicitudState = respuesta.datos.id_solicitud;
+              this.tramiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
+            }
+          },
+          error: (error) => {
+            console.error('Error en onGuardar:', error);
+            this.formErrorAlert =
+              registroSolicitudImmexComponent.generarAlertaDeError(
+                'Error al procesar la solicitud'
+              );
+            this.esFormaValido = false;
+            this.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(
+              () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+              0
+            );
+          },
+        });
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
+  }
+
+  public static generarAlertaDeError(mensajes: string): string {
+    const ALERTA = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary" >Corrija los siguientes errores:
+(Ingrese al menos una planta en la solicitud) es un campo requerido</div>
+
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">${mensajes}</span>
+    </div>  
+  </div>
+</div>
+`;
+    return ALERTA;
   }
 }
