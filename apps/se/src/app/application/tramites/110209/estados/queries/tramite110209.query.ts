@@ -4,6 +4,7 @@
 
 import { Tramite110209State, Tramite110209Store } from "./../stores/tramite110209.store";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
@@ -18,6 +19,14 @@ export class Tramite110209Query extends Query<Tramite110209State> {
   selectTramite110209$ = this.select((state) => {
     return state;
   });
+
+  /**
+   * Obtiene el valor seleccionado de la radio
+   * @returns Observable<string | number>
+   */
+  public get valorSeleccionado$(): Observable<string | number> {
+    return this.select('valorSeleccionado');
+  }  
 
   /**
    * Constructor de la consulta.

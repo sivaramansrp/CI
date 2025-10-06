@@ -1,4 +1,4 @@
-import { CatalogoServices,InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
@@ -11,26 +11,19 @@ import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
-import { Solocitud110203Service } from '../../service/service110203.service';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
-import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 
+import { Solicitud110209Service } from '../../services/solicitud-110209/solicitud-110209.service';
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
-/**
- * Standalone component for managing search data.
- * 
- * - Uses Angular modules and custom components.
- * - Provides search options, form validation, and table visualization.
- */
 @Component({
   selector: 'app-datos-busqueda',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputRadioComponent, CatalogoSelectComponent, TableComponent,NotificacionesComponent],
   templateUrl: './datos-busqueda.component.html',
-  styleUrl: './datos-busqueda.component.css',
 })
 export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
@@ -54,18 +47,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * Cada elemento define las propiedades necesarias para construir un dropdown dinámico.
    */
   configuracionesDropdown: ConfiguracionDropdown[] = [];
-
-  /**
-   * Lista de objetos de tipo Catalogo que representa los tratados o acuerdos disponibles para la búsqueda.
-   * Se utiliza para mostrar las opciones en el componente de datos de búsqueda.
-   */
-  tratadoAcuerdo: Catalogo[] = [];
-
-  /**
-   * Lista de objetos de tipo Catalogo que representa los países disponibles para seleccionar en el bloque correspondiente.
-   * Se utiliza para mostrar opciones de países en el componente de búsqueda.
-   */
-  paisBloque: Catalogo[] = [];
 
   /**
    * Colección de entidades del catálogo.
@@ -146,12 +127,24 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
 
   /**
-   * Identificador del trámite actual.
-   * 
-   * @remarks
-   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   * Lista de objetos de tipo Catalogo que representa los tratados o acuerdos disponibles para la búsqueda.
+   * Se utiliza para mostrar las opciones en el componente de datos de búsqueda.
    */
-  tramites:string='110203';
+  tratadoAcuerdo: Catalogo[] = [];
+
+  /**
+   * Lista de objetos de tipo Catalogo que representa los países disponibles para seleccionar en el bloque correspondiente.
+   * Se utiliza para mostrar opciones de países en el componente de búsqueda.
+   */
+  paisBloque: Catalogo[] = [];
+
+  
+  /**
+  * Código del trámite asociado al establecimiento.
+  * 
+  * Valor predeterminado: '110209'.
+  */
+  tramites:string='110209';
 
   /** 
    * Constructor del componente.
@@ -159,17 +152,17 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    *
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {Router} router - Servicio para la navegación entre rutas.
-   * @param {Tramite110203Query} tramite110203Query - Consulta para manejar datos del trámite 110203.
-   * @param {Tramite110203Store} tramite110203Store - Almacenamiento para manejar el estado del trámite 110203.
+   * @param {Tramite110209Query} tramite110209Query - Consulta para manejar datos del trámite 110209.
+   * @param {Tramite110209Store} tramite110209Store - Almacenamiento para manejar el estado del trámite 110209.
    */
   constructor(
     private fb: FormBuilder, // Servicio para construir formularios reactivos
     private router: Router, // Servicio para la navegación entre rutas
-    private tramite110203Query: Tramite110203Query, // Consulta para manejar datos del trámite 110203
-    private tramite110203Store: Tramite110203Store, // Almacenamiento para manejar el estado del trámite 110203
-     private Solocitud110203Service: Solocitud110203Service,
-       private consultaQuery: ConsultaioQuery,
+    private consultaQuery: ConsultaioQuery,
     private route: ActivatedRoute,
+    private Solicitud110209Service: Solicitud110209Service,
+    private tramite110209Query: Tramite110209Query,
+    private tramite110209Store: Tramite110209Store,
     private catalogoService: CatalogoServices
   ) {
     /** 
@@ -184,14 +177,14 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
  /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
  *  Marca la bandera de respuesta si la información es válida. */
      guardarDatosFormulario(): void {
-    this.Solocitud110203Service
+    this.Solicitud110209Service
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        this.Solocitud110203Service.actualizarEstadoFormulario(resp);
+        this.Solicitud110209Service.actualizarEstadoFormulario(resp);
         }
       });
   }
@@ -220,7 +213,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      * Suscribe a los cambios en el valor seleccionado del trámite.
      * Utiliza takeUntil para evitar fugas de memoria.
      */
-    this.tramite110203Query.valorSeleccionado$
+    this.tramite110209Query.valorSeleccionado$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(valor => {
         this.valorSeleccionado = valor; // Actualiza el valor seleccionado.
@@ -238,7 +231,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
  */
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110203Store.setNumeroDeCertificado(valor));
+      .subscribe(valor => this.tramite110209Store.setTramite110209({ numeroDeCertificado: valor }));
 
     /** 
      * Escucha los cambios en el campo "tratadoAcuerdo" del formulario.  
@@ -247,7 +240,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      */
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110203Store.setTratadoAcuerdo(valor));
+      .subscribe(valor => this.tramite110209Store.setTramite110209({ tratadoAcuerdo: valor }));
 
     /** 
      * Escucha los cambios en el campo "paisBloque" del formulario.  
@@ -256,7 +249,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      */
     this.datosBusquedaFormulario.get('paisBloque')?.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110203Store.setPaisBloque(valor));
+      .subscribe(valor => this.tramite110209Store.setTramite110209({ paisBloque: valor }));
 
 
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
@@ -266,9 +259,15 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     * Llama a la función para obtener los datos del establecimiento.
     */
     this.getEstableCimiento();
-    
-    this.obtenerTratadoAcuerdo();
 
+    /**
+    * Llama a la función para obtener los tratados y acuerdos.
+    */
+    this.obtenerTratadosAcuerdos();
+
+    /**
+    * Llama a la función para obtener los países y bloques.
+    */
     this.obtenerPaisesBloque();
   }
   /**
@@ -280,7 +279,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
   enCambioValorRadio(valor: string | number): void {
     this.valorSeleccionado = valor;
     this.validadoresActualización();
-    this.tramite110203Store.setValorSeleccionado(valor);
+    this.tramite110209Store.setTramite110209({ valorSeleccionado: valor });
   }
 
   /**
@@ -374,7 +373,7 @@ public buscar(): void {
    * Uses `distinctUntilChanged` to avoid redundant updates and `take(1)` to auto-unsubscribe.
    */
   private restaurarValoresFormulario(): void {
-    this.restauraSubscription$ = this.tramite110203Query.selectSolicitud$
+    this.restauraSubscription$ = this.tramite110209Query.selectTramite110209$
       .pipe(
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
         takeUntil(this.unsubscribe$)
@@ -391,8 +390,7 @@ public buscar(): void {
    * Redirects to `/pago/seleccion-tramite` using Angular's Router.
    */
   navigateToSeleccionTramite(): void {
-    this.router.navigate(['../tecnicosdatos'], { relativeTo: this.route });
-
+    this.router.navigate(['../solicitud-page'], { relativeTo: this.route });
   }
 
   /**
@@ -403,8 +401,8 @@ public buscar(): void {
    * la propiedad `this.tratadoAcuerdo`. La suscripción se gestiona para finalizar automáticamente cuando
    * el componente se destruye, evitando fugas de memoria.
    */
-  obtenerTratadoAcuerdo(): void {
-    this.catalogoService.tratadosAcuerdoCatalogo(this.tramites)
+  obtenerTratadosAcuerdos(): void {
+    this.catalogoService.tratadosAcuerdosCatalogo(this.tramites,"TITRAC.TA")
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
