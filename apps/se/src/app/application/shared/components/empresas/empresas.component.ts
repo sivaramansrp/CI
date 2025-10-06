@@ -43,6 +43,13 @@ export class EmpresasComponent implements OnInit, OnDestroy {
   @Output() estadosOpciones: EventEmitter<Catalogo[]> = new EventEmitter();
 
   /**
+   * Evento que se emite para solicitar la búsqueda de empresas controladoras.
+   * 
+   * Se dispara sin argumentos cuando se requiere actualizar o consultar la lista de controladoras.
+   */
+  @Output() buscarControladorasEmit: EventEmitter<{ rfc: string; estado: string }> = new EventEmitter<{ rfc: string; estado: string }>();
+
+  /**
    * Título para la sección de empresas.
    */
   @Input() tituloEmpresas: string = '';
@@ -71,6 +78,15 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    * Formulario reactivo utilizado para la captura de la información de empresas.
    */
   empresasForm!: FormGroup;
+
+  /**
+   * Input para recibir datos de empresas disponibles desde el componente padre.
+   * Al cambiar, actualiza la lista de disponibles y sincroniza con el store.
+   */
+  @Input() set disponiblesDatos(value: DisponsibleFiscal[]) {
+    this.disponibles = value || [];
+    this.tramite80104Store.setDisponibles(this.disponibles);
+  }
 
   /**
    * Lista de empresas disponibles para ser seleccionadas.
@@ -227,24 +243,7 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    */
   buscarControladoras(): void {
     if (this.empresasForm.valid) {
-      const DATA: DisponsibleFiscal[] = [
-        {
-          calle: 'LOMBARDINI PTE',
-          numeroExterior: '1353',
-          numeroInterior: 'yes',
-          codigoPostal: '81124',
-          colonia: 'OTRA NO ESPECIFICADA EN GUASAVE',
-          municipioDelegacion: 'EL CATALOGO',
-          entidadFederativa: this.estadosCatalogo.find(item => item.id === Number(this.empresasForm.value.estado))?.descripcion,
-          pais: 'ESTADOS UNIDOS MEXICANOS',        
-          registroFederalContribuyentes: this.solicitudState.rfc,
-          domicilioFiscalSolicitante: 'AV SAN DIEGO 137 PARQUE IND B QUINTANA EL MARQUES QUERETARO ESTADOS UNIDOS MEXICANOS',
-          razonSocial: 'CORPORACION MEXICANA DE COMPUTO S DE RL DE CV'
-        }
-      ];
-      // Asigna el arreglo a la variable que usa tu tabla
-      this.disponibles = DATA;
-      this.tramite80104Store.setDisponibles(DATA);
+      this.buscarControladorasEmit.emit(this.empresasForm.value);
     }
   }
 

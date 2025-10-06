@@ -189,6 +189,9 @@ export interface PlantasDireccionModelo {
  * @interface Tramite80207State
  */
 export interface Tramite80207State {
+  
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Información del registro asociada al trámite.
    * @property {InfoRegistro} infoRegistro
@@ -231,4 +234,27 @@ export interface Tramite80207State {
      */
     esDatosSubcontratistaValido: boolean;
   };
+}
+
+export interface DomicilioPayload {
+  idDomicilio: number;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: string;
+  informacionExtra: string;
+  clave: string;
+  cveLocalidad: string;
+  cveDelegMun: string;
+  cveEntidad: string;
+  cvePais: string;
+  ciudad: string;
+  telefono: string;
+  fax: string;
+  municipio: string;
+  colonia: string;
+  descUbicacion: string;
+  cveCatalogo: string;
+  telefonos: string;
+  tipoDomicilio: number;
 }

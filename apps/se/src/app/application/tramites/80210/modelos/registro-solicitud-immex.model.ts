@@ -1,4 +1,3 @@
-
 /**
  * @interfaz
  * @nombre FormularioDatos
@@ -6,10 +5,10 @@
  * Define la estructura de los datos del formulario.
  * Contiene información básica como modalidad, folio y año.
  */
-export interface FormularioDatos{
-  modalidad:string,
-  folio:string,
-  ano:string
+export interface FormularioDatos {
+  modalidad: string;
+  folio: string;
+  ano: string;
 }
 
 /**

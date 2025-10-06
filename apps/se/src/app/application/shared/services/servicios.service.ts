@@ -1,4 +1,5 @@
-import { ServicioItemResponse, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
+import { PlantasDisponiblesPayload, PlantasDisponiblesResponse, ServicioItemResponse, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
+import { API_BUSCAR_DATOS_GRID } from '../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient} from '@angular/common/http';
@@ -36,6 +37,11 @@ export class ServiciosService {
   }
 
 
+postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload):
+  Observable<BaseResponse<PlantasDisponiblesResponse[]>> {
+    const ENDPOINT = `${this.host}${API_BUSCAR_DATOS_GRID(tramite.toString())}`;
+    return this.http.post<BaseResponse<PlantasDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
+  }
   
   static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `
