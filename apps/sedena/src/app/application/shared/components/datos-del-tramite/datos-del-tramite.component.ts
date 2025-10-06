@@ -33,7 +33,6 @@ import {
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -52,7 +51,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     InputRadioComponent,
     InputCheckComponent,
     InputFechaComponent,
-    TooltipModule
   ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
@@ -337,7 +335,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
    * @output eliminarMercanciaFinalEvent - Evento que emite cuando se elimina un destinatario final.
    * Este EventEmitter emite una instancia de `MercanciaDetalle`.
    */
-@Output() eliminarMercanciaFinalEvent = new EventEmitter<MercanciaDetalle>();
+  @Output() eliminarMercanciaFinalEvent: EventEmitter<MercanciaDetalle> =
+    new EventEmitter<MercanciaDetalle>(true);
 
   /**
    * Configuración utilizada para construir la tabla dinámica de mercancías.
@@ -612,7 +611,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
    */
   eliminarDestinatarioFinal(): void {
     if (this.mercanciaTablaSeleccionada.length > 0) {
-      this.eliminarMercanciaFinalEvent.emit(this.mercanciaTablaSeleccionada[0] as MercanciaDetalle);
+      this.eliminarMercanciaFinalEvent.emit(this.mercanciaTablaSeleccionada[0]);
     } else {
       console.error('No se ha seleccionado ninguna fila para eliminar.');
     }

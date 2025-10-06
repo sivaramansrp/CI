@@ -46,7 +46,7 @@
     <div class="row">
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
-        <input type="text" class="form-control" formControlName="nombres" maxlength="165" />
+        <input type="text" class="form-control" formControlName="nombres" maxlength="200" />
         <div class="error-message">
           <small
             *ngIf="agregarDestinatarioFinal.get('nombres')?.touched && agregarDestinatarioFinal.get('nombres')?.hasError('required')"

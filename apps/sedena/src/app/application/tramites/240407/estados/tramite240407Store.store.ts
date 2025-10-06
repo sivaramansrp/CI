@@ -53,10 +53,6 @@ export function createInitialState(): Tramite240407State {
       usoFinal: '',
       aduanasSeleccionadas: [],
       paisDestino: '',
-    fechaPago: '',
-    unoSemestre: '',
-    anoEnCurso: false,
-    informacionConfidencial: false
     },
     justificacionTramiteFormState :{
       justificacion:''

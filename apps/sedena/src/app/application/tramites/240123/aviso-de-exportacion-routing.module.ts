@@ -1,4 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
@@ -11,7 +13,15 @@ const ROUTES: Routes = [
   {
     path: 'contenedor-de-pasos',
     component: SolicitudPageComponent,
-  }
+  },
+  {
+      path: 'agregar-datos-mercancia',
+      component: DatosMercanciaContenedoraComponent,
+   },
+    {
+      path: 'agregar-destino-final',
+      component: AgregarDestinatarioFinalContenedoraComponent,
+    },
   ];
 
 @NgModule({

@@ -42,16 +42,6 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     maxlength: 12,
     orden: 1,
   },
-    {
-    labelNombre: '',
-    campo: '',
-    class: 'col-md-6 col-sm-10 pr-5',
-    tipo_input: '',
-    required: false,
-    maxlength: 0,
-    orden: 2,
-
-  },
   {
     labelNombre: 'Denominación o razón social',
     campo: 'razonSocial',
