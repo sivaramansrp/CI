@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { Location } from '@angular/common';
@@ -20,11 +21,11 @@ import { Tramite240123Store } from '../../estados/tramite240123Store.store';
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, CatalogoSelectComponent, DatosMercanciaComponent, ReactiveFormsModule, TituloComponent],
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,AfterViewInit {
+export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
   
   /**
    * Evento que se emite cuando se actualiza la tabla de mercancías o se requiere cerrar el componente.
@@ -82,8 +83,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
    */
   monedaCatalogo: Catalogo[] = [];
 
-  @Input() data!: MercanciaDetalle;
-
   /**
    * Constructor del componente.
    *
@@ -127,26 +126,19 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
    * @returns {void}
    */
   guardar(): void {
-    const FORM_ID = this.datosMercancia.get('id')?.getRawValue() || 0;
     const DATOS_MERCANCIA: MercanciaDetalle = {
-      id: FORM_ID === 0 ? Math.floor(Math.random() * 1000000) : FORM_ID,
-      fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')?.getRawValue(),
-      descripcionFraccion: this.datosMercancia.get('descFraccion')?.getRawValue(),
-      unidadMedidaTarifa: this.datosMercancia.get('umt')?.getRawValue(),
-      cantidadUMT: this.datosMercancia.get('cantidadUMT')?.getRawValue(),
-      valorComercial: this.datosMercancia.get('valorComercial')?.getRawValue(),
-      tipoMoneda: this.datosMercancia.get('tipoMoneda')?.getRawValue(),
-      descripcion: this.datosMercancia.get('descripcion')?.getRawValue(),
+      fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')?.value,
+      descripcionFraccion: this.datosMercancia.get('descFraccion')?.value,
+      unidadMedidaTarifa: this.datosMercancia.get('umt')?.value,
+      cantidadUMT: this.datosMercancia.get('cantidadUMT')?.value,
+      valorComercial: this.datosMercancia.get('valorComercial')?.value,
+      tipoMoneda: this.datosMercancia.get('tipoMoneda')?.value,
+      descripcion: this.datosMercancia.get('descripcion')?.value,
     };
+
     this.datosMercancias.push(DATOS_MERCANCIA);
-    
-    if (FORM_ID === 0) {
-      this.updateMercanciaDetalle(this.datosMercancias);
-    } else {
-      this.tramiteStore.updateListMercanciaTablaDatos(this.datosMercancias);
-    }
+    this.updateMercanciaDetalle(this.datosMercancias);
     this.datosMercancia.reset();
-    this.cerrar.emit();
   }
 
   /**
@@ -159,21 +151,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
     this.crearFormaulario();
     this.cargarDatos();
   }
-  ngAfterViewInit(): void {
-    if (this.data) {
-        this.datosMercancia.patchValue({
-          descripcion: this.data.descripcion,
-          fraccionArancelaria: this.data.fraccionArancelaria,
-          descFraccion: this.data.descripcionFraccion,
-          cantidadUMT: this.data.cantidadUMT,
-          umt: this.data.unidadMedidaTarifa,
-          valorComercial: this.data.valorComercial,
-          umc: this.data.umc,
-          tipoMoneda: this.data.tipoMoneda,
-          id:this.data.id
-        });
-    }
-  }
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.
@@ -184,6 +161,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+    this.cerrar.emit();
   }
 
   /**
@@ -208,7 +186,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
       valorComercial: [null, Validators.required],
       umc: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
-      id:[0,Validators.required]
     });
     this.cargarDatos();
   }
@@ -235,7 +212,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
    * @returns {void}
    */
   cancelar(): void {
-    this.cerrar.emit();
+    this.ubicaccion.back();
   }
 
   ngOnDestroy(): void {

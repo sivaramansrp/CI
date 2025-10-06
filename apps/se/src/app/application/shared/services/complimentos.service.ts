@@ -11,7 +11,6 @@ import {
   JsonResponseCatalogo,
   parseToString,
 } from '@ng-mf/data-access-user';
-import { BuscarPayload, PlantasSubfabricante } from '../models/empresas-subfabricanta.model';
 import { API_ROUTES } from '../servers/api-route';
 import { DisponsibleFiscal } from '../models/empresas.model';
 import { HttpClient } from '@angular/common/http';
@@ -352,6 +351,42 @@ export class ComplimentosService {
     }
 
     /**
+     * Realiza una solicitud POST para obtener la lista de plantas controladas disponibles.
+     * 
+     * @param body - Objeto de tipo `BuscarPayload` que contiene los parámetros de búsqueda.
+     * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+     * @throws Error si ocurre un problema al obtener la lista de subfabricantes.
+     */
+    getControladasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80104').buscarControldasPlantas, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80104').buscarControldasPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+
+      /**
+       * Obtiene la lista de subfabricantes disponibles según los criterios de búsqueda proporcionados.
+       *
+       * @param body - Objeto que contiene los parámetros de búsqueda para filtrar las subfabricantes.
+       * @returns Un observable que emite la respuesta JSON con la lista de subfabricantes disponibles.
+       * @throws Error si ocurre un problema al obtener la lista de subfabricantes desde la API.
+       */
+      getTerciarizadasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80105').buscarTerciarizadasPlantas, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80105').buscarTerciarizadasPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    
+    /**
      * Obtiene la lista de plantas disponibles.
      * @method getPlantasDisponibles
      * @returns {Observable<TableData>} Observable con la lista de plantas disponibles.
@@ -419,6 +454,40 @@ private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string
   }
 
 
+/**
+ * Transforma un objeto fuente en una instancia de `DisponsibleFiscal`.
+ * 
+ * Extrae y mapea los datos fiscales y de domicilio desde diferentes estructuras posibles del objeto fuente,
+ * asegurando valores predeterminados en caso de ausencia. Los campos incluyen información de domicilio,
+ * entidad federativa, país, RFC, razón social y otros datos relevantes para el contexto fiscal.
+ * 
+ * @param source El objeto fuente que contiene la información fiscal y de domicilio.
+ * @returns Un objeto `DisponsibleFiscal` con los datos mapeados y normalizados.
+ */
+toDisponsibleFiscal(source: any[]): DisponsibleFiscal[] {
+  if (!Array.isArray(source)) {
+    return [];
+  }
+  return source.map(item => {
+    const DOMICILIO = item?.domicilioDto || item?.empresaDto?.domicilioSolicitud || {};
+    const ENTIDAD = DOMICILIO?.entidadFederativa || item?.domicilioDto?.entidadFederativa;
+    const PAIS = DOMICILIO?.pais || item?.domicilioDto?.pais;
+
+    return {
+      calle: DOMICILIO?.calle ?? '',
+      numeroExterior: DOMICILIO?.numExterior ?? '',
+      numeroInterior: DOMICILIO?.numInterior ?? '',
+      codigoPostal: DOMICILIO?.codigoPostal ?? '',
+      colonia: DOMICILIO?.colonia ?? '',
+      municipioDelegacion: DOMICILIO?.municipio ?? DOMICILIO?.delegacionMunicipio ?? '',
+      entidadFederativa: ENTIDAD?.nombre ?? '',
+      pais: PAIS?.nombre ?? 'MÉXICO',
+      registroFederalContribuyentes: item?.empresaDto?.rfc ?? item?.rfc ?? '',
+      domicilioFiscalSolicitante: DOMICILIO?.descUbicacion ?? DOMICILIO?.colonia ?? '',
+      razonSocial: item?.empresaDto?.razonSocial ?? item?.razonSocial ?? ''
+    };
+  });
+}
 
     /**
    * Mapea la respuesta de la API a un arreglo de objetos PlantasSubfabricante.

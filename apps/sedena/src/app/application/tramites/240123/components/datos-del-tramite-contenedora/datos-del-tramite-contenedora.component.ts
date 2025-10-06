@@ -178,19 +178,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         });
       }
     }
-  modificarMercanciasDatos(event: MercanciaDetalle): void {
-    this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
-        cerrarModal: this.cerrarModal.bind(this),
-        data: event,
-      });
-  }
-  eliminarMercanciaFinalEvent(event: MercanciaDetalle): void {
-    const INDEX = this.datosMercanciaTabla.findIndex(item => item.id === event.id);
-    if (INDEX !== -1) {
-      this.datosMercanciaTabla.splice(INDEX, 1);
-      this.tramiteStore.deleteMercanciaTablaDatos(this.datosMercanciaTabla);
-    }
-  }
+  
     /**
      * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
      *

@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
+  <ng-titulo titulo="Agregar destinatraio (destino final)"></ng-titulo>
   <form [formGroup]="agregarDestinatarioFinal">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -90,7 +90,7 @@
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio">*</span>:</label>
-        <input type="text" class="form-control" formControlName="nombres" maxlength="165"
+        <input type="text" class="form-control" formControlName="nombres" maxlength="200"
           [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small
