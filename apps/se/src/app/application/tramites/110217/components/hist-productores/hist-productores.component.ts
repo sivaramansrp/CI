@@ -1,79 +1,94 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
-import { PeruCertificadoService } from '../../services/peru-certificado.service';
-import { Tramite110205Query } from '../../estados/tramite110205.query';
-import { Tramite110205Store } from '../../estados/tramite110205.store';
+import { HistoricoColumnas } from '../../models/certificado-origen.model';
+import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
+import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
+import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 
 @Component({
-  selector: 'app-peru-historico-productores',
-  templateUrl: './peru-historico-productores.component.html',
-  styleUrl: './peru-historico-productores.component.scss',
+  selector: 'app-hist-productores',
+  standalone: true,
+  imports: [
+    CommonModule,
+    HistoricoProductoresComponent
+  ],
+  templateUrl: './hist-productores.component.html',
+  styleUrl: './hist-productores.component.scss',
 })
 
-export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
+export class HistProductoresComponent implements OnInit, OnDestroy {
 
   /**
-   * Lista de productores disponibles para el exportador.
+   * Estado actual del trámite.
    */
-  productoresExportador: HistoricoColumnas[] = [];
-  /**
-   * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
-   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
-   */
-  mercancia: MercanciaTabla[] = [];
+  public tramiteState!: { [key: string]: unknown };
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
   destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * @property tramiteState
-   * @command
-   * Este objeto se utiliza para almacenar y gestionar el estado actual del trámite.
-   */
-  public tramiteState!: {[key: string]: unknown};
-  /**
+   /**
    * @public
-   * @property {Object} agregarDatosProductor - Objeto utilizado para agregar datos relacionados con un productor.
-   * @description Este objeto puede contener claves con valores de diferentes tipos, incluyendo cadenas, números, booleanos, objetos o indefinidos.
-   * @command Este objeto es utilizado para gestionar la información de los productores en el componente.
+   * @property
+   * @type { [key: string]: unknown}
+   * @comando
+   * Este objeto debe ser inicializado antes de su uso para evitar errores.
    */
-  public agregarDatosProductor!: {[key: string]: unknown};
+  public agregarDatosProductor!: { [key: string]: unknown };
 
   /**
-   * @descripcion
-   * Indica si el formulario se encuentra en modo solo lectura.
+   * Lista de productores disponibles para el exportador.
    */
-   esFormularioSoloLectura: boolean = false;
+  public productoresExportador: HistoricoColumnas[] = [];
+
+  /**
+   * @property {boolean} ocultarFax
+   * Indica si el campo de fax debe estar oculto o visible en la interfaz de usuario.
+    * @default true
+  */
+  public ocultarFax: boolean = true;
+
+  /**
+   * @property esTipoDeSeleccionado
+   * @type {boolean}
+   * @description Indica si el tipo seleccionado es válido o está activo.
+   */
+  public esTipoDeSeleccionado: boolean = true;
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
+
+  /** Indica si el formulario es válido. */
+  public isFormValid: boolean = false;
 
   /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-   * @param {peruCertificadoService} peruCertificadoService - Servicio para obtener datos relacionados con los productores.
-   * @param {Tramite110216Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite110216Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {Tramite110217Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite110217Query} tramiteQuery - Query para obtener el estado del trámite.
   */
   constructor(
-    public fb: FormBuilder,
-    private peruCertificadoService: PeruCertificadoService,
-    public store: Tramite110205Store,
-    public tramiteQuery: Tramite110205Query,
+    public store: Tramite110217Store,
+    public tramiteQuery: Tramite110217Query,
+    private certificadoDeService: CertificadosOrigenService,
     private consultaQuery: ConsultaioQuery
-  ) { }
+  ) {
+    //
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
-    this.cargarProductorPorExportador();
-    this.cargarMercancia();
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -82,7 +97,8 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.tramiteQuery.agregarDatosProductorFormulario$.pipe(
+
+    this.tramiteQuery.datosProductorFormulario$.pipe(
       takeUntil(this.destroyNotifier$), map((seccionState) => {
         this.agregarDatosProductor = seccionState;
       })
@@ -96,29 +112,8 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
 
-  /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
-  cargarProductorPorExportador(): void {
-    this.peruCertificadoService.obtenerProductorPorExportador()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
-        this.productoresExportador = respuesta.datos;
-      });
-  }
-
-
-  /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
-  cargarMercancia(): void {
-    this.peruCertificadoService.obtenerMercancia()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
-        this.mercancia = respuesta.datos;
-      });
+    this.cargarProductorPorExportador();
   }
 
   /**
@@ -156,6 +151,31 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Carga la lista de productores disponibles para el exportador desde el servicio.
+   */
+  cargarProductorPorExportador(): void {
+    this.certificadoDeService.obtenerProductorPorExportador()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(respuesta => {
+        this.productoresExportador = respuesta.datos;
+      });
+  }
+
+  /** Actualiza el estado de validez del formulario según el valor recibido. */
+  public formaValida(event: boolean): void {
+    this.isFormValid = event;
+  }
+
+  /**
+   * Valida el formulario del componente.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+public validarFormulario(): boolean {
+  return this.isFormValid;
+}
+
+/**
    * Método que se ejecuta al destruir el componente.
    * 
    * Libera los recursos y cancela las suscripciones activas.

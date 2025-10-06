@@ -3,4 +3,6 @@
     [agregarDatosProductor]="agregarDatosProductor" [productoresExportador]="productoresExportador || []"
     [mercanciaDatos]="mercancia || []" [ocultarFax]="ocultarFax" [esTipoDeSeleccionado]="esTipoDeSeleccionado"
     [optionsTipoFactura]="optionsTipoFactura || []"
-    [esFormularioSoloLectura]="esFormularioSoloLectura"></app-historico-productores>
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
+    [sortMercanciasTablaOrder]="true"
+    (formaValida)="formaValida($event)"></app-historico-productores>
