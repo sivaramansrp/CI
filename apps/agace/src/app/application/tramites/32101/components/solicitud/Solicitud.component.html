@@ -11,7 +11,8 @@
                 <label for="valorEnPesos" class="form-label">Valor en pesos<span [ngClass]="registroForm.get('valorEnPesos')?.invalid && 
               registroForm.get('valorEnPesos')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input class="form-control" [ngClass]="{'is-invalid': isInvalid('valorEnPesos')}" type="text" formControlName="valorEnPesos" name="valorEnPesos"
-                 id="valorEnPesos" maxlength="15" pattern="[0-9]" (change)="setValoresStore(registroForm, 'valorEnPesos', 'setValorEnPesos')" />                 
+                 id="valorEnPesos" maxlength="15" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                 (change)="setValoresStore(registroForm, 'valorEnPesos', 'setValorEnPesos')" />                 
                  <div *ngIf="isInvalid('valorEnPesos')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>

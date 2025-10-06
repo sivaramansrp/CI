@@ -14,7 +14,7 @@
             <div class="col-md-4">
               <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
               <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos"
-                id="valorEnPesos" maxlength="15" pattern="[0-9]"/>
+                id="valorEnPesos" maxlength="15" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
             </div>
           </div>
           <div class="row mb-3">     
