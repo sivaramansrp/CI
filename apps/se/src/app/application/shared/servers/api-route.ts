@@ -48,6 +48,8 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     tipoInversion: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-inversion`,
     estadoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     buscarPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-submanufactureras/buscar-datos-grid-plantas`,
+    buscarControldasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-controladas/buscar-datos-grid-plantas-controladoras`,
+    buscarTerciarizadasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-terciarizadas/buscar-datos-grid-plantas`,
     buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
     tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
