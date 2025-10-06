@@ -983,8 +983,12 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
                     const RESPONSE:SubfabricanteDireccionModelo[] = this.subfabricanteDatosService.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
                     this.formularioDatosSubcontratista.patchValue({
                       rfc: '',
-                      estado: '-1'
+                      estado: ''
                     });
+                    this.formularioDatosSubcontratista.get('rfc')?.markAsPristine();
+                    this.formularioDatosSubcontratista.get('rfc')?.markAsUntouched();
+                    this.formularioDatosSubcontratista.get('estado')?.markAsPristine();
+                    this.formularioDatosSubcontratista.get('estado')?.markAsUntouched();
                     this.store.setPlantasBuscadas(RESPONSE);
                   } 
                 }
@@ -1156,6 +1160,7 @@ else{
    * ```
    */
   private mostrarNotificacion(mensaje: string,cancelButton:boolean=false): void {
+  
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -1167,7 +1172,7 @@ else{
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: cancelButton ? 'Cancelar' : '',
     };
-    this.deleteMessageExportacion=false;
+    this.deleteMessageExportacion=cancelButton;
   }
 
   /**
@@ -1432,6 +1437,7 @@ else{
     this.listaDeSubfabricantesPorEliminar= [];
       }
       this.deleteMessageExportacion = false;
+      this.nuevaNotificacion={} as Notificacion;
     }
 
   /**
