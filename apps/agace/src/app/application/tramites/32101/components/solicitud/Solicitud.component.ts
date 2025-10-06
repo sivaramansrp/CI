@@ -664,6 +664,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
     }
   }
+
   /**
   * modificar la fila seleccionada en modal popup
   */
@@ -688,6 +689,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.consultaAvisoAcreditacionService.setUpdatedRow([FILA_SELECCIONADA]);
       this.tramite32101Store.setAbc(FILA_SELECCIONADA);
       this.modalActualizacion.abrirModal(FILA_SELECCIONADA);
+      this.selectedRows = [];
     }
   }
 
@@ -847,7 +849,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
     this.elementoParaEliminar = i;
   }
-
   /**
   * Elimina un pedimento si se confirma la acción. 
   */
@@ -857,8 +858,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         (row) => !this.selectedRows.includes(row)
       );
       this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-      this.selectedRows = [];
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+    
+    this.selectedRows = [];
   }
 }
