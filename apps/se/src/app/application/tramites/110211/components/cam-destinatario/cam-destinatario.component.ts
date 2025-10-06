@@ -79,7 +79,6 @@ interface FormValues {
   ]
 })
 export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
-  idProcedimiento:number=110211;
   /**
    * @property {FormGroup} exportadorForm
    * @description Formulario para capturar los datos del exportador.

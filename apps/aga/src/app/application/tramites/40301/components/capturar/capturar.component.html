@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="control-label" for="tipoAgente">{{ tipoAgenteLabel }} *:</label>
+          <label class="control-label" for="tipoAgente">{{ tipoAgenteLabel }}*:</label>
           <app-catalogo-select [catalogo]="agentCatalog" formControlName="tipoAgente" [required]="true"
             name="tipoAgente" [isDisabled]="soloLectura" (change)="conTipoAgenteData('tipoAgente')" [placeholder]="'Selecciona tipo de agente'"></app-catalogo-select>
         </div>

@@ -1,13 +1,16 @@
 import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { ProveedorCliente, ProyectoImmex } from '../../../shared/models/complimentos-seccion.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera } from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
+import { Directos } from '../../../shared/constantes/empleados.enum';
 import { DisponsibleFiscal } from '../../../shared/models/empresas.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
 import { Injectable } from '@angular/core';
@@ -82,6 +85,7 @@ export interface Tramite80101State {
 
   indicePrevioRuta: number;
   tablaDatosFederatarios: FederatariosEncabezado[];
+  datosFederatarios: FederatariosEncabezado;
   /**
    * Información detallada de plantas IMMEX.
    */
@@ -119,8 +123,6 @@ export interface Tramite80101State {
  * así como información de proveedores y capacidad instalada.
  */
   tablaDatosCapacidadInstalada: CapacidadInstalada[];
-
-  estadosOpciones: Catalogo[];
 }
 
 /**
@@ -301,7 +303,6 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     estadoDos: '',
     estadoTres: '',
     },
-    estadosOpciones: []
 };
 
 /**
@@ -795,6 +796,18 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setFederatariosCatalogo(datosFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      datosFederatarios,
+    }));
+  }
+
+  /**
    * Establece el índice previo de la ruta en el estado de la tienda.
    *
    * @param indice - El índice que se establecerá como el índice previo de la ruta.
@@ -1065,15 +1078,4 @@ setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada
       tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
     }));
   }
-
-  /**
-   * Establece la lista de empresas seleccionadas en el estado.
-   * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
-   */
-    public setEstadosOpciones(estadosOpciones: Catalogo[]):void {
-      this.update((state) => ({
-        ...state,
-        estadosOpciones: estadosOpciones,
-      }));
-    }
-  }
+}

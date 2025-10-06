@@ -60,6 +60,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    * cuando el usuario intenta guardar el formulario sin cumplir con los requisitos de validación.
    */
   chequeoValidacionAlGuardar =false;
+    /** Mensaje de error o información para mostrar al usuario */
+  message: string | undefined;
   /**
    * Identificador del procedimiento actual.
    * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
@@ -252,10 +254,15 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       estado: [
         this.obtenerValor('estadoLocalidad'),
         (this.elementosRequeridos.includes('estado') || this.chequeoValidacionAlGuardar)
-          ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
+          ? [Validators.required, Validators.pattern('^[a-zA-Z0-9/s/(/)/-/./#&,]*$')]
           : [],
       ],
-      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(CODIGO_POSTAL)]],
+       codigoPostal: [
+      this.obtenerValor('codigoPostal'),
+      this.idProcedimiento === 260911
+        ? [Validators.required, Validators.pattern(CODIGO_POSTAL)]
+        : [Validators.pattern(CODIGO_POSTAL)]
+    ],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
@@ -410,6 +417,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
           Object.values(this.agregarProveedorForm.controls).forEach(control => {
             control.markAsTouched();
             control.updateValueAndValidity();
+            this.message = 'Faltan campos por capturar.';
           });
           
             // NO redirigir ni emitir nada si el formulario es inválido

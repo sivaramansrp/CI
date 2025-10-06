@@ -285,7 +285,14 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
       this.tramite630103Store.setTramite630103State($event.campo, $event.valor);
     }
   }
-
+  /*
+  * Valida el formulario de datos de importación temporal.
+  * @returns {boolean} - `true` si el formulario es válido, `false` en caso contrario.
+  */
+  validarFormulario(): boolean {
+    this.tipoPropietarioFormulario.markAllAsTouched();
+    return this.tipoPropietarioFormulario.valid;
+  }
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.

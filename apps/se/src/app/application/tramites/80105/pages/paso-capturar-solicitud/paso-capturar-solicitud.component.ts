@@ -1,9 +1,10 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user';
-import { Subject, finalize, map, switchMap, take, tap } from 'rxjs';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, DatosPasos, ERROR_FORMA_ALERT, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent, WizardService, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user';
+import { Observable, Subject, finalize, map, switchMap, take, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
@@ -64,6 +65,19 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
    * - Asegúrese de que el componente `WizardComponent` esté presente en la plantilla.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  
+  /**
+ * @property wizardService
+ * @description
+ * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+ * @type {WizardService}
+ */
+  wizardService = inject(WizardService);
+  
+  /** Indica si hay una carga en progreso. */
+  cargaEnProgreso: boolean = true;
+
   /**
  * 
  * Una cadena que representa la clase CSS para una alerta de información.
@@ -156,6 +170,30 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
   public solicitudState!: Tramite80101State;
 
   /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
+      /**
+ * @property formErrorAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+ * @type {string}
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+   /**
+ * @property esFormaValido
+ * @description
+ * Indica si el formulario actual es válido. Se utiliza para habilitar o deshabilitar la navegación entre pasos en el wizard.
+ * @type {boolean}
+ * @default false
+ */
+  public esFormaValido!: boolean;
+
+  /**
    * Constructor del componente `PasoCapturarSolicitudComponent`.
    * Inicializa el componente y establece la validez del formulario en el store.
    * 
@@ -169,13 +207,10 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
     private tramite80105Store: Tramite80101Store,
     private tramite80105Query: Tramite80101Query,
     private toastrService: ToastrService,
+    private consultaQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
-    });
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
 
@@ -187,6 +222,14 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
     * evitando fugas de memoria.
     */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      ).subscribe();
+
     this.tramite80105Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -196,7 +239,91 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
       ).subscribe();
   }
 
-/**
+    /**
+ * @method verificarLaValidezDelFormulario
+ * @description
+ * Este método verifica la validez de los formularios dinámicos asociados a los pasos del wizard.
+ * @returns {boolean} - Indica si todos los formularios son válidos.
+ */
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      (this.servicioDeFormularioService.isFormValid('datosGeneralisForm') ??
+        false) &&
+      (this.servicioDeFormularioService.isFormValid('formaModificacionesForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('obligacionesFiscalesForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
+      false) && 
+      ((this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistas') ??
+      false) ||
+      (this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistasExtrenjeros') ??
+      false)) &&
+      this.isAllArraysFilledIn80101(['anexoUnoTabla1', 'anexoUnoTabla2', 'federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
+    );
+  }
+
+  
+  /** Verifica que todos los arreglos indicados estén llenos en el formulario del trámite 80101. */
+  isAllArraysFilledIn80101(array: string[]): boolean {
+    return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
+  }
+
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e - event$: Acción del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor <= this.pasos.length) {
+      const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+      if (!this.consultaState.readonly && e.accion === 'cont') {
+        if (!this.consultaState.update) {
+          this.esFormaValido = this.verificarLaValidezDelFormulario();
+          if (!this.esFormaValido) {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+            this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
+            this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
+            this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
+            this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+            return;
+          }
+        }
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else if (e.accion === 'cont') {
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else {
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
+        this.wizardComponent.atras();
+      }
+    }
+  }
+
+    /**
  * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
  * 
  * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
@@ -206,35 +333,23 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
  * 
  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
  */
-getValorIndice(e: AccionBoton): void {
-  let shouldNavigate = false;
-  this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(
+  private shouldNavigate$(): Observable<boolean> {
+    return this.nuevoProgramaIndustrialService.getAllState().pipe(
       take(1),
-      switchMap((data) => this.guardar(data)),
-      tap(response => {
-        shouldNavigate = response.codigo === '00';
-        if(shouldNavigate) {
-          this.padreBtn = false;
+      switchMap(data => this.guardar(data)),
+      map(response => {
+        const OK = response.codigo === '00';
+        if (OK) {
           this.toastrService.success(response.mensaje);
         } else {
           this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
-      }),
-      finalize(() => {
-        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
+        return OK;
       })
-    )
-    .subscribe();
-}
+    );
+  }
+
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -247,39 +362,113 @@ getValorIndice(e: AccionBoton): void {
       });
   }
 
-  /**
+ 
+/**
    * Construye un arreglo de objetos de plantas basado en una estructura base común.
-   * 
+   *
    * @param arr Arreglo de datos de entrada para cada planta.
    * @param base Objeto base que se combina con los datos específicos de cada planta.
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
+
+    // eslint-disable-next-line complexity
+    const mapCapacidadInstalada = (item: any) => ({
+      idPlantaCa: item.PLANTA ?? "",
+      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
+      umt: item.UMT ?? "",
+      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
+      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
+      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
+      turnos: (item.TURNOS ?? "").toString(),
+      horasTurno: (item.HORAS_POR_TURNO ?? "").toString(),
+      cantidadEmpleados: (item.CANTIDAD_EMPLEADOS ?? "").toString(),
+      cantidadMaquinaria: (item.CANTIDAD_MAQUINARIA ?? "").toString(),
+      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
+      capacidadMensual: (item.CAPACIDAD_INSTALADA_MENSUAL ?? "").toString(),
+      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
+      testado: "1",
+      claveServicio: item.CLAVE_SERVICIO ?? "",
+      cveTipoServicio: item.CVE_TIPO_SERVICIO ?? "",
+      descripcionServicio: item.DESCRIPCION_SERVICIO ?? "",
+      descTestado: item.DESC_TESTADO ?? "",
+      fraccionVista: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO ?? "",
+      idCapacidad: item.ID_CAPACIDAD ?? "",
+      tipoServicio: item.TIPO_SERVICIO ?? "",
+    });
+
+  const MAP_COMPLEMENTAR = (item:any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+  })
+
+  const MAP_FIRMANTES = (item:any) => ({
+      tipoFirmante: item.tipoFirmante ?? '',
+  })
+  
+  const MAP_MONTOS_INVERSION = (item:any) => ({
+      idPlantaM: item.PLANTA ?? "",
+      tipo: item.TIPO ?? "",
+      cantidad: item.CANTIDAD ?? "",
+      descripcion: item.DESCRIPCION ?? "",
+      monto: item.MONTO ?? "",
+  })
+
+  const MAP_EMPLEADOS = (item:any) => ({
+      idPlantaE: item.PLANTA ?? '',
+      totalEmpleados: item.TOTAL ?? '',
+      directos: item.DIRECTOS ?? '',
+      cedula: item.CEDULA_DE_CUOTAS ?? '',
+      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
+      indirectos: item.INDIRECTOS ?? '',
+      contrato: item.CONTRATO ?? '',
+      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
+      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
+      rfcEmpresa: item.RFC ?? '',
+      razonEmpresa: item.RAZON_SOCIAL ?? '',
+  })
+
+  const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
+  const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+  const firmantes = (data.firmantesDatos || []).map(MAP_FIRMANTES); 
+  const montos = (data.montosInversionDatos || []).map(MAP_MONTOS_INVERSION);
+  const datosEmpleados = (data.empleadosDatos || []).map(MAP_EMPLEADOS);
+
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+    let RESULT: any[] = [];
     array.forEach(arr => {
+      // eslint-disable-next-line complexity
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      idPlanta: arr.planta ?? '',
-      calle: arr.calle ?? '',
-      numeroExterior: arr.numeroExterior ?? '',
-      numeroInterior: arr.numeroInterior ?? '',
-      codigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.localidad ?? '',
-      colonia: arr.colonia ?? '',
-      delegacionMunicipio: arr.delegacionMunicipio ?? '',
-      entidadFederativa: arr.entidadFederativa ?? '',
-      pais: arr.pais ?? '',
-      rfc: arr.registroFederalDeContribuyentes ?? '',
-      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-      razonSocial: arr.razonSocial ?? '',
+          idPlanta: arr.planta ?? '',
+          calle: arr.calle ?? '',
+          numeroExterior: arr.numeroExterior ?? '',
+          numeroInterior: arr.numeroInterior ?? '',
+          codigoPostal: arr.codigoPostal ?? '',
+          localidad: arr.localidad ?? '',
+          colonia: arr.colonia ?? '',
+          delegacionMunicipio: arr.delegacionMunicipio ?? '',
+          entidadFederativa: arr.entidadFederativa ?? '',
+          pais: arr.pais ?? '',
+          rfc: arr.registroFederalDeContribuyentes ?? '',
+          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+          razonSocial: arr.razonSocial ?? '',
         });
       });
     });
-    return RESULT;
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
+    return RESULT_DATA;
   }
 
 /**
@@ -301,7 +490,7 @@ getValorIndice(e: AccionBoton): void {
       apellidoMaterno: arr.segundoApellido ?? '',
       apellidoPaterno: arr.primerApellido ?? '',
       numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: arr.fechaDelActa ?? '',
+      fechaActa: formatearFechaYyyyMmDd(arr.fechaDelActa ?? ''),
       numeroNotaria: arr.numeroDeNotaria ?? '',
       entidadFederativa: arr.estado ?? '',
       delegacionMunicipio: arr.estadoOptions ?? '',
@@ -319,10 +508,11 @@ getValorIndice(e: AccionBoton): void {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): Promise<any> {
+   
     const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
     const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasTerciarizadoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
@@ -350,8 +540,8 @@ getValorIndice(e: AccionBoton): void {
       "solicitante": {
 
       },
-      "planta": [...PLANTAS],
-      "notario": [...NOTARIOS],
+      "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
+      "notarios": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -603,7 +793,7 @@ getValorIndice(e: AccionBoton): void {
 
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-  /**
+ /**
    * Construye el objeto `anexo` a partir de los datos proporcionados.
    *
    * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
@@ -616,7 +806,6 @@ getValorIndice(e: AccionBoton): void {
    * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
    */
   buildAnexo(data: any) {
-
     const buildAnexoItem = (item: Anexo1) => ({
       descripcion: item.encabezadoFraccion,
       idTipoBien: 0,
@@ -625,7 +814,7 @@ getValorIndice(e: AccionBoton): void {
       contadorGrid: null,
       descripcionTestado: item.encabezadoDescripcion,
     });
-
+ 
     const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
@@ -639,7 +828,7 @@ getValorIndice(e: AccionBoton): void {
       idProductoP: item.idProductoP,
       descTestado: item.descTestado,
     });
-
+ 
     const buildDatosParaNavegar = (datos: any) => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
@@ -654,24 +843,23 @@ getValorIndice(e: AccionBoton): void {
       fecFinVigencia: null,
       volumenAnualSolicitado: null,
     });
-    const anexoDos: any = [];
-
-    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
-      anexoDos.push({
-        fraccionExportacion: item.encabezadoFraccionExportacion,
-        fraccionImportacion: item.encabezadoFraccionImportacion,
-        descFraccionImpo: item.encabezadoDescripcionComercial,
-        claveFraccionAnexo: item.encabezadoAnexoII,
-        idProducto: item.encabezadoIdProducto,
-        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
-        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
-        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
-        categoriaFraccion: item.encabezadoCategoria,
-        tipoFraccion: item.encabezadoTipo,
-        umt: item.encabezadoUmt
-      });
+ 
+    const buildAnexoDos = (item: any) => ({
+      fraccionExportacion: item.encabezadoFraccionExportacion,
+      fraccionImportacion: item.encabezadoFraccionImportacion,
+      descFraccionImpo: item.encabezadoDescripcionComercial,
+      claveFraccionAnexo: item.encabezadoAnexoII,
+      idProducto: item.encabezadoIdProducto,
+      fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+      fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+      fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+      fraccionVolumenMensual: item?.encabezadoValorEnMonedaMensual,
+      fraccionVolumenAnual: item?.encabezadoVolumenAnual,
+      categoriaFraccion: item.encabezadoCategoria,
+      tipoFraccion: item.encabezadoTipo,
+      umt: item.encabezadoUmt,
     });
-
+ 
     const proyectoImmexDatos = (item: any) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
@@ -682,7 +870,13 @@ getValorIndice(e: AccionBoton): void {
       testado: true,
       fecFinVigencia: item.encabezadoFechaVigencia,
     });
-
+ 
+    /**
+     * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
+     *
+     * @param item - Objeto que contiene la información del proveedor y cliente.
+     * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
+     */
     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
@@ -693,14 +887,14 @@ getValorIndice(e: AccionBoton): void {
       domicilio: item.domicilio,
       descTestado: item.descTestado,
     });
-
+ 
     return {
       anexo: {
         ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
         ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
         proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-        tableDos: anexoDos,
+        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.importarDatosTabla[0] || {}),
+        tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
         proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
         proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
@@ -766,5 +960,12 @@ getValorIndice(e: AccionBoton): void {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /** Actualiza el estado de carga en progreso.
+   * @param carga - Indica si hay una carga en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

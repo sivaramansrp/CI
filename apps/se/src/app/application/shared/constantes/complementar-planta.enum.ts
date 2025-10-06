@@ -62,12 +62,12 @@ export const COMPLEMENTO_DE_PLANTA = [
     orden: 3,
   },
   {
-    encabezado: 'Fecha de firma (programa)',
+    encabezado: 'Fecha de firma',
     clave: (ele: ComplementoDePlanta): string => ele.FECHA_DE_FIRMA,
     orden: 4,
   },
   {
-    encabezado: 'Fecha de fin de vigencia (programa)',
+    encabezado: 'Fecha de fin de vigencia',
     clave: (ele: ComplementoDePlanta): string => ele.FECHA_DE_FIN_DE_VIGENCIA,
     orden: 5,
   },
@@ -77,12 +77,12 @@ export const COMPLEMENTO_DE_PLANTA = [
     orden: 6,
   },
   {
-    encabezado: 'Fecha de firma (documento)',
+    encabezado: 'Fecha de firma',
     clave: (ele: ComplementoDePlanta): string => ele.FECHA_DE_FIRMA_DOCUMENTO,
     orden: 7,
   },
   {
-    encabezado: 'Fecha de fin de vigencia (documento)',
+    encabezado: 'Fecha de fin de vigencia',
     clave: (ele: ComplementoDePlanta): string =>
       ele.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO,
     orden: 8,

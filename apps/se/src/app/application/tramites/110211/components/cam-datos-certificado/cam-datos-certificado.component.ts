@@ -22,7 +22,6 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
   imports:[DatosCertificadoDeComponent,CommonModule]
 })
 export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
-  idProcedimiento:number=110211;
   /**
    * @descripcion
    * Indica si el idioma predeterminado está seleccionado.

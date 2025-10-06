@@ -37,7 +37,6 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
-import { PRESENTA_ID } from '../../constantes/modificacion.enum';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -151,8 +150,6 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   @Output() idiomaSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
 
-
-presentaView:boolean=true;
   /**
    * Evento que emite cuando se selecciona una entidad federativa.
    * @type {EventEmitter<Catalogo>}
@@ -243,7 +240,6 @@ presentaView:boolean=true;
  * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
  */
   ngOnInit(): void {
-    this.presentaView = PRESENTA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
   }
   /**

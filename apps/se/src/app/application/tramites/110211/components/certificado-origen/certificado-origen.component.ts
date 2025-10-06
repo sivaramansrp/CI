@@ -43,8 +43,6 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
     MercanciaComponent]
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
-    idProcedimiento:number=110211;
-
   /**
    * @description
    * Lista de estados disponibles para selección.
@@ -66,7 +64,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * }
    * ```
    */
-  
   estado: Catalogo[] = [];
 
   /**

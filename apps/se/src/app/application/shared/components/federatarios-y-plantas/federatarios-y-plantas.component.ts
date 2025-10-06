@@ -486,8 +486,8 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       mensaje: this.federatariosSeleccionadoDatos.length > 0 ? '¿Está seguro de eliminar el(los) notario(s)?' : 'Seleccione el notario que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: this.federatariosSeleccionadoDatos.length > 0 ? 'Cancelar' : '',
+      txtBtnAceptar: 'Aceptar'
     };
   }
 
@@ -624,8 +624,7 @@ agregarPlantas(): void {
    * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
    */
   buscarPlantasImmex(): void {
-    this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
-    this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
+    this.datosPlantaDisponibles.emit();
   }
 
   /**

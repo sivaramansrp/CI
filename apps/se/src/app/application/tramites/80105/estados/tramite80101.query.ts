@@ -184,6 +184,14 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   );
 
   /**
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+
+  selectDatosFederatariosFormulario$ = this.select(
+    (state) => state.datosFederatarios
+  );
+
+  /**
    * Selecciona los datos para navegar en el Anexo Uno del estado.
    */
   selectDatosParaNavegar$ = this.select(
