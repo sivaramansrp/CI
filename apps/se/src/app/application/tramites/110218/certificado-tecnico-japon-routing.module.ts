@@ -4,6 +4,8 @@ import { MercanciasSeleccionadasFormComponent } from './components/mercancias-se
 import { NgModule } from '@angular/core';
 import { ValidarCertificadoTecnicoJaponComponent } from './pages/validar-certificado-tecnico-japon/validar-certificado-tecnico-japon.component';
 
+import { DatosBusquedaComponent } from './components/datos-busqueda/datos-busqueda.component';
+
 const ROUTES: Routes = [
   {
     canActivate: [IniciarTramiteResolver],
@@ -13,6 +15,10 @@ const ROUTES: Routes = [
       },
     },
     path: 'validar-certificado-tecnico-japon',
+    component: DatosBusquedaComponent,
+  },
+  {
+    path: 'validar-certificado-tecnico',
     component: ValidarCertificadoTecnicoJaponComponent,
   },
   {

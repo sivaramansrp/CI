@@ -464,6 +464,11 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     })
   }
 
+  /**
+   * Limita la entrada de un campo de texto a un número máximo de caracteres numéricos.
+   * @param event Event del input
+   * @param maxLength 
+   */
   onInputMaxLength(event: Event, maxLength: number): void { 
   const TARGET = event.target as HTMLInputElement;
   let value = TARGET.value;

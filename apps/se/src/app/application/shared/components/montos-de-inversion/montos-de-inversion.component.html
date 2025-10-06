@@ -9,7 +9,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label" for="cantidad">Cantidad*:</label>
-        <input class="form-control min-hgt" id="cantidad" formControlName="cantidad" type="text" maxlength="11"
+        <input class="form-control min-hgt" id="cantidad" formControlName="cantidad" type="number" maxlength="11" (input)="onInputMaxLength($event, 11, 'cantidad')"
           (change)="setValoresStore(montosDeInversionForm, 'cantidad', 'setCantidad')" />
       </div>
     </div>
@@ -24,8 +24,8 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label class="form-label mnx" for="mnx">Monto de inversión en moneda nacional(mxn)*:</label>
-        <input class="form-control" id="mnx" formControlName="mnx" type="text" maxlength="16"
-          (change)="setValoresStore(montosDeInversionForm, 'mnx', 'setMnx')" />
+        <input class="form-control" id="mnx" formControlName="mnx" type="number" maxlength="16"
+          (change)="setValoresStore(montosDeInversionForm, 'mnx', 'setMnx')" (input)="onInputMaxLength($event, 16, 'mnx')"/>
       </div>
     </div>
     <div class="row mt-5">

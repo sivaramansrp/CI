@@ -1,15 +1,14 @@
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
 import { FormBuilder } from '@angular/forms';
 import { HistoricoColumnas} from '../../../110223/models/certificado-origen.model';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { MercanciaTabla } from '../../../../shared/models/certificado-origen.model';
 import { Subject } from 'rxjs';
 import { Tramite110223Query } from '../../query/tramite110223.query';
-import { Tramite110223Store } from '../../estados/Tramite110223.store';
 
 /**
  * Componente para gestionar el histórico de productores.
@@ -78,6 +77,11 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Solicitud actual del trámite.
+   */
+  public solicitudState!: TramiteState;
+
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -99,9 +103,22 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+    this.tramiteQuery.selectPexim$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.cargarProductorPorExportador();
     this.cargarMercancia();
-    this.facturaOpcion();
+    if (this.solicitudState.optionsTipoFactura.length === 0) {
+      this.facturaOpcion();
+    } else {
+      this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
+    }
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -140,19 +157,13 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    * Obtiene la lista de países disponibles.
    */
   facturaOpcion(): void {
-    this.certificadoDeService.obtenerMenuDesplegable('factura.json')
+    this.certificadoDeService.getTipoFactura()
       .pipe(
         takeUntil(this.destroyNotifier$),
       )
-      .subscribe({
-        next: (data) => {
-
-          this.optionsTipoFactura = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-
-        },
+      .subscribe((data) => {
+        this.optionsTipoFactura = data.datos as Catalogo[];
+        this.store.setTipoFacturaOpciones(this.optionsTipoFactura);
       });
   }
 
@@ -197,7 +208,7 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    * 
    * @command Actualiza el estado del store con los valores proporcionados.
    */
-  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: string | number | boolean | null, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }

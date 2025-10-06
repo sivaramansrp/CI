@@ -3,6 +3,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
+import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 
 /**
  * @interface Solicitud110218State
@@ -113,6 +114,18 @@ export interface Solicitud110218State {
 
   /** Nombre del solicitante o responsable */
   solicitante: string;
+
+  /** **Valor seleccionado dentro del proceso de solicitud** */
+  valorSeleccionado: string | number;
+  
+  /** **Número de certificado asociado a la solicitud** */
+  numeroDeCertificado: string;
+
+  /** **Tratado o acuerdo relacionado con la solicitud** */
+  tratadoAcuerdo: string;
+
+  /** **País o bloque económico relacionado con la solicitud** */
+  paisBloque: string;
 }
 
 /**
@@ -159,6 +172,10 @@ export function createInitialState(): Solicitud110218State {
     fechaSolicitud: '',
     estado: '',
     solicitante: '',
+    valorSeleccionado: radioOpciones?.radioOptions[0].label,
+    numeroDeCertificado: '',
+    tratadoAcuerdo: '',
+    paisBloque: '',
   };
 }
 

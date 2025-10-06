@@ -11,6 +11,23 @@ import { Tramite110214Store } from '../tramites/tramite110214.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110214Query extends Query<Tramite110214State> {
+   /**
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */ 
+    datosProductorFormulario$ = this.select((state) => {
+      return state.datosProductorFormulario;
+    });
+  
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
+    formulario$ = this.select((state) => {
+      return state.formulario;
+    });
+
 
   /**
    * Observable que selecciona el estado completo del trámite.
