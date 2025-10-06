@@ -613,16 +613,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6",
       tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState.tratado || '' },
-      pais: { clave: this.solicitudState.pais || '' }
+      pais: { cvePais: this.solicitudState.pais || '' }
     };
 
     this.registroService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
       this.mercanciaDisponsiblesTablaDatos = response.datos || [];
       this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
     });
-
-
-    // this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
     this.hayMercanciasDisponibles = true;
   }
 
