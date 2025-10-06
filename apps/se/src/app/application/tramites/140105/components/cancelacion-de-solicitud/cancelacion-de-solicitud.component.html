@@ -12,7 +12,7 @@
       <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
         aria-controls="offcanvasRight" [disabled]="cuerpoTablaCancelacion.length === 0" (click)="eliminarRegistro($event)">Eliminar registro</button>
       <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-        aria-controls="offcanvasRight" (click)="busqueda($event)">Búsqueda folio</button>
+        aria-controls="offcanvasRight" (click)="showForm()">Búsqueda folio</button>
     </div>
   </div>
   <div *ngIf="datosDePermiso">
@@ -38,3 +38,52 @@
     </form>
 
   </div>
+  <div class="modal fade" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
+    <div class="modal-dialog modal-l  modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header d-flex justify-content-between">
+            <h5 class="modal-title" id="exampleModalLabel">Buscar permiso a cancelar</h5>
+           
+          </div>
+        <div class="modal-body">
+
+    <div>
+        <form [formGroup]="busquedaForm">
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <label class="form-label" for="tramite">Folio trámite*:</label>
+                    <input type="text" class="form-control" id="tramite" formControlName="tramite">
+                    <div *ngIf="busquedaForm.controls['tramite'].invalid && busquedaForm.controls['tramite'].touched">
+                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['required']">*El campo no puede estar vacío.</small>
+                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['pattern']">*Solo se permiten números.</small>
+                      </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-md-8 d-flex justify-content-end"></div>
+        </div>
+        
+    </div>
+    
+
+        
+     </div>
+     <div class="modal-footer">
+     <div class="row mt-5">
+        <div class="col-md-12 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                #closeModal (click)="cerrarModal()">Cancelar</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                (click)="abrirModificarModal()">Buscar</button>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+<div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+<app-busqueda-folio (cerrarClicado)="cerrarModificarModal()"
+></app-busqueda-folio>
+</div>

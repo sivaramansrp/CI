@@ -76,8 +76,7 @@
     <div class="col-md-12">
       <div class="form-group">
         <label class="form-label" for="observaciones"
-          >Justificación
-          <span
+          >Justificación<span
             for="asterisk"
             [ngClass]="
               esValido(solicitudForm, 'observaciones') ? 'require' : ''
@@ -106,6 +105,7 @@
     <div class="col-md-12">
       <ng-titulo titulo="Datos del establecimiento" />
     </div>
+    @if (mostrarBoton) {
     <div class="col-md-12">
       <div class="text-end">
         <button
@@ -123,6 +123,7 @@
         </button>
       </div>
     </div>
+    }
     <div class="col-md-4 mt-4">
       <label class="form-label" for="rfcSanitario"
         >RFC del responsable sanitario<span
@@ -252,12 +253,12 @@
         [required]="estadoCatalogo.required"
         formControlName="estado"
         (selectionChange)="setEstado($event)"
-        [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="true"
       ></app-catalogo-select>
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="municipio"
-        >Municipio y alcaldía<span
+        >Municipio o alcaldía<span
           for="asterisk"
           [ngClass]="esValido(solicitudForm, 'municipio') ? 'require' : ''"
           >*</span
@@ -285,13 +286,17 @@
         placeholder=""
         type="text"
         formControlName="localidad"
+        [ngClass]="esValido(solicitudForm, 'localidad') ? 'required' : ''"
         maxlength="120"
       />
+      @if (solicitudForm.controls['localidad'].errors?.['pattern'] &&
+      (solicitudForm.controls['localidad'].touched ||
+      solicitudForm.controls['localidad'].dirty)) {
+      <span class="mensaje-error">El valor capturado no es válido.</span>
+      }
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="colonia"
-        >Colonia:</label
-      >
+      <label class="form-label" for="colonia">Colonia:</label>
       <input
         class="form-control"
         id="colonia"
@@ -385,6 +390,7 @@
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
+    @if (mostrarBoton) {
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
       <div class="btn-group">
         <button
@@ -409,6 +415,7 @@
         </button>
       </div>
     </div>
+    }
     <div class="col-md-4 mt-4">
       <div class="form-check mt-3">
         <lib-input-check
@@ -417,7 +424,7 @@
           [required]="true"
           formControlName="avisoDeFuncionamiento"
           (change)="setAvisoDeFuncionamiento()"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="true"
         ></lib-input-check>
       </div>
     </div>
@@ -438,7 +445,8 @@
         (change)="setLicenciaSanitaria($event)"
       />
     </div>
-    <div class="col-md-8 mt-4">
+    <div class="col-md-4 mt-4"></div>
+    <div class="col-md-4 mt-4">
       <app-catalogo-select
         [id]="'regimenCatalogo'"
         [catalogo]="regimenCatalogo.catalogos"
@@ -449,10 +457,10 @@
         (selectionChange)="setRegimen($event)"
         [tooltipQuestionCircle]="true"
         tooltipQuestionCircleText="Régimen al que se destinará la mercancia"
-        [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="true"
       ></app-catalogo-select>
     </div>
-    <div class="col-md-4 mt-4">
+    <div class="col-md-8 mt-4">
       <app-catalogo-select
         [id]="'aduana'"
         [catalogo]="aduanaCatalogo.catalogos"
@@ -461,7 +469,7 @@
         [required]="aduanaCatalogo.required"
         formControlName="aduana"
         (selectionChange)="setAduana($event)"
-        [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="true"
       ></app-catalogo-select>
     </div>
     <div class="col-md-12 mt-4">
@@ -474,6 +482,7 @@
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
+    @if (mostrarBoton) {
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
       <div class="btn-group">
         <button
@@ -506,6 +515,7 @@
         </button>
       </div>
     </div>
+    }
     <div class="col-md-12 mt-4">
       <ng-titulo titulo="Manifiestos y declaraciones" />
       <div class="alert alert-info">
@@ -573,6 +583,7 @@
       <span class="mensaje-error">Este campo es obligatorio</span>
       }
     </div>
+    @if (mostrarBoton) {
     <div class="col-md-2 mt-4 buscar-btn">
       <button
         type="button"
@@ -582,6 +593,7 @@
         Buscar
       </button>
     </div>
+    }
     <div class="col-md-6 mt-4"></div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="legalRazonSocial"
@@ -612,7 +624,7 @@
         id="apellidoMaterno"
         placeholder=""
         type="text"
-        formControlName="apellidoMeterno"
+        formControlName="apellidoMaterno"
       />
     </div>
   </div>
@@ -695,7 +707,10 @@
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <app-mercancias-datos [mercancia]="seleccionadaMercancia" (modificar)="onMercanciaModificada($event)"></app-mercancias-datos>
+          <app-mercancias-datos
+            [mercancia]="seleccionadaMercancia"
+            (modificar)="onMercanciaModificada($event)"
+          ></app-mercancias-datos>
         </div>
       </div>
     </div>
@@ -707,10 +722,10 @@
   tabindex="-1"
   aria-labelledby="SCIANLabel"
 >
-  <form [formGroup]="claveSCIANForm">
-    <div class="col-md-12">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form [formGroup]="claveSCIANForm">
+        <div class="col-md-12">
           <div class="col-md-12">
             <ng-titulo titulo="Clave S.C.I.A.N." />
           </div>
@@ -722,7 +737,6 @@
               [required]="SCIANCatalogo.required"
               formControlName="claveSCIAN"
               (selectionChange)="setClaveSCIAN($event)"
-              [isDisabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
           </div>
           <div class="col-md-8 mt-4">
@@ -771,7 +785,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
