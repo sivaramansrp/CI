@@ -1,0 +1,123 @@
+<ng-container>
+  <form [formGroup]="formRepresentante">
+    <ng-titulo titulo="Datos del Representante Legal exportador" />
+    <div>
+      <div class="row">
+        <div class="col-md-8 mb-3">
+          <label>Lugar*:</label>
+          <input type="text" class="form-control" id="lugar" formControlName="lugar" maxlength="70"
+            [ngClass]="formRepresentante.get('lugar')?.invalid && formRepresentante.get('lugar')?.touched ? 'required' : ''"
+            (change)="setValoresStore('formRepresentante', 'lugar', 'setGrupoRepresentativoLugar')" />
+          @if (formRepresentante.get('lugar')?.hasError('required') &&
+          formRepresentante.get('lugar')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 mb-3">
+          <label>Nombre del representante legal del exportador*:</label>
+          <input type="text" class="form-control" id="nombreExportador" formControlName="nombreExportador"
+            maxlength="70"
+            [ngClass]="formRepresentante.get('nombreExportador')?.invalid && formRepresentante.get('nombreExportador')?.touched ? 'required' : ''"
+            (change)="setValoresStore('formRepresentante', 'nombreExportador', 'setGrupoRepresentativoNombreExportador')" />
+
+          @if (formRepresentante.get('formRepresentante.nombreExportador')?.hasError('required') &&
+          formRepresentante.get('formRepresentante.nombreExportador')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label>Empresa*:</label>
+          <input type="text" class="form-control" id="empresa" formControlName="empresa" maxlength="90"
+            [ngClass]="formRepresentante.get('empresa')?.invalid && formRepresentante.get('empresa')?.touched ? 'required' : ''"
+            (change)="setValoresStore('formRepresentante', 'empresa', 'setGrupoRepresentativoEmpresa')" />
+
+          @if (formRepresentante.get('formRepresentante.empresa')?.hasError('required') &&
+          formRepresentante.get('formRepresentante.empresa')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
+          }
+        </div>
+        <div class="col-md-4 mb-3">
+          <label>Cargo*:</label>
+          <input type="text" class="form-control" id="cargo" formControlName="cargo" maxlength="70"
+            [ngClass]="formRepresentante.get('cargo')?.invalid && formRepresentante.get('cargo')?.touched ? 'required' : ''"
+            (change)="setValoresStore('formRepresentante', 'cargo', 'setGrupoRepresentativoCargo')" />
+
+          @if (formRepresentante.get('formRepresentante.cargo')?.hasError('required') &&
+          formRepresentante.get('formRepresentante.cargo')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
+          }
+        </div>
+        <div class="col-md-1 mb-3">
+          <label>Lada:</label>
+          <input type="text" class="form-control" id="lada" formControlName="lada"
+            (change)="setValoresStore('formRepresentante', 'lada', 'setGrupoRepresentativoLada')" />
+        </div>
+        <div class="col-md-3 mb-3">
+          <label>Teléfono*:</label>
+          <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20"
+            [ngClass]="isValid(formRepresentante,'telefono') ? 'required' : ''"
+            (change)="setValoresStore('formRepresentante', 'telefono', 'setGrupoRepresentativoTelefono')" />
+
+          @if (formRepresentante.get('formRepresentante.telefono')?.hasError('required') &&
+          formRepresentante.get('formRepresentante.telefono')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
+          } @if (formRepresentante.get('formRepresentante.telefono')?.hasError('pattern') &&
+          formRepresentante.get('formRepresentante.telefono')?.touched) {
+          <div class="text-danger">
+            <small>Por favor, ingrese solo dígitos</small>
+          </div>
+          }
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label>Fax*:</label>
+            <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="20"
+              [ngClass]="formRepresentante.get('fax')?.invalid && formRepresentante.get('fax')?.touched ? 'required' : ''"
+              (change)="setValoresStore('formRepresentante', 'fax', 'setGrupoRepresentativoFax')" />
+
+            @if (formRepresentante.get('formRepresentante.fax')?.hasError('required') &&
+            formRepresentante.get('formRepresentante.fax')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio.</small>
+            </div>
+            }
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2"
+              tooltip="ejemplo@dominio.com" placement="top"></span>
+            <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
+              [ngClass]="formRepresentante.get('correoElectronico')?.invalid && formRepresentante.get('correoElectronico')?.touched ? 'required' : ''"
+              (change)="setValoresStore('formRepresentante','correoElectronico','setGrupoRepresentativoCorreoElectronico')" />
+
+            @if (formRepresentante.get('formRepresentante.correoElectronico')?.hasError('required') &&
+            formRepresentante.get('formRepresentante.correoElectronico')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio.</small>
+            </div>
+            } @else if (formRepresentante.get('formRepresentante.correoElectronico')?.hasError('pattern') &&
+            formRepresentante.get('formRepresentante.correoElectronico')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe una dirección de correo válida</small>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-container>
