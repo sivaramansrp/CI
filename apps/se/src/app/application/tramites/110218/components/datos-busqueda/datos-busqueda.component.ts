@@ -24,7 +24,6 @@ import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputRadioComponent, CatalogoSelectComponent, TableComponent,NotificacionesComponent],
   templateUrl: './datos-busqueda.component.html',
-  styleUrl: './datos-busqueda.component.scss'
 })
 export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
