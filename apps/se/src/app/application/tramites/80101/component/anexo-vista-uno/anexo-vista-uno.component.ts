@@ -1,6 +1,7 @@
 import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosEncabezado, DatosComplimento, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, Input } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
@@ -10,7 +11,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RutaNombre } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Observable, Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
