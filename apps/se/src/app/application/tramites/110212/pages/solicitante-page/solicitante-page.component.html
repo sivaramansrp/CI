@@ -18,7 +18,7 @@
       @switch (indice) { @case (1) {
       <app-paso-uno #pasoUnoRef (cambioDePestana)="alCambiarPestana()"></app-paso-uno>
       } @case (2) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110212" [procedureUrl]="'validacion-posteriori/solicitante'"></paso-firma>
       } }
       <btn-continuar
         [datos]="datosPasos"

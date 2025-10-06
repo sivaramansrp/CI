@@ -1,6 +1,7 @@
 import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosEncabezado, DatosComplimento, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, Input } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
@@ -10,7 +11,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RutaNombre } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
@@ -278,6 +278,26 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   proveedorClienteDatosTablaId?:string;
 
+   /**
+   * Observable que representa los datos de la tabla de complementos.
+   *
+   * @type {Observable<ProveedorClienteTabla[]>}
+   * @description Este observable contiene una lista de objetos de tipo `ProveedorClienteTabla`,
+   * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
+   * en la interfaz de usuario.
+   */
+  public proveedorClienteDatosTabla$!: Observable<ProveedorClienteTabla[]>;
+
+  /**
+   * Observable que representa los datos de la tabla de complementos.
+   *
+   * @type {Observable<ProveedorClienteTabla[]>}
+   * @description Este observable contiene una lista de objetos de tipo `ProveedorClienteTabla`,
+   * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
+   * en la interfaz de usuario.
+   */
+  public proveedorClienteDatosTablaDos$!: Observable<ProveedorClienteTabla[]>;
+
   /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
@@ -326,10 +346,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
           this.anexoDosTablaLista = exportarTablsDatos;
         }
       });
-      this.inicializarFormularioDatosSubcontratista();
-     this.obtenerDatosDelAlmacen();
-         this.inicializarFormularioDatosDosSubcontratista();
-     this.obtenerDatosDosDelAlmacen();
+
+    this.proveedorClienteDatosTabla$ = this.query.selectProveedorClienteDatosTabla$;
+    this.proveedorClienteDatosTablaDos$ = this.query.selectProveedorClienteDatosTablaDos$;
+
+    this.inicializarFormularioDatosSubcontratista();
+    this.obtenerDatosDelAlmacen();
+    this.inicializarFormularioDatosDosSubcontratista();
+    this.obtenerDatosDosDelAlmacen();
   }
 
 

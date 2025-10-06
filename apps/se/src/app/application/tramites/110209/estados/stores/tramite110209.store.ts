@@ -15,6 +15,8 @@ import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.
  * @interface
  */
 export interface Tramite110209State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
   /** Medio de transporte utilizado */
   medioDeTransporte: string;
   /** Ruta completa del transporte */
@@ -77,6 +79,7 @@ export interface Tramite110209State {
  */
 export function createInitialState(): Tramite110209State {
   return {
+    idSolicitud: 0,
     medioDeTransporte: '',
     rutaCompleta: '',
     puertoDeEmbarque: '',
@@ -88,7 +91,7 @@ export function createInitialState(): Tramite110209State {
       nombreTecnico: '',
       nombreComercial: '',
       nombreIngles: '',
-      numeroDeRegistro: ''
+      numeroDeRegistro: '',
     },
     descripcion: '',
     marca: '',
@@ -129,6 +132,18 @@ export class Tramite110209Store extends Store<Tramite110209State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**

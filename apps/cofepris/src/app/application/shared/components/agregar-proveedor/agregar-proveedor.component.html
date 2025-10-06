@@ -1,9 +1,11 @@
 <div class="container mt-4">
+   <div *ngIf="message" class="alert alert-danger error-message text-center" style="margin-bottom: 16px;">
+    {{ message }}
+  </div>
   <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.tipoPersona; else agregarProveedor"
     titulo="Modificar proveedor"
   ></ng-titulo>
-
   <ng-template #agregarProveedor>
     <ng-titulo titulo="Agregar proveedor"></ng-titulo>
   </ng-template>
@@ -469,11 +471,11 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado</label><span
-          class="form-label"
+        <label class="form-label">Estado</label>
+        <span
           *ngIf="elementosRequeridos.includes('estado') || chequeoValidacionAlGuardar"
-          >*</span
-        ><span class="form-label">:</span>
+          [ngClass]="{'text-danger': agregarProveedorForm.get('estado')?.touched && agregarProveedorForm.get('estado')?.invalid}"
+          >*</span><span class="form-label">:</span>
         <input
           type="text"
           class="form-control"

@@ -1,10 +1,12 @@
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Catalogo, ConfiguracionColumna, doDeepCopy, esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 @Component({
@@ -14,13 +16,24 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './empresas-terciarizadaas.component.html',
   styleUrl: './empresas-terciarizadaas.component.scss',
 })
-export class EmpresasTerciarizadaasComponent implements OnDestroy {
+export class EmpresasTerciarizadaasComponent implements OnDestroy, OnInit {
 
+  public estadosCatalogo$!: Observable<Catalogo[]>;
+  
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
-    private tramite80101Store: Tramite80101Store
+    private tramite80104Store: Tramite80101Store, private tramite80104Query: Tramite80101Query,private _compartidaSvc: ComplimentosService
   ) {
-    this.obtenerListaEstado();
   }
+
+  ngOnInit(): void {
+    this.estadosCatalogo$ = this.tramite80104Query.selectEstadosOpciones$;
+  }
+
+ /**
+   * Arreglo que contiene las entidades fiscales disponibles para selección.
+   * Cada elemento representa una instancia de `DisponsibleFiscal`.
+   */
+  disponiblesDatos: DisponsibleFiscal[] = []; 
 
   /**
   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -43,33 +56,48 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
     { encabezado: 'Domicilio fiscal del solicitante', clave: (item) => item.domicilioFiscalSolicitante, orden: 10 },
     { encabezado: 'Razón social', clave: (item) => item.razonSocial, orden: 11 },
   ];
-  /**
-   * Arreglo que contiene los estados disponibles en el catálogo.
-   * Cada elemento es de tipo `Catalogo`.
-   */
-  estadosCatalogo: Catalogo[] = [];
 
   actualizarSeleccionadas(event: DisponsibleFiscal[]): void {
    if (event) {
-    this.tramite80101Store.setSeleccionadas(event);
+    this.tramite80104Store.setSeleccionadas(event);
    }
   }
 
-  /**
-  * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
-  * @method obtenerListaEstado
-  */
-  obtenerListaEstado(): void {
-    this.nuevoProgramaIndustrialService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response) => {
-        if (response) {
-          this.estadosCatalogo = response.data;
-        }
-      });
+  actualizarEstados(event: Catalogo[]): void {
+    if (event) {
+      this.tramite80104Store.setEstadosOpciones(event);
+    }
   }
 
+
+  /**
+   * Obtiene la lista de empresas terciarizadas disponibles según el RFC y estado proporcionados.
+   * 
+   * @param event - Objeto que contiene el RFC de la empresa submanufacturera y la entidad federativa.
+   * 
+   * Realiza una petición al servicio compartido para obtener las empresas terciarizadas disponibles,
+   * filtra y transforma los datos recibidos, y los asigna a la propiedad `disponiblesDatos`.
+   * La suscripción se cancela automáticamente al destruir el componente.
+   */
+  obtenerTerciarizadasDisponibles(event: { rfc: string; estado: string }): void {
+    const PAYLOAD = {
+      "rfcEmpresaSubManufacturera": event.rfc,
+      "entidadFederativa": event.estado,
+      "idPrograma": null
+    };
+  
+    this._compartidaSvc
+      .getTerciarizadasDisponibles(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+          if(esValidObject(response)) {
+            const API_DATOS = doDeepCopy(response);
+            if(esValidArray(API_DATOS.datos)) {
+              this.disponiblesDatos = this._compartidaSvc.toDisponsibleFiscal(API_DATOS.datos);
+            } 
+          }
+      });
+  }
 
   /**
  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

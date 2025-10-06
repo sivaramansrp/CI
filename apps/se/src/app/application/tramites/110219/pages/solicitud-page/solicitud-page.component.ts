@@ -6,9 +6,16 @@ import {
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Solicitud110219State,
+  Tramite110219Store,
+} from '../../estados/Tramite110219.store';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite110219Query } from '../../estados/Tramite110219.query';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -38,6 +45,7 @@ interface AccionBoton {
     PasoUnoComponent,
     PasoTresComponent,
     CommonModule,
+    PasoFirmaComponent,
   ],
 })
 export class SolicitudPageComponent implements OnInit {
@@ -85,6 +93,42 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la solicitud 110219.
+   *
+   * Esta propiedad mantiene la información de la solicitud en curso y
+   * se sincroniza de manera reactiva con el store correspondiente.
+   * Contiene los datos necesarios para representar y manipular
+   * la solicitud dentro del componente.
+   *
+   * @type {Solicitud110219State}
+   * @public
+   */
+  public solicitudState!: Solicitud110219State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+  constructor(
+    public store: Tramite110219Store,
+    private query: Tramite110219Query
+  ) {
+    this.query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
 
   /**
    * Inicializa el componente y ajusta la lista de pasos del asistente,

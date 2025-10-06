@@ -10,6 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
   forwardRef,
+  input,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -142,6 +143,8 @@ export class InputRadioComponent
    */
   @Output() valueChange = new EventEmitter<string | number>();
 
+  @Input() bloquearOpciones: boolean = false;
+
   /**
  * Constructor del componente.
  *
@@ -197,6 +200,15 @@ export class InputRadioComponent
     const VALIDATORS = this.isRequired ? [Validators.required] : [];
     this.FormInputRadio = this.fb.group({
       seleccion: [this.selectedValue || '', VALIDATORS],
+    });
+
+    // Escuchar cuando cambie el valor
+    let alreadyDisabled = false;
+    this.FormInputRadio.get('seleccion')?.valueChanges.subscribe(valor => {
+      if (valor && this.bloquearOpciones && !alreadyDisabled) {
+        alreadyDisabled = true;
+        this.FormInputRadio.get('seleccion')?.disable({ emitEvent: false }); // bloquear después de la primera selección sin triggering valueChanges
+      }
     });
   }
 

@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import { Subject,map,takeUntil } from 'rxjs';
 import { AlertComponent } from 'ngx-bootstrap/alert';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DisponsibleFiscal } from '../../models/empresas.model';
 import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
@@ -39,6 +40,15 @@ export class EmpresasComponent implements OnInit, OnDestroy {
 
   @Output() seleccionadasDatos: EventEmitter<DisponsibleFiscal[]> = new EventEmitter();
 
+  @Output() estadosOpciones: EventEmitter<Catalogo[]> = new EventEmitter();
+
+  /**
+   * Evento que se emite para solicitar la búsqueda de empresas controladoras.
+   * 
+   * Se dispara sin argumentos cuando se requiere actualizar o consultar la lista de controladoras.
+   */
+  @Output() buscarControladorasEmit: EventEmitter<{ rfc: string; estado: string }> = new EventEmitter<{ rfc: string; estado: string }>();
+
   /**
    * Título para la sección de empresas.
    */
@@ -68,6 +78,15 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    * Formulario reactivo utilizado para la captura de la información de empresas.
    */
   empresasForm!: FormGroup;
+
+  /**
+   * Input para recibir datos de empresas disponibles desde el componente padre.
+   * Al cambiar, actualiza la lista de disponibles y sincroniza con el store.
+   */
+  @Input() set disponiblesDatos(value: DisponsibleFiscal[]) {
+    this.disponibles = value || [];
+    this.tramite80104Store.setDisponibles(this.disponibles);
+  }
 
   /**
    * Lista de empresas disponibles para ser seleccionadas.
@@ -108,6 +127,7 @@ export class EmpresasComponent implements OnInit, OnDestroy {
     private tramite80104Store: Tramite80104Store,
     private tramite80104Query: Tramite80104Query,
      private consultaioQuery: ConsultaioQuery,
+    private complimentosService: ComplimentosService,
         ) { 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -127,7 +147,26 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarCertificadoFormulario();
+    if (this.estadosCatalogo.length === 0) {
+      this.obtenerEstados();
+    }
   }
+
+  /**
+   * Obtiene la lista de estados llamando al servicio `complimentosService`.
+   * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+   */
+  obtenerEstados():void {
+    this.complimentosService.getEstado()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.estadosCatalogo = res.datos;
+      this.estadosOpciones.emit(this.estadosCatalogo);
+    }); 
+  }
+
    /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
@@ -204,24 +243,7 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    */
   buscarControladoras(): void {
     if (this.empresasForm.valid) {
-      const DATA: DisponsibleFiscal[] = [
-        {
-          calle: 'LOMBARDINI PTE',
-          numeroExterior: '1353',
-          numeroInterior: 'yes',
-          codigoPostal: '81124',
-          colonia: 'OTRA NO ESPECIFICADA EN GUASAVE',
-          municipioDelegacion: 'EL CATALOGO',
-          entidadFederativa: this.estadosCatalogo.find(item => item.id === Number(this.empresasForm.value.estado))?.descripcion,
-          pais: 'ESTADOS UNIDOS MEXICANOS',        
-          registroFederalContribuyentes: this.solicitudState.rfc,
-          domicilioFiscalSolicitante: 'AV SAN DIEGO 137 PARQUE IND B QUINTANA EL MARQUES QUERETARO ESTADOS UNIDOS MEXICANOS',
-          razonSocial: 'CORPORACION MEXICANA DE COMPUTO S DE RL DE CV'
-        }
-      ];
-      // Asigna el arreglo a la variable que usa tu tabla
-      this.disponibles = DATA;
-      this.tramite80104Store.setDisponibles(DATA);
+      this.buscarControladorasEmit.emit(this.empresasForm.value);
     }
   }
 

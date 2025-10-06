@@ -37,12 +37,13 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
-import { Input, OnDestroy, OnInit } from '@angular/core';
+import { Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 
 const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
 
@@ -69,7 +70,7 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
  *
  * @export ServiciosComponent
  */
-export class ServiciosComponent implements OnInit, OnDestroy {
+export class ServiciosComponent implements OnInit, OnDestroy,OnChanges {
   /**
        * @description
        * Objeto que representa una nueva notificación para RFC.
@@ -154,7 +155,12 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @type {string}
    */
   tiempoPrograma: string = '';
-
+  /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
   /**
    * Configuración de la tabla de domicilios.
    * @type {ConfiguracionColumna<ServicioInmex>[]}
@@ -280,7 +286,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private Tramite80102Query: Tramite80102Query,
     private Tramite80102Store: Tramite80102Store,
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
-    private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery
+    private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {
    
     this.formulario = this.fb.group({
@@ -342,6 +349,25 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
+  }
+
+
+ngOnChanges(): void {
+    if (this.datosImmex.length === 0) {
+        this.servicioDeFormularioService.registerArray('serviciosImmex', this.datosImmex);
+    } else {
+        this.servicioDeFormularioService.setArray('serviciosImmex', this.datosImmex);
+    }
+    if (this.datos.length === 0) {
+      this.servicioDeFormularioService.registerArray('empresasNacionales', this.datos);
+    } else {
+        this.servicioDeFormularioService.setArray('empresasNacionales', this.datos);
+    }
+    if(this.datosEmpresaExtranjera.length === 0) {
+        this.servicioDeFormularioService.registerArray('empresasExtranjera', this.datosEmpresaExtranjera);
+    } else {
+        this.servicioDeFormularioService.setArray('empresasExtranjera', this.datosEmpresaExtranjera);
+    }
   }
 
   /**
@@ -610,6 +636,19 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @method eliminarEmpresasNacionales
    */
   eliminarEmpresasNacionales(): void {
+      if (!this.empresasSeleccionados || this.empresasSeleccionados.length === 0) {
+    this.notificacionAgregarServicios = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona un registro.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
     const INDICE = this.datos.findIndex(
       (item: ServicioInmex) =>
         item.registroContribuyentes ===
@@ -695,6 +734,15 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   agregarEmpresaExtranjera(): void {
     this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
+      this.formularioEmpresaExtranjera.value
+    );   
+    this.formularioEmpresaExtranjera.reset({
+      taxIdEmpresaExt: '',
+      nombreEmpresaExt: '',
+      entidadFederativaEmpresaExt: '',
+      direccionEmpresaExtranjera: ''
+    }); 
+      this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
       this.formularioEmpresaExtranjera.value
     );
   }
