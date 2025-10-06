@@ -817,7 +817,7 @@ export function buildGuardarPayload(solicitudState: AmpliacionServiciosState): u
             },
             "fraccionCompuesta": null,
             "cveServicioImmex": {
-                "claveServicio": null,
+                "claveServicio": 1,
                 "nombre": "ABASTECIMIENTO, ALMACENAJE O DISTRIBUCION DE MERCANCIAS",
                 "tipoServicio": "TISIMMEX.TN",
                 "blnActivo": true,
@@ -908,7 +908,7 @@ export function buildGuardarPayload(solicitudState: AmpliacionServiciosState): u
                     }
                 ],
                 "cveServicioImmex": {
-                    "claveServicio": "string",
+                    "claveServicio": 1,
                     "nombre": "string",
                     "tipoServicio": "string",
                     "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
@@ -1042,7 +1042,7 @@ export function buildGuardarPayload(solicitudState: AmpliacionServiciosState): u
             }
         ],
         "cveServicioImmex": {
-            "claveServicio": "string",
+            "claveServicio": 1,
             "nombre": "string",
             "tipoServicio": "string",
             "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
@@ -1188,13 +1188,13 @@ export function buildGuardarPayload(solicitudState: AmpliacionServiciosState): u
             "claveSencible": 0,
             "complemento": "00001",
             "unidadMedidaTarifaria": "1",
-            "cantidad": "300000.0",
-            "valor": "20000.00",
+            "cantidad": solicitudState.cantidad,
+            "valor": solicitudState.valor,
             "fraccionPadre": "02101999",
             "descUnidadMedida": null,
             "fechaInicioVigencia": "2025-09-07",
             "fechaFinVigencia": "2025-09-07",
-            "cveFraccion": "string"
+            "cveFraccion": solicitudState.fraccion
         }
     ],
     "fraccionesTextiles": [

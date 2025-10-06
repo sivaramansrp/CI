@@ -273,6 +273,7 @@ tramiteId: string = '80206';
           const SHOULD_NAVIGATE = response.codigo === '00';
           
           if (SHOULD_NAVIGATE) {
+            this.esFormaValido = false;
             // Update solicitud ID if available
             if (esValidObject(response) && esValidObject(response.datos)) {
               const DATOS = response.datos as { id_solicitud?: number };
@@ -300,12 +301,10 @@ tramiteId: string = '80206';
             console.error('API call failed - cannot navigate');
             console.error('Error message:', response.mensaje);
             console.error('Response code:', response.codigo);
-            this.esFormaValido = true;
           }
         },
         error: (error) => {
           console.error('API call error:', error);
-          this.esFormaValido = true;
         }
       });
     

@@ -15,17 +15,12 @@
  * @interface Sector
  */
 export interface Sector {
-  /**
-   * Descripción del sector.
-   * @property {string} [descripcion]
-   */
-  descripcion?: string;
-
+  clave?: string;
   /**
    * Descripción detallada del sector.
    * @property {string} [descripcionSector]
    */
-  descripcionSector?: string;
+  descripcion?: string;
 }
 
 /**

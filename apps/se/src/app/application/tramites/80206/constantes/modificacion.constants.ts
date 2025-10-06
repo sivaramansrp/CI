@@ -45,15 +45,11 @@ export const PASOS = [
  * @constant {Array<Object>} CONFIGURACION_SECTOR
  */
 export const CONFIGURACION_SECTOR = [
-  {
-    encabezado: '',
-    clave: (ele: Sector): string | undefined => ele.descripcion,
-    orden: 1,
-  },
+  
   {
     encabezado: 'Descripción',
-    clave: (ele: Sector): string | undefined => ele.descripcionSector,
-    orden: 2,
+    clave: (ele: Sector): string | undefined => ele.descripcion,
+    orden: 1,
   },
 ];
 

@@ -18,6 +18,7 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  Validators,
 } from '@angular/forms';
 import { OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
@@ -44,12 +45,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @property {boolean} isSelectedRegla
    */
   isSelectedRegla: boolean = false;
-
-  /**
-   * Lista de sectores recibidos.
-   * @property {Sector[]} recibioSector
-   */
-  recibioSector: Sector[] = [];
 
   /**
    * Formulario reactivo para la información de registro.
@@ -173,11 +168,8 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     this.obtenerReglaSelectList(this.tramiteID);
     this.inicializarFormularioDesdeAlmacen();
     this.obtenerSectorSelectList();
-    if (this.esFormularioSoloLectura) {
-    this.formularioInfoRegistro.get('seleccionaLaModalidad')?.disable();
-  } else {
-    this.formularioInfoRegistro.get('seleccionaLaModalidad')?.enable();
-  }
+    
+   
   }
 
   /**
@@ -238,10 +230,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   inicializarFormularioInfoRegistro(): void {
   this.formularioInfoRegistro = this.fb.group({
     seleccionaLaModalidad: [
-      { value: 'Ampliación 3RS' }, 
+      { value: 'Ampliación 3RS',disabled: true }, 
     ],
     seleccionarRegla: [
       { value: this.tramiteState.seleccionarRegla || '' }, 
+      [Validators.required]
     ],
     sector: [
       { value: this.tramiteState.sector || '' }
@@ -312,16 +305,31 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method agregarServiciosAmpliacion
    */
   agregarServiciosAmpliacion(): void {
-    const CUERPODATOS = {
-      descripcion: this.recibioSector[0]?.descripcion,
-      descripcionSector: this.recibioSector[0]?.descripcionSector,
-    };
-    this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
-     // Trigger validation and update section state after adding sector
+  const SECTOR_SELECCIONADO = this.formularioInfoRegistro.get('sector')?.value;
+  
+  if (SECTOR_SELECCIONADO) {
+    const SECTOR_ENCONTRADO = this.sectorDesplegable.find(sector => sector.clave === SECTOR_SELECCIONADO);
+    
+    if (SECTOR_ENCONTRADO) {
+      const YAEXISTE = this.datosSector.some(sector => sector.clave === SECTOR_ENCONTRADO.clave);
+      
+      if (!YAEXISTE) {
+        const NUEVO_SECTOR: Sector = {
+          descripcion: SECTOR_ENCONTRADO.descripcion,
+        };
+        
+        const DATOS_ACTUALIZADOS = [...this.datosSector, NUEVO_SECTOR];
+        this.tramite80206Store.setDatosSector(DATOS_ACTUALIZADOS);
+        
+        this.formularioInfoRegistro.get('sector')?.setValue('');
+        
         const ISVALID = this.validarFormulario();
         this.seccionStore.establecerSeccion([ISVALID]);
         this.seccionStore.establecerFormaValida([ISVALID]);
+      }
+    }
   }
+}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
@@ -352,7 +360,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
     this.tramite80206Store.setSeleccionarRegla(DATA);
 
-      // Trigger validation and update section state after regla change
     const ISVALID = this.validarFormulario();
     this.seccionStore.establecerSeccion([ISVALID]);
     this.seccionStore.establecerFormaValida([ISVALID]);
@@ -363,16 +370,9 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method cambioDeSector
    * @param {Catalogo | Catalogo[]} data - Datos del sector seleccionado.
    */
-  cambioDeSector(data: Catalogo): void {
-    this.formularioInfoRegistro.get('sector')?.setValue(data.clave);
-
-    this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite80206Store.setSector(data?.clave || '');
-
-    // Trigger validation and update section state after sector change
-    const ISVALID = this.validarFormulario();
-    this.seccionStore.establecerSeccion([ISVALID]);
-    this.seccionStore.establecerFormaValida([ISVALID]);
+  cambioDeSector(): void {
+    const DATA = this.formularioInfoRegistro.get('sector')?.value;
+    this.tramite80206Store.setSector(DATA);
   }
 
   /**
@@ -397,7 +397,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 validarFormulario(): boolean {
   let isValid = true;
 
-  
   if (this.formularioInfoRegistro) {
     this.formularioInfoRegistro.markAllAsTouched();
     this.formularioInfoRegistro.updateValueAndValidity();
@@ -405,17 +404,16 @@ validarFormulario(): boolean {
     const SELECCIONA_LA_MODALIDA = this.formularioInfoRegistro.get('seleccionaLaModalidad')?.value;
     const SELECCIONAR_REGLA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
 
-
     if (!SELECCIONA_LA_MODALIDA || SELECCIONA_LA_MODALIDA.trim() === '') {
       isValid = false;
     }
 
-    if (!SELECCIONAR_REGLA || SELECCIONAR_REGLA.trim() === '') {
+    // Enhanced validation for seleccionarRegla
+    if (!SELECCIONAR_REGLA || SELECCIONAR_REGLA === '' || SELECCIONAR_REGLA === -1 || SELECCIONAR_REGLA === '-1') {
       isValid = false;
     }
 
     if (SELECCIONAR_REGLA === '3.2.25' && this.isSelectedRegla) {
-      
       if (this.datosSector.length === 0) {
         isValid = false;
       } 

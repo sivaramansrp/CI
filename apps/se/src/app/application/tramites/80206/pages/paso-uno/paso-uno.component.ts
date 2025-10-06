@@ -160,23 +160,21 @@ ngOnDestroy(): void {
   //   console.log('Solicitante form not found');
   // }
 
-  // // Validate ampliacion anexo component (tab 2)
-  // console.log('Checking ampliacionAnexoComponent...');
-  // console.log('ampliacionAnexoComponent exists:', !!this.ampliacionAnexoComponent);
+  // Validate ampliacion anexo component (tab 2)
   
-  // if (this.ampliacionAnexoComponent) {
+  //  if (this.ampliacionAnexoComponent) {
   //   const AMPLIACION_ANEXO_VALID = this.ampliacionAnexoComponent.validarFormulario();
-  //   console.log('ampliacionAnexoComponent validation result:', AMPLIACION_ANEXO_VALID);
     
   //   if (!AMPLIACION_ANEXO_VALID) {
   //     isValid = false;
-  //     console.log('Ampliacion anexo validation failed');
   //   }
   // } else {
-  //   console.log('ampliacionAnexoComponent not found');
+  //   if (this.esDatosRespuesta) {
+  //     isValid = false;
+  //   }
   // }
 
-  // Validate ampliacion 3Rs component (tab 3) - This is the key validation
+  //Validate ampliacion 3Rs component (tab 3) - This is the key validation
   
   if (this.ampliacion3RsComponent) {
     const AMPLIACION_3RS_VALID = this.ampliacion3RsComponent.validarFormulario();
