@@ -123,8 +123,6 @@ export interface Tramite80101State {
  * así como información de proveedores y capacidad instalada.
  */
   tablaDatosCapacidadInstalada: CapacidadInstalada[];
-
-  estadosOpciones: Catalogo[];
 }
 
 /**
@@ -305,7 +303,6 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     estadoDos: '',
     estadoTres: '',
     },
-    estadosOpciones: []
 };
 
 /**
@@ -1081,15 +1078,4 @@ setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada
       tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
     }));
   }
-
-  /**
-   * Establece la lista de empresas seleccionadas en el estado.
-   * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
-   */
-    public setEstadosOpciones(estadosOpciones: Catalogo[]):void {
-      this.update((state) => ({
-        ...state,
-        estadosOpciones: estadosOpciones,
-      }));
-    }
-  }
+}

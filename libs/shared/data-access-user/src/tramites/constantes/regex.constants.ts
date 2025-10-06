@@ -1136,6 +1136,23 @@ export const REGEX_CAPTURA_USDA = /^([0-9]{9})$/;
 export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
 
 /**
+ * Expresión regular para detectar caracteres especiales no permitidos.
+ * Esta expresión regular identifica la presencia de caracteres especiales que
+ * generalmente no están permitidos en campos como llaves de pago, códigos de referencia,
+ * o campos alfanuméricos específicos.
+ */
+export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
+
+
+/**
+ * Expresión regular para detectar caracteres especiales no permitidos.
+ * Esta expresión regular identifica la presencia de caracteres especiales que
+ * generalmente no están permitidos en campos como llaves de pago, códigos de referencia,
+ * o campos alfanuméricos específicos.
+ */
+export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
+
+/**
  * Expresión regular para validar caracteres permitidos en mercancías.
  * - Dígitos numéricos (0-9)
  * - Letras mayúsculas y minúsculas (A-Z, a-z)

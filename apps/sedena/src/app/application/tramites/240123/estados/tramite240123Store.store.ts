@@ -167,6 +167,43 @@ export class Tramite240123Store extends Store<Tramite240123State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+    /**
+   * Agrega nuevos registros a la tabla de mercancías.
+   *
+   * @method updateMercanciaTablaDatos
+   * @param {MercanciaDetalle[]} newMercancia - Nuevas mercancías a agregar.
+   * @returns {void}
+   */
+  public deleteMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
+    this.update((state) => ({
+      ...state,
+      merccancialTablaDatos: [...newMercancia],
+    }));
+  }
+  public updateListMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
+  this.update((state) => {
+    const UPDATED_LIST = [...state.merccancialTablaDatos];
+
+    for (const MERCANCIA of newMercancia) {
+      const INDEX = UPDATED_LIST.findIndex(m => m.id === MERCANCIA.id);
+
+      if (INDEX !== -1) {
+        // If found, update existing
+        UPDATED_LIST[INDEX] = { ...UPDATED_LIST[INDEX], ...MERCANCIA };
+      } else {
+        // If not found, add new
+        UPDATED_LIST.push(MERCANCIA);
+      }
+    }
+
+    // Return updated state
+    return {
+      ...state,
+      merccancialTablaDatos: UPDATED_LIST,
+    };
+  });
+}
+
 
   /**
    * Actualiza los datos de un destinatario en el estado.

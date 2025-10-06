@@ -302,7 +302,6 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   montosInversionDatos: [],
   empleadosDatos: [],
   tablaDatosCapacidadInstalada: [],
-  estadosOpciones: []
 };
 
 /**

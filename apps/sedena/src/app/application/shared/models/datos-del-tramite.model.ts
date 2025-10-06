@@ -53,6 +53,7 @@ export interface MercanciaDetalle {
   descripcion: string;
   paisOrigen?: string;
   tableIndex?: number;
+  id?: number;
 }
 
 /**
