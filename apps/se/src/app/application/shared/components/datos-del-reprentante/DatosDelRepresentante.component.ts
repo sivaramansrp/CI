@@ -10,7 +10,7 @@ import { CAMPO_DE_REPRESENTANTE } from '../../constantes/modificacion.enum';
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './DatosDelRepresentante.component.html',
-  styleUrl: './DatosDelRepresentante.component.css',
+  styleUrl: './DatosDelRepresentante.component.scss',
 })
 export class DatosDelRepresentanteComponent implements OnInit, OnDestroy {
 
