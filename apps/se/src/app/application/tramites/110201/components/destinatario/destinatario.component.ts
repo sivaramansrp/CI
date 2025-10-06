@@ -200,10 +200,23 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
   onClick(): void {
     this.isDisabled = true;
   }
-
+  
+  /**
+   * Maneja el evento de cambio para la selección de "Nación".
+   * Actualiza el store con la descripción de la nación seleccionada.
+   *
+   * @param event - Objeto del evento que contiene los detalles de la nación seleccionada, incluyendo su descripción.
+   */
   onNacionChange(event: any): void {
     this.store.setNacionDescripcion(event.descripcion);
   }
+
+  /**
+   * Maneja el evento de cambio para la selección de "Transporte".
+   * Actualiza el store con la descripción del transporte seleccionado.
+   *
+   * @param event - Objeto del evento que contiene los detalles del transporte seleccionado, incluyendo su descripción.
+   */
   onTransporteChange(event: any): void {
     this.store.setTransporteDescripcion(event.descripcion);
   }
@@ -302,11 +315,23 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
 
+  /**
+   * Obtiene la lista de países de destino para el destinatario según el `TramitesID` actual.
+   * Este método llama al servicio `paisesCatalogo`, se suscribe al resultado y actualiza la
+   * propiedad `nacionOptions.catalogos` con los datos recibidos. La suscripción se cancela
+   * automáticamente cuando el componente se destruye.
+   */
   getPaisDestinoDestinatario(): void {
     this.catalogoServices.paisesCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.nacionOptions.catalogos = res.datos ?? [];
     });
   }
+  /**
+   * Obtiene la lista de medios de transporte para el destinatario según el `TramitesID` actual.
+   * Este método llama al servicio `catalogoMedioTransporte`, se suscribe al resultado y actualiza la
+   * propiedad `transporteOptions.catalogos` con los datos recibidos. La suscripción se cancela
+   * automáticamente cuando el componente se destruye.
+   **/
   getTransporteDestinatario(): void {
     this.catalogoServices.catalogoMedioTransporte(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.transporteOptions.catalogos = res.datos ?? [];

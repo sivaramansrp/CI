@@ -203,6 +203,9 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     }));
   }
 
+  /** Establece la descripción del tratado.
+   * @param tratadoDescripcion Cadena que representa la descripción del tratado.
+   */
   public setTratadoDescripciones(tratadoDescripcion: string):void {
     this.update((state) => ({
       ...state,
@@ -210,6 +213,9 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     }));
   }
 
+  /** Establece la descripción del país.
+   *  @param paisDescripcion Cadena que representa la descripción del país.
+   */
   public setPaisDescripcion(paisDescripcion: string):void {
     this.update((state) => ({
       ...state,
@@ -217,18 +223,29 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     }));
   }
 
+  /** Establece la descripción del transporte.
+   * @param umcDescripcion Cadena que representa la descripción del transporte.
+   */
   public setUmcDescripcion(umcDescripcion: string): void {
     this.update((state) => ({
       ...state,
       umcDescripcion,
     }));
   }
+
+  /** Establece la descripción del tipo de factura.
+   * @param tipoFacturaDescripcion Cadena que representa la descripción del tipo de factura.
+   **/
   public setTipoFacturaDescripcion(tipoFacturaDescripcion: string): void {
     this.update((state) => ({
       ...state,
       tipoFacturaDescripcion,
     }));
   }
+
+  /** Establece la descripción de la unidad de medida.
+   * @param unidadMedidaDescripcion Cadena que representa la descripción de la unidad de medida.
+   * */
   public setUnidadMedidaDescripcion(unidadMedidaDescripcion: string): void {
     this.update((state) => ({
       ...state,
@@ -236,18 +253,28 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     }));
   }
   
+  /** Establece la descripción del idioma.
+   * @param idiomaDescripcion Cadena que representa la descripción del idioma.
+   * */
   public setIdiomaDescripcion(idiomaDescripcion: string):void {
     this.update((state) => ({
       ...state,
       idiomaDescripcion,
     }));
   }
+
+  /** Establece la descripción de la entidad.
+   * @param entidadDescripcion Cadena que representa la descripción de la entidad.
+   */
   public setEntidadDescripcion(entidadDescripcion: string):void {
     this.update((state) => ({
       ...state,
       entidadDescripcion,
     }));
   }
+  /** Establece la descripción de la representación.
+   *    @param representacionDescripcion Cadena que representa la descripción de la representación.
+   * */
   public setRepresentacionDescripcion(representacionDescripcion: string):void {
     this.update((state) => ({
       ...state,
@@ -255,12 +282,19 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     }));
   }
   
+  /** Establece la descripción de la nación.
+   *  @param nacionDescripcion Cadena que representa la descripción de la nación.
+   * */
   public setNacionDescripcion(nacionDescripcion: string):void {
     this.update((state) => ({
       ...state,
       nacionDescripcion,
     }));
   }
+
+  /** Establece la descripción del transporte.
+   * @param transporteDescripcion Cadena que representa la descripción del transporte.
+   * */
   public setTransporteDescripcion(transporteDescripcion: string):void {
     this.update((state) => ({
       ...state,
