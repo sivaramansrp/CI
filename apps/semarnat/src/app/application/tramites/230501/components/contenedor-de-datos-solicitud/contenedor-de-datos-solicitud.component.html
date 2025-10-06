@@ -210,7 +210,6 @@
 
         <div class="row mt-3">
             <div class="col-md-8">
-                <label class="form-label">Fecha prevista para llevar a cabo la exportación:</label>
                 <input-fecha (valorCambiado)="onFechaCambiada($event)"
                     [setFecha]="datosSolicitudForm.get('fechaExportacion')?.value"
                     [datos]="fechaDeLaFacturaInput"></input-fecha>
