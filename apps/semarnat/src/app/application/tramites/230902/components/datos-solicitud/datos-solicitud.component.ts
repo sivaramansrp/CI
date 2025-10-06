@@ -894,30 +894,6 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
     return HASSPECIALCHAR ? { hasSpecialCharacters: true } : null;
   }
-
-  /**
-   * @method noSpecialCharactersValidator
-   * @description
-   * Validador personalizado estático que verifica si un campo contiene caracteres especiales no permitidos.
-   * Utiliza una expresión regular para detectar caracteres como: !"#$%/()=?=)(/&%$#""#$%$#"#$&
-   * Si se detectan caracteres especiales, retorna un error de validación que puede ser usado para mostrar
-   * el mensaje "Ingresa datos validos." en la interfaz de usuario.
-   * 
-   * @param {AbstractControl} control - El control de formulario que se está validando.
-   * @returns {ValidationErrors | null} Objeto con el error 'hasSpecialCharacters' si hay caracteres especiales, null si la validación pasa.
-   * @static
-   */
-  static noSpecialCharactersValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) {
-      return null;
-    }
-
-    const SPECIALCHARACTERREGEX = /[!"#$%/()=?=)(/&%$#""#$%$#"#$&]/;
-    const HASSPECIALCHAR = SPECIALCHARACTERREGEX.test(control.value);
-
-    return HASSPECIALCHAR ? { hasSpecialCharacters: true } : null;
-  }
-
   /**
    * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.

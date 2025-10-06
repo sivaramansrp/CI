@@ -12,6 +12,7 @@ import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
@@ -109,7 +110,8 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
     private router: Router,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly zoosanitarioStore: ZoosanitarioStore,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private catalogoService: CatalogosService
   ) { }
 
   /**
@@ -168,11 +170,10 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    * @method pairsCatalogChange
    */
   pairsCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.pairsCatalog = data;
-      });
+
+    this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.pairsCatalog = data.datos ?? [];
+    });
   }
 
   /**
@@ -180,11 +181,10 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.estadoCatalog = data;
-      });
+
+    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.estadoCatalog = data.datos ?? [];
+    });
   }
 
   /**

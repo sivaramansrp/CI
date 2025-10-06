@@ -74,7 +74,7 @@
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
         <span class="bi bi-question-circle-fill fs-4 m-1" data-bs-title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-        <input type="email" class="form-control" id="primerApellido" formControlName="correoElectronico" maxlength="70" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+        <input type="email" class="form-control" formControlName="correoElectronico" maxlength="70" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
         <div *ngIf="registroForm.get('validacionForm.correoElectronico')?.invalid && registroForm.get('validacionForm.correoElectronico')?.touched" class="text-danger">
           <small class="text-danger" *ngIf="registroForm.get('validacionForm.correoElectronico')?.errors?.['required']">Este campo es obligatorio.</small>
           <small class="text-danger" *ngIf="registroForm.get('validacionForm.correoElectronico')?.errors?.['email']">Por favor, escribe una dirección de correo válida</small>
@@ -84,19 +84,16 @@
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <app-catalogo-select [catalogo]="nacionOptions.catalogos" [required]="true" [label]="'País destino'" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')" [isDisabled]="soloLectura" [markTouched]="validationAttempted"></app-catalogo-select>
-        <div *ngIf="registroForm.get('validacionForm.nacion')?.invalid && registroForm.get('validacionForm.nacion')?.touched" class="text-danger">
-          <small>Este campo es obligatorio.</small>
-        </div>
-        <div class="text-danger mt-1"> @if(paisNoCoincide){ <small>El País destino, debe ser el mismo que se seleccionó en el Campo País/Bloque del apartado de Certificado de origen.</small> } </div>
+        <app-catalogo-select [catalogo]="nacionOptions.catalogos" [required]="true" [label]="'País destino'" 
+        (selectionChange)="onNacionChange($event)"
+        formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')" [isDisabled]="soloLectura" [markTouched]="registroForm.get('validacionForm.nacion')?.touched??false"></app-catalogo-select>
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />
     <div class="col-md-8 mb-3">
-      <app-catalogo-select [catalogo]="transporteOptions.catalogos" [label]="'Medio de transporte'" formControlName="transporte" [required]="true" (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte') " [isDisabled]="soloLectura" [markTouched]="validationAttempted"></app-catalogo-select>
-      <div *ngIf="registroForm.get('validacionForm.transporte')?.invalid && registroForm.get('validacionForm.transporte')?.touched" class="text-danger">
-        <small>Este campo es obligatorio.</small>
-      </div>
+      <app-catalogo-select [catalogo]="transporteOptions.catalogos" [label]="'Medio de transporte'" formControlName="transporte" [required]="true" (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte') " 
+      (selectionChange)="onTransporteChange($event)"
+      [isDisabled]="soloLectura" [markTouched]="registroForm.get('validacionForm.transporte')?.touched??false"></app-catalogo-select>
     </div>
   </ng-container>
 </form>
