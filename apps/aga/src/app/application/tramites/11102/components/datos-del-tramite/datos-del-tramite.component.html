@@ -21,7 +21,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-4"></div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-45">
             <lib-input-check
               [id]="'organismoPublico'"
               [label]="'Organismo público'"
@@ -73,13 +73,13 @@
             </div>
           </div>
           <div class="table-container mt-5">
-            <app-tabla-dinamica 
-              [tipoSeleccionTabla]="tablaSeleccion" 
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="tablaSeleccion"
               [datos]="mercanciaBodyData"
               [configuracionTabla]="configuracionTablaMercancia"
               [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
               (listaDeFilaSeleccionada)="seleccionarMercancias($event)"
-              ></app-tabla-dinamica>
+            ></app-tabla-dinamica>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button
@@ -99,7 +99,8 @@
               <label for="rfc"
                 >Registro federal de contribuyentes<span
                   [ngClass]="
-                    modificacionDonacionesImmex.get('rfc') && esValido(modificacionDonacionesImmex, 'rfc')
+                    modificacionDonacionesImmex.get('rfc') &&
+                    esValido(modificacionDonacionesImmex, 'rfc')
                       ? 'require'
                       : ''
                   "
@@ -116,7 +117,8 @@
                   setValoresStore(modificacionDonacionesImmex, 'rfc', 'setRfc')
                 "
               />
-              @if (modificacionDonacionesImmex.get('rfc') && modificacionDonacionesImmex.get('rfc')?.touched &&
+              @if (modificacionDonacionesImmex.get('rfc') &&
+              modificacionDonacionesImmex.get('rfc')?.touched &&
               modificacionDonacionesImmex.get('rfc')?.invalid) { @if
               (modificacionDonacionesImmex.get('rfc')?.errors?.['pattern']) {
               <span class="mensaje-error"> El RFC es inválido </span>
@@ -129,7 +131,8 @@
                 >Número de programa immex<span
                   for="asterisk"
                   [ngClass]="
-                    modificacionDonacionesImmex.get('numeroProgramaImmex') && esValido(modificacionDonacionesImmex, 'numeroProgramaImmex')
+                    modificacionDonacionesImmex.get('numeroProgramaImmex') &&
+                    esValido(modificacionDonacionesImmex, 'numeroProgramaImmex')
                       ? 'require'
                       : ''
                   "
@@ -147,6 +150,12 @@
                 size="30"
                 maxlength="180"
                 class="form-control"
+                [ngClass]="
+                  modificacionDonacionesImmex.get('numeroProgramaImmex') &&
+                  esValido(modificacionDonacionesImmex, 'numeroProgramaImmex')
+                    ? 'required'
+                    : ''
+                "
                 (change)="
                   setValoresStore(
                     modificacionDonacionesImmex,
@@ -155,25 +164,26 @@
                   )
                 "
               />
-              @if (
-                modificacionDonacionesImmex.get('numeroProgramaImmex') &&
-                modificacionDonacionesImmex.get('numeroProgramaImmex')?.touched &&
-                modificacionDonacionesImmex.get('numeroProgramaImmex')?.invalid
+              @if ( modificacionDonacionesImmex.get('numeroProgramaImmex') &&
+              modificacionDonacionesImmex.get('numeroProgramaImmex')?.touched &&
+              modificacionDonacionesImmex.get('numeroProgramaImmex')?.invalid )
+              { @if (
+              modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['required']
               ) {
-                @if (
-                  modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['required']
-                ) {
-                  <div class="mensaje-error">Este campo es obligatorio</div>
-                }
-              }
-              @if (
-                modificacionDonacionesImmex.get('numeroProgramaImmex') &&
-                modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['maxlength']
-              ) {
-                <span class="mensaje-error">
-                  Por favor, no escribas más de 11 caracteres
-                </span>
-              }
+              <div class="mensaje-error">Este campo es obligatorio</div>
+              } @if
+              (modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['pattern'])
+              {
+              <div class="mensaje-error">
+                El dato debe de ser conforme el formato indicado
+              </div>
+              } @if
+              (modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['maxlength'])
+              {
+              <span class="mensaje-error"
+                >Por favor, no escribas más de 11 caracteres</span
+              >
+              } }
             </div>
           </div>
         </div>
@@ -340,18 +350,18 @@
                 "
               />
               @if (
-                tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional') &&
-                tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.touched &&
-                tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.invalid
+              tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')
+              &&
+              tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.touched
+              &&
+              tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.invalid
+              ) { @if (
+              tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.errors?.['pattern']
               ) {
-                @if (
-                  tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.errors?.['pattern']
-                ) {
-                  <div class="mensaje-error">
-                    El dato debe de ser conforme el formato indicado
-                  </div>
-                }
-              }
+              <div class="mensaje-error">
+                El dato debe de ser conforme el formato indicado
+              </div>
+              } }
             </div>
           </div>
           <div class="col-md-4">
@@ -373,18 +383,17 @@
                 "
               />
               @if (
-                tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional') &&
-                tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.touched &&
-                tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.invalid
+              tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional') &&
+              tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.touched
+              &&
+              tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.invalid
+              ) { @if (
+              tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.errors?.['pattern']
               ) {
-                @if (
-                  tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.errors?.['pattern']
-                ) {
-                  <div class="mensaje-error">
-                    El dato debe de ser conforme el formato indicado
-                  </div>
-                }
-              }
+              <div class="mensaje-error">
+                El dato debe de ser conforme el formato indicado
+              </div>
+              } }
             </div>
           </div>
         </div>
@@ -462,15 +471,19 @@
             </div>
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="cantidadComercial">Cantidad<span 
-                  [ngClass]="
-                    esValido(datosMercancia, 'cantidad') ? 'require' : ''
-                  ">*</span>:</label>
+                <label for="cantidadComercial"
+                  >Cantidad<span
+                    [ngClass]="
+                      esValido(datosMercancia, 'cantidad') ? 'require' : ''
+                    "
+                    >*</span
+                  >:</label
+                >
                 <input
                   type="text"
                   class="form-control"
                   formControlName="cantidad"
-                  id="cantidadComercial" 
+                  id="cantidadComercial"
                   size="20"
                   maxlength="12"
                   [required]="true"
@@ -478,25 +491,18 @@
                     esValido(datosMercancia, 'cantidad') ? 'required' : ''
                   "
                   (change)="
-                    setValoresStore(
-                      datosMercancia,
-                      'cantidad',
-                      'setCantidad'
-                    )
+                    setValoresStore(datosMercancia, 'cantidad', 'setCantidad')
                   "
                 />
                 @if (datosMercancia.get('cantidad')?.touched &&
                 datosMercancia.get('cantidad')?.invalid) { @if
                 (datosMercancia.get('cantidad')?.errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+                } } @if (datosMercancia.get('cantidad')?.errors?.['pattern']) {
                 <span class="mensaje-error"
-                  >Este campo es obligatorio</span
+                  >Por favor, escribe un número entero válido</span
                 >
-                } } @if
-                (datosMercancia.get('cantidad')?.errors?.['pattern']) {
-                  <span class="mensaje-error"
-                    >Por favor, escribe un número entero válido</span
-                  >
-                } 
+                }
               </div>
               <div class="col-md-6">
                 <app-catalogo-select
@@ -527,14 +533,10 @@
                     class="form-control"
                     formControlName="marca"
                     id="marca"
-                    size="30" 
+                    size="30"
                     maxlength="60"
                     (change)="
-                      setValoresStore(
-                        datosMercancia,
-                        'marca',
-                        'setMarca'
-                      )
+                      setValoresStore(datosMercancia, 'marca', 'setMarca')
                     "
                   />
                 </div>
@@ -558,11 +560,7 @@
                     id="modelo"
                     maxlength="80"
                     (change)="
-                      setValoresStore(
-                        datosMercancia,
-                        'modelo',
-                        'setModelo'
-                      )
+                      setValoresStore(datosMercancia, 'modelo', 'setModelo')
                     "
                   />
                 </div>
@@ -580,11 +578,7 @@
                     size="50"
                     maxlength="30"
                     (change)="
-                      setValoresStore(
-                        datosMercancia,
-                        'serie',
-                        'setSerie'
-                      )
+                      setValoresStore(datosMercancia, 'serie', 'setSerie')
                     "
                   />
                 </div>
