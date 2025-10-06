@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
   templateUrl: './DetallesDelTransporte.component.html',
-  styleUrl: './DetallesDelTransporte.component.css',
+  styleUrl: './DetallesDelTransporte.component.scss',
 })
 export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
@@ -53,7 +53,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
     this.formaValida.emit(this.formTransporte.valid);
     this.formTransporteEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }
-  
+
   createForm(): void {
     this.formTransporte = this.fb.group({
       medioDeTransporte: [''],
