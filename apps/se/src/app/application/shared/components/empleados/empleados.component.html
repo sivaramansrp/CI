@@ -11,7 +11,7 @@
           id="totalDeEmpleados"
           formControlName="totalDeEmpleados"
           type="number"
-          maxlength="10"
+          (input)="onInputMaxLength($event, 10, 'totalDeEmpleados')"
              (change)="setValoresStore(empleadosForm, 'totalDeEmpleados', 'setTotalDeEmpleados')"
         />
       </div>
@@ -56,6 +56,7 @@
           id="directo"
           formControlName="directo"
           type="text"
+          (input)="onInputMaxLength($event, 10, 'directo')"
           (change)="setValoresStore(empleadosForm, 'directo', 'setDirecto')"
         />
         <div *ngIf="empleadosForm.get('directo')?.invalid && (empleadosForm.get('directo')?.touched || empleadosForm.get('directo')?.dirty)" class="mensaje-error">
@@ -77,7 +78,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <input-fecha [datos]="fetchaDeCedula" [setFecha]="empleadosForm.get('fechaCedula')?.value"
-          (valorCambiado)="cambiofetchaDeCedula($event)"></input-fecha>
+          (valorCambiado)="cambiofetchaDeCedula($event)" [deshabilitarFuturas]="true"></input-fecha>
           <div *ngIf="empleadosForm.get('fechaCedula')?.invalid && (empleadosForm.get('fechaCedula')?.touched || empleadosForm.get('fechaCedula')?.dirty)" class="mensaje-error">
             Este campo es obligatorio.
           </div>
@@ -99,6 +100,7 @@
           id="indirectosDatos"
           formControlName="indirectosDatos"
           type="text"
+          (input)="onInputMaxLength($event, 11, 'indirectosDatos')"
           (change)="setValoresStore(empleadosForm, 'indirectosDatos', 'setIndirectosDatos')"
         />
         <div *ngIf="empleadosForm.get('indirectosDatos')?.invalid && (empleadosForm.get('indirectosDatos')?.touched || empleadosForm.get('indirectosDatos')?.dirty)" class="mensaje-error">
@@ -114,6 +116,7 @@
           id="contrato"
           formControlName="contrato"
           type="text"
+          maxlength="20"
           (change)="setValoresStore(empleadosForm, 'contrato', 'setContrato')"
         />
         <div *ngIf="empleadosForm.get('contrato')?.invalid && (empleadosForm.get('contrato')?.touched || empleadosForm.get('contrato')?.dirty)" class="mensaje-error">
@@ -129,6 +132,7 @@
           id="objeto"
           formControlName="objeto"
           type="text"
+          maxlength="100"
           (change)="setValoresStore(empleadosForm, 'objeto', 'setObjeto')"
         />
         <div *ngIf="empleadosForm.get('objeto')?.invalid && (empleadosForm.get('objeto')?.touched || empleadosForm.get('objeto')?.dirty)" class="mensaje-error">
@@ -166,6 +170,7 @@
           id="rfcEmpresa"
           formControlName="rfcEmpresa"
           type="text"
+          maxlength="13"
           (change)="setValoresStore(empleadosForm, 'rfcEmpresa', 'setRfcEmpresa')"
         />
         <div *ngIf="empleadosForm.get('rfcEmpresa')?.invalid && (empleadosForm.get('rfcEmpresa')?.touched || empleadosForm.get('rfcEmpresa')?.dirty)" class="mensaje-error">
