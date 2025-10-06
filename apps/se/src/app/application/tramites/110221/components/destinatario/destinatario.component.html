@@ -11,6 +11,7 @@
           formControlName="nombre"
           maxlength="250"
           (change)="setdestinatarioForm()"
+          [ngClass]="isValid(destinatarioForm, 'nombre') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -28,6 +29,7 @@
           formControlName="numeroFiscal"
           (change)="setdestinatarioForm()"
           maxlength="30"
+          [ngClass]="isValid(destinatarioForm, 'numeroFiscal') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -51,6 +53,7 @@
           maxlength="90"
           formControlName="calle"
           (change)="setdomicilioForm()"
+          [ngClass]="isValid(domicilioForm, 'calle') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -68,6 +71,7 @@
           maxlength="30"
           formControlName="numeroLetra"
           (change)="setdomicilioForm()"
+              [ngClass]="isValid(domicilioForm, 'numeroLetra') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -100,6 +104,7 @@
           formControlName="ciudad"
           maxlength="50"
           (change)="setdomicilioForm()"
+           [ngClass]="isValid(domicilioForm, 'ciudad') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -124,6 +129,7 @@
           maxlength="70"
           formControlName="correoElectronico"
           (change)="setdomicilioForm()"
+          [ngClass]="isValid(domicilioForm, 'correoElectronico') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -175,6 +181,7 @@
           maxlength="70"
           formControlName="nombreRepresentante"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'nombreRepresentante') ? 'required' : ''"
         />
         <small
           class="mensaje-error"
@@ -192,6 +199,7 @@
           maxlength="70"
           formControlName="lugar"
           (change)="setrepresentanteLegalForm()"
+        [ngClass]="isValid(representanteLegalForm, 'lugar') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -211,6 +219,7 @@
           maxlength="70"
           formControlName="calle"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'calle') ? 'required' : ''"
         />
         <small
           class="mensaje-error"
@@ -228,6 +237,7 @@
           maxlength="70"
           formControlName="numero"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'numero') ? 'required' : ''"
         />
         <small
           class="mensaje-error"
@@ -252,6 +262,7 @@
           maxlength="70"
           formControlName="ciudad"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'ciudad') ? 'required' : ''"
         />
         <small
           class="mensaje-error"
@@ -271,6 +282,7 @@
           maxlength="70"
           formControlName="cargo"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'cargo') ? 'required' : ''"
         />
         <small
           class="mensaje-error"
@@ -288,6 +300,7 @@
           maxlength="70"
           formControlName="empresa"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'empresa') ? 'required' : ''"
         />
         <small
           class="mensaje-error"
@@ -307,6 +320,7 @@
           maxlength="20"
           formControlName="numeroRegistroFiscal"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'numeroRegistroFiscal') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -342,6 +356,7 @@
           maxlength="20"
           formControlName="telefono"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'telefono') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -359,6 +374,7 @@
           maxlength="20"
           formControlName="fax"
           (change)="setrepresentanteLegalForm()"
+          [ngClass]="isValid(representanteLegalForm, 'fax') ? 'required' : ''"
         />
         <div
           class="mensaje-error"
@@ -383,6 +399,7 @@
           maxlength="70"
           formControlName="correoElectronico"
           (change)="setrepresentanteLegalForm()"
+           [ngClass]="isValid(representanteLegalForm, 'correoElectronico') ? 'required' : ''"
         />
         <div
           class="mensaje-error"

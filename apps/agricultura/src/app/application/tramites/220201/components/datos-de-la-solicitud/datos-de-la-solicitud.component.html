@@ -22,7 +22,8 @@
                   </div>
                   <div class="col-md-12">
                     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
-                      [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud"
+                      [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud" [tableId]="'tabla-solicitud'"
+                      [showPagination]="true" [mode]="'client'" [totalItems]="cuerpoTablaSolicitud.length" [itemsPerPage]="5"
                       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (filaClic)="onFilaClic($event)"></app-tabla-dinamica>
                   </div>
                 </div>
@@ -108,7 +109,7 @@
         </div>
         <div class="col-md-12">
           <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'" name="tipoMercancia"
-            formControlName="tipoMercancia" (change)="radioBotonSeleccionado()" ></app-input-radio>
+            formControlName="tipoMercancia" (change)="radioBotonSeleccionado()" [bloquearOpciones]="true"></app-input-radio>
           <div *ngIf="datosDelaSolicitud.get('tipoMercancia')?.invalid && datosDelaSolicitud.get('tipoMercancia')?.touched">
             <small class="mensaje-error">Este campo es obligatorio.</small>
           </div>

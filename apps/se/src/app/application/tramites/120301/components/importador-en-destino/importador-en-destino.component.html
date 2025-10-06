@@ -4,11 +4,20 @@
       <ng-titulo titulo="Importador en destino" />
     </div>
     <div class="row mt-5">
+
+      @if(visualizarTipoIOR){
       <div class="col-md-6">
         <app-catalogo-select [isDisabled]="formularioDeshabilitado" [catalogo]="tipoData" formControlName="tipo"
           [label]="'Tipo I O R(importer of Record)'" [required]="true" name="tipo"
           (change)="setValoresStore(importadorForm, 'tipo', 'setTipo')"></app-catalogo-select>
       </div>
+      }
+      @if(!visualizarTipoIOR){
+      <div class="col-md-6">
+        <label class="form-label" for="tipoIOR">Tipo I O R(importer of Record)*:</label>
+        <input class="form-control" name="tipoIOR" id="tipoIOR" placeholder="" type="text" libUppercase formControlName="tipoIOR" />
+      </div>
+      }
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="cantidadTotalImportador">Valor (sin espacios, sin guiones)*:</label>

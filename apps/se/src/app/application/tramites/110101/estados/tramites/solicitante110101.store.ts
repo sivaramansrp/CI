@@ -1,4 +1,4 @@
-import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
+import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 import { DeclaracionDatosResponse } from '../../models/response/declaracion-datos-response.model';
 import { FraccionValidarResponse } from '../../models/response/validar-fraccion-response.model';
@@ -82,6 +82,9 @@ export interface Solicitante110101State {
 
   /** Valor habilitar tab Procesos */
   tab_procesos: boolean;
+
+  /** Id solicitud de peticion de guardado */
+  id_solcitud: number;
 }
 
 
@@ -168,7 +171,8 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     envasesCriteriosDatos: [],
     declaracion_solicitud:[],
     protesto_verdad: false,
-    tab_procesos: false
+    tab_procesos: false,
+    id_solcitud: 0
   };
 }
 
@@ -591,6 +595,16 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       tab_procesos,
+    }));
+  }
+  /**
+   * Actualiza el di de guardado.
+   * @param id_solcitud - El id de peticion guardado.
+   */
+  public setId_solicitud(id_solcitud: number):void {
+    this.update((state) => ({
+      ...state,
+      id_solcitud,
     }));
   }
 }

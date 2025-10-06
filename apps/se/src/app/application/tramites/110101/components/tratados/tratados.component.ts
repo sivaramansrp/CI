@@ -12,7 +12,7 @@ import { CatalogosTramiteService } from '../../services/catalogo.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
-import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
+import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
