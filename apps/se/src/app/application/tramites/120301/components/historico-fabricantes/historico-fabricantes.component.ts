@@ -37,6 +37,8 @@ import {
   Solicitud120301State,
   Tramite120301Store,
 } from '../../estados/tramites/tramite120301.store';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { FabricanteResponse } from '../../models/response/fabricantes-response.model';
@@ -94,13 +96,11 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
   ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
-  /**
-   * Información histórica de fabricantes proporcionada al componente.
-   * @input informacionHistorico
-   */
+/**
+ * @property {string} numeroFolio - Número de folio del trámite.
+ */
   @Input()
-  informacionHistorico: FabricanteResponse[] = [];
-
+  numeroFolio: string = '';
   /**
    * Almacena los fabricantes que serán evaluados.
    */
@@ -582,7 +582,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     private elegibilidadTextilesService: ElegibilidadTextilesService,
     private cdr: ChangeDetectorRef,
     private historicoFabricantesService: HistoricoFabricantesService,
-    private tramiteStore: Tramite120301Store
+    private tramiteStore: Tramite120301Store,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -651,10 +652,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
     if (this.formularioDeshabilitado) {
       this.historicoFabricantesForm.disable();
-      this.fabricantesEvaluar = this.informacionHistorico;
       this.visualizarEvaluacion = true;
       this.isFabricantes = false;
-      this.llenarTabla();
+    }
+    if (this.numeroFolio) {
+      this.consultarInformacionHistorico(this.numeroFolio);
     }
 
     if (this.historicoState.exportadorFabricanteMismo) {
@@ -677,17 +679,33 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
   }
 
-  llenarTabla(): void {
-    this.informacionHistorico.forEach(fab => {
-      const FABRICANTE: HistoricoColumns = {
-        nombreFabricante: fab.nombre_fabricante ?? '',
-        numeroRegistroFiscal: fab.numero_registro_fiscal ?? '',
-        direccion: fab.direccion ?? '',
-        correoElectrónico: fab.correo_electronico ?? '',
-        telefono: fab.telefono ?? '',
-      };
-      this.fabricanteEvaluacion.push(FABRICANTE);
-    });
+  /**
+   * Obtene
+   */
+  informacionHistorico!: FabricanteResponse;
+  consultarInformacionHistorico(idFolio: string): void {
+    this.evaluacionSolicitud.getDatosFabricante(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            const DATOS = response.datos;
+            this.fabricanteEvaluacion = [{
+              numeroRegistroFiscal: DATOS?.numero_registro_fiscal ?? '',
+              nombreFabricante: DATOS?.nombre_fabricante ?? '',
+              direccion: DATOS?.direccion ?? '',
+              correoElectrónico: DATOS?.correo_electronico ?? '',
+              telefono: DATOS?.telefono ?? ''
+            }];
+            
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
   }
 
   /**

@@ -377,7 +377,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       fraccionArancelaria: [{ value: [], disabled: true }],
       nombreComercial: [{ value: [[]], disabled: true }],
       nombreTecnico: [{ value: [[]], disabled: true }],
-      numeroDeRegistroFiscal: [],
+      numeroDeRegistroFiscal: ['',Validators.required],
       valorMercancia: [{ value: '', disabled: true }],
       complemento: [{ value: '', disabled: true }],
       numeroFactura: [{ value: [[]], disabled: true }],
@@ -389,7 +389,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   initAgregarDatosProductorFormulario(): void {
     this.agregarDatosProductorFormulario = this.fb.group({
-      numeroRegistroFiscal: [[Validators.required]],
+      numeroRegistroFiscal: ['', [Validators.required]],
       fax: [[Validators.pattern(REGEX_SOLO_DIGITOS)]]
     });
   }
