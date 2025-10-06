@@ -105,6 +105,8 @@ export class PermisoSanitarioSolicitanteComponent {
   /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
+   * @param solicitud260910Store - Servicio para manejar el estado de la solicitud.
+   * @param solicitud260910Query - Servicio para consultar el estado de la solicitud.
    */
   constructor(
     public solicitud260910Store: Solicitud260910Store,
