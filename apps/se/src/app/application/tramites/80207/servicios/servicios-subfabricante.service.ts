@@ -73,7 +73,7 @@ export class SubfabricanteService {
      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80207','80207').buscarPlantas, body).pipe(
             map((response) => response),
             catchError(() => {
-              const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES().buscarPlantas}`);
+              const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80207','80207').buscarPlantas}`);
               return throwError(() => ERROR);
             })
           );
@@ -231,5 +231,39 @@ export function mapPlantaToDomicilio(planta?: PlantasDireccionModelo): Domicilio
     tipoDomicilio: 0,
   };
 }
+
+
+export function buildPlantasSubmanufactureras(array: PlantasDireccionModelo[], base: unknown[]): unknown[] {
+  
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      empresaCalle: arr.calle ?? '',
+      empresaNumeroInterior: arr.numInterior ?? '',
+      empresaNumeroExterior: arr.numExterior ?? '',
+      empresaCodigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.localidad ?? '',
+      empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
+      empresaEntidadFederativa: arr.entidadFederativa ?? '',
+      empresaPais: arr.pais ?? '',
+      rfc: arr.rfc ?? '',
+      domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+       datosComplementarios: Array.isArray((ITEM as any)?.datosComplementarios)
+          ? (ITEM as any).datosComplementarios.map((dc:any) => ({
+              idPlantaC: dc.idPlantaC ?? '',
+              idDato: dc.idDato ?? '',
+              amparoPrograma: dc.amparoPrograma ?? '',              
+            }))
+          : []
+        });
+      });
+    });
+    return RESULT;
+  }
 
 

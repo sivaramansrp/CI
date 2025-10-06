@@ -98,6 +98,7 @@ export class ContenedorDePasosComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+   
   /**
    * Obtiene el valor del índice del paso actual.
    * @method getValorIndice
@@ -205,10 +206,8 @@ public solicitudState: Tramite80207State = {} as Tramite80207State; // or provid
       
     }
     else if((this.solicitudState?.plantas?.length ?? 0) > 0){
-       const PAYLOAD = buildSolicitud80207Payload(this.solicitudState);
-              console.log("this.solicitudState >>>>>>>>>>" , this.solicitudState);
 
-       console.log("payload >>>>>>>>>>" , PAYLOAD.domicilio);
+       const PAYLOAD = buildSolicitud80207Payload(this.solicitudState);
        
        this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {

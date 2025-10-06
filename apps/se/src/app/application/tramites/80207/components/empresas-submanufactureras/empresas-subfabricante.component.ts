@@ -474,7 +474,6 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
                 DATOS.push(JSON.parse(JSON.stringify(item)));
               });
             }
-  
             this.store.addPlantas(DATOS);
           }
         });
