@@ -9,22 +9,23 @@
                     <div class="col-md-6">
                         <label for="certficacion_a">Tipo persona*:</label>
                     </div>
-                     <div class="col-md-6">
-                         <input type="radio" id="planta" name="planta" value="yes" [checked]="destinatarioForm.value.planta === 'yes'" (change)="enCambioValorRadio()" [disabled]="esFormularioSoloLectura"/>
-                          <label class="form-label  ms-3" for="planta">Planta TIF</label>
+                    <div class="col-md-6">
+                        <input type="radio" id="tipoMercancia" formControlName="tipoMercancia" name="tipoMercancia" value="tif" [checked]="destinatarioForm.value.tipoMercancia === 'tif'" (change)="enCambioValorRadio()" [disabled]="esFormularioSoloLectura"/>
+                        <label class="form-label  ms-3" for="planta">Planta TIF</label>
                     </div>
                     <div>
-                        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'"
-                            name="tipoMercancia" formControlName="tipoMercancia"
-                            (valueChange)="enCambioValorRadio()"></app-input-radio>
+                        <input type="radio" id="tipoMercancia" formControlName="tipoMercancia" name="tipoMercancia" value="yes" [checked]="destinatarioForm.value.tipoMercancia === 'yes'" (change)="enCambioValorRadio()" [disabled]="esFormularioSoloLectura"/>
+                        <label class="form-label  ms-3" for="planta">Física</label><br>
+                        <input type="radio" id="tipoMercancia" formControlName="tipoMercancia" name="tipoMercancia" value="no" [checked]="destinatarioForm.value.tipoMercancia === 'no'" (change)="enCambioValorRadio()" [disabled]="esFormularioSoloLectura"/>
+                        <label class="form-label  ms-3" for="planta">Moral</label>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row"  *ngIf="destinatarioForm.value.tipoMercancia !== 'tif'">
                 <div class="col-md-12">
                     <ng-titulo titulo="Datos personales" />
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="nombre">Nombre(s)*:</label>
@@ -67,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
+                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia !== 'yes'">
                     <div class="col-md-8">
                         <div class="form-group">
                             <label class="form-label" for="razonSocial">Denominación/razón social*: </label>
@@ -84,6 +85,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true" name="pais"
@@ -229,4 +231,65 @@
             </div>
         </form>
     </div>
+    <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'tif'">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-12">
+                    <ng-titulo titulo="Planta TIF"  />
+                </div>
+            </div>
+
+            <form [formGroup]="plantaTifForm" >
+            <div class="row mb-4">
+            <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label" for="nombreEstablecimiento">
+                    <strong>Nombre establecimiento TIF:</strong>
+                </label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="nombreEstablecimiento"
+                    formControlName="nombreEstablecimiento"
+                    placeholder="Ingrese el nombre del establecimiento"
+                >
+            </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                <label class="form-label" for="numeroEstablecimiento">
+                    <strong>Número establecimiento TIF:</strong>
+                </label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="numeroEstablecimiento"
+                    formControlName="numeroEstablecimiento"
+                    placeholder="Ingrese el número de establecimiento"
+                >
+                </div>
+            </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end gap-2">
+                <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    (click)="onLimpiar()"
+                >
+                Limpiar
+                </button>
+                <button 
+                    type="button" 
+                    class="btn btn-primary"
+                    (click)="onBuscar()"
+                >
+                    Buscar
+                </button>
+                </div>
+                </div>
+            </form>
+        </div>
+        </div>
 </div>
