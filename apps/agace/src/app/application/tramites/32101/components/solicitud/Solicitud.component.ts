@@ -523,18 +523,40 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.banco.catalogos = respuesta.data;
-      });
-  }
+      });  }
 
   /**
    * Maneja el cambio en la selección de la forma de adquisición.
-   * @param selectedOption - El objeto de la opción seleccionada del catálogo.
-   */  
-  onlistaDeDocumentosChange(selectedOption: Catalogo): void {
+   * @param event - El evento o objeto que contiene la opción seleccionada del catálogo.
+   */    onlistaDeDocumentosChange(event: Event | { selectedOption?: Catalogo } | Catalogo | undefined): void {
+    let VALUE = '';
+    let selectedOption: Catalogo | undefined;
     
-    const VALUE = selectedOption?.id || selectedOption?.clave;
-
-    this.comprobanteVisible = String(VALUE) === '1';
+    if (event) {
+      if ('value' in event) {
+        VALUE = (event as { value?: string }).value || '';
+      } 
+      else if ('selectedOption' in event) {
+        selectedOption = (event as { selectedOption?: Catalogo }).selectedOption;
+        VALUE = String(selectedOption?.id || '');
+      } 
+      else if ('id' in event && 'descripcion' in event) {
+        selectedOption = event as Catalogo;
+        VALUE = String(selectedOption.id || '');
+      } 
+      else if ((event as Event).target) {
+        const target = (event as Event).target as HTMLSelectElement;
+        VALUE = target?.value || '';
+      }
+    }
+    
+    const DESCRIPTION = selectedOption?.descripcion || '';
+    this.setValoresStore(this.registroForm, 'listaDeDocumentos', 'setListaDeDocumentos');
+    
+    // Determinar si el comprobante debe ser visible
+    const isCompraNacional = DESCRIPTION.toLowerCase().includes('compra nacional') || 
+                             DESCRIPTION.toLowerCase().includes('nacional');
+    this.comprobanteVisible = VALUE === '1' || selectedOption?.id === 1 || isCompraNacional;
     
     const COMPROBANTE_CONTROL = this.registroForm.get('comprobante');
     
@@ -544,6 +566,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       } else {
         COMPROBANTE_CONTROL.clearValidators();
         COMPROBANTE_CONTROL.setValue(''); 
+        COMPROBANTE_CONTROL.markAsUntouched();
       }
       COMPROBANTE_CONTROL.updateValueAndValidity();
     }

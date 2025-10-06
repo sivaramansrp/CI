@@ -33,8 +33,8 @@
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
                 [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" 
-                (selectionChange)="onlistaDeDocumentosChange($event)" [markTouched]="registroForm.get('listaDeDocumentos')?.touched??false"
-                id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')" [isDisabled]="soloLectura"></app-catalogo-select>
+                [markTouched]="registroForm.get('listaDeDocumentos')?.touched??false"
+                id="listaDeDocumentos" (change)="onlistaDeDocumentosChange($event)" [isDisabled]="soloLectura"></app-catalogo-select>
             </div>
             <div *ngIf="comprobanteVisible" class="col-md-4">
               <app-catalogo-select [catalogo]="comprobante.catalogos" [label]="comprobante.labelNombre"

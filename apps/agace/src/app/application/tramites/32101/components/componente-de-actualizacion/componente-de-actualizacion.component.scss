@@ -6,30 +6,12 @@
   font-weight: normal;
 }
 
-// .modal-dialog-centered {
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   min-height: 100vh;
-// }
-
-// .modal-content {
-//   margin: auto;
-// }
-
 ::ng-deep p {
   font-size: 15px !important;
 }
 
-// .mt-20 {
-//   margin-top: 15px;
-// }
-
-// .mr-5px {
-//   margin-right: 5px;
-// }
 .modal-lg-custom {
-  max-width: 800px;
+  max-width: 950px;
 }
 
 .modal-body {
@@ -57,7 +39,7 @@ textarea.form-control {
 
 #modalModificar {
   .modal-dialog {
-    max-width: 800px;
+    max-width: 950px;
     width: 90vw;
     margin: 1.75rem auto;
   }
@@ -67,9 +49,22 @@ textarea.form-control {
     width: 100%;
   }
 
-  .modal-header {
-    border-bottom: none;
-    padding: 1rem 1rem 0 1rem;
-    height: 40%;
+  .row {
+    margin-left: -8px;
+    margin-right: -8px;
+    
+    .col-md-4, .col-md-8 {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+
+  .form-control {
+    margin-bottom: 0.5rem;
+  }
+
+  .form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
   }
 }
