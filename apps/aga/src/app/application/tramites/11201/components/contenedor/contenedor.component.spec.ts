@@ -38,6 +38,16 @@ describe('ContenedorComponent', () => {
 
 
   beforeEach(async () => {
+    Object.defineProperty(window, 'bootstrap', {
+      value: {
+        Modal: jest.fn().mockImplementation((element) => ({
+          show: jest.fn(),
+          hide: jest.fn()
+        }))
+      },
+      writable: true
+    });
+
     datosTramiteServiceMock = {
       getContenedores: jest.fn().mockReturnValue(of({ data: [] })),
       getTransporteList: jest.fn().mockReturnValue(of({ data: [] })),
@@ -175,26 +185,37 @@ describe('ContenedorComponent', () => {
     expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.solicitudForm, 'testField');
     expect(result).toBe(false);
   });
-  it('should set mostrarArchivoSeleccionadoTable to true when adjuntarArchivo is called', () => {
-    component.mostrarArchivoSeleccionadoTable = false;
+  it('should validate fields and call abrirModalArchivo when adjuntarArchivo is called with valid fields', () => {
+    // Mock DOM element for modal
+    const mockModalElement = document.createElement('div');
+    mockModalElement.id = 'modalArchivoCsv';
+    jest.spyOn(document, 'getElementById').mockReturnValue(mockModalElement);
+
+    component.solicitudForm = new FormBuilder().group({
+      aduanaMenuDesplegable: ['validValue', Validators.required],
+      fechaDeIngreso: ['2023-01-01', Validators.required]
+    });
+    const abrirModalArchivoSpy = jest.spyOn(component, 'abrirModalArchivo');
     component.adjuntarArchivo();
-    expect(component.mostrarArchivoSeleccionadoTable).toBe(true);
+    expect(abrirModalArchivoSpy).toHaveBeenCalled();
   });
-  it('should update fechaDeIngreso in the form and mark it as untouched', () => {
+  it('should update fechaDeIngreso in the form and mark it as touched and dirty', () => {
     component.solicitudForm = new FormBuilder().group({
       fechaDeIngreso: [''],
     });
     component.cambioFechaDeIngreso('2023-01-01');
     expect(component.solicitudForm.get('fechaDeIngreso')?.value).toBe('2023-01-01');
-    expect(component.solicitudForm.get('fechaDeIngreso')?.untouched).toBe(true);
+    expect(component.solicitudForm.get('fechaDeIngreso')?.touched).toBe(true);
+    expect(component.solicitudForm.get('fechaDeIngreso')?.dirty).toBe(true);
   });
-  it('should update fechaIngreso in the form and mark it as untouched', () => {
+  it('should update fechaIngreso in the form and mark it as touched and dirty', () => {
     component.solicitudForm = new FormBuilder().group({
       fechaIngreso: [''],
     });
     component.cambioFechaIngreso('2023-01-01');
     expect(component.solicitudForm.get('fechaIngreso')?.value).toBe('2023-01-01');
-    expect(component.solicitudForm.get('fechaIngreso')?.untouched).toBe(true);
+    expect(component.solicitudForm.get('fechaIngreso')?.touched).toBe(true);
+    expect(component.solicitudForm.get('fechaIngreso')?.dirty).toBe(true);
   });
 
 
@@ -303,7 +324,7 @@ describe('ContenedorComponent', () => {
     component.regresar();
     expect(component.mostrarCargarArchivoTable).toBe(false);
     expect(mockFileInput.value).toBe('');
-    expect(component.etiquetaDeArchivo).toBe('Sin archivo seleccionados');
+    expect(component.etiquetaDeArchivo).toBe('');
   });
   it('should mark all fields as touched and show mensaje if numeroManifiesta and menuDesplegable are valid', () => {
     component.solicitudForm = new FormBuilder().group({
@@ -408,7 +429,7 @@ describe('ContenedorComponent', () => {
     component.onCambioDeArchivo(mockEvent);
 
     expect(component.archivoMedicamentos).toBeNull();
-    expect(component.etiquetaDeArchivo).toBe('Sin archivo seleccionados');
+    expect(component.etiquetaDeArchivo).toBe('');
   });
 
   it('should open the modal when a non-CSV file is uploaded', () => {
