@@ -1,4 +1,5 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
+import { AfterViewInit,ElementRef,ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
@@ -7,6 +8,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
@@ -21,7 +23,7 @@ import { Validators } from '@angular/forms';
 })
 
 
-export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
+export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Formulario para capturar los datos de la solicitud.
    */
@@ -41,6 +43,20 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * @descripcion
+   * Instancia del modal de modificación.
+   */
+  modalInstanceDos!: Modal;
+
+  /**
+   * Instancia del modal para gestionar archivos.
+   *
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
+  modalInstances: Modal | null = null;
+
+  
 
   /**
    * Configuración de las columnas de la tabla de solicitudes de cancelación.
@@ -64,11 +80,38 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * Almacena los registros de cancelación para mostrar en la tabla.
    */
   cuerpoTablaCancelacion: Cancelacion[] = [];
+
+  /**
+   * Referencia al elemento del modal para buscar mercancías.
+   *
+   * Se utiliza para abrir o cerrar el modal de búsqueda.
+   */
+  @ViewChild('modalBuscar') modalBuscar!: ElementRef;
+
   
   /**
    * Indica si el usuario tiene permiso para realizar ciertas acciones.
    */
   public datosDePermiso: boolean = false;
+
+  /**
+   * @descripcion
+   * Referencia al elemento del modal de modificación.
+   */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   *
+   * Se utiliza para cerrar el modal de manera programada.
+   */
+@ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Formulario utilizado para capturar el número de folio del trámite.
+   * Este formulario incluye validaciones requeridas y de patrón numérico.
+   */
+  public busquedaForm!: FormGroup;
 
   /**
    * Constructor del componente.
@@ -83,7 +126,9 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     private servicioDeMensajesService: ServicioDeMensajesService,
     private consultaQuery: ConsultaioQuery,
     private desistimientoQuery: DesistimientoQuery
-  ) { }
+  ) { this.establecerBusquedaForm();
+
+  }
    /**
    * Método que se ejecuta al iniciar el componente.
    * Inicializa los formularios de solicitud y cancelación, 
@@ -147,7 +192,92 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  /**
+   * Muestra el formulario modal para buscar mercancías.
+   * Inicializa la instancia del modal si no está creada y luego lo muestra.
+   * @return void
+   * */
+  showForm():void{
+    if (this.modalBuscar) {
+      if (!this.modalInstances) {
+        this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+      }
+    }
+    this.modalInstances?.show();
+  }
+
+   /**
+   * Inicializa el formulario de búsqueda de trámites.
+   * Contiene el campo `tramite` con validaciones de requerido y solo números.
+   */
+   public establecerBusquedaForm(): void {
+    this.busquedaForm = this.fb.group({
+      tramite: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
+    });
+  }
   
+  /**
+   * Cierra el modal activo.
+   *
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo
+   * y resetea el estado de validación del formulario de mercancía.
+   */
+  cerrarModal(): void {
+   
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    
+    }
+
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+   
+  }
+
+   /**
+   * @descripcion
+   * Hook del ciclo de vida que se llama después de que la vista del componente se haya inicializado.
+   * Inicializa el modal de modificación.
+   */
+   ngAfterViewInit(): void {
+    if (this.modifyModal) {
+      this.modalInstanceDos = new Modal(this.modifyModal.nativeElement);
+    }
+  }
+
+   /**
+   * @descripcion
+   * Abre el modal de modificación con los datos seleccionados.
+   * @param disponiblesDatos - Los datos seleccionados para modificación.
+   */
+   abrirModificarModal(): void {
+    if (this.busquedaForm.invalid) {
+      this.busquedaForm.markAllAsTouched();
+      return;
+    }
+    else if(this.modalInstanceDos) {
+      this.modalInstanceDos.show();
+    }
+  
+    }
+
+  
+
+   /**
+   * @descripcion
+   * Cierra el modal de modificación.
+   */
+   cerrarModificarModal(): void {
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+    if (this.modalInstanceDos) {
+    
+      this.modalInstanceDos.hide();
+    }
+  }
 
 
   /**
