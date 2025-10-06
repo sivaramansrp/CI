@@ -1,15 +1,33 @@
-import { Catalogo, CatalogosSelect, InputFecha } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, REGEX_LLAVE_PAGO, REGEX_SOLO_NUMEROS, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Solicitud260910State, Solicitud260910Store } from '../../estados/tramites260910.store';
+import {
+  Catalogo,
+  CatalogosSelect,
+  InputFecha,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  REGEX_LLAVE_PAGO,
+  REGEX_SOLO_NUMEROS,
+} from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud260910State,
+  Solicitud260910Store,
+} from '../../estados/tramites260910.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 
 /**
  * Componente para gestionar el registro del pago de derechos.
- * 
+ *
  * Este componente maneja el formulario y la lógica relacionada con el pago de derechos.
  */
 @Component({
@@ -58,8 +76,20 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si se ha hecho clic en el botón de continuar para validar el formulario.
+   * @type {boolean}
+   */
+  @Input() esContinuarClicked: boolean = false;
+
+  /**
+   * Indica si el campo de fecha de pago está deshabilitado.
+   * @type {boolean}
+   */
+  disableFechaDePago: boolean = true;
+
+  /**
    * Constructor del componente.
-   * 
+   *
    * @param fb Constructor de formularios reactivos
    * @param solicitudDatosService Servicio para datos de solicitud
    * @param solicitud260910Store Almacén para estado de solicitud
@@ -90,20 +120,41 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo para el pago de derechos.
    */
   private inicializarFormulario(): void {
-    this.pagoDeDerechosForm = this.fb.group({
-      /** Clave de referencia del pago */
-      claveDeReferencia: [this.solicitud260910State.claveDeReferencia, [Validators.maxLength(9)]],
-      /** Cadena de dependencia asociada al pago */
-      cadenaDeDependencia: [this.solicitud260910State.cadenaDeDependencia, [Validators.maxLength(14)]],
-      /** Banco seleccionado para el pago */
-      banco: [this.solicitud260910State.banco],
-      /** Llave de pago proporcionada por el sistema */
-      liaveDePago: [this.solicitud260910State.liaveDePago, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_PAGO)]],
-      /** Fecha en la que se realizó el pago */
-      fechaDePago: [this.solicitud260910State.fechaDePago],
-      /** Importe total del pago realizado */
-      importeDePago: [this.solicitud260910State.importeDePago, [Validators.maxLength(16), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-    });
+    this.pagoDeDerechosForm = this.fb.group(
+      {
+        /** Clave de referencia del pago */
+        claveDeReferencia: [
+          {
+            value: this.solicitud260910State.claveDeReferencia,
+            disabled: true,
+          },
+          [Validators.maxLength(9)],
+        ],
+        /** Cadena de dependencia asociada al pago */
+        cadenaDeDependencia: [
+          {
+            value: this.solicitud260910State.cadenaDeDependencia,
+            disabled: true,
+          },
+          [Validators.maxLength(14)],
+        ],
+        /** Banco seleccionado para el pago */
+        banco: [{ value: this.solicitud260910State.banco, disabled: true }],
+        /** Llave de pago proporcionada por el sistema */
+        liaveDePago: [
+          { value: this.solicitud260910State.liaveDePago, disabled: true },
+          [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_PAGO)],
+        ],
+        /** Fecha en la que se realizó el pago */
+        fechaDePago: [{ value: this.solicitud260910State.fechaDePago }],
+        /** Importe total del pago realizado */
+        importeDePago: [
+          { value: this.solicitud260910State.importeDePago, disabled: true },
+          [Validators.maxLength(16), Validators.pattern(REGEX_SOLO_NUMEROS)],
+        ],
+      },
+      { validators: PagoDerechosComponent.dependenciaPagoValidator() }
+    );
 
     this.solicitud260910Query.seleccionarSolicitud$
       .pipe(
@@ -118,9 +169,55 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
             fechaDePago: this.solicitud260910State.fechaDePago,
             importeDePago: this.solicitud260910State.importeDePago,
           });
+          this.actualizarEstadoFormulario();
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Actualiza el estado del formulario basado en el tipo de operación.
+   * Habilita o deshabilita campos según corresponda.
+   */
+  actualizarEstadoFormulario(): void {
+    if (this.solicitud260910State.tipoOperacion === 'PRO') {
+      this.pagoDeDerechosForm.enable();
+      this.disableFechaDePago = true;
+    } else if (
+      this.solicitud260910State.tipoOperacion === 'MYP' ||
+      this.solicitud260910State.tipoOperacion === 'MOD'
+    ) {
+      this.pagoDeDerechosForm.enable();
+      this.disableFechaDePago = false;
+    }
+  }
+
+  /**
+   * Validador personalizado para asegurar que al menos un campo de pago esté lleno.
+   * @return Función de validador que verifica los campos del formulario.
+   */
+  static dependenciaPagoValidator(): (
+    formGroup: FormGroup
+  ) => ValidationErrors | null {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      const CLAVE_DE_REFERENCIA = formGroup.get('claveDeReferencia')?.value;
+      const CADENA_DE_DEPENDENCIA = formGroup.get('cadenaDeDependencia')?.value;
+      const BANCO = formGroup.get('banco')?.value;
+      const LIAVE_DE_PAGO = formGroup.get('liaveDePago')?.value;
+      const FECHA_DE_PAGO = formGroup.get('fechaDePago')?.value;
+      const IMPORTE_DE_PAGO = formGroup.get('importeDePago')?.value;
+
+      const AL_MENOS_UNO_LLENO = Boolean(
+        CLAVE_DE_REFERENCIA ||
+        CADENA_DE_DEPENDENCIA ||
+        BANCO ||
+        LIAVE_DE_PAGO ||
+        FECHA_DE_PAGO ||
+        IMPORTE_DE_PAGO
+      );
+      
+      return AL_MENOS_UNO_LLENO ? { pRequerido: true } : null;
+    };
   }
 
   /**
@@ -145,7 +242,8 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   obtenerPagoDerechos(): void {
     this.solicitudDatosService
-      .obtenerPagoDerechos().pipe(takeUntil(this.destroyNotifier$))
+      .obtenerPagoDerechos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: CatalogosSelect) => {
           this.bancoCatalogo = respuesta;
@@ -181,7 +279,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza la llave de pago en el almacén de estado.
-   * 
+   *
    * @param evento Evento de entrada que contiene el valor
    */
   setLiaveDePago(evento: Event): void {
@@ -191,7 +289,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza la fecha de pago en el almacén de estado.
-   * 
+   *
    * @param evento Cadena con la fecha seleccionada
    */
   seleccionarFechaInicio(evento: string): void {
@@ -200,7 +298,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el importe del pago en el almacén de estado.
-   * 
+   *
    * @param evento Evento de entrada que contiene el valor
    */
   setImporteDePago(evento: Event): void {
@@ -214,20 +312,18 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   private actualizarEstadoFormularios(): void {
     if (this.esFormularioSoloLectura) {
       this.pagoDeDerechosForm.disable();
-    } else {
-      this.pagoDeDerechosForm.enable();
     }
   }
 
   /**
-     * Método para validar el formulario.
-     * @param form Formulario a validar.
-     * @param field Campo a validar.
-     * @returns {boolean} Regresa un booleano si el campo es válido o no.
-     */
-    esValido(form: FormGroup, field: string): boolean {
-      return this.validacionesService.isValid(form, field) === true;
-    }
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
+  }
 
   /**
    * Destrucción del componente.
