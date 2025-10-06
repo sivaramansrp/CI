@@ -142,7 +142,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       claveReferencia: [{ value: '', disabled: true }],
       numeroOperacion: [
         this.solicitudState?.numeroOperacion,
-        [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+        [Validators.required, Validators.minLength(1), Validators.maxLength(50)],
       ],
       cadenaDependencia: [{ value: '', disabled: true }],
       banco: [this.solicitudState?.banco],
