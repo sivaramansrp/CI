@@ -583,10 +583,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     this.setValoresStore(this.validacionMercanciaForm, 'fecha', 'setFecha');
   }
 
+  /**
+   * Maneja el cambio en el catálogo de tratados.
+   * @param event Objeto del catálogo de tratados seleccionado.
+   */
   onTratadoChange(event: Catalogo): void {
     this.store.setTratadoDescripciones(event.descripcion);
   }
 
+  /**
+   * Maneja el cambio en el catálogo de países.
+   * @param event Objeto del catálogo de países seleccionado.
+   */
   onPaisChange(event: Catalogo): void {
     this.store.setPaisDescripcion(event.descripcion);
   }
@@ -627,7 +635,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    * @method abrirModalMercancia - Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles
    * @param rowData - Datos de la fila seleccionada de tipo ColumnasTabla
    */
-  abrirModalMercancia(rowData: ColumnasTabla): void {        
+  abrirModalMercancia(rowData: ColumnasTabla): void {
     if (rowData) {
       this.esFormulario = true;
       this.esMercanciaEnEdicion = false;
@@ -1005,7 +1013,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       validacionForm: this.fb.group({
         tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
         pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
-        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.minLength(8),Validators.maxLength(8)]],
+        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8), Validators.maxLength(8)]],
         numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }],
         nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }],
         fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }],
@@ -1257,34 +1265,74 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     });
   }
 
+  /**
+   * Obtiene la lista de tratados y acuerdos desde el servicio `catalogoServices`
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.
+   *  Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'tratado' en `optionsTratado` con las opciones obtenidas.
+   */
   getTratadoCertificado(): void {
     this.catalogoServices.tratadosAcuerdosCatalogo(this.TramitesID, this.tratadoAsociado).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.optionsTratado.catalogos = res.datos ?? [];
     });
   }
 
+  /**
+   * Maneja el cambio en el catálogo de UMC (Unidad de Medida de la Cantidad).
+   * Actualiza la descripción de UMC en el estado de la tienda.
+   * @param event Objeto del catálogo de UMC seleccionado.
+   */
   onUmcChange(event: Catalogo): void {
     this.store.setUmcDescripcion(event.descripcion);
   }
-
+  
+  /**
+   * Maneja el cambio en el catálogo de Unidad de Medida.
+   * Actualiza la descripción de Unidad de Medida en el estado de la tienda.
+   * @param event Objeto del catálogo de Unidad de Medida seleccionado.
+   */
   onUnidadMedidaChange(event: Catalogo): void {
     this.store.setUnidadMedidaDescripcion(event.descripcion);
   }
 
+  /**
+   * Maneja el cambio en el catálogo de Tipo de Factura.
+   * Actualiza la descripción de Tipo de Factura en el estado de la tienda.
+   * @param event Objeto del catálogo de Tipo de Factura seleccionado.
+   */
   onTipoFacturaChange(event: Catalogo): void {
     this.store.setTipoFacturaDescripcion(event.descripcion);
   }
 
+  /**
+   * Obtiene la lista de Unidades de Medida de la Cantidad (UMC) desde el servicio `catalogoServices`
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.  
+   *  Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'umc' en `optionsUMC` con las opciones obtenidas.
+   */
   getUmc(): void {
     this.catalogoServices.unidadMasaBrutaCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.optionsUMC.catalogos = res.datos ?? [];
     });
   }
+
+  /**
+   * Obtiene la lista de Unidades de Medida desde el servicio `catalogoServices`
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'unidadMedida' en `optionsUnidadMedida` con las opciones obtenidas.
+   */
   getUnidadMedidaCertificado(): void {
     this.catalogoServices.unidadesMedidaComercialCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.optionsUnidadMedida.catalogos = res.datos ?? [];
     });
   }
+  /**
+   * Obtiene la lista de Tipos de Factura desde el servicio `catalogoServices`
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'tipoFactura' en `optionsTipoFactura` con las opciones obtenidas.
+   **/
   getTipoFacturaCertificado(): void {
     this.catalogoServices.tipoFacturaCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.optionsTipoFactura.catalogos = res.datos ?? [];
