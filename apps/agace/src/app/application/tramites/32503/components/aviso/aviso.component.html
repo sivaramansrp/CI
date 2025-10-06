@@ -379,11 +379,6 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        @if (mostrarAlertaValidacionMercancia) {
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-             Debe registrar correctamente datos del domicilio de la planta o bodega de destino de las mercancías.
-          </div>
-        }
         <form [formGroup]="mercanciaFormulario">
           <ng-titulo titulo="Datos de la mercancía que se trasladará" />
           <ng-container>

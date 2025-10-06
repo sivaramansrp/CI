@@ -981,15 +981,18 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   abiertoMercancia(esModificacion: boolean = false): void {
 
-    if (this.domicilioFormulario.invalid) {
+    if (!esModificacion && this.domicilioFormulario && this.domicilioFormulario.invalid) {
       Object.keys(this.domicilioFormulario.controls).forEach(key => {
-        this.domicilioFormulario.get(key)?.markAsTouched();
+        const CONTROL = this.domicilioFormulario.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
       });
-      this.mostrarAlertaValidacionMercancia = true;
+      
+      this.mostrarAlertaValidacionDomicilio = true;
       return;
     }
-
-    this.mostrarAlertaValidacionMercancia = false;
+    this.mostrarAlertaValidacionDomicilio = false;
 
     if (esModificacion && this.filaSeleccionadaMercanciaLista && this.filaSeleccionadaMercanciaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaMercanciaLista[0];
@@ -1035,7 +1038,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.mercanciaFormulario.valid) {
-      this.mostrarAlertaValidacionMercancia = false;
+
       
       const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
       const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
@@ -1068,7 +1071,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       this.mercanciaFormulario.reset();
       this.closeMercancia?.nativeElement?.click();
     } else {
-      this.mostrarAlertaValidacionMercancia = true;
+
       
       Object.keys(this.mercanciaFormulario.controls).forEach(key => {
         this.mercanciaFormulario.get(key)?.markAsTouched();
@@ -1092,7 +1095,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
 
     if (this.domicilioFormulario.valid) {
-      this.mostrarAlertaValidacionDomicilio = false;
+
       
       const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
       const NUEVO_ID = Date.now();
