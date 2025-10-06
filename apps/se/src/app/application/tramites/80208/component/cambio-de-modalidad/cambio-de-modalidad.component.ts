@@ -562,6 +562,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
         this.cambioModalidadStore.actualizarEstado({
           ServiciosDatos: [...this.ServiciosDatos, CUERPODATOS]
         });
+        this.cambioModalidadStore.setServicios(this.ServiciosDatos);
       }
     });
   }
