@@ -494,7 +494,7 @@ else{
  
 }
   
-  private mostrarNotificacion(mensaje: string): void {
+  private mostrarNotificacion(mensaje: string,cancelButton:boolean=false): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -504,7 +504,7 @@ else{
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: cancelButton ? 'Cancelar' : '',
     };
     this.deleteMessageExportacion=false;
   }
@@ -567,7 +567,7 @@ else{
     if (DATOS === 0) { this.mostrarNotificacion('Selecciona la planta que desea eliminar.'); return; }
     
     this.deleteMessageExportacion = true;
-    this.mostrarNotificacion('¿Está seguro de eliminar la(s) planta(s) seleccionada(s)?');
+    this.mostrarNotificacion('¿Está seguro de eliminar la(s) planta(s) seleccionada(s)?',true);
   }
   
     /**
