@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="row my-3">
-        <div class="col-md-8">
+        <div class="col-md-8 text-alignment">
           <div>
             <label for="idTransaccion">ID de transacción VUCEM del aviso inicial</label>
             <label for="puntos">:</label>
@@ -97,7 +97,7 @@
     }
     <ng-container formGroupName="direccionOrigen">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 text-alignment">
           <div>
             <label for="nombrePlanta">Nombre comercial</label>
             <label for="puntos">:</label>
@@ -124,7 +124,7 @@
             <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'claveColonia') }}</div>
           }
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-2">
           <div>
             <label for="solicitud.envioAvisos.callePlanta">Calle</label>
             <span class="require" id="domicilio">*</span>
@@ -263,7 +263,7 @@
           <ng-titulo titulo="Datos del domicilio de la planta o bodega de destino de las mercancías (donde se llevarán a cabo los procesos de reparación o mantenimiento, análisis y pruebas, calibración o diseño)" />
           <ng-container>
             <div class="row">
-              <div class="col-md-8">
+              <div class="col-md-8 text-alignment">
                 <div>
                   <label for="nombrePlanta">Nombre comercial</label>
                   <label for="puntos">:</label>
@@ -294,7 +294,7 @@
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" formControlName="claveColonia" [ngClass]="isValid(domicilioFormulario,'claveColonia') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveColonia', 'setDomicilioFormularioColonia')" [isDisabled]="soloLectura" [markTouched]="domicilioFormulario.get('claveColonia')?.touched ?? false"></app-catalogo-select>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 mt-2">
                 <div>
                   <label for="solicitud.envioAvisos.callePlanta">Calle</label>
                   <span class="require" id="domicilio">*</span>
@@ -383,12 +383,12 @@
           <ng-titulo titulo="Datos de la mercancía que se trasladará" />
           <ng-container>
             <div class="row">
-              <div class="col-md-4 mb-2">
+              <div class="col-md-4 mt-2">
                 <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true" id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')" [isDisabled]="soloLectura"
                 [markTouched]="mercanciaFormulario.get('claveFraccionArancelaria')?.touched ?? false"
                 ></app-catalogo-select>
               </div>
-              <div class="col-md-4 mb-2">
+              <div class="col-md-4 datos-trasladara-nico">
                 
                 <label for="nico">NICO</label>
                 <span class="require">*</span>
@@ -402,7 +402,7 @@
               </div>
             </div>
             <div class="row mb-5">
-              <div class="col-md-4 mb-2">
+              <div class="col-md-4 datos-trasladara-cantidad">
                 <label for="cantidad">Cantidad</label>
                 <span class="require">*</span>
                 <label for="cantidad">:</label>
@@ -419,7 +419,7 @@
                   <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida') }}</div>
                 }
               </div>
-              <div class="col-md-4 mb-2">
+              <div class="col-md-4 datos-trasladara-cantidad">
                 <label for="valorUSD">Valor USD</label>
                 <span class="require">*</span>
                 <label for="valorUSD">:</label>
