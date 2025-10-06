@@ -17,8 +17,11 @@ export interface Domicilio {
 }
 
 export interface Solicitante {
-  id_persona_solicitud: number;
-  correo_electronico: string;
+  id_persona_solicitud: number | null;
+  rfc: string | null;
+  razon_social: string | null;
+  correo_electronico: string | null;
+  descripcion_giro: string | null;
   domicilio: Domicilio;
 }
 
@@ -51,6 +54,7 @@ export interface ApiResponseChofer {
     domicilio: {
       pais: string;
       codigo_postal: string;
+      correo_electronico: string | null;
       estado: string;
       municipio: string;
       localidad: string;

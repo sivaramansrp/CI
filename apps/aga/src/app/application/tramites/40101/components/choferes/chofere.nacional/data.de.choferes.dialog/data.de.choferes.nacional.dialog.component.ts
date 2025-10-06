@@ -528,26 +528,25 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       };
     }
   }
-
   /**
-* Getting Data for the National Driver Data using the curp and rfc
-*/
-  GetDataForNationalDriver(): void {
+   * Obtener datos para el conductor nacional usando CURP y RFC
+   */
+  ObtenerDatosConductorNacional(): void {
     const CURP_VALUE = this.formChoferes.get('curp')?.value;
     const RFC_VALUE = this.formChoferes.get('rfc')?.value;
     this.modificacarTerrestreService.buscarChoferNacional(CURP_VALUE, RFC_VALUE).subscribe((data: ApiResponseChofer) => {
       if (data && data.datos) {
         const DATOS = data.datos;
-        this.patchFormWithDatos(DATOS);
+        this.completarFormularioConDatos(DATOS);
       }
     });
   }
 
   /**
-   * Helper function to patch form with chofer data.
-   * @param DATOS Data from API response
+   * Función auxiliar para completar el formulario con datos del chofer.
+   * @param DATOS Datos de la respuesta de la API
    */
-  private patchFormWithDatos(DATOS: ApiResponseChofer['datos']): void {
+  private completarFormularioConDatos(DATOS: ApiResponseChofer['datos']): void {
     this.formChoferes.patchValue({
       curp: DATOS.curp || '',
       rfc: DATOS.rfc || '',
@@ -569,7 +568,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       localidad: DATOS.domicilio?.localidad || '',
       codigoPostal: DATOS.domicilio?.codigo_postal || '',
       telefono: DATOS.domicilio?.telefono || '',
-      correoElectronico: '',
+      correoElectronico: DATOS.domicilio?.correo_electronico || '',
     });
 
   }

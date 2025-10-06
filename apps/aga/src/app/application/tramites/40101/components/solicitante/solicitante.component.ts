@@ -1,4 +1,4 @@
-import { ApiResponseSolicitante, Domicilio, Solicitante } from '../../models/registro-muestras-mercancias.model';
+import { ApiResponseSolicitante, Solicitante } from '../../models/registro-muestras-mercancias.model';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
@@ -69,10 +69,10 @@ export class SolicitanteComponent implements OnInit {
    * y que `solicitudForm` está correctamente inicializado.
    */
   setFormValues(): void {
-    // const RFC = this.solicitudForm.get('rfc');
-    // RFC?.setValue(this.solicitudData?.rfc);
-    // this.solicitudForm.get('denominacion')?.setValue(this.solicitudData?.denominacion);
-    // this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.actividadEconomica);
+    const RFC = this.solicitudForm.get('rfc');
+    RFC?.setValue(this.solicitudData?.rfc);
+    this.solicitudForm.get('denominacion')?.setValue(this.solicitudData?.razon_social);
+    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.descripcion_giro);
     this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData?.correo_electronico);
     this.solicitudForm.get('pais')?.setValue(this.solicitudData?.domicilio?.pais);
     this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData.domicilio?.codigo_postal);
