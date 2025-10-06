@@ -3,14 +3,15 @@ import {
   AnexoUnoEncabezado,
 } from '../models/nuevo-programa-industrial.model';
 import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
+import { BuscarPayload, PlantasSubfabricante } from '../models/empresas-subfabricanta.model';
 import {
   Catalogo,
   HttpCoreService,
   JSONResponse,
   JsonResponseCatalogo,
 } from '@ng-mf/data-access-user';
-import { PlantasSubfabricante, PlantsEmpresaSubfabricante } from '../models/empresas-subfabricanta.model';
 import { API_ROUTES } from '../servers/api-route';
+import { DisponsibleFiscal } from '../models/empresas.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -348,6 +349,57 @@ export class ComplimentosService {
     }
 
     /**
+     * Realiza una solicitud POST para obtener la lista de plantas controladas disponibles.
+     * 
+     * @param body - Objeto de tipo `BuscarPayload` que contiene los parámetros de búsqueda.
+     * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+     * @throws Error si ocurre un problema al obtener la lista de subfabricantes.
+     */
+    getControladasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80104').buscarControldasPlantas, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80104').buscarControldasPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+
+      /**
+       * Obtiene la lista de subfabricantes disponibles según los criterios de búsqueda proporcionados.
+       *
+       * @param body - Objeto que contiene los parámetros de búsqueda para filtrar las subfabricantes.
+       * @returns Un observable que emite la respuesta JSON con la lista de subfabricantes disponibles.
+       * @throws Error si ocurre un problema al obtener la lista de subfabricantes desde la API.
+       */
+      getTerciarizadasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80105').buscarTerciarizadasPlantas, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80105').buscarTerciarizadasPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    
+    /**
+     * Obtiene la lista de plantas disponibles.
+     * @method getPlantasDisponibles
+     * @returns {Observable<TableData>} Observable con la lista de plantas disponibles.
+     */
+    getPlantasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES().buscarPlantasImmex, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES().buscarPlantasImmex}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    /**
  * Construye el domicilio fiscal completo a partir de los datos de domicilio
  * @param domicilio - Objeto domicilioDto
  * @param empresaDomicilio - Objeto domicilioSolicitud de empresaDto
@@ -396,6 +448,134 @@ private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string
         domicilioFiscal: this.buildDomicilioFiscal(DOMICILIO, EMPRESA_DOMICILIO),
         razonSocial: EMPRESA.razonSocial || item.razonSocial || ''
       };
+    });
+  }
+
+
+/**
+ * Transforma un objeto fuente en una instancia de `DisponsibleFiscal`.
+ * 
+ * Extrae y mapea los datos fiscales y de domicilio desde diferentes estructuras posibles del objeto fuente,
+ * asegurando valores predeterminados en caso de ausencia. Los campos incluyen información de domicilio,
+ * entidad federativa, país, RFC, razón social y otros datos relevantes para el contexto fiscal.
+ * 
+ * @param source El objeto fuente que contiene la información fiscal y de domicilio.
+ * @returns Un objeto `DisponsibleFiscal` con los datos mapeados y normalizados.
+ */
+toDisponsibleFiscal(source: any[]): DisponsibleFiscal[] {
+  if (!Array.isArray(source)) {
+    return [];
+  }
+  return source.map(item => {
+    const DOMICILIO = item?.domicilioDto || item?.empresaDto?.domicilioSolicitud || {};
+    const ENTIDAD = DOMICILIO?.entidadFederativa || item?.domicilioDto?.entidadFederativa;
+    const PAIS = DOMICILIO?.pais || item?.domicilioDto?.pais;
+
+    return {
+      calle: DOMICILIO?.calle ?? '',
+      numeroExterior: DOMICILIO?.numExterior ?? '',
+      numeroInterior: DOMICILIO?.numInterior ?? '',
+      codigoPostal: DOMICILIO?.codigoPostal ?? '',
+      colonia: DOMICILIO?.colonia ?? '',
+      municipioDelegacion: DOMICILIO?.municipio ?? DOMICILIO?.delegacionMunicipio ?? '',
+      entidadFederativa: ENTIDAD?.nombre ?? '',
+      pais: PAIS?.nombre ?? 'MÉXICO',
+      registroFederalContribuyentes: item?.empresaDto?.rfc ?? item?.rfc ?? '',
+      domicilioFiscalSolicitante: DOMICILIO?.descUbicacion ?? DOMICILIO?.colonia ?? '',
+      razonSocial: item?.empresaDto?.razonSocial ?? item?.razonSocial ?? ''
+    };
+  });
+}
+
+    /**
+   * Mapea la respuesta de la API a un arreglo de objetos PlantasSubfabricante.
+   * @param apiResponse - Respuesta de la API que contiene los datos de las plantas subfabricantes.
+   * @returns Arreglo de objetos PlantasSubfabricante mapeados.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  mapApiResponseToPlantasDisponibles(apiResponse: any[]): PlantasDisponibles[] {
+    // eslint-disable-next-line complexity
+    if (!Array.isArray(apiResponse) || apiResponse.length === 0) {
+      return [];
+    }
+
+    // eslint-disable-next-line complexity
+    return apiResponse.map((item) => {
+      // Extract nested objects safely
+      const DOMICILIO = item.domicilioDto || {};
+      const EMPRESA = item.empresaDto || {};
+      const EMPRESA_DOMICILIO = EMPRESA.domicilioSolicitud || {};
+      const ENTIDAD_FEDERATIVA =
+        DOMICILIO.entidadFederativa ||
+        EMPRESA_DOMICILIO.entidadFederativa ||
+        {};
+      const PAIS = DOMICILIO.pais || EMPRESA_DOMICILIO.pais || {};
+
+      const MAPPED_PLANTA: PlantasDisponibles = {
+        calle:
+          DOMICILIO.calle ||
+          EMPRESA_DOMICILIO.calle ||
+          '',
+
+        numeroExterior: parseToString(
+          DOMICILIO.numExterior ||
+            EMPRESA_DOMICILIO.numExterior || ''
+        ),
+
+        numeroInterior: parseToString(
+          DOMICILIO.numInterior ||
+            EMPRESA_DOMICILIO.numInterior || ''
+        ),
+
+        codigoPostal: parseToString(
+          DOMICILIO.codigoPostal ||
+            EMPRESA_DOMICILIO.codigoPostal || ''
+        ),
+
+        localidad: parseToString(
+          DOMICILIO.cveLocalidad ||
+            DOMICILIO.localidad ||
+            EMPRESA_DOMICILIO.localidad ||
+            ''
+        ),
+
+        colonia:
+          DOMICILIO.colonia ||
+          DOMICILIO.descUbicacion ||
+          EMPRESA_DOMICILIO.colonia ||
+          '',
+
+        municipioODelegacion:
+          DOMICILIO.municipio ||
+          DOMICILIO.delegacionMunicipio ||
+          EMPRESA_DOMICILIO.municipio ||
+          EMPRESA_DOMICILIO.delegacionMunicipio ||
+          '',
+
+        entidadFederativa:
+          ENTIDAD_FEDERATIVA.nombre ||
+          DOMICILIO.cveEntidad ||
+          EMPRESA_DOMICILIO.cveEntidad ||
+          '',
+
+        pais:
+          PAIS.nombre ||
+          item.empresaPais || '',
+
+        registroFederalDeContribuyentes:
+          EMPRESA.rfc || '',
+
+        domicilioFiscalDelSolicitante: this.buildDomicilioFiscal(
+          DOMICILIO,
+          EMPRESA_DOMICILIO
+        ),
+
+        razonSocial:
+          EMPRESA.razonSocial ||
+          '',
+      };
+
+      return MAPPED_PLANTA;
     });
   }
 }
