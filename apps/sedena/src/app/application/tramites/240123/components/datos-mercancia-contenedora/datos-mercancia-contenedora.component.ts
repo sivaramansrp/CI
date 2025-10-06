@@ -138,18 +138,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
       tipoMoneda: this.datosMercancia.get('tipoMoneda')?.getRawValue(),
       descripcion: this.datosMercancia.get('descripcion')?.getRawValue(),
     };
-
-    if (FORM_ID === 0) {
-      this.datosMercancias.push(DATOS_MERCANCIA);
-    } else {
-      const INDEX = this.datosMercancias.findIndex(item => item.id === FORM_ID);
-      if (INDEX !== -1) {
-      this.datosMercancias[INDEX] = DATOS_MERCANCIA;
-      }
-    }
+    this.datosMercancias.push(DATOS_MERCANCIA);
     
-    this.updateMercanciaDetalle(this.datosMercancias);
+    if (FORM_ID === 0) {
+      this.updateMercanciaDetalle(this.datosMercancias);
+    } else {
+      this.tramiteStore.updateListMercanciaTablaDatos(this.datosMercancias);
+    }
     this.datosMercancia.reset();
+    this.cerrar.emit();
   }
 
   /**
@@ -187,7 +184,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
-    this.cerrar.emit();
   }
 
   /**
@@ -212,7 +208,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
       valorComercial: [null, Validators.required],
       umc: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
-      id:[0]
+      id:[0,Validators.required]
     });
     this.cargarDatos();
   }
