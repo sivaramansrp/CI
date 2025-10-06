@@ -384,10 +384,9 @@
           <ng-container>
             <div class="row">
               <div class="col-md-4 mb-2">
-                <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true" id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')" [isDisabled]="soloLectura"></app-catalogo-select>
-                @if (obtenerMensajeError(mercanciaFormulario, 'claveFraccionArancelaria')) {
-                  <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveFraccionArancelaria') }}</div>
-                }
+                <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true" id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')" [isDisabled]="soloLectura"
+                [markTouched]="mercanciaFormulario.get('claveFraccionArancelaria')?.touched ?? false"
+                ></app-catalogo-select>
               </div>
               <div class="col-md-4 mb-2">
                 
@@ -395,7 +394,7 @@
                 <span class="require">*</span>
                 <label for="nico">:</label>
                 <div>
-                  <input type="number" id="nico" formControlName="nico" class="form-control" maxlength="2" [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''" (keyup)="desinfectarNumerico(mercanciaFormulario,'nico',$event)" (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
+                  <input type="text" id="nico" formControlName="nico" class="form-control validanumericos" maxlength="2" [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''" (keyup)="limpiarSoloNumeros($event)" (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
                   @if (obtenerMensajeError(mercanciaFormulario, 'nico')) {
                     <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'nico') }}</div>
                   }
@@ -408,14 +407,14 @@
                 <span class="require">*</span>
                 <label for="cantidad">:</label>
                 <div>
-                  <input type="number" formControlName="cantidad" id="cantidad" class="form-control" [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
+                  <input type="text" formControlName="cantidad" id="cantidad" class="form-control validanumericos" [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''" (keyup)="limpiarNumeroDecimal($event)" (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
                   @if (obtenerMensajeError(mercanciaFormulario, 'cantidad')) {
                     <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'cantidad') }}</div>
                   }
                 </div>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" id="claveUnidadMedida" formControlName="claveUnidadMedida" [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" [isDisabled]="soloLectura"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" id="claveUnidadMedida" formControlName="claveUnidadMedida" [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" (keyup)="limpiarNumeroDecimal($event)" (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida')) {
                   <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida') }}</div>
                 }
@@ -425,7 +424,7 @@
                 <span class="require">*</span>
                 <label for="valorUSD">:</label>
                 <div>
-                  <input type="number" formControlName="valorUSD" id="valorUSD" class="form-control" [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
+                  <input type="text" formControlName="valorUSD" id="valorUSD" class="form-control validanumericos" (keyup)="limpiarNumeroDecimal($event)" [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
                   @if (obtenerMensajeError(mercanciaFormulario, 'valorUSD')) {
                     <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'valorUSD') }}</div>
                   }
