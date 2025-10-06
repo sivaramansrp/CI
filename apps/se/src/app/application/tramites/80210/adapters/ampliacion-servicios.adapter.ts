@@ -43,7 +43,6 @@ interface Solicitud {
   anioPrograma: string;
 }
 
-
 interface PlantasSubmanufactureras {
   idPlanta: string;
   calle: string;
@@ -110,7 +109,6 @@ interface PlantasSubmanufactureras {
   }[];
 }
 
-
 /**
  * Interface representing the API payload structure for trámite 80205
  */
@@ -154,8 +152,8 @@ export class AmpliacionServiciosAdapter {
     const PLANTAS_SUBMANUFACTURERAS: PlantasSubmanufactureras = {
       idPlanta: SELECTED_PLANTA?.id?.toString() ?? '',
       calle: SELECTED_PLANTA?.calle ?? '',
-      numeroInterior: SELECTED_PLANTA?.numeroInterior ?? '',
-      numeroExterior: SELECTED_PLANTA?.numeroExterior ?? '',
+      numeroInterior: SELECTED_PLANTA?.numInterior ?? '',
+      numeroExterior: SELECTED_PLANTA?.numExterior ?? '',
       codigoPostal: SELECTED_PLANTA?.codigoPostal ?? '',
       colonia: SELECTED_PLANTA?.colonia ?? '',
       delegacionMunicipio: SELECTED_PLANTA?.municipio ?? '',
