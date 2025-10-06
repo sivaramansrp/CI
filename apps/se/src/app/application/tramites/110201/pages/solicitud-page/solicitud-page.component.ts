@@ -206,6 +206,11 @@ export class SolicitudPageComponent implements OnInit {
     }
   }
 
+  /**
+   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+   * */
 buildMercanciaSeleccionadas(arr: any[]): any[] {
 return arr.map((item: any) => ({
   id: item.id,
@@ -314,6 +319,10 @@ return arr.map((item: any) => ({
       },
     });
   }
+  /**
+   * Navega a través de los pasos del asistente según la acción del botón.
+   * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
+   */
  pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;

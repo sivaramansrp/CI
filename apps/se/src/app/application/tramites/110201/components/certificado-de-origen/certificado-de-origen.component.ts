@@ -818,6 +818,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     this.actualizarValidacionArchivo(true);
     this.dataEvent.emit(true);
   }
+
+  /**
+   * Actualiza las validaciones del campo de archivo en el formulario reactivo.
+   * @param archivo Indica si se debe aplicar la validación de archivo.
+   * Si es `true`, se agrega la validación `Validators.required`; si es `false`, se eliminan las validaciones.
+   **/ 
   actualizarValidacionArchivo(archivo: boolean): void {
     this.registroForm.get('validacionForm.archivo')?.setValidators(archivo ? [Validators.required] : []);
     this.registroForm.get('validacionForm.archivo')?.updateValueAndValidity();
