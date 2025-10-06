@@ -12,6 +12,22 @@ import { Tramite110216Store } from '../tramites/tramite110216.store';
 export class Tramite110216Query extends Query<Tramite110216State> {
 
   /**
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */ 
+    datosProductorFormulario$ = this.select((state) => {
+      return state.datosProductorFormulario;
+    });
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
+    formulario$ = this.select((state) => {
+      return state.formulario;
+    });
+
+  /**
    * Observable que selecciona el estado completo del trámite.
    * 
    * Este observable emite el estado actual del trámite 110216.

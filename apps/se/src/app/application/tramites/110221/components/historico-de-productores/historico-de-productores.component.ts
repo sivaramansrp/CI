@@ -1,11 +1,10 @@
 import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
-import { Tramite110221Store } from '../../estados/tramite110221.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 @Component({
@@ -70,6 +69,11 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Solicitud actual del trámite.
+   */
+  public solicitudState!: Tramite110221State;
+
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -91,9 +95,22 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+    this.tramiteQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.cargarProductorPorExportador();
     this.cargarMercancia();
-    this.facturaOpcion();
+    if (this.solicitudState.optionsTipoFactura.length === 0) {
+      this.facturaOpcion();
+    } else {
+      this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
+    }
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -132,19 +149,13 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Obtiene la lista de países disponibles.
    */
   facturaOpcion(): void {
-    this.certificadoDeService.obtenerMenuDesplegable('factura.json')
+    this.certificadoDeService.getTipoFacturaOpciones()
       .pipe(
         takeUntil(this.destroyNotifier$),
       )
-      .subscribe({
-        next: (data) => {
-
-          this.optionsTipoFactura = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-
-        },
+      .subscribe((data) => {
+        this.optionsTipoFactura = data.datos as Catalogo[];
+        this.store.setTipoFacturaOpciones(this.optionsTipoFactura);
       });
   }
 

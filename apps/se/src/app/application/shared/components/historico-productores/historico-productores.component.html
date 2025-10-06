@@ -57,7 +57,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-container mt-5" *ngIf="tramiteState?.productorMismoExportador">
+        <div class="table-container mt-5" *ngIf="tramiteState?.productorMismoExportador && mostrarMercanciasSeleccionadas">
             <h6>Mercancías Seleccionadas</h6>
             @if(esTipoDeSeleccionado){
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
@@ -180,9 +180,14 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Número de registro fiscal*:</label>
-                                <input type="text" required="false" class="form-control"
+                                <input type="text" class="form-control"
                                     formControlName="numeroDeRegistroFiscal"
-                                    (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') " />
+                                    (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') "
+                                    [ngClass]="isValid(formularioMercancia, 'numeroDeRegistroFiscal') ? 'required' : ''">
+                                    <div *ngIf="formularioMercancia.get('numeroDeRegistroFiscal')?.errors?.['required'] && (formularioMercancia.get('numeroDeRegistroFiscal')?.touched || formularioMercancia.get('numeroDeRegistroFiscal')?.dirty)"
+                                        class="text-danger">
+                                        <small>Este campo es obligatorio.</small>
+                                    </div>
                             </div>
                         </div>
                     </ng-container>

@@ -1,12 +1,13 @@
-import { Catalogo, HistoricoColumnas, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite110214State, Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
-import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
-import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
+
 @Component({
   selector: 'app-hist-productores',
   standalone: true,
@@ -17,17 +18,13 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   templateUrl: './hist-productores.component.html',
   styleUrl: './hist-productores.component.scss',
 })
+
 export class HistProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual del trámite.
    */
   public tramiteState!: { [key: string]: unknown };
-
-  /**
-   * Solicitud actual del trámite.
-   */
-  public solicitudState!: Tramite110214State;
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
@@ -49,17 +46,11 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   public productoresExportador: HistoricoColumnas[] = [];
 
   /**
-   * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
-   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
-   */
-  public mercancia: SeleccionadasTabla[] = [];
-
-  /**
    * @property {boolean} ocultarFax
    * Indica si el campo de fax debe estar oculto o visible en la interfaz de usuario.
     * @default true
   */
-  public ocultarFax: boolean = false;
+  public ocultarFax: boolean = true;
 
   /**
    * @property esTipoDeSeleccionado
@@ -67,13 +58,6 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * @description Indica si el tipo seleccionado es válido o está activo.
    */
   public esTipoDeSeleccionado: boolean = true;
-
-   /**
-   * @property {Catalogo[]} optionsTipoFactura
-   * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
-   * @command Este arreglo se utiliza para poblar un componente de selección en la interfaz de usuario.
-   */
-  public optionsTipoFactura: Catalogo[] = [];
 
   /**
   * Indica si el formulario está en modo solo lectura.
@@ -91,9 +75,9 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * @param {Tramite110214Query} tramiteQuery - Query para obtener el estado del trámite.
   */
   constructor(
-    public store: Tramite110214Store,
-    public tramiteQuery: Tramite110214Query,
-    private certificadoDeService: ValidarInicialmenteCertificadoService,
+    public store: Tramite110216Store,
+    public tramiteQuery: Tramite110216Query,
+    private certificadoDeService: CertificadosOrigenService,
     private consultaQuery: ConsultaioQuery
   ) {
     //
@@ -104,14 +88,6 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
-    this.tramiteQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
 
     this.tramiteQuery.formulario$
       .pipe(
@@ -138,12 +114,6 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.cargarProductorPorExportador();
-    this.cargarMercancia();
-    if (this.solicitudState.optionsTipoFactura.length === 0) {
-      this.facturaOpcion();
-    } else {
-      this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
-    }
   }
 
   /**
@@ -188,35 +158,6 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(respuesta => {
         this.productoresExportador = respuesta.datos;
-      });
-  }
-
-  /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
-  cargarMercancia(): void {
-    this.certificadoDeService
-    .obtenerMercanciasSeleccionadas()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    )
-    .subscribe(respuesta => {
-      this.mercancia = respuesta;
-    });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  facturaOpcion(): void {
-    this.certificadoDeService.getTipoFactura()
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe((data) => {
-        this.optionsTipoFactura = data.datos as Catalogo[];
-        this.store.setTipoFacturaOpciones(this.optionsTipoFactura);
       });
   }
 
