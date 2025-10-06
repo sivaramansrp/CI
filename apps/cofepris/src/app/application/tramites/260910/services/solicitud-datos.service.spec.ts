@@ -38,7 +38,7 @@ describe('SolicitudDatosService', () => {
       setRfc: jest.fn(),
       setLegalRazonSocial: jest.fn(),
       setApellidoPaterno: jest.fn(),
-      setApellidoMeterno: jest.fn(),
+      setApellidoMaterno: jest.fn(),
       setMercanciasDatos: jest.fn(),
       setSCIANDatos: jest.fn(),
       setManifesto: jest.fn(),
