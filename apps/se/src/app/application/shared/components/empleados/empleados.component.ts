@@ -165,14 +165,27 @@ export class EmpleadosComponent implements OnInit {
       cedula: [this.solicitudState.cedula],
       fechaCedula: [this.solicitudState.fechaCedula],
       indirectosDatos: [this.solicitudState.indirectosDatos],
-      contrato: [this.solicitudState.contrato],
-      objeto: [this.solicitudState.objeto],
+      contrato: [this.solicitudState.contrato,[Validators.maxLength(20)]],
+      objeto: [this.solicitudState.objeto,[Validators.maxLength(100)]],
       fechaFirma: [this.solicitudState.fechaFirma],
       fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
-      rfcEmpresa: [this.solicitudState.rfcEmpresa],
-      razonSocial: [this.solicitudState.razonSocial]
+      rfcEmpresa: [this.solicitudState.rfcEmpresa,[Validators.maxLength(13)]],
+      razonSocial: [{ value: this.solicitudState.razonSocial, disabled: true }],
     });
   }
+  
+    /**
+   * Maneja el evento de entrada y limita la longitud del texto.
+   * @param event Evento del input
+   * @param maxLength Longitud máxima permitida
+   */
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.empleadosForm.get(controlPath)?.setValue(value, { emitEvent: false });
+}
 
   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
