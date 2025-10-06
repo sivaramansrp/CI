@@ -60,9 +60,7 @@
           <div class="row">
             <div class="col-md-8 mt-3">
               <div class="pull-right justify-content-end">
-                <button type="button" class="btn btn-primary" (click)="
-                      buscarChoferNacional(formChoferes.get('curp')?.value)
-                    ">
+                <button type="button" class="btn btn-primary" (click)="GetDataForNationalDriver()">
                   Buscar
                 </button>
               </div>
@@ -305,7 +303,8 @@
               <div>
                 <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55" />
               </div>
-              @if (formChoferes.get('correoElectronico')?.errors?.['email'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
+              @if (formChoferes.get('correoElectronico')?.errors?.['email'] &&
+              (formChoferes.get('correoElectronico')?.touched || submitted)) {
               <div class="text-danger">
                 <small>Por favor, escribe una dirección de correo válida.</small>
               </div>
@@ -318,7 +317,8 @@
               <div>
                 <input type="tel" class="form-control" formControlName="telefono" maxlength="12" />
               </div>
-              @if (formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched || submitted)) {
+              @if (formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched ||
+              submitted)) {
               <div class="text-danger">
                 <small>Por favor, sólo escribe dígitos.</small>
               </div>

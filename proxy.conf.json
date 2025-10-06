@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "http://34.58.25.68:9090",
+    "secure": false,
+    "changeOrigin": true,
+    "headers": {
+      "Cache-Control": "no-cache"
+    }
+  }
+}

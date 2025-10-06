@@ -1,6 +1,7 @@
-import * as mockData from '@libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
+import { ApiResponseSolicitante, Domicilio, Solicitante } from '../../models/registro-muestras-mercancias.model';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
 /**
  * Componente para gestionar el formulario del solicitante.
  */
@@ -15,7 +16,7 @@ export class SolicitanteComponent implements OnInit {
    */
   solicitudForm!: FormGroup;
 
-  solicitudData = mockData;
+  solicitudData = {} as Solicitante;
 
   /**
    * Constructor para inyectar las dependencias necesarias.
@@ -23,7 +24,7 @@ export class SolicitanteComponent implements OnInit {
    */
   // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private modificarTerrestreService: modificarTerrestreService) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -31,7 +32,6 @@ export class SolicitanteComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-
     this.solicitudForm = this.fb.group({
       rfc: [''],
       denominacion: [''],
@@ -49,9 +49,10 @@ export class SolicitanteComponent implements OnInit {
       lada: [''],
       telefono: [''],
     });
-    
-    this.solicitudData = mockData;
-    this.setFormValues();
+    this.modificarTerrestreService.obtenerDatosSolicitante().subscribe((data: ApiResponseSolicitante) => {
+      this.solicitudData = data ? data?.datos?.solicitante : [] as unknown as Solicitante;
+      this.setFormValues();
+    });
   }
 
   /**
@@ -68,20 +69,20 @@ export class SolicitanteComponent implements OnInit {
    * y que `solicitudForm` está correctamente inicializado.
    */
   setFormValues(): void {
-    const RFC = this.solicitudForm.get('rfc');
-    RFC?.setValue(this.solicitudData?.rfc);
-    this.solicitudForm.get('denominacion')?.setValue(this.solicitudData?.denominacion);
-    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.actividadEconomica);
-    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData?.correoElectronico);
-    this.solicitudForm.get('pais')?.setValue(this.solicitudData?.pais);
-    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData?.codigoPostal);
-    this.solicitudForm.get('estado')?.setValue(this.solicitudData?.estado);
-    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData?.municipioOAlcadia);
-    this.solicitudForm.get('localidad')?.setValue(this.solicitudData?.localidad);
-    this.solicitudForm.get('colonia')?.setValue(this.solicitudData?.colonia);
-    this.solicitudForm.get('calle')?.setValue(this.solicitudData?.calle);
-    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData?.numeroExterior);
-    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData?.numeroInterior);
-    this.solicitudForm.get('telefono')?.setValue(this.solicitudData?.telefono);
+    // const RFC = this.solicitudForm.get('rfc');
+    // RFC?.setValue(this.solicitudData?.rfc);
+    // this.solicitudForm.get('denominacion')?.setValue(this.solicitudData?.denominacion);
+    // this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.actividadEconomica);
+    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData?.correo_electronico);
+    this.solicitudForm.get('pais')?.setValue(this.solicitudData?.domicilio?.pais);
+    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData.domicilio?.codigo_postal);
+    this.solicitudForm.get('estado')?.setValue(this.solicitudData?.domicilio.estado);
+    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData?.domicilio.municipio);
+    this.solicitudForm.get('localidad')?.setValue(this.solicitudData?.domicilio.localidad);
+    this.solicitudForm.get('colonia')?.setValue(this.solicitudData?.domicilio.colonia);
+    this.solicitudForm.get('calle')?.setValue(this.solicitudData?.domicilio.calle);
+    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData?.domicilio.numero_exterior);
+    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData?.domicilio.numero_interior);
+    this.solicitudForm.get('telefono')?.setValue(this.solicitudData?.domicilio.telefono);
   }
 }

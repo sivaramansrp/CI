@@ -42,8 +42,9 @@ import {
   REGEX_SOLO_DIGITOS
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
+import { ApiResponseChofer, DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
-import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
+import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
 
 @Component({
   selector: 'app-choferes-datos',
@@ -167,8 +168,9 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   constructor(private fb: FormBuilder,
     private modalService: BsModalService,
     private chofer40101Service: Chofer40101Service,
+    private modificacarTerrestreService: modificarTerrestreService
   ) {
-     // Lógica para el constructor si es necesario.
+    // Lógica para el constructor si es necesario.
   }
 
   /**
@@ -381,7 +383,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       correoElectronico: '',
       telefono: ''
     });
-    
+
   }
 
   /**
@@ -416,27 +418,27 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       return;
     }
 
-        await this.chofer40101Service
-          .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
-          .pipe(takeUntil(this.destroyed$))
-          .subscribe( (response) => {
-            if(response?.length === 0) {
-              this.alertaNotificacion = {
-                tipoNotificacion: TipoNotificacionEnum.ALERTA,
-                categoria: CategoriaMensaje.INFORMACION,
-                modo: 'action',
-                titulo: 'Alert',
-                mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
-                cerrar: true,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
-              return;
-            }
-            this.updateListsData(response[0]);
-            // Rellenar el formulario
-            this.formChoferes.patchValue(response[0]);
-          });
+    await this.chofer40101Service
+      .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        if (response?.length === 0) {
+          this.alertaNotificacion = {
+            tipoNotificacion: TipoNotificacionEnum.ALERTA,
+            categoria: CategoriaMensaje.INFORMACION,
+            modo: 'action',
+            titulo: 'Alert',
+            mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
+        this.updateListsData(response[0]);
+        // Rellenar el formulario
+        this.formChoferes.patchValue(response[0]);
+      });
   }
 
   /**
@@ -525,6 +527,51 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         txtBtnCancelar: '',
       };
     }
+  }
+
+  /**
+* Getting Data for the National Driver Data using the curp and rfc
+*/
+  GetDataForNationalDriver(): void {
+    const CURP_VALUE = this.formChoferes.get('curp')?.value;
+    const RFC_VALUE = this.formChoferes.get('rfc')?.value;
+    this.modificacarTerrestreService.buscarChoferNacional(CURP_VALUE, RFC_VALUE).subscribe((data: ApiResponseChofer) => {
+      if (data && data.datos) {
+        const DATOS = data.datos;
+        this.patchFormWithDatos(DATOS);
+      }
+    });
+  }
+
+  /**
+   * Helper function to patch form with chofer data.
+   * @param DATOS Data from API response
+   */
+  private patchFormWithDatos(DATOS: ApiResponseChofer['datos']): void {
+    this.formChoferes.patchValue({
+      curp: DATOS.curp || '',
+      rfc: DATOS.rfc || '',
+      nombre: DATOS.nombre || '',
+      primerApellido: DATOS.primer_apellido || '',
+      segundoApellido: DATOS.segundo_apellido || '',
+      numeroDeGafete: DATOS.numero_de_gafete || '',
+      vigenciaGafete: DATOS.vigencia_del_gafete || '',
+
+      // domicilio
+      calle: DATOS.domicilio?.calle || '',
+      numeroExterior: DATOS.domicilio?.numero_exterior || '',
+      numeroInterior: DATOS.domicilio?.numero_interior || '',
+      estado: DATOS.domicilio?.estado || '',
+      municipioAlcaldia: DATOS.domicilio?.municipio || '',
+      colonia: DATOS.domicilio?.colonia || '',
+      paisDeResidencia: DATOS.domicilio?.pais || '',
+      ciudad: DATOS.domicilio?.localidad || '',
+      localidad: DATOS.domicilio?.localidad || '',
+      codigoPostal: DATOS.domicilio?.codigo_postal || '',
+      telefono: DATOS.domicilio?.telefono || '',
+      correoElectronico: '',
+    });
+
   }
 
   /**

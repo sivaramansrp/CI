@@ -1,3 +1,69 @@
+
+/**
+ * Interfaces para tipar la respuesta del API
+ */
+export interface Domicilio {
+  pais: string;
+  codigo_postal: string;
+  estado: string;
+  municipio: string | null;
+  localidad: string | null;
+  colonia: string | null;
+  calle: string;
+  numero_exterior: string;
+  numero_interior: string;
+  lada: string | null;
+  telefono: string | null;
+}
+
+export interface Solicitante {
+  id_persona_solicitud: number;
+  correo_electronico: string;
+  domicilio: Domicilio;
+}
+
+export interface ApiResponseSolicitante {
+  codigo: string;
+  mensaje: string;
+  datos: {
+    mostrarDirectorGeneral: boolean;
+    solicitante: Solicitante;
+    caat_existe: boolean;
+  };
+}
+
+export interface ApiResponseChofer {
+  codigo: string;
+  mensaje: string;
+  datos: {
+    curp: string;
+    rfc: string;
+    nss: string | null;
+    nombre: string | null;
+    primer_apellido: string | null;
+    segundo_apellido: string | null;
+    nacionalidad: string | null;
+    numero_de_gafete: string;
+    vigencia_del_gafete: string;
+    estado_fisico_gafete: string | null;
+    estado_gafete: string | null;
+    estado_solicitud: string | null;
+    domicilio: {
+      pais: string;
+      codigo_postal: string;
+      estado: string;
+      municipio: string;
+      localidad: string;
+      colonia: string;
+      calle: string;
+      numero_exterior: string;
+      numero_interior: string;
+      lada: string | null;
+      telefono: string | null;
+    };
+  };
+}
+
 /**
  * Interfaz que define la configuración de la tabla de unidades de arrastre.
  * Contiene encabezados y datos para la visualización en una tabla.
@@ -225,12 +291,12 @@ export interface DatosDelChoferNacional {
   curp?: string;
   rfc?: string;
 
-  nombre?:string;
+  nombre?: string;
   primerApellido?: string;
   segundoApellido?: string;
   numeroDeGafete?: string;
   vigenciaGafete?: string;
-  
+
 
   calle?: string;
   numeroExterior?: string;
@@ -242,7 +308,7 @@ export interface DatosDelChoferNacional {
   paisDeResidencia?: string;
   ciudad?: string;
   localidad?: string;
-  codigoPostal?: string; 
+  codigoPostal?: string;
 
 
   telefono: string;
@@ -251,7 +317,7 @@ export interface DatosDelChoferNacional {
 
 export interface ChoferesExtranjeros {
   /** Línea de captura del pago. */
-  numero?:string;
+  numero?: string;
   primerApellido?: string;
   segundoApellido?: string;
 
@@ -263,7 +329,7 @@ export interface ChoferesExtranjeros {
   numberDeIdeFiscal?: string;
 
   pais?: string;
- 
+
   apellidoPaterno?: string;
   codigoPostal?: string;
   estado?: string;
@@ -271,7 +337,7 @@ export interface ChoferesExtranjeros {
   calle?: string;
   numeroExterior?: string;
   numeroInterior?: string;
-  
+
   paisDeResidencia?: string;
   ciudad?: string;
 
@@ -470,7 +536,7 @@ export interface DatosVehiculo {
  * @property paisEmisor2daPlaca - País emisor de la segunda placa.
  * @property descripcion - Descripción.
  */
-export interface DatosUnidad{
+export interface DatosUnidad {
   vinVehiculo: string;
   tipoDeUnidadArrastre: string;
   idDeVehiculoUnidad: string;
@@ -478,7 +544,7 @@ export interface DatosUnidad{
   numeroPlaca: string;
   paisEmisor: string;
   estado: string;
-  colorVehiculo: string;  
+  colorVehiculo: string;
   numero2daPlaca: string;
   estado2daPlaca: string;
   paisEmisor2daPlaca: string;
