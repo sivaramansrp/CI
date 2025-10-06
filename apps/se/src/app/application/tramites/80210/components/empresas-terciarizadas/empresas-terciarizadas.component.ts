@@ -645,10 +645,10 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
         const RESPONSE = (data.datos ?? []).map((item: PlantasDisponiblesResponse) => {
         const DOMICILIO = item.domicilioDto || {};
         return {
-          id: Number(item.recintoSolicitudPK?.idRecinto ?? 0),
+          id: String(item.recintoSolicitudPK?.idRecinto ?? ''),
           calle: DOMICILIO.calle ?? '',
-          numeroExterior: DOMICILIO.numExterior ?? '',
-          numeroInterior: DOMICILIO.numInterior ?? '',
+          numExterior: DOMICILIO.numExterior ?? '', 
+          numInterior: DOMICILIO.numInterior ?? '', 
           codigoPostal: DOMICILIO.codigoPostal ?? '',
           colonia: DOMICILIO.colonia ?? '',
           municipio: DOMICILIO.municipio ?? '',
