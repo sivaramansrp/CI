@@ -11,7 +11,7 @@
  * @author Sistema VUCEM
  */
 
-import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_TRATADO_ACUERDOS, CATALOGO_PAISES_BLOQUE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
+import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -308,6 +308,17 @@ tratadosAcuerdosCatalogo(tramite: string, ideTipoTratadoAcuerdo: string): Observ
 }
 
 /*
+ * Obtiene el catálogo de tratados y acuerdos.
+ * @param {string} tramite - El ID del trámite.
+ * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
+ * @returns {Observable<BaseResponse<Catalogo[]>>}
+ */
+tratadosAcuerdoCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/*
  * Obtiene el catálogo de países (bloques).
  * @param {string} tramite - El ID del trámite.
  * @returns {Observable<BaseResponse<Catalogo[]>>}
@@ -387,55 +398,6 @@ unidadesMedidaComercialCatalogo(tramite: string): Observable<BaseResponse<Catalo
   const ENDPOINT = `${this.host}${UNIDADES_MEDIDA_COMERCIAL(tramite)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
-
-  /**
-   * Obtiene el catálogo de tratados y acuerdos comerciales internacionales.
-   * 
-   * Este método consulta el catálogo completo de tratados comerciales y acuerdos
-   * internacionales disponibles en el sistema TITRAC.TA, incluyendo información
-   * sobre acuerdos bilaterales, multilaterales y preferenciales que México tiene
-   * con otros países y bloques comerciales.
-   *
-   * @param tramite - Identificador del trámite que determina el contexto específico
-   *                  y la versión del catálogo de tratados a consultar
-   * 
-   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta
-   *          del servidor con el array completo de tratados y acuerdos disponibles
-   * 
-   * @throws {HttpErrorResponse} Error HTTP si hay problemas con el servicio TITRAC.TA
-   * 
-   * @example
-   * ```typescript
-   * this.catalogoServices.tratadoAcuerdoCatalogo('110219')
-   *   .pipe(
-   *     takeUntil(this.destroyed$)
-   *   )
-   *   .subscribe(response => {
-   *     this.tratadoCatalogo.catalogos = response.datos;
-   *   });
-   * 
-   * this.catalogoServices.tratadoAcuerdoCatalogo('130118')
-   *   .pipe(
-   *     map(response => response.datos.filter(tratado => 
-   *       tratado.descripcion.includes('TLCAN') || 
-   *       tratado.descripcion.includes('T-MEC')
-   *     ))
-   *   )
-   *   .subscribe(tratadosNorteamerica => {
-   *     this.tratadosRegionales = tratadosNorteamerica;
-   *   });
-   * ```
-   * 
-   * @see CATALOGO_TRATADO_ACUERDOS
-   * @see BaseResponse
-   * @see Catalogo
-   * @since 1.0.0
-   * @author Sistema VUCEM
-   */
-  tratadoAcuerdoCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite)}`;
-    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-  }
 
   /**
    * Obtiene el catálogo de países organizados por bloques comerciales.

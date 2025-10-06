@@ -806,6 +806,7 @@ export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
  */
 export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+ 
 
 
 /**
@@ -819,11 +820,6 @@ export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERD
  *                  el contexto y versión del catálogo a consultar
  * 
  * @returns {string} Ruta formateada del endpoint para consultar tratados/acuerdos UE
- * 
- * @example
- * ```typescript
- * const rutaTratados = CATALOGO_TRATADO_ACUERDO('110219');
- * // Resultado: 'sat-t110219/catalogo/tratado-acuerdo/UE/bloque'
  * 
  * this.http.get(`${BASE_URL}/${rutaTratados}`)
  *   .subscribe(tratados => {
@@ -849,11 +845,6 @@ export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string) : string => `sat-t${TR
  * @returns {string} Endpoint formateado para el catálogo de tratados y acuerdos
  * 
  * @example
- * ```typescript
- * const rutaAcuerdos = CATALOGO_TRATADO_ACUERDOS('110219');
- * // Resultado: 'sat-t110219/catalogo/TITRAC.TA/tratados-acuerdos'
- * 
- * // Uso en servicio HTTP
  * this.catalogoService.get(rutaAcuerdos)
  *   .pipe(takeUntil(this.destroyed$))
  *   .subscribe(acuerdos => {
@@ -868,35 +859,6 @@ export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string) : string => `sat-t${TR
 export const CATALOGO_TRATADO_ACUERDOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
 
 /**
- * Genera la ruta para obtener el catálogo de países organizados por bloques comerciales.
- * 
- * Construye el endpoint para consultar países agrupados por bloques o regiones
- * comerciales (ej: TLCAN, UE, MERCOSUR), según el contexto del trámite especificado.
- * Esta organización facilita la selección de países según acuerdos comerciales vigentes.
- * 
- * @param TRAMITE - Identificador del trámite para construir la ruta contextualizada
- * 
- * @returns {string} Endpoint para el catálogo de países por bloques comerciales
- * 
- * @example
- * ```typescript
- * const rutaPaisesBloques = CATALOGO_PAISES_BLOQUE('110219');
- * // Resultado: 'sat-t110219/catalogo/paises/bloques'
- * 
- * // Obtener países por bloques
- * this.http.get(`${API_BASE}/${rutaPaisesBloques}`)
- *   .subscribe(paisesBloques => {
- *     this.paisesPorBloque = this.organizarPorBloque(paisesBloques);
- *   });
- * ```
- * 
- * @see COMUN_URL.BASE_URL
- * @since 1.0.0
- * @author Sistema VUCEM
- */
-export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
-
-/**
  * Construye la ruta para el catálogo de medios de transporte disponibles.
  * 
  * Genera el endpoint para consultar los diferentes medios de transporte
@@ -908,11 +870,7 @@ export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAM
  * @returns {string} Endpoint para consultar el catálogo de medios de transporte
  * 
  * @example
- * ```typescript
- * const rutaTransporte = CATALOGO_MEDIO_TRANSPORTE('110219');
- * // Resultado: 'sat-t110219/catalogo/medio-transporte'
  * 
- * // Cargar medios de transporte
  * this.transporteService.getMediosTransporte(rutaTransporte)
  *   .subscribe(medios => {
  *     this.mediosDisponibles = medios.filter(m => m.activo);
@@ -923,4 +881,3 @@ export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAM
  * @since 1.0.0
  * @author Sistema VUCEM
  */
-export const CATALOGO_MEDIO_TRANSPORTE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/medio-transporte`;

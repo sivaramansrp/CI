@@ -546,7 +546,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    */
   getTratadoData(tramiteId: string): void {
     this.catalogoServices
-    .tratadoAcuerdoCatalogo(tramiteId)
+    .tratadosAcuerdosCatalogo(tramiteId,"TITRAC.TA")
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp): void => {
         this.tratadoCatalogo.catalogos = resp.datos as Catalogo[];

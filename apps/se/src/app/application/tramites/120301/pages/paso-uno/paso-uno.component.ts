@@ -311,12 +311,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   tabsCompletadas: Set<number> = new Set();
 
   /**
-   * @property {DetallesCupoResponse} detalles
-   * obtiene los detalles del cupo seleccionado.
-   */
-  detalles!: TplDetalleResponse;
-
-  /**
    * @property {FacturasTplAsociadaResponse[]} facturas
    */
   informacionFacturasAsociadas!: FacturasTplAsociadaResponse;
@@ -502,6 +496,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return ALL_TABS_COMPLETED;
   }
   /**
+   * @property {string} numeroFolio
+   */
+  numeroFolio: string = '';
+
+  /**
    * @constructor
    * @description
    * Constructor del componente PasoUnoComponent que inicializa todas las dependencias
@@ -567,10 +566,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           // Normal logic: readonly true = disable fields, readonly false = enable fields
           this.formularioDeshabilitado = seccionState.readonly;
           if (this.consultaState.folioTramite) {
-            this.obtenerDetallesCupo(this.consultaState.folioTramite ?? '');
-            this.obtenerDatosFacturasAsociadas(this.consultaState.folioTramite ?? '');
-            this.obtenerDatosHistorico(this.consultaState.folioTramite ?? '');
-            this.obtenerInformacionImportador(this.consultaState.folioTramite);
+            this.numeroFolio = this.consultaState.folioTramite;
             this.mostrarOtraPestana = true;
             this.mostrarEvaluar = false;
           }
@@ -585,49 +581,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtener los datos del importador del destino
-   * @param idFolio Identificador del folio del trámite
-   */
-  obtenerInformacionImportador(idFolio: string): void {
-    this.evaluacionSolicitud.getDatosImportadorDestino(idFolio)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => {
-          if (response.codigo === CodigoRespuesta.EXITO) {
-            this.informacionImportador = response.datos ?? {} as ImportadorDestinoResponse;
-          }
-          else {
-            console.error('Error en la respuesta del servicio:', response.mensaje);
-          }
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        }
-      });
-  }
-
-  /**
-   * Obtiene los datos históricos de un trámite.
-   * @param idFolio Identificador del folio del trámite
-   */
-  obtenerDatosHistorico(idFolio: string): void {
-    this.evaluacionSolicitud.getDatosFabricante(idFolio)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => {
-          if (response.codigo === CodigoRespuesta.EXITO) {
-            this.informacionHistorico = response.datos ?? {} as FabricanteResponse;
-          } else {
-            console.error('Error en la respuesta del servicio:', response.mensaje);
-          }
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        }
-      });
-  }
-
-  /**
    * Obtener los datos de las facturas asociadas 
    *  * @param idFolio Identificador del folio del trámite
    */
@@ -638,27 +591,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.informacionFacturasAsociadas = response.datos ?? {} as FacturasTplAsociadaResponse;
-          } else {
-            console.error('Error en la respuesta del servicio:', response.mensaje);
-          }
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        }
-      });
-  }
-
-  /**
-   * Obtiene los detalles del cupo asociado al folio del trámite.
-   * @param idFolio Identificador del folio del trámite
-   */
-  obtenerDetallesCupo(idFolio: string): void {
-    this.evaluacionSolicitud.getDetallesCupo(idFolio)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => {
-          if (response.codigo === CodigoRespuesta.EXITO) {
-            this.detalles = response.datos ?? {} as TplDetalleResponse;
           } else {
             console.error('Error en la respuesta del servicio:', response.mensaje);
           }

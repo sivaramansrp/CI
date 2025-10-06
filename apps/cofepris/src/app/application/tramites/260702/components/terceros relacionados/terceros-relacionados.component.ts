@@ -131,7 +131,15 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Índice del elemento que se eliminará de la lista.
    */
   elementoParaEliminar!: number;
+/** 
+ * Conjunto de filas seleccionadas en la tabla de fabricantes.
+ */
+filasSeleccionadasFabricante: Set<number> = new Set();
 
+/** 
+ * Conjunto de filas seleccionadas en la tabla de destinatarios.
+ */
+filasSeleccionadasDestinatario: Set<number> = new Set();
   /**
    * Lista de pedimentos gestionados en el componente.
    */
@@ -146,6 +154,19 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /** Datos de los pedimentos */
+   tablaActual: string = '';
+
+  /** Datos de los pedimentos */
+   formTitle: string = ''; 
+
+  /** Datos de los destinatarios para 260702 */
+  destinatarioDatos: Destinatario[] = [];
+
+  /** Datos de los fabricantes para 260702 */
+  fabricanteDatos: Destinatario[] = [];
+  
 
   /**
    * Constructor del componente.
@@ -364,33 +385,64 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Guarda los datos del formulario en la tabla.
    */
- onGuardar(): void {
+onGuardar(): void {
   const FORM_DATA = this.destinatarioForm.value;
-  if (FORM_DATA.agregarDestinatario && FORM_DATA.datosPersonales) {
-    const DESTINATARIO = {
-      id: this.editingRowId ?? this.tableData2.length + 1,
+
+  /** Manejar únicamente las tablas de 'fabricante' y 'destinatario' */
+  let targetTable: Destinatario[] = [];
+  switch (this.tablaActual) {
+    case 'fabricante':
+      targetTable = this.fabricanteDatos;
+      break;
+    case 'destinatario':
+      targetTable = this.destinatarioDatos;
+      break;
+    default:
+      console.error('Invalid table selection');
+      return;
+  }
+
+  /** Actualizar la fila existente si una fila está seleccionada */
+  if (this.selectedRow) {
+    const INDEX = targetTable.findIndex((row) => row.id === this.selectedRow?.id);
+    if (INDEX !== -1) {
+      const UPDATED_ROW = {
+        ...targetTable[INDEX],
+        ...FORM_DATA.agregarDestinatario,
+        ...FORM_DATA.datosPersonales,
+      };
+      targetTable[INDEX] = UPDATED_ROW;
+
+      if (this.tablaActual === 'fabricante') {
+        this.fabricanteDatos = [...targetTable];
+      } else if (this.tablaActual === 'destinatario') {
+        this.destinatarioDatos = [...targetTable];
+      }
+    }
+  } else {
+    /** Agregar nueva fila si no se seleccionó ninguna fila */
+    const NEW_ID =
+      targetTable.length > 0
+        ? Math.max(...targetTable.map((row) => row.id || 0)) + 1
+        : 1;
+    const NEW_ROW = {
+      id: NEW_ID,
       ...FORM_DATA.agregarDestinatario,
       ...FORM_DATA.datosPersonales,
-      pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
     };
 
-    if (this.editingRowId) {
-      this.tableData2 = this.tableData2.map(row =>
-        row.id === this.editingRowId ? DESTINATARIO : row
-      );
-      this.editingRowId = null;
-    } else {
-      this.tableData2 = [...this.tableData2, DESTINATARIO];
+    if (this.tablaActual === 'fabricante') {
+      this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
+    } else if (this.tablaActual === 'destinatario') {
+      this.destinatarioDatos = [...this.destinatarioDatos, NEW_ROW];
     }
-    this.destinatarioForm.reset();
-    this.esFormularioVisible = false;
-        this.filasSeleccionadas.clear();
-
-  } else {
-    this.destinatarioForm.markAllAsTouched();
   }
-}
 
+  /** Restablecer el formulario y ocultarlo. */
+  this.destinatarioForm.reset();
+  this.esFormularioVisible = false;
+  this.selectedRow = null;
+}
   /**
    * Obtiene el nombre del país a partir de su ID.
    * @param paisId ID del país.
@@ -407,73 +459,134 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de filas seleccionadas en la tabla.
    * @param filasSeleccionadas Filas seleccionadas.
    */
-  onfilasSeleccionadasChange(filasSeleccionadas: Destinatario[]): void {
-    this.filasSeleccionadas = new Set(filasSeleccionadas.map((row) => row.id));
-    this.esFormularioVisible = false;
+ enCambioDeFilasSeleccionadas(filasseleccionadas: Destinatario[], tableName: string): void {
+  this.tablaActual = tableName;
+  switch (tableName) {
+    case 'fabricante':
+      this.filasSeleccionadasFabricante = new Set(filasseleccionadas.map((row) => row.id));
+      break;
+    case 'destinatario':
+      this.filasSeleccionadasDestinatario = new Set(filasseleccionadas.map((row) => row.id));
+      break;
+    default:
+      console.error('Invalid table name. Only "fabricante" and "destinatario" are allowed.');
   }
+}
 
   /**
  * Elimina la mercancía seleccionada de la tabla.
  */
 eliminarMercancias(): void {
-  if (this.filasSeleccionadas.size === 1) {
-    const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
-    this.tableData2 = this.tableData2.filter((row) => row.id !== SELECTED_ID);
-    this.filasSeleccionadas.clear();
-  } else {
-    console.warn('Debe seleccionar exactamente una fila para eliminar.');
+  let filasseleccionadas: Set<number>;
+
+  /* Determinar las filas seleccionadas y la tabla objetivo según la tabla actual. */
+  switch (this.tablaActual) {
+    case 'fabricante':
+      filasseleccionadas = this.filasSeleccionadasFabricante;
+      this.fabricanteDatos = this.fabricanteDatos.filter(
+        (row) => !filasseleccionadas.has(row.id)
+      );
+      break;
+    case 'destinatario':
+      filasseleccionadas = this.filasSeleccionadasDestinatario;
+      this.destinatarioDatos = this.destinatarioDatos.filter(
+        (row) => !filasseleccionadas.has(row.id)
+      );
+      break;
+    default:
+      console.error('Invalid table selection:', this.tablaActual);
+      return;
   }
+
+  /** Limpiar las filas seleccionadas */
+  filasseleccionadas.clear();
+
+  /** Mostrar una notificación de éxito */
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'success',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos eliminados correctamente',
+    cerrar: false,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
 }
 editingRowId: number | null = null;
   /**
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
-  openModificarMercancias(): void {
-    if (this.filasSeleccionadas.size === 1) {
-      const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
-      const SELECTED_ROW_DATA = this.tableData2.find(
-        (row) => row.id === SELECTED_ID
-      );
+openModificarMercancias(): void {
+  let filasseleccionadas: Set<number>;
 
-      if (SELECTED_ROW_DATA) {
-        this.destinatarioForm.patchValue({
-          agregarDestinatario: {
-            tipoPersona: SELECTED_ROW_DATA.tipoPersona,
-          },
-          datosPersonales: {
-            nombre: SELECTED_ROW_DATA.nombre,
-            primerApellido: SELECTED_ROW_DATA.primerApellido,
-            segundoApellido: SELECTED_ROW_DATA.segundoApellido,
-            denominacion: SELECTED_ROW_DATA.denominacion,
-            pais: SELECTED_ROW_DATA.pais,
-            domicilio: SELECTED_ROW_DATA.domicilio,
-            estado: SELECTED_ROW_DATA.estado,
-            codigopostal: SELECTED_ROW_DATA.codigopostal,
-            calle: SELECTED_ROW_DATA.calle,
-            numeroExterior: SELECTED_ROW_DATA.numeroExterior,
-            numeroInterior: SELECTED_ROW_DATA.numeroInterior,
-            lada: SELECTED_ROW_DATA.lada,
-            telefono: SELECTED_ROW_DATA.telefono,
-            correoElectronico: SELECTED_ROW_DATA.correoElectronico,
-          },
-        });
-         this.editingRowId = SELECTED_ID;
-        this.esFormularioVisible = true;
-      } else {
-        console.error('Selected row data not found.');
-      }
-    } else {
-      console.warn('Please select exactly one row to modify.');
-    }
+  switch (this.tablaActual) {
+    case 'fabricante':
+      filasseleccionadas = this.filasSeleccionadasFabricante;
+      break;
+    case 'destinatario':
+      filasseleccionadas = this.filasSeleccionadasDestinatario;
+      break;
+    default:
+      console.error('Invalid table selection:', this.tablaActual);
+      return;
   }
 
+  if (filasseleccionadas.size === 1) {
+    const SELECTED_ID = Array.from(filasseleccionadas)[0];
+    const SELECTED_ROW_DATA = this.tablaActual === 'fabricante'
+      ? this.fabricanteDatos.find((row) => row.id === SELECTED_ID)
+      : this.destinatarioDatos.find((row) => row.id === SELECTED_ID);
+
+    if (SELECTED_ROW_DATA) {
+      this.destinatarioForm.patchValue({
+        agregarDestinatario: {
+          tipoPersona: SELECTED_ROW_DATA.tipoPersona,
+        },
+        datosPersonales: {
+          nombre: SELECTED_ROW_DATA.nombre,
+          primerApellido: SELECTED_ROW_DATA.primerApellido,
+          segundoApellido: SELECTED_ROW_DATA.segundoApellido,
+          denominacion: SELECTED_ROW_DATA.denominacion,
+          pais: SELECTED_ROW_DATA.pais,
+          domicilio: SELECTED_ROW_DATA.domicilio,
+          estado: SELECTED_ROW_DATA.estado,
+          codigopostal: SELECTED_ROW_DATA.codigopostal,
+          calle: SELECTED_ROW_DATA.calle,
+          numeroExterior: SELECTED_ROW_DATA.numeroExterior,
+          numeroInterior: SELECTED_ROW_DATA.numeroInterior,
+          lada: SELECTED_ROW_DATA.lada,
+          telefono: SELECTED_ROW_DATA.telefono,
+          correoElectronico: SELECTED_ROW_DATA.correoElectronico,
+        },
+      });
+
+      this.selectedRow = SELECTED_ROW_DATA; 
+      this.esFormularioVisible = true;
+    } 
+  } 
+}
   /**
    * Abre el formulario para agregar nuevas mercancías.
    */
-  agregarMercancias(): void {
-    this.esFormularioVisible = true;
-    this.destinatarioForm.reset();
+agregarMercancias(tableName: string, title: string): void {
+  /* Validar el nombre de la tabla para permitir solo 'fabricante' y 'destinatario' */
+  if (!['fabricante', 'destinatario'].includes(tableName)) {
+    return;
   }
+
+  /** Establecer la tabla actual y el título del formulario */
+  this.tablaActual = tableName;
+  this.formTitle = title;
+
+  /** Restablecer el formulario y hacerlo visible */
+  this.esFormularioVisible = true;
+  this.destinatarioForm.reset();
+
+  this.selectedRow = null; 
+  
+}
 
   /**
    * Cancela la visualización del formulario.
@@ -506,12 +619,45 @@ editingRowId: number | null = null;
    * Maneja la acción de eliminación de las filas seleccionadas.
    * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
    */
-  onDeleted(): void {
-    if (this.filasSeleccionadas.size > 0) {
-      this.abrirModal();
-    }
+/**
+ * Elimina las filas seleccionadas de la tabla actual (fabricante o destinatario).
+ */
+enEliminado(tableName: string): void {
+  this.tablaActual = tableName;
+
+  let filasseleccionadas: Set<number>;
+  switch (this.tablaActual) {
+    case 'fabricante':
+      filasseleccionadas = this.filasSeleccionadasFabricante;
+      break;
+    case 'destinatario':
+      filasseleccionadas = this.filasSeleccionadasDestinatario;
+      break;
+    default:
+      console.error('Invalid table selection:', this.tablaActual);
+      return;
   }
 
+  if (filasseleccionadas.size > 0) {
+     
+
+  this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Confirma la eliminación?',
+        cerrar: false,
+        tiempoDeEspera: 0,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+       this.elementoParaEliminar = 0; 
+
+  } else {
+    console.warn('No rows selected for deletion.');
+  }
+}
   /**
    * Establece valores en el store a partir del formulario.
    * @param form Formulario reactivo.
