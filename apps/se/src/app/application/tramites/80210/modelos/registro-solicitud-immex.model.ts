@@ -1,4 +1,3 @@
-
 /**
  * @interfaz
  * @nombre FormularioDatos
@@ -6,10 +5,10 @@
  * Define la estructura de los datos del formulario.
  * Contiene información básica como modalidad, folio y año.
  */
-export interface FormularioDatos{
-  modalidad:string,
-  folio:string,
-  ano:string
+export interface FormularioDatos {
+  modalidad: string;
+  folio: string;
+  ano: string;
 }
 
 /**
@@ -33,16 +32,16 @@ export interface RespuestaPlantas {
  * Contiene información como dirección, razón social y registro federal.
  */
 export interface Plantas {
-    id: number,
-    calle: string,
-    numeroExterio: string,
-    numeroInterio: string,
-    codiogoPostal: string,
-    colonia:string,
-    municipio: string,
-    entidadFederativa:string,
-    pais: string,
-    registroFederal: string,
-    domicilio: string,
-    razon: string
+  id: string;
+  calle: string;
+  numExterior: string;
+  numInterior: string;
+  codigoPostal: string;
+  colonia: string;
+  municipio: string;
+  entidadFederativa: string;
+  pais: string;
+  registroFederal: string;
+  domicilio: string;
+  razon: string;
 }

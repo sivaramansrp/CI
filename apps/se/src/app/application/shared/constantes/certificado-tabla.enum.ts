@@ -58,55 +58,61 @@ export const CONFIGURACION_PRODUCTOR_EXPORTADOR = [
  *   console.log(columna.encabezado);
  * });
  */
-export const CONFIGURACION_MERCANCIA = [
-  {
-    encabezado: 'Fracción arancelaria ',
-    clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor,
-    orden: 0,
-  },
-   {
-        encabezado: 'Cantidad',
-        clave: (ele: MercanciaTabla): string | undefined => ele.fraccionArancelaria,
-        orden: 1,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (ele: MercanciaTabla): string | undefined => ele.nombreTecnico,
-        orden: 2,
-      },
-      {
-        encabezado: 'Valor marcancía',
-        clave: (ele: MercanciaTabla): string | undefined => ele.cantidad,
-        orden: 3,
-      },
-      {
-        encabezado: 'Tipo de factura',
-        clave: (ele: MercanciaTabla): string | undefined => ele.unidadMedida,
-        orden: 4,
-      },
-      {
-        encabezado: 'valorMercancia',
-        clave: (ele: MercanciaTabla): string | undefined => ele.valorMercancia,
-        orden: 5,
-      },
-      {
-        encabezado: 'Número factura',
-        clave: (ele: MercanciaTabla): string | undefined => ele.tipoFactura,
-        orden: 6,
-      },
-      {
-        encabezado: 'Complemento descripción',
-        clave: (ele: MercanciaTabla): string | undefined => ele.complementoDescripcion,
-        orden: 7,
-      },
-       {
-        encabezado: 'Fetch factura',
-        clave: (ele: MercanciaTabla): string | undefined => ele.fetchFactura,
-        orden: 8,
-      },
-       {
-        encabezado: 'RFC productor',
-        clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor1,
-        orden: 9,
-      }
-    ];
+export const CONFIGURACION_MERCANCIA = (prioritizeRfcProductor1: boolean): Array<{ encabezado: string; clave: (ele: MercanciaTabla) => string | undefined; orden: number }> => {
+  const BASE_CONFIG = [
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: MercanciaTabla): string | undefined => ele.fraccionArancelaria,
+      orden: 0,
+    },
+    {
+      encabezado: 'Cantidad',
+      clave: (ele: MercanciaTabla): string | undefined => ele.cantidad,
+      orden: 1,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (ele: MercanciaTabla): string | undefined => ele.unidadMedida,
+      orden: 2,
+    },
+    {
+      encabezado: 'Valor mercancía',
+      clave: (ele: MercanciaTabla): string | undefined => ele.valorMercancia,
+      orden: 3,
+    },
+    {
+      encabezado: 'Tipo de factura',
+      clave: (ele: MercanciaTabla): string | undefined => ele.tipoFactura,
+      orden: 4,
+    },
+    {
+      encabezado: 'Número factura',
+      clave: (ele: MercanciaTabla): string | undefined => ele.numeroFactura,
+      orden: 6,
+    },
+    {
+      encabezado: 'Complemento descripción',
+      clave: (ele: MercanciaTabla): string | undefined => ele.complementoDescripcion,
+      orden: 7,
+    },
+    {
+      encabezado: 'Fecha factura',
+      clave: (ele: MercanciaTabla): string | undefined => ele.fetchFactura,
+      orden: 8,
+    },
+    {
+      encabezado: 'RFC productor',
+      clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor1,
+      orden: 9,
+    },
+  ];
+
+  if (prioritizeRfcProductor1) {
+    const RFC_PRODUCTOR_COLUMN = BASE_CONFIG.find(c => c.encabezado === 'RFC productor');
+    const OTHER_COLUMNS = BASE_CONFIG.filter(c => c.encabezado !== 'RFC productor');
+    const RE_ORDERED = RFC_PRODUCTOR_COLUMN ? [RFC_PRODUCTOR_COLUMN, ...OTHER_COLUMNS] : OTHER_COLUMNS;
+    return RE_ORDERED.map((c, index) => ({ ...c, orden: index + 1 }));
+  }
+  return BASE_CONFIG;
+};
+

@@ -7,7 +7,7 @@ import { CertificadosOrigenService } from '../../services/certificado-origen.ser
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
 /**
@@ -26,9 +26,9 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
     CommonModule,
     SolicitanteComponent,
     DatosCertificadoComponent,
-    HistoricoProductoresComponent,
     DestinatarioComponent,
     CertificadoOrigenComponent,
+    HistProductoresComponent
   ],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
@@ -70,7 +70,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente `HistoricoProductoresComponent`.
    */
-  @ViewChild('historicoProductoresRef') historicoProductoresComp!: HistoricoProductoresComponent;
+  @ViewChild('historicoProductoresRef') historicoProductoresComp!: HistProductoresComponent;
 
   /**
    * Evento que se emite cuando cambia de tab.
