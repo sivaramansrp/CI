@@ -567,3 +567,20 @@ export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string =
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
  */
 export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+
+/**
+ * Genera la ruta de la API para acceder al catálogo de tratados/acuerdos de la UE por bloque,
+ * utilizando el identificador de trámite proporcionado.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en la ruta.
+ * @returns La ruta formateada como cadena de texto.
+ */
+export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
+
+/**
+ * Genera la ruta de la API para obtener el catálogo de países bloqueados según el trámite especificado.
+ *
+ * @param TRAMITE - El identificador del trámite para construir la ruta.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises/bloques`;

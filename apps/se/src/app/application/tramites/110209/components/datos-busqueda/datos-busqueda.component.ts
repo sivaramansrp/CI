@@ -1,6 +1,6 @@
+import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -127,6 +127,26 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
 
+  /**
+   * Lista de objetos de tipo Catalogo que representa los tratados o acuerdos disponibles para la búsqueda.
+   * Se utiliza para mostrar las opciones en el componente de datos de búsqueda.
+   */
+  tratadoAcuerdo: Catalogo[] = [];
+
+  /**
+   * Lista de objetos de tipo Catalogo que representa los países disponibles para seleccionar en el bloque correspondiente.
+   * Se utiliza para mostrar opciones de países en el componente de búsqueda.
+   */
+  paisBloque: Catalogo[] = [];
+
+  
+  /**
+  * Código del trámite asociado al establecimiento.
+  * 
+  * Valor predeterminado: '110209'.
+  */
+  tramites:string='110209';
+
   /** 
    * Constructor del componente.
    * Se inyectan las dependencias necesarias para el funcionamiento del componente.
@@ -144,6 +164,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     private Solicitud110209Service: Solicitud110209Service,
     private tramite110209Query: Tramite110209Query,
     private tramite110209Store: Tramite110209Store,
+    private catalogoService: CatalogoServices
   ) {
     /** 
      Configuración de dropdowns para los catálogos de búsqueda
@@ -240,6 +261,15 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     */
     this.getEstableCimiento();
 
+    /**
+    * Llama a la función para obtener los tratados y acuerdos.
+    */
+    this.obtenerTratadosAcuerdos();
+
+    /**
+    * Llama a la función para obtener los países y bloques.
+    */
+    this.obtenerPaisesBloque();
   }
   /**
    * Handles radio value changes.
@@ -362,7 +392,39 @@ public buscar(): void {
    */
   navigateToSeleccionTramite(): void {
     this.router.navigate(['../solicitud-page'], { relativeTo: this.route });
+  }
 
+  /**
+   * Obtiene el catálogo de tratados o acuerdos relacionados con el trámite actual.
+   * 
+   * Realiza una solicitud al servicio `catalogoService` para recuperar los datos de tratados/acuerdos,
+   * utilizando el identificador de trámite almacenado en `this.tramites`. Los resultados se asignan a
+   * la propiedad `this.tratadoAcuerdo`. La suscripción se gestiona para finalizar automáticamente cuando
+   * el componente se destruye, evitando fugas de memoria.
+   */
+  obtenerTratadosAcuerdos(): void {
+    this.catalogoService.tratadosAcuerdosCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tratadoAcuerdo = response?.datos ?? []
+        }
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de países por bloque relacionado con los trámites actuales.
+   * Realiza una solicitud al servicio de catálogo y actualiza la propiedad `paisBloque` con los datos recibidos.
+   * La suscripción se cancela automáticamente cuando el componente se destruye.
+   */
+  obtenerPaisesBloque(): void {
+    this.catalogoService.paisBloqueCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => { 
+            this.paisBloque = response?.datos ?? [];
+        }
+      });
   }
 
   /** 
