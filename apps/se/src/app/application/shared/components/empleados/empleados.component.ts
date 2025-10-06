@@ -170,10 +170,10 @@ export class EmpleadosComponent implements OnInit {
       fechaFirma: [this.solicitudState.fechaFirma],
       fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
       rfcEmpresa: [this.solicitudState.rfcEmpresa,[Validators.maxLength(13)]],
-      razonSocial: [this.solicitudState.razonSocial]
+      razonSocial: [{ value: this.solicitudState.razonSocial, disabled: true }],
     });
   }
-
+  
     /**
    * Maneja el evento de entrada y limita la longitud del texto.
    * @param event Evento del input
