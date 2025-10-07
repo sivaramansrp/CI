@@ -1,6 +1,6 @@
 import {AbstractControl,FormBuilder,FormControl,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
 import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
@@ -137,7 +137,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el campo de fecha inicial.
    */
-  fechaInicialInput: InputFecha = FECHA_PAGO;
+  fechaDePago: InputFecha = FECHA_PAGO;
 
   /**
    * Arreglo que contiene las filas seleccionadas de la tabla.
@@ -188,7 +188,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public tramite32101Store: Tramite32101Store,
     private tramite32101Query: Tramite32101Query,
     private router: Router,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.tramiteList = {
       catalogos: [],
@@ -805,7 +806,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   public cambioFechaIngreso(nuevo_valor: string): void {
     this.registroForm.get('fechaInicialInput')?.setValue(nuevo_valor);
-    this.registroForm.get('fechaInicialInput')?.markAsUntouched();
+    this.registroForm.get('fechaInicialInput')?.markAsTouched();
+    this.registroForm.get('fechaInicialInput')?.markAsDirty();
     this.tramite32101Store.setFechaInicialInput(nuevo_valor);
   }
   /**
@@ -819,8 +821,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * Utiliza el método `reset()` para limpiar los valores de cada control y
    * marca los campos importantes como tocados para mostrar errores de validación.
-   */
-  borrar(): void {
+   */  borrar(): void {
     this.registroForm.reset();
     const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
     FECHA_CONTROL?.setValue('');
@@ -838,6 +839,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         FIELD_CONTROL.markAsDirty();
       }
     });
+
+    // Trigger change detection to update the markTouched bindings for catalogo-select components
+    this.cdr.detectChanges();
   }
 
   /**
