@@ -987,6 +987,7 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
                     this.formularioDatosSubcontratista.patchValue({
                       rfc:'',
                       estado:'-1'});
+                    this.store.setDatosContr(this.formularioDatosSubcontratista.value);
                     this.store.setPlantasBuscadas(RESPONSE);
                   } 
                 }
