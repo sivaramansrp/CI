@@ -1,12 +1,5 @@
-import {
-  AgregarDatosProductorFormulario,
-  DisponiblesTabla,
-  FormularioMercancia,
-  GrupoOperador,
-  GrupoTratado,
-  HistoricoColumnas,
-  SeleccionadasTabla,
-} from '../../tramites/110214/models/validar-inicialmente-certificado.model';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoOperador, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoReceptor } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoRepresentativo } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
@@ -143,6 +136,23 @@ export interface Tramite110214State {
    * @description Historial de mercancías seleccionadas en la tabla de datos.
    */
   historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+
+/**
+   * @property {Object} formulario - Otros datos de formularios auxiliares.
+   * @description
+   * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
+   */
+  formulario: { [key: string]: unknown};
+
+  /**
+   * @property {Object} datosProductorFormulario - Datos adicionales del productor.
+   * @description
+   * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
+   */
+  datosProductorFormulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
 }
 
 /**
@@ -228,6 +238,15 @@ export function createInitialState(): Tramite110214State {
     mercanciaDisponsiblesTablaDatos: [],
     productoresExportador: [],
     historicoMercanciaSeleccionadasTablaDatos: [],
+    formulario:{
+      datosConfidencialesProductor: '',
+      productorMismoExportador: '',
+    },
+    datosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: '',      
+    },
+    optionsTipoFactura: []
   };
 }
 /**
@@ -1094,15 +1113,55 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     }));
   }
 
-  /**
-   * Actualiza el grupo operador completo.
-   *
-   * @param {GrupoOperador} grupoOperador - Objeto que contiene la información del grupo operador.
+/**
+* Actualiza el grupo operador completo.
+* 
+* @param {GrupoOperador} grupoOperador - Objeto que contiene la información del grupo operador.
+*/
+public setGrupoOperador(grupoOperador: GrupoOperador): void {
+  this.update((state) => ({
+    ...state,
+    grupoOperador,
+  }));
+}
+
+/**
+   * @descripcion
+   * Actualiza los datos del formulario histórico.
+   * @param values - Valores a actualizar en el formulario.
    */
-  public setGrupoOperador(grupoOperador: GrupoOperador): void {
+  setFormHistorico(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formulario: {
+        ...state.formulario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setAgregarFormDatosProductor(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      datosProductorFormulario: {
+        ...state.datosProductorFormulario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      grupoOperador,
+      optionsTipoFactura: tipoFactura,
     }));
   }
 }

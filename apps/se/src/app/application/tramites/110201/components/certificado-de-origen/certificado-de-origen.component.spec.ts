@@ -170,11 +170,11 @@ describe('CertificadoDeOrigenComponent', () => {
       component.ngOnInit();
 
       expect(component.mercanciatable).toHaveBeenCalled();
-      expect(component.getTratado).toHaveBeenCalled();
-      expect(component.getPais).toHaveBeenCalled();
-      expect(component.getUMC).toHaveBeenCalled();
-      expect(component.getUnidadMedida).toHaveBeenCalled();
-      expect(component.getTipoFactura).toHaveBeenCalled();
+      expect(component.tratado).toHaveBeenCalled();
+      expect(component.getPaises).toHaveBeenCalled();
+      expect(component.getUmc).toHaveBeenCalled();
+      expect(component.unidadMedida).toHaveBeenCalled();
+      expect(component.tipoFactura).toHaveBeenCalled();
       expect(component.getSolicitudesTabla).toHaveBeenCalled();
       expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
       expect(component.donanteDomicilio).toHaveBeenCalled();

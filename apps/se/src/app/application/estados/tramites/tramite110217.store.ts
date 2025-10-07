@@ -128,6 +128,20 @@ export interface Tramite110217State {
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+
+   /**
+   * @property {Object} formulario - Otros datos de formularios auxiliares.
+   * @description
+   * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
+   */
+  formulario: { [key: string]: unknown};
+
+  /**
+   * @property {Object} datosProductorFormulario - Datos adicionales del productor.
+   * @description
+   * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
+   */
+  datosProductorFormulario: { [key: string]: unknown};
 }
 
 /**
@@ -227,6 +241,14 @@ export function createInitialState(): Tramite110217State {
     },
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
+    formulario:{
+      datosConfidencialesProductor: '',
+      productorMismoExportador: '',
+    },
+    datosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: '',      
+    }
   };
 }
 /**
@@ -272,6 +294,20 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     this.update((state) => ({
       ...state,
       pasoActivo,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario histórico.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setFormHistorico(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formulario: {
+        ...state.formulario,
+        ...values,
+      },
     }));
   }
 
@@ -1402,6 +1438,20 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     this.update((state) => ({
       ...state,
       grupoDeDirecciones,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setAgregarFormDatosProductor(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      datosProductorFormulario: {
+        ...state.datosProductorFormulario,
+        ...values,
+      },
     }));
   }
 }

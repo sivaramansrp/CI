@@ -21,9 +21,9 @@ import { Plantas } from "../modelos/registro-solicitud-immex.model"
  */
 export const CONFIGURACION_TABLA_PLANTAS: ConfiguracionColumna<Plantas>[] = [
 {encabezado:'Calle', clave: (item: Plantas):string=>item.calle, orden:1 },
-{encabezado:'Número exterio', clave: (item: Plantas):string=>item.numeroExterio, orden:2 },
-{encabezado:'Número interio', clave: (item: Plantas):string=>item.numeroInterio, orden:3 },
-{encabezado:'Código postal', clave: (item: Plantas):string=>item.codiogoPostal, orden:4 },
+{encabezado:'Número exterior', clave: (item: Plantas):string=>item.numExterior, orden:2 },
+{encabezado:'Número interior', clave: (item: Plantas):string=>item.numInterior, orden:3 },
+{encabezado:'Código postal', clave: (item: Plantas):string=>item.codigoPostal, orden:4 },
 {encabezado:'Colonia', clave: (item: Plantas):string=>item.colonia, orden:5 },
 {encabezado:'Municipio o delegación', clave: (item: Plantas):string=>item.municipio, orden:6 },
 {encabezado:'Entidad federativa', clave: (item: Plantas):string=>item.entidadFederativa, orden:7 },

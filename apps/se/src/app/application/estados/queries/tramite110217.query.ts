@@ -21,6 +21,22 @@ export class Tramite110217Query extends Query<Tramite110217State> {
   });
 
   /**
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */ 
+    datosProductorFormulario$ = this.select((state) => {
+      return state.datosProductorFormulario;
+    });
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
+    formulario$ = this.select((state) => {
+      return state.formulario;
+    });
+
+  /**
    * Constructor de la clase Tramite110217Query.
    * 
    * @param {Tramite110217Store} store - El store que contiene el estado del trámite 110217.
