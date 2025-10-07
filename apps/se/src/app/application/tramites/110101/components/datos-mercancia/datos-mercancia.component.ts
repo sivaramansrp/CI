@@ -196,6 +196,12 @@ get ninoFormGroup(): FormGroup {
   public formMercancia!: FormGroup;
 
   /**
+   * Una instancia de FormGroup que representa el formulario para evaluar Mercancia (bienes).
+   * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
+   */
+  public formEvaluarMercancia!: FormGroup;
+  
+  /**
    * **Subject para manejar la destrucción del componente**
    * 
    * Este `Subject` se utiliza para cancelar suscripciones y evitar 
@@ -315,6 +321,7 @@ get ninoFormGroup(): FormGroup {
           });
       }
     }
+    this.inicializarFormularioEvaluar();
   }
 
   /**
@@ -385,6 +392,32 @@ get ninoFormGroup(): FormGroup {
       descripcion: [{value: this.solicitudeState?.descripcion, disabled: true}],
       valorTransaccion: [this.solicitudeState?.valorTransaccion, Validators.maxLength(20)],
       francofabrica:[this.solicitudeState?.francofabrica, Validators.maxLength(20)],
+    });
+  }
+
+  /**
+   * @method inicializarFormularioEvaluar
+   * @description
+   * Inicializa el formulario reactivo `formEvaluarMercancia`, el cual se utiliza para
+   * capturar y evaluar la información relacionada con una mercancía.  
+   * Cada control representa un campo específico de la ficha técnica o clasificación del producto.
+   */
+  public inicializarFormularioEvaluar(): void {
+    this.formEvaluarMercancia = this.fb.group({
+      nombreComercialEvaluar: [],
+      fraccionArancelariaEvaluar: [],
+      nombreTecnicoEvaluar: [],
+      costoNetoEvaluar: [],
+      tipoExportadorEvaluar: [],
+      valorTransaccionalEvaluar: [],
+      clásificaciónNALADIEvaluar: [],
+      descripcionNALADIEvaluar: [],
+      clasificacionNALADISA1993Evaluar: [],
+      descripcionNALADISA1993Evaluar: [],
+      clasificacionNALADISA1996Evaluar: [],
+      descripcionNALADISAEvaluar: [],
+      clasificacionNALADISA2002Evaluar: [],
+      descripcionNALADISA2002Evaluar: []
     });
   }
 

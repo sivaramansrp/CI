@@ -250,6 +250,144 @@
   </div>
 </div>
 
+@if(esFormularioSoloLectura === true){
+  <ng-titulo titulo="Datos de la mercancía" />
+  <form [formGroup]="formEvaluarMercancia">
+    <div class="row">
+      <div class="col-md-12">
+          <label for="nombreComercialEvaluar" class="form-label">Nombre comercial de la mercancía (igual que en la factura)</label>
+          <input type="text" id="nombreComercialEvaluar" 
+          class="form-control" 
+          formControlName="nombreComercialEvaluar" 
+          placeholder="Nombre comercial de la mercancía (igual que en la factura)">        
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label for="fraccionArancelariaEvaluar" class="form-label">Fracción arancelaria</label>
+        <input type="text" id="fraccionArancelariaEvaluar" 
+        class="form-control" 
+        formControlName="fraccionArancelariaEvaluar" 
+        placeholder="Fracción arancelaria" />
+      </div>
+
+      <div class="col-md-8">
+        <label for="nombreTecnicoEvaluar" class="form-label">Nombre técnico</label>
+        <input type="text" id="nombreTecnicoEvaluar"
+        class="form-control" 
+        formControlName="nombreTecnicoEvaluar" 
+        placeholder="Nombre técnico" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="costoNetoEvaluar" class="form-label">Costo neto (en dólares)</label>
+        <input type="text" id="costoNetoEvaluar"
+        class="form-control" 
+        formControlName="costoNetoEvaluar" 
+        placeholder="Costo neto (en dólares)" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="tipoExportadorEvaluar" class="form-label">Tipo Exportador</label>
+        <input type="text" id="tipoExportadorEvaluar"
+        class="form-control" 
+        formControlName="tipoExportadorEvaluar" 
+        placeholder="Tipo Exportador" />
+      </div>
+    </div>
+
+    <ng-titulo titulo="Certificado Origen Titulo Mercancia A L A D I" />
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+          <label for="valorTransaccionalEvaluar" class="form-label">Valor Transaccional (Base FOB)</label>
+          <input type="text" id="valorTransaccionalEvaluar" 
+          class="form-control" 
+          formControlName="valorTransaccionalEvaluar" 
+          placeholder="Valor Transaccional (Base FOB)">        
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="clásificaciónNALADIEvaluar" class="form-label">Clásificación NALADI</label>
+        <input type="text" id="clásificaciónNALADIEvaluar" 
+        class="form-control" 
+        formControlName="clásificaciónNALADIEvaluar" 
+        placeholder="Clásificación NALADI" />
+      </div>
+
+      <div class="col-md-8">
+        <label for="descripcionNALADIEvaluar" class="form-label">Descripción NALADI</label>
+        <input type="text" id="descripcionNALADIEvaluar"
+        class="form-control" 
+        formControlName="descripcionNALADIEvaluar" 
+        placeholder="Descripción NALADI" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="clasificacionNALADISA1993Evaluar" class="form-label">Clasificación NALADISA 1993</label>
+        <input type="text" id="clasificacionNALADISA1993Evaluar" 
+        class="form-control" 
+        formControlName="clasificacionNALADISA1993Evaluar" 
+        placeholder="Clasificación NALADISA 1993" />
+      </div>
+
+      <div class="col-md-8">
+        <label for="descripcionNALADISA1993Evaluar" class="form-label">Descripción NALADISA 1993</label>
+        <input type="text" id="descripcionNALADISA1993Evaluar"
+        class="form-control" 
+        formControlName="descripcionNALADISA1993Evaluar" 
+        placeholder="Descripción NALADISA 1993" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="clasificacionNALADISA1996Evaluar" class="form-label">Clasificación NALADISA 1996</label>
+        <input type="text" id="clasificacionNALADISA1996Evaluar" 
+        class="form-control" 
+        formControlName="clasificacionNALADISA1996Evaluar" 
+        placeholder="Clasificación NALADISA 1996" />
+      </div>
+
+      <div class="col-md-8">
+        <label for="descripcionNALADISAEvaluar" class="form-label">Descripción NALADISA 1996</label>
+        <input type="text" id="descripcionNALADISAEvaluar"
+        class="form-control" 
+        formControlName="descripcionNALADISAEvaluar" 
+        placeholder="Descripción NALADISA 1996" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="clasificacionNALADISA2002Evaluar" class="form-label">Clasificación NALADISA 2002</label>
+        <input type="text" id="clasificacionNALADISA2002Evaluar" 
+        class="form-control" 
+        formControlName="clasificacionNALADISA2002Evaluar" 
+        placeholder="Clasificación NALADISA 2002" />
+      </div>
+
+      <div class="col-md-8">
+        <label for="descripcionNALADISA2002Evaluar" class="form-label">Descripción NALADISA 2002</label>
+        <input type="text" id="descripcionNALADISA2002Evaluar"
+        class="form-control" 
+        formControlName="descripcionNALADISA2002Evaluar" 
+        placeholder="Descripción NALADISA 2002" />
+      </div>
+    </div>
+
+  </form>
+}
+
 @if (nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion">
