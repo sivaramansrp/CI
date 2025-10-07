@@ -201,7 +201,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
       tipoNotificacion: 'alert',
       categoria: 'warning',
       modo: 'action',
-      titulo: '',
+      titulo: 'Cancelar',
       mensaje: '¿Está seguro que desea cancelar?. Se borrarán los datos capturados.',
       cerrar: false,
       tiempoDeEspera: 0,
