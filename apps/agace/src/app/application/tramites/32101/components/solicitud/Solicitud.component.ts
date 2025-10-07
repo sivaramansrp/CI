@@ -811,43 +811,35 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * Este método actualiza el campo 'fechaInicialInput' del formulario con el nuevo valor proporcionado
    * y marca el campo como no modificado (untouched).
-   */    public cambioFechaIngreso(nuevo_valor: string): void {
+   */
+  public cambioFechaIngreso(nuevo_valor: string): void {
     const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
-    console.log('Valor recibido:', nuevo_valor);
     
-    // Set the value first
     FECHA_CONTROL?.setValue(nuevo_valor);
     FECHA_CONTROL?.markAsTouched();
     FECHA_CONTROL?.markAsDirty();
     
     if (nuevo_valor && nuevo_valor.trim() !== '') {
-      // Parse the date to check if it's a future date
       const FECHA_INGRESADA = new Date(nuevo_valor.split('/').reverse().join('-'));
       const FECHA_ACTUAL = new Date();
-      FECHA_ACTUAL.setHours(23, 59, 59, 999); // Set to end of day for comparison
+      FECHA_ACTUAL.setHours(23, 59, 59, 999);
       
       if (FECHA_INGRESADA > FECHA_ACTUAL) {
-        // Set custom error for future date
         FECHA_CONTROL?.setErrors({ 'fechaFutura': true });
-        console.log('Fecha futura detectada, error establecido.');
-        console.log('Errores actuales del control:', FECHA_CONTROL?.errors);
       } else {
-        // Clear the fechaFutura error but preserve other errors
-        const currentErrors = FECHA_CONTROL?.errors;
-        if (currentErrors && currentErrors['fechaFutura']) {
-          delete currentErrors['fechaFutura'];
-          const hasOtherErrors = Object.keys(currentErrors).length > 0;
-          FECHA_CONTROL?.setErrors(hasOtherErrors ? currentErrors : null);
+        const FECHA_ERROR = FECHA_CONTROL?.errors;
+        if (FECHA_ERROR && FECHA_ERROR['fechaFutura']) {
+          delete FECHA_ERROR['fechaFutura'];
+          const HAS_ERROR = Object.keys(FECHA_ERROR).length > 0;
+          FECHA_CONTROL?.setErrors(HAS_ERROR ? FECHA_ERROR : null);
         }
-        console.log('Fecha válida, error de fecha futura eliminado.');
       }
     } else {
-      // Clear the fechaFutura error but preserve required error if field is empty
-      const currentErrors = FECHA_CONTROL?.errors;
-      if (currentErrors && currentErrors['fechaFutura']) {
-        delete currentErrors['fechaFutura'];
-        const hasOtherErrors = Object.keys(currentErrors).length > 0;
-        FECHA_CONTROL?.setErrors(hasOtherErrors ? currentErrors : null);
+      const FECHA_ERROR = FECHA_CONTROL?.errors;
+      if (FECHA_ERROR && FECHA_ERROR['fechaFutura']) {
+        delete FECHA_ERROR['fechaFutura'];
+        const HAS_ERROR = Object.keys(FECHA_ERROR).length > 0;
+        FECHA_CONTROL?.setErrors(HAS_ERROR ? FECHA_ERROR : null);
       }
     }
     
@@ -864,7 +856,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * Utiliza el método `reset()` para limpiar los valores de cada control y
    * marca los campos importantes como tocados para mostrar errores de validación.
-   */  borrar(): void {
+   */  
+  borrar(): void {
     this.registroForm.reset();
     const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
     FECHA_CONTROL?.setValue('');
@@ -883,7 +876,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Trigger change detection to update the markTouched bindings for catalogo-select components
     this.cdr.detectChanges();
   }
 
