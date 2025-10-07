@@ -404,6 +404,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Getter para debugging - obtiene el control de fechaInicialInput
+   * @returns {FormControl} El control de formulario 'fechaInicialInput'.
+   */
+  get fechaInicialInputControl(): FormControl {
+    return this.registroForm.get('fechaInicialInput') as FormControl;
+  }
+
+  /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
    * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
    */
@@ -803,11 +811,46 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * Este método actualiza el campo 'fechaInicialInput' del formulario con el nuevo valor proporcionado
    * y marca el campo como no modificado (untouched).
-   */
-  public cambioFechaIngreso(nuevo_valor: string): void {
-    this.registroForm.get('fechaInicialInput')?.setValue(nuevo_valor);
-    this.registroForm.get('fechaInicialInput')?.markAsTouched();
-    this.registroForm.get('fechaInicialInput')?.markAsDirty();
+   */    public cambioFechaIngreso(nuevo_valor: string): void {
+    const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
+    console.log('Valor recibido:', nuevo_valor);
+    
+    // Set the value first
+    FECHA_CONTROL?.setValue(nuevo_valor);
+    FECHA_CONTROL?.markAsTouched();
+    FECHA_CONTROL?.markAsDirty();
+    
+    if (nuevo_valor && nuevo_valor.trim() !== '') {
+      // Parse the date to check if it's a future date
+      const FECHA_INGRESADA = new Date(nuevo_valor.split('/').reverse().join('-'));
+      const FECHA_ACTUAL = new Date();
+      FECHA_ACTUAL.setHours(23, 59, 59, 999); // Set to end of day for comparison
+      
+      if (FECHA_INGRESADA > FECHA_ACTUAL) {
+        // Set custom error for future date
+        FECHA_CONTROL?.setErrors({ 'fechaFutura': true });
+        console.log('Fecha futura detectada, error establecido.');
+        console.log('Errores actuales del control:', FECHA_CONTROL?.errors);
+      } else {
+        // Clear the fechaFutura error but preserve other errors
+        const currentErrors = FECHA_CONTROL?.errors;
+        if (currentErrors && currentErrors['fechaFutura']) {
+          delete currentErrors['fechaFutura'];
+          const hasOtherErrors = Object.keys(currentErrors).length > 0;
+          FECHA_CONTROL?.setErrors(hasOtherErrors ? currentErrors : null);
+        }
+        console.log('Fecha válida, error de fecha futura eliminado.');
+      }
+    } else {
+      // Clear the fechaFutura error but preserve required error if field is empty
+      const currentErrors = FECHA_CONTROL?.errors;
+      if (currentErrors && currentErrors['fechaFutura']) {
+        delete currentErrors['fechaFutura'];
+        const hasOtherErrors = Object.keys(currentErrors).length > 0;
+        FECHA_CONTROL?.setErrors(hasOtherErrors ? currentErrors : null);
+      }
+    }
+    
     this.tramite32101Store.setFechaInicialInput(nuevo_valor);
   }
   /**

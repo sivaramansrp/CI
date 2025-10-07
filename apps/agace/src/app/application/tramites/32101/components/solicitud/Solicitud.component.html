@@ -130,7 +130,10 @@
       <div class="col-md-4 input-fecha-wrapper" [ngClass]="{'is-invalid': isInvalid('fechaInicialInput')}">
         <input-fecha [datos]="fechaDePago" (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" 
         required="fechaDePago.required" [isDisabled]="soloLectura"></input-fecha>
-        <div *ngIf="isInvalid('fechaInicialInput')" class="mensaje-error">
+        <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaFutura') && (registroForm.get('fechaInicialInput')?.touched || registroForm.get('fechaInicialInput')?.dirty)" class="mensaje-error">
+          La fecha de pago debe ser menor o igual a la fecha actual.
+        </div>
+        <div *ngIf="isInvalid('fechaInicialInput') && !registroForm.get('fechaInicialInput')?.hasError('fechaFutura')" class="mensaje-error">
           Todos los campos de pago son requeridos
         </div>
       </div>
