@@ -180,18 +180,26 @@ export class MontosDeInversionComponent implements OnInit {
       .subscribe();
     this.montosDeInversionForm = this.fb.group({
       tipos: [this.solicitudState.tipos],
-      cantidad: [this.solicitudState.cantidad, [Validators.required , Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      cantidad: [this.solicitudState.cantidad, [Validators.required]],
       descripsion: [this.solicitudState.descripsion, [Validators.required , Validators.maxLength(1000)]],
       mnx: [
-        this.solicitudState.mnx,
-        [
-          Validators.required,
-          Validators.maxLength(16), 
-          Validators.pattern('^\\d{1,16}$')
-        ]
+        this.solicitudState.mnx, [ Validators.required]
       ],
     });
   }
+
+  /**
+   * Maneja el evento de entrada y limita la longitud del texto.
+   * @param event Evento del input
+   * @param maxLength Longitud máxima permitida
+   */
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.montosDeInversionForm.get(controlPath)?.setValue(value, { emitEvent: false });
+}
   /**
      * Método que actualiza el store con los valores del formulario.
      * 

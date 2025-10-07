@@ -1,20 +1,11 @@
-import { RegistroExpansionComponent } from './registro-expansion.component';
+import { registroSolicitudImmexComponent } from './registro-solicitud-immex.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-describe('RegistroExpansionComponent', () => {
-  let componente: RegistroExpansionComponent;
+describe('registroSolicitudImmexComponent', () => {
+  let componente: registroSolicitudImmexComponent;
 
   beforeEach(() => {
-    const mockTramite80211Store = {} as any;
-    const mockTramite80211Query = {} as any;
-    const mockRegistroService = {} as any;
-    const mockRegistroSolicitudService = {} as any;
-    componente = new RegistroExpansionComponent(
-      mockTramite80211Store,
-      mockTramite80211Query,
-      mockRegistroService,
-      mockRegistroSolicitudService
-    );
+    componente = new registroSolicitudImmexComponent();
     componente.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

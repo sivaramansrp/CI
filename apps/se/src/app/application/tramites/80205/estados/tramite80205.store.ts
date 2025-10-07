@@ -1,6 +1,7 @@
-import { EmpresasNacionales, Servicio, ServicioAmpliacion, ServicioAutorizado, ServicioInmex, Servicios } from '../models/datos-info.model';
+import { Servicio, ServicioAmpliacion, ServicioAutorizado, ServicioInmex, Servicios } from '../models/datos-info.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '../constantes/modificacion.enum';
+import { EmpresaNacional } from '../../../shared/models/modelo-interface.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -46,7 +47,7 @@ export interface AmpliacionServiciosState {
   /**
    * Lista de empresas relacionadas con IMMEX.
    */
-  empresas: EmpresasNacionales[];
+  empresas: EmpresaNacional[];
 
   /**
    * Lista de servicios disponibles.
@@ -281,10 +282,11 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
    *
    * @param empresas - Arreglo de objetos de tipo `ServicioInmex` que representa las empresas a establecer en el estado.
    */
-  setEmpresas(empresas: EmpresasNacionales[]): void {
+  setEmpresas(empresas: Partial<EmpresaNacional[]>): void {
+    const FILTERED_EMPRESAS = (empresas as EmpresaNacional[]).filter((e): e is EmpresaNacional => e !== undefined);
     this.update((state) => ({
       ...state,
-      empresas,
+      empresas: FILTERED_EMPRESAS,
     }));
   }
 
@@ -314,9 +316,9 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
   /**
    * Agrega una nueva empresa al estado actual.
    *
-   * @param empresa - Objeto de tipo `EmpresasNacionales` que representa la empresa a agregar.
+   * @param empresa - Objeto de tipo `EmpresaNacional` que representa la empresa a agregar.
    */
-  agregarEmpresa(empresa: EmpresasNacionales): void {
+  agregarEmpresa(empresa: EmpresaNacional): void {
     this.update((state) => ({
       ...state,
       empresas: [...state.empresas, empresa],

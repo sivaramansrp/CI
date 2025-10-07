@@ -1,9 +1,11 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+
 
 /**
  * @component BusquedaFolioComponent
@@ -54,6 +56,15 @@ export class BusquedaFolioComponent implements OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+
+  /**
+   * @descripcion
+   * Evento que se emite al cerrar el modal.
+   */
+  @Output() cerrarClicado = new EventEmitter();
+
+    
+
   /**
    * Sujeto utilizado para cancelar suscripciones activas al momento de destruir el componente.
    * Esto evita fugas de memoria en la aplicación.
@@ -73,9 +84,9 @@ export class BusquedaFolioComponent implements OnDestroy {
     private fb: FormBuilder,
     private consultaQuery: ConsultaioQuery,
   ) {
-    this.establecerBusquedaForm();
+   
     this.estableDetalleDelPermisoForm();
-
+    this.buscar();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -103,11 +114,8 @@ export class BusquedaFolioComponent implements OnDestroy {
    *
    * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
-  public buscar(_event: Event): void {
-    if (this.busquedaForm.invalid) {
-      this.busquedaForm.markAllAsTouched();
-      return;
-    }
+  public buscar(): void {
+    
 
     this.detalleDelPermiso = true;
     this.establecerFormularioDeDetallesDe();
@@ -121,15 +129,18 @@ export class BusquedaFolioComponent implements OnDestroy {
   public agregar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
+    this.cerrarClicado.emit();
   }
+
 
   /**
    * Cancela la visualización del detalle del permiso y oculta el formulario.
    *
    * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
-  public detalleCancelar(_event: Event): void {
-    this.detalleDelPermiso = false;
+  public detalleCancelar(): void {
+    this.cerrarClicado.emit();
+    
   }
 
   /**
@@ -141,15 +152,7 @@ export class BusquedaFolioComponent implements OnDestroy {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 
-  /**
-   * Inicializa el formulario de búsqueda de trámites.
-   * Contiene el campo `tramite` con validaciones de requerido y solo números.
-   */
-  public establecerBusquedaForm(): void {
-    this.busquedaForm = this.fb.group({
-      tramite: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
-    });
-  }
+  
 
   /**
    * Inicializa el formulario del detalle del permiso con campos deshabilitados.
