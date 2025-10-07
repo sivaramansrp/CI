@@ -49,4 +49,6 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     estadoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     buscarPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-submanufactureras/buscar-datos-grid-plantas`,
     buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
+    buscarfraccionarancelariaImportacion: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/importacion`,
+    buscarSectoresImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/actividad-tres-rs/sectores-immex`,
 });

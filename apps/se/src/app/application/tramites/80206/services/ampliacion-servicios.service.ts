@@ -8,8 +8,8 @@
  * Este servicio utiliza el cliente HTTP de Angular para realizar solicitudes a archivos JSON locales y expone observables para manejar datos y eventos.
  */
 
-import { Arancelaria, BuscarPayload, DatosResponse, FraccionArancelariaApiResponse } from '../models/datos-info.model';
-import { JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Arancelaria, ArancelariaImportacion, BuscarPayload, DatosResponse, FraccionArancelariaApiResponse, FraccionArancelariaImportacion, Sector } from '../models/datos-info.model';
+import { Catalogo, JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, Subject, catchError, map, throwError } from 'rxjs';
 import { API_ROUTES } from '../../../shared/servers/api-route';
 import { AmpliacionServiciosState } from '../estados/tramite80206.store';
@@ -151,6 +151,56 @@ mapApiResponseToFraccionArancelaria(
       valorAnual: item.valorMonedaAnual?.toString() || '',
       volumenrMensual: item.valorProduccionMensual?.toString() || '',
       volumenAnual: item.valorProduccionAnual?.toString() || '',
+    }));
+  }
+
+  obtenerFraccionImportacion(body: FraccionArancelariaImportacion): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarfraccionarancelariaImportacion, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES('/sat-t80206','80206').buscarfraccionarancelariaImportacion}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+   mapApiResponseToFraccionArancelariaImportacion(
+    dato: FraccionArancelariaApiResponse[], 
+    startIndex: number = 0
+  ): ArancelariaImportacion[] {
+    return dato.map((item, index) => ({
+      fraccion: (startIndex + index + 1).toString(),
+      fraccionArancelaria: item.fraccionPadre || '',
+      descripcionFraccionPadre: item.descripcionFraccionPadre || '',
+      fraccionArancelariaImportacion: item.cveFraccion || '',
+      descripcionComercialImportacion: item.descripcion || '',
+      anexoII: item.tipoFraccion || '',
+      tipo: item.tipoOperacion || '',
+      umt: item.unidadMedida || item.umt || '',
+      categoria: item.descripcionCategoria || item.claveCategoria || '',
+      valorMensual: item.valorMonedaMensual?.toString() || '',
+      valorAnual: item.valorMonedaAnual?.toString() || '',
+      volumenrMensual: item.valorProduccionMensual?.toString() || '',
+      volumenAnual: item.valorProduccionAnual?.toString() || '',
+    }));
+  }
+
+obtenerSectoresImmex(body: { sectorImmex: string }): Observable<JSONResponse> {
+  return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarSectoresImmex, body).pipe(
+    map((response) => response),
+    catchError(() => {
+      const ERROR = new Error(`Error al obtener información del sector en ${API_ROUTES('/sat-t80206','80206').buscarSectoresImmex}`);
+      return throwError(() => ERROR);
+    })
+  );
+}
+
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  mapApiResponseToSectoresImmex(dato: any[]): Sector[] {
+    return dato.map((item) => ({
+      clave: item.clave || '',
+      descripcion: item.descripcion || '',
     }));
   }
 }

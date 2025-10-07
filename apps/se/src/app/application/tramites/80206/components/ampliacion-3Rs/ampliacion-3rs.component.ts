@@ -13,6 +13,8 @@ import {
   Catalogo,
   SeccionLibStore,
   TablaSeleccion,
+  doDeepCopy,
+  esValidObject,
 } from '@ng-mf/data-access-user';
 
 import {
@@ -304,31 +306,78 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * Agrega servicios a la ampliación.
    * @method agregarServiciosAmpliacion
    */
-  agregarServiciosAmpliacion(): void {
+agregarServiciosAmpliacion(): void {
   const SECTOR_SELECCIONADO = this.formularioInfoRegistro.get('sector')?.value;
   
-  if (SECTOR_SELECCIONADO) {
-    const SECTOR_ENCONTRADO = this.sectorDesplegable.find(sector => sector.clave === SECTOR_SELECCIONADO);
-    
-    if (SECTOR_ENCONTRADO) {
-      const YAEXISTE = this.datosSector.some(sector => sector.clave === SECTOR_ENCONTRADO.clave);
-      
-      if (!YAEXISTE) {
-        const NUEVO_SECTOR: Sector = {
-          descripcion: SECTOR_ENCONTRADO.descripcion,
-        };
-        
-        const DATOS_ACTUALIZADOS = [...this.datosSector, NUEVO_SECTOR];
-        this.tramite80206Store.setDatosSector(DATOS_ACTUALIZADOS);
-        
-        this.formularioInfoRegistro.get('sector')?.setValue('');
-        
-        const ISVALID = this.validarFormulario();
-        this.seccionStore.establecerSeccion([ISVALID]);
-        this.seccionStore.establecerFormaValida([ISVALID]);
-      }
-    }
+  if (!SECTOR_SELECCIONADO) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe seleccionar un sector.';
+    return;
   }
+
+  // Check if sector already exists
+  const SECTOR_EXISTENTE = this.datosSector.some(sector => sector.clave === SECTOR_SELECCIONADO);
+  if (SECTOR_EXISTENTE) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'El sector seleccionado ya existe en la lista.';
+    return;
+  }
+
+  const PAYLOAD = {
+    "sectorImmex": SECTOR_SELECCIONADO
+  };
+
+  this.ampliacionServiciosService
+    .obtenerSectoresImmex(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = API_DATOS.error || API_DATOS.mensaje || 'Error al obtener información del sector.';
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            try {
+              // Find sector description from dropdown
+              const SECTOR_ENCONTRADO = this.sectorDesplegable.find(sector => sector.clave === SECTOR_SELECCIONADO);
+              
+              const NUEVO_SECTOR: Sector = {
+                clave: SECTOR_SELECCIONADO,
+                descripcion: SECTOR_ENCONTRADO?.descripcion || ''
+              };
+              
+              const DATOS_ACTUALIZADOS = [...this.datosSector, NUEVO_SECTOR];
+              this.tramite80206Store.setDatosSector(DATOS_ACTUALIZADOS);
+              
+              // Clear the form field
+              this.formularioInfoRegistro.get('sector')?.setValue('');
+              
+              const ISVALID = this.validarFormulario();
+              this.seccionStore.establecerSeccion([ISVALID]);
+              this.seccionStore.establecerFormaValida([ISVALID]);
+              
+            } catch (mappingError) {
+              console.error('Error al procesar respuesta:', mappingError);
+              this.mostrarAlerta = true;
+              this.mensajeDeAlerta = 'Error al procesar la información del sector.';
+            }
+          } else {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = 'No se encontraron datos para el sector especificado.';
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener información del sector:', error);
+        this.mostrarAlerta = true;
+        this.mensajeDeAlerta = 'Error al conectar con el servidor. Intente nuevamente.';
+      }
+    });
 }
 
   /**

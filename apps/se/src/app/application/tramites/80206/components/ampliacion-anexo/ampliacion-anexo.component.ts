@@ -524,6 +524,79 @@ obtenerInformacionFraccion(): void {
     });
 }
 
+obtenerInformacionFraccionImportacion(): void {
+  const FRACCION_IMPORTACION_VALUE = this.importacion;
+
+  if (!FRACCION_IMPORTACION_VALUE || FRACCION_IMPORTACION_VALUE.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe introducir una fracción arancelaria válida.';
+    return;
+  }
+
+ if (!AmpliacionAnexoComponent.validarFormatoFraccion(FRACCION_IMPORTACION_VALUE)) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
+    return;
+  }
+
+  const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === FRACCION_IMPORTACION_VALUE);
+  if (EXISTS) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+    return;
+  }
+
+  const PAYLOAD = {
+    "fraccion": FRACCION_IMPORTACION_VALUE,
+    "fraccionPadre": this.fraccionArancelaria,
+    "tipoSolicitud": "14",
+    "idPrograma": "121517",
+    "idSolicitud": "202785257",
+    "idProductoPadre": ""
+  };
+
+  this.ampliacionServiciosService
+    .obtenerFraccionImportacion(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = API_DATOS.error || API_DATOS.mensaje || 'La fracción arancelaria solicitada no existe.';
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            try {
+              const CURRENT_COUNT = this.datosImportacion.length;
+              const RESPONSE: ArancelariaImportacion[] = this.ampliacionServiciosService
+                .mapApiResponseToFraccionArancelariaImportacion([API_DATOS.datos], CURRENT_COUNT);
+
+              this.tramite80206Store.setDatosImportacion([...this.datosImportacion, ...RESPONSE]);
+
+              this.fraccionArancelaria = '';
+              
+            } catch (mappingError) {
+              console.error('Error al mapear respuesta:', mappingError);
+              this.mostrarAlerta = true;
+              this.mensajeDeAlerta = 'Error al procesar la información de la fracción arancelaria.';
+            }
+          } else {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = 'No se encontraron datos para la fracción arancelaria especificada.';
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener información de fracción:', error);
+        this.mostrarAlerta = true;
+        this.mensajeDeAlerta = 'Error al conectar con el servidor. Intente nuevamente.';
+      }
+    });
+}
   /**
    * Cierra el modal de alerta.
    * @method cerrarModal
@@ -536,45 +609,46 @@ obtenerInformacionFraccion(): void {
    * Agrega datos de importación al grid.
    * @method agregarImportacion
    */
-  agregarImportacion(): void {
-    if(!this.importacion || this.importacion.trim() === '') {
-      this.mostrarAlerta = true;
-      this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
-      return;
-    }
- 
-    if(this.domiciliosSeleccionados.length === 0) {
-      this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
-      this.activarModal();
-    }
-    else if(this.importacion) {
-      this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
-      this.activarModal();
-    }
-    else if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
-      this.mensajeDeAlerta = "La solicitud contiene fracciones arancelarias que pertenecen al grupo 3R's, la fracción que desea ingresar pertenece a otro grupo por lo tanto no es válida.";
-      this.activarModal();
-      this.importacion = '';
-    }
-    else{
-    const CUERPODATOS = {
-      fraccion: this.domiciliosSeleccionados[0]?.fraccion,
-      fraccionArancelaria: this.domiciliosSeleccionados[0]?.fraccionArancelaria,
-      descripcionComercial:this.domiciliosSeleccionados[0]?.descripcionComercial,
-      fraccionArancelariaImportacion: this.importacion,
-      descripcionComercialImportacion:"Mercancias destinadas a procesos tales como reparacion, reacondicionamiento o remanufactura, cuando las empresas cuenten con registro otorgado conforme a los lineamientos establecidos por la Secretaria de Economia.  ", 
-      anexoII: this.domiciliosSeleccionados[0]?.anexoII,
-      tipo: this.domiciliosSeleccionados[0]?.tipo,
-      umt:this.domiciliosSeleccionados[0]?.umt,
-      categoria: this.domiciliosSeleccionados[0]?.categoria,
-      valorMensual: this.domiciliosSeleccionados[0]?.valorMensual,
-      valorAnual: this.domiciliosSeleccionados[0]?.valorAnual,
-      volumenrMensual: this.domiciliosSeleccionados[0]?.volumenrMensual,
-      volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
-    }
-    this.tramite80206Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
-    this.importacion = '';
+ agregarImportacion(): void {
+  // Check if importacion field is empty
+  if (!this.importacion || this.importacion.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
+    return;
   }
+
+  // Check if a row is selected from datosImmex table
+  if (this.domiciliosSeleccionados.length === 0) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
+    return; // Exit early - don't proceed with adding data
+  }
+
+  // Validate fraccion format
+  if (!AmpliacionAnexoComponent.validarFormatoFraccion(this.importacion)) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
+    return;
+  }
+
+  // Check if fraccion already exists in datosImportacion
+  const EXISTS = this.datosImportacion.some(item => item.fraccion === this.importacion);
+  if (EXISTS) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+    return;
+  }
+
+  // Check if selected fraccion matches the importacion fraccion
+  // if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
+  //   this.mostrarAlerta = true;
+  //   this.mensajeDeAlerta = "La solicitud contiene fracciones arancelarias que pertenecen al grupo 3R's, la fracción que desea ingresar pertenece a otro grupo por lo tanto no es válida.";
+  //   this.importacion = '';
+  //   return;
+  // }
+
+  // Only proceed with API call if all validations pass
+  this.obtenerInformacionFraccionImportacion();
 }
 
   /**

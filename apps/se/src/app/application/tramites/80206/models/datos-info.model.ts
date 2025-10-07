@@ -45,7 +45,7 @@ export interface Arancelaria {
    * Descripción comercial de la fracción.
    * @property {string} descripcionComercial
    */
-  descripcionComercial: string;
+  descripcionComercial?: string;
 
   /**
    * Información del Anexo II.
@@ -115,12 +115,6 @@ export interface ArancelariaImportacion {
   fraccionArancelaria: string;
 
   /**
-   * Descripción comercial del producto de exportación.
-   * @property {string} descripcionComercial
-   */
-  descripcionComercial: string;
-
-  /**
    * Fracción arancelaria de la mercancía de importación.
    * @property {string} fraccionArancelariaImportacion
    */
@@ -131,6 +125,8 @@ export interface ArancelariaImportacion {
    * @property {string} descripcionComercialImportacion
    */
   descripcionComercialImportacion: string;
+
+  descripcionFraccionPadre: string;
 
   /**
    * Información del Anexo II.
@@ -333,7 +329,15 @@ export interface BuscarPayload {
       fraccion: string,
       tipoSolicitud:number
 }
+export interface FraccionArancelariaImportacion{
+  fraccion?: string,
+  fraccionPadre?: string,
+  tipoSolicitud?: string,
+  idPrograma?: string,
+  idSolicitud?: string,
+  idProductoPadre?: string
 
+}
 /**
  * Interface for API fraccion arancelaria response data
  * @export

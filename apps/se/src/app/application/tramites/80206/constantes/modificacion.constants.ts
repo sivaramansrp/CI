@@ -132,7 +132,7 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.descripcionComercial,
+    clave: (ele: ArancelariaImportacion): string | undefined => ele.descripcionFraccionPadre,
     orden: 3,
   },
   {
