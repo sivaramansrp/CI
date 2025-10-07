@@ -26,7 +26,7 @@
       <div class="col-md-8 mb-4">
         <label for="pagina">Página web*:</label>
         <input type="text" id="pagina" name="pagina" class="form-control" formControlName="paginaWWeb" maxlength="120"
-          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)"
+          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)" placeholder="WWW.ULTRASIST.COM"
           [ngClass]="esValido('datosGeneralis', 'paginaWWeb') ? 'required' : ''" />
         <div
           *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.hasError('required') && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched">
