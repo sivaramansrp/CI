@@ -107,7 +107,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     public consultaQuery: ConsultaioQuery,
     public destinatarioService: DestinatarioService
   ) {
-    this.iniciarFormulario();
+    // this.iniciarFormulario();
     this.inicializarSuscripciones();
   }
 
@@ -192,11 +192,11 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   /**
    * Inicializa el formulario reactivo del destinatario.
    */
-  iniciarFormulario(): void {
-    this.destinatarioForm = this.fb.group({
-      medioDeTransporte: [''],
-    });
-  }
+  // iniciarFormulario(): void {
+  //   this.destinatarioForm = this.fb.group({
+  //     medioDeTransporte: [''],
+  //   });
+  // }
 
   /**
    * Configura las suscripciones necesarias para el formulario y el estado.
