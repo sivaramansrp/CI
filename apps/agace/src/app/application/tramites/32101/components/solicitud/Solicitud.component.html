@@ -95,11 +95,12 @@
       <div class="col-md-6">
         <label for="numeroDeOperacion" class="form-label">Número de operación:</label>
         <input class="form-control" [ngClass]="{'is-invalid': isInvalid('numeroDeOperacion')}"
-          type="text" formControlName="numeroDeOperacion" name="numeroDeOperacion" id="numeroDeOperacion"  maxlength="30"
-          (change)="setValoresStore(registroForm, 'numeroDeOperacion', 'setNumeroDeOperacion')" />
-          <div *ngIf="registroForm.get('numeroDeOperacion')?.hasError('required')" class="text-danger">
-          Todos los campos de pago son requeridos
-        </div>
+          type="text" formControlName="numeroDeOperacion" name="numeroDeOperacion" id="numeroDeOperacion" maxlength="30"
+          oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')" 
+          (keypress)="onlyAlphanumeric($event)" (change)="setValoresStore(registroForm, 'numeroDeOperacion', 'setNumeroDeOperacion')" />
+          <div *ngIf="isInvalid('numeroDeOperacion')" class="mensaje-error">
+            Todos los campos de pago son requeridos
+          </div>
       </div>
     </div>
     <div class="row mb-3">
@@ -110,20 +111,22 @@
           id="cadenaDeLaDependencia" (change)="setValoresStore(registroForm, 'cadenaDeLaDependencia', 'setCadenaDeLaDependencia')" />
       </div>
       <div class="col-md-6">
-        <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre" [placeholder]="banco.primerOpcion" formControlName="banco" name="banco" id="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')" [isDisabled]="soloLectura"></app-catalogo-select>
-        <div *ngIf="registroForm.get('banco')?.hasError('required')" class="text-danger">
-          Todos los campos de pago son requeridos
+        <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre" [placeholder]="banco.primerOpcion" 
+        formControlName="banco" name="banco" id="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')" 
+        [markTouched]="registroForm.get('banco')?.touched??false" [isDisabled]="soloLectura"></app-catalogo-select>
+        <div *ngIf="isInvalid('banco')" class="mensaje-error">
+          Este campo es obligatorio.
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-4">
-        <label for="llaveDePago" class="form-label">Llave de pago:</label>
-        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('llaveDePago')}" 
+        <label for="llaveDePago" class="form-label">Llave de pago:</label>        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('llaveDePago')}" 
         type="text" formControlName="llaveDePago" name="llaveDePago" id="llaveDePago" maxlength="20"
-        (change)="setValoresStore(registroForm, 'llaveDePago', 'setLlaveDePago')" />
-        <div *ngIf="registroForm.get('llaveDePago')?.hasError('required')" class="text-danger">
-          Todos los campos de pago son requeridos
+        oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')" 
+        (keypress)="onlyAlphanumeric($event)" (change)="setValoresStore(registroForm, 'llaveDePago', 'setLlaveDePago')" />
+        <div *ngIf="isInvalid('llaveDePago')" class="mensaje-error">
+          Este campo es obligatorio.
         </div>
       </div>
       <div class="col-md-4">

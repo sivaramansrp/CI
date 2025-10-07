@@ -320,11 +320,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           value: this.solicitudState?.cadenaDeLaDependencia,
           disabled: true,
         },
-      ],
-      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      banco: [this.solicitudState?.banco],
-      llaveDePago: [this.solicitudState?.llaveDePago, [ Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      fechaInicialInput: [this.solicitudState?.fechaInicialInput],
+      ], 
+      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.required, Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      banco: [this.solicitudState?.banco, [Validators.required]],
+      llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required, Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      fechaInicialInput: [this.solicitudState?.fechaInicialInput, [Validators.required]],
       importeDePago: [
         { value: this.solicitudState?.importeDePago, disabled: true },
       ],
@@ -443,6 +443,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   isInvalid(id: string): boolean {
     const CONTROL = this.registroForm.get(id);
     return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
+
+  /**
+   * Valida que solo se permitan caracteres alfanuméricos (letras y números) en el campo.
+   * Bloquea la entrada de caracteres especiales, espacios y signos negativos.
+   * @param event Evento del teclado
+   */
+  onlyAlphanumeric(event: KeyboardEvent): void {
+    const char = event.key;
+    const isValidChar = /^[a-zA-Z0-9]$/.test(char);
+    const isControlKey = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(char);
+    
+    if (!isValidChar && !isControlKey) {
+      event.preventDefault();
+    }
   }
 
   /**
@@ -793,7 +808,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.registroForm.get('fechaInicialInput')?.markAsUntouched();
     this.tramite32101Store.setFechaInicialInput(nuevo_valor);
   }
-
   /**
    * Restablece los campos del formulario relacionados con la operación bancaria.
    *
@@ -804,7 +818,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * - `fechaInicialInput`: Fecha inicial de la operación.
    *
    * Utiliza el método `reset()` para limpiar los valores de cada control y
-   * elimina cualquier error de validación asociado.
+   * marca los campos importantes como tocados para mostrar errores de validación.
    */
   borrar(): void {
     this.registroForm.reset();
@@ -814,6 +828,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     FECHA_CONTROL?.markAsUntouched();
     FECHA_CONTROL?.markAsPristine();
     this.tramite32101Store.setFechaInicialInput('');
+
+    // Marcar los campos importantes de pago como tocados para mostrar errores de validación
+    const PAYMENT_FIELDS = ['numeroDeOperacion', 'banco', 'llaveDePago', 'fechaInicialInput'];
+    PAYMENT_FIELDS.forEach(fieldName => {
+      const FIELD_CONTROL = this.registroForm.get(fieldName);
+      if (FIELD_CONTROL) {
+        FIELD_CONTROL.markAsTouched();
+        FIELD_CONTROL.markAsDirty();
+      }
+    });
   }
 
   /**
