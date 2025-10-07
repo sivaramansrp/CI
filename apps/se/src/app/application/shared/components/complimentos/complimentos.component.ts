@@ -552,10 +552,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
-    this.formaComplimentos.get('modalidad')?.setValue('servicios', { emitEvent: false });
+    this.formaComplimentos.get('modalidad')?.setValue('Servicios', { emitEvent: false });
 
-
-  }
+ }
 
   /**
    * Transforms radio button values to the expected format
