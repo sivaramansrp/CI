@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, EventEmitter, Input,OnChanges, OnDestroy,OnInit, Output,SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
+import { DestinatarioService } from '../../services/destinatario.service';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
@@ -20,7 +21,7 @@ import { Subject } from 'rxjs';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss'
 })
-export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
+export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
   /**
    * Identificador del procedimiento asociado al componente.
@@ -72,6 +73,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,On
    * @type {Catalogo[]}
    */
   @Input() paisDestin!: Catalogo[];
+  /**
+  * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
+  * @type {Catalogo[]}
+  */
+  paisDestinDestinatario!: Catalogo[];
 
   /**
    * Evento que se emite cuando se selecciona un país de destino
@@ -136,7 +142,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,On
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
    */
   constructor(
-    private fb: FormBuilder) {
+    private fb: FormBuilder, public destinatarioService: DestinatarioService) {
 
     // La función se ejecutará después de un segundo.
     setTimeout(() => {
@@ -156,11 +162,19 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,On
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
+    this.getPaisDestino();
+  }
+
+  /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.formDestinatario) {
+      this.formDestinatario.markAllAsTouched();
+    }
   }
 
   ngAfterViewInit(): void {
-    if(this.paisDestino){
-      this.formDestinatario.get('paisDestin')?.setValidators([Validators.required,Validators.minLength(0)]);
+    if (this.paisDestino) {
+      this.formDestinatario.get('paisDestin')?.setValidators([Validators.required, Validators.minLength(0)]);
     }
   }
   /**
@@ -176,16 +190,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,On
 
     }
   }
-   /**
-   * @method ngOnChanges
-   * @description
-   * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
-   * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
-   * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
-   * no existe, lo crea.
-   * 
-   * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
-   */
+  /**
+  * @method ngOnChanges
+  * @description
+  * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
+  * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
+  * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
+  * no existe, lo crea.
+  * 
+  * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
+  */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['datosForm'] && this.datosForm) {
       if (this.formDestinatario) {
@@ -207,21 +221,21 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,On
     * representación federal y precisión, aplicando las validaciones correspondientes.
     */
   createForm(): void {
-this.formDestinatario = this.fb.group({
-  paisDestin: [''],
-  ciudad: ['', [Validators.required,Validators.maxLength(50)]],
-  calle: ['', [Validators.required,Validators.maxLength(90)]],
-  numeroLetra: ['', [Validators.required,Validators.maxLength(30)]],
-  lada: ['', [Validators.pattern(/^\d+$/),Validators.maxLength(5)]],
-  telefono: ['', [Validators.pattern(/^\d+$/),Validators.maxLength(30)]],
-  fax: ['', [Validators.pattern(/^\d+$/),Validators.maxLength(20)]],
-  correoElectronico: ['', [
-    Validators.required,
-    Validators.email,
-    Validators.maxLength(70),
-    Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) 
-  ]]
-});
+    this.formDestinatario = this.fb.group({
+      paisDestin: [''],
+      ciudad: ['', [Validators.required, Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.maxLength(90)]],
+      numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
+      lada: ['', [Validators.pattern(/^\d+$/), Validators.maxLength(5)]],
+      telefono: ['', [Validators.pattern(/^\d+$/), Validators.maxLength(30)]],
+      fax: ['', [Validators.pattern(/^\d+$/), Validators.maxLength(20)]],
+      correoElectronico: ['', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(70),
+        Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+      ]]
+    });
 
   }
 
@@ -232,22 +246,18 @@ this.formDestinatario = this.fb.group({
   paisDestionSeleccion(estado: Catalogo): void {
     this.paisDestionSeleccionEvent.emit(estado)
   }
- validarFormularios():boolean{
-if(this.formDestinatario.invalid){
-  this.formDestinatario.markAllAsTouched();
-  return false;
-}
-return true;
- }
+  validarFormularios(): boolean {
+    if (this.formDestinatario.invalid) {
+      this.formDestinatario.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
 
-
-
-  /**
-  * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
-  */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+  getPaisDestino(): void {
+    this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
+      this.paisDestinDestinatario = data as Catalogo[];
+    });
   }
 
   /**
@@ -267,4 +277,13 @@ return true;
     this.formaValida.emit(this.formDestinatario.valid);
     this.formDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }
+
+  /**
+  * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
