@@ -1,10 +1,10 @@
-import { ServicioItemResponse, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
+import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
+import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_EMPRESAS_NACIONALES, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +35,30 @@ export class ServiciosService {
     return this.http.post<BaseResponse<ServicioItemResponse[]>>(ENDPOINT, PAYLOAD);
   }
 
+/**
+ * Envía las opciones de evaluación del trámite 130118.
+ * @param PAYLOAD Datos de las opciones de evaluación.
+ * @returns Observable con la respuesta del servidor.
+ */
+  postServiciosAutorizadosTabla(tramite: string, PAYLOAD: ServiciosAutorizadosTablePayload):
+    Observable<BaseResponse<ServicioDtosKey>> {
+    const ENDPOINT = `${this.host}${SERVICIO_AUTORIZADOS_TABLA(tramite.toString())}`;
+    return this.http.post<BaseResponse<ServicioDtosKey>>(ENDPOINT, PAYLOAD);
+  }
+
+  /**
+ * Envía las opciones de evaluación del trámite 130118.
+ * @param PAYLOAD Datos de las opciones de evaluación.
+ * @returns Observable con la respuesta del servidor.
+ */
+  postServiciosEmpresasNacionales(tramite: string, PAYLOAD: ServiciosEmpresasNacionalesPayload):
+    Observable<BaseResponse<EmpresasNacionalesResponse>> {
+    const ENDPOINT = `${this.host}${SERVICIO_EMPRESAS_NACIONALES(tramite.toString())}`;
+    return this.http.post<BaseResponse<EmpresasNacionalesResponse>>(ENDPOINT, PAYLOAD);
+  }
 
   
-  static generarAlertaDeError(mensajes:string): string {
+static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `
 <div class="d-flex justify-content-center text-center">
   <div class="col-md-12 p-3  border-danger  text-danger rounded">
