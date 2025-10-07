@@ -30,11 +30,11 @@
           }
         ],
         "styles": [
-             "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "node_modules/ngx-toastr/toastr.css",
-             "libs/shared/theme/assets/styles/main.scss"
-            ],
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "libs/shared/theme/assets/styles/main.scss"
+        ],
         "scripts": [
           "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
           "libs/shared/theme/assets/js/jsrsasign-4.7.0-all-min_sat-fix.js",
@@ -43,10 +43,7 @@
         "customWebpackConfig": {
           "path": "apps/se/webpack.config.ts"
         },
-        "allowedCommonJsDependencies": [
-          "node-forge",
-          "moment"
-       ]
+        "allowedCommonJsDependencies": ["node-forge", "moment"]
       },
       "configurations": {
         "production": {
@@ -125,8 +122,7 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4205,
-        "publicHost": "/"
+        "port": 4205
       },
       "configurations": {
         "production": {

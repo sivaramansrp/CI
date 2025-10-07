@@ -1,10 +1,11 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
+import { ApiResponseSolicitante, ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Chofer40101Service } from '../../estado/chofer40101.service';
+import { Tramite40101Query } from '../../estado/tramite40101.query';
 
 @Component({
   selector: 'paso-uno',
@@ -58,6 +59,16 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   validacion: boolean = false;
 
   /**
+     * Booleano para mostrar u ocultar el componente de director general.
+     */
+  isShowDirector: boolean = false;
+
+  /**
+   * Subject para destruir las suscripciones y evitar fugas de memoria de los datos del solicitante.
+   */
+  private destroySolicitante$ = new Subject<void>();
+
+  /**
    * Propiedad de entrada que representa el número de pedimento.
    * Este valor es proporcionado desde el componente padre y se utiliza
    * para mostrar o procesar información relacionada con el pedimento.
@@ -96,10 +107,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * 
    * @param chofer40101Service Servicio para gestionar los datos del chofer.
    * @param consultaQuery Consulta para obtener el estado de la consulta.
+   * @param tramite40101Query Consulta para obtener el estado del trámite 40101.
    */
   constructor(
     private chofer40101Service: Chofer40101Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private tramite40101Query: Tramite40101Query
   ) {
     // Lógica para el constructor si es necesario.
   }
@@ -122,6 +135,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+    this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroySolicitante$)).subscribe((data: ApiResponseSolicitante['datos']) => {
+      this.isShowDirector = data.mostrar_director_general;
+    })
   }
 
   /**
@@ -167,5 +183,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+    this.destroySolicitante$.next();
+    this.destroySolicitante$.complete();
   }
 }

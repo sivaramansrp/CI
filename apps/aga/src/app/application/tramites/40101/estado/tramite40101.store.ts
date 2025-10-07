@@ -2,6 +2,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 import {
+  ApiResponseSolicitante,
   DatosUnidad,
   DatosVehiculo,
 } from '../models/registro-muestras-mercancias.model';
@@ -13,6 +14,7 @@ import {
 export interface Tramite40101State {
   datosVehiculo: DatosVehiculo;
   datosUnidad: DatosUnidad;
+  solicitanteDatas: ApiResponseSolicitante['datos']
 }
 /**
  * Crea el estado inicial para el trámite 40101.
@@ -52,6 +54,30 @@ export function createInitialState(): Tramite40101State {
       paisEmisor2daPlaca: '',
       descripcion: '',
     },
+    solicitanteDatas: {
+      caat_existe: false,
+      mostrar_director_general: false,
+      solicitante: {
+        id_persona_solicitud: null,
+        rfc: '',
+        razon_social: '',
+        descripcion_giro: '',
+        correo_electronico: '',
+        domicilio: {
+          pais: '',
+          codigo_postal: '',
+          estado: '',
+          municipio: '',
+          localidad: '',
+          colonia: '',
+          calle: '',
+          numero_exterior: '',
+          numero_interior: '',
+          telefono: '',
+          lada: '',
+        },
+      }
+    }
   };
 }
 /**

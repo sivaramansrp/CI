@@ -33,6 +33,16 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
   /**
+   * Booleano para mostrar u ocultar el componente de director general.
+   */
+  isShowDirector: boolean = false;
+
+  /**
+   * Subject para destruir las suscripciones y evitar fugas de memoria de los datos del solicitante.
+   */
+  private destroySolicitante$ = new Subject<void>();
+
+  /**
    * Índice actual del paso en el wizard.
    *
    * @type {number}
@@ -83,7 +93,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   constructor(
     private chofer40101Query: Chofer40101Query,
     private chofer40101Store: Chofer40101Store
-  ) {}
+  ) { }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.

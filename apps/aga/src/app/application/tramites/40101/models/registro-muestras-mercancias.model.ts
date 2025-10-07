@@ -29,7 +29,7 @@ export interface ApiResponseSolicitante {
   codigo: string;
   mensaje: string;
   datos: {
-    mostrarDirectorGeneral: boolean;
+    mostrar_director_general: boolean;
     solicitante: Solicitante;
     caat_existe: boolean;
   };
