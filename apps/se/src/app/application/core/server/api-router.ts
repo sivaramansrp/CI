@@ -26,10 +26,19 @@ export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string
 /**
  * API para prepar evaluacion tramite general.
  */
-export const SERVICIO_IMMEX_TABLA = (TRAMITE: string) : string => `sat-t${TRAMITE}/servicios/buscar`;
+export const SERVICIO_IMMEX_TABLA = (TRAMITE: string): string =>
+  `sat-t${TRAMITE}/servicios/buscar`;
 
 /**
  * API para buscar datos de la grid de plantas controladoras de empresas controladas.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Empresas-Controladas/buscarDatosGridPlantasControladoras
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80210/solicitud/empresas-controladas/buscar-datos-grid-plantas-controladoras
  */
-export const API_BUSCAR_DATOS_GRID = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/empresas-controladas/buscar-datos-grid-plantas-controladoras`;
+export const API_BUSCAR_DATOS_GRID = (TRAMITE: string): string =>
+  `sat-t${TRAMITE}/solicitud/empresas-controladas/buscar-datos-grid-plantas-controladoras`;
+
+/**
+ * API para buscar datos de la grid de plantas controladoras de empresas controladas.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80211/solicitud/empresas-terciarizadas/buscar-datos-grid-plantas
+ */
+export const API_BUSCAR_TERCIARIZADAS = (TRAMITE: string): string =>
+  `sat-t${TRAMITE}/solicitud/empresas-terciarizadas/buscar-datos-grid-plantas`;
