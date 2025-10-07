@@ -1,8 +1,8 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState,ERROR_FORMA_ALERT,WizardService} from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
@@ -46,7 +46,7 @@ import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-acci
   templateUrl: './paso-capturar-solicitud.component.html',
   providers: [ToastrService],
 })
-export class PasoCapturarSolicitudComponent implements OnInit {
+export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
 
   /** 
    * Indica si el componente padre es BtnContinuarComponent. 
@@ -334,6 +334,7 @@ ngOnInit(): void {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -346,6 +347,7 @@ ngOnInit(): void {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -985,5 +987,15 @@ ngOnInit(): void {
    */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Utiliza un Subject para notificar a todos los observables suscritos que deben completarse.
+   * Esto ayuda a evitar posibles fugas de memoria al completar el Subject y finalizar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

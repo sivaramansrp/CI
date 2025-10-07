@@ -21,7 +21,7 @@
     formControlName="selectControl"
     title="Seleccione una opción"
     (change)="handleChange($event)"
-    [ngClass]="{ required: isInvalid(), 'col-sm-9': isInline }"
+    [ngClass]="{ required: isInvalid(), 'col-sm-9': isInline, 'bg-color-disabled': bgColorDisabled }"
   >
     <option
       value="{{ primerOptionValue }}"

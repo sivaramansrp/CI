@@ -40,7 +40,7 @@
       <div class="col-md-8">
         <label for="localizacion">Localización*:</label>
         <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
-          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)"
+          maxlength="120" (input)="onLocalizacionInputChange($event)" libAlphaNumericOnly
           [ngClass]="esValido('datosGeneralis', 'localizacion') ? 'required' : ''" />
         <div
           *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.hasError('required') && formaComplimentos.get('datosGeneralis.localizacion')?.touched">
@@ -55,9 +55,9 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva"
-          [label]="'Opinión positiva del SAT'" [required]="true" [isDisabled]="true" name="opinionPositiva"
+          [label]="'Opinión positiva del SAT'" [bgColorDisabled]="true" [required]="true" name="opinionPositiva"
           [markTouched]="formaComplimentos.get('obligacionesFiscales.opinionPositiva')?.touched ?? false"></app-catalogo-select>
-      </div>
+      </div> 
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG"
           [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
@@ -86,11 +86,11 @@
     <ng-titulo titulo="Datos federatario(s) Constitución y modificaciones de la sociedad" />
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-12"> 
         <div class="col-12 mb-4">
           <label for="Nombre">Nombre del federatario que expide el documento*:</label>
           <input type="text" id="Nombre" name="Nombre" class="form-control" formControlName="nombreDelFederatario"
-            maxlength="120" [ngClass]="esValido('formaModificaciones', 'nombreDelFederatario') ? 'required' : ''" />
+            maxlength="120" [ngClass]="esValido('formaModificaciones', 'nombreDelFederatario') ? 'required' : ''" libUppercase/>
           <div
             *ngIf="formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.touched">
             <p class="mensaje-error">Este campo es obligatorio.</p>
@@ -411,6 +411,14 @@
 <section>
   <lib-notificaciones [notificacionInput]="eliminarUnoConfirmationNotificacion"
     (confirmacionModal)="confirmarEliminarUnoConfirmation($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (accionistasExtranjerosNotificacion) {
+  <section>
+  <lib-notificaciones [notificacionInput]="accionistasExtranjerosNotificacion"
+    (confirmacionModal)="confirmarAccionistasConfirmation($event)">
   </lib-notificaciones>
 </section>
 }
