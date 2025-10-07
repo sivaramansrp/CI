@@ -323,23 +323,23 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.transporteList = {
       catalogos: [],
       labelNombre: 'Tipo de transporte',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
     };
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
     };
     this.aduanaList = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
       required: true
     };
     this.contenedores = {
       catalogos: [],
       labelNombre: 'Tipo de equipo',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
     };
   }
 
