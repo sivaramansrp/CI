@@ -981,14 +981,11 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
                    const API_DATOS = doDeepCopy(response);
                   if(esValidArray(API_DATOS.datos)) {
                     const RESPONSE:SubfabricanteDireccionModelo[] = this.subfabricanteDatosService.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
+
+                    this.formularioDatosSubcontratista.reset();
                     this.formularioDatosSubcontratista.patchValue({
-                      rfc: '',
-                      estado: ''
-                    });
-                    this.formularioDatosSubcontratista.get('rfc')?.markAsPristine();
-                    this.formularioDatosSubcontratista.get('rfc')?.markAsUntouched();
-                    this.formularioDatosSubcontratista.get('estado')?.markAsPristine();
-                    this.formularioDatosSubcontratista.get('estado')?.markAsUntouched();
+                      rfc:'',
+                      estado:'-1'});
                     this.store.setPlantasBuscadas(RESPONSE);
                   } 
                 }
