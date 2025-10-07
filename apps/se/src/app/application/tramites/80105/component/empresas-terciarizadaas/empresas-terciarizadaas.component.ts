@@ -106,9 +106,10 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy, OnInit {
           }
       },
         (err) => {  
+        if(err.error.codigo==="01"){
           this.rfcError=true;
         }
-      );
+      });
   }
 
   /**
