@@ -22,10 +22,10 @@ import {
 } from '@angular/forms';
 import { REGEX_CAPTURA_CBP, REGEX_CAPTURA_IRS, REGEX_CAPTURA_USDA } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { HttpClient } from '@angular/common/http';
 import { ImportadorDestinoResponse } from '../../models/response/importador-destino-response.model'
 import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
 
@@ -79,14 +79,12 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
-  * @property {ImportadorDestinoResponse} informacionImportador - Información del importador en destino.
-  * Propiedad de entrada que recibe un objeto con la información del importador en destino.
-  * Se utiliza para llenar el formulario cuando está en modo de solo lectura.
-  * Permite mostrar los datos existentes del importador sin posibilidad de edición.
-  * @input
+   * @property {string} numFolio - Número de folio del trámite.
+   * Propiedad de entrada que recibe el número de folio asociado al trámite actual.
+   * Se utiliza para cargar y mostrar la información específica del importador en destino
    */
   @Input()
-  informacionImportador!: ImportadorDestinoResponse;
+  numeroFolio: string = '';
 
   /**
     * @property {ImportadorDestinoResponse} obtenerInformacionImportador - Información del importador en destino.
@@ -196,15 +194,14 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @param {ChangeDetectorRef} cdr - Referencia al ChangeDetectorRef para manejar cambios en la vista
    */
   constructor(
-    private ElegibilidadTextilesService: ElegibilidadTextilesService,
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private importeRecordService: ImporteRecordService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -297,12 +294,12 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
 
         CANTIDADCTRL.updateValueAndValidity();
       });
-
     if (this.formularioDeshabilitado) {
       this.importadorForm.disable();
       this.visualizarTipoIOR = false;
-      this.obtenerInformacionImportador = this.informacionImportador;
-      this.llenarInformacionFormulario(this.obtenerInformacionImportador);
+    }
+    if (this.numeroFolio && this.numeroFolio !== '') {
+      this.llenarInformacionFormulario(this.numeroFolio);
     }
   }
 
@@ -310,16 +307,34 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * Llena el formulario con la información del importador.
    * @param data ImportadorDestinoResponse
    */
-  llenarInformacionFormulario(data: ImportadorDestinoResponse): void {
-    this.importadorForm.patchValue({
-      tipoIOR: data.tipoIor,
-      cantidadTotalImportador: data.valor,
-      razonSocialImportador: data.razon_social,
-      domicilio: data.domicilio,
-      ciudadImportador: data.ciudad,
-      cpImportador: data.cp,
-      PaisImportador: data.pais
-    });
+  llenarInformacionFormulario(idFolio: string): void {
+    if (!idFolio) {
+      return;
+    }
+    this.evaluacionSolicitud.getDatosImportadorDestino(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.obtenerInformacionImportador = response.datos ?? {} as ImportadorDestinoResponse;
+            this.importadorForm.patchValue({
+              tipoIOR: this.obtenerInformacionImportador.tipoIor ?? '',
+              cantidadTotalImportador: this.obtenerInformacionImportador.valor ?? '',
+              razonSocialImportador: this.obtenerInformacionImportador.razon_social ?? '',
+              domicilio: this.obtenerInformacionImportador.domicilio ?? '',
+              ciudadImportador: this.obtenerInformacionImportador.ciudad ?? '',
+              cpImportador: this.obtenerInformacionImportador.cp ?? '',
+              PaisImportador: this.obtenerInformacionImportador.pais ?? 'ESTADOS UNIDOS DE AMERICA'
+            });
+          }
+          else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
   }
   /**
    * @method initActionFormBuild

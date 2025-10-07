@@ -35,6 +35,8 @@ import {
 } from '../../estados/elegibilidad-de-textiles.store';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
 import { FacturasTplAsociadaResponse } from '../../models/response/datos-factura-response.model';
@@ -101,12 +103,15 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   @Input()
   formularioDeshabilitado: boolean = false;
 
-  @Input()
-  informacionFacturasAsociadas!: FacturasTplAsociadaResponse;
+  // @Input()
+  // informacionFacturasAsociadas!: FacturasTplAsociadaResponse;
   /**
    * @property {FacturasTplAsociadaResponse} informacionFacturasAsociadas - Información de las facturas asociadas.
    */
   informacionFacturaAsociadas!: FacturasTplAsociadaResponse;
+
+  @Input()
+  numeroFolio: string = '';
 
   /**
    * @property {boolean} visualizarEvaluacion - Indica si se debe mostrar la evaluación.
@@ -403,6 +408,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private cdr: ChangeDetectorRef,
     private tramite120301: Tramite120301Store,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -471,10 +477,11 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       this.seccionStore.establecerFormaValida([false]);
     }
     if (this.formularioDeshabilitado) {
-      this.informacionFacturaAsociadas = this.informacionFacturasAsociadas;
-      this.llenarTablaFacturasAsociadas(this.informacionFacturaAsociadas);
       this.visualizarEvaluacion = false;
       this.formularioAsociacionFactura.disable();
+    }
+    if (this.numeroFolio && this.numeroFolio !== '') {
+      this.llenarTablaFacturasAsociadas(this.numeroFolio);
     }
   }
 
@@ -482,30 +489,47 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * Llena la información que se mostrará en la tabla de facturas asociadas.
    * @param data - Datos de la respuesta que contiene la información de las facturas asociadas.
    */
-  llenarTablaFacturasAsociadas(data: FacturasTplAsociadaResponse): void {
-    if (data.facturas_asociadas) {
-      this.facturasAsociadas = [
-        {
-          candidadAsociada: data.facturas_asociadas.cantidad_asociada.toString(),
-          numeroDeLaFactura: data.facturas_asociadas.factura_expedicion.num_factura,
-          razonSocial: data.facturas_asociadas.factura_expedicion.razon_social,
-          domicilio: data.facturas_asociadas.factura_expedicion.domicilio,
-          fechaExpedicionFactura: data.facturas_asociadas.factura_expedicion.fecha_expedicion,
-          cantidadTotal: data.facturas_asociadas.factura_expedicion.cantidad.toString(),
-          cantidadDisponible: data.facturas_asociadas.factura_expedicion.cantidad_disponible.toString(),
-          unidadMedida: data.facturas_asociadas.factura_expedicion.unidad_medida.descripcion,
-          valorDolares: data.facturas_asociadas.factura_expedicion.importe_dolares.toString(),
-          idFacturaExpedicion: data.facturas_asociadas.id_factura_expedicion,
-          idExpedicion: data.facturas_asociadas.id_expedicion
+  llenarTablaFacturasAsociadas(idFolio: string): void {
+    if (!idFolio) {
+      return;
+    }
+    this.evaluacionSolicitud.getFacturasAsociadasPorFolio(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.informacionFacturaAsociadas = response.datos ?? {} as FacturasTplAsociadaResponse;
+            this.facturasAsociadas = [
+              {
+                candidadAsociada: this.informacionFacturaAsociadas.facturas_asociadas.cantidad_asociada.toString(),
+                numeroDeLaFactura: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.num_factura,
+                razonSocial: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.razon_social,
+                domicilio: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.domicilio,
+                fechaExpedicionFactura: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.fecha_expedicion,
+                cantidadTotal: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.cantidad.toString(),
+                cantidadDisponible: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.cantidad_disponible.toString(),
+                unidadMedida: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.unidad_medida.descripcion,
+                valorDolares: this.informacionFacturaAsociadas.facturas_asociadas.factura_expedicion.importe_dolares.toString(),
+                idFacturaExpedicion: this.informacionFacturaAsociadas.facturas_asociadas.id_factura_expedicion,
+                idExpedicion: this.informacionFacturaAsociadas.facturas_asociadas.id_expedicion
+              }
+            ];
+            if (this.informacionFacturaAsociadas.resultado_equivalencia) {
+              this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.setValue(this.informacionFacturaAsociadas.resultado_equivalencia.cantidad_factura);
+              this.formularioAsociacionFactura.get('metrosCuadradosEquivalentes')?.setValue(this.informacionFacturaAsociadas.resultado_equivalencia.total_equivalente);
+              this.labelUnidad = this.informacionFacturaAsociadas.resultado_equivalencia.unidad_label;
+            }
+          }
+          else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
         }
-      ];
-    }
-    if (data.resultado_equivalencia) {
-      this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.setValue(data.resultado_equivalencia.cantidad_factura);
-      this.formularioAsociacionFactura.get('metrosCuadradosEquivalentes')?.setValue(data.resultado_equivalencia.total_equivalente);
-      this.labelUnidad = data.resultado_equivalencia.unidad_label;
-    }
+      });
   }
+
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo para capturar los datos de las facturas asociadas.
@@ -705,7 +729,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * y `metrosCuadradosEquivalentes` del formulario.
    * La suscripción se maneja con `takeUntil` para evitar fugas de memoria.
    * @returns {void} No retorna ningún valor.
- */
+  */
   setValoresCantidadTotal(): void {
     this.facturasAsociadasService
       .getFacturaTplTotalUnida(this.solicitudState.idExpedicion)
@@ -861,8 +885,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   }
 
   /**
-* Método que se ejecuta al ocultar el modal.
-*/
+  * Método que se ejecuta al ocultar el modal.
+  */
   onHidden(): void {
     this.mostrarModal = false;
   }

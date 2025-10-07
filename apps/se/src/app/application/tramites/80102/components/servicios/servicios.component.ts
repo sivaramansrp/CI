@@ -155,7 +155,12 @@ export class ServiciosComponent implements OnInit, OnDestroy,OnChanges {
    * @type {string}
    */
   tiempoPrograma: string = '';
-
+  /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
   /**
    * Configuración de la tabla de domicilios.
    * @type {ConfiguracionColumna<ServicioInmex>[]}
@@ -631,6 +636,19 @@ ngOnChanges(): void {
    * @method eliminarEmpresasNacionales
    */
   eliminarEmpresasNacionales(): void {
+      if (!this.empresasSeleccionados || this.empresasSeleccionados.length === 0) {
+    this.notificacionAgregarServicios = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona un registro.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
     const INDICE = this.datos.findIndex(
       (item: ServicioInmex) =>
         item.registroContribuyentes ===
@@ -716,6 +734,15 @@ ngOnChanges(): void {
    */
   agregarEmpresaExtranjera(): void {
     this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
+      this.formularioEmpresaExtranjera.value
+    );   
+    this.formularioEmpresaExtranjera.reset({
+      taxIdEmpresaExt: '',
+      nombreEmpresaExt: '',
+      entidadFederativaEmpresaExt: '',
+      direccionEmpresaExtranjera: ''
+    }); 
+      this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
       this.formularioEmpresaExtranjera.value
     );
   }

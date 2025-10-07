@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo,CatalogoSelectComponent,CatalogosSelect, REGEX_NUMEROS, REG_X, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, CatalogosSelect, REGEX_NUMEROS, REG_X, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
@@ -45,7 +45,7 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   /**
    * @property consultaDatos - Estado de consulta de datos para el componente
    */
@@ -126,7 +126,14 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
    */
   validationAttempted: boolean = false;
-
+  /** ID del trámite actual */
+  TramitesID: string = '110201';
+  /**
+   * Indica si el componente destinatario está actualmente activo.
+   * Este input se puede usar para alternar el estado activo del componente.
+   * @default false
+   */
+  @Input() active = false;
   /**
    * @constructor Constructor del componente DestinatarioComponent
    * @param registroService - Servicio para obtener datos de catálogos
@@ -144,7 +151,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery,
-    private elRef: ElementRef
+    private elRef: ElementRef,
+    private catalogoServices: CatalogoServices
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -172,10 +180,45 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
+   * Método del ciclo de vida que se llama cuando cambia cualquier propiedad enlazada por datos.
+   * 
+   * @param changes - Objeto de pares clave/valor, donde la clave es el nombre de la propiedad y el valor es un objeto {@link SimpleChanges} que contiene los valores actual y anterior.
+   * 
+   * Si la propiedad 'active' cambia y su valor actual es verdadero, este método dispara
+   * la obtención de información de país de destino y transporte para el destinatario.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['active']?.currentValue) {
+      this.getPaisDestinoDestinatario();
+      this.getTransporteDestinatario();
+    }
+  }
+
+  /**
    * @method onClick - Maneja el evento de clic para deshabilitar el formulario
    */
   onClick(): void {
     this.isDisabled = true;
+  }
+  
+  /**
+   * Maneja el evento de cambio para la selección de "Nación".
+   * Actualiza el store con la descripción de la nación seleccionada.
+   *
+   * @param event - Objeto del evento que contiene los detalles de la nación seleccionada, incluyendo su descripción.
+   */
+  onNacionChange(event: any): void {
+    this.store.setNacionDescripcion(event.descripcion);
+  }
+
+  /**
+   * Maneja el evento de cambio para la selección de "Transporte".
+   * Actualiza el store con la descripción del transporte seleccionado.
+   *
+   * @param event - Objeto del evento que contiene los detalles del transporte seleccionado, incluyendo su descripción.
+   */
+  onTransporteChange(event: any): void {
+    this.store.setTransporteDescripcion(event.descripcion);
   }
 
   /**
@@ -183,18 +226,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Obtiene los catálogos de países de destino y medios de transporte
    */
   ngOnInit(): void {
-    this.registroService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe((resp) => {
-        if (resp) {
-          this.registroService.actualizarEstadoFormulario(resp);
-        }
-      });
-
-    this.getPaisDestino();
-    this.getTransporte();
     this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
@@ -282,27 +313,29 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
       this.registroForm.enable();
     }
   }
-  /**
-   * @method getPaisDestino - Obtiene el catálogo de países de destino desde el servicio
-   */
-  getPaisDestino(): void {
-    this.registroService
-      .getPaisDestino()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        this.nacionOptions.catalogos = resp as Catalogo[];
-      });
-  }
+
 
   /**
-   * @method getTransporte - Obtiene el catálogo de medios de transporte desde el servicio
+   * Obtiene la lista de países de destino para el destinatario según el `TramitesID` actual.
+   * Este método llama al servicio `paisesCatalogo`, se suscribe al resultado y actualiza la
+   * propiedad `nacionOptions.catalogos` con los datos recibidos. La suscripción se cancela
+   * automáticamente cuando el componente se destruye.
    */
-  getTransporte(): void {
-    this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyed$))
-      .subscribe((resp): void => {
-        this.transporteOptions.catalogos = resp as Catalogo[];
-      });
+  getPaisDestinoDestinatario(): void {
+    this.catalogoServices.paisesCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+      this.nacionOptions.catalogos = res.datos ?? [];
+    });
+  }
+  /**
+   * Obtiene la lista de medios de transporte para el destinatario según el `TramitesID` actual.
+   * Este método llama al servicio `catalogoMedioTransporte`, se suscribe al resultado y actualiza la
+   * propiedad `transporteOptions.catalogos` con los datos recibidos. La suscripción se cancela
+   * automáticamente cuando el componente se destruye.
+   **/
+  getTransporteDestinatario(): void {
+    this.catalogoServices.catalogoMedioTransporte(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+      this.transporteOptions.catalogos = res.datos ?? [];
+    });
   }
 
   /**

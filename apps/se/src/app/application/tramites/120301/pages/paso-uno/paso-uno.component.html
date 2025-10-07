@@ -32,12 +32,12 @@
       @if(esDatosRespuesta){
       <app-constancia-del-registro #constanciaDelRegistroRef (mostrarTabs)="onMostrarTabs($event)"
         (errorValidacion)="alErrorDeValidacion($event)" [formularioDeshabilitado]="formularioDeshabilitado"
-        [detalleCupo]="detalles"></app-constancia-del-registro>
+        [numeroFolio]="numeroFolio"></app-constancia-del-registro>
       }
       } @case (3) {
       @if(esDatosRespuesta){
       <app-facturas-asociadas #facturasAsociadasRef [formularioDeshabilitado]="formularioDeshabilitado"
-        [informacionFacturasAsociadas]="informacionFacturasAsociadas"></app-facturas-asociadas>
+        [numeroFolio]="numeroFolio"></app-facturas-asociadas>
       }
       } @case (4) {
       @if(esDatosRespuesta){
@@ -47,12 +47,12 @@
       } @case (5) {
       @if(esDatosRespuesta){
       <app-historico-fabricantes #historicoFabricantesRef [formularioDeshabilitado]="formularioDeshabilitado"
-        [informacionHistorico]="[informacionHistorico]"></app-historico-fabricantes>
+        [numeroFolio]="numeroFolio"></app-historico-fabricantes>
       }
       } @case (6) {
       @if(esDatosRespuesta){
       <app-importador-en-destino #importadorEnDestinoRef [formularioDeshabilitado]="formularioDeshabilitado"
-        [informacionImportador]="informacionImportador"></app-importador-en-destino>
+        [numeroFolio]="numeroFolio"></app-importador-en-destino>
       }
       }
       }

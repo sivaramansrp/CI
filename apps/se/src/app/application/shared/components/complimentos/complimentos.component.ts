@@ -397,15 +397,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
+        opinionPositiva: [{ value: 1, disabled: true }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
         nombreDelFederatario: ['', [Validators.required, Validators.maxLength(120)]],
-        nombreDeNotaria: ['', [Validators.required, Validators.maxLength(10)]],
+        nombreDeNotaria: ['', [Validators.required]],
         estado: ['', Validators.required],
-        nombreDeActa: ['', [Validators.required, Validators.maxLength(10)]],
+        nombreDeActa: ['', [Validators.required]],
         fechaDeActa: ['', Validators.required],
         rfc: ['', [
           Validators.required,
@@ -463,6 +463,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       }
     })
   }
+
+  /**
+   * Limita la entrada de un campo de texto a un número máximo de caracteres numéricos.
+   * @param event Event del input
+   * @param maxLength 
+   */
+  onInputMaxLength(event: Event, maxLength: number): void { 
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
+}
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.

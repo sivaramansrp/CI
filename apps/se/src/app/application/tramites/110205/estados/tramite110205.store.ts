@@ -268,7 +268,7 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de productor.
    * @param values Valores a actualizar en el formulario.
    */
-  setAgregarFormDatosProductor(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setAgregarFormDatosProductor(values: { [key: string]: string | number | boolean | null }): void {
     this.update((state) => ({
       agregarDatosProductorFormulario: {
         ...state.agregarDatosProductorFormulario,

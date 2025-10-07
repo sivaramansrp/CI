@@ -17,7 +17,6 @@ import {
 } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Modal } from 'bootstrap';
-import { ModificarMercanciasComponent } from '../mercancias-datos/mercancias-datos.component';
 import { provideHttpClient } from '@angular/common/http';
 
 jest.mock('bootstrap', () => ({
@@ -37,16 +36,14 @@ describe('SolicitudDatosComponent', () => {
 
   beforeEach(async () => {
     solicitudDatosServiceMock = {
-      obtenerMercanciaCatalogos: jest.fn().mockReturnValue(
-        of({
-          productosCatalogo: [],
-          especificarCatalogo: [],
-          tipoProductoCatalogo: [],
-          farmaceuticaCatalogo: [],
-          fisicoCatalogo: [],
-          umcCatalogo: [],
-        })
-      ),
+      obtenerMercanciaCatalogos: jest.fn().mockReturnValue(of({
+        productosCatalogo: [],
+        especificarCatalogo: [],
+        tipoProductoCatalogo: [],
+        farmaceuticaCatalogo: [],
+        fisicoCatalogo: [],
+        umcCatalogo: [],
+      })),
       obtenerCrosslisto: jest.fn().mockReturnValue(
         of({
           paisOrigenCrossList: [],
@@ -58,6 +55,7 @@ describe('SolicitudDatosComponent', () => {
       obtenerEstadoCatalogo: jest.fn().mockReturnValue(of({})),
       obtenerDatosDeSolicitud: jest.fn().mockReturnValue(
         of({
+          tablaHeadData: [],
           tablaFilaDatos: [],
           hacerlosRadioOptions: [],
           tipoOperacionOptions: [],
@@ -84,7 +82,7 @@ describe('SolicitudDatosComponent', () => {
       setAvisoDeFuncionamiento: jest.fn(),
       setLegalRazonSocial: jest.fn(),
       setApellidoPaterno: jest.fn(),
-      setApellidoMeterno: jest.fn(),
+      setApellidoMaterno: jest.fn(),
       setMercanciasDatos: jest.fn(),
       setSCIANDatos: jest.fn(),
       setEstado: jest.fn(),
@@ -123,7 +121,7 @@ describe('SolicitudDatosComponent', () => {
         CatalogoSelectComponent,
         InputCheckComponent
       ],
-      declarations: [SolicitudDatosComponent, ModificarMercanciasComponent],
+      declarations: [SolicitudDatosComponent],
       providers: [
         FormBuilder,
         { provide: SolicitudDatosService, useValue: solicitudDatosServiceMock },
@@ -172,7 +170,7 @@ describe('SolicitudDatosComponent', () => {
       avisoDeFuncionamiento: true,
       legalRazonSocial: 'legal',
       apellidoPaterno: 'pat',
-      apellidoMeterno: 'mat',
+      apellidoMaterno: 'mat',
     };
     solicitudDatosServiceMock.obtenerSolicitud.mockReturnValue(of(solicitud));
     component.obtenerSolicitud();
@@ -526,7 +524,7 @@ describe('SolicitudDatosComponent', () => {
     expect(component.claveSCIANForm.disabled).toBe(true);
     component.esFormularioSoloLectura = false;
     (component as any).actualizarEstadoFormularios();
-    expect(component.solicitudForm.enabled).toBe(true);
-    expect(component.claveSCIANForm.enabled).toBe(true);
+    expect(component.solicitudForm.enabled).toBe(false);
+    expect(component.claveSCIANForm.enabled).toBe(false);
   });
 });

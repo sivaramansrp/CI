@@ -4,7 +4,7 @@ import { CertificadoOrigenComponent } from '../../components/certificado-origen/
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Subject } from 'rxjs';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './paso-uno.component.scss',
   standalone: true,
   imports: [CommonModule, SolicitanteComponent,
-    DatosCertificadoComponent, HistoricoProductoresComponent,
+    DatosCertificadoComponent, HistProductoresComponent,
     DestinatarioComponent, CertificadoOrigenComponent
   ]
 })
@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 /** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
  * Permite gestionar sus métodos y propiedades.
  */
-@ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
+@ViewChild('HistProductoresComponent', { static: false }) histProductoresComponent!: HistProductoresComponent;
 
 /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
  * Proporciona acceso a sus métodos y propiedades.
@@ -178,8 +178,8 @@ public esDatosRespuesta: boolean = false;
       isValid = false;
     }
 
-    if (this.historicoProductoresComponent) {
-      if (!this.historicoProductoresComponent.validarFormulario()) {
+    if (this.histProductoresComponent) {
+      if (!this.histProductoresComponent.validarFormulario()) {
         isValid = false;
       }
     } else {

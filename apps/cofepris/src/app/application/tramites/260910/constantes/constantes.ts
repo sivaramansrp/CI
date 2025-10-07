@@ -6,7 +6,7 @@ export const TEXTOS = {
      * Texto relacionado con la funcionalidad de solicitudes.
      * Indica que al hacer doble clic en una solicitud, se copian los datos a otra solicitud.
      */
-    TEXTOS_SOLICITUD: 'Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.',
+    TEXTOS_SOLICITUD: `<div style="text-align: center;">Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</div>`,
   
     /**
      * Texto relacionado con los manifiestos.
