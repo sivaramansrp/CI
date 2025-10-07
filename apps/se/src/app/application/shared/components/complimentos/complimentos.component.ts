@@ -1,3 +1,4 @@
+import { AlphaNumericOnlyDirective } from '@libs/shared/data-access-user/src/tramites/directives/alpha-numeric-only/alpha-numeric-only.directive';
 /* eslint-disable class-methods-use-this */
 /**
  * Importaciones necesarias para el componente de empresas.
@@ -15,6 +16,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  UppercaseDirective,
   ValidacionesFormularioService,
   WEBPAGE,
 } from '@libs/shared/data-access-user/src';
@@ -80,7 +82,9 @@ import { TramiteStore } from '../../../estados/tramite.store';
     CatalogoSelectComponent,
     SelectPaisesComponent,
     InputFechaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    AlphaNumericOnlyDirective,
+    UppercaseDirective
   ],
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
@@ -1353,6 +1357,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * Maneja la confirmación de la notificación para accionistas extranjeros.
+   * Si el usuario confirma, elimina la notificación correspondiente.
+   * @param confirmar Indica si el usuario confirmó la notificación.
+   */
+  confirmarAccionistasConfirmation(confirmar: boolean): void {
+    if (confirmar) {
+      if (this.accionistasExtranjerosNotificacion) {
+        this.accionistasExtranjerosNotificacion = undefined as unknown as Notificacion;
+      }
+    }
+  }
+
+  /**
  * Maneja la confirmación de la notificación para eliminar registros.
  * Si el usuario confirma, elimina la notificación correspondiente.
  * @param confirmar Indica si el usuario confirmó la notificación.
@@ -1516,9 +1533,11 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
     if (VALOR) {
-      CONTROL?.setValue(VALOR, { emitEvent: true });
-      CONTROL?.markAsTouched({ onlySelf: true });
-      CONTROL?.updateValueAndValidity();
+      const NEW_VALUE = campo === 'taxId' ? VALOR.toUpperCase() : VALOR;
+      if (CONTROL.value !== NEW_VALUE) {
+        CONTROL.setValue(NEW_VALUE, { emitEvent: false });
+      }
+      CONTROL.markAsTouched({ onlySelf: true });
     } else {
       CONTROL?.markAsDirty();
       CONTROL?.markAsTouched();
