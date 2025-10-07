@@ -13,7 +13,7 @@ import { Mercancia } from '../models/configuracion-columna.model';
  * Este estado incluye catálogos, selecciones, formularios dinámicos, listas de mercancía, datos del destinatario y banderas de validación.
  */
 export interface TramiteState {
-   idSolicitud: number | null;
+   idSolicitud: any;
    calle1:string;
    numeroLetra1:string;
   /** Lista de idiomas disponibles como catálogo */
@@ -170,7 +170,7 @@ export interface TramiteState {
  * Contiene datos relacionados con la mercancía, información del solicitante, origen/destino y otros campos asociados al formulario.
  */
 export interface Solicitud110202State {
-     idSolicitud: number | null;
+     idSolicitud: any;
    calle1:string;
    numeroLetra1:string;
   /** Régimen de la mercancía (por ejemplo, definitivo, temporal) */
@@ -1055,7 +1055,7 @@ constructor() {
    *
    * @param idSolicitud - El ID de la solicitud que se va a guardar.
    */
-  public setIdSolicitud(idSolicitud: number): void {
+  public setIdSolicitud(idSolicitud: any): void {
     this.update((state) => ({
       ...state,
       idSolicitud,

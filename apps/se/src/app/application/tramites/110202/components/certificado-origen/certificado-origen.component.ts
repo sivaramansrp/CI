@@ -397,7 +397,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
   validationAttempted: boolean = false;
 
   /** ID del trámite actual */
-  TramitesID: string = '110201';
+  TramitesID: string = '110202';
 
   /** Tratado asociado al certificado de origen */
   tratadoAsociado: string = 'TITRAC.TA';

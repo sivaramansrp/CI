@@ -242,7 +242,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
  */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.cargarIdioma('110201');
+    this.cargarIdioma(this.idProcedimiento.toString());
     this.cargarEntidadFederativa();
   }
   /**
@@ -388,7 +388,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   cargarEntidadFederativa(): void {
     this.catalogoServices
-      .entidadesFederativasCatalogo('110201')
+      .entidadesFederativasCatalogo(this.idProcedimiento.toString())
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data) => {
@@ -421,7 +421,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   getRepresentacionDatos(cveEntidad: { clave: string; descripcion: string }): void {
     this.catalogoServices
-      .representacionFederalCatalogo('110201', cveEntidad.clave)
+      .representacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad.clave)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
         const DESCRIPCION_ENTIDAD: string = (cveEntidad.descripcion ?? '')

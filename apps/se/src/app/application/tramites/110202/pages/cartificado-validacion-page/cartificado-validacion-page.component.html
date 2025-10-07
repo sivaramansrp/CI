@@ -20,14 +20,14 @@
       @switch (indice) { @case (1) {
      <app-paso-uno (alertaEvento)="mostrarAlerta = $event"></app-paso-uno>
       } @case (2) {
-      <paso-firma [idSolicitud]="202812727" [procedure]="110202"
+      <paso-firma [idSolicitud]="this.solicitudState.idSolicitud" [procedure]="110202"
         [procedureUrl]="'certificado-validacion/validacion'"></paso-firma>
       } }
 
       <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+      ></btn-continuar> 
          @if (mostrarAlerta) {
    <ng-alert
           [CONTENIDO]="TEXTOS.ADJUNTAR"

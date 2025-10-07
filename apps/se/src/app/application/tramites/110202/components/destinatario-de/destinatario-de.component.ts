@@ -330,7 +330,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    */
   cargarMedioDeTransporte(): void {
     this.destinatarioService
-      .getTransporte('110201')
+      .getTransporte('110202')
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => response.datos || [])

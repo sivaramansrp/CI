@@ -1,7 +1,7 @@
 import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PasoFirmaComponent,WizardComponent } from '@libs/shared/data-access-user/src';
-import { Subject, take, takeUntil } from 'rxjs';
+import { map, Subject, take, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
@@ -134,6 +134,14 @@ export class CartificadoValidacionPageComponent {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([res]);
     });
+        this.tramiteQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          ).subscribe();
+      
   }
   /**
    * Selecciona una pestaña del asistente (wizard).

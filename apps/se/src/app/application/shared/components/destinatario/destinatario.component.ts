@@ -255,7 +255,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   getPaisDestino(): void {
-    this.destinatarioService.getPaisDestino('110201').subscribe((data) => {
+    this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
       this.paisDestinDestinatario = data as Catalogo[];
     });
   }
