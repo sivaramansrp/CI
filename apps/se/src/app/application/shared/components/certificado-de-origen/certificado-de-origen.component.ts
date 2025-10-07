@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -14,6 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from "ngx-toastr";
 
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
+import { RADIO_OPTIONS } from '../../../tramites/110214/constants/validar-inicialmente-certificado.enum';
 
 
 /**
@@ -41,7 +42,7 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final:',
+  labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
 };
@@ -75,7 +76,8 @@ export const FECHA_FIN = {
     AlertComponent,
     NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective),
-  ],
+    InputRadioComponent
+],
   templateUrl: './certificado-de-origen.component.html',
   providers: [ToastrService],
   styleUrl: './certificado-de-origen.component.scss'
@@ -90,6 +92,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
 
   /**
+ * @property {boolean} domTercerOperador
+ * @description
+ * Propiedad de entrada que controla la visualización del domicilio del tercer operador.
+ * Cuando es true, muestra los campos relacionados con el domicilio del tercer operador.
+ */
+@Input() domTercerOperador: boolean = false;
+  /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
    */
@@ -100,6 +109,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {boolean}
    */
   @Input() operador!: boolean;
+
+
+    /**
+     * Indica si el componente está en modo de solo lectura.
+     */
+   radioOptions = RADIO_OPTIONS;
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -493,7 +508,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder,private service: CertificadoValidacionService) {
+  constructor(private fb: FormBuilder,private service: CertificadoValidacionService,private validacionesService: ValidacionesFormularioService) {
 
     this.actualizarDatosFormularioSolicitud();
   }
@@ -519,20 +534,20 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
       nombreComercialForm: ['', [Validators.maxLength(200)]],
       fechaInicioInput: [''],
       fechaFinalInput: [''],
-      nombres: ['', [Validators.maxLength(20)]],
-      primerApellido: ['', [Validators.maxLength(20)]],
+      nombres: ['', [Validators.required,Validators.maxLength(20)]],
+      primerApellido: ['', [Validators.required,Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.required, Validators.maxLength(30)]],
-      razonSocial: [''],
-      calle: ['', [Validators.maxLength(90)]],
-      numeroLetra: ['', [Validators.maxLength(30)]],
-      numeroLetras: ['', [Validators.maxLength(30)]],
+      razonSocial: ['',Validators.required],
+      calle: ['', [Validators.required,Validators.maxLength(90)]],
+      numeroLetra: ['', [Validators.required,Validators.maxLength(30)]],
+      numeroLetras: ['', [Validators.required,Validators.maxLength(30)]],
       pais: [''],
-      ciudad: [''],
-      lada: [''],
-      telefono: [''],
+      ciudad: ['',Validators.required],
+      lada: ['',Validators.required],
+      telefono: ['',Validators.required],
       fax: [''],
-      correo: [''],
+      correo: ['',Validators.required],
       correoElectronico: [''],
       // Nuevos controles de formulario para el procedimiento 110222
       calle1: ['',Validators.required],
@@ -573,7 +588,16 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
     CALLE.updateValueAndValidity();
     NUMERO_LETRA.updateValueAndValidity();
   }
-
+  /**
+   * Valida un campo del formulario.
+   * 
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
    /**
    * method loadComboUnidadMedida
    * description Carga la lista de derechos desde el servicio.

@@ -175,7 +175,9 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado*:</label>
+        <label class="form-label">Estado<span 
+              [ngClass]="{'text-danger': agregarFacturadorForm.get('estado')?.touched && agregarFacturadorForm.get('estado')?.invalid}"
+            >*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -197,12 +199,17 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente:</label>
+        <label class="form-label">Código postal o equivalente<span
+    *ngIf="idProcedimiento === 260911"
+    [ngClass]="agregarFacturadorForm.controls['codigoPostal'].errors?.['required'] && agregarFacturadorForm.controls['codigoPostal'].touched ? 'text-danger' : ''"
+    >*</span
+  >:</label>
         <input
           type="text"
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
+          [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
         />
         <div class="text-danger">
            <small
@@ -211,6 +218,18 @@
             Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
+        <div class="text-danger" *ngIf="idProcedimiento === 260911">
+          <small
+            *ngIf="agregarFacturadorForm.controls['codigoPostal'].errors?.['required'] && agregarFacturadorForm.controls['codigoPostal'].touched"
+          >
+            Este campo es obligatorio
+          </small>
+          <small
+            *ngIf="agregarFacturadorForm.controls['codigoPostal'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
+      </div>
       </div>
     </div>
     @if(chequeoValidacionAlGuardar) {

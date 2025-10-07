@@ -1,4 +1,4 @@
-import { Catalogo, CertificadoDisponibles, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CertificadoDisponibles, ConsultaioQuery, doDeepCopy, esValidArray, esValidObject, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 /**
  * @descripcion
@@ -78,7 +79,8 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private tramite110210Store: Tramite110210Store, 
     private tramite110210Query: Tramite110210Query,
     private consultaioQuery: ConsultaioQuery,
-    private certificadoService: CertificadoDisponiblesService
+    private certificadoService: CertificadoDisponiblesService,
+    private complimentosService: ComplimentosService
   ) {
     
      this.consultaioQuery.selectConsultaioState$
@@ -168,13 +170,17 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   obtenerPaisBloque(): void {
-    this.service.getPaisBloque().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: Catalogo[]) => {
-        this.paisBloque = data;
-      }
-    );
+    this.complimentosService.getPaisBloque().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.paisBloque = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
+      });
+    
   }
 
   /**
@@ -189,13 +195,16 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   obtenerTratadoAcuerdo(): void {
-    this.service.getTratadoAcuerdo().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.tratadoAcuerdo = data;
-      }
-    );
+    this.complimentosService.getTratadoAcuerdo().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.tratadoAcuerdo = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
+      });
   }
 
   /**

@@ -8,7 +8,9 @@ import {
   Catalogo,
   CatalogosSelect,
   REGEX_CORREO,
+  REGEX_LOCALIDAD,
   TablaSeleccion,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -23,7 +25,6 @@ import {
   REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
   REGEX_RFC,
   REGEX_SOLO_NUMEROS,
-  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
   DatosDeSolicitud,
@@ -237,6 +238,11 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   seleccionadaMercancia!: Mercancia | null;
 
   /**
+   * Indica si se muestra el botón de acción en el componente.
+   */
+  mostrarBoton: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param solicitudDatosService Servicio para datos de solicitud
    * @param solicitud260910Store Almacén para estado de solicitud
@@ -329,14 +335,14 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
-      estado: [this.solicitud260910State.estado, [Validators.required]],
+      estado: [{ value: this.solicitud260910State.estado, disabled: true }, [Validators.required]],
       municipio: [
         { value: this.solicitud260910State.municipio, disabled: true },
         [Validators.required, Validators.maxLength(120)],
       ],
       localidad: [
         { value: this.solicitud260910State.localidad, disabled: true },
-        Validators.maxLength(120),
+        [Validators.maxLength(120), Validators.pattern(REGEX_LOCALIDAD)],
       ],
       colonia: [
         { value: this.solicitud260910State.colonia, disabled: true },
@@ -358,16 +364,16 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
-      avisoDeFuncionamiento: [this.solicitud260910State.avisoDeFuncionamiento],
+      avisoDeFuncionamiento: [{ value: this.solicitud260910State.avisoDeFuncionamiento, disabled: true }],
       licenciaSanitaria: [
         { value: this.solicitud260910State.licenciaSanitaria, disabled: true },
       ],
       liveFreshFrozen: [this.solicitud260910State.liveFreshFrozen],
-      regimen: [this.solicitud260910State.regimen, [Validators.required]],
-      aduana: [this.solicitud260910State.aduana, [Validators.required]],
-      hacerlos: [this.solicitud260910State.hacerlos, [Validators.required]],
+      regimen: [{ value: this.solicitud260910State.regimen, disabled: true }, [Validators.required]],
+      aduana: [{ value: this.solicitud260910State.aduana, disabled: true }, [Validators.required]],
+      hacerlos: [{ value: this.solicitud260910State.hacerlos, disabled: true }, [Validators.required]],
       rfc: [
-        this.solicitud260910State.rfc,
+        { value: this.solicitud260910State.rfc, disabled: true },
         [Validators.required, Validators.maxLength(13)],
       ],
       legalRazonSocial: [
@@ -378,11 +384,11 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         { value: this.solicitud260910State.apellidoPaterno, disabled: true },
         [Validators.required, Validators.maxLength(30)],
       ],
-      apellidoMeterno: [
-        { value: this.solicitud260910State.apellidoMeterno, disabled: true },
+      apellidoMaterno: [
+        { value: this.solicitud260910State.apellidoMaterno, disabled: true },
         [Validators.maxLength(30)],
       ],
-      manifesto: [this.solicitud260910State.manifesto],
+      manifesto: [{ value: this.solicitud260910State.manifesto, disabled: true }],
     });
 
     this.claveSCIANForm = this.fb.group({
@@ -424,13 +430,16 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
             rfc: this.solicitud260910State.rfc,
             legalRazonSocial: this.solicitud260910State.legalRazonSocial,
             apellidoPaterno: this.solicitud260910State.apellidoPaterno,
-            apellidoMeterno: this.solicitud260910State.apellidoMeterno,
+            apellidoMaterno: this.solicitud260910State.apellidoMaterno,
             manifesto: this.solicitud260910State.manifesto,
           });
           this.claveSCIANForm.patchValue({
             claveSCIAN: this.solicitud260910State.claveSCIAN,
             claveSCIANDesc: this.solicitud260910State.claveSCIANDesc,
           });
+          if (this.solicitud260910State.tipoOperacion) {
+            this.actualizarEstadoFormulario();
+          }
           this.mercanciasDatos = this.solicitud260910State.mercanciasDatos;
           this.SCIANDatos = this.solicitud260910State.SCIANDatos;
         })
@@ -454,6 +463,13 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: Solicitud) => {
+          this.solicitud260910Store.setRfc(respuesta.rfc);
+          this.solicitud260910Store.setLicenciaSanitaria(respuesta.licenciaSanitaria);
+          this.solicitud260910Store.setRegimen(respuesta.regimen);
+          this.solicitud260910Store.setAduana(respuesta.aduana);
+          this.solicitud260910Store.setEstado(respuesta.estado);
+          this.solicitud260910Store.setHacerlos(respuesta.hacerlos);
+          this.solicitud260910Store.setManifesto(respuesta.manifesto);
           this.solicitud260910Store.setRfcSanitario(respuesta.rfcSanitario);
           this.solicitud260910Store.setRazonSocial(respuesta.razonSocial);
           this.solicitud260910Store.setCorreoElectronico(
@@ -475,8 +491,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           this.solicitud260910Store.setApellidoPaterno(
             respuesta.apellidoPaterno
           );
-          this.solicitud260910Store.setApellidoMeterno(
-            respuesta.apellidoMeterno
+          this.solicitud260910Store.setApellidoMaterno(
+            respuesta.apellidoMaterno
           );
         },
       });
@@ -709,32 +725,26 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   setTipoOperacion(evento: number | string): void {
     this.solicitud260910Store.setTipoOperacion(evento);
+    this.actualizarEstadoFormulario();
+  }
+
+  /**
+   * Actualiza el estado de los formularios según el modo de solo lectura.
+   */
+  actualizarEstadoFormulario(): void {
     if (this.solicitudForm.get('tipoOperacion')?.value === 'PRO') {
-      this.solicitudForm.get('observaciones')?.disable();
-      this.solicitudForm.get('rfcSanitario')?.disable();
-      this.solicitudForm.get('razonSocial')?.disable();
-      this.solicitudForm.get('correoElectronico')?.disable();
-      this.solicitudForm.get('codigoPostal')?.disable();
-      this.solicitudForm.get('estado')?.disable();
-      this.solicitudForm.get('municipio')?.disable();
-      this.solicitudForm.get('localidad')?.disable();
-      this.solicitudForm.get('colonia')?.disable();
-      this.solicitudForm.get('calle')?.disable();
-      this.solicitudForm.get('lada')?.disable();
-      this.solicitudForm.get('telefono')?.disable();
-    } else {
+      this.solicitudForm.disable();
+      this.solicitudForm.get('tipoOperacion')?.enable();
+      this.solicitudForm.get('rfc')?.enable();
       this.solicitudForm.get('observaciones')?.enable();
-      this.solicitudForm.get('rfcSanitario')?.enable();
-      this.solicitudForm.get('razonSocial')?.enable();
-      this.solicitudForm.get('correoElectronico')?.enable();
-      this.solicitudForm.get('codigoPostal')?.enable();
-      this.solicitudForm.get('estado')?.enable();
-      this.solicitudForm.get('municipio')?.enable();
-      this.solicitudForm.get('localidad')?.enable();
-      this.solicitudForm.get('colonia')?.enable();
-      this.solicitudForm.get('calle')?.enable();
-      this.solicitudForm.get('lada')?.enable();
-      this.solicitudForm.get('telefono')?.enable();
+      this.mostrarBoton = false;
+    } else {
+      this.solicitudForm.enable();
+      this.solicitudForm.get('avisoDeFuncionamiento')?.disable();
+      this.solicitudForm.get('legalRazonSocial')?.disable();
+      this.solicitudForm.get('apellidoPaterno')?.disable();
+      this.solicitudForm.get('apellidoMaterno')?.disable();
+      this.mostrarBoton = true;
     }
   }
 
@@ -936,9 +946,6 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.solicitudForm.disable();
       this.claveSCIANForm.disable();
-    } else {
-      this.solicitudForm.enable();
-      this.claveSCIANForm.enable();
     }
   }
 }

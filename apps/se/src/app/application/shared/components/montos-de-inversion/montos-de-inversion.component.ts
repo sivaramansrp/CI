@@ -6,9 +6,9 @@ import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 
 import { CATALOGO_TIPO, MontoDeInversion } from '../../constantes/complementar-planta.enum';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MONTOS_DE_INVERSION } from '../../constantes/montos-de-inversion.enum';
@@ -87,6 +87,12 @@ export class MontosDeInversionComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
   @Output() cerrarPopup = new EventEmitter<void>();
+
+/**  
+ * Evento de salida que emite una lista de montos de inversión al componente padre.
+ */
+  @Output() obtenerMontosInversionList: EventEmitter<MontoDeInversion[]> = new EventEmitter<MontoDeInversion[]>();
+
   /**
    * Constructor del componente.
    * @constructor
@@ -174,11 +180,26 @@ export class MontosDeInversionComponent implements OnInit {
       .subscribe();
     this.montosDeInversionForm = this.fb.group({
       tipos: [this.solicitudState.tipos],
-      cantidad: [this.solicitudState.cantidad],
-      descripsion: [this.solicitudState.descripsion],
-      mnx: [this.solicitudState.mnx],
+      cantidad: [this.solicitudState.cantidad, [Validators.required]],
+      descripsion: [this.solicitudState.descripsion, [Validators.required , Validators.maxLength(1000)]],
+      mnx: [
+        this.solicitudState.mnx, [ Validators.required]
+      ],
     });
   }
+
+  /**
+   * Maneja el evento de entrada y limita la longitud del texto.
+   * @param event Evento del input
+   * @param maxLength Longitud máxima permitida
+   */
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.montosDeInversionForm.get(controlPath)?.setValue(value, { emitEvent: false });
+}
   /**
      * Método que actualiza el store con los valores del formulario.
      * 
@@ -195,6 +216,7 @@ export class MontosDeInversionComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
+    this.obtenerMontosInversionList.emit(this.montosDeInversionDatos);
     this.cerrarPopup.emit();
   }
 }

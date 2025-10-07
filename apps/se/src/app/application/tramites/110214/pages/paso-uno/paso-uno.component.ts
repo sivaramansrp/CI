@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Subject } from 'rxjs';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
@@ -19,23 +19,62 @@ import { takeUntil } from 'rxjs';
   styleUrl: './paso-uno.component.scss',
   standalone: true,
   imports: [CommonModule, SolicitanteComponent,
-    DatosCertificadoComponent, HistoricoProductoresComponent,
+    DatosCertificadoComponent, HistProductoresComponent,
     DestinatarioComponent, CertificadoOrigenComponent
   ]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
-  @ViewChild(DestinatarioComponent) destinatarioComponent!: DestinatarioComponent;
-  @ViewChild(HistoricoProductoresComponent) historicoProductoresComponent!: HistoricoProductoresComponent;
-  @ViewChild(CertificadoOrigenComponent) certificadoOrigenComponent!: CertificadoOrigenComponent;
+  
+/**
+ * Referencia al componente 'Solicitante' en la plantilla.
+ * Permite acceder a sus propiedades y métodos desde el componente padre.
+ */
+@ViewChild('Solicitante', { static: false }) solicitante!: SolicitanteComponent;
 
-  indice: number = 1;
-  public tramiteState!: Tramite110214State;
-  destroyNotifier$: Subject<void> = new Subject();
-  consultaDatos!: ConsultaioState;
-  public esDatosRespuesta: boolean = false;
+/** Referencia al componente 'DatosCertificadoComponent' en la plantilla.
+ * Permite interactuar con sus métodos y propiedades.
+ */
+@ViewChild('DatosCertificadoComponent', { static: false }) datosCertificadoComponent!: DatosCertificadoComponent;
 
+/** Referencia al componente 'DestinatarioComponent' en la plantilla.
+ * Facilita el acceso a sus funcionalidades desde este componente.
+ */
+@ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: DestinatarioComponent;
+
+/** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
+ * Permite gestionar sus métodos y propiedades.
+ */
+@ViewChild('HistProductoresComponent', { static: false }) histProductoresComponent!: HistProductoresComponent;
+
+/** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+ * Proporciona acceso a sus métodos y propiedades.
+ */
+@ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoOrigenComponent;
+
+/** Índice que representa la pestaña activa en el componente. */
+indice: number = 1;
+
+/** Estado del trámite actual, utilizado para almacenar y gestionar datos relacionados con el trámite. */
+public tramiteState!: Tramite110214State;
+
+/** Notificador para destruir observables y evitar fugas de memoria. */
+destroyNotifier$: Subject<void> = new Subject();
+
+/** Estado de la consulta, utilizado para almacenar los datos obtenidos de la consulta. */
+consultaDatos!: ConsultaioState;
+
+/** Bandera que indica si los datos de la consulta ya están disponibles. */
+public esDatosRespuesta: boolean = false;
+
+/**
+ * Constructor del componente.
+ * 
+ * @param store 
+ * @param tramiteQuery 
+ * @param consultaioQuery 
+ * @param validarInicialmenteCertificadoService 
+ */
+ 
   constructor(
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query,
@@ -122,13 +161,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    if (this.datosCertificadoComponent) {
-      if (!this.datosCertificadoComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
+  if (!this.datosCertificadoComponent) {
+  console.error('DatosCertificadoComponent is not loaded');
+  isValid = false;
+} else {
+  if (!this.datosCertificadoComponent.validarFormulario()) {
+    isValid = false;
+  }
+}
 
     if (this.destinatarioComponent) {
       if (!this.destinatarioComponent.validarFormulario()) {
@@ -138,8 +178,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    if (this.historicoProductoresComponent) {
-      if (!this.historicoProductoresComponent.validarFormulario()) {
+    if (this.histProductoresComponent) {
+      if (!this.histProductoresComponent.validarFormulario()) {
         isValid = false;
       }
     } else {

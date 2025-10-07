@@ -7,19 +7,47 @@
           <div class="form-group">
             <label class="form-label" for="cantidadModificar">Cantidad:</label>
             <input class="form-control" type="text" id="cantidadModificar" formControlName="cantidadModificar"
-              appUppercase aria-labelledby="cantidad" maxlength="18"
+              appUppercase aria-labelledby="cantidad" [maxlength]="18"
               (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadModificar')" />
             <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['cantidadModificar'].invalid" class="text-danger">
               <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('required')">Cantidad
                 es obligatoria.</small>
               <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('pattern')">Solo se
                 permiten números.</small>
-              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('maxlength')">Máximo
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('maxlength')&&idProcedominto!==idNumeroProcedimiento">Máximo
                 18 caracteres.</small>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        @if(delaMercancia){
+           <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="fraccionArancelariaTIGIE">Fracción arancelaria TIGIE:</label>
+            <input class="form-control" type="text" id="fraccionArancelariaTIGIE" formControlName="fraccionArancelariaTIGIE"
+              appUppercase aria-labelledby="fraccionArancelariaTIGIE" [maxlength]="18"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionArancelariaTIGIE')" />
+            <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['fraccionArancelariaTIGIE'].invalid" class="text-danger">
+              <small *ngIf="partidasDelaMercanciaForm.controls['fraccionArancelariaTIGIE'].hasError('required')">Fracción arancelaria TIGIE
+                es obligatoria.</small>
+              <small *ngIf="partidasDelaMercanciaForm.controls['fraccionArancelariaTIGIE'].hasError('pattern')">Solo se
+                permiten números.</small>
+              <small *ngIf="partidasDelaMercanciaForm.controls['fraccionArancelariaTIGIE'].hasError('maxlength')">Máximo
+                18 caracteres.</small>
+            </div>
+          </div>
+          </div>
+          <div class="col-md-4">
+                   <app-catalogo-select
+          [catalogo]="elementosDeBloque"
+          [label]="''"
+          [isDisabled]="esFormularioSoloLectura"
+          [placeholder]="'Selecciona una fracción'"
+          formControlName="catalogo"
+        ></app-catalogo-select> 
+            </div>
+        }
+        @else{
+             <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="descripcion">Descripción:</label>
             <textarea class="form-control height" cols="55" rows="2" id="descripcion"
@@ -57,7 +85,51 @@
             </div>
           </div>
         </div>
+      }
+        </div>
+        @if(delaMercancia){
+        <div class="row mt-4" >
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="descripcion">Descripción:</label>
+            <textarea class="form-control height" cols="55" rows="2" id="descripcion"
+              formControlName="descripcionModificar" aria-labelledby="descripcion"
+              [maxlength]="245"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionModificar')"></textarea>
+            <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['descripcionModificar'].invalid" class="text-danger">
+              <small *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('required')">Descripción
+                es obligatoria.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('maxlength')">La descripción no puede ser mayor de 1000 caracteres.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="valorPartidaUSD">Valor partida USD:</label>
+            <input class="form-control" type="text" id="valorPartidaUSD"  title="En caso de no contar con Valor Factura proporcionar el Valor Estimado
+            " [maxlength]="20"
+              formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
+                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia') 
+              " />
+            <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].invalid" class="text-danger">
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
+                campo es obligatorio.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
+                un número válido.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
+                valor debe ser mayor o igual a 0.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                20 caracteres permitidos.</small>
+            </div>
+          </div>
+        </div>
       </div>
+    }
       <div class="row mt-5">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">

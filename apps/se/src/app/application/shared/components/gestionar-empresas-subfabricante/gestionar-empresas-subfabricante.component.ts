@@ -1,8 +1,13 @@
 import {
   Catalogo,
   ConfiguracionColumna,
-  TablaDinamicaComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaSeleccion,
+  doDeepCopy,
+  esValidArray,
+  esValidObject,
+  TablaDinamicaComponent,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -35,7 +40,8 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ContenedorComplementarPlantasComponent
+    ContenedorComplementarPlantasComponent,
+    NotificacionesComponent
   ],
   templateUrl: './gestionar-empresas-subfabricante.component.html',
   styleUrl: './gestionar-empresas-subfabricante.component.scss',
@@ -277,6 +283,11 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit, OnChang
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
 
+  /**
+   * Lista de plantas subfabricantes.
+   */
+  plantasSubmanufactureras: PlantasSubfabricante[] = [];
+
 /**  
  * Indica si el modal complementario debe mostrarse.  
  * Valor booleano utilizado para controlar la visibilidad del modal.
@@ -292,6 +303,9 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit, OnChang
  */
 private modalRef: Modal | null = null;
 
+/** Notificación para mostrar mensajes al usuario.
+ */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
@@ -437,9 +451,10 @@ private modalRef: Modal | null = null;
    * @param {PlantasSubfabricante[]} plantasSeleccionadas - Lista de plantas seleccionadas por el usuario.
    * @description Este método asigna las plantas seleccionadas a la propiedad `plantasSeleccionadas`.
    */
-  onPlantasSeleccionadas(plantasSeleccionadas: PlantasSubfabricante[]): void {
+  onPlantasSeleccionadas(plantasSeleccionadas: PlantasSubfabricante[]): void { 
     if (plantasSeleccionadas.length > 0) {
       this.plantasSeleccionadas = plantasSeleccionadas;
+      this.plantasSubmanufactureras = plantasSeleccionadas;
     }
   }
 
@@ -449,7 +464,28 @@ private modalRef: Modal | null = null;
    * @description Este método emite el evento `plantasPorEliminar` con las plantas seleccionadas para ser eliminadas.
    */
   eliminarPlantas(): void {
-    if (this.plantasSeleccionadas.length > 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.plantasSeleccionadas.length === 0
+          ? 'Selecciona la planta que desea eliminar.'
+          : 'Debe seleccionar un tipo de figura para continuar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: this.plantasSeleccionadas.length === 0 ? '' : 'Cancelar',
+      };
+  }
+/**
+ * 
+ * @param confirmacion - booleano que indica si se confirmó la eliminación.
+ * Si se confirma, se restauran las plantas seleccionadas a la lista de disponibles,
+ * se emite el evento `plantasPorEliminar` y se limpia la selección.
+ */
+  eliminarPedimentoDatos(confirmacion: boolean): void {
+    if (confirmacion) {
+     if (this.plantasSeleccionadas.length > 0) {
       // Agregar las plantas de vuelta a la lista de disponibles
       const PLANTAS_A_RESTAURAR = this.plantasSeleccionadas.filter(plantaSeleccionada => {
         // Verificar que la planta no esté ya en la lista de disponibles
@@ -473,9 +509,8 @@ private modalRef: Modal | null = null;
       // Limpiar la selección
       this.plantasSeleccionadas = [];
     }
+    }
   }
-
-
    /**
    * Emite el evento para complementar las plantas seleccionadas.
    * @returns {void}
@@ -503,7 +538,14 @@ private modalRef: Modal | null = null;
    */
   obtenerEstados():void {
       this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-        this.estadoCatalogo = res.datos;
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.estadoCatalogo = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
       });
       
     }

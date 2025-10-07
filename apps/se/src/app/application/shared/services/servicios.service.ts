@@ -1,5 +1,7 @@
 import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
+import { PlantasDisponiblesPayload, PlantasDisponiblesResponse } from '../models/modelo-interface.model';
 import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_EMPRESAS_NACIONALES, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
+import { API_BUSCAR_DATOS_GRID } from '../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient} from '@angular/common/http';
@@ -57,6 +59,11 @@ export class ServiciosService {
     return this.http.post<BaseResponse<EmpresasNacionalesResponse>>(ENDPOINT, PAYLOAD);
   }
 
+postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload):
+  Observable<BaseResponse<PlantasDisponiblesResponse[]>> {
+    const ENDPOINT = `${this.host}${API_BUSCAR_DATOS_GRID(tramite.toString())}`;
+    return this.http.post<BaseResponse<PlantasDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
+  }
   
 static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `

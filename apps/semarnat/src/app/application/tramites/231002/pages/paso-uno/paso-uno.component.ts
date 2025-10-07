@@ -1,5 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
@@ -18,11 +27,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
-  imports: [
-    CommonModule,
-    SolicitanteComponent,
-    DatosSolicitudComponent
-  ],
+  imports: [CommonModule, SolicitanteComponent, DatosSolicitudComponent],
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
@@ -35,6 +40,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   indice: number = 1;
+
+  @ViewChild(DatosSolicitudComponent)
+  datosSolicitudComponent!: DatosSolicitudComponent;
 
   /**
    * Selecciona una pestaña específica.
@@ -71,7 +79,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService
-  ) { }
+  ) {}
 
   /**
    * Inicialización del componente:

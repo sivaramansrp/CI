@@ -1,7 +1,9 @@
 import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
+import { HttpCoreService, JsonResponseCatalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PROC_110214 } from '../servers/api-route';
 import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
 /**
  * Servicio para validar inicialmente los datos del certificado en el trámite 110214.
@@ -20,7 +22,10 @@ export class ValidarInicialmenteCertificadoService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los recursos.
    */
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    public httpService: HttpCoreService
+  ) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.
@@ -103,5 +108,21 @@ export class ValidarInicialmenteCertificadoService {
    */
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/110214/consulta-110214.json`);
+  }
+
+  /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getTipoFactura(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_110214.TIPO_FACTURA,
+      {},
+      false
+    );
   }
 }

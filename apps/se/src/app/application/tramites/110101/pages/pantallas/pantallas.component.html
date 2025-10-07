@@ -12,10 +12,17 @@
                     <app-datos></app-datos>
                 }
                 @case (2) {
-                     <app-firmar-solicitud></app-firmar-solicitud>
+                     <app-firmar-solicitud [procedure]="110101" [procedureUrl]="'pantallas/datosdecomponentes'"></app-firmar-solicitud>
                 }
             }
         </div>
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

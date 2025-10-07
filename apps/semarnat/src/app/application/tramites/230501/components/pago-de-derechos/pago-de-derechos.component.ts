@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, InputFecha, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FECHA_PAGO, PagoDerechosState } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
-import { PagoDerechosState } from '../../models/materiales-peligrosos.model';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Tramite230501Query } from "../../estados/queries/tramite230501Query.query";
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
@@ -22,7 +22,7 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputFechaComponent],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
   providers: [MaterialesPeligrososService],
@@ -64,6 +64,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 * Cuando es `true`, los campos del formulario no se pueden editar.
 */
   esFormularioSoloLectura: boolean = false;
+
+  public fechaPagoInput: InputFecha = FECHA_PAGO;
 
   /**
    * Constructor de la clase PagoDeDerechosComponent.
@@ -187,8 +189,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Este método actualiza el estado del formulario y establece la propiedad 
    * 'fecha' en el estado de `tramite230501Store` con el valor seleccionado.
    */
-  onCambioDeTiempo(value: string | number): void {
-    const VALOR_SELECCIONADO = value as string;
+  onCambioDeTiempo(event: string): void {
+    const VALOR_SELECCIONADO = event
     this.setFormValida(this.pagoDerechos.valid);
     this.tramite230501Store.setPagoDerechosStateProperty('fecha', VALOR_SELECCIONADO);
   }

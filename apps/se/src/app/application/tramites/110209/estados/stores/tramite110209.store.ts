@@ -7,12 +7,16 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../../constantes/certificado-sgp.enum';
+import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+
 
 /**
  * Interfaz que define el estado del trámite 110209.
  * @interface
  */
 export interface Tramite110209State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
   /** Medio de transporte utilizado */
   medioDeTransporte: string;
   /** Ruta completa del transporte */
@@ -59,6 +63,14 @@ export interface Tramite110209State {
   fax: number;
   /** Teléfono */
   telefono: number;
+  /** **Valor seleccionado dentro del proceso de solicitud** */
+  valorSeleccionado: string | number;
+  /** **Número de certificado asociado a la solicitud** */
+  numeroDeCertificado: string;
+  /** **Tratado o acuerdo relacionado con la solicitud** */
+  tratadoAcuerdo: string;
+   /** **País o bloque económico relacionado con la solicitud** */
+  paisBloque: string;
 }
 
 /**
@@ -67,6 +79,7 @@ export interface Tramite110209State {
  */
 export function createInitialState(): Tramite110209State {
   return {
+    idSolicitud: 0,
     medioDeTransporte: '',
     rutaCompleta: '',
     puertoDeEmbarque: '',
@@ -78,7 +91,7 @@ export function createInitialState(): Tramite110209State {
       nombreTecnico: '',
       nombreComercial: '',
       nombreIngles: '',
-      numeroDeRegistro: ''
+      numeroDeRegistro: '',
     },
     descripcion: '',
     marca: '',
@@ -97,6 +110,10 @@ export function createInitialState(): Tramite110209State {
     correoElectronico: '',
     fax: 0,
     telefono: 0,
+    valorSeleccionado: radioOpciones?.radioOptions[0].label,
+    numeroDeCertificado: '',
+    tratadoAcuerdo: '',
+    paisBloque: '',
   };
 }
 
@@ -115,6 +132,18 @@ export class Tramite110209Store extends Store<Tramite110209State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**

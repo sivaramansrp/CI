@@ -5,7 +5,16 @@ describe('RegistroExpansionComponent', () => {
   let componente: RegistroExpansionComponent;
 
   beforeEach(() => {
-    componente = new RegistroExpansionComponent();
+    const mockTramite80211Store = {} as any;
+    const mockTramite80211Query = {} as any;
+    const mockRegistroService = {} as any;
+    const mockRegistroSolicitudService = {} as any;
+    componente = new RegistroExpansionComponent(
+      mockTramite80211Store,
+      mockTramite80211Query,
+      mockRegistroService,
+      mockRegistroSolicitudService
+    );
     componente.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

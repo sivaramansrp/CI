@@ -172,16 +172,18 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <label for="message" class="form-label">Descripción*:<span tooltip="Describe si se trata de piel, trofeos de caza, madera, plantas, semillas, entre otros, asi como la forma de presentación o preservación, las cuales pueden ser vivos, formol, taxidermia u otros."
+              <label for="message" class="form-label">Descripción<span [ngClass]="formMercancia.get('descripcion')?.touched && formMercancia.get('descripcion')?.invalid && formMercancia.get('descripcion')?.errors?.['required'] ? 'text-danger' : ''">*</span>:<span tooltip="Describe si se trata de piel, trofeos de caza, madera, plantas, semillas, entre otros, asi como la forma de presentación o preservación, las cuales pueden ser vivos, formol, taxidermia u otros."
                 ><i class="bi bi-question-circle-fill"></i
               ></span></label>
-              <textarea
+                <textarea
                 id="descripcion"
                 formControlName="descripcion"
                 class="form-control"
                 rows="4"
                 [required]="true"
                 (change)="setValoresStore(formMercancia,'descripcion')"
+                [ngStyle]="formMercancia.get('descripcion')?.touched && formMercancia.get('descripcion')?.invalid && formMercancia.get('descripcion')?.errors?.['required'] ? {'border': '1px solid red'} : {}"
+                >
               ></textarea>
               <div *ngIf="esInvalido('descripcion')" class="text-danger">
                 <small
@@ -252,7 +254,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="marca">Marca (Marcaje)*:</label>
+                <label class="form-label" for="marca">Marca (Marcaje)<span [ngClass]="(formMercancia.get('marca')?.touched && formMercancia.get('marca')?.invalid && formMercancia.get('marca')?.errors?.['required']) || formMercancia.controls['marca'].hasError('hasSpecialCharacters') ? 'text-danger' : ''">*</span>:</label>
                 <input
                   id="marca"
                   type="text"
@@ -266,11 +268,12 @@
               </div>
               <div *ngIf="esInvalido('marca')" class="text-danger">
                 <span *ngIf="formMercancia.controls['marca'].hasError('required')">Este campo es obligatorio.</span>
+                <span *ngIf="formMercancia.controls['marca'].hasError('hasSpecialCharacters')">Ingresa datos validos.</span>
             </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="cantidad">Cantidad*:</label>
+                <label class="form-label" for="cantidad">Cantidad<span [ngClass]="(formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.invalid && formMercancia.get('cantidad')?.errors?.['required']) || formMercancia.controls['cantidad'].hasError('pattern') ? 'text-danger' : ''">*</span>:</label>
                 <input
                   id="cantidad"
                   type="text"

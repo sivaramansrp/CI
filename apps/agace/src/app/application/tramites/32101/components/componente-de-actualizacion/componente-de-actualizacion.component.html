@@ -1,29 +1,47 @@
-<div class="container">
-  <ng-titulo titulo="Modificar Información"></ng-titulo>
-  <form [formGroup]="modificarFormulario">
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre"
-          [placeholder]="tramiteList.primerOpcion" [required]="true" formControlName="tipoDeInversion"
-          name="tipoDeInversion" id="tipoDeInversion"></app-catalogo-select>
-      </div>
-      <div class="col-md-5">
-        <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
-        <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos" id="valorEnPesos" />
-      </div>
-      <div class="col-md-4">
-        <label for="descripcionGeneral" class="form-label">Descripción general*:</label>
-        <input class="form-control" type="text" formControlName="descripcionGeneral" name="descripcionGeneral"
-          id="descripcionGeneral" />
-      </div>
-      <div class="col-md-5">
-        <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-          [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
-          name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select>
-      </div>
-      <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary ms-3" (click)="onGuardarCambios()">Guardar Cambios</button>
+<div class="modal fade" id="modalModificar" tabindex="-1" aria-labelledby="modalModificarLabel"
+  aria-hidden="true" #modalModificar>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body">
+        <form [formGroup]="modificarFormulario">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre"
+                [placeholder]="tramiteList.primerOpcion" [required]="true" formControlName="tipoDeInversion"
+                name="tipoDeInversion" id="tipoDeInversion"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
+              <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos"
+                id="valorEnPesos" />
+            </div>
+          </div>
+          <div class="row mb-3">     
+            <div class="col-md-8 textarea-container">
+              <label for="descripcionGeneral" class="form-label">Descripción general*:</label>
+              <textarea class="form-control" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral"
+                id="descripcionGeneral"></textarea>
+            </div>
+          </div>
+          <div class="row">            
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
+                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
+                name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="comprobante.catalogos" [label]="comprobante.labelNombre"
+                [placeholder]="comprobante.primerOpcion" [required]="true" formControlName="comprobante"
+                name="comprobante" id="comprobante"></app-catalogo-select>
+            </div>
+          </div>
+        </form>
+      </div>      
+      <div class="modal-footer justify-content-end">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="onGuardarCambios()">Aceptar</button>
       </div>
     </div>
-  </form>
+  </div>
 </div>

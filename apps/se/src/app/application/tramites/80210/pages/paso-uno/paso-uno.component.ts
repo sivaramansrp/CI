@@ -1,6 +1,7 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { EmpresasTerciarizadasComponent } from '../../components/empresas-terciarizadas/empresas-terciarizadas.component';
 import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
 
 /**
@@ -15,6 +16,13 @@ import { registroSolicitudImmexService } from '../../services/registro-solicitud
  * Componente que representa el primer paso de un trámite.
  */
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia al componente `solicitudComponent`.
+   */
+  @ViewChild('solicitudComponent', { static: false }) solicitudComponent:
+    | EmpresasTerciarizadasComponent
+    | undefined;
+
   /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
@@ -78,6 +86,27 @@ ngOnInit(): void {
           this.esDatosRespuesta = false;
         }
       });
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   *
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   *
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validarTodosLosFormularios(): boolean {
+    let allFormsValid = true;
+    if (this.indice >= 2 && this.solicitudComponent) {
+      if (
+        !this.solicitudComponent?.empresasForm?.get('rfc')?.valid &&
+        this.solicitudComponent?.empresasForm?.get('estado')?.valid
+      ) {
+        allFormsValid = false;
+      }
+    }
+    return allFormsValid;
   }
 
   /**

@@ -32,12 +32,13 @@
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
-                    <app-generar-dictamen [isAntecedentes]="false" 
+                    <app-generar-dictamen [isAntecedentes]="config.isAntecedentes" 
                     [conformidad]="conformidadDictamen"
                     [dataIniciarDictamen]="dataIniciarDictamen"
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
                     (enviarEvento)="enviarEvento($event)"
-                    [habilitarFechasPorAceptacion]="true">
+                    [habilitarFechasPorAceptacion]="config.habilitarFechas"
+                    [anexo222se]="config.anexo222se">
                     </app-generar-dictamen>
                     }
                     @case (2) {

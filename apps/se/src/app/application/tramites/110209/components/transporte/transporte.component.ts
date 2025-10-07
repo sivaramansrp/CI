@@ -2,7 +2,7 @@
  * Este componente maneja el formulario de transporte.
  */
 
-import { Catalogo, ConsultaioQuery } from "@ng-mf/data-access-user";
+import { Catalogo, CatalogoServices, ConsultaioQuery } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -59,6 +59,15 @@ export class TransporteComponent implements OnInit, OnDestroy {
    */
   formularioCargado: boolean = false;
 
+
+  /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110209'
+   */
+  tramites: string = '110209';
+
+  
+
   /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de transporte.
@@ -67,7 +76,9 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * @param {Tramite110209Store} tramite110209Store - Servicio para manejar el estado del trámite.
    * @param {Tramite110209Query} tramite110209Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: TransporteService, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query, private consultaQuery: ConsultaioQuery) {
+  constructor(private fb: FormBuilder, private service: TransporteService, private tramite110209Store: Tramite110209Store,
+     private tramite110209Query: Tramite110209Query,
+      private consultaQuery: ConsultaioQuery,private catalogoService: CatalogoServices) {
     this.transporteForm = this.fb.group({
       medioDeTransporte: ['',Validators.required],
       rutaCompleta: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)],
@@ -98,7 +109,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * Obtiene las opciones de medio de transporte y los valores del store.
    */
   ngOnInit(): void {
-    this.getMedioDeTransporte();
+    this.obtenerMedioTransporte();
     this.getValoresStore();
   }
 
@@ -128,19 +139,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Obtiene las opciones de medio de transporte desde el servicio.
-   */
-  getMedioDeTransporte(): void {
-    this.service.getMedioDeTransporte().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.medioDeTransporteOptions = data;
-        this.formularioCargado = true;
-      }
-    );
-  }
+
 
   /**
    * Establece los valores en el store.
@@ -189,6 +188,28 @@ export class TransporteComponent implements OnInit, OnDestroy {
     return false;
   }
 
+
+  /**
+   * Obtiene el catálogo de medios de transporte utilizando el servicio `catalogoService`
+   * y actualiza la propiedad `medio` con los datos recibidos.
+   * 
+   * Realiza la petición pasando los trámites actuales (`this.tramites`) y gestiona la suscripción
+   * para que se cancele automáticamente cuando el componente se destruya, usando `destroyNotifier$`.
+   * 
+   * @remarks
+   * Los datos recibidos se asignan a la propiedad `medio`. Si la respuesta no contiene datos,
+   * se asigna un arreglo vacío.
+   */
+  obtenerMedioTransporte(): void {
+    this.catalogoService.medioTransporteCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (response) => {
+          this.medioDeTransporteOptions = response?.datos ?? [];
+        this.formularioCargado = true;
+        }
+      });
+  }
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.
