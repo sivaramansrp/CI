@@ -171,6 +171,11 @@ export class CatalogoSelectComponent
    * Si es `true`, se mostrarán los mensajes de error de validación.
    */
   @Input() mostrarErrores: boolean = true;
+
+  /**
+ * Indica si se debe aplicar un color de fondo especial cuando el select está deshabilitado.
+ */
+  @Input() bgColorDisabled: boolean = false; 
   /**
    * @constructor
    * @param fb - Instancia de `FormBuilder` para crear formularios reactivos.

@@ -366,7 +366,6 @@ export class EmpleadosComponent implements OnInit {
     else if (this.empleadosForm.invalid) {
       this.mostrarValidacion();
     }
- this.limpiar();
   }
   /**
    * Muestra una notificación de validación al usuario.
@@ -375,16 +374,20 @@ export class EmpleadosComponent implements OnInit {
    * el usuario debe capturar todos los datos marcados como obligatorios.
    */
   mostrarValidacion(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+    const DIRECTOS_CHECKED = this.empleadosForm.get('directos')?.value;
+    const INDIRECTOS_CHECKED = this.empleadosForm.get('indirectos')?.value;
+    if (DIRECTOS_CHECKED || INDIRECTOS_CHECKED) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Al menos una de las opciones está seleccionada (checked).',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
   /**
@@ -405,8 +408,8 @@ export class EmpleadosComponent implements OnInit {
     this.empleadosForm.reset();
     this.empleadosForm.get('razonSocial')?.disable();
     this.disableRazonSocial = true;
-    this.empleadosForm.get('directos')?.setValue(false);
-    this.empleadosForm.get('indirectos')?.setValue(false);
+   this.empleadosForm.get('directos')?.setValue(false);
+   this.empleadosForm.get('indirectos')?.setValue(false);
     this.setDirectosValidation();
     this.setIndirectosValidation();
   }

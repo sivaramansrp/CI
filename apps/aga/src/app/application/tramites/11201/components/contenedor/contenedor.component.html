@@ -233,26 +233,35 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
+                    <div class="row mb-5">
+                        <div class="col-d">
                             <ng-titulo titulo="Adjuntar archivo" />
-                            <div class="display">
-                                <label class="margin-right" for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="text" name="archivoSeleccionado"
-                                id="archivoSeleccionado" [value]="etiquetaDeArchivo || 'No se eligió ningún archivo'" readonly>
-                            </div>
-                            
                         </div>
+                        <div class="col-md-4">
+                            <div class="display">
+                                <label class="margin-right" for="archivoSeleccionado" class="form-label m-0">Archivo Seleccionado*:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control archivoSeleccionado" type="text" name="archivoSeleccionado"
+                                id="archivoSeleccionado" disabled>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-4 d-flex justify-content-end width-dos">
                             <button
                                 type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
                                 archivo</button>
                         </div>
-                        <div *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'Archivo CSV'"
-                            class="table-container">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTablaManifiesto"
-                                [datos]="datosTabla"></app-tabla-dinamica>
-                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'Archivo CSV'"
+                        class="table-container">
+                        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTablaManifiesto"
+                            [datos]="datosTabla"></app-tabla-dinamica>
                     </div>
                 </div>
             </div>
@@ -301,23 +310,23 @@
                 <div class="row margin-top-dos" *ngIf="mostrarArchivoSeleccionadoTable">
                     <div class="col-md-12">
                         <ng-titulo titulo="Cargar archivo" />
-                        <div class="col-md-12">
-                                <label for="cargarArchivo" class="form-label d-flex">Subir Archivo:</label>
-                                <div class="d-flex">
-                                    <button class="mb-2 file-upload" type="button" (click)="activarSeleccionArchivo()">
-                                        Seleccionar archivo
-                                    </button>
-                                    <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'Sin archivos seleccionados' }}</span>
-                                </div>
-                                <input type="file" id="cargarArchivo" class="file-upload display-dos display-none" accept=".csv"
-                                    (change)="onCambioDeArchivo($event)">
-                                @if (nuevaNotificacion) { <section>
-                                    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-                                        (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-                                </section> }
-                        </div>
                     </div>
-                    <div class="col-md-4 d-flex justify-content-end p-5 gap-3 width-dos">
+                    <div class="col-md-12">
+                            <label for="cargarArchivo" class="form-label d-flex">Archivo:</label>
+                            <div class="d-flex choose-file">
+                                <button class="mb-2 file-upload" type="button" (click)="activarSeleccionArchivo()">
+                                    Choose file
+                                </button>
+                                <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No file chosen' }}</span>
+                            </div>
+                            <input type="file" id="cargarArchivo" class="file-upload display-dos display-none" size="60" accept=".csv"
+                                (change)="onCambioDeArchivo($event)">
+                            @if (nuevaNotificacion) { <section>
+                                <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+                                    (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+                            </section> }
+                    </div>                    
+                    <div class="col-md-4 d-flex justify-content-end gap-3 width-dos">
                         <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="regresar()">Regresar</button>
                         <button type="button" class="btn btn-primary" (click)="archivo()" data-bs-dismiss="modal">Enviar</button>
                     </div>
