@@ -334,3 +334,25 @@ export const USUARIO_INFO = {
          */
         "referenciaSolicitud": ""
       }
+      export const ERROR_PLANTAS_SUBMANUFACTURERAS =
+`
+    <div class="custom-error-box mx-auto p-4" style="max-width: 800px;">
+        <div class="text-center">
+            <p class="error-title mb-2">Corrija los siguientes errores:</p>
+        </div>
+        <div class="d-flex align-items-center">
+            <p class="mb-0 error-detail">
+                (Debe seleccionar plantas submanufactureras) es un campo requerido
+            </p>
+        </div>
+    </div>
+</div>
+<style>
+    .error-title {
+        color: #6c757d; 
+    }
+    .error-detail {
+        color: red; 
+    }
+</style>
+`;

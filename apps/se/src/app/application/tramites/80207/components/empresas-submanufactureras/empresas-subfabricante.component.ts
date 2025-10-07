@@ -1437,7 +1437,37 @@ else{
       this.deleteMessageExportacion = false;
       this.nuevaNotificacion={} as Notificacion;
     }
+    /**
+     * Validates that both plant data arrays contain valid data for processing.
+     * 
+     * Checks if both `datosPlantasParaSerAgregados` and `datosTablaSubfabricantesDisponibles` 
+     * are defined, are arrays, and contain at least one element each.
+     * 
+     * @returns {boolean} `true` if both arrays are valid and non-empty, `false` otherwise
+     * 
+     * @example
+     * ```typescript
+     * const isValid = this.validarCampos();
+     * if (isValid) {
+     *   // Proceed with processing the plant data
+     * }
+     * ```
+     * 
+     * @memberof EmpresasSubfabricanteComponent
+     * @since 1.0.0
+     */
+    validarCampos(): boolean {
+      if(this.datosPlantasParaSerAgregados && 
+         Array.isArray(this.datosPlantasParaSerAgregados) && 
+         this.datosPlantasParaSerAgregados.length > 0 &&
+         this.datosTablaSubfabricantesDisponibles && 
+         Array.isArray(this.datosTablaSubfabricantesDisponibles) && 
+         this.datosTablaSubfabricantesDisponibles.length > 0) {
+        return true;
+      }
 
+      return false;
+    }
   /**
    * @method ngOnDestroy
    * @lifecycle OnDestroy

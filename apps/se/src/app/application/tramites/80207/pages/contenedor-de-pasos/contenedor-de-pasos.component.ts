@@ -22,9 +22,9 @@ import {
   RegistroSolicitudService,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
+import { ERROR_PLANTAS_SUBMANUFACTURERAS, PASOS } from '../../constantes/pasos.enum';
 import { map, takeUntil } from 'rxjs/operators';
 import { AVISO } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/pasos.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Subject } from 'rxjs';
 import { Tramite80207State } from '../../modelos/subfabricante.model';
@@ -359,6 +359,10 @@ export class ContenedorDePasosComponent implements OnInit, OnDestroy {
    */
     seccionCargarDocumentos: boolean = true;
 
+    esFormaValido:boolean=false;
+
+    formErrorAlert:string=ERROR_PLANTAS_SUBMANUFACTURERAS;
+
   
     /**
      * @property {boolean} cargaEnProgreso
@@ -543,13 +547,12 @@ public solicitudState: Tramite80207State = {} as Tramite80207State;
 
    if(e.accion==='cont'){
     let isValid=true;
+     this.esFormaValido=this.pasoUnoComponent?.validarTodosLosFormularios() ? false: true;
     if (this.indice === 1 && this.pasoUnoComponent) {
-      isValid = this.pasoUnoComponent.validarTodosLosFormularios();
+      isValid = this.pasoUnoComponent?.validarTodosLosFormularios();
     }
     if (!isValid) {
-      
-      this.datosPasos.indice = this.indice;
-      
+      this.datosPasos.indice = this.indice;  
     }
     else if((this.solicitudState?.plantas?.length ?? 0) > 0){
 
