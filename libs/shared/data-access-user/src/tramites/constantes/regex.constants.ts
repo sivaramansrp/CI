@@ -763,6 +763,21 @@ export const PATRON_LETRAS_NUMEROS_ESPACIOS = /^[A-Za-z0-9 ]+$/;
 export const PATRON_NUMERO_DECIMAL_10_2 = /^\d{1,10}\.\d{2}$/;
 
 /**
+ * Expresión regular para validar números enteros o decimales con hasta 10 dígitos enteros y opcionalmente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890"
+ * - "1234567890.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901" (más de 10 dígitos enteros)
+ * - "123.1" (menos de 2 decimales si hay decimales)
+ * - "abc" (no es un número)
+ */
+export const REGEX_ENTERO_O_DECIMAL_10_2 = /^\d{1,10}(\.\d{2})?$/;
+
+/**
  * Expresión regular para validar números decimales con hasta 3 dígitos enteros y hasta 18 decimales.
  *
  * Ejemplos válidos:
@@ -1121,9 +1136,105 @@ export const REGEX_CAPTURA_USDA = /^([0-9]{9})$/;
 export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
 
 /**
+ * Expresión regular para validar caracteres permitidos en mercancías.
+ * - Dígitos numéricos (0-9)
+ * - Letras mayúsculas y minúsculas (A-Z, a-z)
+ * - Espacios en blanco
+ */
+export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s]+$/;
+
+/**
  * Expresión regular para detectar caracteres especiales no permitidos.
  * Esta expresión regular identifica la presencia de caracteres especiales que
  * generalmente no están permitidos en campos como llaves de pago, códigos de referencia,
  * o campos alfanuméricos específicos.
  */
 export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico con caracteres especiales limitados.
+ *
+ * Esta expresión regular permite:
+ * - Letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
+ * - Dígitos del 0 al 9
+ * - Caracteres especiales específicos: & ) , (
+ * - No permite espacios ni otros caracteres especiales
+ *
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "Empresa&Asociados"
+ * - "Test(México),SA"
+ * - "ABC123(&),"
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial no permitido)
+ * - "Test-Case" (contiene un guión no permitido)
+ */
+export const REGEX_RFC_ALPHANUMERICO = /^[A-Za-z0-9Ññ&(),]+$/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico con caracteres especiales limitados.
+ *
+ * Esta expresión regular permite:
+ * - Letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
+ * - Dígitos del 0 al 9
+ * - Caracteres especiales específicos: , ( )
+ * - No permite espacios ni otros caracteres especiales
+ *
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "Empresa,Asociados"
+ * - "Test(México),SA"
+ * - "ABC123(),"
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial no permitido)
+ * - "Test-Case" (contiene un guión no permitido)
+ */
+export const REGEX_NOMBRE_ALPHANUMERICO = /^[A-Za-z0-9Ññ(), ]+$/;
+
+/**
+ * PATRONES PARA FILTRADO DE ENTRADA EN TIEMPO REAL
+ * Estos patrones se usan para bloquear caracteres no permitidos mientras el usuario escribe
+ */
+
+/**
+ * Patrón para permitir solo letras, números y caracteres específicos: &, (, ), ,
+ * Usado para filtrar entrada en tiempo real en campos RFC
+ */
+export const INPUT_FILTER_RFC_ALPHANUMERICO = /[A-Za-z0-9Ññ&(),]/;
+
+/**
+ * Patrón para permitir solo letras, números, comas, paréntesis y espacios
+ * Usado para filtrar entrada en tiempo real en campos de nombres
+ */
+export const INPUT_FILTER_NOMBRE_ALPHANUMERICO = /[A-Za-z0-9Ññ(), ]/;
+
+/**
+ * Patrón para permitir solo letras, números, comas, paréntesis y espacios
+ * Usado para filtrar entrada en tiempo real en campos de dirección
+ */
+export const INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /[A-Za-z0-9,() ]/;
+
+/**
+ * Expresión regular para validar el formato del número de programa IMMEX.
+ * El formato esperado es: 123456/2023
+ * - Antes de la barra (/) puede haber entre 1 y 6 dígitos.
+ * - Después de la barra (/) debe haber exactamente 4 dígitos.
+ */
+export const REGEX_NUMERO_PROGRAMA_IMMEX = /^\d{1,6}[/]\d{4}$/;
+
+/**
+ * Expresión regular para encontrar caracteres que no sean números (0-9).
+ * Utilizada para filtrar o reemplazar caracteres no numéricos en campos NICO.
+ * 
+ * @example
+ * // Uso para limpiar una cadena manteniendo solo números
+ * const input = "ABC123DEF456";
+ * const soloNumeros = input.replace(REGEX_NICO, ''); // Resultado: "123456"
+ */
+export const REGEX_NICO = /[^0-9]/g;

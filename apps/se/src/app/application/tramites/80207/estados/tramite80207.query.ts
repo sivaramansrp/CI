@@ -60,12 +60,33 @@ export class Tramites80207Queries extends Query<Tramite80207State> {
   );
 
   /**
+   * Selector para obtener el ID de solicitud desde el estado.
+   * @property {Observable<number | null>} idSolicitud$
+   */
+  idSolicitud$ = this.select((state) => {
+    return state.idSolicitud;
+  });
+
+  /**
    * Selector que evalúa si todos los valores del objeto `formaValida` en el estado son `true`.
    * @property {Observable<boolean>} formaValida$
    */
   formaValida$ = this.select((state) => {
     return Object.values(state.formaValida).every((value) => value === true);
   });
+
+    /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
+
+  /**
+ * Observable selector for retrieving the entire state.
+ */
+allStoreData$ = this.select((state) => state);
+
 
   /**
    * Crea una instancia de Tramites80207Queries.

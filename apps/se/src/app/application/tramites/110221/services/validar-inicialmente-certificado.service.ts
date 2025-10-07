@@ -1,4 +1,4 @@
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.model';
 import { Observable, catchError, map, throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 import { Mercancias } from '../models/plantas-consulta.model';
+import { PROC_110221 } from '../servers/api-route';
 
 /**
  * @descripcion
@@ -26,7 +27,7 @@ export class ValidarInicialmenteCertificadoService {
    * @param http Cliente HTTP para realizar solicitudes.
    * @param tramite110221Store Store para manipular el estado del trámite.
    */
-  constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store) { }
+  constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store, public httpService: HttpCoreService) { }
 
   /**
    * @method obtenerMenuDesplegable
@@ -223,4 +224,19 @@ export class ValidarInicialmenteCertificadoService {
     }
   
 
+    /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getTipoFacturaOpciones(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_110221.TIPO_FACTURA,
+      {},
+      false
+    );
+  }
 }

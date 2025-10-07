@@ -6,16 +6,29 @@ import { RespuestaApi } from "@libs/shared/data-access-user/src/core/models/1120
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
 
+/**
+ * Servicio para gestionar los datos del trámite 11201.
+ * 
+ * Este servicio proporciona métodos para obtener diferentes tipos de datos
+ * relacionados con el trámite de contenedores temporales, incluyendo:
+ * - Contenedores
+ * - Catálogos de transporte y aduanas
+ * - Datos de tablas y solicitantes
+ * - Simulación de carga de archivos y envío de formularios
+ * 
+ * @injectable
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class DatosTramiteService {
 
-  constructor(
-    private http: HttpClient
-    // eslint-disable-next-line no-empty-function
-  ) {
-  }
+  /**
+   * Constructor del servicio DatosTramiteService.
+   * 
+   * @param {HttpClient} http - Cliente HTTP para realizar peticiones a APIs o archivos JSON.
+   */
+  constructor(private http: HttpClient) {}
 
   /**
    * Obtener una lista de Contenedores

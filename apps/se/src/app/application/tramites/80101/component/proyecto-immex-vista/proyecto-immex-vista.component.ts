@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Catalogo } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DOCUMENTO_CATALOGO_DATOS } from '../../constantes/nuevo-programa.enum';
+import { Observable } from 'rxjs';
 import { PROYECTO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { PoryectoDatos } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { ProyectoImmexComponent } from '../../../../shared/components/proyecto-immex/proyecto-immex.component';
 import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 /**
@@ -25,7 +25,7 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './proyecto-immex-vista.component.html',
   styleUrl: './proyecto-immex-vista.component.scss',
 })
-export class ProyectoImmexVistaComponent {
+export class ProyectoImmexVistaComponent implements OnInit {
   /**
    * Representa los datos del proyecto IMMEX.
    * 
@@ -41,7 +41,7 @@ export class ProyectoImmexVistaComponent {
    * 
    * @param tramite80101Store Servicio para gestionar el estado y operaciones relacionadas con el trámite 80101.
    */
-  constructor( private tramite80101Store: Tramite80101Store){
+  constructor( private tramite80101Store: Tramite80101Store, private query: Tramite80101Query,){
  // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -79,6 +79,20 @@ export class ProyectoImmexVistaComponent {
    * No envía ningún dato, solo indica la acción de cierre.
    */
   @Output() cerrarPopup = new EventEmitter<void>();
+
+  /**
+   * Observable que representa los datos de la tabla de complementos.
+   *
+   * @type {Observable<ProyectoImmexEncabezado[]>}
+   * @description Este observable contiene una lista de objetos de tipo `ProyectoImmexEncabezado`,
+   * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
+   * en la interfaz de usuario.
+   */
+  public proyectoImmexTablaLista$!: Observable<ProyectoImmexEncabezado[]>;
+
+  ngOnInit(): void {
+    this.proyectoImmexTablaLista$ = this.query.selectProyectoImmexTablaLista$;
+  }
 
   /**
    * Método para asignar la lista de proyectos IMMEX a la propiedad `proyectoImmexTablaLista`.

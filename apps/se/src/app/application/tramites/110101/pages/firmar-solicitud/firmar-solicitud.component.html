@@ -1,11 +1,18 @@
 <div class="container">
-    <div class="row d-flex justify-content-center align-items-center">
-      <div class="col-md-4">
-        <firma-electronica
-          [tipo]="''"
-          (firma)="obtieneFirma($event)"
-        ></firma-electronica>
-      </div>
+  <div class="row">
+    <div class="col-md-4">
+      <firma-electronica 
+        [tipo]="''" 
+        [cadenaOriginal]="cadenaOriginal"
+        (datosFirma)="datosFirma($event)"
+      ></firma-electronica>
     </div>
   </div>
-  
+</div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

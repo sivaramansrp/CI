@@ -894,7 +894,6 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
     return HASSPECIALCHAR ? { hasSpecialCharacters: true } : null;
   }
-
   /**
    * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.
