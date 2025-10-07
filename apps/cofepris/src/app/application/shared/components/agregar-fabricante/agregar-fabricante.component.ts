@@ -302,23 +302,25 @@ export class AgregarFabricanteComponent
   ngOnInit(): void {
     this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
-      this.chequeoValidacionAlGuardar =
+    this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
         ? true
-        :false;
+        : false;
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
+    this.estaDeshabilitadoDesplegable = true;
+
     this.changeNacionalidad();
     this.changeTipoPersona();
+
     this.mostarColoniaOEquivalente =
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
         : false;
-
-       if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
-    this.agregarFabricanteForm.get('tipoPersona')?.disable();
-  }
-  this.forzarDeshabilitarPais();
+    if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
+      this.agregarFabricanteForm.get('tipoPersona')?.disable();
+    }
+    this.forzarDeshabilitarPais();
   }
 
   /**
@@ -341,9 +343,7 @@ export class AgregarFabricanteComponent
      if (this.chequeoValidacionAlGuardar) {
       this.fabricantes = Array.isArray(this.fabricanteTablaDatos) ? [...this.fabricanteTablaDatos] : [];
     }
-
-    // Fix: Only access currentValue if datoSeleccionado exists in SimpleChanges and is defined
-    if (currentValue['datoSeleccionado'] && currentValue['datoSeleccionado'].currentValue?.length > 0) {
+    if (currentValue['datoSeleccionado'] && currentValue['datoSeleccionado'].currentValue && currentValue['datoSeleccionado'].currentValue.length > 0) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
       setTimeout(() => {
         if (
@@ -375,6 +375,19 @@ export class AgregarFabricanteComponent
           correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
           coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
         });
+        if (this.datoSeleccionado?.[0]?.municipioAlcaldia) {
+          this.municipiosDatos = [...this.municipiosTempDatos];
+          this.agregarFabricanteForm.get('municipio')?.enable();
+        }
+        if (this.datoSeleccionado?.[0]?.localidad) {
+          this.localidadesDatos = [...this.localidadesTempDatos];
+          this.agregarFabricanteForm.get('localidad')?.enable();
+        }
+        if (this.datoSeleccionado?.[0]?.colonia) {
+          this.coloniasDatos = [...this.coloniasTempDatos];
+          this.agregarFabricanteForm.get('colonia')?.enable();
+        }
+        this.updateDropdownEnableState();
         const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
         const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
         const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
@@ -386,7 +399,6 @@ export class AgregarFabricanteComponent
             RAZON_SOCIAL_CONTROL?.clearValidators();
           }
           RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
-          // nombres & primerApellido for Fisica only
           if (TIPO_PERSONA_VALUE === this.tipoPersona.FISICA) {
             NOMBRES_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
             PRIMER_APELLIDO_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
@@ -454,14 +466,14 @@ export class AgregarFabricanteComponent
       ],
       razonSocial: [
         this.obtenerValor('razonSocial'),
-        [] // Set validator dynamically below
+        []
       ],
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
             ? ''
             : this.obtenerValor('pais'),
-          disabled: this.elementosDeshabilitados.includes('pais') || this.idProcedimiento === 260911,
+          disabled: this.elementosDeshabilitados.includes('pais') || this.chequeoValidacionAlGuardar,
         },
         [Validators.required],
       ],
@@ -534,7 +546,7 @@ export class AgregarFabricanteComponent
     const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
     const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
     const TIPO_PERSONA_CONTROL = this.agregarFabricanteForm.get('tipoPersona');
-    const SET_STRICT_VALIDATORS = (tipo: TipoPersona) => {
+  const SET_STRICT_VALIDATORS = (tipo: TipoPersona): void => {
       if (this.chequeoValidacionAlGuardar) {
         if (tipo === this.tipoPersona.MORAL) {
           RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
@@ -609,6 +621,7 @@ private forzarDeshabilitarPais(): void {
         this.elementosNoRequeridos = ['colonia'];
         break;
         case 260912:
+        this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia', 'codigoPostal'];
         break;
         default:
@@ -762,13 +775,9 @@ private forzarDeshabilitarPais(): void {
       this.agregarFabricanteForm.reset();
       Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
         this.agregarFabricanteForm.get(controlName)?.disable();
-        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-          this.agregarFabricanteForm.get(controlName)?.enable();
-        }
       });
-      if (!this.agregarFabricanteForm.get('nacionalidad')?.value) {
-        this.agregarFabricanteForm.get('tipoPersona')?.disable();
-      }
+      this.agregarFabricanteForm.get('nacionalidad')?.enable();
+      this.estaDeshabilitadoDesplegable = true;
     } else {
       this.agregarFabricanteForm.reset();
     }
@@ -878,7 +887,7 @@ private forzarDeshabilitarPais(): void {
   /**
    * Maneja el evento de cambio en el campo de RFC.
    *
-   * @param {Event} event - Evento que se dispara al cambiar el valor del campo de entrada (input).
+   * @param {Event} event - Evento que se dispara al cambfiar el valor del campo de entrada (input).
    */
   onChangeRfc(event: Event): void {
     if (this.chequeoValidacionAlGuardar) {
@@ -950,41 +959,36 @@ private forzarDeshabilitarPais(): void {
       RFC_CONTROL.markAsTouched();
       RFC_CONTROL.updateValueAndValidity();
     }
-    if (
-      this.agregarFabricanteForm?.get('nacionalidad')?.value === '' ||
-      this.agregarFabricanteForm?.get('nacionalidad')?.value === undefined
-    ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
+    const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+    const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+    if (!NACIONALIDAD || NACIONALIDAD === '') {
+      this.estaDeshabilitadoDesplegable = true;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+      if (this.chequeoValidacionAlGuardar) {
+        this.agregarFabricanteForm.get('tipoPersona')?.disable();
+      }
+    } else if (NACIONALIDAD === this.nacionalStr || NACIONALIDAD === 'Extranjero') {
+      if (NACIONALIDAD && TIPO_PERSONA) {
+        this.estaDeshabilitadoDesplegable = false;
+        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+          if (!this.elementosDeshabilitados.includes(controlName)) {
+            this.agregarFabricanteForm.get(controlName)?.enable();
+          }
+        });
+      } else {
+        this.estaDeshabilitadoDesplegable = true;
+        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
           this.agregarFabricanteForm.get(controlName)?.disable();
           if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
             this.agregarFabricanteForm.get(controlName)?.enable();
           }
-        }
-      );
-      // Cuando chequeoValidacionAlGuardar es verdadero, deshabilita tipoPersona hasta que se seleccione nacionalidad
-   if (this.chequeoValidacionAlGuardar) {
-      this.agregarFabricanteForm.get('tipoPersona')?.disable();
-    }
-    } else if (
-      this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-        this.nacionalStr ||
-      this.agregarFabricanteForm?.get('nacionalidad')?.value === 'Extranjero'
-    ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          this.estaDeshabilitadoDesplegable = true;
-          if (controlName !== 'nacionalidad') {
-            this.agregarFabricanteForm.get(controlName)?.reset();
-          }
-          if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        }
-      );
-      // Asegura que tipoPersona esté habilitado cuando se selecciona nacionalidad (anula chequeoValidacionAlGuardar)
-    this.agregarFabricanteForm.get('tipoPersona')?.enable();
+        });
+      }
     }
     this.forzarDeshabilitarPais();
   }
@@ -1028,25 +1032,11 @@ changeTipoPersona(): void {
       this.agregarFabricanteForm?.get('nacionalidad')?.value &&
       this.agregarFabricanteForm?.get('tipoPersona')?.value
     ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
+      this.estaDeshabilitadoDesplegable = false;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
           this.agregarFabricanteForm.get(controlName)?.enable();
-          this.estaDeshabilitadoDesplegable = false;
         }
-      );
-    }
-
-    if (
-      (this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-        this.nacionalStr &&
-        this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-          this.tipoPersona.FISICA) ||
-      this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-        this.tipoPersona.MORAL
-    ) {
-      this.estaDeshabilitadoDesplegable = true;
-      this.agregarFabricanteForm.patchValue({
-        pais: 2,
       });
     }
   }
@@ -1096,7 +1086,8 @@ private resetExcept(excludedControls: string[]): void {
   });
 }
 
-    /**
+
+  /**
    * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
    * @param borrar Indica si se debe proceder con la eliminación.
    * @returns {void}
@@ -1104,6 +1095,35 @@ private resetExcept(excludedControls: string[]): void {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Updates the estaDeshabilitadoDesplegable flag based on whether both nacionalidad and tipoPersona are selected.
+   * If either is missing, disables dropdowns. If both are present, enables them.
+   */
+  private updateDropdownEnableState(): void {
+    const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+    const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+    if (NACIONALIDAD && TIPO_PERSONA) {
+      this.estaDeshabilitadoDesplegable = false;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+    } else {
+      this.estaDeshabilitadoDesplegable = true;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.disable();
+        } else {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+      if (this.chequeoValidacionAlGuardar && !NACIONALIDAD) {
+        this.agregarFabricanteForm.get('tipoPersona')?.disable();
+      }
     }
   }
 

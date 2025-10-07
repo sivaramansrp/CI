@@ -1,19 +1,13 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import {
-  Destinatario,
-  Fabricante,
-  Facturador,
-  Proveedor,
-} from '../../../../shared/models/terceros-relacionados.model';
-import { EventEmitter, Output } from '@angular/core';
-
-
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
+import { Tramite260912Store,Tramites260912State } from '../../estados/tramite-260912.store';
 import { CommonModule } from '@angular/common';
 import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
+
+
 import { AgregarFabricanteContenedoraComponent } from '../agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
 
 /**
@@ -45,8 +39,19 @@ import { AgregarFabricanteContenedoraComponent } from '../agregar-fabricante-con
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, OnChanges {
+  mostrarModalEditarFabricante = false;
+  fabricanteSeleccionadoParaEditar: Fabricante[] = [];
+
+  abrirModalEditarFabricante(fabricante: Fabricante): void {
+    this.fabricanteSeleccionadoParaEditar = [fabricante];
+    this.mostrarModalEditarFabricante = true;
+  }
+
+  cerrarModalEditarFabricante(): void {
+    this.mostrarModalEditarFabricante = false;
+    this.fabricanteSeleccionadoParaEditar = [];
+  }
   @Output() continuar = new EventEmitter<void>();
-  // ...existing code...
 
   tipoTramiteUP: string = '';
   botonDesactivarParaProrrogar: boolean = false;
@@ -129,8 +134,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    */
   esFormularioSoloLectura = false;
 
-  //botonDesactivarParaProrrogar!:boolean;
-
   /**
    * Subject para manejar la destrucción del componente.
    */
@@ -169,28 +172,27 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
     this.tramiteQuery.getFabricanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
-        this.fabricanteTablaDatos = datos;
+        if (datos && datos.length > 0) {
+            this.fabricanteTablaDatos = datos;
+          } else {
+            this.fabricanteTablaDatos = [];
+        }
       });
-
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
         this.destinatarioFinalTablaDatos = datos;
       });
-
     this.tramiteQuery.getProveedorTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
-        
         this.proveedorTablaDatos = datos as Proveedor[];
       });
-
     this.tramiteQuery.getFacturadorTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
         this.facturadorTablaDatos = datos as Facturador[];
       });
-    
   }
 /**
  * Método del ciclo de vida de Angular que se ejecuta al detectar cambios en las propiedades de entrada.
@@ -289,8 +291,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
 
   modificarProveedor(): void {
     if (this.proveedorSeleccionadoDatos.length === 1) {
-      // Open modal or form to edit proveedor
-      // Example: this.openEditDialog(this.proveedorSeleccionadoDatos[0]);
+      //
     }
   }
 
@@ -346,16 +347,19 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    * Este método inicializa el arreglo `fabricanteSeleccionadoDatos` como vacío,
    * permitiendo la selección de un nuevo fabricante en el componente.
    */
+
   agregarFabricante(): void {
-    // For add, pass empty array so modal is empty
     this.fabricanteSeleccionadoDatos = [];
+    this.abrirModalAgregarFabricante();
   }
 
   modificarFabricante(): void {
-    // For edit, pass the selected row
-    // This will be passed to datoSeleccionado
-    // Modal will open with this row pre-filled
-    // (You may want to call abrirModalAgregarFabricante() here)
+    if (this.fabricanteSeleccionadoDatos && this.fabricanteSeleccionadoDatos.length === 1) {
+      const SELECTED = this.fabricanteSeleccionadoDatos[0];
+      const FULL_ROW = this.fabricanteTablaDatos.find(f => f.id === SELECTED.id) || SELECTED;
+      this.fabricanteSeleccionadoDatos = [FULL_ROW];
+      this.abrirModalAgregarFabricante();
+    }
   }
 
   /**
@@ -550,33 +554,34 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
 
 // eslint-disable-next-line class-methods-use-this
 public validateRequiredFields(): boolean {
-  // No required fields in this component
   return true;
 }
 
 // eslint-disable-next-line class-methods-use-this
 public markAllFieldsTouched(): void {
-  // No fields to mark as touched in this component
+  // No hay campos para marcar como tocados en este componente
 }
-tramiteState: import('../../estados/tramite-260912.store').Tramites260912State = {} as import('../../estados/tramite-260912.store').Tramites260912State;
+tramiteState: Tramites260912State = {} as Tramites260912State;
 
-// Add this method
-// Only handle modal close, do not update store here (store is updated in container)
 updateFabricanteTablaDatos(event: Fabricante[]): void {
-  this.fabricanteTablaDatos = event; // update local array if needed for UI
-  this.cerrarModalAgregarFabricante(); // just close modal
+  this.fabricanteTablaDatos = event;
+  this.cerrarModalAgregarFabricante();
 }
-  // Optionally, handle/log unexpected event types here
 
 
 abrirModalAgregarFabricante(): void {
-  const MODAL = new (window as any).bootstrap.Modal(document.getElementById('modalAgregarFabricante'));
+  const MODAL_ELEMENT = this.el.nativeElement.querySelector('#modalAgregarFabricante');
+  type BootstrapModalType = { Modal: new (element: HTMLElement) => { show: () => void } };
+  const BOOTSTRAP = (window as unknown as { bootstrap: BootstrapModalType }).bootstrap;
+  const MODAL = new BOOTSTRAP.Modal(MODAL_ELEMENT);
   MODAL.show();
 }
 
 cerrarModalAgregarFabricante(): void {
   this.fabricanteSeleccionadoDatos = [];
-  const MODAL = (window as any).bootstrap.Modal.getInstance(document.getElementById('modalAgregarFabricante'));
+  type BootstrapModalType = { Modal: { getInstance: (element: HTMLElement | null) => { hide: () => void } | null } };
+  const BOOTSTRAP = (window as unknown as { bootstrap: BootstrapModalType }).bootstrap;
+  const MODAL = BOOTSTRAP.Modal.getInstance(document.getElementById('modalAgregarFabricante'));
   if (MODAL) {
     MODAL.hide();
   }

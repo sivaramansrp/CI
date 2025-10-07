@@ -44,10 +44,20 @@
               class="btn btn-default ms-2"
               (click)="modificarFabricante()"
               [disabled]="esFormularioSoloLectura ? true : false"
+              *ngIf="!esVisible"
             >
               Modificar
             </button>
-        
+            <button
+              type="button"
+              name="modificarMercanciasModal"
+              class="btn btn-default ms-2"
+              (click)="fabricanteEventoModificarModal.emit(fabricanteSeleccionadoDatos)"
+              [disabled]="esFormularioSoloLectura ? true : false"
+              *ngIf="esVisible"
+            >
+              Modificar
+            </button>
         }         
         <button
           type="button"

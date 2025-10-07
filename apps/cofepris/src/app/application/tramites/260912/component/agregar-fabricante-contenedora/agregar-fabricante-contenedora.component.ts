@@ -52,7 +52,6 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
 
-  // idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * Notificador para la destrucción del componente.
@@ -75,7 +74,6 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * Se inicializa mediante datos externos o servicios que gestionan
    * el flujo de la aplicación.
    */
-  // public tramiteState!: Tramites260912State;
 
   /**
    * Lista de fabricantes en la tabla de datos.
@@ -86,7 +84,6 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * Se actualiza dinámicamente a partir de la interacción del usuario
    * o de llamadas a servicios.
    */
-  // fabricanteTablaDatos: Fabricante[] = [];
  
   /**
    * @constructor
@@ -146,20 +143,16 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
 
 
 updateFabricanteTablaDatosHandler(event: Fabricante[]): void {
-  this.tramite260912Store.updateFabricanteTablaDatos(event); // update store
-  this.cerrarModalAgregarFabricante(); // close modal (emits only one event)
+  this.tramite260912Store.updateFabricanteTablaDatos(event); 
+  this.cerrarModalAgregarFabricante();
 }
 
 
   cerrarModalAgregarFabricante(): void {
-    this.cancelar.emit(); // Only emit one event for modal close
-    // this.guardarYSalir.emit(); // Do not emit both, only one close event
-    // Optionally, you can use guardarYSalir if you want, but not both
-    // this.router.navigate(['../terceros-relacionados'], { relativeTo: this.route });
+    this.cancelar.emit();
   }
 
 onLimpiarFabricante(): void {
-  // Optionally reset state or just navigate
   this.router.navigate(['../terceros-relacionados'], { relativeTo: this.route });
 }
 

@@ -1,3 +1,5 @@
+
+
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
@@ -65,6 +67,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './terceros-relacionados.component.css',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  /**
+   * Evento para abrir el modal de edición de fabricante solo cuando esVisible === true
+   */
+  @Output() fabricanteEventoModificarModal: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -496,8 +502,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
-    this.irAAcciones('../agregar-fabricante', true);
+    if (this.esVisible) {
+      this.fabricanteEventoModificarModal.emit(this.fabricanteSeleccionadoDatos);
+    } else {
+      this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
+      this.irAAcciones('../agregar-fabricante', true);
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component.ts';
+import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component';
 import { Renderer2, ElementRef } from '@angular/core';
 
 const fullFabricante = {
@@ -123,7 +123,12 @@ describe('TercerosRelacionadosVistaComponent', () => {
 		};
 		renderer = {} as Renderer2;
 		el = {} as ElementRef;
+		const mockModalService = {
+			open: jest.fn().mockReturnValue({ result: Promise.resolve() }),
+			Modal: {}
+		};
 		component = new TercerosRelacionadosVistaComponent(tramiteQuery, tramiteStore, renderer, el);
+		(component as any).modalService = mockModalService;
 	});
 
 	it('should create', () => {
