@@ -223,11 +223,11 @@ return arr.map((item: any) => ({
   cantidad: item.cantidad,
   unidad_medida: item.unidadMedida,
   valor_mercancia: item.valorMercancia,
-  nombreTecnico: item.nombreTecnico,
+  nombre_tecnico: item.nombreTecnico,
   nombre_comercial: item.nombreComercial,
   registro_producto: item.numeroRegistroProducto,
-  fechaExpedicion: item.fechaExpedicion,
-  fechaVencimiento: item.fechaVencimiento,
+  fecha_expedicion: item.fechaExpedicion,
+  fecha_vencimiento: item.fechaVencimiento,
   tipo_factura: item.tipoFactura,
   num_factura: item.numFactura,
   complemento_descripcion: item.complementoDescripcion,
@@ -279,6 +279,8 @@ return arr.map((item: any) => ({
         nombre_comercial: item.nombreComercial,
         fecha_inicio: item.fechaFinal,
         fecha_fin: item.fechaInicial,
+        numero_letra: item.numeroLetra1,
+        calle:item.calle1,
         mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
       },
  
