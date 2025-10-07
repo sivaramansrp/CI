@@ -146,9 +146,13 @@
       </div>
     </div>
   </ng-container>
-
-  <ng-titulo titulo="Datos del representante legal del exportador"/>
-  <ng-container formGroupName="grupoRepresentativo">
+  
+  <app-representante-legal-exportador
+    [procedimiento]="'110212'"
+    [datosForm]="solicitudState.grupoRepresentativo"
+    (formDatosDelDestinatarioEvent)="setValoresStore1($event)"
+  ></app-representante-legal-exportador>
+  <!-- <ng-container formGroupName="grupoRepresentativo">
     <div class="row">
       <div class="col-md-8 mb-3">
         <label>Lugar<span [ngClass]="grupoRepresentativo.get('lugar')?.invalid && grupoRepresentativo.get('lugar')?.touched ? 'text-danger' : ''">*</span>:</label>
@@ -262,6 +266,6 @@
         </div>
       </div>
     </div>
-  </ng-container>
+  </ng-container> -->
 
 </form>
