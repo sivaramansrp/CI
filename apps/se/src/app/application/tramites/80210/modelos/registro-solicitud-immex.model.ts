@@ -32,16 +32,16 @@ export interface RespuestaPlantas {
  * Contiene información como dirección, razón social y registro federal.
  */
 export interface Plantas {
-    id: number,
-    calle: string,
-    numeroExterio: string,
-    numeroInterio: string,
-    codiogoPostal: string,
-    colonia:string,
-    municipio: string,
-    entidadFederativa:string,
-    pais: string,
-    registroFederal: string,
-    domicilio: string,
-    razon: string
+  id: string;
+  calle: string;
+  numExterior: string;
+  numInterior: string;
+  codigoPostal: string;
+  colonia: string;
+  municipio: string;
+  entidadFederativa: string;
+  pais: string;
+  registroFederal: string;
+  domicilio: string;
+  razon: string;
 }

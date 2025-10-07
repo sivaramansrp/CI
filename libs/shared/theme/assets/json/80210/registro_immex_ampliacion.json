@@ -5,8 +5,8 @@
     {
       "id":1,
       "calle":"AVENIDA PERIFERICO NORTE",
-      "numeroExterior":"47B",
-      "numeroInterior":"",
+      "numExterior":"47B",
+      "numInterior":"",
       "codigoPostal":"31136",
       "colonia":"COMPLEJO INDUSTRIAL",
       "municipio": "CHIHUAHUA",
@@ -21,8 +21,8 @@
     {
       "id":1,
       "calle":"AVENIDA PERIFERICO NORTE",
-      "numeroExterior":"47B",
-      "numeroInterior":"",
+      "numExterior":"47B",
+      "numInterior":"",
       "codigoPostal":"31136",
       "colonia":"COMPLEJO INDUSTRIAL",
       "municipio": "CHIHUAHUA",

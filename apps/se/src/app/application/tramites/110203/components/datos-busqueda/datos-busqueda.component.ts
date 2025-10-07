@@ -404,7 +404,7 @@ public buscar(): void {
    * el componente se destruye, evitando fugas de memoria.
    */
   obtenerTratadoAcuerdo(): void {
-    this.catalogoService.tratadosAcuerdoCatalogo(this.tramites)
+    this.catalogoService.tratadosAcuerdosCatalogoDatos(this.tramites,"UE")
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
