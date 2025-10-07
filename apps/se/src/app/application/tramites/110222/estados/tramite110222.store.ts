@@ -202,6 +202,9 @@ export interface Tramite110222State {
    * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
    */
   formulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
 }
 
 /**
@@ -327,7 +330,8 @@ export function createInitialState(): Tramite110222State {
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',      
-    }
+    },
+    optionsTipoFactura: []
   };
 }
 
@@ -741,6 +745,18 @@ export class Tramite110222Store extends Store<Tramite110222State> {
         ...state.formCertificado,
         ...values,
       },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
     }));
   }
 }

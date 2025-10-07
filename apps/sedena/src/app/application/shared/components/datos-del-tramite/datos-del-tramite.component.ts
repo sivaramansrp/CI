@@ -20,7 +20,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { ConsultaioQuery, InputCheckComponent, InputRadioComponent, REGEX_NUMEROS, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import {
   DatosDelTramiteFormState,
   FECHA_DE_PAGO,

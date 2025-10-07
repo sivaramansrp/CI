@@ -8,8 +8,8 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
-             [datos]="tableData2"
-             (listaDeFilaSeleccionada)="onfilasSeleccionadasChange($event)"
+            [datos]="fabricanteDatos"
+            (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'fabricante')"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
@@ -17,32 +17,32 @@
           <div class="btn-group">
            <div>
             <button
-            *ngIf="filasSeleccionadas.size > 0"
+            *ngIf="filasSeleccionadasFabricante.size > 0"
             class="btn btn-default"
               class="btn btn-default 3"
               type="button"
               data-bs-toggle="modal"
-             (click)="onDeleted()"
+              (click)="enEliminado('fabricante')"
             >
               Eliminar
             </button>
             <button
-            *ngIf="filasSeleccionadas.size === 1"
+              *ngIf="tablaActual && filasSeleccionadasFabricante.size === 1 && tablaActual === 'fabricante'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               class="btn btn-default btn-space ms-3"
-              (click)="openModificarMercancias()"    
+              (click)="openModificarMercancias()"
             >
               Modificar
             </button>
-            </div>
+           </div>
             <button
               type="button"
               class="btn btn-primary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
-              (click)="agregarMercancias()"
+             (click)="agregarMercancias('fabricante', 'Agregar Fabricante')"
              [disabled]="esFormularioSoloLectura"
             >
               Agregar
@@ -54,17 +54,44 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
-                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="destinatarioDatos"
+            (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'destinatario')"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
       </div>
       <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
-          <button
+         
+        <button
+            *ngIf="filasSeleccionadasDestinatario.size > 0"
+            class="btn btn-default"
+              class="btn btn-default 3"
+              type="button"
+              data-bs-toggle="modal"
+              (click)="enEliminado('destinatario')"
+            >
+              Eliminar
+            </button>
+            <button
+              *ngIf="tablaActual && filasSeleccionadasDestinatario.size === 1 && tablaActual === 'destinatario'"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+              class="btn btn-default btn-space ms-3"
+              (click)="openModificarMercancias()"    
+            >
+              Modificar
+            </button>
+             <button
           type="button"
           class="btn btn-primary ms-3"
-            [disabled]="esFormularioSoloLectura">
+          data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
+                (click)="agregarMercancias('destinatario', 'Agregar Destinatario')"
+               >
           Agregar
         </button>
         </div>

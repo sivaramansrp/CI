@@ -1,54 +1,9 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src"
-import { Plantas } from "../modelos/registro-expansion.model"
-
-/**
- *  CONFIGURACION_TABLA_PLANTAS
- * @description Configuración de las columnas para la tabla de plantas en el módulo de trámites IMMEX.
- * Cada columna está definida con un encabezado, una clave que especifica cómo obtener el valor de la propiedad
- * correspondiente del objeto `Plantas`, y un orden que determina la posición de la columna en la tabla.
- * 
- * @type {ConfiguracionColumna<Plantas>[]}
- * 
- * @property {string} encabezado - El título de la columna que se mostrará en la tabla.
- * @property {Function} clave - Una función que recibe un objeto `Plantas` y devuelve el valor de la propiedad correspondiente.
- * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
- * 
- * @example
- * // Ejemplo de uso:
- * CONFIGURACION_TABLA_PLANTAS.forEach(columna => {
- *   console.log(columna.encabezado, columna.clave(item), columna.orden);
- * });
- */
-export const CONFIGURACION_TABLA_PLANTAS: ConfiguracionColumna<Plantas>[] = [
-{encabezado:'Calle', clave: (item: Plantas):string=>item.calle, orden:1 },
-{encabezado:'Número exterio', clave: (item: Plantas):string=>item.numeroExterio, orden:2 },
-{encabezado:'Número interio', clave: (item: Plantas):string=>item.numeroInterio, orden:3 },
-{encabezado:'Código postal', clave: (item: Plantas):string=>item.codiogoPostal, orden:4 },
-{encabezado:'Colonia', clave: (item: Plantas):string=>item.colonia, orden:5 },
-{encabezado:'Municipio o delegación', clave: (item: Plantas):string=>item.municipio, orden:6 },
-{encabezado:'Entidad federativa', clave: (item: Plantas):string=>item.entidadFederativa, orden:7 },
-{encabezado:'País', clave: (item: Plantas):string=>item.pais, orden:8 },
-{encabezado:'Registro federal de contribuyentes', clave: (item: Plantas):string=>item.registroFederal, orden:9 },
-{encabezado:'Domicilio fiscal del solicitante', clave: (item: Plantas):string=>item.domicilio, orden:10 },
-{encabezado:'Razón social', clave: (item: Plantas):string=>item.razon, orden:11 }
-]
-
-/**
- * PAYLOAD
- * @description Objeto JSON que representa un ejemplo de payload para una solicitud de trámite IMMEX.
- *  Este objeto contiene información detallada sobre la solicitud, incluyendo datos del solicitante,
- * la solicitud específica, notarios involucrados, plantas asociadas, capacidad de producción,
- * plantas submanufactureras y plantas controladoras.
- * @type {Object}
- * @property {string} tipoDeSolicitud - Tipo de solicitud (e.g., "guardar").
- *  @property {number} idSolicitud - Identificador único de la solicitud.
- */
-export const PAYLOAD = {
+export const GUARDAR_PAYLOAD_80207 = {
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 0,
-    "idTipoTramite": 80211,
-    "rfc": "JCB100702TQ1",
-    "cveUnidadAdministrativa": "8211",
+    "idTipoTramite": 80207,
+    "rfc": "AAL0409235E6",
+    "cveUnidadAdministrativa": "8101",
     "costoTotal": 10000.5,
     "certificadoSerialNumber": "1234567890ABCDEF",
     "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
@@ -57,7 +12,7 @@ export const PAYLOAD = {
     "apPaterno": "Pérez",
     "apMaterno": "López",
     "telefono": "5551234567",
-     "solicitud": {
+    "solicitud": {
         "modalidad": "",
         "booleanGenerico": true,
         "descripcionSistemasMedicion": "Web",
@@ -84,7 +39,7 @@ export const PAYLOAD = {
             "nombreNotario": "JORGE",
             "apellidoMaterno": "NAVARRO",
             "apellidoPaterno": "NEAVES",
-            "rfc": "JCB100702TQ1",
+            "rfc": "AAL0409235E6",
             "numeroActa": "26117",
             "numeroNotaria": "22",
             "numeroNotario": null,
@@ -488,7 +443,7 @@ export const PAYLOAD = {
             ]
         }
     ],
-     "plantasTerciarizadoras": [
+    "plantasTerciarizadoras": [
         {
             "idPlanta": "123",
             "calle": "Main St",
@@ -659,7 +614,7 @@ export const PAYLOAD = {
                     "descripcion": null,
                     "fechaFirma": "04/09/2025",
                     "fechaVigencia": "04/09/2025",
-                    "rfcFirmante": "JCB100702TQ1",
+                    "rfcFirmante": "AAL0409235E6",
                     "razonFirmante": "SILVA",
                     "testado": true,
                     "fecFinVigencia": "2025-09-07"
@@ -671,7 +626,7 @@ export const PAYLOAD = {
                     "rfcProveedor": "WERWSV",
                     "razonProveedor": "WER QWER QW",
                     "paisDestino": "ANTARTIDA",
-                    "rfcClient": "JCB100702TQ1",
+                    "rfcClient": "AAL0409235E6",
                     "razonCliente": "CLICNTE UNO ",
                     "domicilioCliente": null,
                     "testado": true,
@@ -733,7 +688,7 @@ export const PAYLOAD = {
                     }
                 ],
                 "cveServicioImmex": {
-                    "claveServicio": "string",
+                    "claveServicio": 123,
                     "nombre": "string",
                     "tipoServicio": "string",
                     "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
@@ -867,7 +822,7 @@ export const PAYLOAD = {
                     }
                 ],
                 "cveServicioImmex": {
-                    "claveServicio": "string",
+                    "claveServicio": 123,
                     "nombre": "string",
                     "tipoServicio": "string",
                     "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
@@ -1075,7 +1030,11 @@ export const PAYLOAD = {
             "tiempoPrograma": "",
             "descripcionTestado": "",
             "idCompuestoEmpresa": "",
-            "idServicioAutorizado": 0
+            "idServicioAutorizado": 0,
+            "domicilioSolicitud": {
+                "codigoPostal": "w93w9393",
+                "informacionExtra": "3939393"
+            }
         }
     ],
     "sectoresImmex": [
@@ -1104,16 +1063,13 @@ export const PAYLOAD = {
     ],
     "sociosAccionistas": [
         {
-            "domicilio":{
-                "codigoPostal":"testing091"
-            },
             "idPersonaPersonaSolicitudR": 0,
-            "idSolicitud": 69512694,
+            "idSolicitud": 202734824,
             "nombre": "",
             "apellidoMaterno": "",
             "apellidoPaterno": "",
             "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
-            "rfc": "JCB100702TQ1",
+            "rfc": "AAL0409235E6",
             "curp": "",
             "ideTipoPersonaSol": "TIPERS.SL",
             "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
@@ -1132,7 +1088,7 @@ export const PAYLOAD = {
             "personaMoral": false,
             "extranjero": false,
             "organismoPublico": false,
-            "cveUsuario": "JCB100702TQ1",
+            "cveUsuario": "AAL0409235E6",
             "paginaWeb": "",
             "ideGenerica1": "",
             "rfcExtranjero": "",
@@ -1211,7 +1167,7 @@ export const PAYLOAD = {
             "descripcionTestado": "",
             "idCompuestoEmpresa": "",
             "idServicioAutorizado": 0,
-             "domicilioSolicitud": {
+            "domicilioSolicitud": {
                 "codigoPostal": "dhdjjd",
                 "informacionExtra": "83938"
             }
@@ -1235,13 +1191,13 @@ export const PAYLOAD = {
     "declaracionSolicitudEntities": [
         {
             "acepto": 0,
-            "idTipoTramite": 80211,
+            "idTipoTramite": 80207,
             "manifiestoDeclaracion": true,
             "cveDeclaracion": "123"
         },
         {
             "acepto": 0,
-            "idTipoTramite": 80211,
+            "idTipoTramite": 80207,
             "manifiestoDeclaracion": true,
             "cveDeclaracion": "456"
         }
@@ -1253,7 +1209,7 @@ export const PAYLOAD = {
     "proyeccion": 750000,
     "trabajadores": 150,
     "id_solicitud": 12345,
-    "discriminatorValue": "80211",
+    "discriminatorValue": "80207",
     "certificacion_sat": "CERTIFICADO",
     "unidadAdministrativaRepresentacionFederal": {
         "clave": "string",
@@ -1309,12 +1265,12 @@ export const PAYLOAD = {
     },
     "solicitante": {
         "idPersonaPersonaSolicitudR": 0,
-        "idSolicitud": 69512694,
+        "idSolicitud": 202734824,
         "nombre": "",
         "apellidoMaterno": "",
         "apellidoPaterno": "",
         "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
-        "rfc": "JCB100702TQ1",
+        "rfc": "AAL0409235E6",
         "curp": "",
         "ideTipoPersonaSol": "TIPERS.SL",
         "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
@@ -1333,7 +1289,7 @@ export const PAYLOAD = {
         "personaMoral": false,
         "extranjero": false,
         "organismoPublico": false,
-        "cveUsuario": "JCB100702TQ1",
+        "cveUsuario": "AAL0409235E6",
         "paginaWeb": "",
         "ideGenerica1": "",
         "rfcExtranjero": "",
@@ -1363,36 +1319,4 @@ export const PAYLOAD = {
         "ampliacionPaises": false,
         "fecFallecimiento": "2025-09-07"
     }
-}
-
-
-/**
- * Representa la estructura para la información de una planta, incluyendo dirección y datos fiscales.
- *
- * @property idPlanta - (Opcional) Identificador único de la planta.
- * @property calle - (Opcional) Nombre de la calle de la dirección de la planta.
- * @property numInterior - (Opcional) Número interior de la dirección de la planta.
- * @property numExterior - (Opcional) Número exterior de la dirección de la planta.
- * @property codigoPostal - (Opcional) Código postal de la dirección de la planta.
- * @property colonia - (Opcional) Colonia o barrio de la dirección de la planta.
- * @property municipio - (Opcional) Municipio de la dirección de la planta.
- * @property entidadFederativa - (Opcional) Entidad federativa o estado de la dirección de la planta.
- * @property pais - (Opcional) País de la dirección de la planta.
- * @property rfc - (Opcional) RFC (Registro Federal de Contribuyentes) de la planta.
- * @property domicilioFiscal - (Opcional) Domicilio fiscal de la planta.
- * @property razonSocial - (Opcional) Razón social de la planta.
- */
-export interface PLANTASBUILD {
-  idPlanta?: string;
-  calle?: string;
-  numInterior?: string;
-  numExterior?: string;
-  codigoPostal?: string;
-  colonia?: string;
-  municipio?: string;
-  entidadFederativa?: string;
-  pais?: string;
-  rfc?: string;
-  domicilioFiscal?: string;
-  razonSocial?: string;
 }

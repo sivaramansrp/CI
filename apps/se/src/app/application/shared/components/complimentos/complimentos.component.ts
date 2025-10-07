@@ -397,7 +397,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
+        opinionPositiva: [{ value: 1, disabled: true }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
@@ -464,6 +464,11 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     })
   }
 
+  /**
+   * Limita la entrada de un campo de texto a un número máximo de caracteres numéricos.
+   * @param event Event del input
+   * @param maxLength 
+   */
   onInputMaxLength(event: Event, maxLength: number): void { 
   const TARGET = event.target as HTMLInputElement;
   let value = TARGET.value;
