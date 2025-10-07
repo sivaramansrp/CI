@@ -1,4 +1,5 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
+import { EmpresaNacional } from "../../../shared/models/modelo-interface.model";
 
 /**
  * @interface CambioDeModalidadForm
@@ -152,28 +153,27 @@ export interface ServiciosState {
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
-    clave: (ele: ServicioInmex): string | undefined => ele.servicio,
+    clave: (ele: EmpresaNacional): string => ele.descripcionServicio,
     orden: 1,
   },
   {
     encabezado: 'Registro federal de contribuyentes',
-    clave: (ele: ServicioInmex): string | undefined =>
-      ele.registroContribuyentes,
+    clave: (ele: EmpresaNacional): string => ele.rfc,
     orden: 2,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: ServicioInmex): string | undefined => ele.denominacionSocial,
+    clave: (ele: EmpresaNacional): string => ele.razonSocial,
     orden: 3,
   },
   {
     encabezado: 'Número del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.numeroIMMEX,
+    clave: (ele: EmpresaNacional): string => ele.numeroPrograma,
     orden: 4,
   },
   {
     encabezado: 'Año del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.anoIMMEX,
+    clave: (ele: EmpresaNacional): string => ele.tiempoPrograma,
     orden: 5,
   },
 ];

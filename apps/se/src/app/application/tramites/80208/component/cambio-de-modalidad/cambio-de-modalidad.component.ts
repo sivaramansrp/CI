@@ -7,7 +7,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CONFIGURACION_DOMICILIOS,ConfiguracionColumna, ServicioInmex } from '../../modelos/cambio-de-modalidad.model';
+import { CONFIGURACION_DOMICILIOS,ConfiguracionColumna } from '../../modelos/cambio-de-modalidad.model';
 import {
   Catalogo,
   CategoriaMensaje,
@@ -15,11 +15,10 @@ import {
   Notificacion,
   NotificacionesComponent,
   SeccionLibQuery,
-  SeccionLibState,
   SeccionLibStore,
   TipoNotificacionEnum,
 } from '@ng-mf/data-access-user';
-import { ServicioDtosKey, ServicioItemResponse } from '../../../../shared/models/modelo-interface.model';
+import { EmpresaNacional, EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse } from '../../../../shared/models/modelo-interface.model';
 import { filter, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { CONFIGURACION_SERVICIO } from '../../modelos/cambio-de-modalidad.model';
@@ -96,7 +95,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      * Configuración de columnas para la tabla de domicilios.
      * @property {ConfiguracionColumna<ServicioInmex>[]} configuracionTabla
      */
-    configuracionTablaImmex: ConfiguracionColumna<ServicioInmex>[] =
+    configuracionTablaImmex: ConfiguracionColumna<EmpresaNacional>[] =
       CONFIGURACION_DOMICILIOS;
   /**
    * @property ServiciosDatos - Datos de los servicios disponibles.
@@ -174,13 +173,13 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      * Datos de empresas nacionales.
      * @property {ServicioInmex[]} datos
      */
-    datos: ServicioInmex[] = [];
+    datos: EmpresaNacional[] = [];
 
     /**
        * Empresas seleccionadas.
        * @property {ServicioInmex[]} empresasSeleccionados
        */
-      empresasSeleccionados: ServicioInmex[] = [];
+      empresasSeleccionados: EmpresaNacional[] = [];
 
   /**
    * @property serviciosImmx - Lista de servicios IMMX disponibles.
@@ -262,7 +261,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   /**
    * @property tramiteID - Identificador del trámite.
    */
-  public tramiteID:string ='80205';
+  public tramiteID:string ='80208';
 
      /**
      * @public
@@ -393,19 +392,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       this.getCambioDeModalidad();
       this.getServiciosImmx();
       this.getTablaDatos();
-
-    /**
-     * @description
-     * Suscripción a los cambios de estado del formulario de cambio de modalidad.
-     * Escucha los cambios en el estado de validación del formulario y actualiza
-     * el estado de validación de la sección correspondiente en el store.
-     * 
-     * Utiliza un delay de 10ms para asegurar que los cambios de estado se procesen
-     * correctamente antes de la validación. La validación se considera exitosa si
-     * el formulario completo es válido o si el control específico 'cambioDeModalidad'
-     * tiene estado 'VALID'.
-     */
-   
   }
 
   /**
@@ -817,9 +803,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      */
     eliminarEmpresasNacionales(): void {
       const INDICE = this.datos.findIndex(
-        (item: ServicioInmex) =>
-          item.registroContribuyentes ===
-          this.empresasSeleccionados[0]?.registroContribuyentes
+        (item: EmpresaNacional) =>
+          item.idServicio === this.empresasSeleccionados[0]?.idServicio
       );
       if (INDICE !== -1) {
         const DATOSACTUALIZADOS = [...this.datos];
@@ -840,39 +825,84 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
-    if (
-      !this.rfcEmpresa?.trim() ||
-      !this.numeroPrograma?.trim() ||
-      !this.tiempoPrograma?.trim()
-    ) {
-      return; 
-    }
-  
-    const CUERPODATOS = {
-      servicio: 'Auditoría de sistemas de seguridad',
-      registroContribuyentes: this.rfcEmpresa,
-      denominacionSocial: 'AAL970927390',
-      numeroIMMEX: this.numeroPrograma,
-      anoIMMEX: this.tiempoPrograma,
-    };
-  
-    const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];
-    
-    this.cambioModalidadStore.actualizarEstado({rfcEmpresa: ''});
-    this.cambioModalidadStore.actualizarEstado({numeroPrograma: ''});
-    this.cambioModalidadStore.actualizarEstado({tiempoPrograma: ''});
-    this.datos= DATOSACTUALIZADOS;
-    this.cambioModalidadStore.actualizarEstado({datos:this.datos})
-    this.rfcEmpresa = '';
-    this.numeroPrograma = '';
-    this.tiempoPrograma = '';
+
+this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
+      rfcEmpresaNacional: this.rfcEmpresa,
+      idServicio: this.domiciliosSeleccionados[0]?.idServicio ?? "8",
+      descripcionServicio: this.domiciliosSeleccionados[0]?.descripcion || this.autorizadosSeleccionados[0]?.descripcion || "",
+      modalidad: this.tramiteID,
+      numeroPrograma: this.numeroPrograma,
+      tiempoPrograma: this.tiempoPrograma,
+      idServicioAutorizado: this.autorizadosSeleccionados[0]?.idServicio || ""
+    })
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        shareReplay(1),
+        filter((data: BaseResponse<EmpresasNacionalesResponse>) => data.codigo === '00'),
+        map((data: BaseResponse<EmpresasNacionalesResponse>) => {
+          if(data?.datos?.empresasNacionales === null) {
+            this.notificacionesService.showNotification({
+            tipoNotificacion: TipoNotificacionEnum.TOASTR,
+            categoria: CategoriaMensaje.ERROR,
+            modo: '',
+            titulo: 'Error',
+            mensaje: `${data?.mensaje}`,
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: ''
+          });
+            return [];
+          }
+          const SERVICIOS_ITEMS = data.datos?.empresasNacionales || [];
+          return SERVICIOS_ITEMS
+            .filter((item: EmpresaNacional) => item.idServicio !== null && item.idServicio !== undefined)
+            .map((item: EmpresaNacional) => ({
+                idCompuestoEmpresa: item.idCompuestoEmpresa,
+                idServicioAutorizado: item.idServicioAutorizado,
+                idServicio: item.idServicio,
+                descripcionServicio: item.descripcionServicio,
+                rfc: item.rfc,
+                razonSocial: item.razonSocial,
+                numeroPrograma: item.numeroPrograma,
+                tiempoPrograma: item.tiempoPrograma
+            } as unknown)) as EmpresaNacional[];
+        }
+      ))
+      .subscribe({
+        next: (empresas: EmpresaNacional[]) => {
+          // Actualizar solo el store con los nuevos datos sin duplicar
+          this.cambioModalidadStore.setEmpresasSeleccionados(empresas);
+          
+          // Limpiar los campos del formulario
+          this.rfcEmpresa = '';
+          this.numeroPrograma = '';
+          this.tiempoPrograma = '';
+        },
+        error: (error) => {
+          this.notificacionesService.showNotification({
+            tipoNotificacion: TipoNotificacionEnum.TOASTR,
+            categoria: CategoriaMensaje.ERROR,
+            modo: '',
+            titulo: 'Error',
+            mensaje: `${error?.error}`,
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: ''
+          });
+        }
+      });  
   }
   /**
      * Selecciona empresas.
      * @method seleccionarEmpresas
      * @param {any} empresas - Empresas seleccionadas.
      */
-    seleccionarEmpresas(empresas: ServicioInmex): void {
+    seleccionarEmpresas(empresas: EmpresaNacional): void {
+       if (!empresas) {
+      this.empresasSeleccionados = [];
+      return;
+    }
+    
     this.empresasSeleccionados = [{ ...empresas }];
     this.cambioModalidadStore.setEmpresasSeleccionados(this.empresasSeleccionados);
     }
@@ -1031,11 +1061,11 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     this.esEliminar = true;}}
   /**
    * Muestra una notificación de confirmación al intentar agregar un servicio.
-   * @method doAgregarDos
+   * @method agregarEmpresa
    * @return {void} Este método no retorna ningún valor.
    *  
    * */
-    doAgregarDos(): void {
+    agregarEmpresa(): void {
       if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.idServicio===undefined&&this.autorizadosSeleccionados[0]?.idServicio===undefined)){
         this.nuevaNotificacion = {
           tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -1066,10 +1096,10 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     }
     /**
      * Muestra una notificación de confirmación al intentar eliminar un servicio.
-     * @method doEliminarDos
+     * @method eliminarEmpresa
      * @return {void} Este método no retorna ningún valor.
      * */
-    doEliminarDos(): void {
+    eliminarEmpresa(): void {
       if(this.empresasSeleccionados.length===0){
         this.nuevaNotificacion = {
           tipoNotificacion: TipoNotificacionEnum.ALERTA,

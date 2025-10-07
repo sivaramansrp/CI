@@ -32,3 +32,8 @@ export const SERVICIO_IMMEX_TABLA = (TRAMITE: string) : string => `sat-t${TRAMIT
  * API para prepar evaluacion tramite general.
  */
 export const SERVICIO_AUTORIZADOS_TABLA = (TRAMITE: string) : string => `sat-t${TRAMITE}/servicios/servicios-autorizados`;
+
+/**
+ * API para prepar evaluacion tramite general.
+ */
+export const SERVICIO_EMPRESAS_NACIONALES = (TRAMITE: string) : string => `sat-t${TRAMITE}/servicios/empresas-nacionales`;

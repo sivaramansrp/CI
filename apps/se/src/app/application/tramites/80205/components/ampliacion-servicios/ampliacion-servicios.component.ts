@@ -788,17 +788,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       } else{
 
         this.actualizaGridEmpresasNacionales();
-      // this.nuevaNotificacion = {
-      //   tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      //   categoria: CategoriaMensaje.ALERTA,
-      //   modo: 'modal',
-      //   titulo: '',
-      //   mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
-      //   cerrar: false,
-      //   txtBtnAceptar: 'Aceptar',
-      //   txtBtnCancelar: '',
-      // };
-      // this.esAgregarDos = true;
     }
     }
     /**

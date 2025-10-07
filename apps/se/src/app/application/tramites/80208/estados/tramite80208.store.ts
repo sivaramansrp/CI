@@ -5,6 +5,7 @@
  */
 import { ServicioInfo, ServicioInmex } from '../modelos/cambio-de-modalidad.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { EmpresaNacional } from '../../../shared/models/modelo-interface.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -29,10 +30,10 @@ export interface CambioModalidadState {
   numeroPrograma: string;
   tiempoPrograma: string;
   datosAutorizados: ServicioInfo[];
-  datos: ServicioInmex[];
+  datos: EmpresaNacional[];
   ServiciosDatos: ServicioInfo[];
   domiciliosSeleccionados: ServicioInfo[];
-  empresasSeleccionados: ServicioInmex[];
+  empresasSeleccionados: EmpresaNacional[];
   servicio?: string;
   descripcionDelServicio?: string;
   tipoDeServicio?: string;
@@ -241,7 +242,7 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
    *
    * @param datos - Los datos de servicio INMEX que se van a guardar.
    */
-  public setDatos(datos: ServicioInmex[]): void {
+  public setDatos(datos: EmpresaNacional[]): void {
     this.update((state) => ({
       ...state,
       datos,
@@ -290,7 +291,7 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
    *
    * @param empresasSeleccionados - Las empresas seleccionadas que se van a guardar.
    */
-  public setEmpresasSeleccionados(empresasSeleccionados: ServicioInmex[]): void {
+  public setEmpresasSeleccionados(empresasSeleccionados: EmpresaNacional[]): void {
     this.update((state) => ({
       ...state,
       empresasSeleccionados,

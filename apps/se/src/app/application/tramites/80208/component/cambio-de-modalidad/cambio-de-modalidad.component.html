@@ -73,7 +73,7 @@
                 <div class="col-md-12">
                     <label class="form-label mb-4" for="serviciosImmx">Servicios autorizados:</label>
                     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTabla"
-                        [datos]="autorizadosDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura" (filaSeleccionada)="seleccionarDomicilios($event)"></app-tabla-dinamica>
+                        [datos]="autorizadosDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura" (filaSeleccionada)="seleccionarAutorizados($event)"></app-tabla-dinamica>
                 </div>
             </div>
             <div class="row">
@@ -115,11 +115,11 @@
             <div class="row my-4">
                 <div class="col-md-12">
                     <div class="pull-right">
-                        <button name="eliminar" (click)="doEliminarDos()" class="btn btn-danger"
+                        <button name="eliminar" (click)="eliminarEmpresa()" class="btn btn-danger"
                             [disabled]="esFormularioSoloLectura">
                             Eliminar
                         </button>
-                        <button name="agregar" (click)="actualizaGridEmpresasNacionales()" class="btn btn-primary mx-2"
+                        <button name="agregar" (click)="agregarEmpresa()" class="btn btn-primary mx-2"
                             [disabled]="esFormularioSoloLectura">
                             Agregar
                         </button>
