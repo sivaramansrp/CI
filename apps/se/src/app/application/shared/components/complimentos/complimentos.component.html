@@ -26,7 +26,7 @@
       <div class="col-md-8 mb-4">
         <label for="pagina">Página web*:</label>
         <input type="text" id="pagina" name="pagina" class="form-control" formControlName="paginaWWeb" maxlength="120"
-          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)"
+          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)" placeholder="WWW.ULTRASIST.COM"
           [ngClass]="esValido('datosGeneralis', 'paginaWWeb') ? 'required' : ''" />
         <div
           *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.hasError('required') && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched">
@@ -40,7 +40,7 @@
       <div class="col-md-8">
         <label for="localizacion">Localización*:</label>
         <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
-          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)"
+          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)" placeholder="VERACRUZ"
           [ngClass]="esValido('datosGeneralis', 'localizacion') ? 'required' : ''" />
         <div
           *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.hasError('required') && formaComplimentos.get('datosGeneralis.localizacion')?.touched">

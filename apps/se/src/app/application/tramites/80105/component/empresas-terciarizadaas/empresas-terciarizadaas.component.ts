@@ -36,6 +36,12 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy, OnInit {
   disponiblesDatos: DisponsibleFiscal[] = []; 
 
   /**
+   * Indica si existe un error relacionado con el RFC.
+   * Se establece en `true` cuando el valor del RFC es inválido o no cumple con los requisitos esperados.
+   */
+  rfcError: boolean = false;
+
+  /**
   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
   *
@@ -80,6 +86,8 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy, OnInit {
    * La suscripción se cancela automáticamente al destruir el componente.
    */
   obtenerTerciarizadasDisponibles(event: { rfc: string; estado: string }): void {
+    
+    this.rfcError=false;
     const PAYLOAD = {
       "rfcEmpresaSubManufacturera": event.rfc,
       "entidadFederativa": event.estado,
@@ -96,7 +104,11 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy, OnInit {
               this.disponiblesDatos = this._compartidaSvc.toDisponsibleFiscal(API_DATOS.datos);
             } 
           }
-      });
+      },
+        (err) => {  
+          this.rfcError=true;
+        }
+      );
   }
 
   /**

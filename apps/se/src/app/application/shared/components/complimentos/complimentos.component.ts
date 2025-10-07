@@ -398,7 +398,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       }),
       obligacionesFiscales: this.fb.group({
         opinionPositiva: [{ value: 1, disabled: true }, Validators.required],
-        fechaExpedicion: ['', Validators.required],
+        fechaExpedicion: ['05/04/2025', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
