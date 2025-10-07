@@ -27,16 +27,14 @@
       <div class="col-md-6">
         <label for="numeroOperacion">Número de operación:</label>
         <input id="numeroOperacion" type="text" class="form-control" formControlName="numeroOperacion" id="numeroOperacion"
-          maxlength="50" minlength="1" [ngClass]="{'is-invalid': esInvalido('numeroOperacion')}"
+          [ngClass]="{'is-invalid': esInvalido('numeroOperacion')}"
           (blur)="onFieldBlur('numeroOperacion')"
           (change)="setValoresStore(avisoForm,'numeroOperacion', 'setnumeroOperacion')" />
         <div *ngIf="esInvalido('numeroOperacion')" class="text-danger">
-          <small *ngIf="avisoForm.controls['numeroOperacion'].errors?.['required']">
-            Este campo es obligatorio.
+          <small *ngIf="avisoForm.controls['numeroOperacion'].errors?.['required'] || avisoForm.get('numeroOperacion')?.errors?.['minlength']" class="d-block">
+            Debe capturar al menos 1 caracter.
           </small>
-          <small
-            *ngIf="avisoForm.get('numeroOperacion')?.errors?.['minlength'] || avisoForm.get('numeroOperacion')?.errors?.['maxlength']"
-            class="d-block">
+          <small *ngIf="avisoForm.get('numeroOperacion')?.errors?.['maxlength']" class="d-block">
             El texto no debe exceder 50 caracteres.
           </small>
         </div>
