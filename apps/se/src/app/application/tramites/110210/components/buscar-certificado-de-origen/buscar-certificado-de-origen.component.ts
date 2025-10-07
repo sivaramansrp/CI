@@ -271,7 +271,9 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       );
   }
-
+  /**
+   * Actualiza el estado del grid de comercializadores de catálogos.
+   */
   actualizaGridComercializadoresCatalogs(): void {
      this.certificadoService.getData().pipe(
         takeUntil(this.destroyed$)
