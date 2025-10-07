@@ -1,7 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { registroSolicitudImmexService } from './registro-expansion.service';
-import { FormularioDatos, RespuestaPlantas } from '../modelos/registro-expansion.model';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { registroSolicitudImmexService } from './registro-solicitud-immex.service';
+import {
+  FormularioDatos,
+  RespuestaPlantas,
+} from '../modelos/registro-solicitud-immex.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 describe('registroSolicitudImmexService', () => {
@@ -49,7 +55,7 @@ describe('registroSolicitudImmexService', () => {
         { id: 1, descripcion: 'Estado 1' },
         { id: 2, descripcion: 'Estado 2' },
       ],
-      message: ''
+      message: '',
     };
 
     service.obtenerEstados();
@@ -94,7 +100,7 @@ describe('registroSolicitudImmexService', () => {
           razon: 'Razón Social 2',
         },
       ],
-      message: ''
+      message: '',
     };
 
     service.obtenerPlantasDatos().subscribe((datos) => {
@@ -123,7 +129,7 @@ describe('registroSolicitudImmexService', () => {
         { id: 1, descripcion: 'Estado 1' },
         { id: 2, descripcion: 'Estado 2' },
       ],
-      message: ''
+      message: '',
     };
 
     service.obtenerRespuestaPorUrl(service, 'estados', '/80211/estados.json');
