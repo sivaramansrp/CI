@@ -2,6 +2,8 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   CatalogoSelectComponent,
+  NotificacionesComponent,
+  PasoCargaDocumentoComponent,
   TablaDinamicaComponent,
 } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -12,6 +14,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -43,10 +46,13 @@ import { registroSolicitudImmexService } from './services/registro-solicitud-imm
     FormsModule,
     AlertComponent,
     AnexarDocumentosComponent,
-    ToastrModule.forRoot(),
     CatalogoSelectComponent,
     SolicitarTransferenciaCuposModule,
     TablaDinamicaComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
+    NotificacionesComponent,
+    ToastrModule.forRoot(),
   ],
   exports: [PasoUnoComponent, PasoDosComponent, PasoTresComponent],
   providers: [registroSolicitudImmexService, ToastrService],

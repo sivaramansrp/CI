@@ -1,5 +1,6 @@
 import {
   DatosSubcontratista,
+  DomicilioPayload,
   InfoRegistro,
   PlantasDireccionModelo,
   SubfabricanteDireccionModelo,
@@ -21,6 +22,7 @@ import { Injectable } from '@angular/core';
  * @property {Array} plantasSubfabricantesAgregar - Lista inicial de plantas subfabricantes a agregar (vacía por defecto).
  */
 export function createInitialState(): Tramite80207State {
+
   const INFO_REGISTRO: InfoRegistro = {
     /**
      * Modalidad del registro.
@@ -47,6 +49,8 @@ export function createInitialState(): Tramite80207State {
   };
 
   return {
+    idSolicitud: 202792606,
+
     /**
      * Información del registro inicial.
      * @property {InfoRegistro} infoRegistro
@@ -127,6 +131,18 @@ export class Tramites80207Store extends Store<Tramite80207State> {
     this.update((state) => ({
       ...state,
       infoRegistro: infoRegistro,
+    }));
+  }
+
+  /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 
@@ -291,3 +307,26 @@ eliminarPlantas(plantasAEliminar: PlantasDireccionModelo[]): void {
     super(createInitialState());
   }
 }
+
+export const DEFAULT_DOMICILIO: DomicilioPayload = {
+  idDomicilio: 0,
+  calle: '',
+  numeroExterior: '',
+  numeroInterior: '',
+  codigoPostal: '',
+  informacionExtra: '',
+  clave: '',
+  cveLocalidad: '',
+  cveDelegMun: '',
+  cveEntidad: '',
+  cvePais: '',
+  ciudad: '',
+  telefono: '',
+  fax: '',
+  municipio: '',
+  colonia: '',
+  descUbicacion: '',
+  cveCatalogo: '',
+  telefonos: '',
+  tipoDomicilio: 0,
+};

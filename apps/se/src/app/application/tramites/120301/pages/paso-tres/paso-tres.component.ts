@@ -14,8 +14,8 @@
  * @see Router
  */
 
-import { CategoriaMensaje, DocumentoService,Notificacion,TramiteFolioStore,base64ToHex, encodeToISO88591Hex, formatFecha} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { FirmarService } from '../../services/firmar.service';
 import { GenerarCadenaResponse } from '../../models/request/generar-cadena-request.model';
@@ -36,6 +36,31 @@ import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/sha
   styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent implements OnInit, OnDestroy {
+
+  /**
+   
+URL del procedimiento actual utilizada para la navegación entre pasos del trámite.
+Se usa para:
+Construir la ruta de navegación al acuse de recibo después de la firma exitosa
+Reemplazar la URL actual con la del siguiente paso en el flujo
+Mantener la coherencia en la navegación del proceso de trámite
+@example
+```html
+<paso-firma procedureUrl="solicitud-11201"></paso-firma>
+```
+*/@Input() procedureUrl: string = '';
+  /**
+     
+  Código numérico que identifica el tipo de procedimiento o trámite.
+  Este valor se utiliza para:
+  Determinar el endpoint específico en las llamadas al servicio
+  Configurar el comportamiento del proceso de firma según el tipo de trámite
+  Validar permisos y reglas de negocio específicas del procedimiento
+  @example
+  ```html
+  <paso-firma [procedure]="11201"></paso-firma>
+  ```*/
+  @Input() procedure: number = 0;
 
   /**
    * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
@@ -115,11 +140,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       .subscribe((state) => {
         this.solicitudState = state;
       });
-
-    // Obtener la URL actual y separar los segmentos
-    const URL_ACTUAL = this.router.url;
-    const URL_SEPARADA = URL_ACTUAL.split('/');
-    this.url = URL_SEPARADA.slice(0, 3).join('/');
 
     // Obtener la cadena original del trámite
     this.obtenerCadenaOriginal();
@@ -255,9 +275,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.tramiteStore.establecerTramite(
             this.folio,
             firma,
-            this.solicitudState.idSolicitud ?? 0
+            this.solicitudState.idSolicitud ?? 0,
+            this.procedure
           );
-          this.router.navigate([`${this.url}/acuse`]);
+         this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);

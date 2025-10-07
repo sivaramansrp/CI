@@ -1,5 +1,6 @@
 import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductorExportador } from '../models/certificado-origen.model';
@@ -20,7 +21,7 @@ export class CertificadosOrigenService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public httpService: HttpCoreService) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.

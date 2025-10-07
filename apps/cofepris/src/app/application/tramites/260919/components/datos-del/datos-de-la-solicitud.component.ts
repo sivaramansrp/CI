@@ -438,7 +438,7 @@ private modalElement: HTMLElement | null = null;
         localidad: [
           this.dataDeLaSolicitudState?.localidad,
           [
-            Validators.required,
+           
             Validators.maxLength(120),
             Validators.pattern(REGEX_IMPORTE_PAGO),
           ],
@@ -449,12 +449,11 @@ private modalElement: HTMLElement | null = null;
         ],
         calle: [
           this.dataDeLaSolicitudState?.calle,
-          [Validators.maxLength(100)],
+          [Validators.required,Validators.maxLength(100)],
         ],
         lada: [
           this.dataDeLaSolicitudState?.lada,
           [
-            Validators.required,
             Validators.maxLength(5),
             Validators.pattern(/^[0-9]+$/),
           ],
@@ -928,8 +927,8 @@ this.tableData = [...this.tableData, FORM_DATA];
       };
       this.indiceFilaSeleccionada = null;
     } else {
-      this.mercanciasData.push(FORM_DATA);
-    }
+this.mercanciasData = [...this.mercanciasData, FORM_DATA];  
+  }
 
     this.tableData2 = [...this.mercanciasData];
     this.dataDeLaSolicitudForm.reset();

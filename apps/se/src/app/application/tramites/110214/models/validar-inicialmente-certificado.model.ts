@@ -285,3 +285,80 @@ export interface ConsultaDatos {
   registroFiscalTercerOperador : string,
   razonSocialTercerOperador : string,
 }
+
+/**
+ * @interface MercanciaTabla
+ * @description
+ * Interfaz que representa la tabla de mercancías.
+ * Contiene información detallada sobre las mercancías, incluyendo fracción arancelaria,
+ * tipo de factura, cantidad, unidad de medida, nombres técnicos y comerciales, 
+ * valor de la mercancía y RFC del productor.
+ * 
+ */
+export interface MercanciaTabla {
+  /**
+   * @property {string} fraccionArancelaria - Fracción arancelaria de la mercancía.
+   * @description
+   * Código que clasifica la mercancía según el sistema arancelario.
+   */
+  fraccionArancelaria: string;
+  /**
+   * @property {string} tipoFactura - Tipo de factura asociada a la mercancía.
+   * @description
+   * Tipo de documento fiscal que respalda la transacción de la mercancía.
+   */
+  tipoFactura: string;
+  /**
+   * @property {string} cantidad - Cantidad de la mercancía.
+   * @description
+   * Cantidad total de la mercancía registrada en la transacción.
+   */
+  cantidad: string;
+  /**
+   * @property {string} unidadMedida - Unidad de medida de la mercancía.
+   * @description
+   * Unidad en la que se mide la mercancía (por ejemplo, kilogramos, litros).
+   */
+  unidadMedida: string;
+  /**
+   * @property {string} nombreTecnico - Nombre técnico de la mercancía.
+   * @description
+   * Denominación técnica del producto, utilizada para su identificación precisa.
+   */
+  nombreTecnico: string;
+  /**
+   * @property {string} nombreComercial - Nombre comercial de la mercancía.
+   * @description
+   * Denominación comercial del producto, utilizada en el mercado.
+   */
+  nombreComercial: string;
+  /**
+   * @property {string} valorMercancia - Valor de la mercancía.
+   * @description
+   * Valor monetario asignado a la mercancía, utilizado para fines fiscales y comerciales.
+   */
+  valorMercancia: string;
+  /**
+   * @property {string} rfcProductor - RFC del productor de la mercancía.
+   * @description
+   * Registro Federal de Contribuyentes del productor responsable de la mercancía.
+   */
+  rfcProductor: string;
+}
+
+/**
+ * @interface MercanciasHistorico
+ * @description
+ * Interfaz que representa el historial de mercancías.
+ * Contiene una lista de objetos de tipo `MercanciaTabla` que almacenan los datos históricos de las mercancías asociadas al trámite.
+ * 
+ */
+export interface MercanciasHistorico {
+  /**
+  * @property {MercanciaTabla[]} datos - Lista de datos históricos de mercancías.
+  * @description
+  * Arreglo que contiene los datos históricos de mercancías, cada uno representado por un
+  * objeto de tipo `MercanciaTabla`.
+  */
+  datos: MercanciaTabla[];
+}

@@ -1,0 +1,35 @@
+<ng-titulo [titulo]="titulo" />
+<ng-alert [CONTENIDO]="mensajeAlerta"></ng-alert>
+<form [formGroup]="formularioInstancias">
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <lib-input-check [label]="'Acumulación'" [required]="false" [id]="'acumulación'"></lib-input-check>
+        </div>
+        <div class="col-md-4">
+            <lib-input-check [label]="modificacionTxt ? 'Juegos o surtidos' : 'Bienes y Materiales Fungibles'" [required]="false"
+                [id]="'bienes'"></lib-input-check>
+        </div>
+        <div class="col-md-4">
+            <lib-input-check [label]="'Materiales Intermedios'" [required]="false"
+                [id]="'intermedio'"></lib-input-check>
+        </div>
+    </div>
+    @if (catalogo) {
+        <div class="col-md-12">
+            <div class="col-md-8">
+                <app-catalogo-select [catalogo]="criteriosInstanciasCatalogo" formControlName="criterioInstancias"
+                    [label]="'Criterio Otras instancias'" [required]="false" name="Criterio Otras instancias"
+                    (change)="setValoresStore(formularioInstancias,'criterioInstancias', 'setCriterioInstancia')"></app-catalogo-select>
+            </div>
+        </div>
+    }
+
+
+</form>
+
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}
