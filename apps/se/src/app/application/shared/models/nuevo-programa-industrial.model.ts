@@ -128,6 +128,7 @@ export interface ProveedorClienteTabla {
   paisDestino: string;
   rfcClinte: string;
   razonSocial: string;
+  rfcProveedor?: string;
 }
 
 export interface DatosComplimento {
