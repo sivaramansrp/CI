@@ -211,14 +211,14 @@ export const ALERT = {
  * @constant
  * @type {string}
  */
-export const FRACCIONARANCELARIAVALIDO = '87033302';
+//export const FRACCIONARANCELARIAVALIDO = '87033302';
 
 /**
  * Valor válido para la mercancía utilizada en validaciones de formularios o lógica de negocio.
  * @constant
  * @type {string}
  */
-export const MERCANCIAVALIDO = '85044017';
+//export const MERCANCIAVALIDO = '85044017';
 /**
  * Mensaje de alerta que se muestra cuando hay errores de validación en los formularios.
  * 

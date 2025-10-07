@@ -48,4 +48,5 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     tipoInversion: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-inversion`,
     estadoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     buscarPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-submanufactureras/buscar-datos-grid-plantas`,
+    buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
 });

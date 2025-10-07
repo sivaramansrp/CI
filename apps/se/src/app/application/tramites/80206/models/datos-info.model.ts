@@ -328,3 +328,63 @@ export interface AccionBoton {
    */
   valor: number;
 }
+
+export interface BuscarPayload {
+      fraccion: string,
+      tipoSolicitud:number
+}
+
+/**
+ * Interface for API fraccion arancelaria response data
+ * @export
+ * @interface FraccionArancelariaApiResponse
+ */
+export interface FraccionArancelariaApiResponse {
+  fraccionPadre?: string | null;
+  descripcionFraccionPadre?: string | null;
+  tipoFraccion?: string;
+  exenta?: string | null;
+  fraccionCompuesta?: string | null;
+  claveFraccionPadre?: string | null;
+  unidadMedida?: string;
+  fraccionConcatenada?: string | null;
+  descripcionTestado?: string | null;
+  testado?: boolean;
+  tipoOperacion?: string;
+  valorMonedaMensual?: number | null;
+  valorMonedaAnual?: number | null;
+  valorProduccionMensual?: number | null;
+  valorProduccionAnual?: number | null;
+  valorProduccionAnualSolicitada?: number | null;
+  claveCategoria?: string | null;
+  descripcionCategoria?: string | null;
+  mensaje?: string | null;
+  descripcionUsuario?: string;
+  umt?: string;
+  idFraccion?: string | null;
+  idProducto?: string | null;
+  idProductoPadre?: string | null;
+  claveProductoExportacion?: string | null;
+  descripcionServicio?: string | null;
+  rowID?: string | null;
+  cveFraccion?: string;
+  capitulo?: string;
+  partida?: string;
+  subPartida?: string;
+  descripcion?: string;
+  fechaCaptura?: string;
+  fechaInicioVigencia?: string;
+  fechaFinVigencia?: string | null;
+  cveUsuario?: string;
+  cveCapituloFraccion?: string | null;
+  cvePartidaFraccion?: string | null;
+  cveSubPartidaFraccion?: string | null;
+  activo?: boolean;
+  activoAnexo28?: boolean | null;
+  decretoImmex?: string | null;
+  sector?: string | null;
+  cveServicioImmex?: string | null;
+  listaProveedores?: unknown[] | null;
+  listaProyecto?: unknown[] | null;
+  nicoDtos?: unknown[] | null;
+}

@@ -13,6 +13,8 @@
 import {
   Catalogo,
   TablaSeleccion,
+  doDeepCopy,
+  esValidObject,
 } from '@ng-mf/data-access-user';
 
 import {
@@ -29,8 +31,6 @@ import {
 import {
   CONFIGURACION_ARANCELARIAS,
   CONFIGURACION_ARANCELARIASIMPORTACION,
-  FRACCIONARANCELARIAVALIDO,
-  MERCANCIAVALIDO,
   TEXTOS_80206
 } from "../../constantes/modificacion.constants";
 
@@ -207,7 +207,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
  * Utiliza la constante FRACCIONARANCELARIAVALIDO.
  * @type {string}
  */
-VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   /**
    * Constructor del componente.
    * @constructor
@@ -424,39 +423,107 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
    * Actualiza el grid de empresas nacionales.
    * @method actualizaGridEmpresasNacionales
    */
-  actualizaGridEmpresasNacionales(): void {
-    const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
-    if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
-    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria.';
-    this.activarModal();
-    }
-    else if(this.fraccionArancelaria !== this.VALIDOAR_FRACCION_ARANCELARIA) {
-      this.mensajeDeAlerta = 'La fracción arancelaria es inválida.';
-      this.activarModal();
-    }
-    else if (EXISTS) {
-      this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
-      this.activarModal();
-    }
-    else{
-    const CUERPODATOS = {
-      fraccion: "1",
-      fraccionArancelaria: this.fraccionArancelaria,
-      descripcionComercial:"Usados",
-      anexoII: "NO SENSIBLE",
-      tipo: "",
-      umt: "",
-      categoria: "",
-      valorMensual: "",
-      valorAnual: "",
-      volumenrMensual: "",
-      volumenAnual: "",
-    };
-    this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-    this.fraccionArancelaria = '';
+ actualizaGridEmpresasNacionales(): void {
+  if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
+    return;
   }
-  }
+  // Verificar si la fracción arancelaria está vacía
+  // if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
+  //   this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria.';
+  //   this.activarModal();
+  //   return;
+  // }
+
+  // Validar el formato de la fracción arancelaria
+  // if (this.fraccionArancelaria) {
+  //   this.mensajeDeAlerta = 'La fracción arancelaria es inválida.';
+  //   this.activarModal();
+  //   return;
+  // }
+
+  // Verificar si la fracción ya existe en los datos
+  // const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
+  // if (EXISTS) {
+  //   this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+  //   this.activarModal();
+  //   return;
+  this.obtenerInformacionFraccion();
+  //}
+
+}
+
+obtenerInformacionFraccion(): void {
+  const FRACCION_VALUE = this.fraccionArancelaria;
   
+  if (!FRACCION_VALUE || FRACCION_VALUE.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe introducir una fracción arancelaria válida.';
+    return;
+  }
+
+ if (!AmpliacionAnexoComponent.validarFormatoFraccion(FRACCION_VALUE)) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
+    return;
+  }
+
+  const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === FRACCION_VALUE);
+  if (EXISTS) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+    return;
+  }
+
+  const PAYLOAD = {
+    "fraccion": FRACCION_VALUE,
+    "tipoSolicitud": 471
+  };
+
+  this.ampliacionServiciosService
+    .obtenerInformacionFraccion(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = API_DATOS.error || API_DATOS.mensaje || 'La fracción arancelaria solicitada no existe.';
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            try {
+              const CURRENT_COUNT = this.datosImmex.length;
+              const RESPONSE: Arancelaria[] = this.ampliacionServiciosService
+                .mapApiResponseToFraccionArancelaria([API_DATOS.datos], CURRENT_COUNT);
+              
+              this.tramite80206Store.setDatosImmex([...this.datosImmex, ...RESPONSE]);
+              
+              this.fraccionArancelaria = '';
+              
+            } catch (mappingError) {
+              console.error('Error al mapear respuesta:', mappingError);
+              this.mostrarAlerta = true;
+              this.mensajeDeAlerta = 'Error al procesar la información de la fracción arancelaria.';
+            }
+          } else {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = 'No se encontraron datos para la fracción arancelaria especificada.';
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener información de fracción:', error);
+        this.mostrarAlerta = true;
+        this.mensajeDeAlerta = 'Error al conectar con el servidor. Intente nuevamente.';
+      }
+    });
+}
+
   /**
    * Cierra el modal de alerta.
    * @method cerrarModal
@@ -470,16 +537,18 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
    * @method agregarImportacion
    */
   agregarImportacion(): void {
+    if(!this.importacion || this.importacion.trim() === '') {
+      this.mostrarAlerta = true;
+      this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
+      return;
+    }
+ 
     if(this.domiciliosSeleccionados.length === 0) {
       this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
       this.activarModal();
     }
-    else if(!this.importacion || this.importacion.trim() === '') {
-      this.mensajeDeAlerta = 'Tiene que introducir la mercancía.';
-      this.activarModal();
-    }
-    else if(MERCANCIAVALIDO !== this.importacion) {
-      this.mensajeDeAlerta = 'La mercancía es inválida.';
+    else if(this.importacion) {
+      this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
       this.activarModal();
     }
     else if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
@@ -537,7 +606,16 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   seleccionarDomicilios(domicilios: Arancelaria): void {
     this.domiciliosSeleccionados = [domicilios];
   }
-
+/**
+ * Validates the format of the fraccion arancelaria
+ * @method validarFormatoFraccion
+ * @param {string} fraccion - The fraccion value to validate
+ * @returns {boolean} - True if valid format (8 digits)
+ */
+  static validarFormatoFraccion(fraccion: string): boolean {
+    const FRACCION_PATTERN = /^\d{8}$/;
+    return FRACCION_PATTERN.test(fraccion);
+  }
    /**
    * @method validarFormulario
    * Valida todos los controles del formulario.

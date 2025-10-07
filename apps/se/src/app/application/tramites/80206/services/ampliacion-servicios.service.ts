@@ -8,12 +8,13 @@
  * Este servicio utiliza el cliente HTTP de Angular para realizar solicitudes a archivos JSON locales y expone observables para manejar datos y eventos.
  */
 
-import { Observable, Subject, map } from 'rxjs';
+import { Arancelaria, BuscarPayload, DatosResponse, FraccionArancelariaApiResponse } from '../models/datos-info.model';
+import { JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable, Subject, catchError, map, throwError } from 'rxjs';
+import { API_ROUTES } from '../../../shared/servers/api-route';
 import { AmpliacionServiciosState } from '../estados/tramite80206.store';
-import { DatosResponse } from '../models/datos-info.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Tramite80206Store } from '../estados/tramite80206.store';
 
 @Injectable({
@@ -110,4 +111,46 @@ export class AmpliacionServiciosService {
    */
   getServiciosData(): Observable<AmpliacionServiciosState> {
     return this.http.get<AmpliacionServiciosState>('assets/json/80206/datos-previos.json')}
+
+    /*
+    * Realiza una solicitud para obtener información de fracciones arancelarias.
+    * @param {BuscarPayload} body - Cuerpo de la solicitud con los parámetros necesarios.
+    * @returns {Observable<JSONResponse>} - Observable con la respuesta de la API.
+    */
+ obtenerInformacionFraccion(body: BuscarPayload): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarfraccionArancelaria, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES('/sat-t80206','80206').buscarfraccionArancelaria}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+  /**
+ * Maps API response data to Arancelaria interface
+ * @method mapApiResponseToFraccionArancelaria
+ * @param {FraccionArancelariaApiResponse[]} dato - Array of API response data
+ * @param {number} startIndex - Starting index for fraccion numbering
+ * @returns {Arancelaria[]} - Mapped array of Arancelaria objects
+ */
+// eslint-disable-next-line class-methods-use-this
+mapApiResponseToFraccionArancelaria(
+    dato: FraccionArancelariaApiResponse[], 
+    startIndex: number = 0
+  ): Arancelaria[] {
+    return dato.map((item, index) => ({
+      fraccion: (startIndex + index + 1).toString(),
+      fraccionArancelaria: item.cveFraccion || '',
+      descripcionComercial: item.descripcion || item.descripcionUsuario || '',
+      anexoII: item.tipoFraccion || '',
+      tipo: item.tipoOperacion || '',
+      umt: item.unidadMedida || item.umt || '',
+      categoria: item.descripcionCategoria || item.claveCategoria || '',
+      valorMensual: item.valorMonedaMensual?.toString() || '',
+      valorAnual: item.valorMonedaAnual?.toString() || '',
+      volumenrMensual: item.valorProduccionMensual?.toString() || '',
+      volumenAnual: item.valorProduccionAnual?.toString() || '',
+    }));
+  }
 }
