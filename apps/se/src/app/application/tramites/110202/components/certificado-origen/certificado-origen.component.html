@@ -12,7 +12,7 @@
           <div class="form-group">
             <label class="form-label" for="calle1">Calle*:</label>
             <input type="text" id="calle1" class="form-control" formControlName="calle1"
-              (change)="setValoresStore(validacionForm,'calle1','setFormCertificadoGenric')" />
+              (change)="setValoresStore(validacionForm,'calle1','setCall1')" />
             <div
               *ngIf="registroForm.get('validacionForm.calle1')?.invalid && (registroForm.get('validacionForm.calle1')?.touched || registroForm.get('validacionForm.calle1')?.dirty)"
               class="text-danger mt-2">
@@ -26,7 +26,7 @@
           <div class="form-group">
             <label class="form-label" for="numeroLetra1">Número y/o letra*:</label>
             <input type="text" id="numeroLetra1" class="form-control" formControlName="numeroLetra1"
-              (change)="setValoresStore(validacionForm,'numeroLetra1','setFormCertificadoGenric')" />
+              (change)="setValoresStore(validacionForm,'numeroLetra1','setnumeroLetra1')" />
             <div *ngIf="
   registroForm.get('validacionForm.numeroLetra1')?.invalid &&
   (registroForm.get('validacionForm.numeroLetra1')?.touched || registroForm.get('validacionForm.numeroLetra1')?.dirty)"

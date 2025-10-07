@@ -13,7 +13,8 @@ import { Injectable } from '@angular/core';
 })
 export class DocumentoService {
   private urlServer = ENVIRONMENT.URL_SERVER_UPLOAD;
-  private urlServerHost = ENVIRONMENT.API_HOST;
+  // private urlServerHost = ENVIRONMENT.API_HOST;
+  private urlServerHost = 'http://localhost:8080'
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario

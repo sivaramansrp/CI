@@ -20,7 +20,8 @@
       @switch (indice) { @case (1) {
      <app-paso-uno (alertaEvento)="mostrarAlerta = $event"></app-paso-uno>
       } @case (2) {
-      <app-paso-dos></app-paso-dos>
+      <paso-firma [idSolicitud]="202812727" [procedure]="110202"
+        [procedureUrl]="'certificado-validacion/validacion'"></paso-firma>
       } }
 
       <btn-continuar

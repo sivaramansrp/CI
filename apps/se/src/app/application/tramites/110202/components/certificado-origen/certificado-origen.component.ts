@@ -397,7 +397,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
   validationAttempted: boolean = false;
 
   /** ID del trámite actual */
-  TramitesID: string = '110202';
+  TramitesID: string = '110201';
 
   /** Tratado asociado al certificado de origen */
   tratadoAsociado: string = 'TITRAC.TA';
@@ -601,14 +601,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
    */
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-    const NEW_ROW = {
-      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
-      nombreTecnico: FORM_VALUES.nombreTecnico,
-      nombreComercial: FORM_VALUES.nombreComercial,
-      numeroRegistroProducto: FORM_VALUES.numeroRegistro,
-      fechaExpedicion: FORM_VALUES.fechaInicial,
-      fechaVencimiento: FORM_VALUES.fechaFinal,
-    };
+    // const NEW_ROW = {
+    //   fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+    //   nombreTecnico: FORM_VALUES.nombreTecnico,
+    //   nombreComercial: FORM_VALUES.nombreComercial,
+    //   numeroRegistroProducto: FORM_VALUES.numeroRegistro,
+    //   fechaExpedicion: FORM_VALUES.fechaInicial,
+    //   fechaVencimiento: FORM_VALUES.fechaFinal,
+    // };
 
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6",
@@ -618,11 +618,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
 
     this.certificadoValidacionService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
       this.mercanciaDisponsiblesTablaDatos = response.datos || [];
+      this.mercanciaSeleccionadasTablaData = response.datos[0];
       this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
     });
 
 
-    this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
+    // this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
     this.hayMercanciasDisponibles = true;
   }
 
@@ -968,6 +969,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  
 
   /**
    * @method validarFormulario - Valida el formulario de certificado de origen

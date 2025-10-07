@@ -667,6 +667,13 @@ constructor() {
   }
 
 
+  setnumeroLetra1(numeroLetra1: string): void {
+       this.update((state) => ({
+      ...state,
+      numeroLetra1,
+    }));
+  }
+
   /**
   * Establece los entidadFederativaSeleccion de países en el almacén.
   * 

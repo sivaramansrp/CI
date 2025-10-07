@@ -8,7 +8,7 @@ export const ROUTES: Routes = [
     canActivate: [IniciarTramiteResolver],
     data: {
       iniciarConfig: {
-        procedureId: '110202',
+        procedureId: '110201',
       },
     },
     path: 'validacion',

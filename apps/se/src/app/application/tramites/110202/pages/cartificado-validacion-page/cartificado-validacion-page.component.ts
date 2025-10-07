@@ -1,9 +1,8 @@
 import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, PasoFirmaComponent,WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, take, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
@@ -30,7 +29,8 @@ interface AccionBoton {
     WizardComponent,
     BtnContinuarComponent,
     PasoUnoComponent,
-    PasoDosComponent, AlertComponent
+    PasoFirmaComponent,
+    AlertComponent
   ],
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
@@ -156,22 +156,20 @@ export class CartificadoValidacionPageComponent {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.indice = 1;
-        this.datosPasos.indice = 1;
-      } else {
-        this.indice = 2;
-        this.datosPasos.indice = 2;
+        return;
       }
-
-    } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.obtenerDatosDelStore()
+    }
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
   }
+
   pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;
@@ -248,10 +246,11 @@ return arr.map((item: any) => ({
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: any): void {
+    console.log(item);
     const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState.idSolicitud || 0,
+      idSolicitud: this.solicitudState?.idSolicitud || 0,
       solicitante: {
         rfc: "AAL0409235E6",
         nombre: "ACEROS ALVARADO S.A. DE C.V.",
@@ -285,35 +284,36 @@ return arr.map((item: any) => ({
       },
  
       destinatario: {
-        nombre: item.nombre,
-        primer_apellido: item.apellidoPrimer,
-        segundo_apellido: item.apellidoSegundo,
-        numero_registro_fiscal: item.numeroFiscal,
-        razon_social: item.razonSocial,
+        nombre: item.formDatosDelDestinatario.nombres,
+        primer_apellido: item.formDatosDelDestinatario.primerApellido,
+        segundo_apellido: item.formDatosDelDestinatario.segundoApellido,
+        numero_registro_fiscal: item.formDatosDelDestinatario.numeroDeRegistroFiscal,
+        razon_social: item.formDatosDelDestinatario.razonSocial,
         domicilio: {
-          ciudad_poblacion_estado_provincia: item.ciudad,
-          calle: item.calle,
-          numero_letra: item.numeroLetra,
-          lada: item.lada,
-          telefono: item.telefono,
-          fax: item.fax,
-          correo_electronico: item.correoElectronico,
-          pais_destino: item.nacion
+          ciudad_poblacion_estado_provincia: item.formDestinatario.ciudad,
+          calle: item.formDestinatario.calle,
+          numero_letra: item.formDestinatario.numeroLetra,
+          lada: item.formDestinatario.lada,
+          telefono: item.formDestinatario.telefono,
+          fax: item.formDestinatario.fax,
+          correo_electronico: item.formDestinatario.correoElectronico,
+          pais_destino: item.formDestinatario.paisDestin
         },
-        medio_transporte: item.transporte
+        medio_transporte: item.medioDeTransporteSeleccion.clave
+
       },
  
       datos_del_certificado: {
-        observaciones: item.observaciones,
-        precisa: item.presica,
-        presenta: item.presenta,
-        idioma: item.idioma,
+        observaciones: item.formDatosCertificado.observacionesDates,
+        precisa: item.formDatosCertificado.precisaDates,
+        presenta: item.formDatosCertificado.precisaDates,
+        idioma: item.formDatosCertificado.idiomaDates,
         representacion_federal: {
-          entidad_federativa: item.entidad,
-          representacion_federal: item.representacion
+          entidad_federativa: item.formDatosCertificado.EntidadFederativaDates,
+          representacion_federal: item.formDatosCertificado.representacionFederalDates
         },
-        desea_obtener_certificado: item.casillaVerificacion,
-        justificacion: item.justificacion
+        desea_obtener_certificado: "true",
+        justificacion: "nbhh"
       }
     };
  
