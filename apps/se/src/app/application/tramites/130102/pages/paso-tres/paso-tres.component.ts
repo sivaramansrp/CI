@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { Router } from '@angular/router';
 
@@ -27,6 +27,8 @@ import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/
   styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent implements OnInit, OnDestroy {
+  @Input() procedureUrl: string = '';
+  @Input() procedure: number = 0;
 
   /**
  * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
@@ -275,9 +277,11 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.tramiteStore.establecerTramite(
             this.folio,
             firma,
-            this.solicitudState.idSolicitud ?? 0
+            this.solicitudState.idSolicitud ?? 0,
+            this.procedure,
+
           );
-          this.router.navigate([`${this.url}/acuse`]);
+          this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
