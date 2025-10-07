@@ -1,4 +1,9 @@
-import { ConsultaioQuery, ConsultaioState, REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_SOLO_DIGITOS,
+} from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -7,6 +12,7 @@ import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -27,7 +33,13 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-destinatario',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TooltipModule],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    TooltipModule,
+    RepresentanteLegalExportadorComponent,
+  ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
@@ -286,6 +298,23 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * @description
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+   * @param event Evento con el campo y valor a actualizar.
+   * @returns {void}
+   */
+  setValoresStore1(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    metodoNombre: string;
+  }): void {
+    const { valor, metodoNombre } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[
+      metodoNombre
+    ]?.(valor);
+  }
 
   /**
    * Obtiene el grupo receptor del formulario.
