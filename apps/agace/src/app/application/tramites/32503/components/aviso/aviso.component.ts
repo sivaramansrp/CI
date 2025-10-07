@@ -8,6 +8,7 @@ import {
   REGEX_ALFANUMERICO_CON_ESPACIOS,
   REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
   REGEX_IMPORTE_PAGO,
+  REGEX_NICO,
   REGEX_NUMEROS,
   REGEX_NUMEROS_USD_2,
   REGEX_REEMPLAZAR,
@@ -1194,9 +1195,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
     const INPUT = event?.target as HTMLInputElement;
     if (INPUT) {
       // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
-      INPUT.value = String(INPUT.value).replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_NICO, '');
       
-      // Update form control
+      // Actualizar control de formulario
       this.mercanciaFormulario.get('nico')?.setValue(INPUT.value, { emitEvent: false });
     }
   }

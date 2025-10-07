@@ -174,12 +174,6 @@ describe('AvisoComponent', () => {
       });
     }
     
-    // Commented out to avoid test failures
-    // try {
-    //   fixture.detectChanges();
-    // } catch (error) {
-    //   console.warn('Error during detectChanges:', error);
-    // }
   });
 
   it('should initialize tramiteState on ngOnInit', () => {
