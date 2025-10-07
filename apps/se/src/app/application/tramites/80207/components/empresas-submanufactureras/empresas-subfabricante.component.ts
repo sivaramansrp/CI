@@ -87,6 +87,7 @@ import { Tramites80207Store } from '../../estados/tramite80207.store';
     TituloComponent,
     NotificacionesComponent
   ],
+  providers: [SubfabricanteService]
 })
 export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
     /**
