@@ -126,6 +126,18 @@ export interface InfoRegistro {
   ano: number;
 }
 
+export interface DomicilioDto {
+  calle?: string;
+  numExterior?: string | number;
+  numInterior?: string | number;
+  codigoPostal?: string | number;
+  colonia?: string;
+  municipio?: string;
+  delegacionMunicipio?: string;
+  entidadFederativa?: { nombre?: string };
+  pais?: { nombre?: string };
+}
+
 /**
  * @interface DatosSubcontratista
  * @description
@@ -827,4 +839,56 @@ export interface DomicilioPayload {
    * @property {number} tipoDomicilio - Tipo de domicilio según clasificación
    */
   tipoDomicilio: number;
+}
+export interface DatoComplementario {
+  idPlantaC?: string | number;
+  idDato?: string | number;
+  amparoPrograma?: string;
+}
+export interface BaseItem {
+  datosComplementarios?: DatoComplementario[];
+  [key: string]: unknown; // allows extra properties safely
+}
+export interface PlantasDireccionModelos {
+  calle?: string;
+  numInterior?: string | number;
+  numExterior?: string | number;
+  codigoPostal?: string | number;
+  localidad?: string;
+  delegacionMunicipio?: string;
+  entidadFederativa?: string;
+  pais?: string;
+  rfc?: string;
+  domicilioFiscalSolicitante?: string;
+  razonSocial?: string;
+}
+export interface EntidadFederativa {
+  cveEntidad?: string | null;
+  nombre?: string;
+}
+
+export interface Pais {
+  nombre?: string;
+}
+
+export interface EmpresaDto {
+  razonSocial?: string;
+  rfc?: string;
+  domicilioSolicitud?: DomicilioDto;
+}
+
+export interface ApiResponseItem {
+  idSubfabricante?: number;
+  calle?: string;
+  numeroExterior?: string | number | null;
+  numeroInterior?: string | number | null;
+  codigoPostal?: string | number | null;
+  colonia?: string;
+  delegacionMunicipio?: string;
+  entidadFederativa?: string;
+  pais?: string;
+  rfc?: string;
+  razonSocial?: string;
+  domicilioDto?: DomicilioDto;
+  empresaDto?: EmpresaDto;
 }
