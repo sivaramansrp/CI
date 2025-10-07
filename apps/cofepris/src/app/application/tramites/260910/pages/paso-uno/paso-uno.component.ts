@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { Solicitud260910State } from '../../estados/tramites260910.store';
+import { SolicitudDatosComponent } from '../../components/solicitud-datos/solicitud-datos.component';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { TercerosRelacionados } from '../../models/solicitud-datos.model';
 import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
@@ -59,6 +61,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */ 
   @ViewChildren(TercerosRelacionadosFabSeccionComponent)
   tercerosRelacionadosComponents!: QueryList<TercerosRelacionadosFabSeccionComponent>;
+
+  /**
+   * Referencia al componente hijo `PagoDerechosComponent`.
+   * Se utiliza para acceder a las propiedades y métodos del componente de pago de derechos.
+   */
+  @ViewChild(PagoDerechosComponent) pagoDerechosComponent!: PagoDerechosComponent;
+
+  /**
+   * Referencia al componente hijo `SolicitudDatosComponent`.
+   * Se utiliza para acceder a las propiedades y métodos del componente de datos de solicitud.
+   */
+  @ViewChild(SolicitudDatosComponent) solicitudDatosComponent!: SolicitudDatosComponent;
 
   /**
    * Constructor del componente.

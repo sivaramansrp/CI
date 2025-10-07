@@ -100,8 +100,8 @@
           <div class="col-md-4 mb-4 mt-3">
             <label for="Numero">Número de notaria*:</label>
             <input type="number" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
-            [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''" 
-              (input)="onInputMaxLength($event, 10)"/>
+              [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"
+              (input)="onInputMaxLength($event, 10)" />
             <div
               *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched">
               <p class="mensaje-error">Este campo es obligatorio.</p>
@@ -119,7 +119,7 @@
             <label for="acta"> Número de acta*:</label>
             <input type="number" id="acta" name="acta" class="form-control" formControlName="nombreDeActa"
               [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched"
-               (input)="onInputMaxLength($event, 10)" />
+              (input)="onInputMaxLength($event, 10)" />
             <div
               *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched">
               <p class="mensaje-error">Este campo es obligatorio.</p>
@@ -138,28 +138,29 @@
           </div>
         </div>
         <div class="row mb-4">
-     <div class="row mb-4">
-  <div class="col-md-4">
-    <label for="rfc"> RFC del Representante Legal*:</label>
-    <div class="position-relative">
-      <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
-        onkeyup="this.value = this.value.toUpperCase();"
-        onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
-        [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''" />
-    </div>
-    <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.touched">
-      <p class="mensaje-error" *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required')">
-        Este campo es obligatorio.
-      </p>
-      <p class="mensaje-error" *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('pattern')">
-        El RFC es incorrecto.
-      </p>
-      <p class="mensaje-error" *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('minlength') || formaComplimentos.get('formaModificaciones.rfc')?.hasError('maxlength')">
-        El RFC no se encontró, favor de verificarlo.
-      </p>
-    </div>
-  </div>
-</div>
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label for="rfc"> RFC del Representante Legal*:</label>
+              <div class="position-relative">
+                <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
+                  onkeyup="this.value = this.value.toUpperCase();"
+                  onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
+                  [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''" />
+              </div>
+              <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.touched">
+                <p class="mensaje-error" *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required')">
+                  Este campo es obligatorio.
+                </p>
+                <p class="mensaje-error" *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('pattern')">
+                  El RFC es incorrecto.
+                </p>
+                <p class="mensaje-error"
+                  *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('minlength') || formaComplimentos.get('formaModificaciones.rfc')?.hasError('maxlength')">
+                  El RFC no se encontró, favor de verificarlo.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="row mb-4">
           <div class="col-md-10">
@@ -308,7 +309,9 @@
           }
           }
         </div>
-
+        @if (item.campo === 'taxId') {
+        <div class="col-md-6"></div>
+        }
         } }
       </div>
     </div>
