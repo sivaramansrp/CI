@@ -1,11 +1,9 @@
 /* eslint-disable no-useless-return */
 import {
   Catalogo,
-  CatalogoSelectComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
-  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +15,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { DestinatarioService } from '../../../../shared/services/destinatario.service';
+import { DetallesDelTransporteComponent } from "../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component";
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 import { ViewChild } from '@angular/core';
@@ -37,10 +36,9 @@ interface FormValues {
     ReactiveFormsModule,
     CommonModule,
     DestinatarioComponent,
-    TituloComponent,
-    CatalogoSelectComponent,
     DatosDelDestinatarioComponent,
-  ],
+    DetallesDelTransporteComponent
+],
   templateUrl: './destinatario-de.component.html',
   styleUrl: './destinatario-de.component.scss',
 })
@@ -117,7 +115,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.cargarMedioDeTransporte();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -153,14 +150,14 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   /**
    * Recibe validez del formulario de datos-del-destinatario
    */
-  setFormValida(valido: boolean) {
+  setFormValida(valido: boolean): void {
     this.datosDelDestinatarioValido = valido;
   }
 
   /**
    * Recibe validez del formulario de destinatario
    */
-  setFormValidaDestinatario(valido: boolean) {
+  setFormValidaDestinatario(valido: boolean): void {
     this.destinatarioValido = valido;
   }
 
@@ -324,21 +321,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.store.setPaisDestinSeleccion(estado);
   }
 
-  
-  /**
-   * Carga los medios de transporte desde el servicio y los actualiza en el estado.
-   */
-  cargarMedioDeTransporte(): void {
-    this.destinatarioService
-      .getTransporte('110201')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => response.datos || [])
-      )
-      .subscribe((datos: Catalogo[]) => {
-        this.store.setMedioDeTransporte(datos);
-      });
-  }
 
   /**
   * Método llamado al destruir el componente. Limpia las suscripciones activas.

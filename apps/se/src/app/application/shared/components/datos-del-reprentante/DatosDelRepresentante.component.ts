@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CAMPO_DE_REPRESENTANTE } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-datos-del-representante',
@@ -12,7 +12,7 @@ import { CAMPO_DE_REPRESENTANTE } from '../../constantes/modificacion.enum';
   templateUrl: './DatosDelRepresentante.component.html',
   styleUrl: './DatosDelRepresentante.component.scss',
 })
-export class DatosDelRepresentanteComponent implements OnInit, OnDestroy {
+export class DatosDelRepresentanteComponent implements OnInit, OnDestroy, OnChanges {
 
   formRepresentante!: FormGroup;
   destroyNotifier$: Subject<void> = new Subject();
@@ -49,6 +49,7 @@ export class DatosDelRepresentanteComponent implements OnInit, OnDestroy {
       }
     }
   }
+  
   donanteDomicilio(): void {
     this.formRepresentante = this.fb.group({
       lugar: ['', [Validators.required, Validators.maxLength(70)]],
