@@ -133,7 +133,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     private modalService: BsModalService,
     private chofer40101Service: Chofer40101Service,
   ) {
-     // Lógica para el constructor si es necesario.
+    // Lógica para el constructor si es necesario.
   }
 
   /**
@@ -246,7 +246,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     try {
       const DATA = await firstValueFrom(
         this.chofer40101Service
-          .getMunicipiosPorEstado(value.id)
+          .getMunicipiosPorEstado(value.clave as string)
           .pipe(takeUntil(this.destroyed$))
       );
       this.municipioList = DATA || [];
@@ -318,8 +318,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   limpiarFormulario(): void {
     this.formChoferes.reset();
     this.formChoferes.reset({
-       curp: '',
-       rfc: '',
+      curp: '',
+      rfc: '',
       nombre: '',
       primerApellido: '',
       segundoApellido: '',

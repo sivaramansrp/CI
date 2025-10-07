@@ -11,9 +11,9 @@ export interface Choferesnacionales40101State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  datosDelChoferNacionalAlta: DatosDelChoferNacional[]; 
+  datosDelChoferNacionalAlta: DatosDelChoferNacional[];
   datosDelChoferNacionalModification: DatosDelChoferNacional[];
-  datosDelChoferNacionalRetirada: DatosDelChoferNacional[]; 
+  datosDelChoferNacionalRetirada: DatosDelChoferNacional[];
 
   datosDelChoferExtranjerosAlta: ChoferesExtranjeros[];
   datosDelChoferExtranjerosModification: ChoferesExtranjeros[];
@@ -25,7 +25,7 @@ export interface Choferesnacionales40101State {
  * @returns El estado inicial.
  */
 export function createChoferState(): Choferesnacionales40101State {
-  return { 
+  return {
     nombre: '',
     primerApellido: '',
     segundoApellido: '',
@@ -33,7 +33,7 @@ export function createChoferState(): Choferesnacionales40101State {
     datosDelChoferNacionalAlta: [],
     datosDelChoferNacionalModification: [],
     datosDelChoferNacionalRetirada: [],
-    
+
     datosDelChoferExtranjerosAlta: [],
     datosDelChoferExtranjerosModification: [],
     datosDelChoferExtranjerosRetirada: []
@@ -71,6 +71,13 @@ export class Chofer40101Store extends Store<Choferesnacionales40101State> {
     }));
   }
 
+  public setMunicipioAlcaldia(municipioAlcaldia: string): void {
+    this.update((state) => ({
+      ...state,
+      municipioAlcaldia,
+    }));
+  }
+
   /**
    * Establece el primer apellido del chofer.
    * @param primerApellido El primer apellido del chofer.
@@ -92,6 +99,30 @@ export class Chofer40101Store extends Store<Choferesnacionales40101State> {
     this.update((state) => ({
       ...state,
       rfc,
+    }));
+  }
+
+  /**
+   * Establece el correo electrónico del chofer.
+   * @param correoElectronico El correo electrónico del chofer.
+   * @returns void
+   */
+  public setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      correoElectronico,
+    }));
+  }
+
+  /**
+   * Establece el país de residencia del chofer.
+   * @param paisDeResidencia El país de residencia del chofer.
+   * @returns void
+   */
+  public setPaisDeResidencia(paisDeResidencia: string): void {
+    this.update((state) => ({
+      ...state,
+      paisDeResidencia,
     }));
   }
 

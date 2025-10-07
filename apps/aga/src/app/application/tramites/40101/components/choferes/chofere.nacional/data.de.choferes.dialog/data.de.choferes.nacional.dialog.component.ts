@@ -22,7 +22,7 @@ import {
 
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
-import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Subject, firstValueFrom, map, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
@@ -46,6 +46,11 @@ import { ApiResponseChofer, DatosDelChoferNacional } from '../../../../models/re
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
 
+
+import { Chofer40101Store, Choferesnacionales40101State } from '../../../../estado/chofer40101.store';
+import { Chofer40101Query } from '../../../../estado/chofer40101.query';
+// ======================= FIN: NUEVA IMPLEMENTACIÓN CON AKITA =======================
+
 @Component({
   selector: 'app-choferes-datos',
   templateUrl: './data.de.choferes.nacional.dialog.component.html',
@@ -56,7 +61,6 @@ import { modificarTerrestreService } from '../../../services/modificacar-terrest
     CommonModule,
     SharedModule,
     FormsModule,
-    CatalogoSelectComponent,
     TituloComponent,
     NotificacionesComponent
   ],
@@ -156,6 +160,14 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   public alertaNotificacion!: Notificacion;
 
+  // ======================= INICIO: NUEVA IMPLEMENTACIÓN CON AKITA =======================
+  /**
+   * Estado del store de Akita para los choferes.
+   */
+  public choferesState!: Choferesnacionales40101State;
+  // ======================= FIN: NUEVA IMPLEMENTACIÓN CON AKITA =======================
+
+
   // ======================= MÉTODOS =======================
 
   /**
@@ -168,7 +180,11 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   constructor(private fb: FormBuilder,
     private modalService: BsModalService,
     private chofer40101Service: Chofer40101Service,
-    private modificacarTerrestreService: modificarTerrestreService
+    private modificacarTerrestreService: modificarTerrestreService,
+    // ======================= INICIO: NUEVA IMPLEMENTACIÓN CON AKITA =======================
+    private chofer40101Store: Chofer40101Store,
+    private chofer40101Query: Chofer40101Query
+    // ======================= FIN: NUEVA IMPLEMENTACIÓN CON AKITA =======================
   ) {
     // Lógica para el constructor si es necesario.
   }
@@ -179,8 +195,13 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * @returns {Promise<void>}
    */
   async ngOnInit(): Promise<void> {
-
-
+    this.chofer40101Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.choferesState = seccionState;
+        })
+      ).subscribe();
 
     this.formChoferes = this.fb.group({
       curp: [{ value: this.datosDeChofere?.curp, disabled: false }, [
@@ -210,7 +231,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     }, { updateOn: 'change' });
 
     await this.paisListData();
-    await this.updateListsData(this.datosDeChofere);
+    // await this.updateListsData(this.datosDeChofere);
 
   }
 
@@ -229,8 +250,10 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       );
       this.paisList = DATA || [];
       if (this.paisList.length > 0) {
-        this.onPaisChange(this.paisList[0]);
+        this.formChoferes.controls['pais'].setValue("MEX");
+        this.chofer40101Store.setPaisChn("MEX");
       }
+      this.onPaisChange();
     } catch (error) {
       // Manejo de errores si es necesario
     }
@@ -238,96 +261,64 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
 
   /**
    * Maneja el cambio de país seleccionado, actualizando la lista de estados y reseteando los campos dependientes.
-   * @param value País seleccionado.
    * @returns {void}
    */
-  onPaisChange(value: Catalogo): void {
-    this.fetchEstadosByPais(value);
-    this.formChoferes.controls['estado'].reset();
-    this.formChoferes.controls['municipioAlcaldia'].reset();
-    this.formChoferes.controls['colonia'].reset();
-  }
+  onPaisChange(): void {
+    const PAISID = this.formChoferes.get('pais')?.value;
+    if (!PAISID) { return; }
 
-  /**
-   * Obtiene la lista de estados por país desde el servicio.
-   * @param value País seleccionado.
-   * @returns {Promise<Catalogo[]>}
-   */
-  private async fetchEstadosByPais(value: Catalogo): Promise<Catalogo[]> {
-    try {
-      const DATA = await firstValueFrom(
-        this.chofer40101Service
-          .getEstadosPorPais(value.id)
-          .pipe(takeUntil(this.destroyed$))
-      );
-      this.estadoList = DATA || [];
-    } catch (error) {
-      console.error('Error al obtener estados por país:', error);
-    }
-    return this.estadoList;
+    this.chofer40101Service.getEstadosPorPaisMex()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(data => {
+        this.estadoList = data || [];
+        this.formChoferes.controls['estado'].reset();
+        this.formChoferes.controls['municipioAlcaldia'].reset();
+        this.formChoferes.controls['colonia'].reset();
+        this.formChoferes.controls['estado'].setValue(this.estadoList.length > 0 ? this.estadoList[0].clave : '');
+        this.chofer40101Store.setEstadoControl(String(this.estadoList.length > 0 ? this.estadoList[0].clave : ''));
+        this.onEstadoChange()
+      });
   }
 
   /**
    * Maneja el cambio de estado seleccionado, actualizando la lista de municipios y reseteando los campos dependientes.
-   * @param value Estado seleccionado.
    * @returns {void}
    */
-  onEstadoChange(value: Catalogo): void {
+  onEstadoChange(): void {
+    const ESTADOID = this.formChoferes.get('estado')?.value;
+    if (!ESTADOID) { return; }
 
-    this.fetchMunicipiosByEstado(value);
+    this.chofer40101Store.setEstadoControl(String(ESTADOID));
 
-    this.formChoferes.controls['municipioAlcaldia'].reset();
-    this.formChoferes.controls['colonia'].reset();
-  }
-
-  /**
-   * Obtiene la lista de municipios por estado desde el servicio.
-   * @param value Estado seleccionado.
-   * @returns {Promise<Catalogo[]>}
-   */
-  private async fetchMunicipiosByEstado(value: Catalogo): Promise<Catalogo[]> {
-    try {
-      const DATA = await firstValueFrom(
-        this.chofer40101Service
-          .getMunicipiosPorEstado(value.id)
-          .pipe(takeUntil(this.destroyed$))
-      );
-      this.municipioList = DATA || [];
-    } catch (error) {
-      console.error('Error al obtener municipios por estado:', error);
-    }
-    return this.municipioList;
-
+    this.chofer40101Service.getMunicipiosPorEstado(ESTADOID)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(data => {
+        this.municipioList = data || [];
+        this.formChoferes.controls['colonia'].reset();
+        this.formChoferes.controls['municipioAlcaldia'].setValue(this.municipioList.length > 0 ? String(this.municipioList[0].clave) : '');
+        this.chofer40101Store.setMunicipioAlcaldia(String(this.municipioList.length > 0 ? this.municipioList[0].clave : ''));
+        // this.chofer40101Store.setDelegacionCHN('');
+        this.chofer40101Store.setColoniaCHN('');
+      });
   }
 
   /**
    * Maneja el cambio de municipio seleccionado, actualizando la lista de colonias y reseteando el campo colonia.
-   * @param value Municipio seleccionado.
    * @returns {void}
    */
-  onMunicipioChange(value: Catalogo): void {
-    this.fetchColoniasByMunicipio(value);
+  onMunicipioChange(): void {
+    const MUNICIPIOID = this.formChoferes.get('municipioAlcaldia')?.value;
+    if (!MUNICIPIOID) { return; }
 
-    this.formChoferes.controls['colonia'].reset();
-  }
+    this.chofer40101Store.setDelegacionCHN(String(MUNICIPIOID));
 
-  /**
-   * Obtiene la lista de colonias por municipio desde el servicio.
-   * @param value Municipio seleccionado.
-   * @returns {Promise<Catalogo[]>}
-   */
-  private async fetchColoniasByMunicipio(value: Catalogo): Promise<Catalogo[]> {
-    try {
-      const DATA = await firstValueFrom(
-        this.chofer40101Service
-          .getColoniasPorMunicipio(value.id)
-          .pipe(takeUntil(this.destroyed$))
-      );
-      this.coloniaList = DATA || [];
-    } catch (error) {
-      console.error('Error al obtener colonias por municipio:', error);
-    }
-    return this.coloniaList;
+    this.chofer40101Service.getColoniasPorMunicipio(MUNICIPIOID)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(data => {
+        this.coloniaList = data || [];
+        this.formChoferes.controls['colonia'].reset();
+        this.chofer40101Store.setColoniaCHN('');
+      });
   }
 
   /**
@@ -356,7 +347,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
 
   /**
    * Limpia el formulario de choferes a sus valores predeterminados.
-   * 
    * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
    * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
@@ -376,69 +366,33 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       estado: '',
       municipioAlcaldia: '',
       colonia: '',
-      paisDeResidencia: '1',
+      paisDeResidencia: '',
       ciudad: '',
       localidad: '',
       codigoPostal: '',
       correoElectronico: '',
       telefono: ''
     });
-
+    this.chofer40101Store.reset();
   }
 
   /**
-   * Maneja la entrada en el campo CURP y busca automáticamente el chofer si la longitud es suficiente.
-   * @returns {void}
-   */
-  onCurpInput(): void {
-    const CURP_VALUE = this.formChoferes.get('curp')?.value;
-    if (CURP_VALUE && CURP_VALUE.length >= 18) {
-      this.buscarChoferNacional(CURP_VALUE);
+  * Obtiene la lista de estados por país desde el servicio.
+  * @param value País seleccionado.
+  * @returns {Promise<Catalogo[]>}
+  */
+  private async fetchEstadosByPais(): Promise<Catalogo[]> {
+    try {
+      const DATA = await firstValueFrom(
+        this.chofer40101Service
+          .getEstadosPorPaisMex()
+          .pipe(takeUntil(this.destroyed$))
+      );
+      this.estadoList = DATA || [];
+    } catch (error) {
+      console.error('Error al obtener estados por país:', error);
     }
-  }
-
-  /**
-   * Busca información de un chofer nacional utilizando su CURP y actualiza el formulario.
-   * @param curp CURP del chofer nacional.
-   * @returns {Promise<void>}
-   */
-  async buscarChoferNacional(curp: string): Promise<void> {
-    if (!curp) {
-      //this.showNotification = true;
-      this.alertaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.INFORMACION,
-        modo: 'action',
-        titulo: 'Alert',
-        mensaje: 'Favor de ingresar CURP o RFC',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      return;
-    }
-
-    await this.chofer40101Service
-      .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((response) => {
-        if (response?.length === 0) {
-          this.alertaNotificacion = {
-            tipoNotificacion: TipoNotificacionEnum.ALERTA,
-            categoria: CategoriaMensaje.INFORMACION,
-            modo: 'action',
-            titulo: 'Alert',
-            mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
-            cerrar: true,
-            txtBtnAceptar: 'Aceptar',
-            txtBtnCancelar: '',
-          };
-          return;
-        }
-        this.updateListsData(response[0]);
-        // Rellenar el formulario
-        this.formChoferes.patchValue(response[0]);
-      });
+    return this.estadoList;
   }
 
   /**
@@ -448,22 +402,28 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   private async updateListsData(data: DatosDelChoferNacional): Promise<void> {
 
-    const PAIS_OBJ = this.paisList.find(p => p.descripcion === data.pais);
-    const PAIS_ID = PAIS_OBJ ? PAIS_OBJ.id : '';
+    const PAIS_OBJ = this.paisList.find(p => p.clave === data.pais);
+    const PAIS_ID = PAIS_OBJ ? PAIS_OBJ.clave : '';
     // ESTADO
-    const ESTADOS = await this.fetchEstadosByPais(PAIS_OBJ || this.paisList[0]);
+    const ESTADOS = await this.fetchEstadosByPais();
     const ESTADO_OBJ = ESTADOS.find(e => e.descripcion === data.estado);
-    const ESTADO_ID = ESTADO_OBJ ? ESTADO_OBJ.id : '';
+    const ESTADO_ID = ESTADO_OBJ ? ESTADO_OBJ.clave : '';
     // MUNICIPIO
     let MUNICIPIO_ID = '';
     let COLONIA_ID = '';
     if (ESTADO_OBJ) {
-      const MUNICIPIOS = await this.fetchMunicipiosByEstado(ESTADO_OBJ);
+      // La siguiente línea fue comentada porque fetchMunicipiosByEstado ya no existe.
+      // const MUNICIPIOS = await this.fetchMunicipiosByEstado(ESTADO_OBJ);
+      const MUNICIPIOS = await firstValueFrom(this.chofer40101Service.getMunicipiosPorEstado(ESTADO_OBJ.clave as string));
+      this.municipioList = MUNICIPIOS || [];
       const MUNICIPIO_OBJ = MUNICIPIOS.find(m => m.descripcion === data.municipioAlcaldia);
       MUNICIPIO_ID = MUNICIPIO_OBJ ? String(MUNICIPIO_OBJ.id) : '';
       // COLONIA
       if (MUNICIPIO_OBJ) {
-        await this.fetchColoniasByMunicipio(MUNICIPIO_OBJ);
+        // La siguiente línea fue comentada porque fetchColoniasByMunicipio ya no existe.
+        // await this.fetchColoniasByMunicipio(MUNICIPIO_OBJ);
+        const COLONIAS = await firstValueFrom(this.chofer40101Service.getColoniasPorMunicipio(MUNICIPIO_OBJ.id));
+        this.coloniaList = COLONIAS || [];
         const COLONIA_OBJ = this.coloniaList.find(c => c.descripcion === data.colonia);
         COLONIA_ID = COLONIA_OBJ ? String(COLONIA_OBJ.id) : '';
       }
@@ -571,6 +531,9 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       correoElectronico: DATOS.domicilio?.correo_electronico || '',
     });
 
+    // ======================= INICIO: NUEVA IMPLEMENTACIÓN CON AKITA =======================
+    // Actualizar el store con los datos encontrados.
+    this.chofer40101Store.update(this.formChoferes.value);
   }
 
   /**
@@ -582,6 +545,9 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     this.isEditando = true;
     this.indiceEditando = indice;
     this.formChoferes.patchValue(datos);
+    // ======================= INICIO: NUEVA IMPLEMENTACIÓN CON AKITA =======================
+    // Al iniciar la edición, actualizar el store con los datos del registro.
+    this.chofer40101Store.update(datos);
   }
 
   /**
@@ -604,4 +570,17 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     this.destroyed$.complete();
   }
 
+  /**
+   * Establece un valor en el store de chofer40101 de forma genérica.
+   * Este método se llama desde el HTML en el evento (change) de los campos del formulario.
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Chofer40101Store): void {
+    const VALOR = form.get(campo)?.value;
+    // La aserción de tipo es necesaria porque TypeScript no puede verificar dinámicamente
+    // que `metodoNombre` corresponde a un método que acepta `VALOR`.
+    (this.chofer40101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 }

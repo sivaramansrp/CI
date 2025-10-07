@@ -1,6 +1,6 @@
-import { BehaviorSubject, Observable } from 'rxjs'; 
+import { ApiResponse, Catalogo } from '@libs/shared/data-access-user/src';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Chofer40101Store } from './chofer40101.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
@@ -110,13 +110,21 @@ export class Chofer40101Service {
     );
   }
 
+
   /**
    * Obtiene el catálogo de países emisores.
    * 
    * @returns Un observable con el catálogo de países emisores.
    */
   getPaisEmisor(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/40101/pais-catalogo.json');
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/paises')
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching countries:', error);
+          return of([]);
+        })
+      );
   }
 
   /**
@@ -184,10 +192,35 @@ export class Chofer40101Service {
     return this.http.get<Catalogo[]>('/assets/json/40101/estado.json');
   }
 
+
+  /**
+  * Obtiene la lista de estados desde un archivo JSON local.
+  *
+  * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
+  */
+  getEstadosPorPaisMex(): Observable<Catalogo[]> {
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/entidades-federativas')
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching countries:', error);
+          return of([]);
+        })
+      );
+  }
+
+
   getMunicipiosPorEstado(
-    claveEstado: number
+    claveEstado: string
   ): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(`/assets/json/40101/municipio.json`);
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101/catalogo/entidad-federativa/${claveEstado}/municipio-o-alcaldia`)
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching countries:', error);
+          return of([]);
+        })
+      );
   }
   /**
    * Obtiene la lista de colonias de un municipio específico.
@@ -196,7 +229,7 @@ export class Chofer40101Service {
    * @returns Un observable con la lista de colonias.
    */
   getColoniasPorMunicipio(
-        municipiosId: number
+    municipiosId: number
   ): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
       `/assets/json/40101/colonia.json`

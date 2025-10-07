@@ -36,6 +36,12 @@ export interface RespuestaCatalogos {
   message: string;
 }
 
+export interface ApiResponse<T> {
+  codigo: string;
+  mensaje: string;
+  datos: T[];
+}
+
 /**
  * Representa un catálogo genérico utilizado en el sistema.
  *

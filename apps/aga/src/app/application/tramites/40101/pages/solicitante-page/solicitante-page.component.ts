@@ -4,12 +4,14 @@ import {
   Choferesnacionales40101State,
 } from '../../estado/chofer40101.store';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40101 } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
+import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
@@ -32,10 +34,22 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
-  /**
-   * Booleano para mostrar u ocultar el componente de director general.
+
+  /** Indica si el trámite es CAAT (Certificado de Autotransporte Aduanal Terrestre).
+   * 
+   * @type {boolean}
+   * @default false
    */
-  isShowDirector: boolean = false;
+  isCaat: boolean = false;
+
+
+  /**
+    * Clase CSS para mostrar una alerta de información.
+    */
+  public info = 'alert-info';
+
+  // temp data needed from db to get  
+  ALERTA = `<p style='text-align: center;'><b>¡Error de registro!</b> Faltan campos por capturar</p>`;
 
   /**
    * Subject para destruir las suscripciones y evitar fugas de memoria de los datos del solicitante.
@@ -92,7 +106,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   constructor(
     private chofer40101Query: Chofer40101Query,
-    private chofer40101Store: Chofer40101Store
+    private chofer40101Store: Chofer40101Store,
+    private tramite40101Query: Tramite40101Query
   ) { }
 
   /**
@@ -119,6 +134,10 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.asignarSecciones();
+
+    this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroySolicitante$)).subscribe((data: ApiResponseSolicitante['datos']) => {
+      this.isCaat = data.caat_existe;
+    })
   }
 
   /**
@@ -130,6 +149,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    this.destroySolicitante$.next();
+    this.destroySolicitante$.complete();
   }
 
   /**
