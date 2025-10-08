@@ -93,11 +93,21 @@ export class MontosDeInversionComponent implements OnInit {
    */
   @Output() obtenerMontosInversionList: EventEmitter<MontoDeInversion[]> = new EventEmitter<MontoDeInversion[]>();
 
-/**
- * Maneja el cambio de selección en la tabla de montos de inversión.
- * @param event Evento que contiene la lista de filas seleccionadas en la tabla.
- */
+  /**
+   * Índice de la capacidad instalada que se está editando actualmente.
+   */
+  editingIndex: number | null = null;
+  /**
+   * Maneja el cambio de selección en la tabla de montos de inversión.
+   * @param event Evento que contiene la lista de filas seleccionadas en la tabla.
+   */
   public seleccionados: MontoDeInversion[] = [];
+
+  /**
+ * Nueva notificación para mostrar mensajes al usuario en el editor.
+ * @property {Notificacion} nuevaNotificacionEditor
+ */
+  public nuevaNotificacionEditor!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -138,6 +148,7 @@ export class MontosDeInversionComponent implements OnInit {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      debugger;
       const VALOR_FORMULARIO = this.montosDeInversionForm.value;
       const NUEVO_MONTO: MontoDeInversion = {
         PLANTA: '',
@@ -146,7 +157,15 @@ export class MontosDeInversionComponent implements OnInit {
         DESCRIPCION: VALOR_FORMULARIO.descripsion || '',
         MONTO: VALOR_FORMULARIO.mnx || '',
       };
-      this.montosDeInversionDatos = [...this.montosDeInversionDatos, NUEVO_MONTO];
+      if (this.editingIndex !== null && this.editingIndex > -1) {
+        debugger;
+        this.montosDeInversionDatos[this.editingIndex] = NUEVO_MONTO;
+        this.montosDeInversionDatos = [...this.montosDeInversionDatos];
+        this.editingIndex = null;
+
+      } else {
+        this.montosDeInversionDatos = [...this.montosDeInversionDatos, NUEVO_MONTO];
+      }
       this.montosDeInversionForm.reset();
     }
   }
@@ -231,13 +250,14 @@ export class MontosDeInversionComponent implements OnInit {
    * @param event Evento que contiene la lista de filas seleccionadas en la tabla.
    */
   onSeleccionChange(event: MontoDeInversion[]): void {
+    debugger;
     this.seleccionados = event;
   }
-  
-/**
- * Elimina los montos de inversión seleccionados de la lista.
- * @returns {void}
- */
+
+  /**
+   * Elimina los montos de inversión seleccionados de la lista.
+   * @returns {void}
+   */
   eliminarMonto(): void {
     this.montosDeInversionDatos = this.montosDeInversionDatos.filter(
       data => !this.seleccionados.some(sel =>
@@ -248,5 +268,45 @@ export class MontosDeInversionComponent implements OnInit {
       )
     );
     this.seleccionados = [];
+  }
+  /**
+   * Maneja la edición de un monto de inversión seleccionado.
+   * Si hay exactamente un monto seleccionado en `seleccionados`, llena el formulario
+   * con los datos de ese monto y establece `editingIndex` al índice correspondiente en `montosDeInversionDatos`.
+   * Si no hay montos seleccionados, muestra una notificación de advertencia.
+   * @returns {void}
+   */
+  editarMonto(): void {
+    debugger;
+    if (this.seleccionados?.length === 1) {
+      const SELECTED = this.seleccionados[0];
+      this.montosDeInversionForm.patchValue({
+        tipos: SELECTED.TIPO,
+        cantidad: SELECTED.CANTIDAD,
+        descripsion: SELECTED.DESCRIPCION,
+        mnx: SELECTED.MONTO,
+      });
+      setTimeout(() => {
+        const NATIVE_EL = document.querySelector(
+          'app-catalogo-select[formControlName="tipos"] select'
+        ) as HTMLElement | null;
+        if (NATIVE_EL) {
+          NATIVE_EL.focus();
+        }
+      }, 0);
+      this.editingIndex = this.montosDeInversionDatos.findIndex(row => row === SELECTED);
+    }
+    else if (!this.seleccionados || this.seleccionados.length === 0) {
+      this.nuevaNotificacionEditor = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe elegir un registro de complemento para actualizar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 }

@@ -316,11 +316,10 @@ export class EmpleadosComponent implements OnInit {
    * Actualiza el estado del almacén con la razón social proporcionada.  
    */
   agregar(): void {
-    let TABLA_VALOR: Directos | null = null;
     if (this.empleadosForm.valid) {
       const DIRECTOS = this.empleadosForm.get('directos')?.value;
       const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
-    TABLA_VALOR = {
+    const TABLA_VALOR: Directos = {
         PLANTA: this.empleadosForm.get('directo')?.value,
         TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
         DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
@@ -334,8 +333,8 @@ export class EmpleadosComponent implements OnInit {
         RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
         RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
       };
-    }
-     if (this.editingIndex !== null && this.editingIndex > -1 && TABLA_VALOR !== null) {
+
+      if (this.editingIndex !== null && this.editingIndex > -1 && TABLA_VALOR !== null) {
       this.directosDatos[this.editingIndex] = TABLA_VALOR;
       this.directosDatos = [...this.directosDatos];
       this.editingIndex = null;
@@ -343,6 +342,8 @@ export class EmpleadosComponent implements OnInit {
     } else if (TABLA_VALOR !== null) {  
       this.directosDatos = [...this.directosDatos, TABLA_VALOR];
     }
+    }
+  
     this.selectedDirectosDatos=[];
     this.agregarValidacion();
   }
