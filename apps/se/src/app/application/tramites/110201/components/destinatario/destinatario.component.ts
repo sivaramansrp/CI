@@ -189,8 +189,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['active']?.currentValue) {
-      this.getPaisDestinoDestinatario();
-      this.getTransporteDestinatario();
+      // this.getPaisDestinoDestinatario();
+      // this.getTransporteDestinatario();
     }
   }
 
@@ -207,7 +207,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    *
    * @param event - Objeto del evento que contiene los detalles de la nación seleccionada, incluyendo su descripción.
    */
-  onNacionChange(event: any): void {
+  onNacionChange(event: Catalogo): void {
     this.store.setNacionDescripcion(event.descripcion);
   }
 
@@ -217,7 +217,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    *
    * @param event - Objeto del evento que contiene los detalles del transporte seleccionado, incluyendo su descripción.
    */
-  onTransporteChange(event: any): void {
+  onTransporteChange(event: Catalogo): void {
     this.store.setTransporteDescripcion(event.descripcion);
   }
 
@@ -227,7 +227,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-
+      this.getPaisDestinoDestinatario();
+      this.getTransporteDestinatario();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),

@@ -1,212 +1,291 @@
 <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="exampleModalLabel">Datos de la mercancía</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="modal-content">
+    <div class="modal-header d-flex justify-content-between">
+      <h5 class="modal-title" id="exampleModalLabel">Datos de la mercancía</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    @if(esMercanciaFormValid){
+      
+        <div class="col-md-12 mt-5">
+          <ng-alert [CONTENIDO]="formErrorAlertMercanica" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+      
+    }
+    @if (esFormaValido) {
+      <div class="col-md-12  mt-5">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-warning'"></ng-alert>
       </div>
-      <div class="modal-body">
-        <form [formGroup]="mercanciaForm">
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <label class="form-label" for="fraccionArancelaria">Fracción arancelaria: </label>
-              <input type="text" class="form-control" formControlName="fraccionArancelaria" [readonly]="true"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'fraccionArancelaria',
-                'setFraccionArancelaria'
-                )" >            
-            </div>
-            <div class="col-md-8">
-              <label for="nombreComercialMercancia">Nombre comercial de la mercancía (igual que en la factura):</label>
-              <input type="text" class="form-control" formControlName="nombreComercialMercancia"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'nombreComercialMercancia',
-                'setNombreComercialMercancia'
-                )">
-            </div>
+    }
+    @if (esFormaValores) {
+      <div class="col-md-12  mt-5">
+        <ng-alert [CONTENIDO]="formErrorAlertValore" [CUSTOMECLASS]="'alert-warning'"></ng-alert>
+      </div>
+    }
+    @if (esFormaCantidadValores) {
+      <div class="col-md-12  mt-5">
+        <ng-alert [CONTENIDO]="formErrorAlertCantVal" [CUSTOMECLASS]="'alert-warning'"></ng-alert>
+      </div>
+    }
+    <div class="modal-body">
+      <form [formGroup]="mercanciaForm">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label class="form-label" for="fraccionArancelaria">Fracción arancelaria: </label>
+            <input type="text" class="form-control" formControlName="fraccionArancelaria" [readonly]="true"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'fraccionArancelaria',
+              'setFraccionArancelaria'
+              )" >            
           </div>
-      
-          <div class="row mt-3 mb-3">
-            <div class="col-md-8">
-              <label for="nombreTecnico">Nombre técnico:</label>
-              <input type="text" class="form-control" formControlName="nombreTecnico"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'nombreTecnico',
-                'setNombreTecnico'
-                )">
-            </div>
+          <div class="col-md-8">
+            <label for="nombreComercialMercancia">Nombre comercial de la mercancía (igual que en la factura):</label>
+            <input type="text" class="form-control" formControlName="nombreComercialMercancia"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'nombreComercialMercancia',
+              'setNombreComercialMercancia'
+              )">
           </div>
-      
-          <div class="row mt-3 mb-3">
-            <div class="col-md-6">
-              <label for="nombreIngles">Nombre en inglés:</label>
-              <input type="text" class="form-control" formControlName="nombreIngles"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'nombreIngles',
-                'setNombreIngles'
-                )">
-            </div>
+        </div>
+    
+        <div class="row mt-3 mb-3">
+          <div class="col-md-8">
+            <label for="nombreTecnico">Nombre técnico:</label>
+            <input type="text" class="form-control" formControlName="nombreTecnico"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'nombreTecnico',
+              'setNombreTecnico'
+              )">
+          </div>
+        </div>
+    
+        <div class="row mt-3 mb-3">
+          <div class="col-md-6">
+            <label for="nombreIngles">Nombre en inglés:</label>
+            <input type="text" class="form-control" formControlName="nombreIngles"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'nombreIngles',
+              'setNombreIngles'
+              )">
+          </div>
 
-            <div class="col-md-6">
-              <label for="otrasInstancias">Otras instancias:</label>
-              <input type="text" class="form-control" formControlName="otrasInstancias"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'otrasInstancias',
-                'setOtrasInstancias'
-                )">
-            </div>
+          <div class="col-md-6">
+            <label for="otrasInstancias">Otras instancias:</label>
+            <input type="text" class="form-control" formControlName="otrasInstancias"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'otrasInstancias',
+              'setOtrasInstancias'
+              )">
+          </div>
 
-            <div class="col-md-6 mt-2">
-              <label for="criterioParaConferirOrigen">Criterio para conferir origen:</label>
-              <input type="text" class="form-control" formControlName="criterioParaConferirOrigen"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'criterioParaConferirOrigen',
-                'setCriterioParaConferirOrigen'
-                )">
-            </div>
+          <div class="col-md-6 mt-2">
+            <label for="criterioParaConferirOrigen">Criterio para conferir origen:</label>
+            <input type="text" class="form-control" formControlName="criterioParaConferirOrigen"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'criterioParaConferirOrigen',
+              'setCriterioParaConferirOrigen'
+              )">
           </div>
-      
-          <div class="row mt-3 mb-3">
-            <div class="col-md-6">
-              <label for="cantidad">Cantidad*:</label>
-              <input type="number" class="form-control" formControlName="cantidad"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'cantidad',
-                'setCantidad'
-                )">
-                @if(mercanciaForm.controls['cantidad'].invalid ) {
-                  <div class="d-grid">
-                    @if(mercanciaForm.controls['cantidad'].errors?.['required']&& mercanciaForm.controls['cantidad'].touched) {
-                      <span class="mensaje-error">Este campo es obligatorio</span>
-                    }
-                    @if(mercanciaForm.get('cantidad')?.errors?.['pattern'])  {
-                      <span class="mensaje-error">El número debe tener máximo 16 dígitos enteros y hasta 4 decimales</span>
-                    }
-                  </div>   
-                }
-                
-            </div>
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="umc || []" [label]="'UMC'" [required]="true" name="estado" formControlName="umc" 
-                (change)="
-                setValoresStore(
-                mercanciaForm,
-                'umc',
-                'setUmc'
-                )"
-                [markTouched]="mercanciaForm.get('umc')?.touched ?? false"></app-catalogo-select>
-              </div>
-          </div>
-          
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="valorMercancia">Valor de la mercancía (dólares)*:</label>
-              <input type="number" class="form-control" formControlName="valorMercancia"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'valorMercancia',
-                'setValorMercancia' 
-                )">
-                @if(mercanciaForm.get('valorMercancia')?.invalid ) {
-                  <div class="d-grid">
-                    @if(mercanciaForm.controls['valorMercancia'].errors?.['required']&& mercanciaForm.get('valorMercancia')?.touched) {
-                      <span class="mensaje-error">Este campo es obligatorio</span>
-                    }
-                    @if(mercanciaForm.get('valorMercancia')?.errors?.['pattern']) {
-                      <span class="mensaje-error">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales</span>
-                    }
-                    </div>
+        </div>
+    
+        <div class="row mt-3 mb-3">
+          <div class="col-md-6">
+            <label for="cantidad">Cantidad<span
+              class="require"
+              [ngClass]="{
+                'text-danger':
+                mercanciaForm.get('cantidad')?.invalid &&
+                mercanciaForm.get('cantidad')?.touched
+              }"
+              >*</span
+            >:</label>
+            <input type="text" class="form-control"  (blur)="formatFieldOnBlur('cantidad')"
+            formControlName="cantidad"
+            maxlength="22"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'cantidad',
+              'setCantidad'
+              )"
+              [ngStyle]="{
+                borderColor:
+                mercanciaForm.get('cantidad')?.invalid &&
+                mercanciaForm.get('cantidad')?.touched
+                    ? 'red'
+                    : ''
+              }">
+              @if(mercanciaForm.controls['cantidad'].invalid ) {
+                <div class="d-grid">
+                  @if(mercanciaForm.controls['cantidad'].errors?.['required']&& mercanciaForm.controls['cantidad'].touched) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
                   }
-            </div>
-            <div class="col-md-6">
-              <label for="complementoDescripcion">Complemento de la descripción*:</label>
-              <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoDescripcion" rows="2"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'complementoDescripcion',
-                'setComplementoDescripcion'
-                )"></textarea>
-                @if(mercanciaForm.controls['complementoDescripcion'].invalid ) {
-                  <div class="d-grid">
-                    @if(mercanciaForm.controls['complementoDescripcion'].errors?.['required']&& mercanciaForm.controls['complementoDescripcion'].touched) {
-                      <span class="mensaje-error">Este campo es obligatorio</span>
-                    }
-                    @if(mercanciaForm.controls['complementoDescripcion'].errors?.['maxlength']) {
-                      <span class="mensaje-error">Por favor, no escribas más de 200 caracteres</span>
-                    }
-                    
-                    </div>
+                  @if(mercanciaForm.get('cantidad')?.errors?.['pattern'])  {
+                    <span class="mensaje-error">El número debe tener máximo 16 dígitos enteros y hasta 4 decimales</span>
                   }
-            </div>
+                </div>   
+              }
+              
           </div>
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <input-fecha
-              [datos]="fechaFactura"
-              [deshabilitarFuturas]="true"
-              [setFecha]="mercanciaForm.get('fechaFactura')?.value"
-              (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
-               @if (esInvalido('fechaFactura')) {
-                  <div class="d-grid">
-                    @if (mercanciaForm.controls['fechaFactura'].errors?.['required']) {
-                      <span class="mensaje-error">Este campo es obligatorio</span>
-                    }
+          <div class="col-md-6">
+              <app-catalogo-select [catalogo]="umc || []" [label]="'UMC'" [required]="true" name="estado" formControlName="umc" 
+              (change)="
+              setValoresStore(
+              mercanciaForm,
+              'umc',
+              'setUmc'
+              )"
+              [markTouched]="mercanciaForm.get('umc')?.touched ?? false"></app-catalogo-select>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="valorMercancia">Valor de la mercancía (dólares)<span
+              class="require"
+              [ngClass]="{
+                'text-danger':
+                mercanciaForm.get('valorMercancia')?.invalid &&
+                mercanciaForm.get('valorMercancia')?.touched
+              }"
+              >*</span
+            >:</label>
+            <input type="text"  (blur)="formatFieldOnBlur('valorMercancia')"
+            class="form-control" formControlName="valorMercancia"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'valorMercancia',
+              'setValorMercancia' 
+              )"
+              maxlength="22"
+              [ngStyle]="{
+                borderColor:
+                mercanciaForm.get('valorMercancia')?.invalid &&
+                mercanciaForm.get('valorMercancia')?.touched
+                    ? 'red'
+                    : ''
+              }" >
+              @if(mercanciaForm.get('valorMercancia')?.invalid ) {
+                <div class="d-grid">
+                  @if(mercanciaForm.controls['valorMercancia'].errors?.['required']&& mercanciaForm.get('valorMercancia')?.touched) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                  @if(mercanciaForm.get('valorMercancia')?.errors?.['pattern']) {
+                    <span class="mensaje-error">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales</span>
+                  }
                   </div>
-                  }
-
-            </div>
-            <div class="col-md-4">
-              <label for="numeroFactura">N° factura / Referencia</label>
-              <input type="text" class="form-control" formControlName="numeroFactura"  maxlength="36"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'numeroFactura',
-                'setNumeroFactura'
-                )" >
-                @if(mercanciaForm.controls['numeroFactura'].invalid && mercanciaForm.controls['numeroFactura'].touched) {
-                  <div class="d-grid">
-                    @if(mercanciaForm.controls['numeroFactura'].errors?.['required']) {
-                      <span class="mensaje-error">Este campo es obligatorio</span>
-                    }
-                    </div>
-                  }
-            </div>
-            <div class="col-md-4 mr-2">
-              <app-catalogo-select [catalogo]="factura || []" [label]="'Tipo de factura'" [required]="true" name="tipoFactura" formControlName="tipoFactura" 
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'tipoFactura',
-                'setTipoFactura'
-                )"
-                [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"></app-catalogo-select>
-            </div>
+                }
           </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="activarModal()" >Agregar</button>
-      </div>
+          <div class="col-md-6">
+            <label for="complementoDescripcion">Complemento de la descripción<span
+              class="require"
+              [ngClass]="{
+                'text-danger':
+                mercanciaForm.get('complementoDescripcion')?.invalid &&
+                mercanciaForm.get('complementoDescripcion')?.touched
+              }"
+              >*</span
+            >:</label>
+            <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoDescripcion" rows="2"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'complementoDescripcion',
+              'setComplementoDescripcion'
+              )"
+              [ngStyle]="{
+                borderColor:
+                mercanciaForm.get('complementoDescripcion')?.invalid &&
+                mercanciaForm.get('complementoDescripcion')?.touched
+                    ? 'red'
+                    : ''
+              }"></textarea>
+              @if(mercanciaForm.controls['complementoDescripcion'].invalid ) {
+                <div class="d-grid">
+                  @if(mercanciaForm.controls['complementoDescripcion'].errors?.['required']&& mercanciaForm.controls['complementoDescripcion'].touched) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                  @if(mercanciaForm.controls['complementoDescripcion'].errors?.['maxlength']) {
+                    <span class="mensaje-error">Por favor, no escribas más de 200 caracteres</span>
+                  }
+                  
+                  </div>
+                }
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <input-fecha
+            [datos]="fechaFactura"
+            [deshabilitarFuturas]="true"
+            [setFecha]="mercanciaForm.get('fechaFactura')?.value"
+            (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+             @if (esInvalido('fechaFactura')) {
+                <div class="d-grid">
+                  @if (mercanciaForm.controls['fechaFactura'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+                }
 
-      @if(nuevaNotificacion){
-        <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="acceptar($event)"></lib-notificaciones>
-        }       
+          </div>
+          <div class="col-md-4">
+            <label for="numeroFactura">N° factura / Referencia</label>
+            <input type="text" class="form-control" formControlName="numeroFactura"  maxlength="36"
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'numeroFactura',
+              'setNumeroFactura'
+              )"
+              maxlength="36"
+              [ngStyle]="{
+                borderColor:
+                mercanciaForm.get('numeroFactura')?.invalid &&
+                mercanciaForm.get('numeroFactura')?.touched
+                    ? 'red'
+                    : ''
+              }" >
+              @if(mercanciaForm.controls['numeroFactura'].invalid && mercanciaForm.controls['numeroFactura'].touched) {
+                <div class="d-grid">
+                  @if(mercanciaForm.controls['numeroFactura'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                  </div>
+                }
+          </div>
+          <div class="col-md-4 mr-2">
+            <app-catalogo-select [catalogo]="factura || []" [label]="'Tipo de factura'" [required]="true" name="tipoFactura" formControlName="tipoFactura" 
+            (change)="
+              setValoresStore(
+              mercanciaForm,
+              'tipoFactura',
+              'setTipoFactura'
+              )"
+              [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"></app-catalogo-select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cancelar</button>
+      <button type="button" class="btn btn-primary" (click)="agregar()" >Agregar</button>
+    </div>
+
+    @if(nuevaNotificacion){
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="acceptar()"></lib-notificaciones>
+      }       

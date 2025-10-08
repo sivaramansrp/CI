@@ -831,32 +831,7 @@ export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERD
  * @since 1.0.0
  * @author Sistema VUCEM
  */
-export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratado-acuerdo/UE/bloque`;
-
-/**
- * Construye la ruta para el catálogo general de tratados y acuerdos comerciales.
- * 
- * Genera el endpoint para acceder al catálogo completo de tratados y acuerdos
- * comerciales internacionales disponibles en el sistema TITRAC.TA (Sistema de
- * Tratados Internacionales y Acuerdos Comerciales), adaptado al trámite especificado.
- * 
- * @param TRAMITE - Identificador del trámite que determina el contexto de la consulta
- * 
- * @returns {string} Endpoint formateado para el catálogo de tratados y acuerdos
- * 
- * @example
- * this.catalogoService.get(rutaAcuerdos)
- *   .pipe(takeUntil(this.destroyed$))
- *   .subscribe(acuerdos => {
- *     this.listaAcuerdos = acuerdos;
- *   });
- * ```
- * 
- * @see COMUN_URL.BASE_URL
- * @since 1.0.0
- * @author Sistema VUCEM
- */
-export const CATALOGO_TRATADO_ACUERDOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
+export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/tratado-acuerdo/${IDETIPOTRATADOACUERDO}/bloque`;
 
 /**
  * Construye la ruta para el catálogo de medios de transporte disponibles.
