@@ -60,6 +60,10 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AgregarDestinatarioFinalComponent
   implements OnDestroy, OnInit, OnChanges {
+  @Output() cancelarDestinario = new EventEmitter<void>();
+  @Output() guardarYSalir = new EventEmitter<void>();
+  @Input() destinatarioFinalTablaDatos: Destinatario[] = [];
+  @Input() tramiteState: unknown;
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -73,7 +77,13 @@ export class AgregarDestinatarioFinalComponent
    * Esta bandera se utiliza para controlar la visualización de mensajes de error o advertencia
    * cuando el usuario intenta guardar el formulario sin cumplir con los requisitos de validación.
    */
-  chequeoValidacionAlGuardar =false;
+  chequeoValidacionAlGuardar = false;
+  
+  /**
+   * Flag to track if we're in edit mode (modifying existing record)
+   * vs add mode (creating new record) - only used for modal scenario
+   */
+  isEditMode = false;
   /**
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
    * @property {FormGroup} agregarDestinatarioFinal
@@ -252,36 +262,103 @@ export class AgregarDestinatarioFinalComponent
   ngOnChanges(currentValue: SimpleChanges): void {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+      
     if (currentValue['datoSeleccionado']) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
-      setTimeout(() => {
-        if (this.datoSeleccionado?.[0]?.tipoPersona) {
-          this.agregarDestinatarioFinal.enable();
+      
+      if (this.chequeoValidacionAlGuardar) {
+        if (this.datoSeleccionado && this.datoSeleccionado.length > 0 && this.datoSeleccionado[0] && this.datoSeleccionado[0].id) {
+          this.isEditMode = true;
+          this.setupEditMode();
+        } else {
+          this.isEditMode = false;
+          this.setupAddMode();
         }
-        this.agregarDestinatarioFinal?.patchValue({
-          tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
-          rfc: this.datoSeleccionado?.[0]?.rfc,
-          curp: this.datoSeleccionado?.[0]?.curp,
-          nombres: this.datoSeleccionado?.[0]?.nombres,
-          primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
-          segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-          razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
-          pais: this.datoSeleccionado?.[0]?.pais,
-          estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
-          municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
-          localidad: this.datoSeleccionado?.[0]?.localidad,
-          codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
-          colonia: this.datoSeleccionado?.[0]?.colonia,
-          calle: this.datoSeleccionado?.[0]?.calle,
-          numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
-          numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
-          lada: this.datoSeleccionado?.[0]?.lada,
-          telefono: this.datoSeleccionado?.[0]?.telefono,
-          correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
-          coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
-        });
-      }, 500);
+      } else {
+        this.setupNonModalMode();
+      }
     }
+  }
+
+  private setupEditMode(): void {
+    setTimeout(() => {
+      this.agregarDestinatarioFinal.enable();
+      this.agregarDestinatarioFinal.patchValue({
+        tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+        rfc: this.datoSeleccionado?.[0]?.rfc,
+        curp: this.datoSeleccionado?.[0]?.curp,
+        nombres: this.datoSeleccionado?.[0]?.nombres,
+        primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+        segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+        denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
+        pais: this.datoSeleccionado?.[0]?.pais || '2',
+        estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+        municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
+        localidad: this.datoSeleccionado?.[0]?.localidad,
+        codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+        colonia: this.datoSeleccionado?.[0]?.colonia,
+        calle: this.datoSeleccionado?.[0]?.calle,
+        numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+        numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+        lada: this.datoSeleccionado?.[0]?.lada,
+        telefono: this.datoSeleccionado?.[0]?.telefono,
+        correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+        coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
+      });
+      
+      this.forzarDeshabilitarPais();
+    }, 50);
+  }
+
+  private setupAddMode(): void {
+    setTimeout(() => {
+      if (this.chequeoValidacionAlGuardar) {
+        this.agregarDestinatarioFinal.reset();
+        Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
+          const CONTROL = this.agregarDestinatarioFinal.get(controlName);
+          if (controlName === 'tipoPersona') {
+            CONTROL?.enable();
+            CONTROL?.setValue('');
+          } else {
+            CONTROL?.disable();
+            CONTROL?.setValue(null);
+          }
+        });
+        this.agregarDestinatarioFinal.get('pais')?.setValue('2');
+        this.forzarDeshabilitarPais();
+        this.estaDeshabilitadoDesplegable = true;
+      }
+    }, 50);
+  }
+
+  private setupNonModalMode(): void {
+    setTimeout(() => {
+      if (this.datoSeleccionado?.[0]?.tipoPersona) {
+        this.agregarDestinatarioFinal.enable();
+      }
+      this.agregarDestinatarioFinal?.patchValue({
+        tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+        rfc: this.datoSeleccionado?.[0]?.rfc,
+        curp: this.datoSeleccionado?.[0]?.curp,
+        nombres: this.datoSeleccionado?.[0]?.nombres,
+        primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+        segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+        razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
+        pais: this.datoSeleccionado?.[0]?.pais,
+        estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+        municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
+        localidad: this.datoSeleccionado?.[0]?.localidad,
+        codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+        colonia: this.datoSeleccionado?.[0]?.colonia,
+        calle: this.datoSeleccionado?.[0]?.calle,
+        numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+        numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+        lada: this.datoSeleccionado?.[0]?.lada,
+        telefono: this.datoSeleccionado?.[0]?.telefono,
+        correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+        coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
+      });
+    }, 500);
   }
 
   /**
@@ -290,59 +367,179 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
-   if (this.chequeoValidacionAlGuardar) {
-    if (this.agregarDestinatarioFinal.invalid) {
+    if (this.chequeoValidacionAlGuardar) {
+      return this.guardarDestinatarioModal();
+    }
+    return this.guardarDestinatarioNormal();
+  }
+
+  /**
+   * Handles modal form save logic for chequeoValidacionAlGuardar === true
+   */
+  private guardarDestinatarioModal(): void {
+    const VALIDATION_ERRORS = this.validateModalForm();
+    if (VALIDATION_ERRORS.length > 0) {
       Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
         control.markAsTouched();
         control.updateValueAndValidity();
       });
       return;
     }
-  }
+    
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-
-    let nombreRazonSocial: string;
-
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido
-        } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    const NUEVO_DESTINATARIO = this.buildDestinatarioObject(VALOR_FORMULARIO);
+    let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
+      ? [...this.destinatarioFinalTablaDatos] 
+      : [];
+    
+    if (this.isEditMode) {
+      const CURRENT_ID = this.datoSeleccionado && this.datoSeleccionado[0] ? this.datoSeleccionado[0].id : undefined;
+      NUEVO_DESTINATARIO.id = CURRENT_ID;
+      UPDATED_DESTINATARIOS = UPDATED_DESTINATARIOS.map(d => 
+        d.id === NUEVO_DESTINATARIO.id ? NUEVO_DESTINATARIO : d
+      );
     } else {
-      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+      const IS_DUPLICATE = UPDATED_DESTINATARIOS.some(d => d.rfc === NUEVO_DESTINATARIO.rfc);
+      
+      if (IS_DUPLICATE) {
+        return;
+      }
+      const NEXT_ID = UPDATED_DESTINATARIOS.length > 0 ? Math.max(...UPDATED_DESTINATARIOS.map(d => d.id || 0)) + 1 : 1;
+      NUEVO_DESTINATARIO.id = NEXT_ID;
+      UPDATED_DESTINATARIOS.push(NUEVO_DESTINATARIO);
     }
+    
+    this.updateDestinatarioFinalTablaDatos.emit(UPDATED_DESTINATARIOS);
+    this.agregarDestinatarioFinal.reset();
+    this.datoSeleccionado = [];
+    this.isEditMode = false;
+    this.setupAddMode();
+    
+    this.guardarYSalir.emit();
+  }
+
+  /**
+   * Handles normal form save logic for chequeoValidacionAlGuardar === false
+   * This preserves the exact original behavior from the old code
+   */
+  private guardarDestinatarioNormal(): void {
+    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+    let nombreRazonSocial: string;
+    if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
+    } else if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO['nombres']} ${VALOR_FORMULARIO['primerApellido']} ${VALOR_FORMULARIO['segundoApellido'] || ''}`.trim();
+    } else {
+      nombreRazonSocial = '';
+    }
+    
     const NUEVO_DESTINATARIO: Destinatario = {
-      nacionalidad: VALOR_FORMULARIO.nacionalidad,
-      tipoPersona: VALOR_FORMULARIO.tipoPersona,
+      nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
+      tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
       nombreRazonSocial: nombreRazonSocial,
-      rfc: VALOR_FORMULARIO.rfc,
+      rfc: VALOR_FORMULARIO['rfc'] as string,
       curp: '',
-      telefono: `${VALOR_FORMULARIO.lada} ${VALOR_FORMULARIO.telefono}`.trim(),
-      correoElectronico: VALOR_FORMULARIO.correoElectronico,
-      calle: VALOR_FORMULARIO.calle,
-      numeroExterior: VALOR_FORMULARIO.numeroExterior,
-      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-      pais: VALOR_FORMULARIO.pais,
-      colonia: VALOR_FORMULARIO.colonia,
-      municipioAlcaldia: VALOR_FORMULARIO.municipio,
-      localidad: VALOR_FORMULARIO.localidad,
+      telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
+      correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
+      calle: VALOR_FORMULARIO['calle'] as string,
+      numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
+      numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
+      pais: VALOR_FORMULARIO['pais'] as string,
+      colonia: VALOR_FORMULARIO['colonia'] as string,
+      municipioAlcaldia: VALOR_FORMULARIO['municipio'] as string,
+      localidad: VALOR_FORMULARIO['localidad'] as string,
       entidadFederativa: '',
-      estadoLocalidad: VALOR_FORMULARIO.estado,
-      codigoPostal: VALOR_FORMULARIO.codigoPostal,
-      coloniaEquivalente: VALOR_FORMULARIO.coloniaEquivalente,
-      nombres: VALOR_FORMULARIO.nombres,
-      primerApellido: VALOR_FORMULARIO.primerApellido,
-      segundoApellido: VALOR_FORMULARIO.segundoApellido,
-      razonSocial: VALOR_FORMULARIO.razonSocial,
-      lada: VALOR_FORMULARIO.lada,
+      estadoLocalidad: VALOR_FORMULARIO['estado'] as string,
+      codigoPostal: VALOR_FORMULARIO['codigoPostal'] as string,
+      coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
+      nombres: VALOR_FORMULARIO['nombres'] as string,
+      primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
+      segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
+      razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
+      lada: VALOR_FORMULARIO['lada'] as string,
     };
+    
     if (this.datoSeleccionado?.[0]?.id) {
       NUEVO_DESTINATARIO.id = this.datoSeleccionado[0].id;
     }
+    
     this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
+  }
+
+  /**
+   * Builds destinatario object from form values
+   */
+  private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
+    let nombreRazonSocial: string;
+    if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
+    } else if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO['nombres']} ${VALOR_FORMULARIO['primerApellido']} ${VALOR_FORMULARIO['segundoApellido'] || ''}`.trim();
+    } else {
+      nombreRazonSocial = '';
+    }
+    
+    return {
+      nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
+      tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
+      nombreRazonSocial: nombreRazonSocial,
+      rfc: VALOR_FORMULARIO['rfc'] as string,
+      curp: '',
+      telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
+      correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
+      calle: VALOR_FORMULARIO['calle'] as string,
+      numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
+      numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
+      pais: VALOR_FORMULARIO['pais'] as string,
+      colonia: VALOR_FORMULARIO['colonia'] as string,
+      municipioAlcaldia: VALOR_FORMULARIO['municipio'] as string,
+      localidad: VALOR_FORMULARIO['localidad'] as string,
+      entidadFederativa: '',
+      estadoLocalidad: VALOR_FORMULARIO['estado'] as string,
+      codigoPostal: VALOR_FORMULARIO['codigoPostal'] as string,
+      coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
+      nombres: VALOR_FORMULARIO['nombres'] as string,
+      primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
+      segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
+      razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
+      lada: VALOR_FORMULARIO['lada'] as string,
+    };
+  }
+
+  /**
+   * Custom validation for modal form scenario
+   * Only validates business rules for chequeoValidacionAlGuardar === true
+   */
+  private validateModalForm(): string[] {
+    const ERRORS: string[] = [];
+    const TIPO_PERSONA = this.agregarDestinatarioFinal.get('tipoPersona')?.value;
+    if (!TIPO_PERSONA) {
+      ERRORS.push('tipoPersona is required');
+    }
+    
+    if (TIPO_PERSONA === this.tipoPersona.MORAL) {
+      const DENOMINACION_RAZON = this.agregarDestinatarioFinal.get('denominacionRazon')?.value;
+      if (!DENOMINACION_RAZON) {
+        ERRORS.push('denominacionRazon is required for MORAL');
+      }
+    }
+    
+    if (TIPO_PERSONA === this.tipoPersona.FISICA) {
+      const NOMBRES = this.agregarDestinatarioFinal.get('nombres')?.value;
+      const PRIMER_APELLIDO = this.agregarDestinatarioFinal.get('primerApellido')?.value;
+      
+      if (!NOMBRES) {
+        ERRORS.push('nombres is required for FISICA');
+      }
+      if (!PRIMER_APELLIDO) {
+        ERRORS.push('primerApellido is required for FISICA');
+      }
+    }
+    
+    return ERRORS;
   }
 
   /**
@@ -356,12 +553,17 @@ export class AgregarDestinatarioFinalComponent
     this.changeNacionalidad();
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
-        this.chequeoValidacionAlGuardar =
+    this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
         ? true
-        :false;
-     this.forzarDeshabilitarPais()
-     this.actualizarValidadoresCalleNumeroExterior();
+        : false;
+    this.forzarDeshabilitarPais();
+    this.actualizarValidadoresCalleNumeroExterior();
+     
+    if (this.chequeoValidacionAlGuardar) {
+      this.isEditMode = false;
+      this.setupAddMode();
+    }
   }
 
   /**
@@ -450,7 +652,7 @@ export class AgregarDestinatarioFinalComponent
       rfc: [
         this.obtenerValor('rfc'), [Validators.required],
       ],
-      curp:['', [Validators.required]],
+      curp: ['', this.chequeoValidacionAlGuardar ? [] : [Validators.required]],
       nombres: [
         {
           value: this.elementosDeshabilitados.includes('nombres')
@@ -458,12 +660,25 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('nombres'),
           disabled: this.elementosDeshabilitados.includes('nombres'),
         },
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        this.chequeoValidacionAlGuardar 
+          ? [Validators.pattern(REGEX_NOMBRE)]
+          : [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
-        [Validators.required,
-        Validators.pattern(REGEX_NOMBRE)],
+        this.chequeoValidacionAlGuardar
+          ? [
+              Validators.required,
+              (control: AbstractControl): ValidationErrors | null => {
+                const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+                if (TIPO_PERSONA === this.tipoPersona.MORAL && !control.value) {
+                  return { conditionalRequired: true };
+                }
+                return null;
+              },
+              Validators.pattern(REGEX_NOMBRE)
+            ]
+          : [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       primerApellido: [
         {
@@ -472,7 +687,9 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('primerApellido'),
           disabled: this.elementosDeshabilitados.includes('primerApellido'),
         },
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        this.chequeoValidacionAlGuardar 
+          ? [Validators.pattern(REGEX_NOMBRE)]
+          : [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       segundoApellido: [
         {
@@ -540,6 +757,42 @@ export class AgregarDestinatarioFinalComponent
         [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
+    
+    if (this.chequeoValidacionAlGuardar) {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+        (controlName) => {
+          if (controlName !== 'tipoPersona') {
+            this.agregarDestinatarioFinal.get(controlName)?.disable();
+          }
+        }
+      );
+    }
+  }
+
+  /**
+   * Initializes the form for adding a new entry (not editing)
+   * Clears any existing datoSeleccionado to ensure we're in add mode
+   */
+  public initializeForNewEntry(): void {
+    if (this.chequeoValidacionAlGuardar) {
+      this.agregarDestinatarioFinal.reset();
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+        (controlName) => {
+          if (controlName !== 'tipoPersona') {
+            this.agregarDestinatarioFinal.get(controlName)?.disable();
+          } else {
+            this.agregarDestinatarioFinal.get(controlName)?.enable();
+            this.agregarDestinatarioFinal.get(controlName)?.setValue('');
+          }
+        }
+      );
+      
+      this.agregarDestinatarioFinal.get('pais')?.setValue('2');
+      
+      this.estaDeshabilitadoDesplegable = true;
+      
+      this.forzarDeshabilitarPais();
+    }
   }
 
   /**
@@ -658,7 +911,11 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    if (this.chequeoValidacionAlGuardar) {
+      this.cancelarDestinario.emit();
+    } else {
+      this.ubicaccion.back();
+    }
   }
 
   /**
@@ -682,6 +939,35 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} No retorna ningún valor.
    */
   changeNacionalidad(): void {
+        if (this.chequeoValidacionAlGuardar) {
+          const NOMBRES_CONTROL = this.agregarDestinatarioFinal.get('nombres');
+          if (NOMBRES_CONTROL) {
+            const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+            if (TIPO_PERSONA === this.tipoPersona.FISICA) {
+              NOMBRES_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+            } else {
+              NOMBRES_CONTROL.clearValidators();
+              NOMBRES_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+            }
+            NOMBRES_CONTROL.updateValueAndValidity();
+          }
+          const PRIMER_APELLIDO_CONTROL = this.agregarDestinatarioFinal.get('primerApellido');
+          if (PRIMER_APELLIDO_CONTROL) {
+            const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+            if (TIPO_PERSONA === this.tipoPersona.FISICA) {
+              PRIMER_APELLIDO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+            } else {
+              PRIMER_APELLIDO_CONTROL.clearValidators();
+              PRIMER_APELLIDO_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+            }
+            PRIMER_APELLIDO_CONTROL.updateValueAndValidity();
+          }
+          const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
+          if (CURP_CONTROL) {
+            CURP_CONTROL.clearValidators();
+            CURP_CONTROL.updateValueAndValidity();
+          }
+        }
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
     if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
       Object.keys(this.agregarDestinatarioFinal.controls).forEach(
@@ -702,6 +988,27 @@ export class AgregarDestinatarioFinalComponent
           ]);
           RFC_CONTROL.markAsTouched();
           RFC_CONTROL.updateValueAndValidity();
+        }
+        if (!this.chequeoValidacionAlGuardar) {
+          const DENOMINACION_RAZON_CONTROL = this.agregarDestinatarioFinal.get('denominacionRazon');
+          if (DENOMINACION_RAZON_CONTROL) {
+            DENOMINACION_RAZON_CONTROL.setValidators([
+              (control: AbstractControl): ValidationErrors | null => {
+                const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+                if (TIPO_PERSONA === this.tipoPersona.MORAL && !control.value) {
+                  return { required: true };
+                }
+                return null;
+              },
+              Validators.pattern(REGEX_NOMBRE)
+            ]);
+            DENOMINACION_RAZON_CONTROL.updateValueAndValidity();
+          }
+          const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
+          if (CURP_CONTROL) {
+            CURP_CONTROL.setValidators([Validators.required]);
+            CURP_CONTROL.updateValueAndValidity();
+          }
         }
         Object.keys(this.agregarDestinatarioFinal.controls).forEach(
           (controlName) => {

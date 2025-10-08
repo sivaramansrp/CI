@@ -1,5 +1,3 @@
-
-
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
@@ -71,6 +69,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Evento para abrir el modal de edición de fabricante solo cuando esVisible === true
    */
   @Output() fabricanteEventoModificarModal: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
+  
+  /**
+   * Evento para abrir el modal de edición de destinatario final solo cuando esVisible === true
+   */
+  @Output() destinatarioEventoModificarModal: EventEmitter<Destinatario[]> = new EventEmitter<Destinatario[]>();
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -94,6 +97,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * para ejecutar la lógica correspondiente al agregar un fabricante relacionado.
    */
    @Output() agregarFabricante = new EventEmitter<void>();
+  /**
+   * @event agregarDestinatarioFinal
+   * @description
+   * Evento emitido cuando se solicita agregar un nuevo destinatario final.
+   * Este evento no envía ningún valor (void) y puede ser escuchado por componentes padres
+   * para ejecutar la lógica correspondiente al agregar un destinatario final relacionado.
+   */
+  @Output() agregarDestinatarioFinal = new EventEmitter<void>();
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
@@ -454,13 +465,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
-      this.esVisible =
+    this.esVisible =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(
         this.idProcedimiento
-      )
-      ? true
-      : false;
-    }
+      );
+  }
     
    
 
@@ -479,6 +488,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.agregarFabricante.emit();
     }
 
+    /**
+   * @method onAgregarDestinatarioFinal
+   * @description
+   * Emite el evento para abrir el modal de destinatario final.
+   * Este método se llama cuando el usuario desea agregar un destinatario final relacionado.
+   * @memberof TercerosRelacionadosComponent
+   * @fires agregarDestinatarioFinal
+   */
+  onAgregarDestinatarioFinal(): void {
+    this.agregarDestinatarioFinal.emit();
+  }
 
   /**
    * Verifica si un campo es requerido según la configuración de campos requeridos.
@@ -512,7 +532,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method modificarDestinatario
-   * @description Emite el evento con la lista de destinatarios seleccionados y navega a la pantalla de edición/agregado de destinatario.
+   * @description Emite el evento with la lista de destinatarios seleccionados y navega a la pantalla de edición/agregado de destinatario.
    * Si no hay destinatarios seleccionados, no realiza ninguna acción.
    *
    * @returns {void}
@@ -522,8 +542,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.destinatarioEventoModificar.emit(this.destinatarioSeleccionadoDatos);
-    this.irAAcciones('../agregar-destinatario-final',true);
+    if (this.esVisible) {
+      this.destinatarioEventoModificarModal.emit(this.destinatarioSeleccionadoDatos);
+    } else {
+      this.destinatarioEventoModificar.emit(this.destinatarioSeleccionadoDatos);
+      this.irAAcciones('../agregar-destinatario-final',true);
+    }
   }
 
   /**

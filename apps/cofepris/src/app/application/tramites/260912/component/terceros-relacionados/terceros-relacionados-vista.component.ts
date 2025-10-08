@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite260912Store,Tramites260912State } from '../../estados/tramite-260912.store';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
@@ -9,6 +10,7 @@ import { Tramite260912Query } from '../../estados/tramite-260912.query';
 
 
 import { AgregarFabricanteContenedoraComponent } from '../agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
+
 
 /**
  * Componente para la gestión y visualización de terceros relacionados (fabricantes y destinatarios).
@@ -34,7 +36,7 @@ import { AgregarFabricanteContenedoraComponent } from '../agregar-fabricante-con
 @Component({
   selector: 'app-terceros-relacionados-vista',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent, AgregarFabricanteContenedoraComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, AgregarFabricanteContenedoraComponent, AgregarDestinatarioFinalContenedoraComponent],
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
@@ -42,14 +44,27 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
   mostrarModalEditarFabricante = false;
   fabricanteSeleccionadoParaEditar: Fabricante[] = [];
 
+    mostrarModalEditarDestinatarioFinal = false;
+    destinatarioFinalSeleccionadoParaEditar: Destinatario[] = [];
+
   abrirModalEditarFabricante(fabricante: Fabricante): void {
     this.fabricanteSeleccionadoParaEditar = [fabricante];
     this.mostrarModalEditarFabricante = true;
   }
 
+  abrirModalEditarDestinatarioFinal(destinatario: Destinatario): void {
+    this.destinatarioFinalSeleccionadoParaEditar = [destinatario];
+    this.mostrarModalEditarDestinatarioFinal = true;
+  }
+
   cerrarModalEditarFabricante(): void {
     this.mostrarModalEditarFabricante = false;
     this.fabricanteSeleccionadoParaEditar = [];
+  }
+
+  cerrarModalEditarDestinatarioFinal(): void {
+    this.mostrarModalEditarDestinatarioFinal = false;
+    this.destinatarioFinalSeleccionadoParaEditar = [];
   }
   @Output() continuar = new EventEmitter<void>();
 
@@ -371,7 +386,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    */
   agregarDestinatario(): void {
   
-    this.destinatarioSeleccionadoDatos = [];
+  this.destinatarioSeleccionadoDatos = [];
+  this.abrirModalAgregarDestinatarioFinal();
   }
 
   /**
@@ -566,7 +582,14 @@ tramiteState: Tramites260912State = {} as Tramites260912State;
 updateFabricanteTablaDatos(event: Fabricante[]): void {
   this.fabricanteTablaDatos = event;
   this.cerrarModalAgregarFabricante();
-}
+
+  }
+
+  updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
+    this.destinatarioFinalTablaDatos = event;
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    this.cerrarModalAgregarDestinatarioFinal();
+  }
 
 
 abrirModalAgregarFabricante(): void {
@@ -575,6 +598,16 @@ abrirModalAgregarFabricante(): void {
   const BOOTSTRAP = (window as unknown as { bootstrap: BootstrapModalType }).bootstrap;
   const MODAL = new BOOTSTRAP.Modal(MODAL_ELEMENT);
   MODAL.show();
+  }
+
+  abrirModalAgregarDestinatarioFinal(): void {
+    this.destinatarioFinalSeleccionadoParaEditar = [];
+    
+const MODAL_ELEMENT = this.el.nativeElement.querySelector('#modalAgregarDestinatarioFinal');
+    type BootstrapModalType = { Modal: new (element: HTMLElement) => { show: () => void } };
+    const BOOTSTRAP = (window as unknown as { bootstrap: BootstrapModalType }).bootstrap;
+    const MODAL = new BOOTSTRAP.Modal(MODAL_ELEMENT);
+    MODAL.show();
 }
 
 cerrarModalAgregarFabricante(): void {
@@ -585,5 +618,15 @@ cerrarModalAgregarFabricante(): void {
   if (MODAL) {
     MODAL.hide();
   }
+  }
+
+  cerrarModalAgregarDestinatarioFinal(): void {
+    this.destinatarioSeleccionadoDatos = [];
+    type BootstrapModalType = { Modal: { getInstance: (element: HTMLElement | null) => { hide: () => void } | null } };
+    const BOOTSTRAP = (window as unknown as { bootstrap: BootstrapModalType }).bootstrap;
+    const MODAL = BOOTSTRAP.Modal.getInstance(document.getElementById('modalAgregarDestinatarioFinal'));
+    if (MODAL) {
+      MODAL.hide();
+    }
 }
 }

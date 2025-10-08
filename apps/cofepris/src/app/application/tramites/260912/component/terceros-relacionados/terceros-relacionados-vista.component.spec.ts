@@ -122,11 +122,24 @@ describe('TercerosRelacionadosVistaComponent', () => {
 			updateFacturadorTablaDatos: jest.fn()
 		};
 		renderer = {} as Renderer2;
-		el = {} as ElementRef;
+		el = {
+			nativeElement: {
+				querySelector: jest.fn().mockReturnValue({})
+			}
+		} as any;
 		const mockModalService = {
 			open: jest.fn().mockReturnValue({ result: Promise.resolve() }),
 			Modal: {}
 		};
+		(global as any).window = {
+			bootstrap: {
+				Modal: jest.fn().mockImplementation(() => ({
+					show: jest.fn(),
+					hide: jest.fn()
+				}))
+			}
+		};
+		
 		component = new TercerosRelacionadosVistaComponent(tramiteQuery, tramiteStore, renderer, el);
 		(component as any).modalService = mockModalService;
 	});
@@ -201,11 +214,15 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
 	describe('agregar methods', () => {
 		it('agregarFabricante should reset selection', () => {
+			jest.spyOn(component, 'abrirModalAgregarFabricante').mockImplementation(() => {});
+			
 			component.fabricanteSeleccionadoDatos = [fullFabricante];
 			component.agregarFabricante();
 			expect(component.fabricanteSeleccionadoDatos).toEqual([]);
 		});
 		it('agregarDestinatario should reset selection', () => {
+			jest.spyOn(component, 'abrirModalAgregarDestinatarioFinal').mockImplementation(() => {});
+			
 			component.destinatarioSeleccionadoDatos = [fullDestinatario];
 			component.agregarDestinatario();
 			expect(component.destinatarioSeleccionadoDatos).toEqual([]);

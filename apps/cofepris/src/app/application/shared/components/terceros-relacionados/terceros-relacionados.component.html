@@ -120,7 +120,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-destinatario-final', false)"
+          (click)="esVisible ? onAgregarDestinatarioFinal() : irAAcciones('../agregar-destinatario-final', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
