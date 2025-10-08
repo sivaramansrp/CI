@@ -29,7 +29,7 @@
               </div>
               <div>
                 <input type="text" maxlength="18" class="form-control" formControlName="curp"
-                  (change)="setValoresStore(formChoferes, 'curp', 'setCurp')" />
+                  (change)="updateDriverFromForm('curp')" />
               </div>
               @if (formChoferes.get('curp')?.errors?.['required'] && (formChoferes.get('curp')?.touched || submitted)) {
               <div class="text-danger">
@@ -50,7 +50,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="rfc" maxlength="13"
-                  (change)="setValoresStore(formChoferes, 'rfc', 'setRfc')" />
+                  (change)="updateDriverFromForm('rfc')" />
               </div>
               @if (formChoferes.get('rfc')?.errors?.['required'] && (formChoferes.get('rfc')?.touched || submitted)) {
               <div class="text-danger">
@@ -164,7 +164,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="calle" maxlength="100"
-                  (change)="setValoresStore(formChoferes, 'calle', 'setCalle')" />
+                  (change)="updateDriverFromForm('calle')" />
               </div>
               @if (formChoferes.get('calle')?.errors?.['required'] && (formChoferes.get('calle')?.touched || submitted))
               {
@@ -179,7 +179,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55"
-                  (change)="setValoresStore(formChoferes, 'numeroExterior', 'setNumeroExterior')" />
+                  (change)="updateDriverFromForm('numeroExterior')" />
               </div>
               @if (formChoferes.get('numeroExterior')?.errors?.['required'] &&
               (formChoferes.get('numeroExterior')?.touched || submitted)) {
@@ -194,7 +194,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroInterior"
-                  (change)="setValoresStore(formChoferes, 'numeroInterior', 'setNumeroInterior')" />
+                  (change)="updateDriverFromForm('numeroInterior')" />
               </div>
             </div>
           </div>
@@ -253,7 +253,7 @@
               <div class="form-group">
                 <label class="form-label">Colonia*</label>
                 <select class="form-control form-select" formControlName="colonia"
-                  (change)="setValoresStore(formChoferes, 'colonia', 'setColoniaCHN')"
+                  (change)="updateDriverFromForm('colonia')"
                   [attr.disabled]="readonly ? '' : null">
                   <option [ngValue]="null">Seleccione un valor</option>
                   <option *ngFor="let colonia of coloniaList" [title]="colonia.descripcion" [value]="colonia.id">
@@ -270,7 +270,7 @@
               <div class="form-group">
                 <label class="form-label">País de residencia*</label>
                 <select class="form-control form-select" formControlName="paisDeResidencia"
-                  (change)="setValoresStore(formChoferes, 'paisDeResidencia', 'setPaisDeResidencia')"
+                  (change)="updateDriverFromForm('paisDeResidencia')"
                   [attr.disabled]="readonly ? '' : null">
                   <option [ngValue]="null">Seleccione un valor</option>
                   <option *ngFor="let pais of paisList" [title]="pais.descripcion" [value]="pais.clave">
@@ -289,7 +289,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="ciudad" maxlength="20"
-                  (change)="setValoresStore(formChoferes, 'ciudad', 'setCiudad')" />
+                  (change)="updateDriverFromForm('ciudad')" />
               </div>
               @if (formChoferes.get('ciudad')?.errors?.['required'] && (formChoferes.get('ciudad')?.touched ||
               submitted)) {
@@ -307,7 +307,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="localidad" maxlength="120"
-                  (change)="setValoresStore(formChoferes, 'localidad', 'setLocalidad')" />
+                  (change)="updateDriverFromForm('localidad')" />
               </div>
               @if (formChoferes.get('localidad')?.errors?.['required'] && (formChoferes.get('localidad')?.touched ||
               submitted)) {
@@ -322,7 +322,7 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12"
-                  (change)="setValoresStore(formChoferes, 'codigoPostal', 'setCodigoPostal')" />
+                  (change)="updateDriverFromForm('codigoPostal')" />
               </div>
               @if (formChoferes.get('codigoPostal')?.errors?.['required'] && (formChoferes.get('codigoPostal')?.touched
               || submitted)) {
@@ -340,7 +340,7 @@
               </div>
               <div>
                 <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55"
-                  (change)="setValoresStore(formChoferes, 'correoElectronico', 'setCorreoElectronico')" />
+                  (change)="updateDriverFromForm('correoElectronico')" />
               </div>
               @if (formChoferes.get('correoElectronico')?.errors?.['email'] &&
               (formChoferes.get('correoElectronico')?.touched || submitted)) {
@@ -355,7 +355,7 @@
               </div>
               <div>
                 <input type="tel" class="form-control" formControlName="telefono" maxlength="12"
-                  (change)="setValoresStore(formChoferes, 'telefono', 'setTelefono')" />
+                  (change)="updateDriverFromForm('telefono')" />
               </div>
               @if (formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched ||
               submitted)) {

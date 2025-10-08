@@ -1,7 +1,7 @@
 {
   "extends": ["../../.eslintrc.json"],
 
-  "ignorePatterns": ["!**/*","**/*.spec.ts", "**/*.scss"],
+  "ignorePatterns": ["!**/*", "**/*.spec.ts", "**/*.scss"],
 
   "overrides": [
     {
@@ -16,7 +16,7 @@
           { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
         ],
         "@typescript-eslint/no-explicit-any": "error",
-        "@angular-eslint/no-empty-lifecycle-method" : ["error"],
+        "@angular-eslint/no-empty-lifecycle-method": ["error"],
         "@angular-eslint/directive-selector": [
           "off",
           {
@@ -39,7 +39,7 @@
             "ignoreCase": false,
             "ignoreDeclarationSort": false,
             "ignoreMemberSort": false,
-            "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+            "memberSyntaxSortOrder": ["none", "all", "single"],
             "allowSeparatedGroups": true
           }
         ],

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, SolicitanteComponent, TIPO_PERSONA, WizardComponent } from '@ng-mf/data-access-user';
 import { Contenedor11202Store } from '../../estados/contenedor11202.store';
-import { DatosTramiteService } from 'apps/aga/src/app/application/tramites/11202/services/datos-tramite.service';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';

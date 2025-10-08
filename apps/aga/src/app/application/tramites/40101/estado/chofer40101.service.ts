@@ -25,6 +25,35 @@ export class Chofer40101Service {
   private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
   /**
+ * Recupera datos simulados para el Director General.
+ *
+ * Envía una solicitud HTTP GET para obtener los datos del Director General desde un archivo JSON simulado.
+ *
+ * @returns Un Observable que emite el objeto DirectorGeneralData.
+ */
+  getDirectorGeneralData(): Observable<DirectorGeneralData> {
+    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`);
+  }
+
+
+  /**
+   * Actualiza la propiedad `directorGeneral` en la tienda con los datos proporcionados.
+   *
+   * @param data - El nuevo objeto `DirectorGeneralData` que se establecerá como la información del director general.
+   */
+  updateStateDirectorGeneralData(data: DirectorGeneralData): void {
+    this.chofer40101Store.update((state) => ({
+      ...state,
+      //directorGeneral: data,
+      nombre: data.nombre,
+      primerApellido: data.primerApellido,
+      segundoApellido: data.segundoApellido,
+      apellidoPaterno: data.primerApellido,
+      apellidoMaternoCHN: data.apellidoMaternoCHN,
+    }));
+  }
+
+  /**
    * Sujeto de comportamiento que almacena la lista de choferes.
    */
   private choferesListSubject = new BehaviorSubject<DatosDelVehículo[]>([]);
@@ -276,33 +305,7 @@ export class Chofer40101Service {
     return this.http.get<T[]>(JSONURL);
   }
 
-  /**
-   * Recupera datos simulados para el Director General.
-   *
-   * Envía una solicitud HTTP GET para obtener los datos del Director General desde un archivo JSON simulado.
-   *
-   * @returns Un Observable que emite el objeto DirectorGeneralData.
-   */
-  getDirectorGeneralData(): Observable<DirectorGeneralData> {
-    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`);
-  }
 
-  /**
-   * Actualiza la propiedad `directorGeneral` en la tienda con los datos proporcionados.
-   *
-   * @param data - El nuevo objeto `DirectorGeneralData` que se establecerá como la información del director general.
-   */
-  updateStateDirectorGeneralData(data: DirectorGeneralData): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      //directorGeneral: data,
-      nombre: data.nombre,
-      primerApellido: data.primerApellido,
-      segundoApellido: data.segundoApellido,
-      apellidoPaterno: data.primerApellido,
-      apellidoMaternoCHN: data.apellidoMaternoCHN,
-    }));
-  }
 
   updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
     this.chofer40101Store.update((state) => ({

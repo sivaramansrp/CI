@@ -14,7 +14,9 @@ import {
 export interface Tramite40101State {
   datosVehiculo: DatosVehiculo;
   datosUnidad: DatosUnidad;
-  solicitanteDatas: ApiResponseSolicitante['datos']
+  solicitanteDatas: ApiResponseSolicitante['datos'];
+  seccion: boolean[];
+  formaValida: boolean[];
 }
 /**
  * Crea el estado inicial para el trámite 40101.
@@ -77,7 +79,9 @@ export function createInitialState(): Tramite40101State {
           lada: '',
         },
       }
-    }
+    },
+    seccion: [],
+    formaValida: [],
   };
 }
 /**
@@ -516,4 +520,11 @@ export class Tramite40101Store extends Store<Tramite40101State> {
     }));
   }
 
+  public establecerSeccion(seccion: boolean[]): void {
+    this.update({ seccion });
+  }
+
+  public establecerFormaValida(formaValida: boolean[]): void {
+    this.update({ formaValida });
+  }
 }

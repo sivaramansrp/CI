@@ -1,11 +1,21 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ApiResponseSolicitante, ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  FormularioDinamico,
+  PERSONA_MORAL_NACIONAL,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Chofer40101Service } from '../../estado/chofer40101.service';
 import { Tramite40101Query } from '../../estado/tramite40101.query';
+import {
+  ApiResponseSolicitante,
+  ChoferesExtranjeros,
+  DatosDelChoferNacional,
+} from '../../models/registro-muestras-mercancias.model';
 
 @Component({
   selector: 'paso-uno',
