@@ -342,11 +342,7 @@ export class ComplimentosService {
      */
     getSubfabricantesDisponibles(body: BuscarPayload): Observable<JSONResponse> {
       return this.http.post<JSONResponse>(API_ROUTES().buscarPlantas, body).pipe(
-        map((response) => response),
-        catchError(() => {
-          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES().buscarPlantas}`);
-          return throwError(() => ERROR);
-        })
+        map((response) => response)
       );
     }
 
@@ -377,11 +373,7 @@ export class ComplimentosService {
        */
       getTerciarizadasDisponibles(body: BuscarPayload): Observable<JSONResponse> {
       return this.http.post<JSONResponse>(API_ROUTES('/sat-t80105').buscarTerciarizadasPlantas, body).pipe(
-        map((response) => response),
-        catchError(() => {
-          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80105').buscarTerciarizadasPlantas}`);
-          return throwError(() => ERROR);
-        })
+        map((response) => response)
       );
     }
 

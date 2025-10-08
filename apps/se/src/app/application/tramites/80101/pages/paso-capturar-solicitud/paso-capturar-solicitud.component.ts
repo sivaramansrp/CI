@@ -1,5 +1,5 @@
+import { AVISO, ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, JSONResponse, WizardService, doDeepCopy } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery,ConsultaioState,ERROR_FORMA_ALERT,JSONResponse,WizardService, doDeepCopy } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
@@ -44,6 +44,16 @@ import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-acci
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+  * compo doc
+  * Mensaje relacionado con el aviso de privacidad simplificado.
+  * 
+  * @type {string}
+  * @memberof PantallasComponent
+  */
+    public avisoPrivacidadAlert: string = AVISO.Aviso;
+
   padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
@@ -300,6 +310,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -312,6 +323,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;

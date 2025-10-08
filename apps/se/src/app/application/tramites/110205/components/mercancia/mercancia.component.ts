@@ -1,11 +1,13 @@
 import { Catalogo, ConsultaioQuery, InputFecha, Notificacion, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {FORM_ERROR_ALERT_CANTIDAD,FORM_ERROR_ALERT_CANT_VAL,FORM_ERROR_ALERT_VALORES} from '../../constantes/peru-certificado.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, of, skip, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { AbstractControl} from '@angular/forms';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
+import {IS_FORM_VALID} from '../../constantes/peru-certificado.module';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { REGEX_PATRON_DECIMAL_15_4 } from '@ng-mf/data-access-user';
@@ -140,6 +142,33 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
    @Input() esFormularioSoloLectura!: boolean;
 
+   /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+ esMercanciaFormValid: boolean = false;
+  esFormaValido: boolean = false;
+
+  esFormaValores: boolean = false;
+  esFormaCantidadValores: boolean = false;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert =FORM_ERROR_ALERT_CANTIDAD;
+
+formErrorAlertMercanica=IS_FORM_VALID;
+
+ /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+ public formErrorAlertCantVal =FORM_ERROR_ALERT_CANT_VAL;
+
+/**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+public formErrorAlertValore =FORM_ERROR_ALERT_VALORES;
+
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -184,9 +213,12 @@ ngOnInit(): void {
           nombreIngles: S.mercanciaForm['nombreIngles'],
           otrasInstancias: S.mercanciaForm['otrasInstancias'],
           criterioParaConferirOrigen: S.mercanciaForm['criterioParaConferirOrigen'],
-          cantidad: S.cantidad,
+          
           umc: S.umc,
-          valorMercancia: S.valorMercancia,
+          cantidad: this.formatTo4Decimals(S.cantidad),
+        
+          valorMercancia: this.formatTo4Decimals(S.valorMercancia),
+       
           complementoDescripcion: S.complementoDescripcion,
           numeroFactura: S.numeroFactura,
           tipoFactura: S.tipoFactura,
@@ -218,27 +250,65 @@ ngOnInit(): void {
     }
   }
 
+/**
+ * Formatea un valor a exactamente 4 lugares decimales.
+ * @param value - El valor a formatear.
+ */
+private formatTo4Decimals(value: string | number | null | undefined): string {
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  
+  if (value === 0 || value === '0') {
+    return '0.0000';
+  }
+
+  const VALUE_STR = String(value);
+  
+  const IS_VALID_NUMBER = /^-?\d+(\.\d*)?$/.test(VALUE_STR);
+  const VAL=this.esFormularioSoloLectura;
+  if (!IS_VALID_NUMBER) {
+    return VALUE_STR;
+  }
+  
+  const PARSED_VALUE = parseFloat(VALUE_STR);
+  return PARSED_VALUE.toFixed(4);
+  
+}
   /**
    * @descripcion
    * Inicializa el formulario de mercancías con los valores actuales del estado.
    */
   initActionFormBuild(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionArancelaria: [this.datosSeleccionados?.fraccionArancelaria],
-      nombreComercialMercancia: [{ value: this.datosSeleccionados?.nombreComercial, disabled: true }],
-      nombreTecnico: [{ value: this.datosSeleccionados?.nombreTecnico, disabled: true }],
-      nombreIngles: [{ value: '', disabled: true }],
-      otrasInstancias: [{ value: '', disabled: true }],
-      criterioParaConferirOrigen: [{ value: '', disabled: true }],
-      fechaFactura: [this.datosSeleccionados?.fechaFactura ?? null, [Validators.required]],
-      cantidad: [this.datosSeleccionados?.cantidad, [Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
-      umc: [this.datosSeleccionados?.umc, [Validators.required]],
-      valorMercancia: [this.datosSeleccionados?.valorMercancia,[Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
-      complementoDescripcion: [this.datosSeleccionados?.complementoDescripcion,[Validators.required, Validators.maxLength(200)]],
-      numeroFactura: [this.datosSeleccionados?.numeroFactura, [Validators.required,Validators.maxLength(36)]],
-      tipoFactura: [this.datosSeleccionados?.tipoFactura, [Validators.required]],
+      fraccionArancelaria: [this.mercanciaState.mercanciaForm['fraccionArancelaria']],
+      nombreComercialMercancia: [{ value: this.mercanciaState.mercanciaForm['nombreComercialMercancia'], disabled: true }],
+      nombreTecnico: [{ value: this.mercanciaState.mercanciaForm['nombreTecnico'], disabled: true }],
+      nombreIngles: [{ value: this.mercanciaState.mercanciaForm['nombreIngles'], disabled: true }],
+      otrasInstancias: [{ value: this.mercanciaState.mercanciaForm['otrasInstancias'], disabled: true }],
+      criterioParaConferirOrigen: [{ value: this.mercanciaState.mercanciaForm['criterioParaConferirOrigen'], disabled: true }],
+      fechaFactura: [this.mercanciaState.fechaFactura ?? null, Validators.required],
+      cantidad: [this.formatTo4Decimals(this.mercanciaState.cantidad), [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
+      umc: [this.mercanciaState.umc, Validators.required],
+      valorMercancia: [this.formatTo4Decimals(this.mercanciaState.valorMercancia), [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
+      complementoDescripcion: [this.mercanciaState.complementoDescripcion,[ Validators.required, Validators.maxLength(200)]],
+      numeroFactura: [this.mercanciaState.numeroFactura,[ Validators.required,Validators.maxLength(36)]],
+      tipoFactura: [this.mercanciaState.tipoFactura, Validators.required],
     });
+    
+
   }
+   /**
+ * Format the field to 4 decimals when focus is lost (blur event)
+ * @param field - The form field name to format
+ */
+formatFieldOnBlur(field: string): void {
+  const CONTROL = this.mercanciaForm.get(field);
+  if (CONTROL&& CONTROL.value !== null && CONTROL.value !== '') {
+    const FORMATTEDVALUE = this.formatTo4Decimals(CONTROL.value);
+    CONTROL.setValue(FORMATTEDVALUE, { emitEvent: false });
+  }
+}
 
   /**
    * @descripcion
@@ -314,18 +384,47 @@ ngOnInit(): void {
    * @descripcion
    * Acepta los datos del formulario, los guarda en el almacén y emite los eventos correspondientes.
    */
-acceptar(agregar: boolean): void {
-  this.mercanciaForm.markAllAsTouched();
-  this.mercanciaForm.updateValueAndValidity({ onlySelf: false, emitEvent: false });
-
-  if (!(agregar && this.mercanciaForm.valid)) {
-    return;
+  agregar(): void {
+    this.esMercanciaFormValid = false;
+    this.esFormaCantidadValores = false;
+    this.esFormaValido = false;
+    this.esFormaValores = false;
+    
+    this.mercanciaForm.markAllAsTouched();
+    this.mercanciaForm.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+    
+    if(this.mercanciaForm.invalid) {
+      this.esMercanciaFormValid = true;
+      return;
+    }
+    
+    const IS_ZERO = (val: string | number | null | undefined): boolean => 
+      val === '0' || val === '0.0000' || parseFloat(String(val || 0)) === 0;
+    
+    const CANTIDAD_VALUE = this.mercanciaForm.get('cantidad')?.value;
+    const VALOR_VALUE = this.mercanciaForm.get('valorMercancia')?.value;
+    
+    if(IS_ZERO(CANTIDAD_VALUE) && IS_ZERO(VALOR_VALUE)) {
+      this.esFormaCantidadValores = true;
+      return;
+    }
+    
+    if(IS_ZERO(VALOR_VALUE)) {
+      this.esFormaValores = true;
+      return;
+    }
+    
+    if(IS_ZERO(CANTIDAD_VALUE)) {
+      this.esFormaValido = true;
+      return;
+    }
+    
+    this.activarModal();
   }
-
+acceptar(): void {
   this.guardarClicado.emit(this.mercanciaForm.value);
-  const MERCANIADATO = this.mercanciaForm.getRawValue();
-  const MERCANIAS = this.buildMercancia(MERCANIADATO);
-    this.store.setmercanciaTabla([MERCANIAS]);
+  this.store.setmercanciaTabla([this.mercanciaForm.value]);
+  
   if (this.mostrarAlerta) {
     of(null).pipe(takeUntil(this.destroyNotifier$), delay(100)).subscribe(() => {
       this.cerrarModal();
@@ -333,6 +432,7 @@ acceptar(agregar: boolean): void {
        this.mercanciaForm.reset();
     });
   }
+
 }
 
   /**

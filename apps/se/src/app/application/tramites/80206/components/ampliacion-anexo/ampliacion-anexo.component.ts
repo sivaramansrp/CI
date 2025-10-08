@@ -1,11 +1,7 @@
 /**
- * @fileoverview
  * El `AmpliacionAnexoComponent` es un componente de Angular diseñado para gestionar la funcionalidad del módulo "Ampliación de Servicios".
  * Maneja formularios reactivos, catálogos, y la interacción con el estado para la gestión de datos relacionados con fracciones arancelarias,
  * importaciones y servicios IMMEX.
- * 
- * @module AmpliacionAnexoComponent
- * @description
  * Este componente proporciona funcionalidad para la ampliación de servicios, incluyendo la inicialización de formularios, 
  * la obtención de datos y la interacción con el estado para la gestión de fracciones arancelarias e importaciones.
  */
@@ -13,6 +9,8 @@
 import {
   Catalogo,
   TablaSeleccion,
+  doDeepCopy,
+  esValidObject,
 } from '@ng-mf/data-access-user';
 
 import {
@@ -29,8 +27,6 @@ import {
 import {
   CONFIGURACION_ARANCELARIAS,
   CONFIGURACION_ARANCELARIASIMPORTACION,
-  FRACCIONARANCELARIAVALIDO,
-  MERCANCIAVALIDO,
   TEXTOS_80206
 } from "../../constantes/modificacion.constants";
 
@@ -47,7 +43,12 @@ import { Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite80206Store } from '../../estados/tramite80206.store';
 
-
+/**
+ * El `AmpliacionAnexoComponent` es un componente de Angular diseñado para gestionar la funcionalidad 
+ * del módulo "Ampliación de Servicios". Maneja formularios reactivos, catálogos, y la interacción 
+ * con el estado para la gestión de datos relacionados con fracciones arancelarias, importaciones 
+ * y servicios IMMEX.
+ */
 @Component({
   selector: 'app-ampliacion-servicios',
   templateUrl: './ampliacion-anexo.component.html',
@@ -59,161 +60,132 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
    * Controla la visibilidad del modal de alerta.
-   * @property {boolean} mostrarAlerta
    */
   mostrarAlerta: boolean = false;
 
   /**
    * Mensaje mostrado en el modal de alerta.
-   * @property {string} mensajeDeAlerta
    */
   mensajeDeAlerta: string = 'Debe seleccionar una fracción de exportación';
   
     /**
      * Estado actual del trámite.
-     * @property {AmpliacionServiciosState} tramiteState
      */
     tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
   
 
   /**
    * Formulario reactivo para la información de registro.
-   * @property {FormGroup} formularioInfoRegistro
    */
   formularioInfoRegistro!: FormGroup;
 
   /**
    * Tipo de selección de tabla (radio button).
-   * @property {TablaSeleccion} tablaSeleccion
    */
   tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO;
 
   /**
    * Fracción arancelaria.
-   * @property {string} fraccion
    */
   fraccion: string = '';
 
   /**
    * Cantidad de bienes.
-   * @property {string} cantidad
    */
   cantidad: string = '';
 
   /**
    * Fracción arancelaria para servicios IMMEX.
-   * @property {string} fraccionArancelaria
    */
   fraccionArancelaria: string = '';
 
   /**
    * Datos relacionados con la importación.
-   * @property {string} importacion
    */
   importacion: string = '';
 
   /**
    * Valor de los bienes.
-   * @property {string} valor
    */
   valor: string = '';
 
   /**
    * Configuración de la tabla para servicios IMMEX.
-   * @property {ConfiguracionColumna<Arancelaria>[]} configuracionTablaServicio
    */
   configuracionTablaServicio: ConfiguracionColumna<Arancelaria>[] = CONFIGURACION_ARANCELARIAS;
 
   /**
    * Configuración de la tabla para importaciones.
-   * @property {ConfiguracionColumna<ArancelariaImportacion>[]} configuracionTablaImportacion
    */
   configuracionTablaImportacion: ConfiguracionColumna<ArancelariaImportacion>[] = CONFIGURACION_ARANCELARIASIMPORTACION;
 
   /**
    * Lista de datos de servicios IMMEX.
-   * @property {Arancelaria[]} datos
    */
   datos: Arancelaria[] = [];
 
   /**
    * Datos de servicios IMMEX para el grid.
-   * @property {Arancelaria[]} datosImmex
    */
   datosImmex: Arancelaria[] = [];
 
   /**
    * Datos de importación para el grid.
-   * @property {ArancelariaImportacion[]} datosImportacion
    */
   datosImportacion: ArancelariaImportacion[] = [];
 
   /**
    * Lista de domicilios seleccionados.
-   * @property {Arancelaria[]} domiciliosSeleccionados
    */
   domiciliosSeleccionados: Arancelaria[] = [];
 
   /**
    * Lista de empresas seleccionadas.
-   * @property {ServicioInmex[]} empresasSeleccionados
+   * empresasSeleccionados
    */
   
   /**
    * Formulario reactivo para datos adicionales.
-   * @property {FormGroup} forma
    */
   forma!: FormGroup;
 
   /**
    * Lista de aduanas de ingreso.
-   * @property {Catalogo[]} aduanaDeIngreso
    */
   aduanaDeIngreso!: Catalogo[];
 
   /**
    * Datos de entidades autorizadas.
-   * @property {[]} autorizadosBodyData
    */
   autorizadosBodyData: [] = [];
 
   /**
    * Información sobre el registro actual.
-   * @property {Servicios} infoRegistro
    */
   infoRegistro!: Servicios;
 
   /**
    * Textos constantes para el componente.
-   * @property {any} TEXTOS
    */
   TEXTOS = TEXTOS_80206;
 
   /**
    * Notificador para gestionar la destrucción o desuscripción de observables.
-   * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
-   * @property {boolean} esFormularioSoloLectura
    */
   @Input() esFormularioSoloLectura: boolean = false;
 
 /**
  * Valor válido de fracción arancelaria para validaciones en el componente.
  * Utiliza la constante FRACCIONARANCELARIAVALIDO.
- * @type {string}
  */
-VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   /**
    * Constructor del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para obtener datos de ampliación de servicios.
-   * @param {HttpClient} httpServicios - Servicio HTTP para realizar peticiones.
    */
 
   constructor(
@@ -230,7 +202,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
   /**
    * Método de inicialización del componente.
-   * @method ngOnInit
    */
   ngOnInit():void {
    this.getDatos();
@@ -239,25 +210,18 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   }
   /**
    * Activa el modal de alerta.
-   * @method activarModal
-   * @returns {void}
    */
   activarModal(): void {
     this.mostrarAlerta = true;
   }
   /**
    * Cierra el modal de alerta.
-   * @method cerrarModal
-   * @returns {void}
    */
   aceptar(): void {
     this.mostrarAlerta = false;
   }
   /**
    * Cambia el valor de un campo específico en el estado.
-   * @method enCambioDeCampo
-   * @param {string} fieldName - Nombre del campo.
-   * @param {string} newValue - Nuevo valor del campo.
    */
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
@@ -287,7 +251,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
   /**
  * Se suscribe a los suscribirseAFields cambios en los campos del estado y actualiza las propiedades locales.
- * @method suscribirseAFields
  */
 
   suscribirseAFields(): void {
@@ -313,7 +276,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   
   /**
    * Obtiene los datos del servicio y actualiza el estado del formulario.
-   * @method getDatos
    */
   getDatos(): void {
     
@@ -328,7 +290,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   }
   /**
  * Se suscribe a los datos de IMMEX desde el store para mantener el componente actualizado.
- * @method suscribirseADatosImmex
  */
   suscribirseADatosImmex(): void {
     
@@ -341,7 +302,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   
   /**
    * Inicializa el formulario a partir de los datos del store.
-   * @method inicializarFormularioDesdeAlmacen
    */
   inicializarFormularioDesdeAlmacen(): void {
       this.formularioInfoRegistro = this.fb.group({
@@ -356,7 +316,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
   /**
    * Inicializa el formulario de información de registro.
-   * @method inicializarFormularioInfoRegistro
    */
   
   inicializarFormularioInfoRegistro(): void {
@@ -373,7 +332,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
   /**
    * Elimina servicios del grid.
-   * @method eliminarServiciosGrid
    */
   eliminarServiciosGrid(): void {
     
@@ -399,6 +357,11 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   return INDICE !== -1; 
 }
 
+/**
+ * <span class="compodoc-span">Handles the delete attempt for selected export fractions.</span>
+ * If no condition is met (i.e., no fractions are selected), sets an alert message and activates the modal dialog.
+ *
+ */
  onIntentarEliminar(): void {
   if (!this.condicion) {
     this.mensajeDeAlerta = 'Seleccione la(s) Fracción(es) de Exportación a eliminar.';
@@ -409,7 +372,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
   /**
    * Elimina datos de importación seleccionados del grid.
-   * @method eliminarImportacion
    */
   eliminarImportacion(): void {
     const INDICE = this.datosImportacion.findIndex((item:ArancelariaImportacion) => item.fraccionArancelaria === this.domiciliosSeleccionados[0]?.['fraccionArancelaria']);
@@ -422,44 +384,179 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   }
   /**
    * Actualiza el grid de empresas nacionales.
-   * @method actualizaGridEmpresasNacionales
    */
-  actualizaGridEmpresasNacionales(): void {
-    const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
-    if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
-    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria.';
-    this.activarModal();
-    }
-    else if(this.fraccionArancelaria !== this.VALIDOAR_FRACCION_ARANCELARIA) {
-      this.mensajeDeAlerta = 'La fracción arancelaria es inválida.';
-      this.activarModal();
-    }
-    else if (EXISTS) {
-      this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
-      this.activarModal();
-    }
-    else{
-    const CUERPODATOS = {
-      fraccion: "1",
-      fraccionArancelaria: this.fraccionArancelaria,
-      descripcionComercial:"Usados",
-      anexoII: "NO SENSIBLE",
-      tipo: "",
-      umt: "",
-      categoria: "",
-      valorMensual: "",
-      valorAnual: "",
-      volumenrMensual: "",
-      volumenAnual: "",
-    };
-    this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-    this.fraccionArancelaria = '';
+ actualizaGridEmpresasNacionales(): void {
+  if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
+    return;
   }
-  }
+    this.obtenerInformacionFraccion();
+
+}
+
+/**
+ * Obtiene la información de una fracción arancelaria ingresada por el usuario.
+ * Realiza validaciones sobre el valor ingresado, verifica si la fracción ya existe en la lista,
+ * y consulta la información correspondiente a través de un servicio externo.
+ * Si la fracción es válida y no existe previamente, agrega los datos obtenidos a la lista de fracciones.
+ * Muestra mensajes de alerta en caso de errores de validación, duplicidad o problemas en la consulta.
+ * Este método es utilizado para gestionar la adición de fracciones arancelarias en el trámite 80206,
+ * asegurando que la información ingresada sea válida y actualizada.
+ */
+obtenerInformacionFraccion(): void {
+  const FRACCION_VALUE = this.fraccionArancelaria;
   
+  if (!FRACCION_VALUE || FRACCION_VALUE.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe introducir una fracción arancelaria válida.';
+    return;
+  }
+
+ if (!AmpliacionAnexoComponent.validarFormatoFraccion(FRACCION_VALUE)) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
+    return;
+  }
+
+  const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === FRACCION_VALUE);
+  if (EXISTS) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+    return;
+  }
+
+  const PAYLOAD = {
+    "fraccion": FRACCION_VALUE,
+    "tipoSolicitud": 471
+  };
+
+  this.ampliacionServiciosService
+    .obtenerInformacionFraccion(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = API_DATOS.error || API_DATOS.mensaje || 'La fracción arancelaria solicitada no existe.';
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            try {
+              const CURRENT_COUNT = this.datosImmex.length;
+              const RESPONSE: Arancelaria[] = this.ampliacionServiciosService
+                .mapApiResponseToFraccionArancelaria([API_DATOS.datos], CURRENT_COUNT);
+              
+              this.tramite80206Store.setDatosImmex([...this.datosImmex, ...RESPONSE]);
+              
+              this.fraccionArancelaria = '';
+              
+            } catch (mappingError) {
+              console.error('Error al mapear respuesta:', mappingError);
+              this.mostrarAlerta = true;
+              this.mensajeDeAlerta = 'Error al procesar la información de la fracción arancelaria.';
+            }
+          } else {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = 'No se encontraron datos para la fracción arancelaria especificada.';
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener información de fracción:', error);
+        this.mostrarAlerta = true;
+        this.mensajeDeAlerta = 'Error al conectar con el servidor. Intente nuevamente.';
+      }
+    });
+}
+
+/**
+ * Obtiene la información de una fracción arancelaria de importación ingresada por el usuario.
+ * Realiza las siguientes validaciones:
+ * Si las validaciones son exitosas, realiza una petición al servicio para obtener los datos de la fracción arancelaria.
+ * Si la respuesta es válida, mapea y agrega la fracción a la lista de importaciones.
+ * En caso de error o datos inválidos, muestra una alerta con el mensaje correspondiente.
+ *
+ */
+obtenerInformacionFraccionImportacion(): void {
+  const FRACCION_IMPORTACION_VALUE = this.importacion;
+
+  if (!FRACCION_IMPORTACION_VALUE || FRACCION_IMPORTACION_VALUE.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe introducir una fracción arancelaria válida.';
+    return;
+  }
+
+ if (!AmpliacionAnexoComponent.validarFormatoFraccion(FRACCION_IMPORTACION_VALUE)) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
+    return;
+  }
+
+  const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === FRACCION_IMPORTACION_VALUE);
+  if (EXISTS) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+    return;
+  }
+
+  const PAYLOAD = {
+    "fraccion": FRACCION_IMPORTACION_VALUE,
+    "fraccionPadre": this.fraccionArancelaria,
+    "tipoSolicitud": "14",
+    "idPrograma": "121517",
+    "idSolicitud": "202785257",
+    "idProductoPadre": ""
+  };
+
+  this.ampliacionServiciosService
+    .obtenerFraccionImportacion(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = API_DATOS.error || API_DATOS.mensaje || 'La fracción arancelaria solicitada no existe.';
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            try {
+              const CURRENT_COUNT = this.datosImportacion.length;
+              const RESPONSE: ArancelariaImportacion[] = this.ampliacionServiciosService
+                .mapApiResponseToFraccionArancelariaImportacion([API_DATOS.datos], CURRENT_COUNT);
+
+              this.tramite80206Store.setDatosImportacion([...this.datosImportacion, ...RESPONSE]);
+
+              this.fraccionArancelaria = '';
+              
+            } catch (mappingError) {
+              console.error('Error al mapear respuesta:', mappingError);
+              this.mostrarAlerta = true;
+              this.mensajeDeAlerta = 'Error al procesar la información de la fracción arancelaria.';
+            }
+          } else {
+            this.mostrarAlerta = true;
+            this.mensajeDeAlerta = 'No se encontraron datos para la fracción arancelaria especificada.';
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener información de fracción:', error);
+        this.mostrarAlerta = true;
+        this.mensajeDeAlerta = 'Error al conectar con el servidor. Intente nuevamente.';
+      }
+    });
+}
   /**
    * Cierra el modal de alerta.
-   * @method cerrarModal
    */
   cerrarModal():void{
     this.mostrarAlerta = false;
@@ -467,51 +564,39 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   }
    /**
    * Agrega datos de importación al grid.
-   * @method agregarImportacion
    */
-  agregarImportacion(): void {
-    if(this.domiciliosSeleccionados.length === 0) {
-      this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
-      this.activarModal();
-    }
-    else if(!this.importacion || this.importacion.trim() === '') {
-      this.mensajeDeAlerta = 'Tiene que introducir la mercancía.';
-      this.activarModal();
-    }
-    else if(MERCANCIAVALIDO !== this.importacion) {
-      this.mensajeDeAlerta = 'La mercancía es inválida.';
-      this.activarModal();
-    }
-    else if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
-      this.mensajeDeAlerta = "La solicitud contiene fracciones arancelarias que pertenecen al grupo 3R's, la fracción que desea ingresar pertenece a otro grupo por lo tanto no es válida.";
-      this.activarModal();
-      this.importacion = '';
-    }
-    else{
-    const CUERPODATOS = {
-      fraccion: this.domiciliosSeleccionados[0]?.fraccion,
-      fraccionArancelaria: this.domiciliosSeleccionados[0]?.fraccionArancelaria,
-      descripcionComercial:this.domiciliosSeleccionados[0]?.descripcionComercial,
-      fraccionArancelariaImportacion: this.importacion,
-      descripcionComercialImportacion:"Mercancias destinadas a procesos tales como reparacion, reacondicionamiento o remanufactura, cuando las empresas cuenten con registro otorgado conforme a los lineamientos establecidos por la Secretaria de Economia.  ", 
-      anexoII: this.domiciliosSeleccionados[0]?.anexoII,
-      tipo: this.domiciliosSeleccionados[0]?.tipo,
-      umt:this.domiciliosSeleccionados[0]?.umt,
-      categoria: this.domiciliosSeleccionados[0]?.categoria,
-      valorMensual: this.domiciliosSeleccionados[0]?.valorMensual,
-      valorAnual: this.domiciliosSeleccionados[0]?.valorAnual,
-      volumenrMensual: this.domiciliosSeleccionados[0]?.volumenrMensual,
-      volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
-    }
-    this.tramite80206Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
-    this.importacion = '';
+ agregarImportacion(): void {
+  if (!this.importacion || this.importacion.trim() === '') {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
+    return;
   }
+
+  if (this.domiciliosSeleccionados.length === 0) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
+    return; 
+  }
+
+  if (!AmpliacionAnexoComponent.validarFormatoFraccion(this.importacion)) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
+    return;
+  }
+
+  const EXISTS = this.datosImportacion.some(item => item.fraccion === this.importacion);
+  if (EXISTS) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+    return;
+  }
+
+  this.obtenerInformacionFraccionImportacion();
 }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones.
-   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -520,8 +605,6 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
  /**
    * Maneja los datos recibidos del componente hijo.
-   * @method procesarDatosDelHijo
-   * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
   procesarDatosDelHijo(data: Catalogo): void { 
     
@@ -531,12 +614,40 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
 
   /**
    * Actualiza la lista de domicilios seleccionados.
-   * @method seleccionarDomicilios
-   * @param {Arancelaria} domicilios - Domicilios seleccionados.
    */
   seleccionarDomicilios(domicilios: Arancelaria): void {
     this.domiciliosSeleccionados = [domicilios];
   }
+/**
+ * Validates the format of the fraccion arancelaria
+ */
+  static validarFormatoFraccion(fraccion: string): boolean {
+    const FRACCION_PATTERN = /^\d{8}$/;
+    return FRACCION_PATTERN.test(fraccion);
+  }
+   /**
+   * Valida todos los controles del formulario.
+   *
+   * Marca todos los controles como tocados y actualiza su estado de validación
+   * para mostrar los errores correspondientes en la interfaz de usuario.
+   * También valida los formularios de los componentes hijo.
+   *
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
 
+    if (this.formularioInfoRegistro) {
+      this.formularioInfoRegistro.markAllAsTouched();
+      this.formularioInfoRegistro.updateValueAndValidity();
+
+      if (this.formularioInfoRegistro.invalid) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+  
+   return isValid;
+}
   
 }
