@@ -42,7 +42,7 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final:',
+  labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
 };
@@ -259,6 +259,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {EventEmitter<Mercancia>}
    */
   @Output() filaClics = new EventEmitter<Mercancia>();
+
+  /**
+   * Propiedad de salida que emite la fila seleccionada de mercancia.
+   * @type {EventEmitter<Mercancia>}
+   */
+  @Output() filaClicsMercanciaSelecction = new EventEmitter<Mercancia>();
+
+    /**
+   * Propiedad de salida que emite la fila seleccionada de mercancia.
+   * @type {EventEmitter<Mercancia>}
+   */
+  @Output() filaClicsMercanciaDisponibles = new EventEmitter<Mercancia>();
 
   /**
   * Este evento emite un arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
@@ -902,6 +914,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    */
   abrirModificarModal(datos1: Mercancia): void {
     this.filaClics.emit(datos1);
+    this.filaClicsMercanciaDisponibles.emit(datos1)
   }
 
   /**
@@ -915,6 +928,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
   abrirModal(): void {
     if (this.seleccionadaguardarClicado.length > 0) {
       this.filaClics.emit(this.seletedccionadaguardarClicado);
+      this.filaClicsMercanciaSelecction.emit(this.seletedccionadaguardarClicado);
     }
     else {
       this.nuevaNotificacion = {

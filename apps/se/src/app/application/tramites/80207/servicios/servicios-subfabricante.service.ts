@@ -1,11 +1,17 @@
 import { DEFAULT_DOMICILIO, Tramites80207Store } from '../estados/tramite80207.store';
+
 import {
+  ApiResponseItem,
+  BaseItem,
+  DatoComplementario,
+  DomicilioDto,
   DomicilioPayload,
   InfoRegistro,
   PlantasDireccionModelo,
   SubfabricanteDireccionModelo,
   Tramite80207State,
 } from '../modelos/subfabricante.model';
+
 import { JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_ROUTES } from '../../../shared/servers/api-route';
@@ -154,7 +160,7 @@ export class SubfabricanteService {
  * @returns String con el domicilio fiscal completo
  */
 // eslint-disable-next-line class-methods-use-this
-private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string {
+private buildDomicilioFiscal(domicilio: DomicilioDto, empresaDomicilio: DomicilioDto = {}): string {
   const CALLE = domicilio.calle || empresaDomicilio.calle || '';
   const NUM_EXTERIOR = domicilio.numExterior || empresaDomicilio.numExterior || '';
   const NUM_INTERIOR = domicilio.numInterior || empresaDomicilio.numInterior || '';
@@ -170,13 +176,26 @@ private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string
   return PARTS.join(', ');
 }
 
+toNumber(
+  value: string | number | null | undefined,
+  integerOnly: boolean = true
+): number {
+  if (value === null || value === undefined || value === '') {return 0;}
+
+  const NUM = Number(value);
+
+  if (isNaN(NUM)) {return 0;}
+
+  return integerOnly ? Math.floor(NUM) : NUM;
+}
+
       /**
        * Mapea la respuesta de la API a un arreglo de objetos PlantasSubfabricante.
        * @param apiResponse - Respuesta de la API que contiene los datos de las plantas subfabricantes.
        * @returns Arreglo de objetos PlantasSubfabricante mapeados.
        */
         // eslint-disable-next-line class-methods-use-this
-        mapApiResponseToPlantasSubfabricante(apiResponse: any[]): SubfabricanteDireccionModelo[] {
+        mapApiResponseToPlantasSubfabricante(apiResponse: ApiResponseItem[]): SubfabricanteDireccionModelo[] {
           // eslint-disable-next-line complexity
           return apiResponse.map(item => {
             const DOMICILIO = item.domicilioDto || {};
@@ -185,14 +204,20 @@ private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string
       
             return {
               calle: DOMICILIO.calle || EMPRESA_DOMICILIO.calle || item.calle || '',
-              numExterior: parseInt(DOMICILIO.numExterior || EMPRESA_DOMICILIO.numExterior || item.numeroExterior, 10) || 0,
-              numInterior: parseInt(DOMICILIO.numInterior || EMPRESA_DOMICILIO.numInterior || item.numeroInterior, 10) || 0,
-              codigoPostal: parseInt(DOMICILIO.codigoPostal || EMPRESA_DOMICILIO.codigoPostal || item.codigoPostal, 10) || 0,
+              numExterior: this.toNumber(
+        DOMICILIO.numExterior || EMPRESA_DOMICILIO.numExterior || item.numeroExterior 
+      )|| 0,
+      numInterior: this.toNumber(
+        DOMICILIO.numInterior || EMPRESA_DOMICILIO.numInterior || item.numeroInterior
+      ),
+      codigoPostal: this.toNumber(
+        DOMICILIO.codigoPostal || EMPRESA_DOMICILIO.codigoPostal || item.codigoPostal
+      ),
               colonia: DOMICILIO.colonia || EMPRESA_DOMICILIO.colonia || item.colonia || '',
               delegacionMunicipio: DOMICILIO.municipio || EMPRESA_DOMICILIO.municipio || DOMICILIO.delegacionMunicipio || item.delegacionMunicipio || '',
               entidadFederativa: DOMICILIO.entidadFederativa?.nombre || EMPRESA_DOMICILIO.entidadFederativa?.nombre || item.entidadFederativa || '',
               pais: DOMICILIO.pais?.nombre || EMPRESA_DOMICILIO.pais?.nombre || item.pais || '',
-              idSubfabricante: item.idSubfabricante || 0,
+              idSubfabricante: (item.idSubfabricante || 0).toString(),
               rfc: EMPRESA.rfc || item.rfc || '',
               domicilioFiscalSolicitante: this.buildDomicilioFiscal(DOMICILIO, EMPRESA_DOMICILIO),
               razonSocial: EMPRESA.razonSocial || item.razonSocial || ''
@@ -233,15 +258,15 @@ export function mapPlantaToDomicilio(planta?: PlantasDireccionModelo): Domicilio
 }
 
 
-export function buildPlantasSubmanufactureras(array: PlantasDireccionModelo[], base: unknown[]): unknown[] {
+export function buildPlantasSubmanufactureras(array: PlantasDireccionModelo[], base: BaseItem[]): unknown[] {
   
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const RESULT: any[] = [];
+  
+  array.forEach(arr => {
+    const TEMPLATE = (base.length > 0 && base[0] && typeof base[0] === 'object') ? base[0] : {};
+    
+    const PLANT_DATA = {
       empresaCalle: arr.calle ?? '',
       empresaNumeroInterior: arr.numInterior ?? '',
       empresaNumeroExterior: arr.numExterior ?? '',
@@ -253,17 +278,24 @@ export function buildPlantasSubmanufactureras(array: PlantasDireccionModelo[], b
       rfc: arr.rfc ?? '',
       domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
       razonSocial: arr.razonSocial ?? '',
-       datosComplementarios: Array.isArray((ITEM as any)?.datosComplementarios)
-          ? (ITEM as any).datosComplementarios.map((dc:any) => ({
-              idPlantaC: dc.idPlantaC ?? '',
-              idDato: dc.idDato ?? '',
-              amparoPrograma: dc.amparoPrograma ?? '',              
-            }))
-          : []
-        });
-      });
+    };
+    
+    const DATOS_COMPLEMENTARIOS = Array.isArray(TEMPLATE.datosComplementarios)
+      ? TEMPLATE.datosComplementarios.map((dc: DatoComplementario) => ({
+          idPlantaC: dc.idPlantaC ?? '',
+          idDato: dc.idDato ?? '',
+          amparoPrograma: dc.amparoPrograma ?? '',
+        }))
+      : [];
+    
+    RESULT.push({
+      ...TEMPLATE,
+      ...PLANT_DATA,
+      datosComplementarios: DATOS_COMPLEMENTARIOS,
     });
-    return RESULT;
-  }
+  });
+  
+  return RESULT;
+}
 
 

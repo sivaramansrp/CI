@@ -716,3 +716,21 @@ export interface nicoInfo {
    */
   estatus: boolean;
 }
+
+export interface BuscarPayload {
+  fraccion: string;
+  tipoSolicitud: string;
+  folioPrograma: string;
+  idSolicitud: string;
+}
+
+export interface FraccionPayload {
+  /** Código de la fracción arancelaria */
+  fraccion: string;
+  /** Descripción de la fracción */
+  descFraccion: string;
+  /** Identificador del producto padre */
+  idProductoPadre: string;
+  /** Código de la fracción padre */
+  fraccionPadre: string;
+}

@@ -1,11 +1,13 @@
 import { Catalogo, ConsultaioQuery, InputFecha, Notificacion, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {FORM_ERROR_ALERT_CANTIDAD,FORM_ERROR_ALERT_CANT_VAL,FORM_ERROR_ALERT_VALORES} from '../../constantes/peru-certificado.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, delay, of, skip, take, takeUntil } from 'rxjs';
+import { Subject, delay, of, skip, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { AbstractControl} from '@angular/forms';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
+import {IS_FORM_VALID} from '../../constantes/peru-certificado.module';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { REGEX_PATRON_DECIMAL_15_4 } from '@ng-mf/data-access-user';
@@ -75,6 +77,17 @@ export class MercanciaComponent implements OnInit, OnDestroy {
   @Input() datosSeleccionados!: Mercancia;
 
   /**
+   * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
+   * 
+   * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
+   * Cuando es `false`, la mercancía fue ingresada manualmente por el usuario.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  @Input() fromMercanciasDisponibles: boolean = true;
+
+  /**
    * @descripcion
    * Formulario para capturar los datos de la mercancía.
    */
@@ -129,6 +142,33 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
    @Input() esFormularioSoloLectura!: boolean;
 
+   /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+ esMercanciaFormValid: boolean = false;
+  esFormaValido: boolean = false;
+
+  esFormaValores: boolean = false;
+  esFormaCantidadValores: boolean = false;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert =FORM_ERROR_ALERT_CANTIDAD;
+
+formErrorAlertMercanica=IS_FORM_VALID;
+
+ /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+ public formErrorAlertCantVal =FORM_ERROR_ALERT_CANT_VAL;
+
+/**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+public formErrorAlertValore =FORM_ERROR_ALERT_VALORES;
+
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -158,12 +198,6 @@ ngOnInit(): void {
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(s => (this.seccionState = s));
 
-  this.query.selectPeru$
-    .pipe(take(1))
-    .subscribe(state => {
-      this.mercanciaState = state as Tramite110205State;
-      this.initActionFormBuild();
-    });
 
   this.query.selectPeru$
     .pipe(skip(1), takeUntil(this.destroyNotifier$))
@@ -179,9 +213,12 @@ ngOnInit(): void {
           nombreIngles: S.mercanciaForm['nombreIngles'],
           otrasInstancias: S.mercanciaForm['otrasInstancias'],
           criterioParaConferirOrigen: S.mercanciaForm['criterioParaConferirOrigen'],
-          cantidad: S.cantidad,
+          
           umc: S.umc,
-          valorMercancia: S.valorMercancia,
+          cantidad: this.formatTo4Decimals(S.cantidad),
+        
+          valorMercancia: this.formatTo4Decimals(S.valorMercancia),
+       
           complementoDescripcion: S.complementoDescripcion,
           numeroFactura: S.numeroFactura,
           tipoFactura: S.tipoFactura,
@@ -192,8 +229,52 @@ ngOnInit(): void {
 
   this.umcOpcion();
   this.facturasOpcion();
+  this.initActionFormBuild();
 }
 
+  /**
+   * Detecta los cambios en las propiedades de entrada del componente y actualiza el formulario en consecuencia.
+   * 
+   * Este método se ejecuta automáticamente cuando Angular detecta un cambio en alguna de las propiedades
+   * con decorador `@Input()`. En este caso, si cambia `datosSeleccionados`, se actualiza la propiedad local
+   * y se vuelve a construir el formulario llamando a `initActionFormBuild()`.
+   * 
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+   * 
+   * @returns {void}
+   */
+  ngOnChange(changes: SimpleChanges): void{
+    if (changes['datosSeleccionados'].currentValue) {
+      this.datosSeleccionados = changes['datosSeleccionados'].currentValue;
+      this.initActionFormBuild();
+    }
+  }
+
+/**
+ * Formatea un valor a exactamente 4 lugares decimales.
+ * @param value - El valor a formatear.
+ */
+private formatTo4Decimals(value: string | number | null | undefined): string {
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  
+  if (value === 0 || value === '0') {
+    return '0.0000';
+  }
+
+  const VALUE_STR = String(value);
+  
+  const IS_VALID_NUMBER = /^-?\d+(\.\d*)?$/.test(VALUE_STR);
+  const VAL=this.esFormularioSoloLectura;
+  if (!IS_VALID_NUMBER) {
+    return VALUE_STR;
+  }
+  
+  const PARSED_VALUE = parseFloat(VALUE_STR);
+  return PARSED_VALUE.toFixed(4);
+  
+}
   /**
    * @descripcion
    * Inicializa el formulario de mercancías con los valores actuales del estado.
@@ -207,14 +288,27 @@ ngOnInit(): void {
       otrasInstancias: [{ value: this.mercanciaState.mercanciaForm['otrasInstancias'], disabled: true }],
       criterioParaConferirOrigen: [{ value: this.mercanciaState.mercanciaForm['criterioParaConferirOrigen'], disabled: true }],
       fechaFactura: [this.mercanciaState.fechaFactura ?? null, Validators.required],
-      cantidad: [this.mercanciaState.cantidad, [Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
+      cantidad: [this.formatTo4Decimals(this.mercanciaState.cantidad), [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
       umc: [this.mercanciaState.umc, Validators.required],
-      valorMercancia: [this.mercanciaState.valorMercancia,[Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
+      valorMercancia: [this.formatTo4Decimals(this.mercanciaState.valorMercancia), [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
       complementoDescripcion: [this.mercanciaState.complementoDescripcion,[ Validators.required, Validators.maxLength(200)]],
       numeroFactura: [this.mercanciaState.numeroFactura,[ Validators.required,Validators.maxLength(36)]],
       tipoFactura: [this.mercanciaState.tipoFactura, Validators.required],
     });
+    
+
   }
+   /**
+ * Format the field to 4 decimals when focus is lost (blur event)
+ * @param field - The form field name to format
+ */
+formatFieldOnBlur(field: string): void {
+  const CONTROL = this.mercanciaForm.get(field);
+  if (CONTROL&& CONTROL.value !== null && CONTROL.value !== '') {
+    const FORMATTEDVALUE = this.formatTo4Decimals(CONTROL.value);
+    CONTROL.setValue(FORMATTEDVALUE, { emitEvent: false });
+  }
+}
 
   /**
    * @descripcion
@@ -290,24 +384,103 @@ ngOnInit(): void {
    * @descripcion
    * Acepta los datos del formulario, los guarda en el almacén y emite los eventos correspondientes.
    */
-acceptar(agregar: boolean): void {
-  this.mercanciaForm.markAllAsTouched();
-  this.mercanciaForm.updateValueAndValidity({ onlySelf: false, emitEvent: false });
-
-  if (!(agregar && this.mercanciaForm.valid)) {
-    return;
+  agregar(): void {
+    this.esMercanciaFormValid = false;
+    this.esFormaCantidadValores = false;
+    this.esFormaValido = false;
+    this.esFormaValores = false;
+    
+    this.mercanciaForm.markAllAsTouched();
+    this.mercanciaForm.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+    
+    if(this.mercanciaForm.invalid) {
+      this.esMercanciaFormValid = true;
+      return;
+    }
+    
+    const IS_ZERO = (val: string | number | null | undefined): boolean => 
+      val === '0' || val === '0.0000' || parseFloat(String(val || 0)) === 0;
+    
+    const CANTIDAD_VALUE = this.mercanciaForm.get('cantidad')?.value;
+    const VALOR_VALUE = this.mercanciaForm.get('valorMercancia')?.value;
+    
+    if(IS_ZERO(CANTIDAD_VALUE) && IS_ZERO(VALOR_VALUE)) {
+      this.esFormaCantidadValores = true;
+      return;
+    }
+    
+    if(IS_ZERO(VALOR_VALUE)) {
+      this.esFormaValores = true;
+      return;
+    }
+    
+    if(IS_ZERO(CANTIDAD_VALUE)) {
+      this.esFormaValido = true;
+      return;
+    }
+    
+    this.activarModal();
   }
-
+acceptar(): void {
   this.guardarClicado.emit(this.mercanciaForm.value);
   this.store.setmercanciaTabla([this.mercanciaForm.value]);
-
+  
   if (this.mostrarAlerta) {
     of(null).pipe(takeUntil(this.destroyNotifier$), delay(100)).subscribe(() => {
       this.cerrarModal();
       this.tablaSeleccionEvent.emit(true);
+       this.mercanciaForm.reset();
     });
   }
+
 }
+
+  /**
+   * Construye y retorna un objeto de tipo `Mercancia` con valores seguros y predeterminados.
+   * 
+   * Este método se encarga de crear una nueva instancia de `Mercancia` a partir de los datos recibidos,
+   * asegurando que todos los campos tengan un valor válido.  
+   * Si algún campo es `undefined` o `null`, se le asigna el valor `'--'` por defecto.
+   * 
+   * Además, el campo `id` se establece en función de la procedencia de los datos:
+   * - Si `fromMercanciasDisponibles` es `true`, utiliza el `id` de `datosSeleccionados`.
+   * - En caso contrario, asigna `0` (nuevo registro).
+   * 
+   * @private
+   * @param {Mercancia} MERCANIADATO - Objeto de entrada con la información de la mercancía.
+   * 
+   * @returns {Mercancia} - Un nuevo objeto `Mercancia` con todos los campos validados y completados.
+   */
+  private buildMercancia(MERCANIADATO: Mercancia): Mercancia {
+    const FALLBACK = (value?: string): string => value ?? '--';
+
+    return {
+      id: this.fromMercanciasDisponibles ? this.datosSeleccionados?.id : 0,
+      fraccionArancelaria: FALLBACK(MERCANIADATO.fraccionArancelaria),
+      numeroDeRegistrodeProductos: FALLBACK(MERCANIADATO.numeroDeRegistrodeProductos),
+      fechaExpedicion: FALLBACK(MERCANIADATO.fechaExpedicion),
+      fechaVencimiento: FALLBACK(MERCANIADATO.fechaVencimiento),
+      nombreTecnico: FALLBACK(MERCANIADATO.nombreTecnico),
+      nombreComercial: FALLBACK(MERCANIADATO.nombreComercial),
+      normaOrigen: FALLBACK(MERCANIADATO.normaOrigen),
+      cantidad: FALLBACK(MERCANIADATO.cantidad),
+      umc: FALLBACK(MERCANIADATO.umc),
+      tipoFactura: FALLBACK(MERCANIADATO.tipoFactura),
+      valorMercancia: FALLBACK(MERCANIADATO.valorMercancia),
+      fechaFinalInput: FALLBACK(MERCANIADATO.fechaFinalInput),
+      numeroFactura: FALLBACK(MERCANIADATO.numeroFactura),
+      unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
+      complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
+      complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
+      fraccionNaladi: MERCANIADATO.fraccionNaladi,
+      fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
+      fraccionNaladiSa96: MERCANIADATO.fraccionNaladiSa96,
+      fraccionNaladiSa02: MERCANIADATO.fraccionNaladiSa02,
+      nalad: MERCANIADATO.nalad,
+      fechaFactura: MERCANIADATO.fechaFactura,
+    };
+  }
+
 
   /**
    * @descripcion
