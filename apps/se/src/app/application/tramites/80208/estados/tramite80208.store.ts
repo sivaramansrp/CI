@@ -42,6 +42,7 @@ export interface CambioModalidadState {
   denominacionSocial?: string;
   numeroIMMEX?: string;
   anoIMMEX?: string;
+  servicios?: ServicioInfo[];
 }
 
 /**
@@ -74,7 +75,8 @@ export function createInitialState(): CambioModalidadState {
     rfc: '',
     denominacionSocial: '',
     numeroIMMEX: '',
-    anoIMMEX: ''
+    anoIMMEX: '',
+    servicios: [],
 
   };
 }
@@ -258,6 +260,7 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     this.update((state) => ({
       ...state,
       ServiciosDatos,
+      servicios: [...(state?.servicios ?? []), ...ServiciosDatos],
     }));
   }
 
@@ -283,6 +286,20 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     this.update((state) => ({
       ...state,
       datosAutorizados,
+      servicios: [...(state?.servicios ?? []), ...datosAutorizados],
+    }));
+  }
+
+  /**
+   * Establece y agrega servicios al estado.
+   * Combina los servicios existentes con los nuevos servicios proporcionados.
+   *
+   * @param servicios - Array de servicios que se van a agregar al estado existente.
+   */
+  setServicios(servicios: ServicioInfo[]): void {
+    this.update((state) => ({
+      ...state,
+      servicios: [...state?.servicios ?? [], ...servicios],
     }));
   }
 

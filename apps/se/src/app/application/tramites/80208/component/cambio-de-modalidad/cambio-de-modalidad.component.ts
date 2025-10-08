@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACION_DOMICILIOS,ConfiguracionColumna } from '../../modelos/cambio-de-modalidad.model';
 import {
   Catalogo,
+  CatalogoServices,
   CategoriaMensaje,
   ConsultaioQuery,
   Notificacion,
@@ -342,7 +343,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     public seccionStore: SeccionLibStore,
     public consultaioQuery: ConsultaioQuery,
     public serviciosService: ServiciosService,
-    private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService,
+     private catalogoServices: CatalogoServices,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -389,8 +391,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       .subscribe();
       this.inicializarForm();
       this.getCargarDatos();
-      this.getCambioDeModalidad();
-      this.getServiciosImmx();
+      this.getCambioDeModalidad(this.tramiteID);
+      this.getServiciosImmx(this.tramiteID);
       this.getTablaDatos();
   }
 
@@ -548,6 +550,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
         this.cambioModalidadStore.actualizarEstado({
           ServiciosDatos: [...this.ServiciosDatos, CUERPODATOS]
         });
+        this.cambioModalidadStore.setServicios(this.ServiciosDatos);
       }
     });
   }
@@ -680,9 +683,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * 
    * @returns {void} No retorna ningún valor.
    */
-  getServiciosImmx(): void {
-    this.modalidadService.getServiciosImmx().subscribe((data) => {
-      this.serviciosImmx = data.datos;
+  getServiciosImmx(tramiteID: string): void {
+    this.catalogoServices.immexCatalogo(tramiteID).subscribe((data) => {
+      this.serviciosImmx = data.datos ?? [];
     });
   }
 
@@ -697,8 +700,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * 
    * @returns {void} No retorna ningún valor.
    */
-  getCambioDeModalidad(): void {
-    this.modalidadService.getCambioDeModalidad().subscribe((data) => {
+  getCambioDeModalidad(tramiteID: string): void {
+    this.modalidadService.getCambioDeModalidad(tramiteID).subscribe((data) => {
       this.cambioDeModalidad = data.datos.map((item: any) => ({
       id: item.id ?? item.clave,
       descripcion: item.descripcion
