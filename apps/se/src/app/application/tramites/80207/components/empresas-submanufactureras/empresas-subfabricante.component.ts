@@ -1196,10 +1196,7 @@ agregarPlantas(): void {
 
       this.store.addPlantas(PLANTASMAPEADAS);
 
-      this.datosDelSubfabricanteSeleccionado = [];
-      
-      this.mostrarNotificacion(`Se agregaron ${PLANTASMAPEADAS.length} planta(s) exitosamente.`);
-      
+
     } catch (error) {
       console.error('Error al mapear datos de subfabricantes:', error);
       this.mostrarNotificacion('Error al procesar los datos seleccionados.');
