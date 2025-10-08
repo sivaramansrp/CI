@@ -1,10 +1,7 @@
 /**
- * @fileoverview
  * El `Ampliacion3RsComponent` es un componente de Angular diseñado para gestionar la funcionalidad del módulo "Ampliación de Servicios".
  * Maneja formularios reactivos, catálogos y la interacción con el estado para la gestión de datos relacionados con sectores y servicios.
  * 
- * @module Ampliacion3RsComponent
- * @description
  * Este componente proporciona funcionalidad para la ampliación de servicios, incluyendo la inicialización de formularios, 
  * la obtención de datos y la interacción con el estado para la gestión de sectores y reglas.
  */
@@ -36,6 +33,12 @@ import { Input } from '@angular/core';
 import { Sector } from "../../models/datos-info.model";
 import { Tramite80206Store } from '../../estados/tramite80206.store';
 
+/**
+ * Componente Angular para la gestión de la ampliación de servicios 3Rs en el trámite 80206.
+ * Este componente permite seleccionar reglas, sectores y gestionar la información relacionada
+ * con la ampliación de servicios, incluyendo la validación de formularios, la interacción con
+ * servicios y el manejo de la interfaz de usuario (modales de alerta, selección de domicilios, etc.).
+ */
 @Component({
   selector: 'app-ampliacion-3rs',
   templateUrl: './ampliacion-3rs.component.html',
@@ -44,111 +47,91 @@ import { Tramite80206Store } from '../../estados/tramite80206.store';
 export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   /**
    * Indica si una regla ha sido seleccionada.
-   * @property {boolean} isSelectedRegla
    */
   isSelectedRegla: boolean = false;
 
   /**
    * Formulario reactivo para la información de registro.
-   * @property {FormGroup} formularioInfoRegistro
    */
   formularioInfoRegistro!: FormGroup;
 
   /**
    * Tipo de selección de tabla (checkbox).
-   * @property {TablaSeleccion} tablaSeleccion
    */
   tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración de la tabla para sectores.
-   * @property {ConfiguracionColumna<Sector>[]} configuracionTablaSector
    */
   configuracionTablaSector: ConfiguracionColumna<Sector>[] = CONFIGURACION_SECTOR;
 
   /**
    * Lista de datos de sectores.
-   * @property {Sector[]} datosSector
    */
   datosSector: Sector[] = [];
 
   /**
    * Lista de domicilios seleccionados.
-   * @property {Sector[]} domiciliosSeleccionados
    */
   domiciliosSeleccionados: Sector[] = [];
 
   /**
    * Formulario reactivo para datos adicionales.
-   * @property {FormGroup} forma
    */
   forma!: FormGroup;
 
   /**
    * Lista de reglas seleccionadas.
-   * @property {Catalogo[]} reglaSeleccionada
    */
   reglaSeleccionada!: Catalogo[];
 
   /**
    * Lista desplegable de sectores.
-   * @property {Catalogo[]} sectorDesplegable
    */
   sectorDesplegable!: Catalogo[];
 
   /**
    * Estado actual del trámite.
-   * @property {AmpliacionServiciosState} tramiteState
    */
   tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
 
   /**
    * Notificador para gestionar la destrucción o desuscripción de observables.
-   * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
      * Indica si el formulario está en modo solo lectura.
      * Cuando es `true`, los campos del formulario no se pueden editar.
-     * @property {boolean} esFormularioSoloLectura
      */
     @Input() esFormularioSoloLectura: boolean = false;
 
     /**
    * Controla la visibilidad del modal de alerta.
-   * @property {boolean} mostrarAlerta
    */
   mostrarAlerta: boolean = false;
 
   /**
-   * @description Identificador del trámite asociado a la ampliación de 3Rs.
+   * Identificador del trámite asociado a la ampliación de 3Rs.
    */
   tramiteID: string = '80206';
 
 /**
    * Mensaje mostrado en el modal de alerta.
-   * @property {string} mensajeDeAlerta
    */
   mensajeDeAlerta: string = '';  
     /**
      * Suscripción para manejar observables.
-     * @property {Subscription} subscription
      */
     private subscription: Subscription = new Subscription();
-      /**
+    /**
    * Valor predeterminado para la selección de aduanas.
-   * @property {number} predeterminado
    */
   predeterminado=-1;
    
 
   /**
    * Constructor del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para obtener datos de ampliación de servicios.
-   * @param {HttpClient} httpServicios - Servicio HTTP para realizar peticiones.
    */
   constructor(
     private fb: FormBuilder,
@@ -164,7 +147,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Método de inicialización del componente.
-   * @method ngOnInit
    */
   ngOnInit(): void {
     this.obtenerReglaSelectList(this.tramiteID);
@@ -176,8 +158,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Activa el modal de alerta.
-   * @method activarModal
-   * @returns {void}
    */
   activarModal(): void {
     this.mostrarAlerta = true;
@@ -185,8 +165,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Cierra el modal de alerta.
-   * @method cerrarModal
-   * @returns {void}
    */
   aceptar(): void {
     this.mostrarAlerta = false;
@@ -194,7 +172,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
     /**
    * Cierra el modal de alerta.
-   * @method cerrarModal
    */
   cerrarModal():void{
     this.mostrarAlerta = false;
@@ -203,7 +180,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario con datos del store.
-   * @method inicializarFormularioDesdeAlmacen
    */
   inicializarFormularioDesdeAlmacen(): void {
     this.ampliacionServiciosQuery.selectSolicitudTramite$
@@ -227,7 +203,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario de información de registro.
-   * @method inicializarFormularioInfoRegistro
    */
   inicializarFormularioInfoRegistro(): void {
   this.formularioInfoRegistro = this.fb.group({
@@ -246,7 +221,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene la lista de reglas para selección.
-   * @method obtenerReglaSelectList
    */
   obtenerReglaSelectList(tramite: string): void {
   this.isSelectedRegla = false;
@@ -268,7 +242,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene la lista de sectores para selección.
-   * @method obtenerSectorSelectList
    */
   obtenerSectorSelectList(): void {
     this.subscription.add(this.catalogoServices.sectoresCatalogo(this.tramiteID).pipe(
@@ -286,7 +259,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   
   /**
    * Elimina servicios seleccionados del grid.
-   * @method eliminarServiciosGrid
    */
   eliminarServiciosGrid(): void {
     const DATOS_IMMEX_ACTUALIZADOS = [...this.datosSector];
@@ -304,7 +276,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega servicios a la ampliación.
-   * @method agregarServiciosAmpliacion
    */
 agregarServiciosAmpliacion(): void {
   const SECTOR_SELECCIONADO = this.formularioInfoRegistro.get('sector')?.value;
@@ -380,7 +351,6 @@ agregarServiciosAmpliacion(): void {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones.
-   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.ampliacionServiciosService.enviarDeberiaMostrar(true);
@@ -390,8 +360,6 @@ agregarServiciosAmpliacion(): void {
 
   /**
    * Maneja los datos recibidos del componente hijo.
-   * @method procesarDatosDelHijo
-   * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
   procesarDatosDelHijo(): void {
     const DATA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
@@ -413,8 +381,6 @@ agregarServiciosAmpliacion(): void {
 
   /**
    * Actualiza el sector seleccionado basado en la entrada del usuario.
-   * @method cambioDeSector
-   * @param {Catalogo | Catalogo[]} data - Datos del sector seleccionado.
    */
   cambioDeSector(): void {
     const DATA = this.formularioInfoRegistro.get('sector')?.value;
@@ -423,22 +389,18 @@ agregarServiciosAmpliacion(): void {
 
   /**
    * Actualiza la lista de domicilios seleccionados.
-   * @method seleccionarDomicilios
-   * @param {Sector[]} domicilios - Domicilios seleccionados.
    */
   seleccionarDomicilios(domicilios: Sector[]): void {
     this.domiciliosSeleccionados = [...domicilios];
   }
 
    /**
-   * @method validarFormulario
    * Valida todos los controles del formulario.
    *
    * Marca todos los controles como tocados y actualiza su estado de validación
    * para mostrar los errores correspondientes en la interfaz de usuario.
    * También valida los formularios de los componentes hijo.
    *
-   * @returns {void}
    */
 validarFormulario(): boolean {
   let isValid = true;

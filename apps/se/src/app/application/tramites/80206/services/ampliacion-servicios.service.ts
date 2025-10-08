@@ -1,11 +1,8 @@
 /* eslint-disable class-methods-use-this */
 /**
- * @fileoverview
  * El `AmpliacionServiciosService` es un servicio de Angular diseñado para gestionar las operaciones relacionadas con la ampliación de servicios.
  * Proporciona métodos para obtener datos desde archivos JSON y gestionar la visibilidad de ciertos elementos en la interfaz de usuario.
  * 
- * @module AmpliacionServiciosService
- * @description
  * Este servicio utiliza el cliente HTTP de Angular para realizar solicitudes a archivos JSON locales y expone observables para manejar datos y eventos.
  */
 
@@ -24,9 +21,6 @@ import { Tramite80206Store } from '../estados/tramite80206.store';
 export class AmpliacionServiciosService {
   /**
    * Constructor del servicio.
-   * @constructor
-   * @param {HttpClient} http - Cliente HTTP de Angular para realizar solicitudes.
-   * @param {Tramite80206Store} tramiteStore - Store para gestionar el estado del trámite de ampliación de servicios.
    */
   constructor(private readonly http: HttpClient, private tramiteStore: Tramite80206Store) {
     // No se necesita lógica de inicialización adicional.
@@ -34,20 +28,16 @@ export class AmpliacionServiciosService {
 
   /**
    * Subject para gestionar la visibilidad de ciertos elementos en la interfaz.
-   * @property {Subject<boolean>} deberiaMostrar
    */
   private deberiaMostrar = new Subject<boolean>();
 
   /**
    * Observable que expone el estado de visibilidad de ciertos elementos.
-   * @property {Observable<boolean>} deberiaMostrar$
    */
   deberiaMostrar$ = this.deberiaMostrar.asObservable();
 
   /**
    * Envía el estado de visibilidad a los suscriptores.
-   * @method enviarDeberiaMostrar
-   * @param {boolean} mostrar - Estado de visibilidad.
    */
   enviarDeberiaMostrar(mostrar: boolean): void {
     this.deberiaMostrar.next(mostrar);
@@ -55,8 +45,6 @@ export class AmpliacionServiciosService {
 
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
-   * @method getDatos
-   * @returns {Observable<DatosResponse[]>} - Observable con los datos obtenidos.
    */
   getDatos(): Observable<DatosResponse[]> {
     return this.http
@@ -66,8 +54,6 @@ export class AmpliacionServiciosService {
 
   /**
    * Obtiene la lista de selección de reglas desde un archivo JSON.
-   * @method obtenerReglaSelectList
-   * @returns {Observable<RespuestaCatalogos>} - Observable con los datos obtenidos.
    */
   obtenerReglaSelectList(): Observable<RespuestaCatalogos> {
     return this.http
@@ -77,8 +63,6 @@ export class AmpliacionServiciosService {
 
   /**
    * Obtiene la lista de selección de sectores desde un archivo JSON.
-   * @method obtenerSectorSelectList
-   * @returns {Observable<RespuestaCatalogos>} - Observable con los datos obtenidos.
    */
   obtenerSectorSelectList(): Observable<RespuestaCatalogos> {
     return this.http
@@ -87,8 +71,6 @@ export class AmpliacionServiciosService {
   }
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
-   * @method actualizarEstadoFormulario
-   * @param {AmpliacionServiciosState} DATOS - Datos de ampliación de servicios.
    */
   actualizarEstadoFormulario(DATOS:AmpliacionServiciosState): void {
     this.tramiteStore.setInfoRegistro(DATOS.infoRegistro);
@@ -108,7 +90,6 @@ export class AmpliacionServiciosService {
 
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
-   * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
    */
   getServiciosData(): Observable<AmpliacionServiciosState> {
     return this.http.get<AmpliacionServiciosState>('assets/json/80206/datos-previos.json')}
@@ -130,10 +111,6 @@ export class AmpliacionServiciosService {
 
   /**
  * Maps API response data to Arancelaria interface
- * @method mapApiResponseToFraccionArancelaria
- * @param {FraccionArancelariaApiResponse[]} dato - Array of API response data
- * @param {number} startIndex - Starting index for fraccion numbering
- * @returns {Arancelaria[]} - Mapped array of Arancelaria objects
  */
 mapApiResponseToFraccionArancelaria(
     dato: FraccionArancelariaApiResponse[], 
@@ -156,10 +133,6 @@ mapApiResponseToFraccionArancelaria(
 
  /**
  * Obtiene información de fracción arancelaria de importación.
- * @method obtenerFraccionImportacion
- * @param {FraccionArancelariaImportacion} body - Cuerpo de la solicitud con los parámetros de fracción arancelaria de importación.
- * @returns {Observable<JSONResponse>} - Observable con la respuesta de la API que contiene la información de la fracción arancelaria de importación.
- * @description
  * Este método realiza una solicitud POST para obtener información detallada de una fracción arancelaria de importación específica.
  * Incluye manejo de errores en caso de fallo en la comunicación con el servidor.
  */
@@ -175,11 +148,6 @@ obtenerFraccionImportacion(body: FraccionArancelariaImportacion): Observable<JSO
 
 /**
  * Mapea los datos de respuesta de la API a la interfaz ArancelariaImportacion.
- * @method mapApiResponseToFraccionArancelariaImportacion
- * @param {FraccionArancelariaApiResponse[]} dato - Array de datos de respuesta de la API de fracción arancelaria.
- * @param {number} startIndex - Índice inicial para la numeración de fracciones (por defecto 0).
- * @returns {ArancelariaImportacion[]} - Array mapeado de objetos ArancelariaImportacion.
- * @description
  * Este método transforma los datos de respuesta de la API en objetos que siguen la interfaz ArancelariaImportacion,
  * asignando valores por defecto cuando los campos están vacíos y generando números de fracción secuenciales.
  */
@@ -206,11 +174,6 @@ mapApiResponseToFraccionArancelariaImportacion(
 
 /**
  * Obtiene información de sectores IMMEX.
- * @method obtenerSectoresImmex
- * @param {Object} body - Objeto que contiene el sector IMMEX a consultar.
- * @param {string} body.sectorImmex - Clave del sector IMMEX (ejemplo: "MEDCON.OTR").
- * @returns {Observable<JSONResponse>} - Observable con la respuesta de la API que contiene la información del sector IMMEX.
- * @description
  * Este método realiza una solicitud POST para obtener información detallada de un sector IMMEX específico.
  * La respuesta incluye atributos de solicitud mapeados relacionados con el sector consultado.
  */
@@ -226,10 +189,6 @@ obtenerSectoresImmex(body: { sectorImmex: string }): Observable<JSONResponse> {
 
 /**
  * Mapea los datos de respuesta de la API a la interfaz Sector.
- * @method mapApiResponseToSectoresImmex
- * @param {Sector[]} dato - Array de datos de sector de la respuesta de la API.
- * @returns {Sector[]} - Array mapeado de objetos Sector con valores limpios.
- * @description
  * Este método transforma los datos de respuesta de sectores IMMEX, asegurando que todos los campos
  * tengan valores válidos y proporcionando cadenas vacías como valores por defecto para campos nulos.
  */

@@ -1,11 +1,7 @@
 /**
- * @fileoverview
  * El `AmpliacionAnexoComponent` es un componente de Angular diseñado para gestionar la funcionalidad del módulo "Ampliación de Servicios".
  * Maneja formularios reactivos, catálogos, y la interacción con el estado para la gestión de datos relacionados con fracciones arancelarias,
  * importaciones y servicios IMMEX.
- * 
- * @module AmpliacionAnexoComponent
- * @description
  * Este componente proporciona funcionalidad para la ampliación de servicios, incluyendo la inicialización de formularios, 
  * la obtención de datos y la interacción con el estado para la gestión de fracciones arancelarias e importaciones.
  */
@@ -47,7 +43,12 @@ import { Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite80206Store } from '../../estados/tramite80206.store';
 
-
+/**
+ * El `AmpliacionAnexoComponent` es un componente de Angular diseñado para gestionar la funcionalidad 
+ * del módulo "Ampliación de Servicios". Maneja formularios reactivos, catálogos, y la interacción 
+ * con el estado para la gestión de datos relacionados con fracciones arancelarias, importaciones 
+ * y servicios IMMEX.
+ */
 @Component({
   selector: 'app-ampliacion-servicios',
   templateUrl: './ampliacion-anexo.component.html',
@@ -59,160 +60,132 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
    * Controla la visibilidad del modal de alerta.
-   * @property {boolean} mostrarAlerta
    */
   mostrarAlerta: boolean = false;
 
   /**
    * Mensaje mostrado en el modal de alerta.
-   * @property {string} mensajeDeAlerta
    */
   mensajeDeAlerta: string = 'Debe seleccionar una fracción de exportación';
   
     /**
      * Estado actual del trámite.
-     * @property {AmpliacionServiciosState} tramiteState
      */
     tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
   
 
   /**
    * Formulario reactivo para la información de registro.
-   * @property {FormGroup} formularioInfoRegistro
    */
   formularioInfoRegistro!: FormGroup;
 
   /**
    * Tipo de selección de tabla (radio button).
-   * @property {TablaSeleccion} tablaSeleccion
    */
   tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO;
 
   /**
    * Fracción arancelaria.
-   * @property {string} fraccion
    */
   fraccion: string = '';
 
   /**
    * Cantidad de bienes.
-   * @property {string} cantidad
    */
   cantidad: string = '';
 
   /**
    * Fracción arancelaria para servicios IMMEX.
-   * @property {string} fraccionArancelaria
    */
   fraccionArancelaria: string = '';
 
   /**
    * Datos relacionados con la importación.
-   * @property {string} importacion
    */
   importacion: string = '';
 
   /**
    * Valor de los bienes.
-   * @property {string} valor
    */
   valor: string = '';
 
   /**
    * Configuración de la tabla para servicios IMMEX.
-   * @property {ConfiguracionColumna<Arancelaria>[]} configuracionTablaServicio
    */
   configuracionTablaServicio: ConfiguracionColumna<Arancelaria>[] = CONFIGURACION_ARANCELARIAS;
 
   /**
    * Configuración de la tabla para importaciones.
-   * @property {ConfiguracionColumna<ArancelariaImportacion>[]} configuracionTablaImportacion
    */
   configuracionTablaImportacion: ConfiguracionColumna<ArancelariaImportacion>[] = CONFIGURACION_ARANCELARIASIMPORTACION;
 
   /**
    * Lista de datos de servicios IMMEX.
-   * @property {Arancelaria[]} datos
    */
   datos: Arancelaria[] = [];
 
   /**
    * Datos de servicios IMMEX para el grid.
-   * @property {Arancelaria[]} datosImmex
    */
   datosImmex: Arancelaria[] = [];
 
   /**
    * Datos de importación para el grid.
-   * @property {ArancelariaImportacion[]} datosImportacion
    */
   datosImportacion: ArancelariaImportacion[] = [];
 
   /**
    * Lista de domicilios seleccionados.
-   * @property {Arancelaria[]} domiciliosSeleccionados
    */
   domiciliosSeleccionados: Arancelaria[] = [];
 
   /**
    * Lista de empresas seleccionadas.
-   * @property {ServicioInmex[]} empresasSeleccionados
+   * empresasSeleccionados
    */
   
   /**
    * Formulario reactivo para datos adicionales.
-   * @property {FormGroup} forma
    */
   forma!: FormGroup;
 
   /**
    * Lista de aduanas de ingreso.
-   * @property {Catalogo[]} aduanaDeIngreso
    */
   aduanaDeIngreso!: Catalogo[];
 
   /**
    * Datos de entidades autorizadas.
-   * @property {[]} autorizadosBodyData
    */
   autorizadosBodyData: [] = [];
 
   /**
    * Información sobre el registro actual.
-   * @property {Servicios} infoRegistro
    */
   infoRegistro!: Servicios;
 
   /**
    * Textos constantes para el componente.
-   * @property {any} TEXTOS
    */
   TEXTOS = TEXTOS_80206;
 
   /**
    * Notificador para gestionar la destrucción o desuscripción de observables.
-   * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
-   * @property {boolean} esFormularioSoloLectura
    */
   @Input() esFormularioSoloLectura: boolean = false;
 
 /**
  * Valor válido de fracción arancelaria para validaciones en el componente.
  * Utiliza la constante FRACCIONARANCELARIAVALIDO.
- * @type {string}
  */
   /**
    * Constructor del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para obtener datos de ampliación de servicios.
-   * @param {HttpClient} httpServicios - Servicio HTTP para realizar peticiones.
    */
 
   constructor(
@@ -229,7 +202,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
    * Método de inicialización del componente.
-   * @method ngOnInit
    */
   ngOnInit():void {
    this.getDatos();
@@ -238,25 +210,18 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   }
   /**
    * Activa el modal de alerta.
-   * @method activarModal
-   * @returns {void}
    */
   activarModal(): void {
     this.mostrarAlerta = true;
   }
   /**
    * Cierra el modal de alerta.
-   * @method cerrarModal
-   * @returns {void}
    */
   aceptar(): void {
     this.mostrarAlerta = false;
   }
   /**
    * Cambia el valor de un campo específico en el estado.
-   * @method enCambioDeCampo
-   * @param {string} fieldName - Nombre del campo.
-   * @param {string} newValue - Nuevo valor del campo.
    */
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
@@ -286,7 +251,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
  * Se suscribe a los suscribirseAFields cambios en los campos del estado y actualiza las propiedades locales.
- * @method suscribirseAFields
  */
 
   suscribirseAFields(): void {
@@ -312,7 +276,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   
   /**
    * Obtiene los datos del servicio y actualiza el estado del formulario.
-   * @method getDatos
    */
   getDatos(): void {
     
@@ -327,7 +290,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   }
   /**
  * Se suscribe a los datos de IMMEX desde el store para mantener el componente actualizado.
- * @method suscribirseADatosImmex
  */
   suscribirseADatosImmex(): void {
     
@@ -340,7 +302,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   
   /**
    * Inicializa el formulario a partir de los datos del store.
-   * @method inicializarFormularioDesdeAlmacen
    */
   inicializarFormularioDesdeAlmacen(): void {
       this.formularioInfoRegistro = this.fb.group({
@@ -355,7 +316,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario de información de registro.
-   * @method inicializarFormularioInfoRegistro
    */
   
   inicializarFormularioInfoRegistro(): void {
@@ -372,7 +332,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina servicios del grid.
-   * @method eliminarServiciosGrid
    */
   eliminarServiciosGrid(): void {
     
@@ -399,7 +358,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 }
 
 /**
- * @description <span class="compodoc-span">Handles the delete attempt for selected export fractions.</span>
+ * <span class="compodoc-span">Handles the delete attempt for selected export fractions.</span>
  * If no condition is met (i.e., no fractions are selected), sets an alert message and activates the modal dialog.
  *
  */
@@ -425,7 +384,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   }
   /**
    * Actualiza el grid de empresas nacionales.
-   * @method actualizaGridEmpresasNacionales
    */
  actualizaGridEmpresasNacionales(): void {
   if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
@@ -438,17 +396,11 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 }
 
 /**
- * @method obtenerInformacionFraccion
- * @description
  * Obtiene la información de una fracción arancelaria ingresada por el usuario.
  * Realiza validaciones sobre el valor ingresado, verifica si la fracción ya existe en la lista,
  * y consulta la información correspondiente a través de un servicio externo.
  * Si la fracción es válida y no existe previamente, agrega los datos obtenidos a la lista de fracciones.
  * Muestra mensajes de alerta en caso de errores de validación, duplicidad o problemas en la consulta.
- *
- * @returns {void}
- *
- * @compodoc
  * Este método es utilizado para gestionar la adición de fracciones arancelarias en el trámite 80206,
  * asegurando que la información ingresada sea válida y actualizada.
  */
@@ -523,8 +475,6 @@ obtenerInformacionFraccion(): void {
 }
 
 /**
- * @method obtenerInformacionFraccionImportacion
- * @description
  * Obtiene la información de una fracción arancelaria de importación ingresada por el usuario.
  * Realiza las siguientes validaciones:
  * Si las validaciones son exitosas, realiza una petición al servicio para obtener los datos de la fracción arancelaria.
@@ -607,7 +557,6 @@ obtenerInformacionFraccionImportacion(): void {
 }
   /**
    * Cierra el modal de alerta.
-   * @method cerrarModal
    */
   cerrarModal():void{
     this.mostrarAlerta = false;
@@ -615,7 +564,6 @@ obtenerInformacionFraccionImportacion(): void {
   }
    /**
    * Agrega datos de importación al grid.
-   * @method agregarImportacion
    */
  agregarImportacion(): void {
   if (!this.importacion || this.importacion.trim() === '') {
@@ -649,7 +597,6 @@ obtenerInformacionFraccionImportacion(): void {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones.
-   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -658,8 +605,6 @@ obtenerInformacionFraccionImportacion(): void {
 
  /**
    * Maneja los datos recibidos del componente hijo.
-   * @method procesarDatosDelHijo
-   * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
   procesarDatosDelHijo(data: Catalogo): void { 
     
@@ -669,31 +614,24 @@ obtenerInformacionFraccionImportacion(): void {
 
   /**
    * Actualiza la lista de domicilios seleccionados.
-   * @method seleccionarDomicilios
-   * @param {Arancelaria} domicilios - Domicilios seleccionados.
    */
   seleccionarDomicilios(domicilios: Arancelaria): void {
     this.domiciliosSeleccionados = [domicilios];
   }
 /**
  * Validates the format of the fraccion arancelaria
- * @method validarFormatoFraccion
- * @param {string} fraccion - The fraccion value to validate
- * @returns {boolean} - True if valid format (8 digits)
  */
   static validarFormatoFraccion(fraccion: string): boolean {
     const FRACCION_PATTERN = /^\d{8}$/;
     return FRACCION_PATTERN.test(fraccion);
   }
    /**
-   * @method validarFormulario
    * Valida todos los controles del formulario.
    *
    * Marca todos los controles como tocados y actualiza su estado de validación
    * para mostrar los errores correspondientes en la interfaz de usuario.
    * También valida los formularios de los componentes hijo.
    *
-   * @returns {void}
    */
   validarFormulario(): boolean {
     let isValid = true;

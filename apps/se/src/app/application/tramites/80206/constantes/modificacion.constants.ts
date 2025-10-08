@@ -1,10 +1,7 @@
 /**
- * @fileoverview
  * Este archivo contiene constantes y configuraciones utilizadas en el módulo de ampliación de servicios.
  * Proporciona configuraciones para tablas, textos, pasos del proceso y alertas que se utilizan en la interfaz de usuario.
  * 
- * @module ModificacionEnum
- * @description
  * Este archivo define configuraciones para sectores, fracciones arancelarias, fracciones de importación, textos de instrucciones,
  * alertas y pasos del proceso de ampliación de servicios.
  */
@@ -17,7 +14,6 @@ import {
 
 /**
  * Pasos del proceso de ampliación de servicios.
- * @constant {Array<Object>} PASOS
  */
 export const PASOS = [
   {
@@ -42,7 +38,6 @@ export const PASOS = [
 
 /**
  * Configuración de la tabla para sectores.
- * @constant {Array<Object>} CONFIGURACION_SECTOR
  */
 export const CONFIGURACION_SECTOR = [
   
@@ -55,7 +50,6 @@ export const CONFIGURACION_SECTOR = [
 
 /**
  * Configuración de la tabla para fracciones arancelarias.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIAS
  */
 export const CONFIGURACION_ARANCELARIAS = [
   {
@@ -117,7 +111,6 @@ export const CONFIGURACION_ARANCELARIAS = [
 
 /**
  * Configuración de la tabla para fracciones de importación.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIASIMPORTACION
  */
 export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   {
@@ -189,7 +182,6 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
 
 /**
  * Textos constantes para el módulo 80206.
- * @constant {Object} TEXTOS_80206
  */
 export const TEXTOS_80206 = {
   ALERTA_TEXTOS:
@@ -198,7 +190,6 @@ export const TEXTOS_80206 = {
 
 /**
  * Mensajes de alerta utilizados en la aplicación.
- * @constant {Object} ALERT
  */
 export const ALERT = {
   ERRORMESSAGE: `<p>Corrija los siguientes errores: </p>

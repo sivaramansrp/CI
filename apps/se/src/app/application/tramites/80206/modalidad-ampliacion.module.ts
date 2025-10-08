@@ -26,15 +26,13 @@ import { RegistroPageComponent } from './pages/registro-page/registro-page.compo
 import { ToastrService } from 'ngx-toastr';
 
 /**
- * @fileoverview Módulo para el registro de certificados zoosanitarios.
+ * Módulo para el registro de certificados zoosanitarios.
  * Este módulo declara y exporta los componentes necesarios para el registro de certificados,
  * incluyendo los pasos del asistente y otros componentes compartidos.
- * @module CertificadoRegistroModule --80206
  */
 
 /**
  * Módulo para el registro de certificados zoosanitarios.
- * @class CertificadoRegistroModule --80206
  */
 
 @NgModule({

@@ -1,10 +1,7 @@
 /**
- * @fileoverview
  * El `PasoDosComponent` es un componente de Angular diseñado para gestionar la funcionalidad del segundo paso del trámite.
  * Proporciona acceso a los textos constantes definidos en la aplicación para su uso en la plantilla HTML.
  * 
- * @module PasoDosComponent
- * @description
  * Este componente utiliza los textos constantes definidos en `TEXTOS` para mostrar información en la interfaz de usuario.
  */
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, Usuario } from '@ng-mf/data-access-user';
@@ -21,7 +18,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
  * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
- * @type {EventEmitter<void>}
  */
   @Input() cargaArchivosEvento!: EventEmitter<void>;
 
@@ -65,7 +61,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
   * Indica si la carga de documentos se realizó correctamente.
-  * @type {boolean}
   */
   cargaRealizada = false;
 
@@ -89,7 +84,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * 
-   * @param catalogosServices Servicio para gestionar los catálogos.
    */
   constructor(
     private catalogosServices: CatalogosService,
@@ -128,8 +122,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
   * Actualiza el estado de carga de documentos y emite un evento con el nuevo valor.
-  * @param cargaRealizada Indica si la carga de documentos se realizó correctamente.
-  * @returns void
   */
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
@@ -138,8 +130,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el evento de carga de documentos y emite un evento con el estado.
-   * @param existenDocumentosParaCargar - Indica si hay documentos para cargar.
-   * @returns void
    */
   manejarEventoCargaDocumento(existenDocumentosParaCargar: boolean): void {
     this.reenviarEventoCarga.emit(existenDocumentosParaCargar);
