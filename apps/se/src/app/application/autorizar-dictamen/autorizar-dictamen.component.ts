@@ -1,7 +1,7 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, OnInit, Type } from "@angular/core";
 
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Router } from '@angular/router';
 
@@ -1159,7 +1159,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.isDictamen = true;
     this.isFirma = false;
     this.isDocumento = false;
-    this.router.navigate(['bandeja-de-tareas-pendientes']);
+    this.router.navigate(['bandeja-de-tareas-pendientes'], {
+      queryParams: { labelExitoso: true }
+    });
   }
 
   /**
