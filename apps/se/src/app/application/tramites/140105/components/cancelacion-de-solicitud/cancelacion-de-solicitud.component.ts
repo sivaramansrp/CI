@@ -1,5 +1,6 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { AfterViewInit,ElementRef,ViewChild } from '@angular/core';
+import {CategoriaMensaje,TipoNotificacionEnum} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
@@ -9,11 +10,13 @@ import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
+import {Notificacion} from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+
 
 
 @Component({
@@ -81,6 +84,8 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    */
   cuerpoTablaCancelacion: Cancelacion[] = [];
 
+  cuerpoTablaSeleccionado: Cancelacion[] = [];
+
   /**
    * Referencia al elemento del modal para buscar mercancías.
    *
@@ -107,12 +112,40 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    */
 @ViewChild('closeModal') closeModal!: ElementRef;
 
+/**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+public nuevaNotificacion!: Notificacion;
+/**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+public nuevaNotificacionUno!: Notificacion;
+
+
   /**
    * Formulario utilizado para capturar el número de folio del trámite.
    * Este formulario incluye validaciones requeridas y de patrón numérico.
    */
   public busquedaForm!: FormGroup;
-
+  /**
+   * Indica si una fila de la tabla está seleccionada.
+   * Cuando es `true`, significa que al menos una fila ha sido seleccionada por el usuario.
+   * Esto puede ser útil para habilitar o deshabilitar acciones basadas en la selección.
+   * */
+  esRowSelected: boolean = false;
+  
+  /**
+   * Indica si se está en el proceso de eliminación de registros.
+   * Cuando es `true`, significa que el usuario ha iniciado una acción para eliminar uno o más registros.
+   * Esto puede activar la visualización de un modal de confirmación o habilitar opciones relacionadas con la eliminación.
+   * */
+  esEliminarDos: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -177,6 +210,9 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
       .subscribe(data => {
         if (Array.isArray(data?.datos)) {
           this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
+          this.cancelacionForm.patchValue({
+            motivoCancelacion: data.motivoCancelacion,
+          });       
         } else {
           this.cuerpoTablaCancelacion = [];
         }
@@ -192,6 +228,16 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
       )
       .subscribe();
   }
+
+   /**
+   * @description Actualiza las ventas totales en el store y recalcula el reporte.
+   * @param evento - Evento del input para capturar el valor introducido.
+   */
+   motivoCancelacion(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    this.servicioDeMensajesService.actualizarEstadoFormulario({ motivoCancelacion: VALUE }); 
+  }
+
 
   /**
    * Muestra el formulario modal para buscar mercancías.
@@ -213,7 +259,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    */
    public establecerBusquedaForm(): void {
     this.busquedaForm = this.fb.group({
-      tramite: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
+      tramite: ['', [Validators.required,]]
     });
   }
   
@@ -253,11 +299,51 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    * @param disponiblesDatos - Los datos seleccionados para modificación.
    */
    abrirModificarModal(): void {
-    if (this.busquedaForm.invalid) {
-      this.busquedaForm.markAllAsTouched();
-      return;
+    const TRAMITEVALUE = this.busquedaForm.get('tramite')?.value;
+ 
+    if (!TRAMITEVALUE || TRAMITEVALUE === '') {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite es un dato requerido",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return 
     }
-    else if(this.modalInstanceDos) {
+    if(TRAMITEVALUE.length < 25){
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite no puede ser menor de 25 carácteres",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return 
+    }
+     if(TRAMITEVALUE.length > 25){
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite no puede ser mayor de 25 carácteres",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return 
+    }
+    if(this.modalInstanceDos) {
       this.modalInstanceDos.show();
     }
   
@@ -272,6 +358,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    cerrarModificarModal(): void {
     if (this.modalInstances) {
       this.modalInstances.hide();
+      this.busquedaForm.reset();
     }
     if (this.modalInstanceDos) {
     
@@ -302,6 +389,43 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
   public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
+
+   /**
+   * Obtiene los datos del subfabricante por eliminar.
+   * @method cueroEliminar
+   * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
+   */
+   cuerpoTablaSelectionEliminar(
+    event: Cancelacion[]
+  ): void {
+    this.cuerpoTablaSeleccionado = event;
+  }
+
+  
+    /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+    cerrarTabla(): void {
+   
+      this.esRowSelected = false;
+    }
+
+     /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+
+  cerrarEliminarDos(evento:boolean): void {
+    this.esEliminarDos=false;
+    if(evento===true){
+      this.cuerpoTablaCancelacion = [];
+      this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
+      this.cuerpoTablaSeleccionado=[];
+     }
+    
+  }
    /**
    * Método que se ejecuta al eliminar un registro de la tabla.
    * Limpia el contenido de la tabla de cancelación y actualiza los datos 
@@ -309,9 +433,37 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    * 
    * @param event Evento que desencadena la eliminación.
    */
-  public eliminarRegistro(_event: Event): void {
-    this.cuerpoTablaCancelacion = [];
-    this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
+   eliminarRegistro(): void {
+    if(this.cuerpoTablaSeleccionado.length === 0){
+      this.nuevaNotificacionUno = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "Seleccione un registro a eliminar.",
+        cerrar: false,
+        tiempoDeEspera: 200,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };  
+    this.esRowSelected= true;
+    }
+      else{
+        this.nuevaNotificacionUno= {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ALERTA,
+          modo: 'modal',
+          titulo: '',
+          mensaje: '¿Esta seguro que desea eliminar el registro marcado?',
+          cerrar: false,
+          tiempoDeEspera: 200,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        };
+        this.esEliminarDos = true;
+      }
+  
+   
   }
 
 
