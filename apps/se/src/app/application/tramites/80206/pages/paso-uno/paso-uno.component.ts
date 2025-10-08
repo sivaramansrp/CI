@@ -1,28 +1,43 @@
 /**
- * @fileoverview
  * El `PasoUnoComponent` es un componente de Angular diseñado para gestionar la funcionalidad del primer paso del trámite.
  * Proporciona la lógica para cambiar entre pestañas y notificar al servicio sobre el estado actual.
- * 
- * @module PasoUnoComponent
- * @description
  * Este componente permite la navegación entre pestañas y utiliza el servicio `AmpliacionServiciosService` para gestionar 
  * la visibilidad de ciertos elementos en función de la pestaña seleccionada.
  */
+import { Component, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { Ampliacion3RsComponent } from '../../components/ampliacion-3Rs/ampliacion-3rs.component';
+import { AmpliacionAnexoComponent } from '../../components/ampliacion-anexo/ampliacion-anexo.component';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+    /**
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+    /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('ampliacionServiciosRef')
+  ampliacionAnexoComponent!: AmpliacionAnexoComponent;
+
+  /**
+   * Referencia al componente Ampliacion3RsComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de las 3 R's antes de continuar al siguiente paso.
+   */
+  @ViewChild('ampliacion3RsRef')
+  ampliacion3RsComponent!: Ampliacion3RsComponent;
   /**
    * Índice de la pestaña seleccionada.
-   * @property {number} indice
    */
   indice: number = 1;
 
@@ -50,12 +65,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  */
  esFormularioSoloLectura: boolean = false;
 
+ /* Agrega esta propiedad para definir tus pestañas (todas las pestañas siempre visibles) */
+ seccionesDeLaSolicitud = [
+  { index: 1, title: 'Solicitante' },
+  { index: 2, title: 'Anexo I' },
+  { index: 3, title: "3 R's" }
+];
+
 
   /**
    * Constructor del componente.
-   * @constructor
-   * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para gestionar la visibilidad de elementos.
-   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta actual.
    */
   constructor(private ampliacionServiciosService: AmpliacionServiciosService,
               private consultaQuery: ConsultaioQuery
@@ -65,8 +84,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia la pestaña seleccionada y notifica al servicio si la pestaña es la 1 o la 2.
-   * @method seleccionaTab
-   * @param {number} i - Índice de la pestaña seleccionada.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -110,4 +127,23 @@ ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();
 }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+  let isValid = true;
+  if (this.ampliacion3RsComponent) {
+    const AMPLIACION_3RS_VALID = this.ampliacion3RsComponent.validarFormulario();
+    
+    if (!AMPLIACION_3RS_VALID) {
+      isValid = false;
+    }
+  } else {
+    if (this.esDatosRespuesta) {
+      isValid = false;
+    }
+  }
+  return isValid;
+} 
 }
