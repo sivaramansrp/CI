@@ -17,6 +17,8 @@ import { DESTINATARIO_BANCO } from '../../enum/destinatario-tabla.enum';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PageDeDerechosData } from '../../models/datos-tramite.model';
+import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
 import { Subject } from 'rxjs';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
 import { map } from 'rxjs';
@@ -118,9 +120,45 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     private solicitud230201Query: Tramite230201Query,
         private consultaioQuery: ConsultaioQuery,
     private validacionesService: ValidacionesFormularioService,
-    private mediodetransporteService: MediodetransporteService
+    private mediodetransporteService: MediodetransporteService,
+    private phytosanitaryExportacionService: PhytosanitaryExportacionService
   ) {
+    this.solicitud230201Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.derechoState = seccionState;
+          if (this.FormSolicitud) {
+            this.pagodeDerechos.patchValue({
+              claveDeReferencia: this.derechoState.claveDeReferencia,
+              cadenaPagoDependencia: this.derechoState.cadenaPagoDependencia,
+              impPago: this.derechoState.impPago
+            });
+          }
+        })
+      )
+      .subscribe();
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.  
+   * Llama a la función para inicializar el estado del formulario.
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.fetchBancoData();
+    this.cargarDatosPagoDerecho();
   }
 
   /**
@@ -147,36 +185,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Hook del ciclo de vida de Angular que se llama después de que la vista del componente se ha inicializado completamente.
-   *
-   * Este método realiza las siguientes acciones:
-   * - Llama al método `getMercancia` para inicializar el objeto `mercancia`.
-   * - Inicializa el grupo de formularios `FormSolicitud` con controles de formulario anidados y validadores.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
    */
-  ngOnInit(): void {
-    this.solicitud230201Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.derechoState = seccionState;
-        })
-      )
-      .subscribe();
-    
-    this.inicializarFormulario();
-
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.updateEstadoFormulario();
-        })
-      )
-      .subscribe();
-
-    this.updateEstadoFormulario();
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.updateEstadoFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
   }
 
   /**
@@ -187,12 +204,11 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * Si es falsa, habilita dichos formularios para permitir la edición.
    */
   updateEstadoFormulario(): void {
+    this.inicializarFormulario();
     if (this.soloLectura) {
       this.FormSolicitud?.disable();
-      this.pagodeDerechos?.disable();
     } else {
       this.FormSolicitud?.enable();
-      this.pagodeDerechos?.enable();
     }
   }
 
@@ -292,6 +308,24 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   */
   get pagodeDerechos(): FormGroup {
     return this.FormSolicitud.get('pagodeDerechos') as FormGroup;
+  }
+
+  /**
+   * Carga los datos del pago de derechos desde el servicio JSON.
+   */
+  cargarDatosPagoDerecho(): void {
+    this.phytosanitaryExportacionService
+      .getPagoDeDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response: PageDeDerechosData) => {
+        if (response && this.FormSolicitud) {
+          this.pagodeDerechos.patchValue({
+            claveDeReferencia: response.claveDeReferencia || '',
+            cadenaPagoDependencia: response.cadenaPagoDependencia || '',
+            impPago: response.impPago || ''
+          });
+        }
+      });
   }
 
   /**
