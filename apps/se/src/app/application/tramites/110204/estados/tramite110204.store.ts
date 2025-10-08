@@ -70,7 +70,7 @@ export interface TramiteState {
   };
 
   /** Lista de mercancías encontradas o buscadas. */
-  buscarMercancia: Mercancias[];
+  buscarMercancia: Mercancia[];
 
   /**
    * Objeto que representa la validez de los formularios,
@@ -348,7 +348,7 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Establece los resultados de mercancía obtenidos por búsqueda.
    * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
    */
-  setbuscarMercancia(buscarMercancia: Mercancias[]): void {
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
     this.update((state) => ({ ...state, buscarMercancia }));
   }
 
@@ -405,6 +405,22 @@ export class Tramite110204Store extends Store<TramiteState> {
   }
 
   public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
-    this.update((state) => ({ ...state, mercanciaTabla }));
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
   }
 }
