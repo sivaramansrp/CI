@@ -65,3 +65,16 @@ export interface EvaluarMercanciaResponse {
   /** Descripción de la clasificación NALADISA 2002 */
   descripcion_naladisa_02: string | null;
 }
+
+/**
+ * Representa los campos del formulario de evaluación de mercancía
+ */
+export interface CampoEvaluar {
+  label?: string;           
+  controlName?: string;   
+  placeholder?: string;     
+  col?: number;           
+  section?: string;     
+  sectionKey?: string;    
+}
+
