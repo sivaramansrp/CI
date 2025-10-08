@@ -971,209 +971,204 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
       }
      
     })),
-    mercanciaImportacion: [
+mercanciaImportacion: (storeData.importacion ?? []).map(item => ({
+  claveMercanciaImportacion: 0,
+  testado: 0,
+  tipoFraccion: "string",
+  visible: true,
+  fraccionPadre: "string",
+  blnFraccionSeleccionada: 0,
+   claveFraccionPadre: "string",
+  fraccionCompuesta: "string",
+  descripcionTestado: "string",
+  unidadMedida: "string",
+  tipoOperacion: "string",
+  valorMonedaMensual: "string",
+  valorMonedaAnual: "string",
+  valorProduccionMensual: "string",
+  valorProduccionAnual: "string",
+  valorProduccionAnualSolicitada: "string",
+  categoria: "string",
+  mensaje: "string",
+  umt: item.umt,
+  claveCategoria: "string",
+  descripcionUsuario: item.descripcionTigie,
+  descripcionFraccionPadre: "string",
+  idProductoPadre: "string",
+  idProducto: "string",
+  permisoPadre: "string",
+  fraccionArancelaria: {
+    fraccionPadre: "string",
+    descripcionFraccionPadre: "string",
+    tipoFraccion: "string",
+    exenta: true,
+    fraccionCompuesta: "string",
+    claveFraccionPadre: "string",
+    unidadMedida: "string",
+    fraccionConcatenada: "string",
+    descripcionTestado: "string",
+    testado: true,
+    tipoOperacion: "string",
+    valorMonedaMensual: "string",
+    valorMonedaAnual: "string",
+    valorProduccionMensual: "string",
+    valorProduccionAnual: "string",
+    valorProduccionAnualSolicitada: "string",
+    claveCategoria: "string",
+    descripcionCategoria: "string",
+    mensaje: "string",
+    descripcionUsuario: item.descripcionTigie,
+    umt: item.umt,
+    idFraccion: "string",
+    idProducto: "string",
+    idProductoPadre: "string",
+    claveProductoExportacion: 0,
+    descripcionServicio: "string",
+    rowID: "string",
+    cveFraccion: item.fraccionArancelaria,
+    capitulo: "string",
+    partida: "string",
+    subPartida: "string",
+    descripcion: "string",
+    fechaCaptura: "2025-09-07T12:43:35.647Z",
+    fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
+    fechaFinVigencia: "2025-09-07T12:43:35.647Z",
+    cveUsuario: "string",
+    cveCapituloFraccion: "string",
+    cvePartidaFraccion: "string",
+    cveSubPartidaFraccion: "string",
+    activo: true,
+    activoAnexo28: true,
+    decretoImmex: true,
+    sector: [
       {
-        claveMercanciaImportacion: 0,
-        testado: 0,
-        tipoFraccion: "string",
-        visible: true,
-        fraccionPadre: "string",
-        blnFraccionSeleccionada: 0,
-        claveFraccionPadre: "string",
-        fraccionCompuesta: "string",
-        descripcionTestado: "string",
-        unidadMedida: "string",
-        tipoOperacion: "string",
-        valorMonedaMensual: "string",
-        valorMonedaAnual: "string",
-        valorProduccionMensual: "string",
-        valorProduccionAnual: "string",
-        valorProduccionAnualSolicitada: "string",
-        categoria: "string",
-        mensaje: "string",
-        umt: "string",
-        claveCategoria: "string",
-        descripcionUsuario: "string",
-        descripcionFraccionPadre: "string",
-        idProductoPadre: "string",
-        idProducto: "string",
-        permisoPadre: "string",
-        fraccionArancelaria: {
-          fraccionPadre: "string",
-          descripcionFraccionPadre: "string",
-          tipoFraccion: "string",
-          exenta: true,
-          fraccionCompuesta: "string",
-          claveFraccionPadre: "string",
-          unidadMedida: "string",
-          fraccionConcatenada: "string",
-          descripcionTestado: "string",
-          testado: true,
-          tipoOperacion: "string",
-          valorMonedaMensual: "string",
-          valorMonedaAnual: "string",
-          valorProduccionMensual: "string",
-          valorProduccionAnual: "string",
-          valorProduccionAnualSolicitada: "string",
-          claveCategoria: "string",
-          descripcionCategoria: "string",
-          mensaje: "string",
-          descripcionUsuario: "string",
-          umt: "string",
-          idFraccion: "string",
-          idProducto: "string",
-          idProductoPadre: "string",
-          claveProductoExportacion: 0,
-          descripcionServicio: "string",
-          rowID: "string",
-          cveFraccion: "61032301",
-          capitulo: "string",
-          partida: "string",
-          subPartida: "string",
-          descripcion: "string",
-          fechaCaptura: "2025-09-07T12:43:35.647Z",
-          fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
-          fechaFinVigencia: "2025-09-07T12:43:35.647Z",
-          cveUsuario: "string",
-          cveCapituloFraccion: "string",
-          cvePartidaFraccion: "string",
-          cveSubPartidaFraccion: "string",
-          activo: true,
-          activoAnexo28: true,
-          decretoImmex: true,
-          sector: [
-            {
-              cveSector: "string",
-              nombre: "string",
-              productorIndirecto: 0,
-              ampliacionMercancias: 0,
-              fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
-              fechaFinVigencia: "2025-09-07T12:43:35.647Z",
-              blnActivo: 0
-            }
-          ],
-          cveServicioImmex: {
-            claveServicio: 1,
-            nombre: "string",
-            tipoServicio: "string",
-            fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
-            fechaFinVigencia: "2025-09-07T12:43:35.647Z",
-            blnActivo: true
-          },
-          listaProveedores: [
-            {
-              idProveedor: "string",
-              paisOrigen: "string",
-              rfcProveedor: "string",
-              razonProveedor: "string",
-              paisDestino: "string",
-              rfcCliente: "string",
-              razonCliente: "string",
-              domicilio: "string",
-              testado: true,
-              idProductoP: "string",
-              descTestado: "string"
-            }
-          ],
-          listaProyecto: [
-            {
-              idProyecto: "string",
-              tipoDocumento: "string",
-              descDocumento: "string",
-              otro: "string",
-              fechaIncio: "string",
-              fechaFin: "string",
-              firmante: {
-                idFirmante: "string",
-                rfc: "string",
-                razonSocial: "string",
-                claveFraccion: "string"
-              },
-              testado: "string",
-              idProducto: "string",
-              descTestado: "string"
-            }
-          ],
-          nicoDtos: [
-            {
-              claveNico: "00",
-              descripcion: "string",
-              testadoNico: "string",
-              testadoInt: true
-            }
-          ]
-        },
-        listaProveedores: [
-          {
-            idProveedor: "string",
-            paisOrigen: "string",
-            rfcProveedor: "string",
-            razonProveedor: "string",
-            paisDestino: "string",
-            rfcCliente: "string",
-            razonCliente: "string",
-            domicilio: "string",
-            testado: true,
-            idProductoP: "string",
-            descTestado: "string"
-          }
-        ],
-        listaProyecto: [
-          {
-            idProyecto: "string",
-            tipoDocumento: "string",
-            descDocumento: "string",
-            otro: "string",
-            fechaIncio: "string",
-            fechaFin: "string",
-            firmante: {
-              idFirmante: "string",
-              rfc: "string",
-              razonSocial: "string",
-              claveFraccion: "string"
-            },
-            testado: "string",
-            idProducto: "string",
-            descTestado: "string"
-          }
-        ],
-        nicoDtos: [
-          {
-            claveNico: "01",
-            descripcion: "string",
-            testadoNico: "string",
-            testadoInt: true
-          }
-        ],
-        proyectosClientes: [
-          {
-            paisOrigen: "",
-            rfcProveedor: "",
-            razonProveedor: "",
-            paisDestino: "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)",
-            rfcClient: "GDFGFDHGJGHJGH",
-            razonCliente: "D FFGSDFSFSDF",
-            domicilioCliente: "",
-            testado: false,
-            fecFinVigencia: null
-          }
-        ],
-        complemento: {
-          anexoII: "NO SENSIBLE",
-          tipo: "EXPORTACION",
-          unidadMedida: "Kilogramo",
-          categoria: "TICAT.MP",
-          descripcion: "DEJ JLFKDSFDSFSDF",
-          valorMensual: "12",
-          valorAnual: "432",
-          volumenMensual: "5435",
-          volumenAnual: "534",
-          testado: true,
-          fecFinVigencia: null,
-          volumenAnualSolicitado: null
-        }
+        cveSector: "string",
+        nombre: "string",
+        productorIndirecto: 0,
+        ampliacionMercancias: 0,
+        fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
+        fechaFinVigencia: "2025-09-07T12:43:35.647Z",
+        blnActivo: 0
       }
     ],
+    cveServicioImmex: {
+      claveServicio: 1,
+      nombre: "string",
+      tipoServicio: "string",
+     fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
+     fechaFinVigencia: "2025-09-07T12:43:35.647Z",
+      blnActivo: true
+    },
+    listaProveedores: [
+      {
+        idProveedor: "string",
+        paisOrigen: "string",
+        rfcProveedor: "string",
+        razonProveedor: "string",
+        paisDestino: "string",
+        rfcCliente: "string",
+        razonCliente: "string",
+        domicilio: "string",
+        testado: true,
+        idProductoP: "string",
+        descTestado: "string"
+      }
+    ],
+    listaProyecto: [
+      {
+        idProyecto: "string",
+        tipoDocumento: "string",
+        descDocumento: "string",
+        otro: "string",
+        fechaIncio: "string",
+        fechaFin: "string",
+        firmante: {
+          idFirmante: "string",
+          rfc: "string",
+          razonSocial: "string",
+          claveFraccion: "string"
+        },
+        testado: "string",
+        idProducto: "string",
+        descTestado: "string"
+      }
+    ],
+    nicoDtos: (item.nicosTable ?? []).map(nico => ({
+      claveNico: nico.NICO_Columna_1 || "00",
+      descripcion: nico.NICO_Columna_2 || "string",
+      testadoNico: "string",
+      testadoInt: true
+    }))
+  },
+  listaProveedores: [
+    {
+      idProveedor: "string",
+      paisOrigen: "string",
+      rfcProveedor: "string",
+      razonProveedor: "string",
+      paisDestino: "string",
+      rfcCliente: "string",
+      razonCliente: "string",
+      domicilio: "string",
+      testado: true,
+      idProductoP: "string",
+      descTestado: "string"
+    }
+  ],
+  listaProyecto: [
+    {
+      idProyecto: "string",
+      tipoDocumento: "string",
+      descDocumento: "string",
+      otro: "string",
+      fechaIncio: "string",
+      fechaFin: "string",
+      firmante: {
+        idFirmante: "string",
+        rfc: "string",
+        razonSocial: "string",
+        claveFraccion: "string"
+      },
+      testado: "string",
+      idProducto: "string",
+      descTestado: "string"
+    }
+  ],
+  nicoDtos: (item.nicosTable ?? []).map(nico => ({
+    claveNico: nico.NICO_Columna_1 || "01",
+    descripcion: nico.NICO_Columna_2 || "string",
+    testadoNico: "string",
+    testadoInt: true
+  })),
+  proyectosClientes: [
+    {
+      paisOrigen: "",
+      rfcProveedor: "",
+      razonProveedor: "",
+      paisDestino: "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)",
+      rfcClient: "GDFGFDHGJGHJGH",
+      razonCliente: "D FFGSDFSFSDF",
+      domicilioCliente: "",
+      testado: false,
+      fecFinVigencia: null
+    }
+  ],
+  complemento: {
+    anexoII: "SENSIBLE",
+    tipo: "EXPORTACION",
+    unidadMedida: "Kilogramo",
+    categoria: "TICAT.MP",
+    descripcion: item.descripcionTigie,
+    valorMensual: null,
+    valorAnual: item.cantidadAnual?.toString() || "0",
+    volumenMensual: item.cantidadPorPeriodo?.toString() || "0",
+    volumenAnual: item.cantidadAnual?.toString() || "0",
+    testado: true,
+    fecFinVigencia: null,
+    volumenAnualSolicitado: item.capacidadInstalada?.toString() || null
+  }
+})),
+
     anexoII: [
       {
         descripcion: "CONTROL DE ENERGIA",
