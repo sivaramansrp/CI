@@ -131,15 +131,6 @@ export class SolicitudModalidadPageComponent implements OnInit {
   /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
   public btnGuardar: boolean = true;
 
-  esFormaValido: boolean = false;
-
-  /**
-   * Indica si el formulario es válido en su totalidad.
-   * Se utiliza para controlar la habilitación de botones y la navegación entre pasos.
-   * @type {boolean}
-   */
-  esFormaValido: boolean = false;
-
   /**
    * Indica si existe un error en el campo de cambio de modalidad.
    * Se actualiza desde el estado del store para mostrar mensajes de error específicos.
@@ -211,7 +202,6 @@ getValorIndice(e: AccionBoton): void {
   if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (ISVALID) {
-        this.esFormaValido = false;
         this.cambioModalidadService.getAllState()
     .pipe(
       take(1),
