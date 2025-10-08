@@ -874,24 +874,16 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
       .subscribe({
         next: (empresas: EmpresaNacional[]) => {
           // Actualizar solo el store con los nuevos datos sin duplicar
-          this.cambioModalidadStore.setEmpresasSeleccionados(empresas);
+          this.cambioModalidadStore.setDatos(empresas);
           
-          // Limpiar los campos del formulario
+          this.cambioDeModalidadForm.get('rfcEmpresa')?.setValue('');
+          this.cambioDeModalidadForm.get('numeroPrograma')?.setValue('');
+          this.cambioDeModalidadForm.get('tiempoPrograma')?.setValue('');
+
           this.rfcEmpresa = '';
           this.numeroPrograma = '';
           this.tiempoPrograma = '';
-        },
-        error: (error) => {
-          this.notificacionesService.showNotification({
-            tipoNotificacion: TipoNotificacionEnum.TOASTR,
-            categoria: CategoriaMensaje.ERROR,
-            modo: '',
-            titulo: 'Error',
-            mensaje: `${error?.error}`,
-            cerrar: true,
-            txtBtnAceptar: '',
-            txtBtnCancelar: ''
-          });
+         
         }
       });  
   }
@@ -1084,17 +1076,6 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
       } else{
 
         this.actualizaGridEmpresasNacionales();
-      // this.nuevaNotificacion = {
-      //   tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      //   categoria: CategoriaMensaje.ALERTA,
-      //   modo: 'modal',
-      //   titulo: '',
-      //   mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
-      //   cerrar: false,
-      //   txtBtnAceptar: 'Aceptar',
-      //   txtBtnCancelar: '',
-      // };
-      // this.esAgregarDos = true;
     }
     }
     /**
@@ -1147,7 +1128,7 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
         this.cambioModalidadStore.setCambioError(true);
         VALID = false;
       }
-      else if(this.cambioDeModalidadForm.get('serviciosImmx')?.value === "-1"){
+      else if(this.ServiciosDatos.length === 0){
         this.cambioModalidadStore.setCambioError(false);
         this.cambioModalidadStore.setserviciosImmxError(true);
         VALID = false;

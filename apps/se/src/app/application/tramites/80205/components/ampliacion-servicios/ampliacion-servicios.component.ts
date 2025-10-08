@@ -1055,18 +1055,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
           this.rfcEmpresa = '';
           this.numeroPrograma = '';
           this.tiempoPrograma = '';
-        },
-        error: (error) => {
-          this.notificacionesService.showNotification({
-            tipoNotificacion: TipoNotificacionEnum.TOASTR,
-            categoria: CategoriaMensaje.ERROR,
-            modo: '',
-            titulo: 'Error',
-            mensaje: `${error?.error}`,
-            cerrar: true,
-            txtBtnAceptar: '',
-            txtBtnCancelar: ''
-          });
         }
       });  
   }
