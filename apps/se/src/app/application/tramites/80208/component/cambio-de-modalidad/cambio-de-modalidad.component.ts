@@ -1148,6 +1148,7 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
         VALID = false;
       }
       else if(this.cambioDeModalidadForm.get('serviciosImmx')?.value === "-1"){
+        this.cambioModalidadStore.setCambioError(false);
         this.cambioModalidadStore.setserviciosImmxError(true);
         VALID = false;
       }

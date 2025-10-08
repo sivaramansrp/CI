@@ -159,6 +159,8 @@ export class SolicitudModalidadPageComponent implements OnInit {
    */
   public serviciosImmxAlert = ERROR_SERVICIOS_ALERT;
 
+    esFormaValido: boolean = true;
+
   /**
    * @constructor
    * @description Constructor que inicializa el componente y sus dependencias.
@@ -198,40 +200,55 @@ export class SolicitudModalidadPageComponent implements OnInit {
  */
 getValorIndice(e: AccionBoton): void {
   let shouldNavigate = false;
+    if (this.indice === 1) {
+      const ISVALID = this.validarTodosFormulariosPasoUno() ?? false;
+      this.esFormaValido = ISVALID;
 
-  if (this.indice === 1 && e.accion === 'cont') {
-      const ISVALID = this.validarTodosFormulariosPasoUno();
-      if (ISVALID) {
-        this.cambioModalidadService.getAllState()
-    .pipe(
-      take(1),
-      tap(data => {
-        //
-      }),
-      switchMap((data) => this.guardar(data)),
-      tap(response => {
-        shouldNavigate = response.codigo === '00';
-        if (shouldNavigate) {
-          this.toastrService.success(response.mensaje);
+      if (!this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+
+      this.cambioModalidadService.getAllState()
+              .pipe(
+                take(1),
+                tap(data => {
+                  //
+                }),
+              switchMap((data) => this.guardar(data)),
+              tap(response => {
+                shouldNavigate = response.codigo === '00';
+                if (shouldNavigate) {
+                  this.esFormaValido = true;
+                  this.indice = e.valor;
+                  this.datosPasos.indice = this.indice;
+                  this.wizardComponent.siguiente();
+                  this.toastrService.success(response.mensaje);
+                  
+                } else {
+                  this.toastrService.error(response.mensaje);
+                  this.esFormaValido = false;
+                  this.indice = 1;
+                  this.datosPasos.indice = 1;
+                  this.wizardComponent.indiceActual = 1;
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                  return;
+                }
+              })
+              )
+              .subscribe();      
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
         } else {
-          this.toastrService.error(response.mensaje);
+          this.wizardComponent.atras();
         }
-      }),
-      finalize(() => {
-        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
-      })
-    )
-    .subscribe();
+      }
+    }
   }
-      } 
-}
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
