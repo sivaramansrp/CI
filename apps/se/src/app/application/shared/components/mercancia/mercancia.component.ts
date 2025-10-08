@@ -254,27 +254,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Inicializa el formulario de mercancías con los valores actuales del estado.
    */
   initActionFormBuild(): void {
-    // this.mercanciaForm = this.fb.group({
-    //   fraccionArancelaria: [this.datosSeleccionados?.fraccionArancelaria],
-    //   fraccionNaladi: [{ value: this.datosSeleccionados?.fraccionNaladi, disabled: true }],
-    //   fraccionNaladiSa93: [{ value: this.datosSeleccionados?.fraccionNaladiSa93, disabled: true }],
-    //   fraccionNaladiSa96: [{ value: this.datosSeleccionados?.fraccionNaladiSa96, disabled: true }],
-    //   fraccionNaladiSa02: [{ value: this.datosSeleccionados?.fraccionNaladiSa02, disabled: true }],
-    //   nombreComercialMercancia: [{ value: this.datosSeleccionados?.nombreComercial, disabled: true }],
-    //   nombreTecnico: [{ value: this.datosSeleccionados?.nombreTecnico, disabled: true }],
-    //   normaOrigen: [{ value: '', disabled: true }],
-    //   nombreIngles: [{ value: '', disabled: true }],
-    //   otrasInstancias: [{ value: '', disabled: true }],
-    //   criterioParaConferirOrigen: [{ value: '', disabled: true }],
-    //   fechaFactura: [this.datosSeleccionados?.fechaFactura ?? null, REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento) ? [Validators.required] : ''],
-    //   cantidad: [this.datosSeleccionados?.cantidad, [REQUIRED_CANTIDAD.includes(this.idProcedimiento) ? Validators.required : '',Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
-    //   umc: [this.datosSeleccionados?.umc, [REQUIRED_UMC.includes(this.idProcedimiento) ? Validators.required : '']],
-    //   valorMercancia: [this.datosSeleccionados?.valorMercancia,[REQUIRED_VALOR_MERCANCIA.includes(this.idProcedimiento) ? Validators.required : '',Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
-    //   complementoDescripcion: [this.datosSeleccionados?.complementoDescripcion,[REQUIRED_COMPLEMENTO_DESCRIPCION.includes(this.idProcedimiento) ? Validators.required : '', Validators.maxLength(200)]],
-    //   numeroFactura: [this.datosSeleccionados?.numeroFactura, [REQUIRED_NUMERO_FACTURA.includes(this.idProcedimiento) ? Validators.required : '',Validators.maxLength(36)]],
-    //   tipoFactura: [this.datosSeleccionados?.tipoFactura, [REQUIRED_TIPO_FACTURA.includes(this.idProcedimiento) ? Validators.required : '']],
-    // });
-
     this.mercanciaForm = this.fb.group({
       fraccionArancelaria: [this.datosSeleccionados?.fraccionArancelaria],
       fraccionNaladi: [
@@ -535,9 +514,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.mercanciaForm.patchValue({
       fechaFactura: nuevo_valor,
     });
-    // this.mercanciaForm.get('fechaFactura')?.setValue(nuevo_valor);
-    // this.mercanciaForm.get('fechaFactura')?.markAsTouched();
-    // this.mercanciaForm.get('fechaFactura')?.markAsDirty();
   }
 
   /**
