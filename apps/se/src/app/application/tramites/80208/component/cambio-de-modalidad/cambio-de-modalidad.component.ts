@@ -1129,4 +1129,34 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
       };
       this.esEliminarDos = true;}}
 
+    /**
+     * Valida el formulario de cambio de modalidad.
+     * 
+     * @method validarFormulario
+     * @description
+     * Este método verifica que los campos requeridos del formulario tengan valores válidos.
+     * Valida que los campos 'cambioDeModalidad' y 'serviciosImmx' no tengan el valor "-1" (valor por defecto/sin selección).
+     * Si algún campo es inválido, actualiza el estado de error correspondiente en el store y retorna false.
+     * Si todos los campos son válidos, limpia los estados de error y retorna true.
+     * 
+     * @returns {boolean} True si el formulario es válido, false en caso contrario.
+     */
+    validarFormulario(): boolean {
+      let VALID = true;
+      if(this.cambioDeModalidadForm.get('cambioDeModalidad')?.value === "-1"){
+        this.cambioModalidadStore.setCambioError(true);
+        VALID = false;
+      }
+      else if(this.cambioDeModalidadForm.get('serviciosImmx')?.value === "-1"){
+        this.cambioModalidadStore.setserviciosImmxError(true);
+        VALID = false;
+      }
+      else{
+        this.cambioModalidadStore.setCambioError(false);
+        this.cambioModalidadStore.setserviciosImmxError(false);
+        VALID = true;
+      }
+      return VALID;
+    }
+
 }

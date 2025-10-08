@@ -13,11 +13,13 @@ import {
 } from '../../estados/tramite80208.store';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, Usuario, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
-import { Observable, Subject, catchError, finalize, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import {
+  ERROR_FORMA_ALERT,
+  ERROR_SERVICIOS_ALERT,
   PASOS,
   USUARIO_INFO,
 } from '../../constantes/solicitud-modalidad.enums';
+import { Observable, Subject, catchError, finalize, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
 import { GuardarService } from '../../service/guardar.service';
@@ -132,6 +134,41 @@ export class SolicitudModalidadPageComponent implements OnInit {
   esFormaValido: boolean = false;
 
   /**
+   * Indica si el formulario es válido en su totalidad.
+   * Se utiliza para controlar la habilitación de botones y la navegación entre pasos.
+   * @type {boolean}
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Indica si existe un error en el campo de cambio de modalidad.
+   * Se actualiza desde el estado del store para mostrar mensajes de error específicos.
+   * @type {boolean}
+   */
+  cambioError: boolean = false;
+
+  /**
+   * Contiene el mensaje HTML de error para el campo de cambio de modalidad.
+   * Se utiliza para mostrar alertas de validación al usuario.
+   * @type {string}
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+   * Indica si existe un error en el campo de servicios IMMX.
+   * Se actualiza desde el estado del store para mostrar mensajes de error específicos.
+   * @type {boolean}
+   */
+  serviciosImmxError: boolean = false;
+  
+  /**
+   * Contiene el mensaje HTML de error para el campo de servicios IMMX.
+   * Se utiliza para mostrar alertas de validación cuando faltan servicios requeridos.
+   * @type {string}
+   */
+  public serviciosImmxAlert = ERROR_SERVICIOS_ALERT;
+
+  /**
    * @constructor
    * @description Constructor que inicializa el componente y sus dependencias.
    * @param {CambioModalidadQuery} cambioModalidadQuery - Servicio para consultar el estado del cambio de modalidad.
@@ -152,6 +189,9 @@ export class SolicitudModalidadPageComponent implements OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state: CambioModalidadState) => {
         this.solicitudState = state;
+        this.cambioError = state.cambioError ?? false;
+        this.serviciosImmxError = state.serviciosImmxError ?? false;
+
       });
   }
 
@@ -167,13 +207,12 @@ export class SolicitudModalidadPageComponent implements OnInit {
  */
 getValorIndice(e: AccionBoton): void {
   let shouldNavigate = false;
-  this.esFormaValido = false;
 
   if (this.indice === 1 && e.accion === 'cont') {
-    //   const ISVALID = this.validarTodosFormulariosPasoUno();
-    }
-
-  this.cambioModalidadService.getAllState()
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (ISVALID) {
+        this.esFormaValido = false;
+        this.cambioModalidadService.getAllState()
     .pipe(
       take(1),
       tap(data => {
@@ -200,6 +239,8 @@ getValorIndice(e: AccionBoton): void {
       })
     )
     .subscribe();
+  }
+      } 
 }
 
   /**
@@ -441,5 +482,28 @@ getValorIndice(e: AccionBoton): void {
     this.wizardComponent.siguiente();
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Valida todos los formularios del paso uno antes de permitir la navegación.
+   * 
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Este método privado verifica que el componente del paso uno existe y que todos sus formularios son válidos.
+   * Si el componente pasoUnoComponent no existe, retorna true por defecto (asumiendo validación exitosa).
+   * Si existe, ejecuta la validación de todos los formularios del paso uno y retorna el resultado.
+   * 
+   * @returns {boolean} True si todos los formularios del paso uno son válidos o si el componente no existe, false en caso contrario.
+   * @private
+   */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 }

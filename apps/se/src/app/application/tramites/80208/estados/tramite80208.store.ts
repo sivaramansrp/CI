@@ -43,6 +43,8 @@ export interface CambioModalidadState {
   numeroIMMEX?: string;
   anoIMMEX?: string;
   servicios?: ServicioInfo[];
+  cambioError?: boolean;
+  serviciosImmxError?: boolean;
 }
 
 /**
@@ -77,7 +79,8 @@ export function createInitialState(): CambioModalidadState {
     numeroIMMEX: '',
     anoIMMEX: '',
     servicios: [],
-
+    cambioError: false,
+    serviciosImmxError: false,
   };
 }
 
@@ -408,6 +411,30 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     this.update((state) => ({
       ...state,
       anoIMMEX,
+    }));
+  }
+
+  /**
+   * Establece el estado de error para el campo de cambio de modalidad.
+   *
+   * @param cambioError - Indica si existe un error en el campo de cambio de modalidad.
+   */
+  public setCambioError(cambioError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      cambioError,
+    }));
+  }
+
+  /**
+   * Establece el estado de error para el campo de servicios IMMX.
+   *
+   * @param serviciosImmxError - Indica si existe un error en el campo de servicios IMMX.
+   */
+  public setserviciosImmxError(serviciosImmxError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      serviciosImmxError,
     }));
   }
 
