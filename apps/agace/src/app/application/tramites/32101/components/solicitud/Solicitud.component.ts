@@ -1,5 +1,5 @@
 import {AbstractControl,FormBuilder,FormControl,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
+import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,REGEX_NUMEROS,REGEX_REEMPLAZAR,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
@@ -470,6 +470,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja el evento de input para campos alfanuméricos
+   * @param event Evento de input
+   */
+  onAlphanumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(REGEX_REEMPLAZAR, '');
+  }
+
+  /**
+   * Maneja el evento de input para campos numéricos
+   * @param event Evento de input
+   */
+  onNumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(REGEX_NUMEROS, '');
+  }
+
+  /**
    * Obtiene la lista de documentos relacionados con el trámite de inversión.
    *
    * Este método realiza una solicitud al servicio `consultaAvisoAcreditacionService`
@@ -844,39 +862,50 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
     
     this.tramite32101Store.setFechaInicialInput(nuevo_valor);
-  }
+  }  
+  
   /**
    * Restablece los campos del formulario relacionados con la operación bancaria.
    *
-   * Este método reinicia los valores de los siguientes controles del formulario:
+   * Este método verifica si todos los campos requeridos de "Pago de derecho" están llenos:
    * - `numeroDeOperacion`: Número de operación bancaria.
    * - `banco`: Banco asociado a la operación.
    * - `llaveDePago`: Llave de pago utilizada.
    * - `fechaInicialInput`: Fecha inicial de la operación.
    *
-   * Utiliza el método `reset()` para limpiar los valores de cada control y
-   * marca los campos importantes como tocados para mostrar errores de validación.
+   * Solo si todos estos campos están completados, procede a resetear todo el formulario
+   * y limpiar específicamente el control de fecha. De lo contrario, no realiza ninguna acción.
    */  
   borrar(): void {
-    this.registroForm.reset();
-    const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
-    FECHA_CONTROL?.setValue('');
-    FECHA_CONTROL?.setErrors(null);
-    FECHA_CONTROL?.markAsUntouched();
-    FECHA_CONTROL?.markAsPristine();
-    this.tramite32101Store.setFechaInicialInput('');
-
-    // Marcar los campos importantes de pago como tocados para mostrar errores de validación
+    // Verificar si todos los campos requeridos de "Pago de derecho" están llenos
     const PAYMENT_FIELDS = ['numeroDeOperacion', 'banco', 'llaveDePago', 'fechaInicialInput'];
-    PAYMENT_FIELDS.forEach(fieldName => {
+    const ALL_PAYMENT_FIELDS_FILLED = PAYMENT_FIELDS.every(fieldName => {
       const FIELD_CONTROL = this.registroForm.get(fieldName);
-      if (FIELD_CONTROL) {
-        FIELD_CONTROL.markAsTouched();
-        FIELD_CONTROL.markAsDirty();
-      }
+      return FIELD_CONTROL?.value && !FIELD_CONTROL.invalid;
     });
+    
+    // Solo proceder si todos los campos de pago están completados
+    if (ALL_PAYMENT_FIELDS_FILLED) {
+      this.registroForm.reset();
+      const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
+      FECHA_CONTROL?.setValue('');
+      FECHA_CONTROL?.setErrors(null);
+      FECHA_CONTROL?.markAsUntouched();
+      FECHA_CONTROL?.markAsPristine();
+      this.tramite32101Store.setFechaInicialInput('');
 
-    this.cdr.detectChanges();
+      this.inicializarEstadoFormulario();
+      this.cdr.detectChanges();
+    } else {
+      // Marcar todos los campos como untouched y pristine para evitar mostrar errores de validación
+      Object.keys(this.registroForm.controls).forEach(fieldName => {
+        const FIELD_CONTROL = this.registroForm.get(fieldName);
+        if (FIELD_CONTROL) {
+          FIELD_CONTROL.markAsTouched();
+          FIELD_CONTROL.markAsPristine();
+        }
+      });
+    }
   }
 
   /**
