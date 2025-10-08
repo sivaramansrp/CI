@@ -1576,4 +1576,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       this.estados = res.datos;
     });
   }
+
+  /**
+   * Maneja el cambio de estado en el formulario de modificaciones.
+   * Actualiza el valor del campo 'estado' en el formulario con la clave seleccionada.
+   * @param event Objeto del catálogo seleccionado.
+   */
+  estadoChange(event: Catalogo): void {
+    if (event) {
+      this.formaComplimentos.get('formaModificaciones.estado')?.setValue(event?.clave);
+    }
+  }
 }
