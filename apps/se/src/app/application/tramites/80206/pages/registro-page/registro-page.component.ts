@@ -217,38 +217,6 @@ tramiteId: string = '80206';
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
   getValorIndice(e: AccionBoton): void {
-  // const PAYLOAD = buildGuardarPayload(this.solicitudState);
-  // let shouldNavigate = false;
-  
-  // this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD)
-  //   .pipe(takeUntil(this.destroyNotifier$))
-  //   .subscribe(response => {
-  //     shouldNavigate = response.codigo === '00';
-      
-  //     if (shouldNavigate) {
-  //       if (esValidObject(response) && esValidObject(response.datos)) {
-  //         const DATOS = response.datos as { id_solicitud?: number };
-  //         if (getValidDatos(DATOS.id_solicitud)) {
-  //           this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-  //         } else {
-  //           this.store.setIdSolicitud(0);
-  //         }
-  //       }
-  //       if (e.valor > 0 && e.valor < 5) {
-  //         this.indice = e.valor;
-  //         if (e.accion === 'cont') {
-  //           this.wizardComponent.siguiente();
-  //         } else {
-  //           this.wizardComponent.atras();
-  //         }
-  //       }
-  //     } else {
-  //       console.error('Error saving data:', response.mensaje);
-  //     }
-  //   });
-
-  //-------------------------------------------------------------------------------------
-
   if (e.accion === 'cont') {
     this.esFormaValido = false;
     
@@ -263,7 +231,6 @@ tramiteId: string = '80206';
     }
     
     
-    // If validation passes, save data and navigate
     const PAYLOAD = buildGuardarPayload(this.solicitudState);
     
     this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD)
@@ -274,7 +241,6 @@ tramiteId: string = '80206';
           
           if (SHOULD_NAVIGATE) {
             this.esFormaValido = false;
-            // Update solicitud ID if available
             if (esValidObject(response) && esValidObject(response.datos)) {
               const DATOS = response.datos as { id_solicitud?: number };
               if (getValidDatos(DATOS.id_solicitud)) {
@@ -284,34 +250,30 @@ tramiteId: string = '80206';
               }
             }
             
-            // Calculate the correct next step index
             const SIGUIENTE_PASO = this.indice + 1;
             
-            // Update indices
             this.indice = SIGUIENTE_PASO;
             this.datosPasos.indice = SIGUIENTE_PASO;
             
-            // Make sure wizardComponent exists before calling siguiente()
             if (this.wizardComponent) {
               this.wizardComponent.siguiente();
             } else {
-              console.error('wizardComponent is not available');
+              console.error('El componente wizard no está disponible para navegar al siguiente paso');
             }
           } else {
-            console.error('API call failed - cannot navigate');
-            console.error('Error message:', response.mensaje);
-            console.error('Response code:', response.codigo);
+            console.error('La llamada a la API falló - no se puede navegar al siguiente paso');
+            console.error('Mensaje de error:', response.mensaje);
+            console.error('Código de respuesta:', response.codigo);
           }
         },
         error: (error) => {
-          console.error('API call error:', error);
+          console.error('Error en la llamada a la API:', error);
         }
       });
     
     return;
   }
   
-  // Handle 'atras' action
   const PASO_ANTERIOR = this.indice - 1;
   this.indice = PASO_ANTERIOR;
   this.datosPasos.indice = PASO_ANTERIOR;
@@ -319,41 +281,9 @@ tramiteId: string = '80206';
   if (this.wizardComponent) {
     this.wizardComponent.atras();
   } else {
-    console.error('wizardComponent is not available for going back');
+    console.error('El componente wizard no está disponible para navegar al paso anterior');
   }
-  //-------------------------------------------------------------------------------------
-    
-  //    this.esFormaValido = false;
-  
-  // // Validar formularios antes de continuar desde el paso uno
-  // if (this.indice === 1 && e.accion === 'cont') {
-  //   const ES_VALIDO = this.validarTodosFormulariosPasoUno();
-  //   if (!ES_VALIDO) {
-  //     this.esFormaValido = true;
-  //     return; // Detener ejecución si los formularios son inválidos - NO actualizar índice
-  //   }
-  // }
-
-  // // Solo calcular y actualizar el índice si la validación pasó
-  // let indiceActualizado = e.valor;
-  // if (e.accion === 'cont') {
-  //   indiceActualizado = e.valor + 1;
-  // } else if (e.accion === 'ant') {
-  //   indiceActualizado = e.valor - 1;
-  // }
-
-  // // Validar que el nuevo índice esté dentro de los límites permitidos
-  // if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-  //   // Actualizar el índice y datosPasos solo si todo está válido
-  //   this.indice = indiceActualizado;
-  //   this.datosPasos.indice = indiceActualizado;
-    
-  //   if (e.accion === 'cont') {
-  //     this.wizardComponent.siguiente();
-  //   } else if (e.accion === 'ant') {
-  //     this.wizardComponent.atras();
-  //   }
-  // }
+ 
   }
 /**
  * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
@@ -366,10 +296,8 @@ tramiteId: string = '80206';
     return false;
   }
   
-  // Call the validation method from PasoUnoComponent
   const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
   
-  // Update section state based on validation result
   this.seccion.establecerSeccion([ISFORM_VALID_TOUCHED]);
   this.seccion.establecerFormaValida([ISFORM_VALID_TOUCHED]);
   

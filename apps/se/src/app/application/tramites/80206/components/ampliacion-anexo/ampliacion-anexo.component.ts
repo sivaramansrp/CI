@@ -398,6 +398,11 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   return INDICE !== -1; 
 }
 
+/**
+ * @description <span class="compodoc-span">Handles the delete attempt for selected export fractions.</span>
+ * If no condition is met (i.e., no fractions are selected), sets an alert message and activates the modal dialog.
+ *
+ */
  onIntentarEliminar(): void {
   if (!this.condicion) {
     this.mensajeDeAlerta = 'Seleccione la(s) Fracción(es) de Exportación a eliminar.';
@@ -408,7 +413,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina datos de importación seleccionados del grid.
-   * @method eliminarImportacion
    */
   eliminarImportacion(): void {
     const INDICE = this.datosImportacion.findIndex((item:ArancelariaImportacion) => item.fraccionArancelaria === this.domiciliosSeleccionados[0]?.['fraccionArancelaria']);
@@ -429,31 +433,25 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
     this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
     return;
   }
-  // Verificar si la fracción arancelaria está vacía
-  // if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
-  //   this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria.';
-  //   this.activarModal();
-  //   return;
-  // }
-
-  // Validar el formato de la fracción arancelaria
-  // if (this.fraccionArancelaria) {
-  //   this.mensajeDeAlerta = 'La fracción arancelaria es inválida.';
-  //   this.activarModal();
-  //   return;
-  // }
-
-  // Verificar si la fracción ya existe en los datos
-  // const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
-  // if (EXISTS) {
-  //   this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
-  //   this.activarModal();
-  //   return;
-  this.obtenerInformacionFraccion();
-  //}
+    this.obtenerInformacionFraccion();
 
 }
 
+/**
+ * @method obtenerInformacionFraccion
+ * @description
+ * Obtiene la información de una fracción arancelaria ingresada por el usuario.
+ * Realiza validaciones sobre el valor ingresado, verifica si la fracción ya existe en la lista,
+ * y consulta la información correspondiente a través de un servicio externo.
+ * Si la fracción es válida y no existe previamente, agrega los datos obtenidos a la lista de fracciones.
+ * Muestra mensajes de alerta en caso de errores de validación, duplicidad o problemas en la consulta.
+ *
+ * @returns {void}
+ *
+ * @compodoc
+ * Este método es utilizado para gestionar la adición de fracciones arancelarias en el trámite 80206,
+ * asegurando que la información ingresada sea válida y actualizada.
+ */
 obtenerInformacionFraccion(): void {
   const FRACCION_VALUE = this.fraccionArancelaria;
   
@@ -524,6 +522,16 @@ obtenerInformacionFraccion(): void {
     });
 }
 
+/**
+ * @method obtenerInformacionFraccionImportacion
+ * @description
+ * Obtiene la información de una fracción arancelaria de importación ingresada por el usuario.
+ * Realiza las siguientes validaciones:
+ * Si las validaciones son exitosas, realiza una petición al servicio para obtener los datos de la fracción arancelaria.
+ * Si la respuesta es válida, mapea y agrega la fracción a la lista de importaciones.
+ * En caso de error o datos inválidos, muestra una alerta con el mensaje correspondiente.
+ *
+ */
 obtenerInformacionFraccionImportacion(): void {
   const FRACCION_IMPORTACION_VALUE = this.importacion;
 
@@ -610,28 +618,24 @@ obtenerInformacionFraccionImportacion(): void {
    * @method agregarImportacion
    */
  agregarImportacion(): void {
-  // Check if importacion field is empty
   if (!this.importacion || this.importacion.trim() === '') {
     this.mostrarAlerta = true;
     this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria';
     return;
   }
 
-  // Check if a row is selected from datosImmex table
   if (this.domiciliosSeleccionados.length === 0) {
     this.mostrarAlerta = true;
     this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
-    return; // Exit early - don't proceed with adding data
+    return; 
   }
 
-  // Validate fraccion format
   if (!AmpliacionAnexoComponent.validarFormatoFraccion(this.importacion)) {
     this.mostrarAlerta = true;
     this.mensajeDeAlerta = 'La fracción arancelaria no es válida o no esta vigente.';
     return;
   }
 
-  // Check if fraccion already exists in datosImportacion
   const EXISTS = this.datosImportacion.some(item => item.fraccion === this.importacion);
   if (EXISTS) {
     this.mostrarAlerta = true;
@@ -639,15 +643,6 @@ obtenerInformacionFraccionImportacion(): void {
     return;
   }
 
-  // Check if selected fraccion matches the importacion fraccion
-  // if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
-  //   this.mostrarAlerta = true;
-  //   this.mensajeDeAlerta = "La solicitud contiene fracciones arancelarias que pertenecen al grupo 3R's, la fracción que desea ingresar pertenece a otro grupo por lo tanto no es válida.";
-  //   this.importacion = '';
-  //   return;
-  // }
-
-  // Only proceed with API call if all validations pass
   this.obtenerInformacionFraccionImportacion();
 }
 

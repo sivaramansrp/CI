@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * @fileoverview
  * El `AmpliacionServiciosService` es un servicio de Angular diseñado para gestionar las operaciones relacionadas con la ampliación de servicios.
@@ -9,7 +10,7 @@
  */
 
 import { Arancelaria, ArancelariaImportacion, BuscarPayload, DatosResponse, FraccionArancelariaApiResponse, FraccionArancelariaImportacion, Sector } from '../models/datos-info.model';
-import { Catalogo, JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, Subject, catchError, map, throwError } from 'rxjs';
 import { API_ROUTES } from '../../../shared/servers/api-route';
 import { AmpliacionServiciosState } from '../estados/tramite80206.store';
@@ -134,7 +135,6 @@ export class AmpliacionServiciosService {
  * @param {number} startIndex - Starting index for fraccion numbering
  * @returns {Arancelaria[]} - Mapped array of Arancelaria objects
  */
-// eslint-disable-next-line class-methods-use-this
 mapApiResponseToFraccionArancelaria(
     dato: FraccionArancelariaApiResponse[], 
     startIndex: number = 0
@@ -154,53 +154,89 @@ mapApiResponseToFraccionArancelaria(
     }));
   }
 
-  obtenerFraccionImportacion(body: FraccionArancelariaImportacion): Observable<JSONResponse> {
-      return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarfraccionarancelariaImportacion, body).pipe(
-        map((response) => response),
-        catchError(() => {
-          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES('/sat-t80206','80206').buscarfraccionarancelariaImportacion}`);
-          return throwError(() => ERROR);
-        })
-      );
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-   mapApiResponseToFraccionArancelariaImportacion(
-    dato: FraccionArancelariaApiResponse[], 
-    startIndex: number = 0
-  ): ArancelariaImportacion[] {
-    return dato.map((item, index) => ({
-      fraccion: (startIndex + index + 1).toString(),
-      fraccionArancelaria: item.fraccionPadre || '',
-      descripcionFraccionPadre: item.descripcionFraccionPadre || '',
-      fraccionArancelariaImportacion: item.cveFraccion || '',
-      descripcionComercialImportacion: item.descripcion || '',
-      anexoII: item.tipoFraccion || '',
-      tipo: item.tipoOperacion || '',
-      umt: item.unidadMedida || item.umt || '',
-      categoria: item.descripcionCategoria || item.claveCategoria || '',
-      valorMensual: item.valorMonedaMensual?.toString() || '',
-      valorAnual: item.valorMonedaAnual?.toString() || '',
-      volumenrMensual: item.valorProduccionMensual?.toString() || '',
-      volumenAnual: item.valorProduccionAnual?.toString() || '',
-    }));
-  }
-
-obtenerSectoresImmex(body: { sectorImmex: string }): Observable<JSONResponse> {
-  return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarSectoresImmex, body).pipe(
+ /**
+ * Obtiene información de fracción arancelaria de importación.
+ * @method obtenerFraccionImportacion
+ * @param {FraccionArancelariaImportacion} body - Cuerpo de la solicitud con los parámetros de fracción arancelaria de importación.
+ * @returns {Observable<JSONResponse>} - Observable con la respuesta de la API que contiene la información de la fracción arancelaria de importación.
+ * @description
+ * Este método realiza una solicitud POST para obtener información detallada de una fracción arancelaria de importación específica.
+ * Incluye manejo de errores en caso de fallo en la comunicación con el servidor.
+ */
+obtenerFraccionImportacion(body: FraccionArancelariaImportacion): Observable<JSONResponse> {
+  return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarfraccionarancelariaImportacion, body).pipe(
     map((response) => response),
     catchError(() => {
-      const ERROR = new Error(`Error al obtener información del sector en ${API_ROUTES('/sat-t80206','80206').buscarSectoresImmex}`);
+      const ERROR = new Error(`Error al obtener información de fracción arancelaria de importación en ${API_ROUTES('/sat-t80206','80206').buscarfraccionarancelariaImportacion}`);
       return throwError(() => ERROR);
     })
   );
 }
 
-    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  mapApiResponseToSectoresImmex(dato: any[]): Sector[] {
-    return dato.map((item) => ({
-      clave: item.clave || '',
-      descripcion: item.descripcion || '',
-    }));
-  }
+/**
+ * Mapea los datos de respuesta de la API a la interfaz ArancelariaImportacion.
+ * @method mapApiResponseToFraccionArancelariaImportacion
+ * @param {FraccionArancelariaApiResponse[]} dato - Array de datos de respuesta de la API de fracción arancelaria.
+ * @param {number} startIndex - Índice inicial para la numeración de fracciones (por defecto 0).
+ * @returns {ArancelariaImportacion[]} - Array mapeado de objetos ArancelariaImportacion.
+ * @description
+ * Este método transforma los datos de respuesta de la API en objetos que siguen la interfaz ArancelariaImportacion,
+ * asignando valores por defecto cuando los campos están vacíos y generando números de fracción secuenciales.
+ */
+mapApiResponseToFraccionArancelariaImportacion(
+  dato: FraccionArancelariaApiResponse[], 
+  startIndex: number = 0
+): ArancelariaImportacion[] {
+  return dato.map((item, index) => ({
+    fraccion: (startIndex + index + 1).toString(),
+    fraccionArancelaria: item.fraccionPadre || '',
+    descripcionFraccionPadre: item.descripcionFraccionPadre || '',
+    fraccionArancelariaImportacion: item.cveFraccion || '',
+    descripcionComercialImportacion: item.descripcion || '',
+    anexoII: item.tipoFraccion || '',
+    tipo: item.tipoOperacion || '',
+    umt: item.unidadMedida || item.umt || '',
+    categoria: item.descripcionCategoria || item.claveCategoria || '',
+    valorMensual: item.valorMonedaMensual?.toString() || '',
+    valorAnual: item.valorMonedaAnual?.toString() || '',
+    volumenrMensual: item.valorProduccionMensual?.toString() || '',
+    volumenAnual: item.valorProduccionAnual?.toString() || '',
+  }));
+}
+
+/**
+ * Obtiene información de sectores IMMEX.
+ * @method obtenerSectoresImmex
+ * @param {Object} body - Objeto que contiene el sector IMMEX a consultar.
+ * @param {string} body.sectorImmex - Clave del sector IMMEX (ejemplo: "MEDCON.OTR").
+ * @returns {Observable<JSONResponse>} - Observable con la respuesta de la API que contiene la información del sector IMMEX.
+ * @description
+ * Este método realiza una solicitud POST para obtener información detallada de un sector IMMEX específico.
+ * La respuesta incluye atributos de solicitud mapeados relacionados con el sector consultado.
+ */
+obtenerSectoresImmex(body: { sectorImmex: string }): Observable<JSONResponse> {
+  return this.http.post<JSONResponse>(API_ROUTES('/sat-t80206','80206').buscarSectoresImmex, body).pipe(
+    map((response) => response),
+    catchError(() => {
+      const ERROR = new Error(`Error al obtener información del sector IMMEX en ${API_ROUTES('/sat-t80206','80206').buscarSectoresImmex}`);
+      return throwError(() => ERROR);
+    })
+  );
+}
+
+/**
+ * Mapea los datos de respuesta de la API a la interfaz Sector.
+ * @method mapApiResponseToSectoresImmex
+ * @param {Sector[]} dato - Array de datos de sector de la respuesta de la API.
+ * @returns {Sector[]} - Array mapeado de objetos Sector con valores limpios.
+ * @description
+ * Este método transforma los datos de respuesta de sectores IMMEX, asegurando que todos los campos
+ * tengan valores válidos y proporcionando cadenas vacías como valores por defecto para campos nulos.
+ */
+mapApiResponseToSectoresImmex(dato: Sector[]): Sector[] {
+  return dato.map((item) => ({
+    clave: item.clave || '',
+    descripcion: item.descripcion || '',
+  }));
+}
 }

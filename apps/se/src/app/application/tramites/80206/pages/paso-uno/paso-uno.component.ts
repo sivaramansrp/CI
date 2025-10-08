@@ -138,44 +138,7 @@ ngOnDestroy(): void {
    * Retorna true si todos los formularios son válidos, false en caso contrario.
    */
   validarFormularios(): boolean {
-  console.log('=== Starting paso-uno validarFormularios ===');
   let isValid = true;
-
-  // Validate solicitante form
-  console.log('Checking solicitante component...');
-  console.log('solicitante exists:', !!this.solicitante);
-  console.log('solicitante.form exists:', !!(this.solicitante?.form));
-  
-  // if (this.solicitante?.form) {
-  //   const solicitanteValid = this.solicitante.form.valid;
-  //   console.log('solicitante form valid:', solicitanteValid);
-  //   console.log('solicitante form errors:', this.solicitante.form.errors);
-    
-  //   if (this.solicitante.form.invalid) {
-  //     this.solicitante.form.markAllAsTouched();
-  //     isValid = false;
-  //     console.log('Solicitante form is invalid');
-  //   }
-  // } else {
-  //   console.log('Solicitante form not found');
-  // }
-
-  // Validate ampliacion anexo component (tab 2)
-  
-  //  if (this.ampliacionAnexoComponent) {
-  //   const AMPLIACION_ANEXO_VALID = this.ampliacionAnexoComponent.validarFormulario();
-    
-  //   if (!AMPLIACION_ANEXO_VALID) {
-  //     isValid = false;
-  //   }
-  // } else {
-  //   if (this.esDatosRespuesta) {
-  //     isValid = false;
-  //   }
-  // }
-
-  //Validate ampliacion 3Rs component (tab 3) - This is the key validation
-  
   if (this.ampliacion3RsComponent) {
     const AMPLIACION_3RS_VALID = this.ampliacion3RsComponent.validarFormulario();
     
@@ -187,9 +150,6 @@ ngOnDestroy(): void {
       isValid = false;
     }
   }
-
-  console.log('Final validation result:', isValid);
-  console.log('=== End paso-uno validarFormularios ===');
   return isValid;
 } 
 }

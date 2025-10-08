@@ -325,10 +325,20 @@ export interface AccionBoton {
   valor: number;
 }
 
+/**
+ * @description Payload para la búsqueda de información relacionada con trámites.
+ * @interface
+ * @property {string} fraccion - Fracción arancelaria utilizada en la búsqueda.
+ * @property {number} tipoSolicitud - Tipo de solicitud para filtrar los resultados.
+ */
 export interface BuscarPayload {
       fraccion: string,
       tipoSolicitud:number
 }
+/**
+ * @description Representa la información de una fracción arancelaria para importación.
+ * 
+ */
 export interface FraccionArancelariaImportacion{
   fraccion?: string,
   fraccionPadre?: string,
