@@ -303,7 +303,7 @@ export class CapacidadInstaladaComponent implements OnInit {
    * @param capacidadInstalada - Arreglo de objetos `CapacidadInstalada` seleccionados.
    * Si el arreglo contiene elementos, actualiza la propiedad `SelectedInstaladaDatos` con la selección.
    */
-  onCapacidadInstaladaSeleccionadas(capacidadInstalada: CapacidadInstalada[]): void { debugger;
+  onCapacidadInstaladaSeleccionadas(capacidadInstalada: CapacidadInstalada[]): void { 
       this.SelectedInstaladaDatos = capacidadInstalada;
 
   }
@@ -320,7 +320,7 @@ export class CapacidadInstaladaComponent implements OnInit {
    * de objetos comparables mediante igualdad estricta (`===`).
    */
   eliminarCapacidadInstalada(): void {
-    if (this.SelectedInstaladaDatos?.length > 0) { debugger;
+    if (this.SelectedInstaladaDatos?.length > 0) { 
       this.SelectedInstaladaDatos.forEach(planta => {
         const INDEX = this.capacidadInstaladaDatos.findIndex(row => row === planta);
         if (INDEX !== -1) {
@@ -334,7 +334,6 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Edita la capacidad instalada seleccionada.
    */
   editarCapacidadInstalada(): void {
-console.log(`selected row ${this.SelectedInstaladaDatos?.length}`)
     if (this.SelectedInstaladaDatos?.length === 1) {
       const SELECTED = this.SelectedInstaladaDatos[0];
       this.capacidadForm.patchValue({
