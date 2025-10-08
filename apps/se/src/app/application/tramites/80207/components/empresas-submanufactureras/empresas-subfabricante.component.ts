@@ -1175,77 +1175,88 @@ else{
   }
 
   /**
-   * @method agregarPlantas
-   * @description
-   * Agrega plantas subfabricantes al trámite basado en la selección del usuario.
-   * Valida que haya selecciones válidas, obtiene las plantas disponibles del
-   * servicio y las duplica según el número de subfabricantes seleccionados.
-   * 
-   * @business_logic
-   * 1. **Validación**: Verifica que haya subfabricantes seleccionados
-   * 2. **Obtención**: Solicita plantas disponibles del servicio
-   * 3. **Multiplicación**: Crea copias de plantas por cada subfabricante
-   * 4. **Almacenamiento**: Guarda en store para persistencia
-   * 
-   * @validation_rule
-   * Requiere al menos un subfabricante seleccionado en
-   * datosDelSubfabricanteSeleccionado para proceder con la operación.
-   * 
-   * @data_multiplication
-   * ```typescript
-   * for (let i = 0; i < subfabricantesSeleccionados.length; i++) {
-   *   plantasDisponibles.forEach(planta => {
-   *     // Crear copia independiente de cada planta
-   *     DATOS.push(JSON.parse(JSON.stringify(planta)))
-   *   })
-   * }
-   * ```
-   * 
-   * @async_operation
-   * Utiliza suscripción a observable del servicio getPlantasDisponibles()
-   * con gestión automática de limpieza mediante takeUntil().
-   * 
-   * @deep_copy_strategy
-   * Emplea JSON.parse(JSON.stringify()) para crear copias profundas
-   * de objetos y evitar referencias compartidas que causen mutaciones.
-   * 
-   * @store_integration
-   * Los datos procesados se almacenan en el store mediante addPlantas()
-   * lo que dispara actualizaciones reactivas en toda la aplicación.
-   * 
-   * @error_feedback
-   * Si no hay selección, muestra notificación informativa:
-   * "Selecciona al menos una planta donde se realizarán las operaciones IMMEX."
-   * 
-   * @immex_context
-   * Las plantas agregadas serán las ubicaciones autorizadas para
-   * realizar operaciones IMMEX (Industria Manufacturera, Maquiladora
-   * y de Servicios de Exportación).
-   */
-  agregarPlantas(): void {
-    if (this.datosDelSubfabricanteSeleccionado.length > 0) {
-      this.subfabricanteDatosService
-        .getPlantasDisponibles()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((response: PlantasDireccionModelo[]) => {
-          if (response.length > 0) {
-            const DATOS: PlantasDireccionModelo[] = [];
-  
-            for (let i = 0; i < this.datosDelSubfabricanteSeleccionado.length; i++) {
-              response.forEach((item) => {
-                DATOS.push(JSON.parse(JSON.stringify(item)));
-              });
-            }
-            this.store.addPlantas(DATOS);
-          }
-        });
-    }
-    else{
-      this.mostrarNotificacion('Selecciona al menos una planta donde se realizarán las operaciones IMMEX.');
-    }
-  }
+ * @method agregarPlantas
+ * @description
+ * Agrega plantas subfabricantes al trámite basado en la selección del usuario.
+ * Mapea los datos seleccionados de subfabricantes disponibles a plantas 
+ * manufactureras y actualiza el store correspondiente.
+ * 
+ * @business_logic
+ * 1. **Validación**: Verifica que haya subfabricantes seleccionados
+ * 2. **Mapeo**: Convierte datos de SubfabricanteDireccionModelo a PlantasDireccionModelo
+ * 3. **Almacenamiento**: Guarda en store para persistencia
+ * 4. **Limpieza**: Resetea selección temporal
+ */
+agregarPlantas(): void {
+  if (this.datosDelSubfabricanteSeleccionado.length > 0) {
+    try {
+      const PLANTASMAPEADAS: PlantasDireccionModelo[] = this.datosDelSubfabricanteSeleccionado.map(
+        subfabricante => this.mapSubfabricanteToPlanta(subfabricante)
+      );
 
+      this.store.addPlantas(PLANTASMAPEADAS);
+
+      this.datosDelSubfabricanteSeleccionado = [];
+      
+      this.mostrarNotificacion(`Se agregaron ${PLANTASMAPEADAS.length} planta(s) exitosamente.`);
+      
+    } catch (error) {
+      console.error('Error al mapear datos de subfabricantes:', error);
+      this.mostrarNotificacion('Error al procesar los datos seleccionados.');
+    }
+  } else {
+    this.mostrarNotificacion('Selecciona al menos una planta donde se realizarán las operaciones IMMEX.');
+  }
+}
+
+  /**
+ * @method mapSubfabricanteToPlanta
+ * @private
+ * @description
+ * Método utilitario que mapea un objeto SubfabricanteDireccionModelo
+ * a PlantasDireccionModelo, asegurando la consistencia en la transformación
+ * de datos entre diferentes estructuras del dominio.
+ * 
+ * @param {SubfabricanteDireccionModelo} subfabricante - Datos del subfabricante a mapear
+ * @returns {PlantasDireccionModelo} Objeto mapeado con estructura de planta
+ */
+private mapSubfabricanteToPlanta(subfabricante: SubfabricanteDireccionModelo): PlantasDireccionModelo {
+  return {
+    rfc: subfabricante.rfc || '',
+    razonSocial: subfabricante.razonSocial || '',
+    domicilioFiscalSolicitante: subfabricante.domicilioFiscalSolicitante || '',
+    idSubfabricante: subfabricante.idSubfabricante || '',
+    
+    calle: subfabricante.calle || '',
+    numExterior: this.toNumber(subfabricante.numExterior),
+    numInterior: this.toNumber(subfabricante.numInterior),
+    codigoPostal: this.toNumber(subfabricante.codigoPostal),
+    
+    localidad: subfabricante.colonia || '', // Mapear colonia a localidad
+    delegacionMunicipio: subfabricante.delegacionMunicipio || '',
+    entidadFederativa: subfabricante.entidadFederativa || '',
+    pais: subfabricante.pais || '',
+    
+  } as PlantasDireccionModelo;
+}
+
+/**
+ * @method toNumber
+ * @private
+ * @description
+ * Convierte un valor a número, manejando casos de null, undefined o strings vacíos.
+ * 
+ * @param {string | number | null | undefined} value - Valor a convertir
+ * @returns {number} Número convertido o 0 si la conversión falla
+ */
+private toNumber(value: string | number | null | undefined): number {
+  if (value === null || value === undefined || value === '') {
+    return 0;
+  }
   
+  const NUM = Number(value);
+  return isNaN(NUM) ? 0 : NUM;
+}
     
   
 
