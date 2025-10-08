@@ -27,8 +27,6 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   @Input() medioTransporte!: Catalogo[];
 
- 
-
   constructor(private fb: FormBuilder, public destinatarioService: DestinatarioService) { }
 
   ngOnInit(): void {
@@ -43,7 +41,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
   }
 
   getMedioTransporte(): void {
-    this.destinatarioService.getTransporte('110201').subscribe((data) => {
+    this.destinatarioService.getTransporte('110202').subscribe((data) => {
       this.medioDeTransporte = data as Catalogo[];
     });
   }
@@ -75,8 +73,10 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
       numeroVuelo: [''],
     });
   }
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

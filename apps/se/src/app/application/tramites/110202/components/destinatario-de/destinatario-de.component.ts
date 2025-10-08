@@ -43,6 +43,13 @@ interface FormValues {
   styleUrl: './destinatario-de.component.scss',
 })
 export class DestinatarioDeComponent implements OnDestroy, OnInit {
+  /** Inicializa el formulario reactivo del destinatario */
+  iniciarFormulario(): void {
+    this.destinatarioForm = this.fb.group({
+      medioDeTransporte: [''],
+      // Agrega otros controles aquí si es necesario
+    });
+  }
  
   /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
   @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
@@ -107,7 +114,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     public consultaQuery: ConsultaioQuery,
     public destinatarioService: DestinatarioService
   ) {
-    // this.iniciarFormulario();
+  this.iniciarFormulario();
     this.inicializarSuscripciones();
   }
 

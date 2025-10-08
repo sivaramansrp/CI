@@ -259,6 +259,8 @@ export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
  */
 export const CAMPO_DE_DESTINATARIO = [110221, 110222, 110223];
 
+export const CAMPO_DE_DESTINATARIOS = [110203];
+
 export const CAMPO_DE_REPRESENTANTE = [110202, 110223];
 
 export const CAMPO_DE_TRANSPORTE = [110207, 110208];
