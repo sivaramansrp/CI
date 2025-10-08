@@ -6,6 +6,7 @@
 
 select {
     -webkit-appearance: listbox !important;
+    appearance: listbox !important;
 }
 
 .page-number {
@@ -30,11 +31,9 @@ select {
 }
 
 .table-container {
-    display: flex;
-    justify-content: center;
     align-items: center;
     height: 100%;
-    margin-top: 15px;
+    margin-top: 60px;
 }
 
 .table {
@@ -111,9 +110,14 @@ select {
 
 .custom-input-file{
   border: 1px solid #cccc;
-  padding: 3.2px;
+  padding: 2px 5px;
+  width: 74%;
+  height: 31px;
+  overflow: hidden;
 }
-
+.choose-file{
+    width: 100%;
+}
 .justify-content-space-around {
     justify-content: space-around;
 }
@@ -158,9 +162,11 @@ label:has(+ app-catalogo-select .required) .require,
 }
 
 .margin-top-dos{
-    margin-top: 20px;
-    position: relative;
-    padding: 15px;
+    padding: 15px 25px;
+        ::ng-deep hr {
+            padding: 0!important;
+            margin: 20px 0 30px 0!important;
+        }
 }
 
 .margin-right{
@@ -177,6 +183,7 @@ label:has(+ app-catalogo-select .required) .require,
 
 .width-dos {
     width: 100%;
+    padding: 30px 15px 20px 20px;
 }
 
 .display{
@@ -199,4 +206,10 @@ label:has(+ app-catalogo-select .required) .require,
 .has-error .form-select,
 .has-error .form-control {
   border-color: #dc3545 !important;
+}
+.archivoSeleccionado{
+    cursor: not-allowed;
+}
+#adjuntarArchivo ::ng-deep #input_fecha{
+    cursor: not-allowed !important;
 }

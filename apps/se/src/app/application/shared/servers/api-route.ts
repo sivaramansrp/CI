@@ -53,6 +53,7 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
     tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
-    buscarAnexoImportacion: `${BASE_URL}${API}${procedure}/solicitud/anexo-uno/fraccion-arancelaria/importacion`,
-    buscarAnexoExportacion: `${BASE_URL}${API}${procedure}/solicitud/anexo-uno/fraccion-arancelaria/exportacion`,
+    buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
+    buscarfraccionarancelariaImportacion: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/importacion`,
+    buscarSectoresImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/actividad-tres-rs/sectores-immex`,
 });
