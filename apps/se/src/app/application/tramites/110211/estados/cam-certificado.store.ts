@@ -48,6 +48,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @command Este estado se utiliza para gestionar los datos y formularios relacionados con el certificado CAM.
  */
 export interface CamState {
+  idSolicitud: number | null;
   formCertificado: { [key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
@@ -88,6 +89,7 @@ export interface CamState {
  */
 export function createInitialState(): CamState {
   return {
+    idSolicitud: 0,
     calle:'',
    formCertificado: {
   si: false,
@@ -207,6 +209,18 @@ export class camCertificadoStore extends Store<CamState> {
     super(createInitialState());
   }
 
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
   /**
    * @descripcion
    * Actualiza los datos del formulario de certificado.
