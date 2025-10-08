@@ -59,3 +59,38 @@ export const TEXTOS_REQUISITOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+
+/**
+ * @constant ERROR_FORMA_ALERT
+ * @description
+ * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+ * Se utiliza para informar al usuario que debe completar todos los campos requeridos antes de continuar.
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Favor de verificar los campos que marcan error.
+    </div>
+  </div>
+</div>
+`
+
+/**
+ * @constant TODOS_PASOS
+ * @description
+ * Mensaje HTML que se muestra al usuario una vez que ha completado todos los pasos del proceso.
+ * Incluye información importante sobre el número temporal de la solicitud y su validez.
+ * Este mensaje sirve para confirmar que la solicitud ha sido registrada correctamente y proporciona detalles sobre el siguiente paso en el proceso.
+ * @example
+ * mostrarHtml(TODOS_PASOS.Importante);
+ * */
+
+export const TODOS_PASOS = {
+    Importante: `<div class="d-flex justify-content-center text-center">
+    <p>La solicitud ha quedado registrada con el número temporal 202785501. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.
+    </p>
+    </div>`,
+
+  };
