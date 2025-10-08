@@ -8,6 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudPageComponent', () => {
   let fixture;
@@ -15,8 +16,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
 
