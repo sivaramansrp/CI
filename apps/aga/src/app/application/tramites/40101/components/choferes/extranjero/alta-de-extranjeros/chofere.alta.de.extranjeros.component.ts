@@ -8,7 +8,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes.enum';
 import { Chofer40101Query } from '../../../../estado/chofer40101.query';
-import { Chofer40101Service } from '../../../../estado/chofer40101.service';
+import { Chofer40101Store } from '../../../../estado/chofer40101.store';
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatosDeChoferesExtranjerosDialogComponent } from '../dialog/data.de.choferes.extranjeros.dialog.component';
@@ -19,110 +19,44 @@ import { DatosDeChoferesExtranjerosDialogComponent } from '../dialog/data.de.cho
   styleUrls: ['./chofere.alta.de.extranjeros.component.scss'],
   standalone: true,
   imports: [
-    TablaDinamicaComponent, 
+    TablaDinamicaComponent,
     DatosDeChoferesExtranjerosDialogComponent,
   ],
   providers: [BsModalService],
 })
 export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
-  // Add your component logic here
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
-
-  /**
-   * Configuración de las columnas de la tabla.
-   * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
-   */
-  ConfiguracionColumna: ConfiguracionColumna<ChoferesExtranjeros>[] =
-    CHOFERES_EXTRANJEROS_TABLA;
-
-
-  /**
-   * Datos del chofer nacional.
-   * @property {ChoferesExtranjeros[]} ChoferesExtranjeros
-   */
+  ConfiguracionColumna: ConfiguracionColumna<ChoferesExtranjeros>[] = CHOFERES_EXTRANJEROS_TABLA;
   datosDelChoferExtranjeros: ChoferesExtranjeros[] = [];
-
-  /**
-   * Datos del chofer nacional seleccionados.
-   * @property {ChoferesExtranjeros[]} datosDelChoferExtranjerosSelected
-   */
   datosDelChoferExtranjerosSelected: ChoferesExtranjeros[] = [];
-
-  /**
-   * Texto de la sección.
-   * @property {string} textoSeccion
-   */
   datosConsulta!: ConsultaioState;
-
-  /**
-   * Datos del chofer nacional que se utilizarán para agregar o editar.
-   * @property {ChoferesExtranjeros} datosChofere
-   */
   datosChofere: ChoferesExtranjeros = {} as ChoferesExtranjeros;
-
-
-  /**
-   * Referencia al modal de Bootstrap para agregar mercancías.
-   * @property {BsModalRef} modalRef
-   */
   modalRef!: BsModalRef | null;
-
-  /**
-   * Referencia al elemento del modal de Bootstrap para agregar mercancías.
-   * @property {TemplateRef} agregarModal
-   */
   @ViewChild('datosDeChoferesModal', { static: false })
-  agregarModalDialog!: TemplateRef<Element>;  
-
-
-  /**
-   * Sujeto utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
-   * Se emite un valor cuando el componente es destruido, permitiendo que las suscripciones se cancelen adecuadamente.
-   */
+  agregarModalDialog!: TemplateRef<Element>;
+  @ViewChild(DatosDeChoferesExtranjerosDialogComponent)
+  datosDeChoferesDialogComponent!: DatosDeChoferesExtranjerosDialogComponent;
   destroy$: Subject<unknown> = new Subject();
-  
-  /**
-   * Indica si el formulario o componente está en modo solo lectura.
-   * Cuando es `true`, los campos no pueden ser editados por el usuario.
-   */
   esSoloLectura: boolean = false;
 
-  /**
-   * Constructor del componente ChofereNacional.
-   * 
-   * @param bsModalService Servicio para manejar modales de Bootstrap.
-   * @param chofer40101Service Servicio para operaciones relacionadas con choferes del trámite 40101.
-   * @param chofer40101Query Consulta para obtener el estado de los choferes del trámite 40101.
-   * @param consultaioQuery Consulta para obtener información adicional relacionada.
-   */
   constructor(
     private bsModalService: BsModalService,
-    private chofer40101Service: Chofer40101Service,
+    private chofer40101Store: Chofer40101Store,
     private chofer40101Query: Chofer40101Query,
     private consultaioQuery: ConsultaioQuery
-  ) {
-     // Lógica para el constructor si es necesario.
-  }
+  ) { }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
-   * - Suscribe a los observables `selectSolicitud$` y `selectConsultaioState$` para obtener y actualizar los datos del chofer nacional y el estado de consulta.
-   * - Actualiza las propiedades `datosDelChoferExtranjeros`, `datosConsulta` e `esSoloLectura` según los datos recibidos.
-   * - Utiliza `takeUntil(this.destroy$)` para gestionar la desuscripción automática y evitar fugas de memoria.
-   */
   ngOnInit(): void {
-
-    this.chofer40101Query.selectSolicitud$
+    this.chofer40101Query.select(state => state.driversExtranjero)
       .pipe(
         takeUntil(this.destroy$),
-        map((data) => {
-          this.datosDelChoferExtranjeros = [...data?.datosDelChoferExtranjerosAlta ?? []];
-        })
+        map(drivers => drivers.filter(d => d.status !== 'deleted').map(d => d.data as ChoferesExtranjeros))
       )
-      .subscribe();
+      .subscribe(data => {
+        this.datosDelChoferExtranjeros = data;
+      });
 
-      this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -134,103 +68,77 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
       ).subscribe();
   }
 
-  /**
-   * Maneja el evento cuando se seleccionan uno o más choferes nacionales.
-   * 
-   * @param $event - Arreglo de objetos de tipo ChoferesExtranjeros que representa los choferes seleccionados.
-   */
+
   onChofereNationalSelected($event: ChoferesExtranjeros[]): void {
     this.datosDelChoferExtranjerosSelected = $event;
   }
 
-  /**
-   * Adds a new row by resetting the `datosChofere` object and opening a modal dialog with the provided template.
-   * 
-   * @param template - The template reference used to display the modal dialog.
-   * @returns void
-   */
   addNewRow(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as ChoferesExtranjeros;
     this.openModal(template);
   }
 
-  /**
-   * Abre un modal para editar la fila seleccionada de chofer nacional.
-   * 
-   * @param template - Referencia a la plantilla del modal que se debe abrir.
-   * 
-   * Si no hay filas seleccionadas en `choferesExtranjerosSelected`, muestra una advertencia en la consola y no realiza ninguna acción.
-   * Si hay al menos una fila seleccionada, asigna la primera fila seleccionada a `datosChofere` y abre el modal correspondiente.
-   */
   editSelectedRow(template: TemplateRef<unknown>): void {
     if (this.datosDelChoferExtranjerosSelected.length === 0) {
-      console.warn('No rows selected for editing.');
       return;
     }
-    this.datosChofere = this.datosDelChoferExtranjerosSelected[0];
+    const seleccionado = this.datosDelChoferExtranjerosSelected[0];
+    const fullDriverList = this.chofer40101Query.getValue().driversExtranjero;
+    const indice = fullDriverList.findIndex(item => item.data === seleccionado);
+    this.datosChofere = seleccionado;
+    setTimeout(() => {
+      if (this.datosDeChoferesDialogComponent && indice !== -1) {
+        this.datosDeChoferesDialogComponent.editarRegistro(seleccionado, indice);
+      }
+    });
     this.openModal(template);
   }
 
-  /**
-   * Elimina las filas seleccionadas de la lista de datos de choferes nacionales.
-   * 
-   * Si hay elementos seleccionados en `choferesExtranjerosSelected`, estos se eliminan de la lista principal `choferesExtranjeros`
-   * y se limpia la selección. Si no hay elementos seleccionados, muestra una advertencia en la consola.
-   */
+  @ViewChild(TablaDinamicaComponent)
+  tablaDinamicaComponent!: TablaDinamicaComponent<ChoferesExtranjeros>;
+
   deleteSelectedRow(): void {
     if (this.datosDelChoferExtranjerosSelected.length > 0) {
-      this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.filter(
-        (item) => !this.datosDelChoferExtranjerosSelected.includes(item)
-      );
+      const fullDriverList = this.chofer40101Query.getValue().driversExtranjero;
+      const indicesToDelete = this.datosDelChoferExtranjerosSelected.map(selectedDriver => {
+        return fullDriverList.findIndex(item => item.data === selectedDriver);
+      }).filter(index => index !== -1).sort((a, b) => b - a);
+
+      indicesToDelete.forEach(index => {
+        this.chofer40101Store.deleteDriver('extranjero', index);
+      });
+
       this.datosDelChoferExtranjerosSelected = [];
-    } else {
-      console.warn('No rows selected for deletion.');
+      if (this.tablaDinamicaComponent) {
+        this.tablaDinamicaComponent.listaDeFilaSeleccionada.emit([]);
+      }
     }
   }
 
-  /**
-   * Abre un modal utilizando el servicio `bsModalService` y muestra el contenido proporcionado por el template.
-   * 
-   * @param template Referencia al template que se mostrará dentro del modal.
-   */
   openModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
   }
 
-  /**
-   * Cierra el modal actual si está abierto y limpia la referencia al modal.
-   * 
-   * @remarks
-   * Esta función verifica si existe una referencia al modal (`modalRef`), 
-   * y en caso afirmativo, lo oculta y establece la referencia a `null`.
-   */
   cancelModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }
 
-  /**
-   * Agrega un nuevo objeto de tipo `ChoferesExtranjeros` al arreglo `datosDelChoferExtranjeros`.
-   * Limpia la selección actual de choferes y cierra el modal.
-   *
-   * @param data - Los datos del chofer extranjero a agregar.
-   */
-  addModal(data: ChoferesExtranjeros): void {
-    this.datosDelChoferExtranjeros.push(data);
+  addModal(evento: { datos: ChoferesExtranjeros, indice?: number }): void {
+    if (evento.indice !== undefined) {
+      this.chofer40101Store.updateDriver('extranjero', evento.indice, evento.datos);
+    } else {
+      this.chofer40101Store.addDriver('extranjero', evento.datos);
+    }
     this.datosDelChoferExtranjerosSelected = [];
-
-    this.chofer40101Service
-      .updateDatosDelChoferExtranjero(this.datosDelChoferExtranjeros);
+    if (this.tablaDinamicaComponent) {
+      this.tablaDinamicaComponent.listaDeFilaSeleccionada.emit([]);
+    }
     this.cancelModal();
   }
 
-  
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
-   * Emite un valor y completa el observable `destroy$` para limpiar suscripciones y evitar fugas de memoria.
-   */
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();

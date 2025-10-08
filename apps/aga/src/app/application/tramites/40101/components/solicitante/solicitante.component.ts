@@ -88,18 +88,18 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     const RFC = this.solicitudForm.get('rfc');
     RFC?.setValue(this.solicitudData.solicitante?.rfc);
     this.solicitudForm.get('denominacion')?.setValue(this.solicitudData.solicitante?.razon_social);
-    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData.solicitante?.descripcion_giro);
-    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData.solicitante?.correo_electronico);
-    this.solicitudForm.get('pais')?.setValue(this.solicitudData.solicitante?.domicilio?.pais);
-    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData.solicitante.domicilio?.codigo_postal);
-    this.solicitudForm.get('estado')?.setValue(this.solicitudData.solicitante?.domicilio.estado);
-    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData.solicitante?.domicilio.municipio);
-    this.solicitudForm.get('localidad')?.setValue(this.solicitudData.solicitante?.domicilio.localidad);
-    this.solicitudForm.get('colonia')?.setValue(this.solicitudData.solicitante?.domicilio.colonia);
-    this.solicitudForm.get('calle')?.setValue(this.solicitudData.solicitante?.domicilio.calle);
-    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData.solicitante?.domicilio.numero_exterior);
-    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData.solicitante?.domicilio.numero_interior);
-    this.solicitudForm.get('telefono')?.setValue(this.solicitudData.solicitante?.domicilio.telefono);
+    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.solicitante?.descripcion_giro);
+    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData?.solicitante?.correo_electronico);
+    this.solicitudForm.get('pais')?.setValue(this.solicitudData?.solicitante?.domicilio?.pais);
+    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData?.solicitante?.domicilio?.codigo_postal);
+    this.solicitudForm.get('estado')?.setValue(this.solicitudData?.solicitante?.domicilio.estado);
+    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData?.solicitante?.domicilio.municipio);
+    this.solicitudForm.get('localidad')?.setValue(this.solicitudData?.solicitante?.domicilio.localidad);
+    this.solicitudForm.get('colonia')?.setValue(this.solicitudData?.solicitante?.domicilio.colonia);
+    this.solicitudForm.get('calle')?.setValue(this.solicitudData?.solicitante?.domicilio.calle);
+    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData?.solicitante?.domicilio.numero_exterior);
+    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData?.solicitante?.domicilio.numero_interior);
+    this.solicitudForm.get('telefono')?.setValue(this.solicitudData?.solicitante?.domicilio.telefono);
   }
 
   ngOnDestroy(): void {

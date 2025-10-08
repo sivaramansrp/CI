@@ -47,7 +47,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
         if (state) {
-          this.directorGeneralForm.patchValue(state, { emitEvent: false });
+          this.directorGeneralForm?.patchValue(state, { emitEvent: false });
         }
       });
 

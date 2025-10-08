@@ -2,7 +2,7 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { ApiResponseChofer, DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { Chofer, Chofer40101Store } from '../../../../estado/chofer40101.store';
+import { Chofer, Chofer40101Store, createInitialState } from '../../../../estado/chofer40101.store';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { REGEX_CURP, REGEX_RFC, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
@@ -88,12 +88,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     await this.paisListData();
   }
 
-  updateDriverFromForm(field: keyof Chofer): void {
-    const VALUE = this.formChoferes.get(field as string)?.value;
-    const TYPE = this.chofer40101Query.getValue().selectedDriverType;
-    this.chofer40101Store.setDriver(TYPE, { [field]: VALUE });
-  }
-
   /**
    * Obtiene la lista de países emisores desde el servicio `chofer40101Service` y la asigna a la propiedad `paisList`.
    *
@@ -168,21 +162,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Obtiene los controles de formulario del formulario choferes.
-   */
-  get getFormValues(): { [key: string]: AbstractControl } {
-    return this.formChoferes.controls;
-  }
-
-  /**
-     * Abre el modal de choferes.
-     * @returns {void}
-     */
-  abiertoModal(): void {
-    this.modalRef = this.modalService.show(this.datosDeChoferesModal, { class: 'modal-xl' });
-  }
-
-  /**
    * Cierra el modal de choferes y emite el evento de cancelación.
    * @returns {void}
    */
@@ -197,7 +176,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   limpiarFormulario(): void {
     this.formChoferes.reset();
-    this.chofer40101Store.clear();
+    this.chofer40101Store.update({ driverInEdit: createInitialState().driverInEdit });
   }
   /**
     * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
@@ -213,11 +192,11 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
 
     if (this.formChoferes.valid) {
       const DATOS = this.formChoferes.getRawValue() as DatosDelChoferNacional;
-      DATOS.pais = this.paisList.find(p => String(p.id) === String(DATOS.pais))?.descripcion || '';
-      DATOS.estado = this.estadoList.find(e => String(e.id) === String(DATOS.estado))?.descripcion || '';
-      DATOS.municipioAlcaldia = this.municipioList.find(m => String(m.id) === String(DATOS.municipioAlcaldia))?.descripcion || '';
-      DATOS.colonia = this.coloniaList.find(c => String(c.id) === String(DATOS.colonia))?.descripcion || '';
-      DATOS.paisDeResidencia = this.paisList.find(p => String(p.id) === String(DATOS.paisDeResidencia))?.descripcion || '';
+      DATOS.pais = this.paisList.find(p => String(p.clave) === String(DATOS.pais))?.descripcion || '';
+      DATOS.estado = this.estadoList.find(e => String(e.clave) === String(DATOS.estado))?.descripcion || '';
+      DATOS.municipioAlcaldia = this.municipioList.find(m => String(m.clave) === String(DATOS.municipioAlcaldia))?.descripcion || '';
+      DATOS.colonia = this.coloniaList.find(c => String(c.clave) === String(DATOS.colonia))?.descripcion || '';
+      DATOS.paisDeResidencia = this.paisList.find(p => String(p.clave) === String(DATOS.paisDeResidencia))?.descripcion || '';
 
       if (this.isEditando && this.indiceEditando !== null) {
         this.addModalEvent.emit({ datos: DATOS, indice: this.indiceEditando });
@@ -296,16 +275,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     this.indiceEditando = indice;
     this.formChoferes.patchValue(datos);
     this.chofer40101Store.setDriver('nacional', datos);
-  }
-
-  /**
-   * Verifica si el control del formulario es inválido y ha sido tocado.
-   * @param controlName El nombre del control del formulario.
-   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
-   */
-  isInvalid(controlName: string): boolean | null {
-    const CONTROL = this.formChoferes.get(controlName);
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
   /**

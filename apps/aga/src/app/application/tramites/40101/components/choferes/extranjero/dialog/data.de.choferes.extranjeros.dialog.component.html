@@ -310,18 +310,22 @@
           <div class="row">
             <div class="col-md-4 mb-3">
               <div>
-                <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
-                  placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
-                  label="País de residencia"
-                  (selectionChange)="updateDriverFromForm('paisDeResidencia')"></app-catalogo-select>
-                @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched ||
-                submitted)) {
-                <div class="text-danger">
-                  @if(formChoferes.get('paisDeResidencia')?.errors?.['required']) {
-                  <small class="text-danger">Este campo es obligatorio.</small>
-                  }
+                <label class="form-label">País de residencia</label>
+                <select class="form-control form-select" formControlName="paisDeResidencia" [disabled]="readonly"
+                  (change)="updateDriverFromForm('paisDeResidencia')">
+                  <option [ngValue]="null">Seleccione un valor</option>
+                  <option *ngFor="let pais of paisList" [title]="pais.descripcion" [value]="pais.clave">
+                    {{ pais.descripcion }}
+                  </option>
+                </select>
+
+                <!-- Validation messages -->
+                <div
+                  *ngIf="formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched || submitted)">
+                  <small class="text-danger" *ngIf="formChoferes.get('paisDeResidencia')?.errors?.['required']">
+                    Este campo es obligatorio.
+                  </small>
                 </div>
-                }
               </div>
             </div>
 

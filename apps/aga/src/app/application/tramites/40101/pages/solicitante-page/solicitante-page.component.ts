@@ -31,7 +31,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @default false
    */
   isCaat: boolean = false;
-
+  catErrorMessage: string = ""
   /**
     * Clase CSS para mostrar una alerta de información.
     */
@@ -101,6 +101,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
     this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroySolicitante$)).subscribe((data: ApiResponseSolicitante['datos']) => {
       this.isCaat = data.caat_existe;
+      this.catErrorMessage = data.mensaje
     });
   }
 

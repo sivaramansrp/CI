@@ -168,9 +168,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
       .pipe(takeUntil(this.destroyed$))
       .subscribe((response) => {
-        this.chofer40101Service.updateDatosDelChoferNacional(response);
-        this.chofer40101Service.updateDatosDelChoferNacionalModification(response);
-        this.chofer40101Service.updateDatosDelChoferNacionalRetirada(response);
+        this.chofer40101Service.loadInitialDrivers('nacional', response);
         this.esDatosRespuesta = true;
 
       });
@@ -179,9 +177,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
       .pipe(takeUntil(this.destroyed$))
       .subscribe((response) => {
-        this.chofer40101Service.updateDatosDelChoferExtranjero(response);
-        this.chofer40101Service.updateDatosDelChoferExtranjeroModification(response);
-        this.chofer40101Service.updateDatosDelChoferExtranjeroRetirada(response);
+        this.chofer40101Service.loadInitialDrivers('extranjero', response);
         this.esDatosRespuesta = true;
       });
   }

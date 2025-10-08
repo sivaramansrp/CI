@@ -28,8 +28,7 @@
                   </span></label>
               </div>
               <div>
-                <input type="text" maxlength="18" class="form-control" formControlName="curp"
-                  (change)="updateDriverFromForm('curp')" />
+                <input type="text" maxlength="18" class="form-control" formControlName="curp" />
               </div>
               @if (formChoferes.get('curp')?.errors?.['required'] && (formChoferes.get('curp')?.touched || submitted)) {
               <div class="text-danger">
@@ -49,8 +48,7 @@
                   </span></label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="rfc" maxlength="13"
-                  (change)="updateDriverFromForm('rfc')" />
+                <input type="text" class="form-control" formControlName="rfc" maxlength="13" />
               </div>
               @if (formChoferes.get('rfc')?.errors?.['required'] && (formChoferes.get('rfc')?.touched || submitted)) {
               <div class="text-danger">
@@ -163,8 +161,7 @@
                 <label for="calle">Calle*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="calle" maxlength="100"
-                  (change)="updateDriverFromForm('calle')" />
+                <input type="text" class="form-control" formControlName="calle" maxlength="100" />
               </div>
               @if (formChoferes.get('calle')?.errors?.['required'] && (formChoferes.get('calle')?.touched || submitted))
               {
@@ -178,8 +175,7 @@
                 <label for="numeroExterior">Número exterior*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55"
-                  (change)="updateDriverFromForm('numeroExterior')" />
+                <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55" />
               </div>
               @if (formChoferes.get('numeroExterior')?.errors?.['required'] &&
               (formChoferes.get('numeroExterior')?.touched || submitted)) {
@@ -193,8 +189,7 @@
                 <label for="numeroInterior">Número interior:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroInterior"
-                  (change)="updateDriverFromForm('numeroInterior')" />
+                <input type="text" class="form-control" formControlName="numeroInterior" />
               </div>
             </div>
           </div>
@@ -253,7 +248,7 @@
               <div class="form-group">
                 <label class="form-label">Colonia*</label>
                 <select class="form-control form-select" formControlName="colonia"
-                  (change)="updateDriverFromForm('colonia')" [attr.disabled]="readonly ? '' : null">
+                   [attr.disabled]="readonly ? '' : null">
                   <option [ngValue]="null">Seleccione un valor</option>
                   <option *ngFor="let colonia of coloniaList" [title]="colonia.descripcion" [value]="colonia.clave">
                     {{ colonia.descripcion }}
@@ -269,7 +264,7 @@
               <div class="form-group">
                 <label class="form-label">País de residencia*</label>
                 <select class="form-control form-select" formControlName="paisDeResidencia"
-                  (change)="updateDriverFromForm('paisDeResidencia')" [attr.disabled]="readonly ? '' : null">
+                  [attr.disabled]="readonly ? '' : null">
                   <option [ngValue]="null">Seleccione un valor</option>
                   <option *ngFor="let pais of paisList" [title]="pais.descripcion" [value]="pais.clave">
                     {{ pais.descripcion }}
@@ -286,8 +281,7 @@
                 <label for="ciudad">Ciudad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="ciudad" maxlength="20"
-                  (change)="updateDriverFromForm('ciudad')" />
+                <input type="text" class="form-control" formControlName="ciudad" maxlength="20" />
               </div>
               @if (formChoferes.get('ciudad')?.errors?.['required'] && (formChoferes.get('ciudad')?.touched ||
               submitted)) {
@@ -304,8 +298,7 @@
                 <label for="localidad">Localidad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="localidad" maxlength="120"
-                  (change)="updateDriverFromForm('localidad')" />
+                <input type="text" class="form-control" formControlName="localidad" maxlength="120" />
               </div>
               @if (formChoferes.get('localidad')?.errors?.['required'] && (formChoferes.get('localidad')?.touched ||
               submitted)) {
@@ -319,8 +312,7 @@
                 <label for="codigoPostal">Código postal*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12"
-                  (change)="updateDriverFromForm('codigoPostal')" />
+                <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12" />
               </div>
               @if (formChoferes.get('codigoPostal')?.errors?.['required'] && (formChoferes.get('codigoPostal')?.touched
               || submitted)) {
@@ -337,8 +329,7 @@
                 <label for="solicitud.correo">Correo electrónico:</label>
               </div>
               <div>
-                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55"
-                  (change)="updateDriverFromForm('correoElectronico')" />
+                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55" />
               </div>
               @if (formChoferes.get('correoElectronico')?.errors?.['email'] &&
               (formChoferes.get('correoElectronico')?.touched || submitted)) {
@@ -352,8 +343,7 @@
                 <label for="solicitud.telefono">Teléfono:</label>
               </div>
               <div>
-                <input type="tel" class="form-control" formControlName="telefono" maxlength="12"
-                  (change)="updateDriverFromForm('telefono')" />
+                <input type="tel" class="form-control" formControlName="telefono" maxlength="12" />
               </div>
               @if (formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched ||
               submitted)) {

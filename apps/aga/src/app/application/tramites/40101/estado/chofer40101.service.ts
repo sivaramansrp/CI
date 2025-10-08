@@ -322,46 +322,7 @@ export class Chofer40101Service {
     return this.http.get<ApiResponseChofer>(FULL_URL);
   }
 
-
-  updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferNacionalAlta: data
-    }));
-  }
-
-  updateDatosDelChoferNacionalModification(data: DatosDelChoferNacional[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferNacionalModification: data
-    }));
-  }
-
-  updateDatosDelChoferNacionalRetirada(data: DatosDelChoferNacional[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferNacionalRetirada: data
-    }));
-  }
-
-  updateDatosDelChoferExtranjero(data: ChoferesExtranjeros[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferExtranjerosAlta: data
-    }));
-  }
-
-  updateDatosDelChoferExtranjeroModification(data: ChoferesExtranjeros[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferExtranjerosModification: data
-    }));
-  }
-
-  updateDatosDelChoferExtranjeroRetirada(data: ChoferesExtranjeros[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferExtranjerosRetirada: data
-    }));
+  loadInitialDrivers(type: 'nacional' | 'extranjero', drivers: any[]): void {
+    this.chofer40101Store.loadInitialDrivers(type, drivers);
   }
 }

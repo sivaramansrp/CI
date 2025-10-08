@@ -31,38 +31,38 @@ export interface Chofer {
 
 export type DriverType = 'nacional' | 'extranjero';
 
+export interface ChoferWithMetadata {
+  data: DatosDelChoferNacional | ChoferesExtranjeros;
+  status: 'new' | 'modified' | 'deleted' | 'unchanged';
+  originalData?: DatosDelChoferNacional | ChoferesExtranjeros;
+}
+
 // The complete state for the 'chofer' feature
 export interface Chofer40101State {
-  // For editing a single driver in the dialog
   driverInEdit: {
-    nacional: Chofer;
-    extranjero: Chofer;
+    nacional: Chofer | null;
+    extranjero: Chofer | null;
+    editingIndex: number | null;
+    isNew: boolean;
   };
   selectedDriverType: DriverType;
 
-  // For the lists of drivers to be sent in the transaction
-  datosDelChoferNacionalAlta: DatosDelChoferNacional[];
-  datosDelChoferNacionalModification: DatosDelChoferNacional[];
-  datosDelChoferNacionalRetirada: DatosDelChoferNacional[];
-
-  datosDelChoferExtranjerosAlta: ChoferesExtranjeros[];
-  datosDelChoferExtranjerosModification: ChoferesExtranjeros[];
-  datosDelChoferExtranjerosRetirada: ChoferesExtranjeros[];
+  // Single arrays with metadata
+  driversNacional: ChoferWithMetadata[];
+  driversExtranjero: ChoferWithMetadata[];
 }
 
 export function createInitialState(): Chofer40101State {
   return {
     driverInEdit: {
-      nacional: {},
-      extranjero: {},
+      nacional: null,
+      extranjero: null,
+      editingIndex: null,
+      isNew: false,
     },
     selectedDriverType: 'nacional',
-    datosDelChoferNacionalAlta: [],
-    datosDelChoferNacionalModification: [],
-    datosDelChoferNacionalRetirada: [],
-    datosDelChoferExtranjerosAlta: [],
-    datosDelChoferExtranjerosModification: [],
-    datosDelChoferExtranjerosRetirada: [],
+    driversNacional: [],
+    driversExtranjero: [],
   };
 }
 
@@ -96,28 +96,67 @@ export class Chofer40101Store extends Store<Chofer40101State> {
     this.update({ selectedDriverType: type });
   }
 
-  updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
-    this.update({ datosDelChoferNacionalAlta: data });
+  // Add driver
+  addDriver(type: DriverType, driver: DatosDelChoferNacional | ChoferesExtranjeros): void {
+    const arrayKey = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
+    this.update(state => ({
+      [arrayKey]: [...(state[arrayKey] as ChoferWithMetadata[]), { data: driver, status: 'new', originalData: driver }]
+    }));
   }
 
-  updateDatosDelChoferNacionalModification(data: DatosDelChoferNacional[]): void {
-    this.update({ datosDelChoferNacionalModification: data });
-  }
+  // Update existing driver
+  updateDriver(type: DriverType, index: number, driver: Partial<DatosDelChoferNacional | ChoferesExtranjeros>): void {
+      const arrayKey = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
+      this.update(state => {
+      const drivers = [...(state[arrayKey] as ChoferWithMetadata[])];
+      const existing = drivers[index];
+      drivers[index] = {
+      ...existing,
+      data: { ...existing.data, ...driver },
+      status: existing.status === 'new' ? 'new' : 'modified',
+      originalData: existing.originalData || existing.data
+      };
+      return { [arrayKey]: drivers };
+      });
+      }
 
-  updateDatosDelChoferNacionalRetirada(data: DatosDelChoferNacional[]): void {
-    this.update({ datosDelChoferNacionalRetirada: data });
-  }
+      // Mark driver as deleted (soft delete)
+      deleteDriver(type: DriverType, index: number): void {
+      const arrayKey = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
+      this.update(state => {
+      const drivers = [...(state[arrayKey] as ChoferWithMetadata[])];
+      if (drivers[index].status === 'new') {
+      // Remove completely if it was never saved
+      drivers.splice(index, 1);
+      } else {
+      // Mark as deleted if it exists in backend
+      drivers[index] = { ...drivers[index], status: 'deleted' };
+      }
+      return { [arrayKey]: drivers };
+      });
+      }
 
-  updateDatosDelChoferExtranjero(data: ChoferesExtranjeros[]): void {
-    this.update({ datosDelChoferExtranjerosAlta: data });
-  }
+      // Get only drivers that need to be sent to backend
+      getDriversForSubmit(type: DriverType) {
+      const state = this.getValue();
+      const drivers = type === 'nacional' ? state.driversNacional : state.driversExtranjero;
 
-  updateDatosDelChoferExtranjeroModification(data: ChoferesExtranjeros[]): void {
-    this.update({ datosDelChoferExtranjerosModification: data });
-  }
+      return {
+      alta: drivers.filter(d => d.status === 'new').map(d => d.data),
+      modification: drivers.filter(d => d.status === 'modified').map(d => d.data),
+      retirada: drivers.filter(d => d.status === 'deleted').map(d => d.data)
+      };
+      }
 
-  updateDatosDelChoferExtranjeroRetirada(data: ChoferesExtranjeros[]): void {
-    this.update({ datosDelChoferExtranjerosRetirada: data });
+  // Method to load initial drivers
+  loadInitialDrivers(type: DriverType, drivers: (DatosDelChoferNacional | ChoferesExtranjeros)[]): void {
+    const arrayKey = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
+    const driversWithMetadata: ChoferWithMetadata[] = drivers.map(d => ({
+      data: d,
+      status: 'unchanged',
+      originalData: d
+    }));
+    this.update({ [arrayKey]: driversWithMetadata });
   }
 
   clear(): void {

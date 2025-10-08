@@ -32,6 +32,7 @@ export interface ApiResponseSolicitante {
     mostrar_director_general: boolean;
     solicitante: Solicitante;
     caat_existe: boolean;
+    mensaje: string
   };
 }
 

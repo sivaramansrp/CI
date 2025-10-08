@@ -30,7 +30,6 @@ import { Chofer, Chofer40101Store } from '../../../../estado/chofer40101.store';
     CommonModule,
     SharedModule,
     FormsModule,
-    CatalogoSelectComponent,
     TituloComponent,
     NotificacionesComponent
   ],
@@ -118,7 +117,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Evento emitido al agregar o editar un chofer nacional.
    * @type {EventEmitter<ChoferesExtranjeros>}
    */
-  @Output() addModalEvent = new EventEmitter<ChoferesExtranjeros>();
+  // @Output() addModalEvent = new EventEmitter<ChoferesExtranjeros>();
+  @Output() addModalEvent = new EventEmitter<{ datos: ChoferesExtranjeros, indice?: number }>();
 
   /**
    * Alerta de notificación para mostrar mensajes al usuario.
@@ -410,7 +410,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(DATA.paisDeResidencia))?.descripcion || '';
 
       // Aquí puedes realizar la lógica para guardar los datos del chofer
-      this.addModalEvent.emit(DATA);
+      this.addModalEvent.emit({ datos: DATA, indice: this.indiceEditando as number });
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

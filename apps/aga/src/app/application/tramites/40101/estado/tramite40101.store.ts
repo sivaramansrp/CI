@@ -59,6 +59,7 @@ export function createInitialState(): Tramite40101State {
     solicitanteDatas: {
       caat_existe: false,
       mostrar_director_general: true,
+      mensaje: '',
       solicitante: {
         id_persona_solicitud: null,
         rfc: '',
