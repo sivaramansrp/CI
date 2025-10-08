@@ -13,7 +13,7 @@ const API = ENVIRONMENT.API;
 /**
  * versión de la API
  */
-const API_VERSION = ENVIRONMENT.API_VERSION;
+// const API_VERSION = ENVIRONMENT.API_VERSION;
 /**
  * Catálogo de la API
  */
@@ -44,5 +44,6 @@ export const PROC_80101 = {
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     API_POST_CADENA_ORIGINAL : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`,
-    API_POST_FIRMA : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`
+    API_POST_FIRMA : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`,
+    MOSTRAR : `${BASE_URL}${API}${PROCEDURE}/registro-solicitud/mostar`
 };

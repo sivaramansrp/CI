@@ -265,12 +265,19 @@ export interface AmpliacionServiciosState {
 
 
 export interface ServicioAmpliacion {
-  idServicio: number;
-  descripcion: string;
+  estatus?: string | boolean;
+  desEstatus?: string;
+  idServicio: string;
+  idSolicitud?: string;
   tipoServicio: string;
-  descripcionTipo: string;
   claveServicio: string;
+  descripcionTipo: string;
+  descripcion: string | null;
+  descripcionTestado: string | null;
+  solicitud: string | null;
   testado?: boolean;
+  fecIniVigencia: string | null;
+  fecFinVigencia: string | null;
 }
 
 export interface ServicioAutorizado {
@@ -280,8 +287,14 @@ export interface ServicioAutorizado {
   idSolicitud?: string;
   tipoServicio: string;
   claveServicio: string;
-  descripcion: string;
   descripcionTipo: string;
+  descripcion: string | null;
+  descripcionTestado: string | null;
+  solicitud: string | null;
+  testado?: boolean;
+  fecIniVigencia: string | null;
+  fecFinVigencia: string | null;
+  
 }
 
 
@@ -298,17 +311,6 @@ export interface ServicioAutorizado {
  * @property {string} numeroPrograma - Número del programa IMMEX
  * @property {string} tiempoPrograma - Vigencia o duración del programa
  */
-export interface EmpresasNacionales {
- idCompuestoEmpresa: string;
-  idServicioAutorizado: string;
-  idServicio: string;
-  descripcionServicio: string;
-  rfc: string;
-  razonSocial: string;
-  numeroPrograma: string;
-  tiempoPrograma: string;
-}
-
 
 /**
  * Mensaje de alerta que se muestra cuando hay errores de validación en los formularios.

@@ -327,7 +327,7 @@ export interface FilaSolicitud {
 /**
  * Representa los datos de una solicitud en el trámite 220201.
  * @interface SolicitudData
- * @property {string} fechaCreacion Fecha en la que se creó la solicitud.
+ * @property {string} fecha_creacion Fecha en la que se creó la solicitud.
  * @property {string} mercancia Nombre o descripción de la mercancía solicitada.
  * @property {number} cantidad Cantidad de mercancía solicitada.
  * @property {string} proovedor Nombre del proveedor de la mercancía.
@@ -337,7 +337,7 @@ export interface SolicitudData {
   /**
    * Fecha en la que se creó la solicitud.
    */
-  fechaCreacion: string;
+  fecha_creacion: string;
   /**
    * Nombre o descripción de la mercancía solicitada.
    */
@@ -349,7 +349,7 @@ export interface SolicitudData {
   /**
    * Nombre del proveedor de la mercancía.
    */
-  proovedor: string;
+  proveedor: string;
 }
 
 /**
@@ -565,5 +565,10 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
     seletedExdora: params.seletedExdora || {} as DestinatarioForm
   }
-  
 }
+
+  export interface FraccionArancelariaDecripcionModel {
+    cve_fraccion: string;
+    descripcion: string;
+    id_fraccion: number;
+  }

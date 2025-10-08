@@ -1,6 +1,14 @@
-import { API_GET_CAT_CRITERIOS, API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS, API_GET_CAT_DECLARACION_DATOS, 
-        API_GET_CAT_ENTIDADES_FEDERATIVAS, API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_REPRESENTACION_FEDERAL, 
-        API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
+import { 
+    API_GET_CAT_CRITERIOS,
+    API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS,
+    API_GET_CAT_DECLARACION_DATOS,
+    API_GET_CAT_ENTIDADES_FEDERATIVAS,
+    API_GET_CAT_PAISES,
+    API_GET_CAT_PAIS_BLOQUES,
+    API_GET_CAT_REPRESENTACION_FEDERAL,
+    API_GET_CAT_TRATADOS_ACUERDO,
+    API_GET_CAT_TRATADOS_ACUERDO_BLOQUE
+} from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { Catalogo } from "@libs/shared/data-access-user/src";
 import { CriteriosOtrasInstanciasRequest } from "../models/request/criterios-otras-instancias-request.model";
@@ -108,6 +116,15 @@ export class CatalogosTramiteService {
   postCatCriteriosOtrasInstancias(PAYLOAD: CriteriosOtrasInstanciasRequest): Observable<BaseResponse<string[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS}`;
     return this.http.post<BaseResponse<string[]>>(ENDPOINT, PAYLOAD);
+  }
+  
+  /**
+   * Consulta el catálogo de paises.
+   * @returns Observable con la respuesta del servidor que contiene el catálogo
+   */
+  getCatPaises(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_PAISES}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
   
 }

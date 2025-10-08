@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-import { BtnContinuarComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, PasoFirmaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 import { DatosBusquedaComponent } from './components/datos-busqueda/datos-busqueda.component';
@@ -25,6 +25,7 @@ import { Tratados110203Component } from './components/tratados-110203/tratados-1
     TecnicosRoutingModule,
     BtnContinuarComponent,   
     TituloComponent,  
+    PasoFirmaComponent,
     WizardComponent,FirmaElectronicaComponent,Destinatario110203Component,
     SolicitanteComponent,Tratados110203Component,DatosCertificado110203Component,Transporte110203Component
   ],

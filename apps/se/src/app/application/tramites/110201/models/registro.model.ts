@@ -5,18 +5,22 @@ import { CatalogosSelect } from "@libs/shared/data-access-user/src";
  * Interfaz que define las columnas de la tabla de mercancías disponibles
  */
 export interface ColumnasTabla {
+  /** Identificador único de la mercancía */
+  id?:string;
   /** Fracción arancelaria de la mercancía */
   fraccionArancelaria: string;
   /** Nombre técnico del producto */
   nombreTecnico: string;
   /** Nombre comercial del producto */
   nombreComercial: string;
-  /** Número de registro del producto */
-  numeroRegistroProductos: string;
   /** Fecha de expedición del certificado */
   fechaExpedicion: string;
   /** Fecha de vencimiento del certificado */
   fechaVencimiento: string;
+  /** Criterio de origen del producto */
+  criterioOrigen?: string;
+  /** Número de registro de productos */
+  numeroRegistroProducto?: string;
 }
 
 /**

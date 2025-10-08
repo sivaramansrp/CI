@@ -364,19 +364,22 @@ export const FORMULARIO_FECHA_IMPORTACION = [
     },
     {
         id: 'fechaLimiteRetorno',
-        labelNombre: 'Fecha limite estimada de retorno',
+        labelNombre: ':  ',
         campo: 'fechaLimiteRetorno',
         clase: 'col-md-4',
         tipoInput: 'date',
-        desactivado: false,
-        soloLectura: false,
+        desactivado: true,
+        soloLectura: true,
         validadores: [
-            { tipo: 'required' }
+        //    { tipo: 'required' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
-        habilitado: true
+        habilitado: true,
+          tooltipQuestionCircle: true,
+        tooltipTxt: 'Fecha límite estimada de retorno' 
+    
     }
 ];
 
@@ -450,3 +453,23 @@ export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
         marginTop: 0,
     }
 ];
+
+export const ERROR_FORMA_ALERT =`<div class="d-flex justify-content-center text-center">
+<div>
+  <div class="col-md-12">
+    Faltan campos por capturar.
+  </div>
+</div>
+</div>`;
+export const ERROR_FORMA_ALERT_DOS = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">(Manifiestos Seleccionados) es un campo requerido</span>
+    </div>
+
+  </div>
+</div>`;

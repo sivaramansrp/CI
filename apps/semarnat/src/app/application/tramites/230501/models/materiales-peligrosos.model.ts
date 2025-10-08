@@ -268,3 +268,9 @@ export interface InputFecha {
    */
   habilitado: boolean;
 }
+
+export const FECHA_PAGO = {
+  labelNombre: 'Fecha de pago:',
+  required: true, 
+  habilitado: true,
+};

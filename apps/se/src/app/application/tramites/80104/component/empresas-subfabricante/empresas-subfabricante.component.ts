@@ -136,7 +136,14 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @property {PlantasSubfabricante[]} configuracionTablaSeleccionadas
    */
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
-/*
+
+  /**
+   * Indica si existe un error relacionado con el RFC.
+   * Se establece en `true` cuando el RFC ingresado no cumple con los criterios requeridos.
+   */
+  rfcError: boolean = false;
+
+  /*
   * Constructor del componente.
 */
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
@@ -263,6 +270,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
  * @method obtenerSubfabricantesDisponibles
  */
   obtenerSubfabricantesDisponibles(): void {
+    this.rfcError=false;
       const PAYLOAD = {
         "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
         "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
@@ -279,6 +287,12 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
               this.store.setPlantasBuscadas(RESPONSE);
             } 
           }
+      },
+    (err) => { 
+        if(err.error.codigo==="01"){
+         this.rfcError=true;
+        }
+         
       });
   }
 

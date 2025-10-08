@@ -1,5 +1,5 @@
 import { AvisoTabla,AvisoTablaDatos,Catalogo,CatalogoLista } from '../../models/aviso-traslado.model';
-import { CatalogoSelectComponent, InputRadioComponent, REGEX_IMPORTE_PAGO, REGEX_NUMEROS,REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputRadioComponent, REGEX_IMPORTE_PAGO, REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { RADIO_OPCIONS, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
 import { CommonModule } from '@angular/common';
@@ -300,7 +300,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         ],
         peso: [
           this.tramiteState.avisoFormulario?.peso,
-          [Validators.required, Validators.pattern(REGEX_NUMEROS)],
+          [Validators.required],
         ],
         unidadMedida: [
           this.tramiteState.avisoFormulario?.unidadMedida,

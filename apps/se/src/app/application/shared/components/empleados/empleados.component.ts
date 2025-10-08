@@ -2,6 +2,7 @@ import { CEDULAS_OPTIONS, DIRECTOS, Directos } from '../../constantes/empleados.
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -18,8 +19,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-
-
 /**
  * Componente para gestionar la información de empleados.
  * @class EmpleadosComponent
@@ -34,6 +33,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     CatalogoSelectComponent,
     InputFechaComponent,
     ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './empleados.component.html',
   styleUrl: './empleados.component.css',
@@ -44,7 +44,11 @@ export class EmpleadosComponent implements OnInit {
    * @property {FormGroup} empleadosForm
    */
   empleadosForm!: FormGroup;
-
+  /**
+   * Nueva notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
  * Estado actual de la solicitud, utilizado para inicializar y gestionar los datos del formulario de empleados.
  * @property {ComplementarState} solicitudState
@@ -114,8 +118,11 @@ export class EmpleadosComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
   @Output() cerrarPopup = new EventEmitter<void>();
-
-
+  
+/**  
+ * Evento de salida que emite una lista de empleados directos al componente padre.
+ */
+ @Output() obtenerEmpleadosList: EventEmitter<Directos[]> = new EventEmitter<Directos[]>();
   /**
    * Constructor del componente.
    * @constructor
@@ -158,20 +165,34 @@ export class EmpleadosComponent implements OnInit {
       cedula: [this.solicitudState.cedula],
       fechaCedula: [this.solicitudState.fechaCedula],
       indirectosDatos: [this.solicitudState.indirectosDatos],
-      contrato: [this.solicitudState.contrato],
-      objeto: [this.solicitudState.objeto],
+      contrato: [this.solicitudState.contrato,[Validators.maxLength(20)]],
+      objeto: [this.solicitudState.objeto,[Validators.maxLength(100)]],
       fechaFirma: [this.solicitudState.fechaFirma],
       fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
-      rfcEmpresa: [this.solicitudState.rfcEmpresa],
-      razonSocial: [this.solicitudState.razonSocial]
+      rfcEmpresa: [this.solicitudState.rfcEmpresa,[Validators.maxLength(13)]],
+      razonSocial: [{ value: this.solicitudState.razonSocial, disabled: true }],
     });
   }
+  
+    /**
+   * Maneja el evento de entrada y limita la longitud del texto.
+   * @param event Evento del input
+   * @param maxLength Longitud máxima permitida
+   */
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.empleadosForm.get(controlPath)?.setValue(value, { emitEvent: false });
+}
 
   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
    * @returns {void}
    */
   regrasar(): void {
+    this.obtenerEmpleadosList.emit(this.directosDatos);
     this.cerrarPopup.emit();
   }
   /**
@@ -302,8 +323,70 @@ export class EmpleadosComponent implements OnInit {
         RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
         RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
       };
+
       this.directosDatos = [...this.directosDatos, TABLA_VALOR];
-      this.limpiar();
+     
+    }
+    this.agregarValidacion();
+  }
+  /**
+   * Agrega validaciones al formulario de empleados.
+   * 
+   * Este método verifica las condiciones de los campos del formulario `empleadosForm`
+   */
+  agregarValidacion(): void {
+    if (this.empleadosForm.get('directos')?.value && !this.empleadosForm.get('indirectos')?.value) {
+      const DIRECTOS = this.empleadosForm.get('directo')?.value;
+      const CEDULA_DE_CUOTAS = this.empleadosForm.get('cedula')?.value;
+      const FECHA_DE_CEDULA = this.empleadosForm.get('fechaCedula')?.value;
+
+      if (DIRECTOS === "" || CEDULA_DE_CUOTAS === "" || FECHA_DE_CEDULA === "") {
+        this.mostrarValidacion();
+      }
+    }
+    else if (this.empleadosForm.get('indirectos')?.value && !this.empleadosForm.get('directos')?.value) {
+      const CONTRATO = this.empleadosForm.get('contrato')?.value;
+      const OBJETO_DEL_CONTRATO_DEL_SERVICIO = this.empleadosForm.get('objeto')?.value;
+      const FECHA_FIRMA = this.empleadosForm.get('fechaFirma')?.value;
+      const FECHA_FIN_VIGENCIA = this.empleadosForm.get('fechaFinVigencia')?.value;
+      const RFC = this.empleadosForm.get('rfcEmpresa')?.value;
+      const RAZON_SOCIAL = this.empleadosForm.get('razonSocial')?.value;
+
+      if (
+        CONTRATO === "" ||
+        OBJETO_DEL_CONTRATO_DEL_SERVICIO === "" ||
+        FECHA_FIRMA === "" ||
+        FECHA_FIN_VIGENCIA === "" ||
+        RFC === "" ||
+        RAZON_SOCIAL === ""
+      ) {
+        this.mostrarValidacion();
+      }
+    }
+    else if (this.empleadosForm.invalid) {
+      this.mostrarValidacion();
+    }
+  }
+  /**
+   * Muestra una notificación de validación al usuario.
+   * 
+   * Esta función configura y muestra una notificación de advertencia indicando que
+   * el usuario debe capturar todos los datos marcados como obligatorios.
+   */
+  mostrarValidacion(): void {
+    const DIRECTOS_CHECKED = this.empleadosForm.get('directos')?.value;
+    const INDIRECTOS_CHECKED = this.empleadosForm.get('indirectos')?.value;
+    if (DIRECTOS_CHECKED || INDIRECTOS_CHECKED) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Al menos una de las opciones está seleccionada (checked).',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
@@ -325,8 +408,8 @@ export class EmpleadosComponent implements OnInit {
     this.empleadosForm.reset();
     this.empleadosForm.get('razonSocial')?.disable();
     this.disableRazonSocial = true;
-    this.empleadosForm.get('directos')?.setValue(false);
-    this.empleadosForm.get('indirectos')?.setValue(false);
+   this.empleadosForm.get('directos')?.setValue(false);
+   this.empleadosForm.get('indirectos')?.setValue(false);
     this.setDirectosValidation();
     this.setIndirectosValidation();
   }

@@ -1,4 +1,9 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
+import {
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TEXTOS,
+} from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 /**
@@ -29,16 +34,16 @@ export class PasoDosComponent implements OnDestroy {
    */
   destoryNotification$: Subject<void> = new Subject<void>();
 
-    /**
+  /**
    * Constructor del componente.
    *
    * @param catalogosServices Servicio para obtener los catálogos necesarios.
    */
-    constructor(
-      @Inject(CatalogosService) private catalogosServices: CatalogosService
-    ) {
-      // Dependencia inyectada para uso posterior
-    }
+  constructor(
+    @Inject(CatalogosService) private catalogosServices: CatalogosService
+  ) {
+    // Dependencia inyectada para uso posterior
+  }
 
   /**
    * Obtiene el catálogo de tipos de documentos disponibles para el trámite.

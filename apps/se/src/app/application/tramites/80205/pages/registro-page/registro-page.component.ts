@@ -13,6 +13,8 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -53,6 +55,7 @@ export class RegistroPageComponent implements OnDestroy {
 
    /**
    * Clase CSS para mostrar una alerta de error.
+   * @type {string}
    */
   infoError = 'alert-danger';
 
@@ -80,21 +83,19 @@ export class RegistroPageComponent implements OnDestroy {
    @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
    /**
-     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     * Mensaje de error para validación de formularios.
+     * @type {string}
      */
    public formErrorAlert!:string;
 
 
-  /**
-     * Constante que almacena el valor de la nota de privacidad.
-     * 
-     * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
-     * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
-     */
-      AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
-
       /**
-   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+     * Valor del aviso de privacidad.
+     * @type {string}
+     */
+      AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;/**
+   * Controla la visibilidad del mensaje de error.
+   * @type {boolean}
    */
   esFormaValido: boolean = true;
 
@@ -111,55 +112,73 @@ export class RegistroPageComponent implements OnDestroy {
 
   /**
    * Mensaje de éxito para el primer paso.
-   * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
+   * @type {string}
    */
   mensajeDeTextoDeExito: string = "MENSAJE_DE_ÉXITO_ETAPA_UNO";
 
 
   
       /**
-       * Evento que se emite para cargar archivos.
-       * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+       * Evento para cargar archivos.
+       * @type {EventEmitter<void>}
        */
       cargarArchivosEvento = new EventEmitter<void>();
     
       /**
-       * Evento que se emite para regresar a la sección de carga de documentos.
-       * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+       * Evento para regresar a la sección de carga de documentos.
+       * @type {EventEmitter<void>}
        */
       regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
     
       /**
-     * Indica si el botón para cargar archivos está habilitado.
+     * Indica si el botón de carga de archivos está habilitado.
+     * @type {boolean}
      */
       activarBotonCargaArchivos: boolean = false;
     
       /**
      * Indica si la sección de carga de documentos está activa.
-     * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+     * @type {boolean}
      */
       seccionCargarDocumentos: boolean = true;
 
       /**
-       * cargaEnProgreso - Indica si la carga de documentos está en progreso.
-       * Se utiliza para mostrar un indicador de carga o deshabilitar ciertas acciones mientras la carga está en curso.
+       * Indica si la carga de documentos está en progreso.
+       * @type {boolean}
        */
       cargaEnProgreso: boolean = true;
 
+      /**
+       * ID del estado de la solicitud.
+       * @type {number | null}
+       */
       idSolicitudState: number | null = 0;
 
-      idTipoTRamite: string = '80205';
+      /**
+       * Identificador del tipo de trámite.
+       * @type {string}
+       */
+      idTipoTramite: string = '80205';
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
+  /**
+   * Constructor del componente.
+   * @param {AmpliacionServiciosQuery} tramiteQuery - Servicio de consulta de trámites
+   * @param {AmpliacionServiciosStore} tranmiteStore - Store de trámites
+   * @param {SeccionLibStore} seccion - Store de sección
+   * @param {RegistroSolicitudService} registroSolicitudService - Servicio de registro
+   * @param {ToastrService} toastrService - Servicio para mostrar notificaciones
+   */
   constructor(
     private tramiteQuery: AmpliacionServiciosQuery,
     private tranmiteStore: AmpliacionServiciosStore,
     private seccion: SeccionLibStore,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
+    private toastrService: ToastrService,
   ) {
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(_res => {
       this.seccion.establecerSeccion([true]);
@@ -175,7 +194,7 @@ export class RegistroPageComponent implements OnDestroy {
 
       if (!this.esFormaValido) {
         this.datosPasos.indice = 1;
-        this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_SERVICIO_ALERT);
+        this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_SERVICIO_ALERT);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
@@ -186,9 +205,10 @@ export class RegistroPageComponent implements OnDestroy {
         next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
           if (respuesta.codigo !== '00') {
             const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
-            this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_MESSAGE);
             this.esFormaValido = false;
             this.indice = 1;
+            this.datosPasos.indice = 1;
             this.wizardComponent.indiceActual = 1;
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
             return;
@@ -201,10 +221,10 @@ export class RegistroPageComponent implements OnDestroy {
               this.idSolicitudState = respuesta.datos.id_solicitud;
               this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
             }
+            this.toastrService.success(respuesta.mensaje);
         },
         error: (error) => {
-          console.error('Error en onGuardar:', error);
-          this.formErrorAlert = RegistroPageComponent.generarAlertaDeError('Error al procesar la solicitud');
+          this.formErrorAlert = ServiciosService.generarAlertaDeError(error.error || 'Error al procesar la solicitud');
           this.esFormaValido = false;
           this.indice = 1;
           this.wizardComponent.indiceActual = 1;
@@ -221,34 +241,6 @@ export class RegistroPageComponent implements OnDestroy {
           this.wizardComponent.atras();
         }
       }
-    }
-  }
-
-  /**
-   * Obtiene el título para cada página según el índice.
-   * @method obtenerNombreDelTítulo
-   * @param {number} valor - El índice de la página.
-   * @returns {string} - El título correspondiente.
-   */
-   
-
-  /**
-   * Cambia el título del mensaje según la pestaña seleccionada.
-   * @method enTabChange
-   * @param {number} selectedTab - El índice de la pestaña seleccionada.
-   */
-  enTabChange(selectedTab: number): void {
-    switch (selectedTab) {
-      case 1:
-        this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
-        break;
-      case 2:
-        this.tituloMensaje =
-          'Registro de solicitud IMMEX modalidad ampliación servicios';
-        break;
-      default:
-        this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
-        break;
     }
   }
 
@@ -304,6 +296,10 @@ export class RegistroPageComponent implements OnDestroy {
     this.cargarArchivosEvento.emit();
   }
 
+  /**
+   * Maneja el evento de carga en progreso.
+   * @param {boolean} carga - Estado de la carga
+   */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
@@ -311,37 +307,30 @@ export class RegistroPageComponent implements OnDestroy {
   /**
    * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
    * y enviar los datos al servidor.
-   * @returns {Observable<{ exito: boolean; [key: string]: any }>}
+   * @returns {Observable<BaseResponse<{ id_solicitud: number }>>}
    */
-  onGuardar(): Observable<any> {
+  onGuardar(): Observable<BaseResponse<{ id_solicitud: number }>> {
     return this.tramiteQuery.selectTramite80205$.pipe(
       take(1), // Tomar solo el primer valor para evitar loops
       map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
       switchMap(FORM_PAYLOAD => {
-        return this.registroSolicitudService.postGuardarDatos(this.idTipoTRamite, FORM_PAYLOAD);
+        return (this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD) as Observable<BaseResponse<{ id_solicitud?: number }>>).pipe(
+          map((response: BaseResponse<{ id_solicitud?: number }>) => {
+            // Adapt the response to the expected type
+            return {
+              ...response,
+              datos: {
+                id_solicitud: response.datos?.id_solicitud ?? 0
+              }
+            } as BaseResponse<{ id_solicitud: number }>;
+          })
+        );
       }),
       catchError(error => {
         console.error('Error al guardar:', error);
         return throwError(() => error);
       })
     );
-  }
-
-
-  public static generarAlertaDeError(mensajes:string): string {
-    const ALERTA = `
-<div class="d-flex justify-content-center text-center">
-  <div class="col-md-12 p-3  border-danger  text-danger rounded">
-    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
-
-    <div class="d-flex justify-content-start mb-1">
-      <span class="me-2">1.</span>
-      <span class="flex-grow-1 text-center">${mensajes}</span>
-    </div>  
-  </div>
-</div>
-`;
-return ALERTA;
   }
 
   /**

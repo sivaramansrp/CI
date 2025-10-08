@@ -45,6 +45,9 @@ export interface TratadoAgregado {
     
     /** Clave del país */
     cve_pais?: string | null;
+
+    /** Clave tratado acuerdo*/
+    cve_tratado_acuerdo?: string | null;
     
     /** Mensaje agregado */
     mensaje_agregado?: string | null;
