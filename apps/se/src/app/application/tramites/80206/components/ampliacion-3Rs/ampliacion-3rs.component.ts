@@ -315,7 +315,6 @@ agregarServiciosAmpliacion(): void {
     return;
   }
 
-  // Check if sector already exists
   const SECTOR_EXISTENTE = this.datosSector.some(sector => sector.clave === SECTOR_SELECCIONADO);
   if (SECTOR_EXISTENTE) {
     this.mostrarAlerta = true;
@@ -343,7 +342,6 @@ agregarServiciosAmpliacion(): void {
 
           if (esValidObject(API_DATOS.datos)) {
             try {
-              // Find sector description from dropdown
               const SECTOR_ENCONTRADO = this.sectorDesplegable.find(sector => sector.clave === SECTOR_SELECCIONADO);
               
               const NUEVO_SECTOR: Sector = {
@@ -354,7 +352,6 @@ agregarServiciosAmpliacion(): void {
               const DATOS_ACTUALIZADOS = [...this.datosSector, NUEVO_SECTOR];
               this.tramite80206Store.setDatosSector(DATOS_ACTUALIZADOS);
               
-              // Clear the form field
               this.formularioInfoRegistro.get('sector')?.setValue('');
               
               const ISVALID = this.validarFormulario();
@@ -457,7 +454,6 @@ validarFormulario(): boolean {
       isValid = false;
     }
 
-    // Enhanced validation for seleccionarRegla
     if (!SELECCIONAR_REGLA || SELECCIONAR_REGLA === '' || SELECCIONAR_REGLA === -1 || SELECCIONAR_REGLA === '-1') {
       isValid = false;
     }
