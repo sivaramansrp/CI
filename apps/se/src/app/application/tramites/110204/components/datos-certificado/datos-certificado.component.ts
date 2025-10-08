@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, JsonResponseCatalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, delay, map, of, takeUntil, tap } from 'rxjs';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -77,6 +77,11 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   private actualizandoFormulario = false;
 
+    /** Bandera que indica si se ha intentado validar el formulario para mostrar errores */
+  validationAttempted: boolean = false;
+
+  procedure = '110204'
+
   /**
    * @constructor
    * @desc
@@ -94,12 +99,14 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @param seccionStore - Store para la gestión del estado de la sección.
    */
   constructor(
-    private fb: FormBuilder, public store: Tramite110204Store,
+    private fb: FormBuilder,
+    public store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
     public certificadoService: CertificadosOrigenGridService,
     private toastr: ToastrService,
-      private seccionQuery: SeccionLibQuery,
-      private seccionStore: SeccionLibStore
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
+    private catalogoService: CatalogoServices,
   ) {
 
     /**
@@ -180,7 +187,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
           delay(10),
           tap((_value) => {
             const SECCION: number = 2;
-            const FORMAS_VALIDADAS = this.seccion.formaValida;
+            const FORMAS_VALIDADAS = [...this.seccion.formaValida];
             const ES_VALIDO_EL_FORM = this.esFormValido();
   
             if (this.formDatosCertificado.valid || (ES_VALIDO_EL_FORM)) {
@@ -210,7 +217,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       this.validarFormulario();
     }
     });
-    this.cargarRepresentacionFederal();
+    // this.cargarRepresentacionFederal();
 
     if(this.formularioDeshabilitado){
       this.esFormularioSoloLectura = true;
@@ -262,12 +269,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Método para cargar la lista de idiomas desde el servicio.
    */
   cargarIdioma(): void {
-    this.certificadoService
-      .obtenerIdioma()
+    this.catalogoService
+      .catalogoIdioma(this.procedure)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setIdiomaDatos(data);
+        (data) => {
+          this.store.setIdiomaDatos(data.datos as Catalogo[]);
         },
         (error) => {
           console.error('Error al cargar los estados:', error);
@@ -276,37 +283,84 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para cargar la lista de representaciones federales desde el servicio.
-   */
-  cargarRepresentacionFederal(): void {
-    this.certificadoService
-      .obtenerRepresentacionFederal()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setRepresentacionFederalDatos(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
-
-  /**
-   * Método para cargar la lista de entidades federativas desde el servicio.
-   */
+ * Método para cargar la lista de entidades federativas desde el servicio global.
+ */
   cargarEntidadFederativa(): void {
-    this.certificadoService
-      .obtenerEntidadFederativa()
+    this.catalogoService
+      .entidadesFederativasCatalogo(this.procedure)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setEntidadFederativaDatos(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
+        (data) => {
+          this.entidadFederativas$ = of(data.datos as Catalogo[]);
         }
       );
+  }
+
+ /**
+   * Maneja el evento de cambio cuando se selecciona una nueva entidad federativa.
+   * Actualiza la lista de representaciones federales basándose en la entidad seleccionada.
+   * @param event - Objeto Catalogo que representa la entidad seleccionada.
+   */
+  onChangeEntidad(event: Catalogo): void {
+    const ENTIDAD_SELECCIONADA = event;
+    this.getRepresentacionDatos({
+      clave: ENTIDAD_SELECCIONADA.clave ?? '',
+      descripcion: ENTIDAD_SELECCIONADA.descripcion ?? ''
+    });
+
+    this.store.setEntidadFederativaDatos([ENTIDAD_SELECCIONADA]);
+  }
+
+  /**
+   * Obtiene los datos del catálogo de representaciones federales basado en la clave de entidad proporcionada.
+   * Los datos recuperados se asignan a la propiedad `representacionFederal$`.
+   * La suscripción al observable se cancela automáticamente cuando el componente se destruye.
+   * @param cveEntidad - Clave de la entidad para filtrar las representaciones federales.
+   */
+  getRepresentacionDatos(cveEntidad: { clave: string; descripcion: string }): void {
+    this.catalogoService
+      .representacionFederalCatalogo(this.procedure, cveEntidad.clave)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        const DESCRIPCION_ENTIDAD: string = (cveEntidad.descripcion ?? '')
+          .toString()
+          .trim()
+          .toLowerCase();
+
+        const CATALOGOS = res.datos ?? [];
+
+        const MATCHED = CATALOGOS.find(
+          (item) =>
+          ((item.descripcion ?? '').toString().trim().toLowerCase() ===
+            DESCRIPCION_ENTIDAD)
+        );
+
+        const OTHERS = CATALOGOS.filter(
+          (items) =>
+          ((items.descripcion ?? '').toString().trim().toLowerCase() !==
+            DESCRIPCION_ENTIDAD)
+        );
+        this.formDatosCertificado
+          .get('representacionFederalDates')
+          ?.setValue(MATCHED ? MATCHED.clave : null);
+        this.representacionFederal$ = of(MATCHED ? [MATCHED, ...OTHERS] : OTHERS);
+        this.setValoresStore(this.formDatosCertificado, 'formDatosCertificado', 'setRepresentacionFederalDatos');
+      });
+  }
+
+     /**
+   * Establecer valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.s
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite110204Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
    /**
@@ -319,11 +373,30 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @returns {boolean} Indica si el formulario de datos del certificado es válido.
    */
   validarFormularioDatos(): boolean {
+    this.validationAttempted = true;
+
     if (this.formDatosCertificado.valid) {
       return true;
     }
     this.formDatosCertificado.markAllAsTouched();
-    return false
+    this.markAllControlsAsTouched(this.formDatosCertificado);
+    return false;
+  }
+
+    /**
+   * Marca recursivamente todos los controles de formulario como tocados, incluyendo FormGroups anidados
+   * @param formGroup - Grupo de formulario a procesar
+   */
+  private markAllControlsAsTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.markAllControlsAsTouched(CONTROL);
+      } else {
+        CONTROL?.markAsTouched();
+        CONTROL?.updateValueAndValidity();
+      }
+    });
   }
 
   /**

@@ -423,4 +423,8 @@ export class Tramite110204Store extends Store<TramiteState> {
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
     });
   }
+
+  public setIdiomaDates(idiomaDates: Catalogo[]): void {
+    this.update((state) => ({ ...state, idiomaDates }));
+  }
 }
