@@ -291,6 +291,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
@@ -424,7 +425,8 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
@@ -515,7 +517,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
           [isDisabled]="
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')
@@ -530,7 +532,7 @@
           (selectionChange)="cargarEstados($event)"
           [label]="'Estado/localidad'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('estado')?.touched ?? false"
         ></app-catalogo-select>
@@ -542,7 +544,7 @@
           (selectionChange)="cargarMunicipios($event)"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('municipio')?.touched ?? false"
         ></app-catalogo-select>
@@ -555,7 +557,7 @@
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
           [required]="!elementosNoRequeridos.includes('localidad')"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
@@ -566,7 +568,7 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
           [required]="!elementosNoRequeridos.includes('codigoPostal')"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('codigoPostal')?.touched ?? false"
@@ -577,7 +579,7 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="''"
           [required]="!elementosNoRequeridos.includes('colonia')"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"

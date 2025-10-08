@@ -856,3 +856,15 @@ export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string, IDETIPOTRATADOACUERDO:
  * @since 1.0.0
  * @author Sistema VUCEM
  */
+
+/*
+ * API para obtener el catálogo de SELECCIONAR_REGLA
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/regla-3rs-immex
+ */
+export const CATALOGO_SELECCIONAR_REGLA = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/regla-3rs-immex`;
+
+/*
+ * API para obtener el catálogo de sectores
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/sectores
+ */
+export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/sectores`;

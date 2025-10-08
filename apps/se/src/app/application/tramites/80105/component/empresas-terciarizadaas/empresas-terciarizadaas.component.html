@@ -4,4 +4,4 @@
     [estadosCatalogo]="(estadosCatalogo$ | async) || []"
     (estadosOpciones)="actualizarEstados($event)"
     (seleccionadasDatos)="actualizarSeleccionadas($event)" (buscarControladorasEmit)="obtenerTerciarizadasDisponibles($event)"
-    [disponiblesDatos]="disponiblesDatos"></app-empresas>
+    [disponiblesDatos]="disponiblesDatos" [rfcError]="rfcError"></app-empresas>

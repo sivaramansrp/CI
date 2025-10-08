@@ -193,6 +193,24 @@ export class AgregarFabricanteComponent
    */
   chequeoValidacionAlGuardar =false;
 
+    /**
+     * Evento de salida que se emite cuando el usuario decide guardar y salir del formulario.
+     * Los componentes padres pueden suscribirse a este evento para ejecutar acciones adicionales
+     * después de que se haya guardado la información y se haya solicitado salir.
+     */
+    @Output() guardarYSalir = new EventEmitter<void>();
+    /**
+     * Evento de salida que emite una señal para cancelar o cerrar el modal actual.
+     * Los componentes padres pueden suscribirse a este evento para manejar la acción de cancelación.
+     */
+    @Output() cancelarmodal = new EventEmitter<void>();
+    /**
+     * @input
+     * Lista de objetos de tipo `Fabricante` que se mostrarán en la tabla de fabricantes.
+     * Este arreglo es recibido como entrada por el componente.
+     */
+    @Input() fabricanteTablaDatos: Fabricante[] = [];
+
  /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
@@ -284,23 +302,25 @@ export class AgregarFabricanteComponent
   ngOnInit(): void {
     this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
-      this.chequeoValidacionAlGuardar =
+    this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
         ? true
-        :false;
+        : false;
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
+    this.estaDeshabilitadoDesplegable = true;
+
     this.changeNacionalidad();
     this.changeTipoPersona();
+
     this.mostarColoniaOEquivalente =
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
         : false;
-
-       if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
-    this.agregarFabricanteForm.get('tipoPersona')?.disable();
-  }
-  this.forzarDeshabilitarPais()
+    if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
+      this.agregarFabricanteForm.get('tipoPersona')?.disable();
+    }
+    this.forzarDeshabilitarPais();
   }
 
   /**
@@ -320,7 +340,10 @@ export class AgregarFabricanteComponent
    * - Si no existe información, limpia el formulario mediante `reset()`.
    */
   ngOnChanges(currentValue: SimpleChanges): void {
-    if (currentValue['datoSeleccionado'].currentValue?.length > 0) {
+     if (this.chequeoValidacionAlGuardar) {
+      this.fabricantes = Array.isArray(this.fabricanteTablaDatos) ? [...this.fabricanteTablaDatos] : [];
+    }
+    if (currentValue['datoSeleccionado'] && currentValue['datoSeleccionado'].currentValue && currentValue['datoSeleccionado'].currentValue.length > 0) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
       setTimeout(() => {
         if (
@@ -352,6 +375,40 @@ export class AgregarFabricanteComponent
           correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
           coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
         });
+        if (this.datoSeleccionado?.[0]?.municipioAlcaldia) {
+          this.municipiosDatos = [...this.municipiosTempDatos];
+          this.agregarFabricanteForm.get('municipio')?.enable();
+        }
+        if (this.datoSeleccionado?.[0]?.localidad) {
+          this.localidadesDatos = [...this.localidadesTempDatos];
+          this.agregarFabricanteForm.get('localidad')?.enable();
+        }
+        if (this.datoSeleccionado?.[0]?.colonia) {
+          this.coloniasDatos = [...this.coloniasTempDatos];
+          this.agregarFabricanteForm.get('colonia')?.enable();
+        }
+        this.updateDropdownEnableState();
+        const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
+        const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
+        const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
+        const TIPO_PERSONA_VALUE = this.datoSeleccionado?.[0]?.tipoPersona;
+        if (this.chequeoValidacionAlGuardar) {
+          if (TIPO_PERSONA_VALUE === this.tipoPersona.MORAL) {
+            RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+          } else {
+            RAZON_SOCIAL_CONTROL?.clearValidators();
+          }
+          RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
+          if (TIPO_PERSONA_VALUE === this.tipoPersona.FISICA) {
+            NOMBRES_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+            PRIMER_APELLIDO_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+          } else {
+            NOMBRES_CONTROL?.clearValidators();
+            PRIMER_APELLIDO_CONTROL?.clearValidators();
+          }
+          NOMBRES_CONTROL?.updateValueAndValidity();
+          PRIMER_APELLIDO_CONTROL?.updateValueAndValidity();
+        }
       }, 100);
     } else {
       this.agregarFabricanteForm?.reset();
@@ -393,7 +450,7 @@ export class AgregarFabricanteComponent
       ],
       curp: [
         this.obtenerValor('curp'),
-        this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]
+        this.idProcedimiento === 260912 ? [] : (this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)])
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -409,14 +466,14 @@ export class AgregarFabricanteComponent
       ],
       razonSocial: [
         this.obtenerValor('razonSocial'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        []
       ],
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
             ? ''
             : this.obtenerValor('pais'),
-          disabled: this.elementosDeshabilitados.includes('pais') || this.idProcedimiento === 260911,
+          disabled: this.elementosDeshabilitados.includes('pais') || this.chequeoValidacionAlGuardar,
         },
         [Validators.required],
       ],
@@ -485,6 +542,33 @@ export class AgregarFabricanteComponent
         { value: this.obtenerValor('coloniaEquivalente'), disabled: true },
       ],
     });
+    const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
+    const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
+    const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
+    const TIPO_PERSONA_CONTROL = this.agregarFabricanteForm.get('tipoPersona');
+  const SET_STRICT_VALIDATORS = (tipo: TipoPersona): void => {
+      if (this.chequeoValidacionAlGuardar) {
+        if (tipo === this.tipoPersona.MORAL) {
+          RAZON_SOCIAL_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+        } else {
+          RAZON_SOCIAL_CONTROL?.clearValidators();
+        }
+        RAZON_SOCIAL_CONTROL?.updateValueAndValidity();
+        if (tipo === this.tipoPersona.FISICA) {
+          NOMBRES_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+          PRIMER_APELLIDO_CONTROL?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+        } else {
+          NOMBRES_CONTROL?.clearValidators();
+          PRIMER_APELLIDO_CONTROL?.clearValidators();
+        }
+        NOMBRES_CONTROL?.updateValueAndValidity();
+        PRIMER_APELLIDO_CONTROL?.updateValueAndValidity();
+      }
+    };
+    SET_STRICT_VALIDATORS(TIPO_PERSONA_CONTROL?.value);
+    TIPO_PERSONA_CONTROL?.valueChanges.subscribe(tipo => {
+      SET_STRICT_VALIDATORS(tipo);
+    });
   }
 
     /**
@@ -537,6 +621,7 @@ private forzarDeshabilitarPais(): void {
         this.elementosNoRequeridos = ['colonia'];
         break;
         case 260912:
+        this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia', 'codigoPostal'];
         break;
         default:
@@ -550,16 +635,12 @@ private forzarDeshabilitarPais(): void {
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
-    if(this.chequeoValidacionAlGuardar){
-      if (this.agregarFabricanteForm.invalid) {
-            // Marca todos los controles como tocados para mostrar errores de validación
-          Object.values(this.agregarFabricanteForm.controls).forEach(control => {
-            control.markAsTouched();
-            control.updateValueAndValidity();
-          });
-            // NO redirigir ni emitir nada si el formulario es inválido
-          return;
-        }
+   if (this.chequeoValidacionAlGuardar && this.agregarFabricanteForm.invalid) {
+      Object.values(this.agregarFabricanteForm.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      return;
     }
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
@@ -602,10 +683,36 @@ private forzarDeshabilitarPais(): void {
     if (this.datoSeleccionado?.[0]?.id) {
       NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
     }
-
+     if (this.chequeoValidacionAlGuardar) {
+      const IS_EDIT = Boolean(this.datoSeleccionado?.[0]?.id);
+      const CURRENT_ID = this.datoSeleccionado?.[0]?.id;
+      const IS_DUPLICATE = this.fabricantes.some(f => f.rfc === NUEVO_FABRICANTE.rfc && (!IS_EDIT || f.id !== CURRENT_ID));
+      if (IS_DUPLICATE) {
+        this.abrirModal('La información proporcionada de la persona ya existe, favor de verificar.');
+        return;
+      }
+       let updatedFabricantes: Fabricante[];
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
+      updatedFabricantes = this.fabricantes.map(f => f.id === NUEVO_FABRICANTE.id ? NUEVO_FABRICANTE : f);
+    } else {
+      const NEXT_ID = this.fabricantes.length > 0 ? Math.max(...this.fabricantes.map(f => f.id || 0)) + 1 : 1;
+      NUEVO_FABRICANTE.id = NEXT_ID;
+      updatedFabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
+    }
+    this.fabricantes = updatedFabricantes;
+    this.updateFabricanteTablaDatos.emit(this.fabricantes);
+    if (this.chequeoValidacionAlGuardar){
+      this.limpiarFormulario();
+      this.datoSeleccionado = [];
+      this.cancelarmodal.emit();
+    }
+    }
+  else {
     this.fabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
     this.updateFabricanteTablaDatos.emit(this.fabricantes);
     this.ubicaccion.back();
+    }
   }
 
   /**
@@ -664,7 +771,16 @@ private forzarDeshabilitarPais(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
-    this.agregarFabricanteForm.reset();
+    if (this.chequeoValidacionAlGuardar) {
+      this.agregarFabricanteForm.reset();
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+      });
+      this.agregarFabricanteForm.get('nacionalidad')?.enable();
+      this.estaDeshabilitadoDesplegable = true;
+    } else {
+      this.agregarFabricanteForm.reset();
+    }
   }
   /**
    * @method cancelar
@@ -673,7 +789,13 @@ private forzarDeshabilitarPais(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    if (this.chequeoValidacionAlGuardar) {
+      this.limpiarFormulario();
+      this.datoSeleccionado = [];
+      this.cancelarmodal.emit();
+    } else {
+      this.ubicaccion.back();
+    }
   }
 
   /**
@@ -765,9 +887,12 @@ private forzarDeshabilitarPais(): void {
   /**
    * Maneja el evento de cambio en el campo de RFC.
    *
-   * @param {Event} event - Evento que se dispara al cambiar el valor del campo de entrada (input).
+   * @param {Event} event - Evento que se dispara al cambfiar el valor del campo de entrada (input).
    */
   onChangeRfc(event: Event): void {
+    if (this.chequeoValidacionAlGuardar) {
+      return;
+    }
     const RFC_VALUE = (event.target as HTMLInputElement).value;
     this.datoSeleccionadorfc?.forEach((dato) => {
       if (dato.rfc === RFC_VALUE) {
@@ -834,41 +959,36 @@ private forzarDeshabilitarPais(): void {
       RFC_CONTROL.markAsTouched();
       RFC_CONTROL.updateValueAndValidity();
     }
-    if (
-      this.agregarFabricanteForm?.get('nacionalidad')?.value === '' ||
-      this.agregarFabricanteForm?.get('nacionalidad')?.value === undefined
-    ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
+    const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+    const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+    if (!NACIONALIDAD || NACIONALIDAD === '') {
+      this.estaDeshabilitadoDesplegable = true;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+      if (this.chequeoValidacionAlGuardar) {
+        this.agregarFabricanteForm.get('tipoPersona')?.disable();
+      }
+    } else if (NACIONALIDAD === this.nacionalStr || NACIONALIDAD === 'Extranjero') {
+      if (NACIONALIDAD && TIPO_PERSONA) {
+        this.estaDeshabilitadoDesplegable = false;
+        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+          if (!this.elementosDeshabilitados.includes(controlName)) {
+            this.agregarFabricanteForm.get(controlName)?.enable();
+          }
+        });
+      } else {
+        this.estaDeshabilitadoDesplegable = true;
+        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
           this.agregarFabricanteForm.get(controlName)?.disable();
           if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
             this.agregarFabricanteForm.get(controlName)?.enable();
           }
-        }
-      );
-      // Cuando chequeoValidacionAlGuardar es verdadero, deshabilita tipoPersona hasta que se seleccione nacionalidad
-   if (this.chequeoValidacionAlGuardar) {
-      this.agregarFabricanteForm.get('tipoPersona')?.disable();
-    }
-    } else if (
-      this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-        this.nacionalStr ||
-      this.agregarFabricanteForm?.get('nacionalidad')?.value === 'Extranjero'
-    ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          this.estaDeshabilitadoDesplegable = true;
-          if (controlName !== 'nacionalidad') {
-            this.agregarFabricanteForm.get(controlName)?.reset();
-          }
-          if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        }
-      );
-      // Asegura que tipoPersona esté habilitado cuando se selecciona nacionalidad (anula chequeoValidacionAlGuardar)
-    this.agregarFabricanteForm.get('tipoPersona')?.enable();
+        });
+      }
     }
     this.forzarDeshabilitarPais();
   }
@@ -912,25 +1032,11 @@ changeTipoPersona(): void {
       this.agregarFabricanteForm?.get('nacionalidad')?.value &&
       this.agregarFabricanteForm?.get('tipoPersona')?.value
     ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(
-        (controlName) => {
+      this.estaDeshabilitadoDesplegable = false;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
           this.agregarFabricanteForm.get(controlName)?.enable();
-          this.estaDeshabilitadoDesplegable = false;
         }
-      );
-    }
-
-    if (
-      (this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-        this.nacionalStr &&
-        this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-          this.tipoPersona.FISICA) ||
-      this.agregarFabricanteForm?.get('tipoPersona')?.value ===
-        this.tipoPersona.MORAL
-    ) {
-      this.estaDeshabilitadoDesplegable = true;
-      this.agregarFabricanteForm.patchValue({
-        pais: 2,
       });
     }
   }
@@ -980,7 +1086,8 @@ private resetExcept(excludedControls: string[]): void {
   });
 }
 
-    /**
+
+  /**
    * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
    * @param borrar Indica si se debe proceder con la eliminación.
    * @returns {void}
@@ -988,6 +1095,35 @@ private resetExcept(excludedControls: string[]): void {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Updates the estaDeshabilitadoDesplegable flag based on whether both nacionalidad and tipoPersona are selected.
+   * If either is missing, disables dropdowns. If both are present, enables them.
+   */
+  private updateDropdownEnableState(): void {
+    const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+    const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+    if (NACIONALIDAD && TIPO_PERSONA) {
+      this.estaDeshabilitadoDesplegable = false;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+    } else {
+      this.estaDeshabilitadoDesplegable = true;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.disable();
+        } else {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+      if (this.chequeoValidacionAlGuardar && !NACIONALIDAD) {
+        this.agregarFabricanteForm.get('tipoPersona')?.disable();
+      }
     }
   }
 

@@ -17,6 +17,14 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { Tramite80104Query } from '../../../../estados/queries/tramite80104.query';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para la visualización y gestión de los anexos dos y tres del trámite 80105.
+ * Permite mostrar, editar y validar los datos relacionados con fracciones arancelarias y descripciones.
+ * Incluye formularios reactivos, suscripciones a estados y configuración de tablas dinámicas.
+ *
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0
+ */
 @Component({
   selector: 'app-anexo-vista-dos-y-tres',
   standalone: true,
@@ -24,22 +32,38 @@ import { takeUntil } from 'rxjs';
   templateUrl: './anexo-vista-dos-y-tres.component.html',
   styleUrl: './anexo-vista-dos-y-tres.component.scss',
 })
+/**
+ * Componente principal para la gestión de los anexos dos y tres.
+ * Implementa OnInit y OnDestroy para el ciclo de vida y limpieza de suscripciones.
+ */
 export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
+    /**
+     * Indica si el formulario está deshabilitado (solo lectura).
+     * @type {boolean}
+     */
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * Lista de encabezados del anexo dos.
    * @type {AnexoEncabezado[]}
    */
+    /**
+     * Lista de encabezados para la tabla del anexo dos.
+     * @type {AnexoEncabezado[]}
+     */
   public anexoDosTablaLista: AnexoEncabezado[] = [];
 
   /**
    * Lista de encabezados del anexo tres.
    * @type {AnexoEncabezado[]}>}
    */
+    /**
+     * Lista de encabezados para la tabla del anexo tres.
+     * @type {AnexoEncabezado[]}
+     */
   public anexoTresTablaLista: AnexoEncabezado[] = [];
 
   /**
@@ -50,6 +74,9 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    * @property {TablaSeleccion} anexoTresTablaSeleccionCheckbox - Selección de tabla del anexo tres.
    * @property {ANEXO_SERVICIO} anexoTresEncabezadoDeTabla - Encabezado de tabla del anexo tres.
    */
+    /**
+     * Configuración de selección y encabezados para las tablas de anexos.
+     */
   public anexoConfig = {
     anexoDosTablaSeleccionCheckbox: TablaSeleccion.CHECKBOX,
     anexoDosEncabezadoDeTabla: ANEXO_SERVICIO,
@@ -60,24 +87,37 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   /*
   * Almacena la configuración de las pestañas del primer paso.
   */
+  /**
+   * Configuración de columnas para la tabla de fracciones arancelarias.
+   */
    configuracionDosDatos: ConfiguracionColumna<FraccionArancelariaDescripcion>[] =CONFIGURACION_DOS_DATOS
 
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
    */
+    /**
+     * Indica si el formulario debe mostrarse en modo solo lectura.
+     * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+     */
   public esFormularioSoloLectura: boolean = false; 
 
   /**
    * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
    * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
    */
+    /**
+     * Formulario reactivo para la sección de Anexo Tres.
+     */
   public anexoTressFormGroup!: FormGroup;
 
   /**
    * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
    * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
    */
+    /**
+     * Formulario reactivo para la sección de Anexo Tres Dos.
+     */
   public anexoTressDosFormGroup!: FormGroup;
 
   /**
@@ -86,8 +126,19 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    *
    * @property {Subject<void>} destroyNotifier$
    */
+    /**
+     * Notificador para limpiar suscripciones al destruir el componente.
+     */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Constructor del componente. Inicializa servicios y suscripciones a estados.
+     * @param query Consulta de estado para el trámite 80101
+     * @param store Almacén de estado para el trámite 80101
+     * @param fb FormBuilder para formularios reactivos
+     * @param query80104 Consulta de estado para el trámite 80104
+     * @param consultaQuery Consulta de estado general
+     */
   constructor(private query: Tramite80101Query,
     private store: Tramite80101Store,
     private fb: FormBuilder,
@@ -104,6 +155,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
        .subscribe()
   }
 
+    /**
+     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * Suscribe a los observables de las tablas y inicializa los formularios.
+     */
   ngOnInit(): void {
     this.query.anexoDosTableLista$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -136,6 +191,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    * @remarks
    * Este método debe llamarse para sincronizar el grupo de formulario con los datos más recientes del almacén.
    */
+    /**
+     * Recupera los datos del almacén para "Anexo Tres" y actualiza el grupo de formulario con los valores recibidos.
+     * Sincroniza el grupo de formulario con los datos más recientes del almacén.
+     */
   obtenerDatosDelAlmacen(): void {
    this.query80104.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -162,6 +221,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
      * @remarks
      * Este método se utiliza normalmente para poblar el grupo de formulario con datos del almacén.
      */
+      /**
+       * Recupera datos del segundo almacén (Almacén Dos) suscribiéndose al observable `selectDatosAnexoTressDos$`.
+       * Actualiza el `anexoTressDosFormGroup` con los datos recibidos.
+       */
     obtenerDatosDelAlmacenDos(): void {
    this.query80104.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -184,6 +247,9 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
        * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
        * @method inicializarFormularioDatosSubcontratista
        */
+      /**
+       * Inicializa el formulario de datos del subcontratista para Anexo Tres.
+       */
     inicializarFormularioDatosSubcontratista(): void {
       this.anexoTressFormGroup = this.fb.group({
         fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
@@ -194,6 +260,9 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
       /**
        * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
        * @method inicializarFormularioDatosSubcontratista
+       */
+      /**
+       * Inicializa el formulario de datos del subcontratista para Anexo Tres Dos.
        */
     inicializarFormularioDatosDosSubcontratista(): void {
       this.anexoTressDosFormGroup = this.fb.group({
@@ -207,6 +276,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    * @param {T[]} event - Evento que contiene la lista de encabezados del anexo dos.
    * @returns {void}
    */
+    /**
+     * Callback para actualizar la lista de encabezados del anexo dos y almacenarla en el estado.
+     * @param event Lista de encabezados del anexo dos
+     */
   obtenerAnexoDosDevolverLaLlamada(event: AnexoEncabezado[]): void {
     this.anexoDosTablaLista = event ? event : [];
     this.store.setAnnexoDosTableLista(this.anexoDosTablaLista);
@@ -217,6 +290,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    * @param {T[]} event - Evento que contiene la lista de encabezados del anexo tres.
    * @returns {void}
    */
+    /**
+     * Callback para actualizar la lista de encabezados del anexo tres y almacenarla en el estado.
+     * @param event Lista de encabezados del anexo tres
+     */
   obtenerAnexoTresDevolverLaLlamada(event: AnexoEncabezado[]): void {
     this.anexoTresTablaLista = event ? event : [];
     this.store.setAnnexoTresTableLista(this.anexoTresTablaLista);
@@ -228,6 +305,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
        * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
        * @returns void
        */
+      /**
+       * Modifica los datos de los cumplimientos y los almacena en el estado para Anexo Tres.
+       * @param complimentos Datos a actualizar
+       */
     modifierComplimentos(complimentos: DatosAnexotressUno): void {
       this.store.setDatosAnexoTres(complimentos);
     }
@@ -238,6 +319,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
        * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
        * @returns void
        */
+      /**
+       * Modifica los datos de los cumplimientos y los almacena en el estado para Anexo Tres Dos.
+       * @param complimentos Datos a actualizar
+       */
     modifierComplimentosDos(complimentos: DatosAnexotressUno): void {
       this.store.setDatosAnexoTresDos(complimentos);
     }
@@ -247,6 +332,10 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
      * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
      * @method ngOnDestroy
      */
+      /**
+       * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+       * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+       */
     ngOnDestroy(): void {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();

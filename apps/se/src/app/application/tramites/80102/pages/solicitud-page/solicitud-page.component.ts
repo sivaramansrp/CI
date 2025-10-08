@@ -920,7 +920,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
-    "idSolicitud": 0,
+    "idSolicitud": this.solicitudState.idSolicitud || 0,
     "idTipoTramite": 80102,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
