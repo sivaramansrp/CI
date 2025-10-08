@@ -148,7 +148,6 @@ export class MontosDeInversionComponent implements OnInit {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      debugger;
       const VALOR_FORMULARIO = this.montosDeInversionForm.value;
       const NUEVO_MONTO: MontoDeInversion = {
         PLANTA: '',
@@ -158,7 +157,6 @@ export class MontosDeInversionComponent implements OnInit {
         MONTO: VALOR_FORMULARIO.mnx || '',
       };
       if (this.editingIndex !== null && this.editingIndex > -1) {
-        debugger;
         this.montosDeInversionDatos[this.editingIndex] = NUEVO_MONTO;
         this.montosDeInversionDatos = [...this.montosDeInversionDatos];
         this.editingIndex = null;
@@ -166,6 +164,7 @@ export class MontosDeInversionComponent implements OnInit {
       } else {
         this.montosDeInversionDatos = [...this.montosDeInversionDatos, NUEVO_MONTO];
       }
+      this.seleccionados = [];
       this.montosDeInversionForm.reset();
     }
   }
@@ -250,7 +249,6 @@ export class MontosDeInversionComponent implements OnInit {
    * @param event Evento que contiene la lista de filas seleccionadas en la tabla.
    */
   onSeleccionChange(event: MontoDeInversion[]): void {
-    debugger;
     this.seleccionados = event;
   }
 
@@ -277,7 +275,6 @@ export class MontosDeInversionComponent implements OnInit {
    * @returns {void}
    */
   editarMonto(): void {
-    debugger;
     if (this.seleccionados?.length === 1) {
       const SELECTED = this.seleccionados[0];
       this.montosDeInversionForm.patchValue({
