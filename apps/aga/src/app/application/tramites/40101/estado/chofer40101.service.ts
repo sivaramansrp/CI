@@ -1,6 +1,6 @@
 import { ApiResponse, Catalogo } from '@libs/shared/data-access-user/src';
 import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
-import { ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
+import { ApiResponseChofer, ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Chofer40101Store } from './chofer40101.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
@@ -232,7 +232,7 @@ export class Chofer40101Service {
       .pipe(
         map(response => response.datos),
         catchError(error => {
-          console.error('Error fetching countries:', error);
+          console.error('Error fetching Estados:', error);
           return of([]);
         })
       );
@@ -246,7 +246,7 @@ export class Chofer40101Service {
       .pipe(
         map(response => response.datos),
         catchError(error => {
-          console.error('Error fetching countries:', error);
+          console.error('Error fetching Municipios:', error);
           return of([]);
         })
       );
@@ -258,11 +258,16 @@ export class Chofer40101Service {
    * @returns Un observable con la lista de colonias.
    */
   getColoniasPorMunicipio(
-    municipiosId: number
+    clave: string
   ): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      `/assets/json/40101/colonia.json`
-    );
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101//catalogo/municipio-o-alcaldia/${clave}/colonia`)
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching Colonia:', error);
+          return of([]);
+        })
+      );
   }
 
 
@@ -305,6 +310,17 @@ export class Chofer40101Service {
     return this.http.get<T[]>(JSONURL);
   }
 
+  /**
+   * Obtiene los datos de una tabla desde un archivo JSON.
+   *
+   * @template T El tipo genérico de los datos que se espera recibir.
+   * @param {string} fileName - Nombre del archivo JSON que contiene los datos.
+   * @returns {Observable<T[]>} Un observable que emite la lista de datos del archivo JSON.
+   */
+  obtenerDatos(nss: string): Observable<ApiResponseChofer> {
+    const FULL_URL = `/api/sat-t140101/chofer/detalles/nss/${nss}`;
+    return this.http.get<ApiResponseChofer>(FULL_URL);
+  }
 
 
   updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {

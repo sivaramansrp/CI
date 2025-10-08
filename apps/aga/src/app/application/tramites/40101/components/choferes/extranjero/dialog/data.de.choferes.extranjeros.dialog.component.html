@@ -1,3 +1,8 @@
+@if(isLoading){
+<div *ngIf="isLoading" class="loader-overlay">
+  <span class="loader"></span>
+</div>
+}
 <div class="modal-dialog modal-dialog-centered modal-fullscreen">
   <div class="modal-content">
 
@@ -18,21 +23,21 @@
           <div class="row">
             <div class="col-md-4">
               <div>
-                <label for="numero">Nombre(s)*:</label>
+                <label for="nombre">Nombre(s)*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numero" size="30" id="numeroCHN"
-                  maxlength="200" />
+                <input type="text" class="form-control" formControlName="nombre" size="30" id="nombreCHE"
+                  maxlength="200" (change)="updateDriverFromForm('nombre')" />
               </div>
-              @if(getFormValues['numero'].invalid && (getFormValues['numero'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['numero'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['numero'].errors?.['maxLength']) {
-                    <small>El número no puede tener más de 200 caracteres.</small>
-                  }
-                </div>
+              @if(getFormValues['nombre'].invalid && (getFormValues['nombre'].touched || submitted)) {
+              <div class="text-danger">
+                @if(getFormValues['nombre'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['nombre'].errors?.['maxLength']) {
+                <small>El número no puede tener más de 200 caracteres.</small>
+                }
+              </div>
               }
             </div>
 
@@ -41,71 +46,69 @@
                 <label for="primerApellido">Primer apellido*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="primerApellido" maxlength="200" />
+                <input type="text" class="form-control" formControlName="primerApellido" maxlength="200"
+                  (change)="updateDriverFromForm('primerApellido')" />
               </div>
               @if(getFormValues['primerApellido'].invalid && (getFormValues['primerApellido'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['primerApellido'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['primerApellido'].errors?.['maxLength']) {
-                    <small>El nombre no puede tener más de 200 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['primerApellido'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['primerApellido'].errors?.['maxLength']) {
+                <small>El nombre no puede tener más de 200 caracteres.</small>
+                }
+              </div>
               }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="apellidoMaterno">Segundo Apellido:</label>
+                <label for="segundoApellido">Segundo Apellido:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="segundoApellido" maxlength="200" />
+                <input type="text" class="form-control" formControlName="segundoApellido" maxlength="200"
+                  (change)="updateDriverFromForm('segundoApellido')" />
               </div>
               @if(getFormValues['segundoApellido'].invalid && (getFormValues['segundoApellido'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['segundoApellido'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['segundoApellido'].errors?.['maxLength']) {
-                    <small>El nombre no puede tener más de 200 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['segundoApellido'].errors?.['maxLength']) {
+                <small>El nombre no puede tener más de 200 caracteres.</small>
+                }
+              </div>
               }
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-md-4">
-              <div>
-                <app-catalogo-select class="nacionalidad" [catalogo]="paisList" [placeholder]="'Seleccione un valor'"
-                  formControlName="nacionalidad" [isDisabled]="readonly" name="nacionalidad" [label]="'Nacionalidad'"
-                  [required]="true" (selectionChange)="onPaisChange($event)"></app-catalogo-select>
-                @if(formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.touched || submitted)) {
-                  <div class="text-danger">
-                    @if(formChoferes.get('nacionalidad')?.errors?.['required']) {
-                      <small class="text-danger">Este campo es obligatorio.</small>
-                    }
-                  </div>
-                }
+              <label class="form-label">Nacionalidad</label>
+              <select class="form-control form-select" formControlName="nacionalidad" [disabled]="readonly"
+                (change)="updateDriverFromForm('nacionalidad')">
+                <option [ngValue]="null">Seleccione un valor</option>
+                <option *ngFor="let pais of paisList" [title]="pais.descripcion" [value]="pais.clave">
+                  {{ pais.descripcion }}
+                </option>
+              </select>
+              <div
+                *ngIf="formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.touched || submitted)">
+                <small class="text-danger" *ngIf="formChoferes.get('nacionalidad')?.errors?.['required']">
+                  Este campo es obligatorio.
+                </small>
               </div>
             </div>
-
             <div class="col-md-4">
               <div>
                 <label for="numeroDeGafete">Número de gafete del chofer:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroDeGafete" maxlength="24" />
+                <input type="text" class="form-control" formControlName="numeroDeGafete" maxlength="24"
+                  (change)="updateDriverFromForm('numeroDeGafete')" />
               </div>
               @if(getFormValues['numeroDeGafete'].invalid && (getFormValues['numeroDeGafete'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['numeroDeGafete'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['numeroDeGafete'].errors?.['maxLength']) {
-                    <small>El gafete no puede tener más de 24 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['numeroDeGafete'].errors?.['maxLength']) {
+                <small>El gafete no puede tener más de 24 caracteres.</small>
+                }
+              </div>
               }
             </div>
             <div class="col-md-4">
@@ -113,17 +116,15 @@
                 <label for="vigenciaGafete">Vigencia del gafete:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="vigenciaGafete" maxlength="15" />
+                <input type="text" class="form-control" formControlName="vigenciaGafete" maxlength="15"
+                  (change)="updateDriverFromForm('vigenciaGafete')" />
               </div>
               @if(getFormValues['vigenciaGafete'].invalid && (getFormValues['vigenciaGafete'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['vigenciaGafete'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['vigenciaGafete'].errors?.['maxLength']) {
-                    <small>La vigencia del gafete no puede tener más de 15 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['vigenciaGafete'].errors?.['maxLength']) {
+                <small>La vigencia del gafete no puede tener más de 15 caracteres.</small>
+                }
+              </div>
               }
             </div>
           </div>
@@ -131,43 +132,48 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <div>
-                <label for="numberDelSocial">Número del seguro social*:</label>
+                <label for="numeroDelSeguroSocial">Número del seguro social*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" maxlength="18" />
+                <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" maxlength="18"
+                  (change)="updateDriverFromForm('numeroDelSeguroSocial')" />
               </div>
-              @if(getFormValues['numeroDelSeguroSocial'].invalid && (getFormValues['numeroDelSeguroSocial'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['numeroDelSeguroSocial'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']) {
-                    <small>El número de seguridad social no puede tener más de 18 caracteres.</small>
-                  }
-                  @if(getFormValues['numeroDelSeguroSocial'].errors?.['pattern']) {
-                    <small>Por favor, sólo escribe dígitos.</small>
-                  }
-                </div>
+              @if(getFormValues['numeroDelSeguroSocial'].invalid && (getFormValues['numeroDelSeguroSocial'].touched ||
+              submitted)) {
+              <div class="text-danger">
+                @if(getFormValues['numeroDelSeguroSocial'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']) {
+                <small>El número de seguridad social no puede tener más de 18 caracteres.</small>
+                }
+                @if(getFormValues['numeroDelSeguroSocial'].errors?.['pattern']) {
+                <small>Por favor, sólo escribe dígitos.</small>
+                }
+              </div>
               }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="numberDeIdeFiscal">Número de identificación fiscal*: </label>
-                <span class="bi bi-question-circle-fill fs-4 m-1" title="Número de identificación fiscal en el de país residencia" ata-bs-toggle="tooltip">
+                <label for="identificadorFiscal">Número de identificación fiscal*: </label>
+                <span class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Número de identificación fiscal en el de país residencia" ata-bs-toggle="tooltip">
                 </span>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numberDeIdeFiscal" maxlength="18" />
+                <input type="text" class="form-control" formControlName="identificadorFiscal" maxlength="18"
+                  (change)="updateDriverFromForm('identificadorFiscal')" />
               </div>
-              @if(getFormValues['numberDeIdeFiscal'].invalid && (getFormValues['numberDeIdeFiscal'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['numberDeIdeFiscal'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['numberDeIdeFiscal'].errors?.['maxLength']) {
-                    <small>El nombre no puede tener más de 18 caracteres.</small>
-                  }
-                </div>
+              @if(getFormValues['identificadorFiscal'].invalid && (getFormValues['identificadorFiscal'].touched ||
+              submitted)) {
+              <div class="text-danger">
+                @if(getFormValues['identificadorFiscal'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['identificadorFiscal'].errors?.['maxLength']) {
+                <small>El nombre no puede tener más de 18 caracteres.</small>
+                }
+              </div>
               }
             </div>
             <div class="col-md-4 mt-3">
@@ -189,16 +195,20 @@
           <div class="row">
             <div class="col-md-4">
               <div>
-                <app-catalogo-select class="paisChn" [catalogo]="paisList" placeholder="Seleccione un país"
-                  formControlName="pais" [required]="true" [isDisabled]="readonly" name="pais" label="País"
-                  (selectionChange)="onPaisChange($event)"></app-catalogo-select>
-                @if(formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.touched || submitted)) {
-                  <div class="text-danger">
-                    @if(formChoferes.get('pais')?.errors?.['required']) {
-                      <small class="text-danger">Este campo es obligatorio.</small>
-                    }
-                  </div>
-                }
+                <label class="form-label">País</label>
+                <select class="form-control form-select" formControlName="pais" [disabled]="readonly"
+                  (change)="updateDriverFromForm('pais')">
+                  <option [ngValue]="null">Seleccione un país</option>
+                  <option *ngFor="let pais of paisList" [title]="pais.descripcion" [value]="pais.clave">
+                    {{ pais.descripcion }}
+                  </option>
+                </select>
+                <!-- Validation messages -->
+                <div *ngIf="formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.touched || submitted)">
+                  <small class="text-danger" *ngIf="formChoferes.get('pais')?.errors?.['required']">
+                    Este campo es obligatorio.
+                  </small>
+                </div>
               </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -206,39 +216,41 @@
                 <label for="codigoPostal">Código postal*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="codigoPostal" />
+                <input type="text" class="form-control" formControlName="codigoPostal"
+                  (change)="updateDriverFromForm('codigoPostal')" />
               </div>
               @if(getFormValues['codigoPostal'].invalid && (getFormValues['codigoPostal'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['codigoPostal'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['codigoPostal'].errors?.['maxLength']) {
-                    <small>codigoPostal no puede tener más de 10 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['codigoPostal'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['codigoPostal'].errors?.['maxLength']) {
+                <small>codigoPostal no puede tener más de 10 caracteres.</small>
+                }
+              </div>
               }
             </div>
 
             <div class="col-md-4">
               <div>
-                <label for="numberDelSocial">Estado*:</label>
+                <label for="estado">Estado*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="estado" />
+                <input type="text" class="form-control" formControlName="estado"
+                  (change)="updateDriverFromForm('estado')" />
               </div>
               @if(getFormValues['estado'].invalid && (getFormValues['estado'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['estado'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['estado'].errors?.['maxLength']) {
-                    <small>El estado no puede tener más de 11 caracteres.</small>
-                  }
-                  @if(getFormValues['estado'].errors?.['pattern']) {
-                    <small>El estado debe tener 11 dígitos.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['estado'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['estado'].errors?.['maxLength']) {
+                <small>El estado no puede tener más de 11 caracteres.</small>
+                }
+                @if(getFormValues['estado'].errors?.['pattern']) {
+                <small>El estado debe tener 11 dígitos.</small>
+                }
+              </div>
               }
             </div>
           </div>
@@ -250,17 +262,18 @@
                 <label for="calle">Calle*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="calle" />
+                <input type="text" class="form-control" formControlName="calle"
+                  (change)="updateDriverFromForm('calle')" />
               </div>
               @if(getFormValues['calle'].invalid && (getFormValues['calle'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['calle'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['calle'].errors?.['maxLength']) {
-                    <small>calle no puede tener más de 10 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['calle'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['calle'].errors?.['maxLength']) {
+                <small>calle no puede tener más de 10 caracteres.</small>
+                }
+              </div>
               }
             </div>
             <div class="col-md-4">
@@ -268,17 +281,18 @@
                 <label for="numeroExterior">Número exterior*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroExterior" />
+                <input type="text" class="form-control" formControlName="numeroExterior"
+                  (change)="updateDriverFromForm('numeroExterior')" />
               </div>
               @if(getFormValues['numeroExterior'].invalid && (getFormValues['numeroExterior'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['numeroExterior'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['numeroExterior'].errors?.['maxLength']) {
-                    <small>Numero Exterior no puede tener más de 10 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['numeroExterior'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['numeroExterior'].errors?.['maxLength']) {
+                <small>Numero Exterior no puede tener más de 10 caracteres.</small>
+                }
+              </div>
               }
             </div>
             <div class="col-md-4">
@@ -286,7 +300,8 @@
                 <label for="numeroInterior">Número interior:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroInterior" />
+                <input type="text" class="form-control" formControlName="numeroInterior"
+                  (change)="updateDriverFromForm('numeroInterior')" />
               </div>
             </div>
           </div>
@@ -297,13 +312,15 @@
               <div>
                 <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
                   placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
-                  label="País de residencia"></app-catalogo-select>
-                @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched || submitted)) {
-                  <div class="text-danger">
-                    @if(formChoferes.get('paisDeResidencia')?.errors?.['required']) {
-                      <small class="text-danger">Este campo es obligatorio.</small>
-                    }
-                  </div>
+                  label="País de residencia"
+                  (selectionChange)="updateDriverFromForm('paisDeResidencia')"></app-catalogo-select>
+                @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched ||
+                submitted)) {
+                <div class="text-danger">
+                  @if(formChoferes.get('paisDeResidencia')?.errors?.['required']) {
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                </div>
                 }
               </div>
             </div>
@@ -313,17 +330,18 @@
                 <label for="ciudad">Ciudad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="ciudad" />
+                <input type="text" class="form-control" formControlName="ciudad"
+                  (change)="updateDriverFromForm('ciudad')" />
               </div>
               @if(getFormValues['ciudad'].invalid && (getFormValues['ciudad'].touched || submitted)) {
-                <div class="text-danger">
-                  @if(getFormValues['ciudad'].errors?.['required']) {
-                    <small class="text-danger">Este campo es obligatorio.</small>
-                  }
-                  @if(getFormValues['ciudad'].errors?.['maxLength']) {
-                    <small>ciudad no puede tener más de 10 caracteres.</small>
-                  }
-                </div>
+              <div class="text-danger">
+                @if(getFormValues['ciudad'].errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['ciudad'].errors?.['maxLength']) {
+                <small>ciudad no puede tener más de 10 caracteres.</small>
+                }
+              </div>
               }
             </div>
           </div>
@@ -331,38 +349,44 @@
           <div class="row">
             <div class="col-md-8">
               <div>
-                <label for="solicitud.correo">Correo electrónico:</label>
+                <label for="correoElectronico">Correo electrónico:</label>
               </div>
               <div>
-                <input type="email" class="form-control" formControlName="correoElectronico" />
+                <input type="email" class="form-control" formControlName="correoElectronico"
+                  (change)="updateDriverFromForm('correoElectronico')" />
               </div>
-              @if(formChoferes.get('correoElectronico')?.errors?.['required'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
-                <div class="text-danger">
-                  <small class="text-danger">Este campo es obligatorio.</small>
-                </div>
+              @if(formChoferes.get('correoElectronico')?.errors?.['required'] &&
+              (formChoferes.get('correoElectronico')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
+              </div>
               }
-              @if(formChoferes.get('correoElectronico')?.errors?.['email'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
-                <div class="text-danger">
-                  <small>Por favor, escribe una dirección de correo válida.</small>
-                </div>
+              @if(formChoferes.get('correoElectronico')?.errors?.['email'] &&
+              (formChoferes.get('correoElectronico')?.touched || submitted)) {
+              <div class="text-danger">
+                <small>Por favor, escribe una dirección de correo válida.</small>
+              </div>
               }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="solicitud.telefono">Teléfono:</label>
+                <label for="telefono">Teléfono:</label>
               </div>
               <div>
-                <input type="tel" class="form-control" formControlName="telefono" />
+                <input type="tel" class="form-control" formControlName="telefono"
+                  (change)="updateDriverFromForm('telefono')" />
               </div>
-              @if(formChoferes.get('telefono')?.errors?.['required'] && (formChoferes.get('telefono')?.touched || submitted)) {
-                <div class="text-danger">
-                  <small class="text-danger">Este campo es obligatorio.</small>
-                </div>
+              @if(formChoferes.get('telefono')?.errors?.['required'] && (formChoferes.get('telefono')?.touched ||
+              submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
+              </div>
               }
-              @if(formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched || submitted)) {
-                <div class="text-danger">
-                  <small>Por favor, sólo escribe dígitos.</small>
-                </div>
+              @if(formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched ||
+              submitted)) {
+              <div class="text-danger">
+                <small>Por favor, sólo escribe dígitos.</small>
+              </div>
               }
             </div>
           </div>

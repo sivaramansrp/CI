@@ -16,7 +16,8 @@ import {
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
-import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
+import { ApiResponseChofer, ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
+import { Chofer, Chofer40101Store } from '../../../../estado/chofer40101.store';
 
 
 @Component({
@@ -42,6 +43,11 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   @Input() readonly: boolean = false;
 
+  isLoading: boolean = false
+  submitted = false;
+  isEditando: boolean = false;
+
+  indiceEditando: number | null = null;
   /**
    * Datos del chofer nacional que se mostrarán o editarán en el formulario.
    * @type {ChoferesExtranjeros}
@@ -132,6 +138,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   constructor(private fb: FormBuilder,
     private modalService: BsModalService,
     private chofer40101Service: Chofer40101Service,
+    private chofer40101Store: Chofer40101Store,
   ) {
     // Lógica para el constructor si es necesario.
   }
@@ -142,38 +149,35 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {Promise<void>}
    */
   async ngOnInit(): Promise<void> {
-
+    this.chofer40101Store.setSelectedDriverType('extranjero');
 
     this.formChoferes = this.fb.group({
-      numero: [{ value: this.datosDeChofere?.numero, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
-      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: this.readonly }, [Validators.required, Validators.maxLength(50)]],
-      segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: this.readonly }],
-
-      nacionalidad: [{ value: this.datosDeChofere?.nacionalidad, disabled: true }, [Validators.required]],
-      numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }],
-      vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }],
-
-      numeroDelSeguroSocial: [{ value: this.datosDeChofere?.numeroDelSeguroSocial, disabled: this.readonly }, [Validators.required, Validators.maxLength(11), Validators.pattern(/^\d{11}$/)]],
-      numberDeIdeFiscal: [{ value: this.datosDeChofere?.numberDeIdeFiscal, disabled: this.readonly }, [Validators.required, Validators.maxLength(13)]],
-
-      pais: [{ value: this.datosDeChofere?.pais, disabled: true }, [Validators.required]],
-      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }, [Validators.required, Validators.maxLength(5), Validators.pattern(/^\d{5}$/)]],
+      nombre: [{ value: this.datosDeChofere?.nombre, disabled: this.readonly }, [Validators.required, Validators.maxLength(200)]],
+      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: this.readonly }, [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: this.readonly }, [Validators.maxLength(200)]],
+      nacionalidad: [{ value: this.datosDeChofere?.nacionalidad, disabled: this.readonly }, [Validators.required]],
+      numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: this.readonly }, [Validators.maxLength(24)]],
+      vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: this.readonly }, [Validators.maxLength(15)]],
+      numeroDelSeguroSocial: [{ value: this.datosDeChofere?.numeroDelSeguroSocial, disabled: this.readonly }, [Validators.required, Validators.maxLength(18), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      identificadorFiscal: [{ value: this.datosDeChofere?.identificadorFiscal, disabled: this.readonly }, [Validators.required, Validators.maxLength(18)]],
+      pais: [{ value: this.datosDeChofere?.pais, disabled: this.readonly }, [Validators.required]],
+      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
       estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }, [Validators.required]],
-
       calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }, [Validators.required, Validators.maxLength(100)]],
       numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
       numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }, [Validators.maxLength(10)]],
-
       paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }, [Validators.required]],
       ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }, [Validators.required, Validators.maxLength(50)]],
-
       correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }, [Validators.required, Validators.email]],
       telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
     }, { updateOn: 'change' });
 
     await this.paisListData();
-    await this.updateListsData(this.datosDeChofere);
+  }
 
+  updateDriverFromForm(field: keyof Chofer): void {
+    const VALUE = this.formChoferes.get(field as string)?.value;
+    this.chofer40101Store.setDriver('extranjero', { [field]: VALUE });
   }
 
 
@@ -190,22 +194,11 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
           .pipe(takeUntil(this.destroyed$))
       );
       this.paisList = DATA || [];
-      if (this.paisList.length > 0) {
-        this.onPaisChange(this.paisList[0]);
-      }
+      const valueNational = this.paisList.length > 0 ? this.paisList[0].clave : ""
+      this.formChoferes.controls['nacionalidad'].setValue(valueNational);
     } catch (error) {
       // Manejo de errores si es necesario
     }
-  }
-
-  /**
-   * Maneja el cambio de país seleccionado, actualizando la lista de estados y reseteando los campos dependientes.
-   * @param value País seleccionado.
-   * @returns {void}
-   */
-  onPaisChange(value: Catalogo): void {
-    this.fetchEstadosByPais(value);
-    this.formChoferes.controls['estado'].reset();
   }
 
   /**
@@ -233,7 +226,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {void}
    */
   onEstadoChange(value: Catalogo): void {
-
+    if (!value) return;
+    this.chofer40101Store.setDriver('extranjero', { estado: value.clave });
     this.fetchMunicipiosByEstado(value);
   }
 
@@ -263,6 +257,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {void}
    */
   onMunicipioChange(value: Catalogo): void {
+    if (!value) return;
+    this.chofer40101Store.setDriver('extranjero', { municipioAlcaldia: value.clave });
     this.fetchColoniasByMunicipio(value);
   }
 
@@ -275,7 +271,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     try {
       const DATA = await firstValueFrom(
         this.chofer40101Service
-          .getColoniasPorMunicipio(value.id)
+          .getColoniasPorMunicipio(value.clave as string)
           .pipe(takeUntil(this.destroyed$))
       );
       this.coloniaList = DATA || [];
@@ -317,26 +313,19 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   limpiarFormulario(): void {
     this.formChoferes.reset();
-    this.formChoferes.reset({
-      curp: '',
-      rfc: '',
-      nombre: '',
-      primerApellido: '',
-      segundoApellido: '',
-      numeroDeGafete: '',
-      vigenciaGafete: '',
-      calle: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      pais: 1,
-      estado: '',
-      paisDeResidencia: '1',
-      ciudad: '',
-      localidad: '',
-      codigoPostal: '',
-      correoElectronico: '',
-      telefono: ''
-    });
+    this.chofer40101Store.clear();
+  }
+
+  /**
+  * Método para iniciar la edición de un registro.
+  * @param datos Datos del chofer a editar
+  * @param indice Índice del registro en la tabla
+  */
+  editarRegistro(datos: ChoferesExtranjeros, indice: number): void {
+    this.isEditando = true;
+    this.indiceEditando = indice;
+    this.formChoferes.patchValue(datos);
+    this.chofer40101Store.setDriver('extranjero', datos);
   }
 
   /**
@@ -345,8 +334,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {Promise<void>}
    */
   async buscarChoferNacional(numeroDelSeguroSocial: string): Promise<void> {
+    this.isLoading = true;
     if (!numeroDelSeguroSocial) {
-      //this.showNotification = true;
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.INFORMACION,
@@ -357,39 +346,49 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      this.isLoading = false;
       return;
     }
-
+    const nss = this.formChoferes.get('numeroDelSeguroSocial')?.value
     await this.chofer40101Service
-      .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
+      .obtenerDatos(nss)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((response) => {
-        if (response?.length === 0) {
-          this.alertaNotificacion = {
-            tipoNotificacion: TipoNotificacionEnum.ALERTA,
-            categoria: CategoriaMensaje.INFORMACION,
-            modo: 'action',
-            titulo: 'Alert',
-            mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
-            cerrar: true,
-            txtBtnAceptar: 'Aceptar',
-            txtBtnCancelar: '',
+      .subscribe((response: ApiResponseChofer) => {
+        if (response) {
+          const datosMapped: ChoferesExtranjeros = {
+            ...response.datos,
+            nombre: response.datos.nombre ?? '',
+            primerApellido: response?.datos?.primer_apellido ?? '',
+            segundoApellido: response?.datos?.segundo_apellido ?? '',
+            nacionalidad: response?.datos?.nacionalidad ?? '',
+            numeroDeGafete: response?.datos?.numero_de_gafete ?? '',
+            vigenciaGafete: response?.datos?.vigencia_del_gafete ?? '',
+            numeroDelSeguroSocial: response?.datos?.nss ?? '',
+            identificadorFiscal: response?.datos?.rfc ?? '',
+            pais: response.datos?.domicilio?.pais ?? '',
+            codigoPostal: response.datos?.domicilio?.codigo_postal ?? '',
+            estado: response.datos?.domicilio?.estado ?? '',
+            calle: response.datos?.domicilio?.calle ?? '',
+            numeroExterior: response.datos?.domicilio?.numero_exterior ?? '',
+            numeroInterior: response.datos?.domicilio?.numero_interior ?? '',
+            paisDeResidencia: response.datos?.domicilio?.pais ?? '',
+            ciudad: response.datos?.domicilio?.ciudad ?? '',
+            correoElectronico: response.datos?.domicilio?.correo_electronico ?? '',
+            telefono: response.datos?.domicilio?.telefono ?? '',
           };
-          return;
+          this.completarFormularioConDatos(datosMapped);
+          this.isLoading = false;
         }
-        this.updateListsData(response[0]);
-        // Rellenar el formulario
-        this.formChoferes.patchValue(response[0]);
       });
   }
 
   /**
-   * Actualiza las listas de estados, municipios y colonias según los datos del chofer.
-   * @param data Datos del chofer nacional.
-   * @returns {Promise<void>}
+   * Función auxiliar para completar el formulario con datos del chofer.
+   * @param datos Datos de la respuesta de la API
    */
-  private updateListsData(data: ChoferesExtranjeros): void {
-    data.pais = (this.paisList.find((p: Catalogo) => p.descripcion === data.pais)?.id)?.toString();
+  private completarFormularioConDatos(datos: ChoferesExtranjeros): void {
+    this.formChoferes.patchValue(datos);
+    this.chofer40101Store.setDriver('extranjero', datos);
   }
 
   /**
@@ -397,8 +396,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
    */
-  submitted = false;
-
   guardarFilaEditada(): void {
     this.submitted = true;
     Object.values(this.formChoferes.controls).forEach(control => {
@@ -414,7 +411,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
 
       // Aquí puedes realizar la lógica para guardar los datos del chofer
       this.addModalEvent.emit(DATA);
-      this.cerrarModal();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

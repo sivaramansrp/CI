@@ -72,7 +72,7 @@ export const CHOFERES_EXTRANJEROS_TABLA: ConfiguracionColumna<ChoferesExtranjero
     },
     {
         encabezado: 'Número',
-        clave: (item: ChoferesExtranjeros) => item.numero,
+        clave: (item: ChoferesExtranjeros) => item.nombre,
         orden: 2,
     },
     {

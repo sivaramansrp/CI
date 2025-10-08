@@ -253,10 +253,9 @@
               <div class="form-group">
                 <label class="form-label">Colonia*</label>
                 <select class="form-control form-select" formControlName="colonia"
-                  (change)="updateDriverFromForm('colonia')"
-                  [attr.disabled]="readonly ? '' : null">
+                  (change)="updateDriverFromForm('colonia')" [attr.disabled]="readonly ? '' : null">
                   <option [ngValue]="null">Seleccione un valor</option>
-                  <option *ngFor="let colonia of coloniaList" [title]="colonia.descripcion" [value]="colonia.id">
+                  <option *ngFor="let colonia of coloniaList" [title]="colonia.descripcion" [value]="colonia.clave">
                     {{ colonia.descripcion }}
                   </option>
                 </select>
@@ -270,8 +269,7 @@
               <div class="form-group">
                 <label class="form-label">País de residencia*</label>
                 <select class="form-control form-select" formControlName="paisDeResidencia"
-                  (change)="updateDriverFromForm('paisDeResidencia')"
-                  [attr.disabled]="readonly ? '' : null">
+                  (change)="updateDriverFromForm('paisDeResidencia')" [attr.disabled]="readonly ? '' : null">
                   <option [ngValue]="null">Seleccione un valor</option>
                   <option *ngFor="let pais of paisList" [title]="pais.descripcion" [value]="pais.clave">
                     {{ pais.descripcion }}

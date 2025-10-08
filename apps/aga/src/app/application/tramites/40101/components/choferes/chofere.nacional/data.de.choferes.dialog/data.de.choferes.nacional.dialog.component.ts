@@ -157,13 +157,13 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   onMunicipioChange(): void {
     const MUNICIPIOID = this.formChoferes.get('municipioAlcaldia')?.value;
     if (!MUNICIPIOID) { return; }
-
     this.chofer40101Store.setDriver('nacional', { municipioAlcaldia: String(MUNICIPIOID) });
-
     this.chofer40101Service.getColoniasPorMunicipio(MUNICIPIOID).pipe(takeUntil(this.destroyed$)).subscribe(data => {
       this.coloniaList = data || [];
-      this.formChoferes.controls['colonia'].reset();
-      this.chofer40101Store.setDriver('nacional', { colonia: '' });
+      const COLONIA = this.coloniaList.length > 0 ? String(this.coloniaList[0].clave) : '';
+      this.formChoferes.controls['colonia'].reset()
+      this.formChoferes.controls['colonia'].setValue(COLONIA)
+      this.chofer40101Store.setDriver('nacional', { colonia: COLONIA })
     });
   }
 

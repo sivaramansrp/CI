@@ -25,6 +25,8 @@ export interface Chofer {
   correoElectronico?: string;
   telefono?: string;
   identificadorFiscal?: string;
+  nacionalidad?: string;
+  numeroDelSeguroSocial?: string;
 }
 
 export type DriverType = 'nacional' | 'extranjero';

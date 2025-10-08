@@ -36,37 +36,40 @@ export interface ApiResponseSolicitante {
 }
 
 export interface ApiResponseChofer {
-  codigo: string;
-  mensaje: string;
+  codigo: string | null;
+  mensaje: string | null;
   datos: {
-    curp: string;
-    rfc: string;
+    curp: string | null;
+    rfc: string | null;
     nss: string | null;
     nombre: string | null;
     primer_apellido: string | null;
     segundo_apellido: string | null;
     nacionalidad: string | null;
-    numero_de_gafete: string;
-    vigencia_del_gafete: string;
+    numero_de_gafete: string | null;
+    vigencia_del_gafete: string | null;
     estado_fisico_gafete: string | null;
     estado_gafete: string | null;
     estado_solicitud: string | null;
     domicilio: {
-      pais: string;
-      codigo_postal: string;
+      pais: string | null;
+      codigo_postal: string | null;
       correo_electronico: string | null;
-      estado: string;
-      municipio: string;
-      localidad: string;
-      colonia: string;
-      calle: string;
-      numero_exterior: string;
-      numero_interior: string;
+      pais_de_residencia: string | null
+      estado: string | null;
+      municipio: string | null;
+      localidad: string | null;
+      colonia: string | null;
+      ciudad: string | null
+      calle: string | null;
+      numero_exterior: string | null;
+      numero_interior: string | null;
       lada: string | null;
       telefono: string | null;
     };
   };
 }
+
 
 /**
  * Interfaz que define la configuración de la tabla de unidades de arrastre.
@@ -321,7 +324,7 @@ export interface DatosDelChoferNacional {
 
 export interface ChoferesExtranjeros {
   /** Línea de captura del pago. */
-  numero?: string;
+  nombre?: string;
   primerApellido?: string;
   segundoApellido?: string;
 
@@ -331,7 +334,7 @@ export interface ChoferesExtranjeros {
 
   numeroDelSeguroSocial?: string;
   numberDeIdeFiscal?: string;
-
+  identificadorFiscal?: string
   pais?: string;
 
   apellidoPaterno?: string;

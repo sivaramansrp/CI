@@ -21,3 +21,41 @@
     ::ng-deep .mensaje-error {
         display: none !important;
     }
+
+
+    .loader-overlay {
+        position: fixed;
+        /* fixed so it covers the whole viewport */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        /* black transparent background */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        /* make sure it's on top of everything */
+    }
+
+    .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #fff;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
