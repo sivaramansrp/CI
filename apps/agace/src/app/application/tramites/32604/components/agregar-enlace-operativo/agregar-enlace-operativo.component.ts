@@ -1,3 +1,11 @@
+/**
+ * Componente para la gestión de enlaces operativos en el trámite 32604.
+ *
+ * Este archivo contiene el componente que permite agregar y gestionar enlaces operativos
+ * mediante formularios reactivos. Incluye validaciones, búsqueda de terceros nacionales,
+ * actualización de estado y emisión de eventos al componente padre.
+ */
+
 import { ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento } from '@ng-mf/data-access-user';
 import { EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,8 +20,15 @@ import { EnlaceOperativo } from '../../models/empresas-comercializadoras.model';
 import { RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 /**
- * Componente para agregar un enlace operativo.
- * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
+ * Componente para agregar y gestionar enlaces operativos en el trámite 32604.
+ * 
+ * Proporciona funcionalidades para capturar información de enlaces operativos
+ * mediante formularios reactivos con validaciones, búsqueda de representantes legales,
+ * y emisión de eventos para comunicación con componentes padre.
+ * 
+ * @component
+ * @implements {OnInit}
+ * @implements {OnDestroy}
  */
 @Component({
   selector: 'app-agregar-enlace-operativo',
@@ -27,45 +42,100 @@ import { Solicitud32604Query } from '../../estados/solicitud32604.query';
  * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
  */
 export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
-  /** Formulario reactivo para capturar los datos del enlace operativo */
+  /**
+   * Formulario reactivo para capturar los datos del enlace operativo.
+   * 
+   * Contiene campos para RFC, nombres, teléfono, correo electrónico,
+   * cargo y configuración de suplente con validaciones específicas.
+   * 
+   * @property {FormGroup} agregarEnlaceOperativoForm
+   */
   agregarEnlaceOperativoForm!: FormGroup;
 
-  /** Subject para manejar la destrucción de suscripciones */
+  /**
+   * Subject para manejar la destrucción de suscripciones.
+   * 
+   * Utilizado con el operador `takeUntil` para cancelar automáticamente
+   * todas las suscripciones activas cuando el componente se destruye.
+   * 
+   * @private
+   * @property {Subject<void>} destroy$
+   */
   private destroy$: Subject<void> = new Subject<void>();
 
-  /** Estado actual de la solicitud */
+  /**
+   * Estado actual de la solicitud 32604.
+   * 
+   * Contiene toda la información del estado actual del formulario
+   * y datos relacionados con el enlace operativo.
+   * 
+   * @property {Solicitud32604State} solicitud32604State
+   */
   solicitud32604State: Solicitud32604State = {} as Solicitud32604State;
 
-  /** Evento para emitir el objeto EnlaceOperativo al componente padre */
+  /**
+   * Evento para emitir el objeto EnlaceOperativo al componente padre.
+   * 
+   * Se dispara cuando se completa exitosamente la creación
+   * del enlace operativo y se desea notificar al componente padre.
+   * 
+   * @output
+   * @property {EventEmitter<EnlaceOperativo>} agregarEnlaceOperativo
+   */
   @Output() agregarEnlaceOperativo = new EventEmitter<EnlaceOperativo>();
 
   /**
    * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * 
+   * Cuando es `true`, los campos del formulario no se pueden editar
+   * y se muestran únicamente para consulta.
+   * 
+   * @property {boolean} esFormularioSoloLectura
    */
   esFormularioSoloLectura: boolean = false;
-/**
- * Propiedad que almacena la notificación actual que se mostrará al usuario.
- */
-public nuevaNotificacion!: Notificacion;
 
-/**
- * Índice del elemento que se desea eliminar de la lista de pedimentos.
- */
-elementoParaEliminar!: number;
+  /**
+   * Propiedad que almacena la notificación actual que se mostrará al usuario.
+   * 
+   * Contiene la configuración y contenido de las notificaciones
+   * que se despliegan en la interfaz de usuario.
+   * 
+   * @public
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
 
-/**
- * Lista de pedimentos asociados al componente.
- */
-pedimentos: Array<Pedimento> = [];
+  /**
+   * Índice del elemento que se desea eliminar de la lista de pedimentos.
+   * 
+   * Almacena la referencia del elemento seleccionado
+   * para operaciones de eliminación en la lista de pedimentos.
+   * 
+   * @property {number} elementoParaEliminar
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * Lista de pedimentos asociados al componente.
+   * 
+   * Array que contiene todos los pedimentos registrados
+   * relacionados con el enlace operativo.
+   * 
+   * @property {Array<Pedimento>} pedimentos
+   */
+  pedimentos: Array<Pedimento> = [];
 
   /**
    * Constructor de la clase que inicializa las dependencias necesarias.
    *
-   * @param fb - Constructor de formularios reactivos.
-   * @param empresasComercializadorasService - Servicio para obtener y gestionar los datos de la solicitud.
-   * @param solicitud32604Store - Store de Akita para el estado de la solicitud 32604.
-   * @param solicitud32604Query - Consulta (query) de Akita para acceder al estado de la solicitud 32604.
+   * Configura las dependencias del componente e inicializa la suscripción
+   * al estado de consulta para manejar el modo de solo lectura del formulario.
+   *
+   * @param {FormBuilder} fb - Constructor de formularios reactivos de Angular
+   * @param {EmpresasComercializadorasService} empresasComercializadorasService - Servicio para gestión de datos de empresas comercializadoras
+   * @param {Solicitud32604Store} solicitud32604Store - Store para manejo del estado de la solicitud 32604
+   * @param {Solicitud32604Query} solicitud32604Query - Query para consultas del estado de la solicitud 32604
+   * @param {ConsultaioQuery} consultaioQuery - Query para el estado de consulta de la aplicación
    */
   constructor(
     public fb: FormBuilder,
@@ -92,7 +162,15 @@ pedimentos: Array<Pedimento> = [];
       .subscribe();
   }
 
-  /** Inicializa el formulario y suscribe al estado de la solicitud */
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * 
+   * Configura el estado inicial del formulario y establece las
+   * suscripciones necesarias para el manejo del estado del componente.
+   * 
+   * @memberof AgregarEnlaceOperativoComponent
+   * @implements {OnInit}
+   */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
@@ -100,9 +178,12 @@ pedimentos: Array<Pedimento> = [];
  /**
  * Método que elimina un pedimento de la lista de pedimentos.
  *
- * @param borrar Indica si se debe proceder con la eliminación del pedimento.
- *               Si es `true`, se elimina el pedimento en el índice especificado
- *               por la propiedad `elementoParaEliminar`.
+ * Verifica si debe proceder con la eliminación y remueve el elemento
+ * de la lista utilizando el índice almacenado en elementoParaEliminar.
+ *
+ * @param {boolean} borrar - Indica si se debe proceder con la eliminación del pedimento.
+ *                          Si es `true`, se elimina el pedimento en el índice especificado
+ * @memberof AgregarEnlaceOperativoComponent
  */
 eliminarPedimento(borrar: boolean): void {
   if (borrar) {
@@ -113,11 +194,13 @@ eliminarPedimento(borrar: boolean): void {
  /**
  * Método que abre un modal para mostrar una notificación al usuario.
  *
- * @param i Índice del elemento que se desea eliminar. Por defecto, es 0.
- *          Este índice se asigna a la propiedad `elementoParaEliminar`.
+ * Configura y muestra un modal de notificación de alerta indicando
+ * que se deben capturar todos los datos marcados como obligatorios.
+ * También almacena el índice del elemento para operaciones posteriores.
  *
- * La notificación muestra un mensaje de alerta indicando que el contribuyente
- * no fue encontrado y solicita verificar el RFC.
+ * @param {number} [i=0] - Índice del elemento que se desea eliminar. Por defecto, es 0.
+ *                        Este índice se asigna a la propiedad `elementoParaEliminar`
+ * @memberof AgregarEnlaceOperativoComponent
  */
 abrirModal(i: number = 0): void {
   this.nuevaNotificacion = {
@@ -125,7 +208,7 @@ abrirModal(i: number = 0): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'EI contribuyente no fue encontrado.Favor de verificar el RFC.',
+    mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
@@ -137,6 +220,11 @@ abrirModal(i: number = 0): void {
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * 
+   * Determina el modo de operación del formulario basado en el estado
+   * de solo lectura y ejecuta la acción correspondiente.
+   * 
+   * @memberof AgregarEnlaceOperativoComponent
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -147,8 +235,12 @@ abrirModal(i: number = 0): void {
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Carga datos del estado y configura el formulario según el modo de operación.
+   * 
+   * Inicializa el formulario y luego aplica el estado de solo lectura
+   * habilitando o deshabilitando los controles según corresponda.
+   * 
+   * @memberof AgregarEnlaceOperativoComponent
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
@@ -162,16 +254,17 @@ abrirModal(i: number = 0): void {
   }
 
   /**
-   * Inicializa el formulario `agregarEnlaceOperativoForm` con los valores actuales
-   * del estado `solicitud32604State`.
+   * Inicializa el formulario `agregarEnlaceOperativoForm` con los valores del estado actual.
    *
-   * Algunos campos están deshabilitados porque no deben ser editables por el usuario.
-   * Aplica validaciones como `required`, `email`, y un patrón para el teléfono.
+   * Configura un formulario reactivo con validaciones específicas para cada campo:
+   * - RFC del tercero (requerido)
+   * - Campos deshabilitados para datos del representante legal
+   * - Teléfono con patrón de validación
+   * - Correo electrónico con validación de email
+   * 
+   * También establece suscripción al estado para mantener sincronización automática.
    *
-   * Además, se suscribe a los cambios del estado de la solicitud (`selectSolicitud$`)
-   * y actualiza los valores del formulario mediante `patchValue`.
-   *
-   * @returns {void}
+   * @memberof AgregarEnlaceOperativoComponent
    */
   inicializarFormulario(): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
@@ -238,8 +331,13 @@ abrirModal(i: number = 0): void {
   }
 
   /**
-   * Llama al servicio para obtener los datos del representante legal
-   * y actualiza el estado con esos datos.
+   * Busca y obtiene los datos del representante legal desde el servicio.
+   * 
+   * Realiza una consulta al servicio para obtener información del representante legal
+   * y actualiza el estado con los datos recibidos. Muestra un modal al finalizar
+   * la operación independientemente del resultado.
+   * 
+   * @memberof AgregarEnlaceOperativoComponent
    */
   buscarTerceroNacionalIDC(): void {
     if (this.agregarEnlaceOperativoForm.get('rfcTercero')?.value) {
@@ -264,39 +362,84 @@ abrirModal(i: number = 0): void {
     this.abrirModal();
   }
 
-  /** Actualiza el RFC del tercero en el store */
+  /**
+   * Actualiza el RFC del tercero en el store.
+   * 
+   * Extrae el valor del input desde el evento y lo almacena
+   * en el estado global para el campo RFC del tercero.
+   * 
+   * @param {Event} evento - Evento de cambio del input con el RFC del tercero
+   * @memberof AgregarEnlaceOperativoComponent
+   */
   actualizarRfcTercero(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32604Store.actualizarRfcTercero(VALOR);
   }
 
-  /** Actualiza el teléfono en el store */
+  /**
+   * Actualiza el teléfono en el store.
+   * 
+   * Extrae el valor del input desde el evento y lo almacena
+   * en el estado global para el campo de teléfono.
+   * 
+   * @param {Event} evento - Evento de cambio del input con el teléfono
+   * @memberof AgregarEnlaceOperativoComponent
+   */
   actualizarTelefono(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32604Store.actualizarTelefono(VALOR);
   }
 
-  /** Actualiza el correo electrónico en el store */
+  /**
+   * Actualiza el correo electrónico en el store.
+   * 
+   * Extrae el valor del input desde el evento y lo almacena
+   * en el estado global para el campo de correo electrónico.
+   * 
+   * @param {Event} evento - Evento de cambio del input con el correo electrónico
+   * @memberof AgregarEnlaceOperativoComponent
+   */
   actualizarCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32604Store.actualizarCorreoElectronico(VALOR);
   }
 
-  /** Actualiza el cargo en el store */
+  /**
+   * Actualiza el cargo del enlace operativo en el store.
+   * 
+   * Extrae el valor del input desde el evento y lo almacena
+   * en el estado global para el campo de cargo del enlace.
+   * 
+   * @param {Event} evento - Evento de cambio del input con el cargo
+   * @memberof AgregarEnlaceOperativoComponent
+   */
   agregarEnlaceCargo(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32604Store.actualizarEnlaceCargo(VALOR);
   }
 
-  /** Actualiza el valor del campo suplente en el store */
+  /**
+   * Actualiza el valor del campo suplente en el store.
+   * 
+   * Extrae el estado checked del checkbox desde el evento
+   * y lo almacena en el estado global para el campo suplente.
+   * 
+   * @param {Event} evento - Evento de cambio del checkbox suplente
+   * @memberof AgregarEnlaceOperativoComponent
+   */
   actualizarEnlaceSuplente(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud32604Store.actualizarEnlaceSuplente(VALOR);
   }
 
   /**
-   * Construye el objeto EnlaceOperativo con los valores del formulario
-   * y lo emite al componente padre.
+   * Construye el objeto EnlaceOperativo con los valores del formulario y lo emite al componente padre.
+   * 
+   * Recopila todos los datos del formulario, construye un objeto EnlaceOperativo
+   * completo con información adicional predeterminada y lo emite al componente
+   * padre mediante el EventEmitter.
+   * 
+   * @memberof AgregarEnlaceOperativoComponent
    */
   aceptarEnlaceSuplente(): void {
     const OBJETO_JSON: EnlaceOperativo = {
@@ -335,15 +478,29 @@ abrirModal(i: number = 0): void {
 
   /**
    * Verifica si un campo del formulario no es válido.
-   * @param id Identificador del campo en el formulario.
-   * @returns true si el campo es inválido y ha sido tocado, de lo contrario undefined.
+   * 
+   * Evalúa el estado de validación de un campo específico del formulario,
+   * verificando si es inválido y ha sido tocado por el usuario.
+   * 
+   * @param {string} id - Identificador del campo en el formulario
+   * @returns {boolean | undefined} true si el campo es inválido y ha sido tocado, undefined en caso contrario
+   * @memberof AgregarEnlaceOperativoComponent
    */
   noEsValido(id: string): boolean | undefined {
     const CONTROL = this.agregarEnlaceOperativoForm.get(id);
     return CONTROL?.invalid && CONTROL?.touched;
   }
 
-  /** Finaliza todas las suscripciones para evitar fugas de memoria */
+  /**
+   * Finaliza todas las suscripciones para evitar fugas de memoria.
+   * 
+   * Método del ciclo de vida que se ejecuta cuando el componente se destruye.
+   * Emite un valor en el Subject destroy$ y lo completa para cancelar
+   * automáticamente todas las suscripciones activas.
+   * 
+   * @memberof AgregarEnlaceOperativoComponent
+   * @implements {OnDestroy}
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

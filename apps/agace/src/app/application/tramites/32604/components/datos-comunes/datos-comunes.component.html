@@ -1,35 +1,49 @@
 <div class="container">
   <form [formGroup]="datosComunesForm">
-    <div class="row mt-3">
+    <div class="row mt-5">
       <div class="col-md-12">
         <label class="form-label text-start"
           >Señale el sector productivo o servicio al que pertenece</label
         >
       </div>
-      <div class="col-md-6">
-        <app-catalogo-select
-          formControlName="catseleccionados"
-          [catalogo]="sectorProductivo.catalogos"
-          [label]="sectorProductivo.labelNombre"
-          [isDisabled]="esFormularioSoloLectura"
-          [required]="sectorProductivo.required"
-          (selectionChange)="actualizarCatseleccionados($event)"
-        ></app-catalogo-select>
+      <div class="col-12 col-md-12 p-0">
+        <div class="col-md-6">
+          <app-catalogo-select
+            formControlName="catseleccionados"
+            [catalogo]="sectorProductivo.catalogos"
+            [label]="sectorProductivo.labelNombre"
+            [placeholder]="sectorProductivo.primerOpcion"
+            [hiddenPrimerOption]="false"
+            [primerOptionValue]="0"
+            [isDisabled]="esFormularioSoloLectura"
+            [required]="sectorProductivo.required"
+            (selectionChange)="actualizarCatseleccionados($event)"
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+          <app-catalogo-select
+            formControlName="servicio"
+            [catalogo]="servicio.catalogos"
+            [label]="servicio.labelNombre"
+            [placeholder]="servicio.primerOpcion"
+            [hiddenPrimerOption]="false"
+            [primerOptionValue]="0"
+            [isDisabled]="esFormularioSoloLectura"
+            [required]="servicio.required"
+            (selectionChange)="actualizarServicio($event)"
+          ></app-catalogo-select>
+        </div>
       </div>
-      <div class="col-md-6">
-        <app-catalogo-select
-          formControlName="servicio"
-          [catalogo]="servicio.catalogos"
-          [label]="servicio.labelNombre"
-          [isDisabled]="esFormularioSoloLectura"
-          [required]="servicio.required"
-          (selectionChange)="actualizarServicio($event)"
-        ></app-catalogo-select>
+      <div class="col-12 col-md-12 mt-5 nota">
+        <div class="alert alert-info">
+          <div class="form-check">
+            <b> Nota:</b> Si no encuadra en los sectores o los servicios de los catálogos, deberá seleccionar el más cercano a sus actividades.
+          </div>
+        </div>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >* Señale si se encuentra al corriente en el cumplimiento de sus
-          obligaciones fiscales y aduaneras</label
+        <label class="form-label text-start"><span class="text-danger">*</span> Señale si se encuentra al corriente en el cumplimiento de sus
+          obligaciones fiscales y aduaneras.</label
         >
         <app-input-radio
           formControlName="190"
@@ -43,7 +57,7 @@
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          >* Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales</label
+          ><span class="text-danger">*</span> Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales</label
         >
         <app-input-radio
           formControlName="191"
@@ -56,7 +70,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">* Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de la fracción VI.</label
+        <label class="form-label text-start"><span class="text-danger">*</span> Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de la fracción VI.</label
         >
         <app-input-radio
           formControlName="199"
@@ -69,10 +83,10 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">* Del mismo modo indique si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo y 69-B Bis, noveno párrafo, del CFF.</label
+        <label class="form-label text-start"><span class="text-danger">*</span> Del mismo modo indique si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo y 69-B Bis, noveno párrafo, del CFF.</label
         >
         <app-input-radio
-          formControlName="199"
+          formControlName="200"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
@@ -82,7 +96,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">* Señale si sus certificados de sellos digitales están vigentes.</label>
+        <label class="form-label text-start"><span class="text-danger">*</span> Señale si sus certificados de sellos digitales están vigentes.</label>
         <app-input-radio
           formControlName="244"
           [radioOptions]="sinoOpcion.radioOptions"
@@ -94,26 +108,15 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">* Señale si infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos 12 meses</label>
+        <label class="form-label text-start"><span class="text-danger">*</span> Señale si infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos 12 meses</label>
         <app-input-radio
-          formControlName="199"
+          formControlName="201"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
           (valueChange)="actualizar201($event)"
         ></app-input-radio>
-      </div>
-
-      <div class="col-md-6">
-        <app-catalogo-select
-          formControlName="servicio"
-          [catalogo]="servicio.catalogos"
-          [label]="servicio.labelNombre"
-          [isDisabled]="esFormularioSoloLectura"
-          [required]="servicio.required"
-          (selectionChange)="actualizarServicio($event)"
-        ></app-catalogo-select>
       </div>
 
       <div class="col-md-12 mt-4">
@@ -180,9 +183,9 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >Señale si tiene actualizado sus medios de contacto para efectos del
+            ><span class="text-danger">*</span> Señale si tiene actualizado sus medios de contacto para efectos del
             buzón tributario en términos del penúltimo párrafo del artículo 17-K
-            del CFF. *</label
+            del CFF.</label
           >
           <app-input-radio
             formControlName="246"
@@ -196,9 +199,9 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >Señale si se encuentra suspendida en el Padron de Importadores o en
+            ><span class="text-danger">*</span> Señale si se encuentra suspendida en el Padron de Importadores o en
             el Padrón de Importadores de Sectores Específicos o Padrón de
-            Exportadores Sectorial. *</label
+            Exportadores Sectorial.</label
           >
           <app-input-radio
             formControlName="247"
@@ -269,8 +272,6 @@
             (change)="actualizarActualmente1($event)"
           />
         </div>
-
-        <div class="col-md-8"></div>
 
         <div class="col-md-12">
           <ng-titulo titulo="Proveedores" />
@@ -349,12 +350,12 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >Señale si el SAT ha interpuesto querella o denuncia penal en contra
+            ><span class="text-danger">*</span> Señale si el SAT ha interpuesto querella o denuncia penal en contra
             de los socios, accionistas, según corresponda, representante legal,
             e integrantes de la administración de la empresa solicitante o
             declaratoria de perjuicio, según corresponda, durante los últimos
             tres años anteriores a la presentación de la solicitud de
-            certificación. *</label
+            certificación.</label
           >
           <app-input-radio
             formControlName="248"
@@ -372,9 +373,9 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >Indique si cuenta con un sistema de control de inventarios, para el
+            ><span class="text-danger">*</span> Indique si cuenta con un sistema de control de inventarios, para el
             registro de sus operaciones de comercio exterior de conformidad con
-            el artículo 59, fracción I de la Ley. *</label
+            el artículo 59, fracción I de la Ley.</label
           >
           <app-input-radio
             formControlName="249"
@@ -388,7 +389,7 @@
 
         <div class="col-md-6 mt-4">
           <label class="form-label text-start"
-            >Nombre del sistema o datos para su identificación *</label
+            >Nombre del sistema o datos para su identificación <span class="text-danger">*</span>:</label
           >
           <input
             type="text"
@@ -400,7 +401,7 @@
           />
         </div>
         <div class="col-md-6 mt-4">
-          <label class="form-label text-start">Lugar de radicación *</label>
+          <label class="form-label text-start">Lugar de radicación<span class="text-danger">*</span>:</label>
           <input
             type="text"
             class="form-control"
@@ -458,7 +459,7 @@
           </div>
         </div>
 
-        <div class="col-md-12 mt-4">
+        <!-- <div class="col-md-12 mt-4">
           <div class="alert alert-info">
             <div class="form-check text-start">
               Deberá anexar un archivo con el reporte de saldos de mercancía de
@@ -468,14 +469,14 @@
               solicitud.
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >Indique si lleva la contabilidad en medios electrónicos y la ingresa mensualmente a través del portal del SAT, de conformidad con el artículo 28, fracciones III y IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF. *</label
+            ><span class="text-danger">*</span> Indique si lleva la contabilidad en medios electrónicos y la ingresa mensualmente a través del portal del SAT, de conformidad con el artículo 28, fracciones III y IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.</label
           >
           <app-input-radio
-            formContolName="250"
+            formControlName="250"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
@@ -489,19 +490,19 @@
         </div>
 
         <div class="col-md-12 mt-4">
-          <h6 class="form-label text-start">
-            Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, según corresponda, representante legal con facultad para actos de administración o de dominio, e integrantes de la administración, de conformidad con la constitución de la empresa. *
-          </h6>
+          <p class="form-label text-start">
+            <span class="text-danger">*</span> Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, según corresponda, representante legal con facultad para actos de administración o de dominio, e integrantes de la administración, de conformidad con la constitución de la empresa.
+          </p>
         </div>
 
         <div class="col-md-12 mt-4">
-          <h6 class="form-label text-start">
-            Señale si los socios, accionistas, según corresponda, representante
+          <p class="form-label text-start">
+            <span class="text-danger">*</span> Señale si los socios, accionistas, según corresponda, representante
             legal con facultad para actos de dominio e integrantes de la
             administración de conformidad con la constitución de la empresa
             solicitante, se encuentran al corriente en el cumplimiento de sus
-            obligaciones fiscales. *
-          </h6>
+            obligaciones fiscales.
+          </p>
         </div>
 
         <div class="col-md-12 mt-4">
@@ -554,17 +555,16 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >Manifieste si sus socios o accionistas, según corresponda,
+            ><span class="text-danger">*</span> Manifieste si sus socios o accionistas, según corresponda,
             representantes legales con facultad para actos de dominio e
             integrantes de la administración, no se encuentren vinculados con
             alguna empresa a la que se le hubiere cancelado su Registro en el
             Esquema de Certificación de Empresas, de conformidad con la regla
             7.2.4., apartado A, fracciones V, VI y VII y apartado B, fracciones
             II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI.
-            *</label
-          >
+          </label>
           <app-input-radio
-            formContolName="251"
+            formControlName="251"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
@@ -574,14 +574,14 @@
         </div>
 
         <div class="col-md-12 mt-4">
-          <div class="form-check text-start">
+          <div class="form-check form-label text-start">
             <input
               type="checkbox"
               class="form-check-input"
               formControlName="checkbox2"
               (change)="actualizarCheckbox2($event)"
             />
-            &nbsp; * Bajo protesta de decir verdad, manifiesto que los datos
+            &nbsp;<span class="text-danger">*</span> Bajo protesta de decir verdad, manifiesto que los datos
             asentados en el presente documento son ciertos y que las facultades
             que me fueron otorgadas para representar al solicitante no me han
             sido modificadas y/ o revocadas.
