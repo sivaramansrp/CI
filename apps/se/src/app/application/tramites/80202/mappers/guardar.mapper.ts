@@ -828,7 +828,7 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
       },
       fraccionCompuesta: null,
       cveServicioImmex: {
-        claveServicio: null,
+        claveServicio: 1,
         nombre: "ABASTECIMIENTO, ALMACENAJE O DISTRIBUCION DE MERCANCIAS",
         tipoServicio: "TISIMMEX.TN",
         blnActivo: true,
@@ -919,7 +919,7 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
           }
         ],
         cveServicioImmex: {
-          claveServicio: "string",
+          claveServicio: 1,
           nombre: "string",
           tipoServicio: "string",
           fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
@@ -1053,7 +1053,7 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
             }
           ],
           cveServicioImmex: {
-            claveServicio: "string",
+            claveServicio: 1,
             nombre: "string",
             tipoServicio: "string",
             fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
