@@ -161,7 +161,7 @@
 
 
     </div>
-    <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
+    <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta, 'custom-backdrop': mostrarAlerta}"
         [ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
             <div class="modal-content">

@@ -31,11 +31,11 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
   providedIn: 'root'
 })
 export class PeruCertificadoService {
-  /**
-   * @property {string} url
-   * @description Ruta base para acceder a los archivos JSON utilizados en el trámite 110205.
-   */
-  url: string = '../../../../../assets/json/110205/';
+    /**
+     * @property {string} url
+     * @description Ruta base para acceder a los archivos JSON utilizados en el trámite 110205.
+     */
+    url: string = '../../../../../assets/json/110205/';
 
   /**
    * @constructor
