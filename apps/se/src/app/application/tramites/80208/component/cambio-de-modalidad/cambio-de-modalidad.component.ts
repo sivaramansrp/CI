@@ -669,6 +669,12 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.cambioDeModalidadForm.patchValue(data);
+        this.cambioModalidadStore.actualizarEstado({
+          folio: data.folio,
+          ano: data.ano,
+          seleccionaModalidad: data.seleccionaModalidad,
+          seleccionaLaModalidad: data.seleccionaLaModalidad
+        });
       });
   }
 

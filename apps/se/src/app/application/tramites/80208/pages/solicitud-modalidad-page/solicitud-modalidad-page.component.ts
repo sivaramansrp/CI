@@ -313,26 +313,10 @@ getValorIndice(e: AccionBoton): void {
         "idServicioAutorizado": 0
     })),
       "solicitud": {
-      "modalidad": "",
-      "booleanGenerico": true,
-      "descripcionSistemasMedicion": "Web",
-      "descripcionLugarEmbarque": "Localisation",
-      "numeroPermiso": "SI",
-      "fechaOperacion": "2025-09-19",
-      "nomOficialAutorizado": "",
-      "notario": {
-        "nombreNotario": "JORGE",
-        "apellidoMaterno": "NAVARRO",
-        "apellidoPaterno": "NEAVES",
-        "rfc": "AAL0409235E6",
-        "numeroActa": "26117",
-        "numeroNotaria": "22",
-        "numeroNotario": null,
-        "delegacionMunicipio": "08046",
-        "entidadFederativa": "CHIH",
-        "fechaActa": "2025-09-05",
-        "numeroRegistro": "251473"
-      }
+      "anioPrograma": data.ano,
+      "folioProgramaAutorizado": data.folio,
+      "modalidad": data.seleccionaModalidad,
+      "modalidadImmex": data.cambioDeModalidad
       },
       "servicios": data.servicios?.map((servicio, index) => ({
       "tipoServicio": servicio.tipoServicio || '',
