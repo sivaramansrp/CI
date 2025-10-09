@@ -274,6 +274,18 @@ export class ServiciosComponent implements OnInit, OnDestroy,OnChanges {
    */
   public esFormularioSoloLectura: boolean = false;
 
+   /**
+   * Indica si se debe mostrar la sección para agregar empresas.
+   * Cuando es verdadero, se muestra la interfaz para añadir nuevas empresas al formulario.
+   */
+  public mostrarEmpresasAgregar: boolean = false;
+
+   /**
+   * Contiene la notificación relacionada con la acción de agregar empresas.
+   * Esta notificación puede incluir mensajes de éxito, error u otra información relevante para el usuario.
+   */
+  public notificacionAgregarEmpresas!: Notificacion;
+
   /**
    * Constructor del componente.
    * @constructor
@@ -315,6 +327,7 @@ export class ServiciosComponent implements OnInit, OnDestroy,OnChanges {
       });
 
     this.formularioEmpresaExtranjera = this.fb.group({
+      servicioExt: [this.recibioDatos[0]?.descripcion, [Validators.required]],
       taxIdEmpresaExt: [this.datosEmpresaExtranjera?.[0]?.taxIdEmpresaExt, [Validators.required, Validators.maxLength(50)]],
       nombreEmpresaExt: [this.datosEmpresaExtranjera?.[0]?.nombreEmpresaExt, [Validators.required, Validators.maxLength(200)]],
       entidadFederativaEmpresaExt: [this.datosEmpresaExtranjera?.[0]?.entidadFederativaEmpresaExt, Validators.required],
@@ -515,11 +528,11 @@ ngOnChanges(): void {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Debe seleccionar un servicio.',
+      mensaje: '¿Esta seguro de eliminar el(los) servicio(s) seleccionado(s)?',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: 'Cancelar',
     };
     this.mostrarNotificacionAgregar = true;
   }
@@ -535,20 +548,7 @@ ngOnChanges(): void {
       return;
     }
 
-    // Configurar modal para agregar
-    this.tipoAccionModal = 'agregar';
-    this.notificacionAgregarServicio = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-    this.mostrarNotificacionAgregar = true;
+    this.ejecutarAgregarServicio();
   }
 
   /**
@@ -636,7 +636,7 @@ ngOnChanges(): void {
    * @method eliminarEmpresasNacionales
    */
   eliminarEmpresasNacionales(): void {
-      if (!this.empresasSeleccionados || this.empresasSeleccionados.length === 0) {
+  if (!this.empresasSeleccionados || this.empresasSeleccionados.length === 0) {
     this.notificacionAgregarServicios = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -648,26 +648,76 @@ ngOnChanges(): void {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+    return;
   }
-    const INDICE = this.datos.findIndex(
-      (item: ServicioInmex) =>
-        item.registroContribuyentes ===
+
+if (this.empresasSeleccionados && this.empresasSeleccionados.length > 0) {
+  this.notificacionAgregarEmpresas = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.mostrarEmpresasAgregar = true;
+  }
+}
+
+  /**
+   * Elimina una empresa seleccionada de la lista de servicios.
+   * 
+   * Busca la empresa seleccionada en la lista de datos usando su `registroContribuyentes`.
+   * Si la encuentra, la elimina tanto de la lista principal (`datos`) como de la lista de empresas seleccionadas (`empresasSeleccionados`),
+   * y actualiza el estado en el store (`Tramite80102Store`).
+   */
+ejecutarEliminarEmpresasServicio(): void {
+      const INDICE = this.datos.findIndex(
+        (item: ServicioInmex) =>
+          item.registroContribuyentes ===
         this.empresasSeleccionados[0]?.registroContribuyentes
     );
     if (INDICE !== -1) {
       const DATOSACTUALIZADOS = [...this.datos];
       DATOSACTUALIZADOS.splice(INDICE, 1);
       this.Tramite80102Store.setDatos(DATOSACTUALIZADOS);
+      this.empresasSeleccionados.splice(INDICE, 1);
     }
-  }
+}
+
 
   /**
    * Actualiza el grid de empresas nacionales.
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
+  /**
+   * Verifica que al menos un domicilio (servicio) esté seleccionado.
+   * 
+   * Si no hay domicilios seleccionados, muestra una notificación de error al usuario
+   * indicando que debe seleccionar un servicio, y detiene la ejecución del método.
+   */
+  if (!this.domiciliosSeleccionados || this.domiciliosSeleccionados.length === 0) {
+    this.mostrarNotificacionError('Debe seleccionar un servicio.');
+    return;
+  }
+  /**
+   * Valida que los campos requeridos estén completos antes de continuar.
+   * 
+   * Verifica que `rfcEmpresa`, `numeroPrograma` y `tiempoPrograma` tengan valores asignados.
+   * Si alguno de ellos está vacío o no definido, muestra una notificación de error
+   * indicando que se debe introducir un RFC válido, y detiene la ejecución del método.
+   */
+  if (!this.rfcEmpresa || !this.numeroPrograma || !this.tiempoPrograma) {
+  this.mostrarNotificacionError('Introduzca un RFC válido.');
+  return;
+  }
+
     const CUERPODATOS = {
-      servicio: 'Auditoría de sistemas de seguridad',
+      servicio: this.recibioDatos[0].descripcion,
       registroContribuyentes: this.rfcEmpresa,
       denominacionSocial: 'AAL970927390',
       numeroIMMEX: this.numeroPrograma,
@@ -694,6 +744,12 @@ ngOnChanges(): void {
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     this.recibioDatos = Array.isArray(data) ? data : [data];
     this.Tramite80102Store.setAduanaDeIngresoSeleccion(data as Catalogo);
+
+    if (this.recibioDatos.length > 0 && this.formularioEmpresaExtranjera) {
+    this.formularioEmpresaExtranjera.patchValue({
+      servicioExt: this.recibioDatos[0].descripcion
+    });
+  }
   }
 
   /**
@@ -737,14 +793,12 @@ ngOnChanges(): void {
       this.formularioEmpresaExtranjera.value
     );   
     this.formularioEmpresaExtranjera.reset({
+      servicioExt: this.recibioDatos[0]?.descripcion || '',
       taxIdEmpresaExt: '',
       nombreEmpresaExt: '',
       entidadFederativaEmpresaExt: '',
       direccionEmpresaExtranjera: ''
     }); 
-      this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
-      this.formularioEmpresaExtranjera.value
-    );
   }
 
   /**
@@ -770,6 +824,22 @@ obtainorServico():void{
   });
 }
 
+ /**
+   * Maneja la confirmación del usuario para eliminar una empresa.
+   * 
+   * Oculta la interfaz de agregar empresas (`mostrarEmpresasAgregar`) y,
+   * si el usuario confirma la acción (`confirmado` es `true`), 
+   * ejecuta el método que elimina la empresa seleccionada de la lista.
+   * 
+   * @param confirmado Indica si el usuario confirmó la eliminación de la empresa.
+   */
+manejarEmpresasConfirmacion(confirmado: boolean): void {
+    this.mostrarEmpresasAgregar = false;
+
+    if (confirmado) {
+        this.ejecutarEliminarEmpresasServicio();
+    }
+}
 
   /**
   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

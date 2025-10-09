@@ -40,7 +40,7 @@
       <div class="col-md-8">
         <label for="localizacion">Localización*:</label>
         <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
-          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)"
+          maxlength="120" (input)="onLocalizacionInputChange($event)"
           [ngClass]="esValido('datosGeneralis', 'localizacion') ? 'required' : ''" />
         <div
           *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.hasError('required') && formaComplimentos.get('datosGeneralis.localizacion')?.touched">
@@ -61,7 +61,7 @@
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG"
           [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
-          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
+          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="true">
         </input-fecha>
         <div
           *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.hasError('required') && formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.touched">
@@ -89,7 +89,7 @@
       <div class="col-12">
         <div class="col-12 mb-4">
           <label for="Nombre">Nombre del federatario que expide el documento*:</label>
-          <input type="text" id="Nombre" name="Nombre" class="form-control" formControlName="nombreDelFederatario"
+          <input type="text" id="Nombre" name="Nombre" class="form-control uppercase" formControlName="nombreDelFederatario"
             maxlength="120" [ngClass]="esValido('formaModificaciones', 'nombreDelFederatario') ? 'required' : ''" />
           <div
             *ngIf="formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.touched">

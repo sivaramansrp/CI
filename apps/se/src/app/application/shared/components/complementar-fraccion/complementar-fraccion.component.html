@@ -44,7 +44,7 @@
           <app-catalogo-select
             [catalogo]="catagoriaSeleccionDatos"
             formControlName="catagoria"
-            [label]="'catagoria'"
+            [label]="'Categoría'"
             [required]="true"
             name="catagoria"
             [isDisabled]="formularioDeshabilitado"
@@ -80,6 +80,7 @@
           id="monedaNacionalMensual"
           formControlName="monedaNacionalMensual"
           type="number"
+          (input)="onIngreseNumerosPositivos($event, 'monedaNacionalMensual')"
         />
       </div>
     </div>
@@ -97,6 +98,7 @@
           id="monedaNacionalDeDosPeriodos"
           formControlName="monedaNacionalDeDosPeriodos"
           type="number"
+          (input)="onIngreseNumerosPositivos($event, 'monedaNacionalDeDosPeriodos')"
         />
       </div>
     </div>
@@ -113,6 +115,7 @@
           id="volumenMensual"
           formControlName="volumenMensual"
           type="number"
+          (input)="onIngreseNumerosPositivos($event, 'volumenMensual')"
         />
       </div>
     </div>
@@ -130,6 +133,7 @@
           id="twoPeriodVolume"
           formControlName="twoPeriodVolume"
           type="number"
+          (input)="onIngreseNumerosPositivos($event, 'twoPeriodVolume')"
         />
       </div>
     </div>
