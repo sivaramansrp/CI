@@ -17,8 +17,7 @@ export class DestinatarioService {
   tramite: string = '110202';
 
   constructor(private http: HttpClient, private catalogoServices: CatalogoServices) {
-    // this.host = `${COMUN_URL.BASE_URL}`
-    this.host = 'http://localhost:8080/api/'
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   getPaisDestino(tramite: string): Observable<Catalogo[]> {

@@ -94,10 +94,7 @@ export class CatalogoServices {
    * @author Sistema VUCEM
    */
   constructor(private http: HttpClient) {
-    // this.host = `${COMUN_URL.BASE_URL}`;
-
-this.host = 'http://localhost:8080/api/';
-
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
 

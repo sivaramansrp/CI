@@ -254,7 +254,6 @@ return arr.map((item: any) => ({
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: any): void {
-    console.log(item);
     const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',

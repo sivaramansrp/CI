@@ -36,7 +36,6 @@ export class DocumentosService {
     idSolicitud: string,
     procedure: number
   ): Observable<BaseResponse<null>> {
-    this.host = 'http://localhost:8080/api/'
     const ENDPOINT =
       `${this.host}` + API_POST_GUARDAR_ACUSE(idSolicitud, procedure);
 
@@ -59,7 +58,6 @@ export class DocumentosService {
     idSolicitud: string,
     procedure: number
   ): Observable<BaseResponse<DocumentoResponse>> {
-    this.host = 'http://localhost:8080/api/';
     const ENDPOINT =
     
       `${this.host}` + API_POST_VISTA_PREVIA(idSolicitud, procedure);
