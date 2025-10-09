@@ -708,7 +708,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   getCambioDeModalidad(tramiteID: string): void {
     this.modalidadService.getCambioDeModalidad(tramiteID).subscribe((data) => {
-      this.cambioDeModalidad = data.datos.map((item: any) => ({
+      this.cambioDeModalidad = ((data.datos as unknown) as Catalogo[]).map((item: Catalogo) => ({
       id: item.id ?? item.clave,
       descripcion: item.descripcion
     }));

@@ -127,8 +127,8 @@ export class CambioModalidadService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: CambioModalidadState): Observable<any> {
-    return this.httpService.post<any>(`${ENVIRONMENT.API_HOST}/api/solicitud/guardar`, { body: body });
+  guardarDatosPost(body: CambioModalidadState): Observable<CambioModalidadResponse> {
+    return this.httpService.post<CambioModalidadResponse>(`${ENVIRONMENT.API_HOST}/api/solicitud/guardar`, { body: body });
   }
 
 } 

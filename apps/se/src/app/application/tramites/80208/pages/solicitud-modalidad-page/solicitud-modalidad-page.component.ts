@@ -19,12 +19,14 @@ import {
   PASOS,
   USUARIO_INFO,
 } from '../../constantes/solicitud-modalidad.enums';
-import { Observable, Subject, catchError, finalize, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
+import { ErrorModelo, Payload } from '../../constantes/texto.enum';
+import { Observable, Subject, catchError, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
 import { GuardarService } from '../../service/guardar.service';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
 import { ResultadoSolicitud } from '../../modelos/solicitud-modalidad.model';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -233,7 +235,6 @@ getValorIndice(e: AccionBoton): void {
                   this.datosPasos.indice = 1;
                   this.wizardComponent.indiceActual = 1;
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-                  return;
                 }
               })
               )
@@ -265,9 +266,9 @@ getValorIndice(e: AccionBoton): void {
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `GuardarService`.
    * 
    * @param data - Los datos que se desean guardar y enviar al servidor.
-   * @returns Promise<any>
+   * @returns Promise<Payload>
    */
-  guardar(data: CambioModalidadState): Promise<any> {
+  guardar(data: CambioModalidadState): Promise<Payload> {
     const PAYLOAD = 
     {
       "tipoDeSolicitud": "guardar",
@@ -332,7 +333,7 @@ getValorIndice(e: AccionBoton): void {
       this.guardarService.postSolicitud(PAYLOAD).subscribe(response => {
         if(esValidObject(response) && esValidObject(response.datos)) {
           if(getValidDatos(response.datos?.id_solicitud)) {
-            this.tramite80208Store.setIdSolicitud(response.datos!.id_solicitud);
+            this.tramite80208Store.setIdSolicitud(response.datos?.id_solicitud || 0);
           } else {
             this.tramite80208Store.setIdSolicitud(0);
           }
@@ -386,8 +387,8 @@ getValorIndice(e: AccionBoton): void {
           response?.mensaje ||
           response?.causa ||
           'Ocurrió un error al guardar la solicitud.';
-        const ERRORESMODELO = (response?.errores_modelo || []).map(
-          (error: any) => ({
+        const ERRORESMODELO = ((response?.errores_modelo as ErrorModelo[]) || []).map(
+          (error: ErrorModelo) => ({
             campo: error.campo || 'general',
             errores: Array.isArray(error.errores)
               ? error.errores

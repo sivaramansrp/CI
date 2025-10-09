@@ -27,4 +27,25 @@ export const TEXTOS_REQUISITOS = {
      */
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
   };
-  
+export interface Payload { 
+  codigo: string; 
+  mensaje: string; 
+  datos?: { id_solicitud: number } 
+}
+
+export interface CambioModalidadState { 
+  campo?: string; 
+  errores?: string | string[] 
+}
+
+/**
+ * Interfaz para definir la estructura de errores del modelo.
+ * @interface ErrorModelo
+ * @description Representa un error específico con su campo asociado y los mensajes de error correspondientes.
+ */
+export interface ErrorModelo {
+  /** Campo del formulario o modelo que contiene el error */
+  campo?: string;
+  /** Mensaje(s) de error asociado(s) al campo. Puede ser un string único o un array de strings */
+  errores?: string | string[];
+}
