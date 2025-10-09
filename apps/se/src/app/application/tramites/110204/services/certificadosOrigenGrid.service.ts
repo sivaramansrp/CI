@@ -1,16 +1,17 @@
+import { Catalogo, HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { Tramite110204Store, TramiteState } from '../estados/tramite110204.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { Mercancias } from '../models/plantas-consulta.model';
+import { PROC_110204 } from '../servers/api-route';
+import { Tramite110204Query } from '../estados/tramite110204.query';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificadosOrigenGridService {
-  constructor(private http: HttpClient, private store: Tramite110204Store) { }
+  constructor(private http: HttpClient,private httpService: HttpCoreService, private store: Tramite110204Store,private query:Tramite110204Query) { }
 
   /**
    * Obtiene la lista de estados desde un archivo JSON local.
@@ -124,5 +125,29 @@ export class CertificadosOrigenGridService {
     this.store.setbuscarMercancia(DATOS.buscarMercancia);
 
   }
+/**
+ * Obtiene todos los datos del estado almacenado en el store.
+ * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+ */
+getAllState(): Observable<TramiteState> {
+  return this.query.selectState$;
+}
+buscarMercanciasCert(body: any): Observable<any> {
+  // return this.httpService.post<any>(
+  //   'http://localhost:8080/api/sat-t110204/solicitud/buscar-mercancias',
+  //   { body: body }
+  // );
+   return this.httpService.post<any>(PROC_110204.BUSCAR, { body: body });
+}
 
+/**
+ * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+ * 
+ * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+ * @returns Observable con la respuesta de la solicitud POST.
+ */
+guardarDatosPost(body: any): Observable<any> {
+  return this.httpService.post<any>(PROC_110204.GUARDAR, { body: body });
+  // return this.httpService.post<any>('http://localhost:8080/api/sat-t110204/solicitud/guardar', { body: body });
+}
 }
