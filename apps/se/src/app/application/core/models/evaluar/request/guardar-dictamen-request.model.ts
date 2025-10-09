@@ -31,5 +31,5 @@ export interface CriterioTratado {
   /** ID del tratado o acuerdo relacionado */
   id_tratado_acuerdo?: number;
   /** Clave del tratado o acuerdo */
-  cve_tratadoAcuerdo?: string;
+  cve_tratado_acuerdo?: string;
 }

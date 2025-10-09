@@ -1237,7 +1237,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
           id_tratado_acuerdo: tratado.id_tratado_acuerdo,
-          cve_tratadoAcuerdo: tratado.cve_tratado_acuerdo
+          cve_tratado_acuerdo: tratado.cve_tratado_acuerdo
         })) ?? [] 
       })
     };
