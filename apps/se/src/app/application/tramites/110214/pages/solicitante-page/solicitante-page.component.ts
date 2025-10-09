@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {
   PASOS,
   TEXTO_DE_ALERTA,
@@ -15,13 +15,18 @@ import {
   ListaPasosWizard,
   Notificacion,
   TipoNotificacionEnum,
+  WizardService,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/validar-inicialmente-certificado.model';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 /**
  * Componente para gestionar la página del solicitante.
@@ -120,11 +125,21 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   public solicitudState!: Tramite110214State;
 
   /**
+   * @property wizardService
+   * @description
+   * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+   * @type {WizardService}
+   */
+    wizardService = inject(WizardService);
+
+  /**
    * Constructor del componente.
    */
   constructor(
     public store: Tramite110214Store,
-    public tramiteQuery: Tramite110214Query
+    public tramiteQuery: Tramite110214Query,
+    private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
+    private toastrService: ToastrService,
   ) {
     this.tramiteQuery.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -152,6 +167,10 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     // Validar formularios antes de continuar desde el paso uno
+    const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
     if (this.indice === 1 && e.accion === 'cont') {
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
@@ -167,12 +186,26 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     // Verifica si el valor de la acción está en el rango adecuado
     if (e.valor > 0 && e.valor <= this.pasos.length) {
       // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+      // this.indice = e.valor;
 
       // Dependiendo de la acción, avanza o retrocede en el wizard
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.shouldNavigate$()
+        .subscribe((shouldNavigate) => {
+          if (shouldNavigate) {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardService.cambio_indice(NEXT_INDEX);
+            this.wizardComponent.siguiente();
+          } else {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+          }
+        });
       } else {
+        // this.wizardComponent.atras();
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
         this.wizardComponent.atras();
       }
 
@@ -226,6 +259,106 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   btnContinuarNotificacion(): void {
     this.btnContinuar = false;
   }
+
+  /**
+     * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
+     *
+     * @param data - Los datos que se desean guardar y enviar al servidor.
+     * @returns void
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    guardar(data: Tramite110214State): Promise<any> {
+      const PRODUCTORES_POR_EXPORTADOR = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.agregarProductoresExportador);
+      const MERCANCIAS_PRODUCDOR = this.validarInicialmenteCertificadoService.buildMercanciasProductor(data.mercanciaProductores);
+      const PAYLOAD = {
+        "esDeGuardar": true,
+        "tipoDeSolicitud": "guardar",
+        "idSolicitud": 202781045,
+        "idTipoTramite": 110214,
+        "rfc": "AAL0409235E6",
+        "cveUnidadAdministrativa": "8101",
+        "costoTotal": 10000.5,
+        "certificadoSerialNumber": "1234567890ABCDEF",
+        "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+        "numeroFolioTramiteOriginal": "TRM-2023-00001",
+        "nombre": "Juan",
+        "apPaterno": "Pérez",
+        "apMaterno": "López",
+        "telefono": "5551234567",
+        "discriminator_value": "110214",
+        "discriminatorValue": "110214",
+        "domicilio": {
+        },
+        "solicitante": {
+   
+        },
+        "solicitud": {
+          "certificadoOrigen": {
+            "datosConfidencialesProductor": "",
+            "productorMismoExportador": "",
+            "productoresPorExportador": [...PRODUCTORES_POR_EXPORTADOR],
+            "mercanciasProductor": [...MERCANCIAS_PRODUCDOR]
+          }
+        }
+        
+      }
+      return new Promise((resolve, reject) => {
+        this.validarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
+          next: (response) => {
+            if (esValidObject(response) && esValidObject(response['datos'])) {
+              const DATOS = response['datos'] as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            resolve(response);
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+        });
+    }
+
+  /**
+   * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+   *
+   * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+   * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+   * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+   * hacia adelante o atrás según el tipo de acción.
+   *
+   * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+   */
+    private shouldNavigate$(): Observable<boolean> {
+      return this.validarInicialmenteCertificadoService.getAllState().pipe(
+        take(1),
+        switchMap(data => this.guardar(data)),
+        map(response => {
+          const OK = response.codigo === '00';
+          if (OK) {
+            this.toastrService.success(response.mensaje);
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+          return OK;
+        })
+      );
+    }
+
+    /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.validarInicialmenteCertificadoService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    */

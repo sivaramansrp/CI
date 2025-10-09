@@ -1,4 +1,4 @@
-import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoOperador, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoOperador, GrupoTratado, HistoricoColumnas, MercanciaTabla, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoReceptor } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
@@ -153,6 +153,10 @@ export interface Tramite110214State {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+
+  agregarProductoresExportador: HistoricoColumnas[];
+
+  mercanciaProductores: MercanciaTabla[];
 }
 
 /**
@@ -246,7 +250,9 @@ export function createInitialState(): Tramite110214State {
       numeroRegistroFiscal: '',
       fax: '',      
     },
-    optionsTipoFactura: []
+    optionsTipoFactura: [],
+    agregarProductoresExportador: [],
+    mercanciaProductores: []
   };
 }
 /**
@@ -1162,6 +1168,23 @@ public setGrupoOperador(grupoOperador: GrupoOperador): void {
     this.update((state) => ({
       ...state,
       optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador: [
+        ...state.agregarProductoresExportador,
+        {...productor},
+      ],
+    }));
+  }
+
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
     }));
   }
 }

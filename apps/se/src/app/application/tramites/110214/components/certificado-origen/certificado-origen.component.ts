@@ -360,13 +360,13 @@ pedimentos: Array<Pedimento> = [];
   inicializarFormularioCertificado(): void {
     this.formularioCertificado = this.fb.group({
       tercerOperador: [this.solicitudState?.tercerOperador],
-      blnPeriodo: [this.solicitudState?.blnPeriodo, [Validators.required]],
+      blnPeriodo: [this.solicitudState?.blnPeriodo],
       grupoOperador: this.fb.group({
-      nombreTercerOperador:  [this.solicitudState?.grupoOperador?.nombreTercerOperador, [Validators.required]],
-      primerApellidoTercerOperador:  [this.solicitudState?.grupoOperador?.primerApellidoTercerOperador, [Validators.required]],
-      segundoApellidoTercerOperador:  [this.solicitudState?.grupoOperador?.segundoApellidoTercerOperador, [Validators.required]],
+      nombreTercerOperador:  [this.solicitudState?.grupoOperador?.nombreTercerOperador],
+      primerApellidoTercerOperador:  [this.solicitudState?.grupoOperador?.primerApellidoTercerOperador],
+      segundoApellidoTercerOperador:  [this.solicitudState?.grupoOperador?.segundoApellidoTercerOperador],
       registroFiscalTercerOperador:  [this.solicitudState?.grupoOperador?.registroFiscalTercerOperador, [Validators.required]],
-      razonSocialTercerOperador:  [this.solicitudState?.grupoOperador?.razonSocialTercerOperador, [Validators.required]],
+      razonSocialTercerOperador:  [this.solicitudState?.grupoOperador?.razonSocialTercerOperador],
       }),
       grupoTratado: this.fb.group({
         tratado: [this.solicitudState?.grupoTratado?.tratado, [Validators.required]],
@@ -504,8 +504,15 @@ static restrictFutureDates(): ValidatorFn {
    * @param {string} field - El nombre del campo a validar.
    * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
    */
-  isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field) || false;
+  isValid(parentFormGroup: FormGroup, field: string, childFormGroup?: string): boolean {
+    if (childFormGroup) {
+      const CHILD_GROUP = parentFormGroup.get(childFormGroup);
+      if (CHILD_GROUP) {
+        return this.validacionesService.isValid(CHILD_GROUP, field) || false;
+      }
+      return false;
+    }
+    return this.validacionesService.isValid(parentFormGroup, field) || false;
   }
   /**
  * Maneja el evento de clic en un botón.

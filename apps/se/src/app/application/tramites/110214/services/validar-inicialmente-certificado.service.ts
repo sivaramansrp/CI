@@ -1,10 +1,12 @@
-import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
+import { CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
 import { HttpCoreService, JsonResponseCatalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PROC_110214 } from '../servers/api-route';
 import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
+import { Tramite110214State } from '../../../estados/tramites/tramite110214.store';
+import { Tramite110214Query } from '../../../estados/queries/tramite110214.query';
 /**
  * Servicio para validar inicialmente los datos del certificado en el trámite 110214.
  * 
@@ -24,7 +26,8 @@ export class ValidarInicialmenteCertificadoService {
    */
   constructor(
     private http: HttpClient,
-    public httpService: HttpCoreService
+    public httpService: HttpCoreService,
+    private tramite110214Query: Tramite110214Query
   ) { }
 
   /**
@@ -82,6 +85,15 @@ export class ValidarInicialmenteCertificadoService {
   }
 
   /**
+   * Obtiene la lista de mercancías seleccionadas.
+   * 
+   * @returns {Observable<SeleccionadasTabla[]>} Un observable con la lista de mercancías seleccionadas.
+   */
+  getMercanciasSeleccionadas(): Observable<MercanciaTabla[]> {
+    return this.http.get<MercanciaTabla[]>('assets/json/110214/mercancias-seleccionadas.json');
+  }
+
+  /**
    * Obtiene la lista de tratados disponibles.
    * 
    * @returns {Observable<CatalogoLista>} Un observable con la lista de tratados.
@@ -124,5 +136,50 @@ export class ValidarInicialmenteCertificadoService {
       {},
       false
     );
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110214.GUARDAR, { body: body });
+  }
+
+  /**
+     * Obtiene todos los datos del estado almacenado en el store.
+     * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+     */
+    getAllState(): Observable<Tramite110214State> {
+      return this.tramite110214Query.allStoreData$;
+    }
+
+  // eslint-disable-next-line class-methods-use-this
+  buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
+    return data.map(item => ({
+      "consecutivo": item.id,
+      "nombreCompleto": item.nombreProductor,
+      "rfc": item.numeroRegistroFiscal,
+      "direccionCompleta": item.direccion,
+      "correoElectronico": item.correoElectronico,
+      "telefono": item.telefono,
+      "fax": item.fax
+    }));
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
+    return data.map(item => ({
+      "fraccionArancelaria": item.fraccionArancelaria,
+      "cantidadComercial": item.cantidad,
+      "descUnidadMedidaComercial": item.unidadMedida,
+      "valorTransaccional": item.valorMercancia,
+      "descFactura": item.fetchFactura,
+      "numeroFactura": item.numeroFactura,
+      "complementoDescripcion": item.complementoDescripcion,
+      "rfcProductor": item.rfcProductor1
+    }));
   }
 }

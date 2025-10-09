@@ -37,7 +37,10 @@
      <div class="row">
       <div class="col-md-4 mb-3">
         <label for="registroFiscal">Número de registro fiscal*:</label>
-        <input type="text" id="registroFiscal" class="form-control" formControlName="registroFiscalTercerOperador"  [disabled]="soloLectura"/>
+        <input type="text" id="registroFiscal" class="form-control" formControlName="registroFiscalTercerOperador"  [disabled]="soloLectura" [ngClass]="isValid(formularioCertificado, 'registroFiscalTercerOperador', 'grupoOperador') ? 'required' : ''"/> 
+        <div *ngIf="formularioCertificado.get('grupoOperador.registroFiscalTercerOperador')?.errors?.['required'] && (formularioCertificado.get('grupoOperador.registroFiscalTercerOperador')?.touched || formularioCertificado.get('grupoOperador.registroFiscalTercerOperador')?.dirty)">
+            <p class="mensaje-error">Este campo es obligatorio.</p>
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label for="razonSocial">Razón social:</label>
