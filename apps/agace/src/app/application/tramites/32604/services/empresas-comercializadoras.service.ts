@@ -1,4 +1,4 @@
-import { EnlaceOperativo, GuardarDatosFormulario, Inventarios, RecibirNotificaciones, RepresentanteLegal, RespuestaConsulta, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista, TransportistasTable } from '../models/empresas-comercializadoras.model';
+import { EnlaceOperativo, GuardarDatosFormulario, RecibirNotificaciones, RepresentanteLegal, RespuestaConsulta, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista, TransportistasTable } from '../models/empresas-comercializadoras.model';
 import { Instalaciones, RespuestaAduanas } from '../constants/agregar.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -95,16 +95,6 @@ export class EmpresasComercializadorasService {
   conseguirSeccionSubcontratados(): Observable<SeccionSubcontratados> {
     return this.http.get<SeccionSubcontratados>(
       'assets/json/32604/seccion-subcontratados.json'
-    );
-  }
-
-  /**
-   * Obtiene los inventarios registrados desde un archivo JSON local.
-   * @returns Observable con un arreglo de Inventarios.
-   */
-  conseguirInventarios(): Observable<Inventarios[]> {
-    return this.http.get<Inventarios[]>(
-      'assets/json/32604/inventarios-datos.json'
     );
   }
 

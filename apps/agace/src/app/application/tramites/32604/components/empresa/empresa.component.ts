@@ -1,6 +1,6 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadio, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -24,6 +24,9 @@ import { Solicitud32604Store } from '../../estados/solicitud32604.store';
 export class EmpresaComponent implements OnInit {
    /** Modelo para la opción de tipo sí/no representado como radio button */
     sinoOpcion: InputRadio = {} as InputRadio;
+    
+    /** Formulario reactivo para el componente empresa */
+    empresaForm!: FormGroup;
   
     /** Subject para manejar la destrucción del componente y evitar fugas de memoria */
     private destroy$: Subject<void> = new Subject<void>();
@@ -74,6 +77,8 @@ export class EmpresaComponent implements OnInit {
         labelNombre: 'Nacionalidad',
         primerOpcion: 'Seleccione un valor',
       };
+      
+      this.inicializarFormulario();
     }
   
     /**
@@ -136,6 +141,53 @@ export class EmpresaComponent implements OnInit {
         .subscribe((data) => {
           this.nacionalidad.catalogos = data.data;
         });
+    }
+
+    /**
+     * Inicializa el formulario reactivo de empresa con validaciones.
+     */
+    private inicializarFormulario(): void {
+      this.empresaForm = this.fb.group({
+        caracterDe: ['', [Validators.required]],
+        rfcBusqueda: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
+        instalacionesPrincipales: ['', [Validators.required]],
+        registroFederalContribuyentes: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
+        nacionalidad: ['', [Validators.required]],
+        nombreCompleto: ['', [Validators.required]]
+      });
+    }
+
+    /**
+     * Valida el formulario y procesa el envío si es válido.
+     * Si el formulario no es válido, marca todos los campos como touched para mostrar errores.
+     */
+    validarYEnviarFormulario(): void {
+      if (this.empresaForm.valid) {
+        // Procesar el formulario válido
+        // Aquí iría la lógica para procesar los datos del formulario
+        this.procesarFormularioValido();
+      } else {
+        // Marcar todos los campos como touched para mostrar errores de validación
+        this.marcarCamposComoTocados();
+      }
+    }
+
+    /**
+     * Procesa el formulario cuando es válido.
+     */
+    private procesarFormularioValido(): void {
+      // Verificar que el formulario existe y es válido
+      if (this.empresaForm.valid) {
+        // Lógica para procesar los datos del formulario válido
+        // Implementar procesamiento específico según requerimientos
+      }
+    }
+
+    /**
+     * Marca todos los campos del formulario como touched para mostrar errores de validación.
+     */
+    private marcarCamposComoTocados(): void {
+      this.empresaForm.markAllAsTouched();
     }
 
 }

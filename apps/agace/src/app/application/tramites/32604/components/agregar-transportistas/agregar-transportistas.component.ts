@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -136,11 +136,11 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.transportistaCertificacionForm = this.fb.group({
       transportistaRFC: [
         this.solicitud32604State.transportistaRFC,
-        [Validators.required, Validators.maxLength(13)]
+        [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]
       ],
       transportistaRFCModifTrans: [ 
         this.solicitud32604State.transportistaRFCModifTrans, 
-        [Validators.maxLength(13)]
+        [Validators.maxLength(13), Validators.pattern(REGEX_RFC)]
       ],
       transportistaRazonSocial: [
         this.solicitud32604State.transportistaRazonSocial,
@@ -270,6 +270,24 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Prepara un objeto con los datos del transportista y lo emite al componente padre.
    */
   aceptarTransportista(): void {
+    this.validarYProcesarTransportista();
+  }
+
+  /**
+   * Valida el formulario y procesa los datos del transportista si es válido.
+   */
+  private validarYProcesarTransportista(): void {
+    if (this.transportistaCertificacionForm.valid) {
+      this.procesarDatosTransportista();
+    } else {
+      this.marcarCamposComoTocados();
+    }
+  }
+
+  /**
+   * Procesa los datos del transportista cuando el formulario es válido.
+   */
+  private procesarDatosTransportista(): void {
     const OBJETO_JSON: TransportistasTable = {
       transportistaRFCModifTrans: this.transportistaCertificacionForm.get('transportistaRFCModifTrans')
         ?.value,
@@ -282,6 +300,13 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       transportistaCaat: this.transportistaCertificacionForm.get('transportistaCaat')?.value,
     };
     this.seccionTransportistasLista.emit(OBJETO_JSON);
+  }
+
+  /**
+   * Marca todos los campos del formulario como touched para mostrar errores de validación.
+   */
+  private marcarCamposComoTocados(): void {
+    this.transportistaCertificacionForm.markAllAsTouched();
   }
 
   /**

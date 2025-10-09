@@ -9,6 +9,7 @@
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
@@ -52,6 +53,7 @@ import { AgregarTransportistasComponent } from '../agregar-transportistas/agrega
   selector: 'app-comercializadora-importadora',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     InputFechaComponent,
     TituloComponent,
@@ -278,8 +280,8 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
         this.solicitudState.llavePago,
         [Validators.maxLength(25)],
       ],
-      programaImmex: [this.solicitudState.programaImmex],
-      importsRadio: [this.solicitudState.importsRadio],
+      programaImmex: [this.solicitudState.programaImmex, Validators.required],
+      importsRadio: [this.solicitudState.importsRadio, Validators.required],
     });
     this.transportistasLista = this.solicitudState.transportistasLista;
   }

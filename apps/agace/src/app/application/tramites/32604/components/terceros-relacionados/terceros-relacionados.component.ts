@@ -8,7 +8,7 @@
  */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ENLACE_OPERATIVO_CONFIGURACION, RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
 import { EnlaceOperativo, RecibirNotificaciones, RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -330,7 +330,7 @@ eliminarPedimento(borrar: boolean): void {
   inicializarFormulario(): void {
     this.tercerosRelacionadosForm = this.fb.group({
       idPersonaSolicitud: [this.solicitud32604State.idPersonaSolicitud],
-      rfcTercero: [this.solicitud32604State.rfcTercero, [Validators.required]],
+      rfcTercero: [this.solicitud32604State.rfcTercero, [Validators.required, Validators.pattern(REGEX_RFC)]],
       rfc: [{ value: this.solicitud32604State.rfc, disabled: true }],
       nombre: [{ value: this.solicitud32604State.nombre, disabled: true }],
       apellidoPaterno: [

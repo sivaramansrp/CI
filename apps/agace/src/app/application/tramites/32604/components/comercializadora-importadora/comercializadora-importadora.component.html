@@ -88,7 +88,7 @@
 
             <div class="col-md-12 mt-4">
                 <label class="form-label text-start">
-                    Indique si cuenta con un programa IMMEX *</label>
+                    Indique si cuenta con un programa IMMEX<span [ngClass]="{'text-danger': modalidadForm.get('programaImmex')?.invalid && (modalidadForm.get('programaImmex')?.touched || modalidadForm.get('programaImmex')?.dirty)}">*</span></label>
                 <app-input-radio
                     formControlName="programaImmex"
                     [radioOptions]="sinoOpcion.radioOptions"
@@ -97,12 +97,15 @@
                     [gap]="'50px'"
                     (valueChange)="actualizarProgramaImmex($event)"
                 ></app-input-radio>
+                @if (modalidadForm.get('programaImmex')?.hasError('required') && (modalidadForm.get('programaImmex')?.touched || modalidadForm.get('programaImmex')?.dirty)) {
+                    <small class="mensaje-error">Este campo es obligatorio</small>
+                }
             </div>
 
             <div class="col-md-12 mt-4">
                 <label class="form-label text-start">
                     Indique si efectuo en el semestre inmediato a la fecha en que ingresa su solicitud,
-                    importaciones por un valor en aduana menor a $300,000,000.00. *
+                    importaciones por un valor en aduana menor a $300,000,000.00.<span [ngClass]="{'text-danger': modalidadForm.get('importsRadio')?.invalid && (modalidadForm.get('importsRadio')?.touched || modalidadForm.get('importsRadio')?.dirty)}">*</span>
                 </label>
                 <app-input-radio
                 formControlName="importsRadio"
@@ -112,6 +115,9 @@
                 [gap]="'50px'"
                 (valueChange)="actualizarImportsRadio($event)"
                 ></app-input-radio>
+                @if (modalidadForm.get('importsRadio')?.hasError('required') && (modalidadForm.get('importsRadio')?.touched || modalidadForm.get('importsRadio')?.dirty)) {
+                    <small class="mensaje-error">Este campo es obligatorio</small>
+                }
             </div>
 
         </div>

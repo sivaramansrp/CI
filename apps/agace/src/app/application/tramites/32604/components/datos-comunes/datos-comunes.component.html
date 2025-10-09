@@ -41,9 +41,14 @@
           </div>
         </div>
       </div>
+      @if (datosComunesForm.get('catseleccionados')?.value.length === 0 || datosComunesForm.get('servicio')?.value.length === 0) {
+        <div class="alert alert-warning">
+          <small>seleccionar un sector productivo o un servicio</small>
+        </div>
+      }
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"><span class="text-danger">*</span> Señale si se encuentra al corriente en el cumplimiento de sus
-          obligaciones fiscales y aduaneras.</label
+        <label class="form-label text-start">Señale si se encuentra al corriente en el cumplimiento de sus
+          obligaciones fiscales y aduaneras<span [ngClass]="{'text-danger': datosComunesForm.get('190')?.invalid && (datosComunesForm.get('190')?.touched || datosComunesForm.get('190')?.dirty)}">*</span>:</label
         >
         <app-input-radio
           formControlName="190"
@@ -53,11 +58,14 @@
           [gap]="'50px'"
           (valueChange)="actualizar190($event)"
         ></app-input-radio>
+        @if (datosComunesForm.get('190')?.hasError('required') && (datosComunesForm.get('190')?.touched || datosComunesForm.get('190')?.dirty)) {
+          <small class="mensaje-error">Este campo es obligatorio</small>
+        }
       </div>
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          ><span class="text-danger">*</span> Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales</label
+          >Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales<span [ngClass]="{'text-danger': datosComunesForm.get('191')?.invalid && (datosComunesForm.get('191')?.touched || datosComunesForm.get('191')?.dirty)}">*</span>:</label
         >
         <app-input-radio
           formControlName="191"
@@ -67,10 +75,13 @@
           [gap]="'50px'"
           (valueChange)="actualizar191($event)"
         ></app-input-radio>
+        @if (datosComunesForm.get('191')?.hasError('required') && (datosComunesForm.get('191')?.touched || datosComunesForm.get('191')?.dirty)) {
+          <small class="mensaje-error">Este campo es obligatorio</small>
+        }
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"><span class="text-danger">*</span> Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de la fracción VI.</label
+        <label class="form-label text-start">Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de la fracción VI<span [ngClass]="{'text-danger': datosComunesForm.get('199')?.invalid && (datosComunesForm.get('199')?.touched || datosComunesForm.get('199')?.dirty)}">*</span>:</label
         >
         <app-input-radio
           formControlName="199"
@@ -80,10 +91,13 @@
           [gap]="'50px'"
           (valueChange)="actualizar199($event)"
         ></app-input-radio>
+        @if (datosComunesForm.get('199')?.hasError('required') && (datosComunesForm.get('199')?.touched || datosComunesForm.get('199')?.dirty)) {
+          <small class="mensaje-error">Este campo es obligatorio</small>
+        }
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"><span class="text-danger">*</span> Del mismo modo indique si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo y 69-B Bis, noveno párrafo, del CFF.</label
+        <label class="form-label text-start">Del mismo modo indique si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo y 69-B Bis, noveno párrafo, del CFF<span [ngClass]="{'text-danger': datosComunesForm.get('200')?.invalid && (datosComunesForm.get('200')?.touched || datosComunesForm.get('200')?.dirty)}">*</span>:</label
         >
         <app-input-radio
           formControlName="200"
@@ -93,10 +107,13 @@
           [gap]="'50px'"
           (valueChange)="actualizar200($event)"
         ></app-input-radio>
+        @if (datosComunesForm.get('200')?.hasError('required') && (datosComunesForm.get('200')?.touched || datosComunesForm.get('200')?.dirty)) {
+          <small class="mensaje-error">Este campo es obligatorio</small>
+        }
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"><span class="text-danger">*</span> Señale si sus certificados de sellos digitales están vigentes.</label>
+        <label class="form-label text-start">Señale si sus certificados de sellos digitales están vigentes<span [ngClass]="{'text-danger': datosComunesForm.get('244')?.invalid && (datosComunesForm.get('244')?.touched || datosComunesForm.get('244')?.dirty)}">*</span>:</label>
         <app-input-radio
           formControlName="244"
           [radioOptions]="sinoOpcion.radioOptions"
@@ -105,10 +122,13 @@
           [gap]="'50px'"
           (valueChange)="actualizar244($event)"
         ></app-input-radio>
+        @if (datosComunesForm.get('244')?.hasError('required') && (datosComunesForm.get('244')?.touched || datosComunesForm.get('244')?.dirty)) {
+          <small class="mensaje-error">Este campo es obligatorio</small>
+        }
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"><span class="text-danger">*</span> Señale si infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos 12 meses</label>
+        <label class="form-label text-start">Señale si infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos 12 meses<span [ngClass]="{'text-danger': datosComunesForm.get('201')?.invalid && (datosComunesForm.get('201')?.touched || datosComunesForm.get('201')?.dirty)}">*</span>:</label>
         <app-input-radio
           formControlName="201"
           [radioOptions]="sinoOpcion.radioOptions"
@@ -117,6 +137,9 @@
           [gap]="'50px'"
           (valueChange)="actualizar201($event)"
         ></app-input-radio>
+        @if (datosComunesForm.get('201')?.hasError('required') && (datosComunesForm.get('201')?.touched || datosComunesForm.get('201')?.dirty)) {
+          <small class="mensaje-error">Este campo es obligatorio</small>
+        }
       </div>
 
       <div class="col-md-12 mt-4">
@@ -183,9 +206,9 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            ><span class="text-danger">*</span> Señale si tiene actualizado sus medios de contacto para efectos del
+            >Señale si tiene actualizado sus medios de contacto para efectos del
             buzón tributario en términos del penúltimo párrafo del artículo 17-K
-            del CFF.</label
+            del CFF<span [ngClass]="{'text-danger': datosComunesForm.get('246')?.invalid && (datosComunesForm.get('246')?.touched || datosComunesForm.get('246')?.dirty)}">*</span>:</label
           >
           <app-input-radio
             formControlName="246"
@@ -195,13 +218,16 @@
             [gap]="'50px'"
             (valueChange)="actualizar246($event)"
           ></app-input-radio>
+          @if (datosComunesForm.get('246')?.hasError('required') && (datosComunesForm.get('246')?.touched || datosComunesForm.get('246')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            ><span class="text-danger">*</span> Señale si se encuentra suspendida en el Padron de Importadores o en
+            >Señale si se encuentra suspendida en el Padron de Importadores o en
             el Padrón de Importadores de Sectores Específicos o Padrón de
-            Exportadores Sectorial.</label
+            Exportadores Sectorial<span [ngClass]="{'text-danger': datosComunesForm.get('247')?.invalid && (datosComunesForm.get('247')?.touched || datosComunesForm.get('247')?.dirty)}">*</span>:</label
           >
           <app-input-radio
             formControlName="247"
@@ -211,6 +237,9 @@
             [gap]="'50px'"
             (valueChange)="actualizar247($event)"
           ></app-input-radio>
+          @if (datosComunesForm.get('247')?.hasError('required') && (datosComunesForm.get('247')?.touched || datosComunesForm.get('247')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
 
         <div class="col-md-12">
@@ -350,7 +379,7 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            ><span class="text-danger">*</span> Señale si el SAT ha interpuesto querella o denuncia penal en contra
+            >Señale si el SAT ha interpuesto querella o denuncia penal en contra
             de los socios, accionistas, según corresponda, representante legal,
             e integrantes de la administración de la empresa solicitante o
             declaratoria de perjuicio, según corresponda, durante los últimos
@@ -373,7 +402,7 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            ><span class="text-danger">*</span> Indique si cuenta con un sistema de control de inventarios, para el
+            >Indique si cuenta con un sistema de control de inventarios, para el
             registro de sus operaciones de comercio exterior de conformidad con
             el artículo 59, fracción I de la Ley.</label
           >
@@ -397,8 +426,13 @@
             formControlName="identificacion"
             name="identificacion"
             id="identificacion"
+            maxlength="250"
+            size="50"
             (change)="actualizarIdentificacion($event)"
           />
+          @if (datosComunesForm.get('identificacion')?.hasError('required') && (datosComunesForm.get('identificacion')?.touched || datosComunesForm.get('identificacion')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
         <div class="col-md-6 mt-4">
           <label class="form-label text-start">Lugar de radicación<span [ngClass]="{'text-danger': datosComunesForm.get('lugarDeRadicacion')?.invalid && (datosComunesForm.get('lugarDeRadicacion')?.touched || datosComunesForm.get('lugarDeRadicacion')?.dirty)}">*</span>:</label>
@@ -408,8 +442,13 @@
             name="lugarDeRadicacion"
             formControlName="lugarDeRadicacion"
             id="lugarDeRadicacion"
+            maxlength="250"
+            size="50"
             (change)="actualizarLugarDeRadicacion($event)"
           />
+          @if (datosComunesForm.get('lugarDeRadicacion')?.hasError('required') && (datosComunesForm.get('lugarDeRadicacion')?.touched || datosComunesForm.get('lugarDeRadicacion')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
 
         <div class="col-md-12 d-flex justify-content-end mt-4">
@@ -419,6 +458,7 @@
             id=""
             class="btn btn-primary me-md-3"
             [disabled]="esFormularioSoloLectura"
+            (click)="validarYProcesarControlInventarios()"
           >
             Agregar
           </button>
@@ -428,13 +468,13 @@
         </div>
 
         <div class="col-md-12 mt-4">
-          <app-tabla-con-entrada
+          <app-tabla-dinamica
             [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
             [configuracionTabla]="inventariosConfiguracionColumnas"
             [datos]="inventariosDatos"
             (listaDeFilaSeleccionada)="seleccionarInventariosDatos($event)"
           >
-          </app-tabla-con-entrada>
+          </app-tabla-dinamica>
         </div>
 
         <div class="col-md-12 mt-5">
@@ -473,7 +513,7 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            ><span class="text-danger">*</span> Indique si lleva la contabilidad en medios electrónicos y la ingresa mensualmente a través del portal del SAT, de conformidad con el artículo 28, fracciones III y IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.</label
+            >Indique si lleva la contabilidad en medios electrónicos y la ingresa mensualmente a través del portal del SAT, de conformidad con el artículo 28, fracciones III y IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.<span [ngClass]="{'text-danger': datosComunesForm.get('250')?.invalid && (datosComunesForm.get('250')?.touched || datosComunesForm.get('250')?.dirty)}">*</span>:</label
           >
           <app-input-radio
             formControlName="250"
@@ -483,6 +523,9 @@
             [gap]="'50px'"
             (valueChange)="actualizar250($event)"
           ></app-input-radio>
+          @if (datosComunesForm.get('250')?.hasError('required') && (datosComunesForm.get('250')?.touched || datosComunesForm.get('250')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
 
         <div class="col-md-12">
@@ -491,13 +534,13 @@
 
         <div class="col-md-12 mt-4">
           <p class="form-label text-start">
-            <span class="text-danger">*</span> Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, según corresponda, representante legal con facultad para actos de administración o de dominio, e integrantes de la administración, de conformidad con la constitución de la empresa.
+            Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, según corresponda, representante legal con facultad para actos de administración o de dominio, e integrantes de la administración, de conformidad con la constitución de la empresa.
           </p>
         </div>
 
         <div class="col-md-12 mt-4">
           <p class="form-label text-start">
-            <span class="text-danger">*</span> Señale si los socios, accionistas, según corresponda, representante
+            Señale si los socios, accionistas, según corresponda, representante
             legal con facultad para actos de dominio e integrantes de la
             administración de conformidad con la constitución de la empresa
             solicitante, se encuentran al corriente en el cumplimiento de sus
@@ -555,13 +598,13 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            ><span class="text-danger">*</span> Manifieste si sus socios o accionistas, según corresponda,
+            >Manifieste si sus socios o accionistas, según corresponda,
             representantes legales con facultad para actos de dominio e
             integrantes de la administración, no se encuentren vinculados con
             alguna empresa a la que se le hubiere cancelado su Registro en el
             Esquema de Certificación de Empresas, de conformidad con la regla
             7.2.4., apartado A, fracciones V, VI y VII y apartado B, fracciones
-            II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI.
+            II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI<span [ngClass]="{'text-danger': datosComunesForm.get('251')?.invalid && (datosComunesForm.get('251')?.touched || datosComunesForm.get('251')?.dirty)}">*</span>:
           </label>
           <app-input-radio
             formControlName="251"
@@ -571,6 +614,9 @@
             [gap]="'50px'"
             (valueChange)="actualizar251($event)"
           ></app-input-radio>
+          @if (datosComunesForm.get('251')?.hasError('required') && (datosComunesForm.get('251')?.touched || datosComunesForm.get('251')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
 
         <div class="col-md-12 mt-4">
@@ -581,11 +627,14 @@
               formControlName="checkbox2"
               (change)="actualizarCheckbox2($event)"
             />
-            &nbsp;<span class="text-danger">*</span> Bajo protesta de decir verdad, manifiesto que los datos
+            &nbsp;Bajo protesta de decir verdad, manifiesto que los datos
             asentados en el presente documento son ciertos y que las facultades
             que me fueron otorgadas para representar al solicitante no me han
-            sido modificadas y/ o revocadas.
+            sido modificadas y/ o revocadas<span [ngClass]="{'text-danger': datosComunesForm.get('checkbox2')?.invalid && (datosComunesForm.get('checkbox2')?.touched || datosComunesForm.get('checkbox2')?.dirty)}">*</span>:
           </div>
+          @if (datosComunesForm.get('checkbox2')?.hasError('required') && (datosComunesForm.get('checkbox2')?.touched || datosComunesForm.get('checkbox2')?.dirty)) {
+            <small class="mensaje-error">Este campo es obligatorio</small>
+          }
         </div>
       </div>
 

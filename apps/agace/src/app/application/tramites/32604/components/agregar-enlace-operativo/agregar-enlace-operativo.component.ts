@@ -10,7 +10,7 @@ import { ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento } fro
 import { EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OnInit, Output } from '@angular/core';
-import { REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { REGEX_RFC, REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -270,16 +270,19 @@ abrirModal(i: number = 0): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
       agregarEnlaceRfcTercero: [
         this.solicitud32604State.rfcTercero,
-        [Validators.required],
+        [Validators.required, Validators.pattern(REGEX_RFC)],
       ],
       agregarEnlaceRfc: [
         { value: this.solicitud32604State.rfc, disabled: true },
+        [Validators.required, Validators.pattern(REGEX_RFC)],
       ],
       agregarEnlaceNombre: [
         { value: this.solicitud32604State.nombre, disabled: true },
+        [Validators.required],
       ],
       agregarEnlaceApellidoPaterno: [
         { value: this.solicitud32604State.apellidoPaterno, disabled: true },
+        [Validators.required],
       ],
       agregarEnlaceApellidoMaterno: [
         { value: this.solicitud32604State.apellidoMaterno, disabled: true },
@@ -442,6 +445,24 @@ abrirModal(i: number = 0): void {
    * @memberof AgregarEnlaceOperativoComponent
    */
   aceptarEnlaceSuplente(): void {
+    this.validarYProcesarEnlaceOperativo();
+  }
+
+  /**
+   * Valida el formulario y procesa los datos del enlace operativo si es válido.
+   */
+  private validarYProcesarEnlaceOperativo(): void {
+    if (this.agregarEnlaceOperativoForm.valid) {
+      this.procesarDatosEnlaceOperativo();
+    } else {
+      this.marcarCamposComoTocados();
+    }
+  }
+
+  /**
+   * Procesa los datos del enlace operativo cuando el formulario es válido.
+   */
+  private procesarDatosEnlaceOperativo(): void {
     const OBJETO_JSON: EnlaceOperativo = {
       rfc: this.agregarEnlaceOperativoForm.get('agregarEnlaceRfc')?.value,
       nombre: this.agregarEnlaceOperativoForm.get('agregarEnlaceNombre')?.value,
@@ -474,6 +495,13 @@ abrirModal(i: number = 0): void {
       delegacionMunicipio: '',
     };
     this.agregarEnlaceOperativo.emit(OBJETO_JSON);
+  }
+
+  /**
+   * Marca todos los campos del formulario como touched para mostrar errores de validación.
+   */
+  private marcarCamposComoTocados(): void {
+    this.agregarEnlaceOperativoForm.markAllAsTouched();
   }
 
   /**

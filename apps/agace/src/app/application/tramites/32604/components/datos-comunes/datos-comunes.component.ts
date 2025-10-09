@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -512,7 +512,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.conseguirOpcionDeRadio();
     this.conseguirOpcionDeRadio();
     this.conseguirSolicitudCatologoSelectLista();
-    this.conseguirInventarios();
   }
 
   /**
@@ -564,11 +563,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.datosComunesForm = this.fb.group({
       catseleccionados: [this.solicitud32604State.catseleccionados],
       servicio: [this.solicitud32604State.servicio],
-      '190': [this.solicitud32604State['190']],
-      '191': [this.solicitud32604State['191']],
-      '199': [this.solicitud32604State['199']],
-      '200': [this.solicitud32604State['200']],
-      '201': [this.solicitud32604State['201']],
+      '190': [this.solicitud32604State['190'], Validators.required],
+      '191': [this.solicitud32604State['191'], Validators.required],
+      '199': [this.solicitud32604State['199'], Validators.required],
+      '200': [this.solicitud32604State['200'], Validators.required],
+      '201': [this.solicitud32604State['201'], Validators.required],
       empleados: [this.solicitud32604State.empleados],
       bimestre: [this.solicitud32604State.bimestre],
       '2034': [this.solicitud32604State['2034']],
@@ -578,21 +577,21 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       '239': [this.solicitud32604State['239']],
       '240': [this.solicitud32604State['240']],
       '243': [this.solicitud32604State['243']],
-      '244': [this.solicitud32604State['244']],
+      '244': [this.solicitud32604State['244'], Validators.required],
       '245': [this.solicitud32604State['245']],
       indiqueTodos: [this.solicitud32604State.indiqueTodos],
-      '246': [this.solicitud32604State['246']],
+      '246': [this.solicitud32604State['246'], Validators.required],
       file1: [this.solicitud32604State.file1],
       file2: [this.solicitud32604State.file2],
-      '247': [this.solicitud32604State['247']],
+      '247': [this.solicitud32604State['247'], Validators.required],
       '248': [this.solicitud32604State['248']],
-      identificacion: [this.solicitud32604State.identificacion],
-      lugarDeRadicacion: [this.solicitud32604State.lugarDeRadicacion],
+      identificacion: [this.solicitud32604State.identificacion, Validators.required],
+      lugarDeRadicacion: [this.solicitud32604State.lugarDeRadicacion, Validators.required],
       '249': [this.solicitud32604State['249']],
-      '250': [this.solicitud32604State['250']],
-      '251': [this.solicitud32604State['251']],
+      '250': [this.solicitud32604State['250'], Validators.required],
+      '251': [this.solicitud32604State['251'], Validators.required],
       checkbox1: [this.solicitud32604State.checkbox1],
-      checkbox2: [this.solicitud32604State.checkbox2],
+      checkbox2: [this.solicitud32604State.checkbox2, Validators.required],
       checkbox3: [this.solicitud32604State.checkbox3],
       actualmente2: [this.solicitud32604State.actualmente2],
       actualmente1: [this.solicitud32604State.actualmente1],
@@ -694,26 +693,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error loading catalog data:', error);
         }
-      });
-  }
-
-  /**
-   * Método para obtener los datos de inventarios desde el servicio.
-   * 
-   * Se suscribe al servicio empresas comercializadoras para obtener
-   * la lista de inventarios disponibles y los asigna a la propiedad
-   * `inventariosDatos` para su visualización en la tabla correspondiente.
-   * 
-   * @memberof DatosComunesComponent
-   */
-  conseguirInventarios(): void {
-    this.empresasComercializadorasService
-      .conseguirInventarios()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: Inventarios[]) => {
-          this.inventariosDatos = respuesta;
-        },
       });
   }
 
@@ -1313,6 +1292,75 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   actualizarLugarDeRadicacion(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32604Store.actualizarLugarDeRadicacion(VALOR);
+  }
+
+  /**
+   * Valida y procesa el control de inventarios.
+   * 
+   * Verifica que los campos obligatorios (identificacion y lugarDeRadicacion) sean válidos
+   * antes de procesar los datos. Si el formulario no es válido, marca todos los campos como tocados
+   * para mostrar los mensajes de error correspondientes y muestra un modal con mensaje de error.
+   * Si la validación es exitosa, agrega los datos a la tabla de inventarios y muestra un mensaje de éxito.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  validarYProcesarControlInventarios(): void {
+    const CAMPOS_CONTROL_INVENTARIOS = ['identificacion', 'lugarDeRadicacion'];
+    const CAMPOS_INVALIDOS = CAMPOS_CONTROL_INVENTARIOS.some(campo => 
+      this.datosComunesForm.get(campo)?.invalid
+    );
+
+    if (CAMPOS_INVALIDOS) {
+      this.marcarCamposInventariosComoTocados();
+      this.abrirModal('Debe capturar todos los datos marcados como obligatorios.');
+    } else {
+      this.procesarDatosControlInventarios();
+    }
+  }
+
+  /**
+   * Procesa los datos del control de inventarios.
+   * 
+   * Crea un nuevo registro de inventario con los datos del formulario,
+   * lo agrega a la lista de inventarios, actualiza el store y muestra
+   * un mensaje de éxito al usuario.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private procesarDatosControlInventarios(): void {
+    const NUEVO_INVENTARIO = {
+      nombre: this.datosComunesForm.get('identificacion')?.value || '',
+      lugarRadicacion: this.datosComunesForm.get('lugarDeRadicacion')?.value || '',
+      anexo24: 'Por determinar'
+    };
+
+    this.inventariosDatos = [...this.inventariosDatos, NUEVO_INVENTARIO];
+    this.abrirModal('Datos guardados correctamente.');
+    
+    // Limpiar los campos después de agregar
+    this.datosComunesForm.patchValue({
+      identificacion: '',
+      lugarDeRadicacion: ''
+    });
+    
+    // Resetear el estado de validación de los campos
+    this.datosComunesForm.get('identificacion')?.markAsUntouched();
+    this.datosComunesForm.get('identificacion')?.markAsPristine();
+    this.datosComunesForm.get('lugarDeRadicacion')?.markAsUntouched();
+    this.datosComunesForm.get('lugarDeRadicacion')?.markAsPristine();
+  }
+
+  /**
+   * Marca los campos del control de inventarios como tocados.
+   * 
+   * Marca específicamente los campos de identificación y lugar de radicación
+   * como tocados para que se muestren los mensajes de error de validación.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private marcarCamposInventariosComoTocados(): void {
+    this.datosComunesForm.get('identificacion')?.markAsTouched();
+    this.datosComunesForm.get('lugarDeRadicacion')?.markAsTouched();
   }
 
   /**
