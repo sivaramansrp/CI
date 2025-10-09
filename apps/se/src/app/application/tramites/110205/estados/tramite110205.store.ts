@@ -1,6 +1,6 @@
+import { HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
-import {HistoricoColumnas} from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -77,6 +77,10 @@ export interface Tramite110205State {
   formulario: {[key: string]: unknown};
   disponiblesDatos:Mercancia[];
   procductoUno:HistoricoColumnas[];
+  agregarProductoresExportador: HistoricoColumnas[];
+  mercanciaProductores: MercanciaTabla[];
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
 }
 
 
@@ -207,7 +211,10 @@ export function createInitialState(): Tramite110205State {
       fax: '',      
     },
     disponiblesDatos: [],
-    procductoUno:[]
+    procductoUno:[],
+    agregarProductoresExportador: [],
+    mercanciaProductores: [],
+    optionsTipoFactura: []
   };
 }
 
@@ -664,6 +671,35 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     this.update((state) => ({
       ...state,
       procductoUno,
+    }));
+  }
+
+  setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador: [
+        ...state.agregarProductoresExportador,
+        {...productor},
+      ],
+    }));
+  }
+
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
     }));
   }
 }
