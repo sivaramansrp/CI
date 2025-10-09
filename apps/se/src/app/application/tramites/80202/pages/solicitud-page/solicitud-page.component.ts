@@ -229,6 +229,128 @@ export class SolicitudPageComponent implements OnInit {
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
+
+    /**
+   * @method siguiente
+   * @description
+   * Método para navegar programáticamente al siguiente paso del wizard.
+   * Ejecuta la transición forward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_forward
+   * Realiza navegación que:
+   * - Ejecuta validación de documentos cargados (comentario indica validación futura)
+   * - Avanza al siguiente paso usando `wizardComponent.siguiente()`
+   * - Actualiza índice local basado en posición del wizard
+   * - Sincroniza datos de pasos con nueva posición
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component
+   * - Datos de configuración de pasos
+   * - Estado visual de la UI
+   * 
+   * @future_validation
+   * Comentario indica que se implementará:
+   * - Validación de documentos cargados
+   * - Verificación de completitud de adjuntos
+   * - Control de calidad de archivos
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @programmatic_navigation
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+    /**
+   * @method anterior
+   * @description
+   * Método para navegar programáticamente al paso anterior del wizard.
+   * Ejecuta la transición backward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_backward
+   * Realiza navegación que:
+   * - Retrocede al paso anterior usando `wizardComponent.atras()`
+   * - Actualiza índice local basado en nueva posición del wizard
+   * - Sincroniza datos de pasos con posición actualizada
+   * - Mantiene consistencia de estado durante retroceso
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component  
+   * - Datos de configuración de pasos
+   * - Estado visual de navegación
+   * 
+   * @state_preservation
+   * Durante retroceso:
+   * - Preserva datos capturados en pasos anteriores
+   * - Mantiene validaciones ya realizadas
+   * - Conserva estado de formularios
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Nueva posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @backward_navigation
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * @method onClickCargaArchivos
+   * @description
+   * Método de manejo de eventos para el click en botón de carga de archivos.
+   * Emite evento que notifica a componentes interesados que deben activar
+   * la funcionalidad de carga de documentos.
+   * 
+   * @event_emission
+   * Emite evento:
+   * - `cargarArchivosEvento`: Sin parámetros (void)
+   * - Notifica inicio de proceso de carga
+   * - Activa funcionalidad en componentes suscritos
+   * 
+   * @component_communication
+   * Facilita comunicación:
+   * - Entre componente padre e hijos
+   * - Con servicios de carga de archivos
+   * - Con sistemas de gestión de documentos
+   * 
+   * @user_interaction
+   * Responde a:
+   * - Click en botón de carga
+   * - Acción intencional del usuario
+   * - Iniciación de flujo de documentos
+   * 
+   * @workflow_trigger
+   * Desencadena:
+   * - Apertura de dialogo de archivos
+   * - Activación de componentes de carga
+   * - Inicio de proceso de validación de documentos
+   * 
+   * @void
+   * @event_handler
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.
