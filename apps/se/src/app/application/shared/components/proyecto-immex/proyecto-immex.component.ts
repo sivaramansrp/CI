@@ -1,4 +1,5 @@
 import {
+  AnexoUnoEncabezado,
   Catalogo,
   ProyectoImmexConfiguartion,
   ProyectoImmexEncabezado,
@@ -110,6 +111,12 @@ export class ProyectoImmexComponent implements OnInit {
   public complementarState!: ComplementarState;
 
   /**
+   * Fila seleccionada del tipo AnexoUnoEncabezado.
+   * Se utiliza para almacenar y manipular la fila actualmente activa o seleccionada en la tabla.
+   */
+  public selectedRow: AnexoUnoEncabezado | null = null;
+
+  /**
    * Constructor de la clase ProyectoImmexComponent.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
@@ -127,7 +134,6 @@ export class ProyectoImmexComponent implements OnInit {
  * Inicializa el componente, suscribe al estado de la solicitud y carga las opciones de país si es necesario.
  */
   ngOnInit(): void {
-    this.crearProyectoForm();
     this.complementarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -136,6 +142,10 @@ export class ProyectoImmexComponent implements OnInit {
         })
       )
       .subscribe();
+    this.complimentosService.anexoUnoFilaSeleccionada$.subscribe(row => {
+      this.selectedRow = row;
+    });
+    this.crearProyectoForm();
     if (!(this.complementarState.tipoDocumentoOptions.length)) {
       this.obtenerTipoDocumentoOptions(102);
     } else {
@@ -161,7 +171,7 @@ export class ProyectoImmexComponent implements OnInit {
    */
   crearProyectoForm(): void {
     this.proyectoForm = this.fb.group({
-      descripcion: [this.proyectoImmexDatos.descripcion, Validators.required],
+      descripcion: [{value: this.selectedRow?.encabezadoDescripcionComercial, disabled: true}, Validators.required],
       tipoDeDocumente: ['', Validators.required],
       fechaDeFirma: [this.proyectoImmexDatos.fechaDeFirma, Validators.required],
       fechaDeVigencia: [
@@ -205,7 +215,7 @@ export class ProyectoImmexComponent implements OnInit {
         encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
         encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
         estatus: this.seleccionList[0].estatus,
-        encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria,
+        encabezadoFraccion: this.selectedRow?.encabezadoFraccionArancelaria ?? '',
       };
       const OBJECTO_INDICE = this.proyectoImmexTablaLista.findIndex((idx) => {
         return idx.encabezadoRfc === OBJECTO_IDX.encabezadoRfc;
@@ -227,7 +237,7 @@ export class ProyectoImmexComponent implements OnInit {
       encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
       encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
       estatus: false,
-      encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria,
+      encabezadoFraccion: this.selectedRow?.encabezadoFraccionArancelaria ?? '',
     };
     this.proyectoImmexTablaLista = [...this.proyectoImmexTablaLista, OBJECTO_IDX];
     this.obtenerProyectoTablaDevolverLaLlamada.emit(
