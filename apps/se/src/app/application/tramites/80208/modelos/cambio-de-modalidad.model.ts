@@ -1,4 +1,5 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
+import { EmpresaNacional } from "../../../shared/models/modelo-interface.model";
 
 /**
  * @interface CambioDeModalidadForm
@@ -92,12 +93,12 @@ export interface RespuestaCatalogos {
 export const CONFIGURACION_SERVICIO = [
     {
         encabezado: 'Descripción del servicio',
-        clave: (ele: ServicioInfo): string | undefined => ele.descripcionDelServicio,
+        clave: (ele: ServicioInfo): string | undefined => ele.descripcion,
         orden: 1
     },
     {
         encabezado: 'Tipo de servicio',
-        clave: (ele: ServicioInfo): string | undefined => ele.tipoDeServicio,
+        clave: (ele: ServicioInfo): string | undefined => ele.tipoServicio,
         orden: 2
     },
 ]
@@ -112,9 +113,12 @@ export const CONFIGURACION_SERVICIO = [
  * @property {boolean} estatus - Estado del servicio.
  */
 export interface ServicioInfo {
-    descripcionDelServicio: string;
-    tipoDeServicio: string;
-    estatus: boolean;
+    idServicio: string;
+    descripcion: string;
+    tipoServicio: string;
+    descripcionTipo: string;
+    claveServicio: string;
+    testado?: boolean;
 }
 
 /**
@@ -149,28 +153,27 @@ export interface ServiciosState {
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
-    clave: (ele: ServicioInmex): string | undefined => ele.servicio,
+    clave: (ele: EmpresaNacional): string => ele.descripcionServicio,
     orden: 1,
   },
   {
     encabezado: 'Registro federal de contribuyentes',
-    clave: (ele: ServicioInmex): string | undefined =>
-      ele.registroContribuyentes,
+    clave: (ele: EmpresaNacional): string => ele.rfc,
     orden: 2,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: ServicioInmex): string | undefined => ele.denominacionSocial,
+    clave: (ele: EmpresaNacional): string => ele.razonSocial,
     orden: 3,
   },
   {
     encabezado: 'Número del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.numeroIMMEX,
+    clave: (ele: EmpresaNacional): string => ele.numeroPrograma,
     orden: 4,
   },
   {
     encabezado: 'Año del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.anoIMMEX,
+    clave: (ele: EmpresaNacional): string => ele.tiempoPrograma,
     orden: 5,
   },
 ];
