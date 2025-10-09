@@ -4,7 +4,6 @@ import {
   FormularioMercancia,
   GrupoCertificadoOrigen,
   GrupoTratado,
-  SeleccionadasTabla,
 } from '../../tramites/110212/models/validacion-posteriori.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110212/models/validacion-posteriori.model';
@@ -12,6 +11,7 @@ import { GrupoOperador } from '../../tramites/110212/models/validacion-posterior
 import { GrupoReceptor } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoRepresentativo } from '../../tramites/110212/models/validacion-posteriori.model';
 import { Injectable } from '@angular/core';
+import { Mercancia } from '../../shared/models/modificacion.enum';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 /**
@@ -25,9 +25,11 @@ export interface Tramite110212State {
   idSolicitud: number | null;
 
   /**
-   * Observaciones generales del trámite.
+   * Lista de mercancías disponibles.
+   * 
+   * @type {Mercancia[]}
    */
-  observaciones: string;
+  disponiblesDatos:Mercancia[];
 
   /** Lista de idiomas disponibles. */
   idioma: string | null;
@@ -122,7 +124,7 @@ export interface Tramite110212State {
    *
    * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
    */
-  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+  mercanciaSeleccionadasTablaDatos: Mercancia[];
   /**
    * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos
    * @description Lista de mercancías disponibles para ser mostradas en la tabla de datos.
@@ -169,6 +171,7 @@ export function createInitialState(): Tramite110212State {
     representacionFederal: null,
     datosConfidencialesProductor: false,
     productorMismoExportador: false,
+    disponiblesDatos:[],
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',
@@ -1352,13 +1355,24 @@ export class Tramite110212Store extends Store<Tramite110212State> {
    *
    * @returns {void}
    */
-  public setMercanciaTablaDatos(
-    mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaSeleccionadasTablaDatos,
-    }));
+  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: Mercancia[]): void {
+     this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaSeleccionadasTablaDatos || [];
+      const NUEVOARTICULO = { ...mercanciaSeleccionadasTablaDatos[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+    });
   }
   /**
    * @method setMercanciaDisponsiblesTablaDatos
@@ -1442,6 +1456,19 @@ export class Tramite110212Store extends Store<Tramite110212State> {
         ...state.formDatosCertificado,
         ...values,
       },
+    }));
+  }
+
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
     }));
   }
 }
