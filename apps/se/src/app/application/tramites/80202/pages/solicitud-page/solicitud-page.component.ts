@@ -12,13 +12,10 @@ import {
   USUARIO_INFO,
 } from '../../constants/immex-ampliacion-sensibles.enums';
 import { Subject, takeUntil } from 'rxjs';
-import { GuardarService } from '../../services/guardar.service';
 import { ImmexAmpliacionSensiblesQuery } from '../../estados/immex-ampliacion-sensibles.query';
-import { ImmexAmpliacionSensiblesService } from '../../services/immex-ampliacion-sensibles.service';
 import { ImmexAmpliacionSensiblesStore } from '../../estados/immex-ampliacion-sensibles.store';
 import { ImmexRegistroState } from '../../estados/immex-ampliacion-sensibles.store';
 import { ListaPasosWizard } from '../../models/immex-ampliacion-sensibles.model';
-import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { buildGuardarPayload } from '../../mappers/guardar.mapper';
@@ -88,10 +85,7 @@ export class SolicitudPageComponent implements OnInit {
   constructor(
     private immexRegistroStore: ImmexAmpliacionSensiblesStore,
     private Query: ImmexAmpliacionSensiblesQuery,
-    private registroService: PermisoImmexDatosService,
     public registroSolicitudService: RegistroSolicitudService,
-    private immexAmpliacionSensiblesService: ImmexAmpliacionSensiblesService,
-    private guardarService: GuardarService,
     private toastrService: ToastrService
   ) { }
 

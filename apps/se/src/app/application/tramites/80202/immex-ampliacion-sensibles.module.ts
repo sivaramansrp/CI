@@ -18,6 +18,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { ToastrService } from 'ngx-toastr';
 @NgModule({
   declarations: [
     PasoDosComponent,
@@ -39,6 +40,9 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     WizardComponent,
     PasoCargaDocumentoComponent,
     forwardRef(() => AnexarDocumentosComponent),
+  ],
+   providers: [
+    ToastrService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

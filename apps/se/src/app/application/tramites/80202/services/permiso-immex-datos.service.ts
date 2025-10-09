@@ -1,8 +1,8 @@
-import { BuscarPayload, FraccionPayload, fraccionInfo } from '../models/immex-ampliacion-sensibles.model';
-import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
+import { BuscarPayload, FraccionPayload, FraccionResponse, GuardarFraccionResponse, fraccionInfo } from '../models/immex-ampliacion-sensibles.model';
 import { ImmexAmpliacionSensiblesStore, ImmexRegistroState } from '../estados/immex-ampliacion-sensibles.store';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_ROUTES } from '../../../shared/servers/api-route';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
 import { Injectable } from '@angular/core';
@@ -73,8 +73,8 @@ export class PermisoImmexDatosService {
    * @method guardarFraccion
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
-  guardarFraccion(body: BuscarPayload): Observable<JSONResponse> {
-     return this.httpClient.post<JSONResponse>(API_ROUTES('/sat-t80202','80202').buscarfraccionarancelariaImportacion, body).pipe(
+  guardarFraccion(body: BuscarPayload): Observable<GuardarFraccionResponse> {
+     return this.httpClient.post<GuardarFraccionResponse>(API_ROUTES('/sat-t80202','80202').buscarfraccionarancelariaImportacion, body).pipe(
             map((response) => response),
             catchError(() => {
               const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80202','80202').buscarPlantas}`);
@@ -84,8 +84,8 @@ export class PermisoImmexDatosService {
   }
 
 
-  guardarFraccionExportacion(body: FraccionPayload): Observable<fraccionInfo> {
-     return this.httpClient.post<fraccionInfo>(API_ROUTES('/sat-t80202','80202').buscarfraccionArancelaria, body).pipe(
+  guardarFraccionExportacion(body: FraccionPayload): Observable<FraccionResponse> {
+     return this.httpClient.post<FraccionResponse>(API_ROUTES('/sat-t80202','80202').buscarfraccionArancelaria, body).pipe(
             map((response) => response),
             catchError(() => {
               const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES('/sat-t80202','80202').buscarPlantas}`);
