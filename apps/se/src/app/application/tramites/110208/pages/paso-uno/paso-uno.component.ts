@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosCertificadoComponent } from '../../components/datosCertificado/datosCertificado.component';
 import { Solocitud110208Service } from '../../services/service110208.service';
 
 /**
@@ -43,6 +44,8 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
    * Este componente se utiliza para gestionar información relacionada con el solicitante.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
 
    /**
    * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
@@ -113,6 +116,19 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
   seleccionaTab(indice: number): void {
     // Establece el índice de la pestaña seleccionada
     this.indice = indice;
+  }
+
+    /** Método público para validar todos los formularios del paso uno */
+  public validateAll(): boolean {
+    let isValid = true;
+    if (this.datosCertificadoComponent) {
+      if (!this.datosCertificadoComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
   /**
    * Hook de destrucción del componente. Limpia las suscripciones activas para evitar fugas de memoria.

@@ -27,8 +27,7 @@ export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string
  * API para prepar evaluacion tramite general.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t80205/swagger-ui/index.html#/Registro-Servicios/buscarServicios
  */
-export const SERVICIO_IMMEX_TABLA = (TRAMITE: string): string =>
-  `sat-t${TRAMITE}/servicios/buscar`;
+export const SERVICIO_IMMEX_TABLA = (TRAMITE: string): string => `sat-t${TRAMITE}/servicios/buscar`;
 
 /**
  * API para prepar evaluacion tramite general.

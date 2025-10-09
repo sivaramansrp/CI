@@ -260,13 +260,13 @@ export function mapPlantaToDomicilio(planta?: PlantasDireccionModelo): Domicilio
 
 export function buildPlantasSubmanufactureras(array: PlantasDireccionModelo[], base: BaseItem[]): unknown[] {
   
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const RESULT: any[] = [];
+  
+  array.forEach(arr => {
+    const TEMPLATE = (base.length > 0 && base[0] && typeof base[0] === 'object') ? base[0] : {};
+    
+    const PLANT_DATA = {
       empresaCalle: arr.calle ?? '',
       empresaNumeroInterior: arr.numInterior ?? '',
       empresaNumeroExterior: arr.numExterior ?? '',
@@ -278,17 +278,24 @@ export function buildPlantasSubmanufactureras(array: PlantasDireccionModelo[], b
       rfc: arr.rfc ?? '',
       domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
       razonSocial: arr.razonSocial ?? '',
-     datosComplementarios: Array.isArray(item.datosComplementarios)
-          ? item.datosComplementarios.map((dc: DatoComplementario) => ({
-              idPlantaC: dc.idPlantaC ?? '',
-              idDato: dc.idDato ?? '',
-              amparoPrograma: dc.amparoPrograma ?? '',
-            }))
-          : [],
-        });
-      });
+    };
+    
+    const DATOS_COMPLEMENTARIOS = Array.isArray(TEMPLATE.datosComplementarios)
+      ? TEMPLATE.datosComplementarios.map((dc: DatoComplementario) => ({
+          idPlantaC: dc.idPlantaC ?? '',
+          idDato: dc.idDato ?? '',
+          amparoPrograma: dc.amparoPrograma ?? '',
+        }))
+      : [];
+    
+    RESULT.push({
+      ...TEMPLATE,
+      ...PLANT_DATA,
+      datosComplementarios: DATOS_COMPLEMENTARIOS,
     });
-    return RESULT;
-  }
+  });
+  
+  return RESULT;
+}
 
 

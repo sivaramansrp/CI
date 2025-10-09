@@ -11,6 +11,30 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110207Query extends Query<Solicitud110207State> {
+
+    /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+  formDatosCertificado$ = this.select((state) => {
+    return state.formDatosCertificado;
+  });
+
+    /**
+   * Selecciona los datos de la entidad federativa.
+   * @returns {Observable<any>} - Observable con los datos de la entidad federativa.
+   */
+  selectEntidadFederativa$ = this.select((state) => {
+    return state.entidadFederativaDatos;
+  });
+
+  /**
+   * Selecciona los datos de la representación federal.
+   * @returns {Observable<any>} - Observable con los datos de la representación federal.
+   */
+  selectrepresentacionFederal$ = this.select((state) => {
+    return state.representacionFederalDatos;
+  });
   /**
    * Constructor de la clase.
    * @param store Instancia de la tienda `Tramite110207Store` que contiene el estado del trámite.

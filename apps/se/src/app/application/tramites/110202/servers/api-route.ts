@@ -1,5 +1,5 @@
 /**
- * Conjunto de rutas de la API para el procedimiento 80101.
+ * Conjunto de rutas de la API para el procedimiento 110202.
  */
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
 /**
@@ -29,15 +29,17 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 /**
  * Procedimiento de la API
  */
-const PROCEDURE = '/sat-t80101';
+const PROCEDURE = '/sat-t110202';
 
-const PROCEDURE_NO = '80101';
+const PROCEDURE_NO = '110202';
 
 /**
- * Rutas de la API para el procedimiento 80101
+ * Rutas de la API para el procedimiento 110202
  */
 export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PROCEDURE_NO) => ({
-    ESTADO: `${BASE_URL}${API}/${procedure}${CATALOGO}/estados`,
+    IDIOMA: `${BASE_URL}${API}/${procedure}${CATALOGO}/idioma`,
+    ENTIDAD_FEDERATIVA: `${BASE_URL}${API}/${procedure}${CATALOGO}/entidades-federativas`,
+    REPRESENTACION_FEDERAL: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal/MEX`,
     PAIS: `${BASE_URL}${API}/${procedure}${CATALOGO}/paises`,
     ActividadProductiva: `${BASE_URL}${API}/${procedure}${CATALOGO}/actividad-productiva-prosec`,
     RepresentacionFederal: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
@@ -48,14 +50,5 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     tipoInversion: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-inversion`,
     estadoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     buscarPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-submanufactureras/buscar-datos-grid-plantas`,
-    buscarControldasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-controladas/buscar-datos-grid-plantas-controladoras`,
-    buscarTerciarizadasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-terciarizadas/buscar-datos-grid-plantas`,
     buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
-    buscarPermisoImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/agregar-anexo-premiso`,
-    tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
-    paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
-    buscarFraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
-    buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
-    buscarfraccionarancelariaImportacion: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/importacion`,
-    buscarSectoresImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/actividad-tres-rs/sectores-immex`,
 });
