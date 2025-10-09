@@ -6,9 +6,10 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DestinatarioDeCertificadoComponent } from '../../components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+  @ViewChild(DestinatarioDeCertificadoComponent) destinatarioDeCertificadoComponent?: DestinatarioDeCertificadoComponent;
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -60,6 +62,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
 
+  }
+
+   /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.destinatarioDeCertificadoComponent?.validateAllForms() ?? true;
   }
   /**
 * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.

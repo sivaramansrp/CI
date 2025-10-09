@@ -1,3 +1,4 @@
+import { Component, ViewChild } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
@@ -6,7 +7,6 @@ import {
 } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDelDestinatarioComponent } from "../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component";
 import { DestinatarioComponent } from "../../../../shared/components/destinatario/destinatario.component";
 import { FormBuilder } from '@angular/forms';
@@ -45,7 +45,7 @@ interface FormValues {
     RepresentanteLegalExportadorComponent,
     DatosDelDestinatarioComponent,
     DestinatarioComponent
-],
+  ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
@@ -96,8 +96,15 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
   datosDelDestinatarioValido: boolean = false;
   /** Valores actuales del formulario de destinatario. */
   formDestinatarioValues!: FormValues;
-   /** Bandera de validez para destinatario */
+  /** Bandera de validez para destinatario */
   destinatarioValido: boolean = false;
+  /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+  @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+  /** Referencia al componente destinatario para marcar campos como tocados */
+  @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
+  /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+  @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
+
   /**
    * Constructor del componente.
    *
@@ -144,6 +151,32 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
   }
 
+   /** Inicializa el formulario reactivo del destinatario */
+  iniciarFormulario(): void {
+    this.registroFormulario = this.fb.group({
+      medioDeTransporte: [''],
+      // Agrega otros controles aquí si es necesario
+    });
+  }
+ 
+public validateAllForms(): boolean {
+  let valid = true;
+  this.destinatarioComponent?.markAllFieldsTouched();
+  this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+  this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+  if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
+    valid = false;
+  }
+  if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
+    valid = false;
+  }
+  if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
+    valid = false;
+  }
+  return valid;
+}
+
+
   /**
    * Método que se ejecuta al destruir el componente.
    *
@@ -170,11 +203,11 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
       grupoDeDirecciones: this.fb.group({
         ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required]],
         calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra,[Validators.required]],
+        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required]],
         lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
         telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
         fax: [this.solicitudState?.grupoDeDirecciones?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico,[Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
+        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
       }),
 
       grupoRepresentativo: this.fb.group({
@@ -255,7 +288,7 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
    * @param {keyof Tramite110212Store} metodoNombre - El nombre del método en el store para actualizar el estado.
    */
 
- setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
@@ -267,7 +300,7 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
    * @param event Evento con el campo y valor a actualizar.
    * @returns {void}
    */
-  setValoresStore1(event: {formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string;}): void {
+  setValoresStore1(event: { formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string; }): void {
     const { VALOR, METODO_NOMBRE } = event;
     (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }

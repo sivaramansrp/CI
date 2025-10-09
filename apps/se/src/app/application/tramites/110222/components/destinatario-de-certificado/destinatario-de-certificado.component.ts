@@ -1,12 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { GrupoRepresentativo } from '../../models/peru-certificado.module';
 import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { Validators } from '@angular/forms';
 
@@ -117,6 +120,14 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * Se utiliza para habilitar o deshabilitar la navegación en el asistente (wizard).
    */
   registroFormulario!: FormGroup;
+  
+    /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+    @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+    /** Referencia al componente destinatario para marcar campos como tocados */
+    @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
+    /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+    @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
+  
 
 
   /**
@@ -185,6 +196,31 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+    /** Inicializa el formulario reactivo del destinatario */
+  iniciarFormulario(): void {
+    this.registroFormulario = this.fb.group({
+      medioDeTransporte: [''],
+      // Agrega otros controles aquí si es necesario
+    });
+  }
+ 
+public validateAllForms(): boolean {
+  let valid = true;
+  this.destinatarioComponent?.markAllFieldsTouched();
+  this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+  this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+  if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
+    valid = false;
+  }
+  if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
+    valid = false;
+  }
+  if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
+    valid = false;
+  }
+  return valid;
+}
 
 
 

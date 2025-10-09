@@ -144,6 +144,14 @@ export class RepresentanteLegalExportadorComponent
     this.obtenerPaisDestinoCatalogo();
   }
 
+   /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.form) {
+      this.form.markAllAsTouched();
+    }
+  }
+
+
   /**
    * @descripcion
    * Crea los controles del formulario basados en la configuración de campos.

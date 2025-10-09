@@ -14,8 +14,9 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Subject} from 'rxjs';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 /**
  * @component CertificadoComponent
@@ -35,6 +36,8 @@ import { Tramite110222Query } from '../../estados/tramite110222.query';
   styleUrl: './certificado.component.scss',
 })
 export class CertificadoComponent {
+
+  @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
 
   /**
    * Array de pasos del wizard.
@@ -97,6 +100,12 @@ export class CertificadoComponent {
    * @param {AccionBoton} e - Objeto de acción que contiene la acción y el valor a manejar.
    */
   getValorIndice(e: AccionBoton): void {
+ if (e.accion === 'cont') {
+      if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
+        return;
+      }
+    }
+
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

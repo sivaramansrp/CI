@@ -46,12 +46,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('solicitante') solicitante!: SolicitanteComponent;
 
-  /**
-   * Referencia al componente `CertificadoOrigenComponent`.
-   */
-  // @ViewChild('certificadoOrigenComp', { static: false }) certificadoOrigenComp: CertificadoOrigenComponent | undefined;
-
-  /**
+   /**
    * Referencia al componente `DestinatarioComponent`.
    */
   @ViewChild('destinatarioComp', { static: false }) destinatarioComp: DestinatarioTramiteComponent | undefined;
@@ -98,6 +93,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+  @ViewChild(DestinatarioTramiteComponent) destinatarioTramiteComponent?: DestinatarioTramiteComponent;
 
   /**
    * Constructor del componente.
@@ -145,6 +141,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+  /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.destinatarioTramiteComponent?.validateAllForms() ?? true;
+  }
   /**
    * Método para seleccionar una pestaña específica.
    *
@@ -178,7 +181,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setTercerOperador(respuesta.datos.tercerOperador);
           this.store.setGrupoOperador(respuesta.datos.grupoOperador);
           this.store.setGrupoTratado(respuesta.datos.grupoTratado);
-          // this.store.setMercanciaTablaDatos(respuesta.datos.mercanciaSeleccionadasTablaDatos);
           this.store.setMercanciaDisponsiblesTablaDatos(
             respuesta.datos.mercanciaDisponsiblesTablaDatos
           );
@@ -207,16 +209,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public validarTodosLosFormularios(): boolean {
     let allFormsValid = true;
-
-    // Validar el formulario de certificado de origen si existe y es visible
-    // if (this.indice >= 2 && this.certificadoOrigenComp && this.certificadoOrigenComp.formularioCertificado) {
-    // this.certificadoOrigenComp.formularioCertificado.markAllAsTouched();
-    // if (!this.certificadoOrigenComp.formularioCertificado.valid) {
-    //   allFormsValid = false;
-    // }
-    // }
-
-    // Validar el formulario de destinatario si existe y es visible
     if (
       this.indice >= 3 &&
       this.destinatarioComp &&
