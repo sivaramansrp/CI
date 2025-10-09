@@ -4,10 +4,15 @@ import {
   CLASIFICACION_NALADISA_2002_IDS,
   CLASIFICACION_NALADI_IDS,
   CRITERIO_PARA_CONFERIR_ORIGEN_IDS,
+  CRITERIO_PARA_TRATO_PREFERENCIAL_IDS,
   FECHA,
+  FECHA_FACTURA_IDS,
+  FECHA_FACTURA_REFERENCIA,
+  FECHA_FACTURA_REFERENCIA_IDS,
   FRACCION_ARANCELARIA_IDS,
   NOMBRE_EN_INGLES_IDS,
   NORMA_ORIGEN_IDS,
+  NUMERO_DE_SERIE_IDS,
   N_FACTURA_IDS,
   N_FACTURA_REFERENCIA_IDS,
   OTRAS_INSTANCIAS_IDS,
@@ -18,6 +23,10 @@ import {
   REQUIRED_TIPO_FACTURA,
   REQUIRED_UMC,
   REQUIRED_VALOR_MERCANCIA,
+  TIPO_DE_FACTURA_IDS,
+  TIPO_DE_FACTURA_REFERENCIA_IDS,
+  VALOR_CONTENIDO_REGIONAL_IDS,
+  VALOR_MERCANCIA_IDS,
 } from '../../constantes/mercancia.enum';
 import {
   Catalogo,
@@ -155,6 +164,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @descripcion
+   * Fecha final para el formulario.
+   */
+  fechaFacturaReferencia: InputFecha = FECHA_FACTURA_REFERENCIA;
+
+  /**
+   * @descripcion
    * Notificador para gestionar la destrucción de suscripciones.
    */
   destroyNotifier$: Subject<void> = new Subject();
@@ -185,27 +200,120 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() idProcedimiento!: number;
 
+  /**
+   * Contiene los identificadores de fracción arancelaria.
+   * @type {number[]}
+   */
   FRACCION_ARANCELARIA: number[] = FRACCION_ARANCELARIA_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADI.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADI: number[] = CLASIFICACION_NALADI_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADISA 1993.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADISA_1993: number[] = CLASIFICACION_NALADISA_1993_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADISA 1996.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADISA_1996: number[] = CLASIFICACION_NALADISA_1996_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADISA 2002.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADISA_2002: number[] = CLASIFICACION_NALADISA_2002_IDS;
 
+  /**
+   * Contiene los identificadores del número de factura de referencia.
+   * @type {number[]}
+   */
   N_FACTURA_REFERENCIA: number[] = N_FACTURA_REFERENCIA_IDS;
 
+  /**
+   * Contiene los identificadores del número de factura.
+   * @type {number[]}
+   */
   N_FACTURA: number[] = N_FACTURA_IDS;
 
+  /**
+   * Contiene los identificadores de la norma de origen.
+   * @type {number[]}
+   */
   NORMA_ORIGEN: number[] = NORMA_ORIGEN_IDS;
 
+  /**
+   * Contiene los identificadores del nombre en inglés.
+   * @type {number[]}
+   */
   NOMBRE_EN_INGLES: number[] = NOMBRE_EN_INGLES_IDS;
 
+  /**
+   * Contiene los identificadores de otras instancias relacionadas.
+   * @type {number[]}
+   */
   OTRAS_INSTANCIAS: number[] = OTRAS_INSTANCIAS_IDS;
 
+  /**
+   * Contiene los identificadores del criterio para conferir origen.
+   * @type {number[]}
+   */
   CRITERIO_PARA_CONFERIR_ORIGEN: number[] = CRITERIO_PARA_CONFERIR_ORIGEN_IDS;
+
+  /**
+   * Contiene los identificadores del criterio para trato preferencial.
+   * @type {number[]}
+   */
+  CRITERIO_PARA_TRATO_PREFERENCIAL: number[] =
+    CRITERIO_PARA_TRATO_PREFERENCIAL_IDS;
+
+  /**
+   * Contiene los identificadores del valor de la mercancía.
+   * @type {number[]}
+   */
+  VALOR_MERCANCIA: number[] = VALOR_MERCANCIA_IDS;
+
+  /**
+   * Contiene los identificadores del valor de contenido regional.
+   * @type {number[]}
+   */
+  VALOR_CONTENIDO_REGIONAL: number[] = VALOR_CONTENIDO_REGIONAL_IDS;
+
+  /**
+   * Contiene los identificadores de la fecha de la factura.
+   * @type {number[]}
+   */
+  FECHA_FACTURA: number[] = FECHA_FACTURA_IDS;
+
+  /**
+   * Contiene los identificadores de la fecha de la factura de referencia.
+   * @type {number[]}
+   */
+  FECHA_FACTURA_REFERENCIA: number[] = FECHA_FACTURA_REFERENCIA_IDS;
+
+  /**
+   * Contiene los identificadores del tipo de factura.
+   * @type {number[]}
+   */
+  TIPO_DE_FACTURA: number[] = TIPO_DE_FACTURA_IDS;
+
+  /**
+   * Contiene los identificadores del tipo de factura de referencia.
+   * @type {number[]}
+   */
+  TIPO_DE_FACTURA_REFERENCIA: number[] = TIPO_DE_FACTURA_REFERENCIA_IDS;
+
+  /**
+   * Contiene los identificadores del número de serie.
+   * @type {number[]}
+   */
+  NUMERO_DE_SERIE: number[] = NUMERO_DE_SERIE_IDS;
 
   /**
    * @descripcion
@@ -238,6 +346,17 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.initActionFormBuild();
   }
 
+  /**
+   * Detecta los cambios en las propiedades de entrada del componente y actualiza el estado en consecuencia.
+   *
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios detectados en las propiedades @Input().
+   * @returns {void}
+   *
+   * @description
+   * Este método se ejecuta automáticamente cuando cambian las propiedades de entrada del componente:
+   * - Si cambia `datosSeleccionados`, se actualiza su valor y se reconstruye el formulario llamando a `initActionFormBuild()`.
+   * - Si cambia `fromMercanciasDisponibles`, se actualiza su valor en la propiedad correspondiente.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['datosSeleccionados'].currentValue) {
       this.datosSeleccionados = changes['datosSeleccionados'].currentValue;
@@ -278,14 +397,14 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreIngles: [{ value: '', disabled: true }],
       otrasInstancias: [{ value: '', disabled: true }],
       criterioParaConferirOrigen: [{ value: '', disabled: true }],
-
+      criterioParaTratoPreferencial: [{ value: '', disabled: true }],
+      valorDeContenidoRegional: [{ value: '', disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
-
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [
@@ -295,14 +414,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.pattern(REGEX_PATRON_DECIMAL_16_4),
         ],
       ],
-
       umc: [
         this.datosSeleccionados?.umc,
         REQUIRED_UMC.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
-
       valorMercancia: [
         this.datosSeleccionados?.valorMercancia,
         [
@@ -312,7 +429,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.pattern(REGEX_PATRON_DECIMAL_15_4),
         ],
       ],
-
       complementoDescripcion: [
         this.datosSeleccionados?.complementoDescripcion,
         [
@@ -322,7 +438,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.maxLength(200),
         ],
       ],
-
       numeroFactura: [
         this.datosSeleccionados?.numeroFactura,
         [
@@ -332,7 +447,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.maxLength(36),
         ],
       ],
-
+      numeroDeSerie: [''],
       tipoFactura: [
         this.datosSeleccionados?.tipoFactura,
         REQUIRED_TIPO_FACTURA.includes(this.idProcedimiento)
@@ -443,6 +558,24 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  /**
+   * Construye un objeto de tipo `Mercancia` a partir de los datos proporcionados,
+   * aplicando valores predeterminados cuando sea necesario.
+   *
+   * @private
+   * @param {Mercancia} MERCANIADATO - Objeto que contiene los datos originales de la mercancía.
+   * @returns {Mercancia} Objeto `Mercancia` completamente estructurado y con valores de respaldo.
+   *
+   * @description
+   * Este método genera un nuevo objeto `Mercancia` tomando como base los valores recibidos en `MERCANIADATO`.
+   * Si alguna propiedad del objeto es `undefined` o `null`, se asigna el valor por defecto `'--'`.
+   *
+   * Además:
+   * - Si la propiedad `fromMercanciasDisponibles` está activa, el campo `id` se inicializa en `0`.
+   * - En caso contrario, el `id` se obtiene desde `datosSeleccionados`.
+   *
+   * El resto de las propiedades se completan con los valores del objeto recibido o con el valor de respaldo.
+   */
   private buildMercancia(MERCANIADATO: Mercancia): Mercancia {
     const FALLBACK = (value?: string): string => value ?? '--';
     return {
