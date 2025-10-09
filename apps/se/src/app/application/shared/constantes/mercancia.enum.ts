@@ -22,6 +22,10 @@ export const FECHA = {
   habilitado: true,
 };
 
+/**
+ * Configuración del campo "Fecha de factura / Referencia".
+ * Contiene información sobre su etiqueta, obligatoriedad y estado de habilitación.
+ */
 export const FECHA_FACTURA_REFERENCIA = {
   /**
    * @descripcion

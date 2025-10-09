@@ -50,20 +50,23 @@ export class CertificadoOrigenComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * @descripcion
-   * Lista de estados disponibles.
+   * Lista de estados disponibles en el catálogo.
+   *
+   * @type {Catalogo[]}
    */
   estado: Catalogo[] = [];
 
   /**
-   * @descripcion
-   * Lista de países disponibles.
+   * Lista de países disponibles en el catálogo.
+   *
+   * @type {Catalogo[]}
    */
   pais: Catalogo[] = [];
 
   /**
-   * @descripcion
-   * Lista de datos disponibles relacionados con mercancías.
+   * Lista de mercancías disponibles.
+   *
+   * @type {Mercancia[]}
    */
   disponiblesDatos: Mercancia[] = [];
 
@@ -162,6 +165,12 @@ export class CertificadoOrigenComponent
    */
   fromMercanciasDisponibles: boolean = false;
 
+  /**
+   * Configuración de las columnas de la tabla de carga de mercancías.
+   * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
+   *
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
 
   /**
