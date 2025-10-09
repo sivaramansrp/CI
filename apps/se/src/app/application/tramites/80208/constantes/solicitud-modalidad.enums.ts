@@ -109,3 +109,49 @@ export const USUARIO_INFO = {
   idSolicitud: 202775426,
   referenciaSolicitud: '',
 };
+
+/**
+ * @const ERROR_FORMA_ALERT
+ * @description Mensaje de error HTML para el campo "Cambio de modalidad" cuando es requerido.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando no se ha seleccionado una modalidad de cambio.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación en el formulario
+ * this.errorMessage = ERROR_FORMA_ALERT;
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <p>Corrija los siguientes errores:</p>
+      <p> 1. - (Cambio de modalidad) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`
+
+/**
+ * @const ERROR_SERVICIOS_ALERT
+ * @description Mensaje de error HTML para cuando no se han agregado servicios requeridos.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando debe agregar al menos un servicio a la solicitud.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación cuando faltan servicios
+ * this.errorMessage = ERROR_SERVICIOS_ALERT;
+ */
+export const ERROR_SERVICIOS_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <p> 1. - (Debe agregar al menos un servicio) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`

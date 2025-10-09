@@ -7,7 +7,7 @@ import { DatosCertificadoDeComponent } from '../../shared/components/datos-certi
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
-import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { MercanciaComponent } from '../../shared/components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
 import { NotificacionesComponent } from "@ng-mf/data-access-user";
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
@@ -18,9 +18,9 @@ import { PeruDestinatarioComponent } from './components/peru-destinatario/peru-d
 import { PeruHistoricoProductoresComponent } from './components/peru-historico-productores/peru-historico-productores.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 import { RouterModule } from '@angular/router';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
-import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 
 
 @NgModule({
@@ -32,7 +32,6 @@ import { RepresentanteLegalExportadorComponent } from "../../shared/components/r
     PeruDatosCertificadoComponent,
     PeruHistoricoProductoresComponent,
     CertificadoOrigenComponent,
-    MercanciaComponent,
   ],
   imports: [
     CommonModule,
@@ -55,7 +54,8 @@ import { RepresentanteLegalExportadorComponent } from "../../shared/components/r
     AlertComponent,
     RepresentanteLegalComponent,
     NotificacionesComponent,
-    RepresentanteLegalExportadorComponent
+    RepresentanteLegalExportadorComponent,
+    MercanciaComponent
 ]
 })
 export class ValidarCertificadoModule { }

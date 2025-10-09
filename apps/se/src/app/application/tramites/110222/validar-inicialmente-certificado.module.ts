@@ -12,15 +12,15 @@ import { DestinatarioComponent } from '../../shared/components/destinatario/dest
 import { DestinatarioDeCertificadoComponent } from './components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { HistoricoDeProductoresComponent } from './components/historico-de-productores/historico-de-productores.component';
 import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
-import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { MercanciaComponent } from '../../shared/components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 import { RouterModule } from '@angular/router';
 import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialmente-certificado-routing.module';
-import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 
 
 @NgModule({
@@ -32,7 +32,6 @@ import { RepresentanteLegalExportadorComponent } from "../../shared/components/r
     DestinatarioDeCertificadoComponent,
     CertificadoOrigenComponent,
     HistoricoDeProductoresComponent,
-    MercanciaComponent,
   ],
   imports: [
     CommonModule,
@@ -54,7 +53,8 @@ import { RepresentanteLegalExportadorComponent } from "../../shared/components/r
     TituloComponent,
     AlertComponent,
     RepresentanteLegalComponent,
-    RepresentanteLegalExportadorComponent
-]
+    RepresentanteLegalExportadorComponent,
+    MercanciaComponent
+  ]
 })
 export class ValidarInicialmenteCertificadoModule { }

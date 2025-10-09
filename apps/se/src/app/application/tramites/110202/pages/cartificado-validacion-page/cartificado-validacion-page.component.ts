@@ -114,7 +114,22 @@ export class CartificadoValidacionPageComponent {
   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
   */
   esFormaValido: boolean = false;
-  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
+
+
+  /**
+   * Constructor de la clase CartificadoValidacionPageComponent.
+   * 
+   * @param seccionStore - Servicio para gestionar el estado de las secciones del formulario.
+   * @param tramiteQuery - Servicio para consultar el estado y datos del trámite 110202.
+   * 
+   * Al inicializar el componente, se suscribe al observable `FormaValida$` del `tramiteQuery`.
+   * Cada vez que se emite un nuevo valor, actualiza el estado de la sección y la validez del formulario
+   * en el `seccionStore`. La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+   * lo que previene fugas de memoria.
+   */
+  constructor(
+    private seccionStore: SeccionLibStore,
+    private tramiteQuery: Tramite110202Query
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -160,6 +175,16 @@ export class CartificadoValidacionPageComponent {
       this.pasoNavegarPor(e);
     }
   }
+
+  /**
+   * Navega entre los pasos de un asistente (wizard) según la acción recibida.
+   *
+   * @param e - Objeto de tipo `AccionBoton` que contiene la acción a realizar y el valor del índice del paso.
+   * 
+   * - Actualiza el índice actual y el índice en `datosPasos` con el valor proporcionado.
+   * - Si el valor está entre 1 y 4 (inclusive), navega al siguiente paso si la acción es 'cont', 
+   *   o al paso anterior en caso contrario, utilizando los métodos del componente wizard.
+   */
   pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;

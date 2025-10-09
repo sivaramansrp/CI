@@ -74,8 +74,8 @@ export class CambioModalidadService {
    * @description Obtiene la respuesta del cambio de modalidad desde un archivo JSON simulado.
    * @returns {Observable<CambioModalidadResponse>} Observable que emite la respuesta del cambio de modalidad.
    */
-  getCambioDeModalidad(): Observable<CambioModalidadResponse> {
-    return this.httpService.get<CambioModalidadResponse>(`${ENVIRONMENT.API_HOST}/api/catalogo/modalidad-immex`, {}, false).pipe(map((res: CambioModalidadResponse) => {
+  getCambioDeModalidad(tramiteID: string): Observable<CambioModalidadResponse> {
+    return this.httpService.get<CambioModalidadResponse>(`${ENVIRONMENT.API_HOST}/api/sat-t${tramiteID}/catalogo/modalidad-immex`, {}, false).pipe(map((res: CambioModalidadResponse) => {
             return res;
           }));
   }

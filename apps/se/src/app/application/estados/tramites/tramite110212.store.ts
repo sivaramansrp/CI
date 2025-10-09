@@ -4,13 +4,14 @@ import {
   FormularioMercancia,
   GrupoCertificadoOrigen,
   GrupoTratado,
-  SeleccionadasTabla,
 } from '../../tramites/110212/models/validacion-posteriori.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoOperador } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoReceptor } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoRepresentativo } from '../../tramites/110212/models/validacion-posteriori.model';
 import { Injectable } from '@angular/core';
+import { Mercancia } from '../../shared/models/modificacion.enum';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 /**
@@ -24,23 +25,38 @@ export interface Tramite110212State {
   idSolicitud: number | null;
 
   /**
-   * Observaciones generales del trámite.
+   * El valor de observaciones.
    */
   observaciones: string;
 
   /**
-   * Idioma seleccionado para el trámite.
+   * Lista de mercancías disponibles.
+   * 
+   * @type {Mercancia[]}
    */
+  disponiblesDatos: Mercancia[];
+
+  /** Lista de idiomas disponibles. */
   idioma: string | null;
 
-  /**
-   * Entidad federativa seleccionada.
-   */
-  entidadFederativa: string | null;
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
 
   /**
-   * Representación federal seleccionada.
-   */
+ * Entidad federativa seleccionada.
+ */
+  entidadFederativa: string | null;
+
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
+
+  /**
+ * Representación federal seleccionada.
+ */
   representacionFederal: string | null;
 
   /**
@@ -113,7 +129,7 @@ export interface Tramite110212State {
    *
    * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
    */
-  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+  mercanciaSeleccionadasTablaDatos: Mercancia[];
   /**
    * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos
    * @description Lista de mercancías disponibles para ser mostradas en la tabla de datos.
@@ -121,10 +137,25 @@ export interface Tramite110212State {
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
-   /** Formulario con los datos específicos del destinatario */
+  /** Formulario con los datos específicos del destinatario */
   formDatosDelDestinatario: { [key: string]: unknown };
-   /** Formulario general del destinatario */
+  /** Formulario general del destinatario */
   formDestinatario: { [key: string]: unknown };
+
+  /**
+   * Datos del formulario relacionados con los detalles del certificado.
+   * Estructura dinámica y flexible.
+   */
+  formDatosCertificado: { [key: string]: unknown };
+
+  /** Representación federal seleccionada */
+  representacionFederalSeleccion: Catalogo;
+
+  /**
+   * Objeto que contiene banderas booleanas para validar formularios.
+   * Cada clave representa una sección del formulario.
+   */
+  formaValida: { [key: string]: boolean };
 }
 
 /**
@@ -139,10 +170,17 @@ export function createInitialState(): Tramite110212State {
     pasoActivo: 1,
     pestanaActiva: 1,
     idioma: null,
+    /** Lista de idiomas disponibles */
+    idiomaDatos: [],
+    /** Lista de entidades federativas disponibles */
+    entidadFederativaDatos: [],
+    /** Lista de representaciones federales disponibles */
+    representacionFederalDatos: [],
     entidadFederativa: null,
     representacionFederal: null,
     datosConfidencialesProductor: false,
     productorMismoExportador: false,
+    disponiblesDatos: [],
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',
@@ -218,26 +256,43 @@ export function createInitialState(): Tramite110212State {
     },
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
-     /** Formulario con información fiscal y general del destinatario */
-  formDatosDelDestinatario: {
-    nombres: '',
-    primerApellido: '',
-    segundoApellido: '',
-    numeroDeRegistroFiscal: '',
-    razonSocial: ''
-  },
-   /** Formulario con información del destinatario (ubicación y contacto) */
-  formDestinatario: {
-    paisDestin: '',
-    ciudad: '',
-    calle: '',
-    numeroLetra: '',
-    lada: '',
-    telefono: '',
-    fax: '',
-    correoElectronico: ''
-  },
+    /** Formulario con información fiscal y general del destinatario */
+    formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: ''
+    },
+    /** Formulario con información del destinatario (ubicación y contacto) */
+    formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      calle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: ''
+    },
 
+    /** Formulario de datos adicionales del certificado */
+    formDatosCertificado: {
+      observacionesDates: '',
+      idiomaDates: '',
+      precisaDates: '',
+      EntidadFederativaDates: '',
+      representacionFederalDates: '',
+    },
+    /** Representación federal seleccionada */
+    representacionFederalSeleccion: { id: -1, descripcion: '' },
+    /** Estado de validación de los diferentes formularios */
+    formaValida: {
+      certificado: true,
+      datos: true,
+      destinatrio: true,
+      datosDestinatario: true,
+    },
   };
 }
 /**
@@ -319,9 +374,9 @@ export class Tramite110212Store extends Store<Tramite110212State> {
    *
    * Este método permite establecer el idioma seleccionado en el trámite.
    *
-   * @param {string} idioma - El idioma a establecer.
+   * @param {Catalogo[]} idioma - El idioma a establecer.
    */
-  public setIdioma(idioma: string): void {
+  public setIdioma(idioma: string | null): void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -329,12 +384,26 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   }
 
   /**
-   * Actualiza la entidad federativa seleccionada para el trámite.
-   *
-   * Este método permite establecer la entidad federativa seleccionada en el trámite.
-   *
-   * @param {string} entidadFederativa - La entidad federativa a establecer.
-   */
+ * Actualiza el idioma seleccionado para el trámite.
+ *
+ * Este método permite establecer el idioma seleccionado en el trámite.
+ *
+ * @param {Catalogo[]} idioma - El idioma a establecer.
+ */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
+
+  /**
+ * Actualiza la entidad federativa seleccionada para el trámite.
+ *
+ * Este método permite establecer la entidad federativa seleccionada en el trámite.
+ *
+ * @param {string} entidadFederativa - La entidad federativa a establecer.
+ */
   public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
@@ -353,6 +422,79 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     this.update((state) => ({
       ...state,
       representacionFederal,
+    }));
+  }
+
+  /**
+   * Establece los datos de la entidad federativa en el almacén.
+   *
+   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la representación federal en el almacén.
+   *
+   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
+    }));
+  }
+
+  /**
+   * Establece los representacionFederalSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
+  }
+
+  /**
+   * Establece el estado de validación del formulario en el almacén.
+   *
+   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormValida(formaValida: { [key: string]: boolean }): void {
+    this.update((state) => {
+      const IS_VALID = { ...state.formaValida, ...formaValida };
+      return {
+        ...state,
+        formaValida: IS_VALID,
+      };
+    });
+  }
+
+  /**
+* Establece el catálogo de idiomaDatosSeleccion en el estado de la tienda.
+*
+* @param idiomaDatosSeleccion - Una lista de objetos de tipo `Catalogo` que representan las idiomaDatosSeleccion a establecer.
+*/
+  setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatosSeleccion,
     }));
   }
 
@@ -1242,13 +1384,24 @@ export class Tramite110212Store extends Store<Tramite110212State> {
    *
    * @returns {void}
    */
-  public setMercanciaTablaDatos(
-    mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaSeleccionadasTablaDatos,
-    }));
+  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaSeleccionadasTablaDatos || [];
+      const NUEVOARTICULO = { ...mercanciaSeleccionadasTablaDatos[0] };
+
+      if (NUEVOARTICULO.id === 0) {
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+      }
+
+      // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+    });
   }
   /**
    * @method setMercanciaDisponsiblesTablaDatos
@@ -1323,21 +1476,47 @@ export class Tramite110212Store extends Store<Tramite110212State> {
    * Actualiza el estado del formulario de datos del destinatario con nuevos valores
    * @param values Objeto con los valores a actualizar en el formulario.
    */
-  setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
-        ...state.formDatosDelDestinatario,
+        ...state.formDatosDelDestinatario, ...values,
+      },
+    }));
+  }
+  /*
+     * Establece los valores del formulario de fechas del certificado en el almacén.
+     *
+     * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
+     *
+     * @returns {void} - No devuelve ningún valor.
+     */
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
         ...values,
       },
     }));
   }
 
-  setFormDestinatario(values: { [key: string]: unknown}): void {
+  setFormDestinatario(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDestinatario: {
         ...state.formDestinatario,
         ...values,
       },
+    }));
+  }
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
     }));
   }
 }

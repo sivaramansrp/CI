@@ -191,7 +191,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
   {
     labelNombre: 'Nombre del empresa*',
     campo: 'nombreEmpresaExt',
-    class: 'col-md-4 col-sm-10',
+    class: 'col-md-4 col-sm-10 text-uppercase',
     tipo_input: 'text',
     required: true,
     orden: 2,
@@ -203,7 +203,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-10 col-10',
     tipo_input: 'select',
     required: true,
-    opciones: [], // Use this instead of opciones
+    opciones: [],
     orden: 3,
   },
   {
