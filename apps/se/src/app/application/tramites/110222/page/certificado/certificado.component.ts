@@ -14,9 +14,9 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ERROR_FORMA_ALERT, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Subject} from 'rxjs';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 /**
  * @component CertificadoComponent
@@ -36,6 +36,7 @@ import { Tramite110222Query } from '../../estados/tramite110222.query';
   styleUrl: './certificado.component.scss',
 })
 export class CertificadoComponent {
+
   /**
    * Array de pasos del wizard.
    * @type {Array<ListaPasoWizard>}
@@ -127,6 +128,11 @@ export class CertificadoComponent {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
+    if (e.accion === 'cont') {
+      if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
+        return;
+      }
+    }
 
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();

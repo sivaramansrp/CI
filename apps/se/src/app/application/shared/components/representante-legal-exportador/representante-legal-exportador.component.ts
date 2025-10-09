@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -100,13 +101,13 @@ export class RepresentanteLegalExportadorComponent
   @Output() formDatosDelDestinatarioEvent: EventEmitter<{
     formGroupName: string;
     campo: string;
-    valor: undefined;
-    metodoNombre: string;
+    VALOR: undefined;
+    METODO_NOMBRE: string;
   }> = new EventEmitter<{
     formGroupName: string;
     campo: string;
-    valor: undefined;
-    metodoNombre: string;
+    VALOR: undefined;
+    METODO_NOMBRE: string;
   }>();
 
   /**
@@ -143,6 +144,14 @@ export class RepresentanteLegalExportadorComponent
     this.obtenerPaisDestinoCatalogo();
   }
 
+   /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.form) {
+      this.form.markAllAsTouched();
+    }
+  }
+
+
   /**
    * @descripcion
    * Crea los controles del formulario basados en la configuración de campos.
@@ -156,12 +165,38 @@ export class RepresentanteLegalExportadorComponent
 
     this.campos.forEach((campo) => {
       if (!this.form.contains(campo.nombre)) {
-        const valorInicial = this.datosForm?.[campo.nombre] ?? '';
+        const VALOR_INICIAL = this.datosForm?.[campo.nombre] ?? '';
+        const VALIDATORS = [];
+        if (campo.required) {
+          VALIDATORS.push(Validators.required);
+        }
+        if (campo.maxlength) {
+          VALIDATORS.push(Validators.maxLength(Number(campo.maxlength)));
+        } else {
+          if (campo.nombre === 'lugar' || campo.nombre === 'exportador') {
+            VALIDATORS.push(Validators.maxLength(70));
+          }
+          if (campo.nombre === 'empresa') {
+            VALIDATORS.push(Validators.maxLength(90));
+          }
+          if (campo.nombre === 'correo' || campo.nombre === 'correoElectronico') {
+            VALIDATORS.push(Validators.maxLength(70));
+          }
+          if (campo.nombre === 'telfono') {
+            VALIDATORS.push(Validators.maxLength(16));
+          }
+        }
+        if (campo.nombre === 'correo' || campo.nombre === 'correoElectronico') {
+          VALIDATORS.push(Validators.email);
+        }
+        if (campo.nombre === 'telfono' || campo.nombre === 'fax' || campo.nombre === 'lada') {
+          VALIDATORS.push(Validators.pattern('^[0-9]*$'));
+        }
         this.form.addControl(
           campo.nombre,
           this.fb.control(
-            valorInicial,
-            campo.required ? [Validators.required] : []
+            VALOR_INICIAL,
+            VALIDATORS
           )
         );
       }
@@ -211,8 +246,8 @@ export class RepresentanteLegalExportadorComponent
     this.formDatosDelDestinatarioEvent.emit({
       formGroupName,
       campo,
-      valor: VALOR,
-      metodoNombre,
+      VALOR: VALOR,
+      METODO_NOMBRE: metodoNombre,
     });
   }
 

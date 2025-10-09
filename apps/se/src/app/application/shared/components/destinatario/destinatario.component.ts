@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { CAMPO_DE_DESTINATARIO, CAMPO_DE_DESTINATARIOS } from '../../constantes/modificacion.enum';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DestinatarioService } from '../../services/destinatario.service';
 import { MenusDesplegables } from '../../models/modificacion.enum';
@@ -136,6 +136,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    * @memberof DestinatarioComponent
    */
   campoDestinatario = false;
+  camposDestinatarios = false;
 
   /**
    * Constructor del componente
@@ -160,6 +161,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    */
   ngOnInit(): void {
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
+    this.camposDestinatarios = CAMPO_DE_DESTINATARIOS.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
     this.getPaisDestino();

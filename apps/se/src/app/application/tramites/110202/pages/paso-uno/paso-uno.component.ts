@@ -68,6 +68,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
    * 

@@ -257,7 +257,9 @@ export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
  * @descripcion
  * Identificador único del procedimiento.
  */
-export const CAMPO_DE_DESTINATARIO = [110222, 110221];
+export const CAMPO_DE_DESTINATARIO = [110221, 110222, 110223];
+
+export const CAMPO_DE_DESTINATARIOS = [110203];
 
 export const CAMPO_DE_REPRESENTANTE = [110202, 110223];
 

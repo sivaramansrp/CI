@@ -15,21 +15,9 @@
   (formaValida)="setFormValidaDestinatario($event)"
 ></app-destinatario>
 
-<div>
-  <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <div class="row">
-        <ng-titulo titulo="Detalles del transporte" />
-        <div class="col-md-6">
-          <app-catalogo-select
-            [label]="'Medio de transporte'"
-            [catalogo]="(medioDeTransporte$ | async) || []"            
-            name="estado"
-            formControlName="medioDeTransporte"
-            (selectionChange)="medioDeTransporteSeleccion($event)"
-          ></app-catalogo-select>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
+<app-detalles-del-transporte
+[idProcedimiento]="110202"
+[medioTransporte]="(medioDeTransporte$ | async) || []"
+(formaValida)="setFormValidaDestinatario($event)"
+[datosForm]="formDestinatarioValues"
+></app-detalles-del-transporte>
