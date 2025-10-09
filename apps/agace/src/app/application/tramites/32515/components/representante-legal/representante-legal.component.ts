@@ -86,6 +86,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   /**
    * Actualiza el estado del store con el nuevo valor de un campo
    * @param campo Campo modificado
@@ -97,22 +98,21 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Configura el monitoreo del campo RFC con múltiples estrategias
-   */
+   */  
   private configurarMonitoreoRfc(): void {
-    const rfcControl = this.ninoFormGroup.get('rfc');
-    if (rfcControl) {
+    const RFC_CONTROL = this.ninoFormGroup.get('rfc');
+    if (RFC_CONTROL) {
       
-      const originalMarkAsTouched = rfcControl.markAsTouched.bind(rfcControl);
-      rfcControl.markAsTouched = (opts?: any) => {
-        const result = originalMarkAsTouched(opts);
-        
-        setTimeout(() => {
-          if (rfcControl.errors?.['required'] && !this.rfcNotificationShown) {
+      const ORIGINAL_MARK_AS_TOUCHED = RFC_CONTROL.markAsTouched.bind(RFC_CONTROL);
+      RFC_CONTROL.markAsTouched = (opts?: any) => {
+        const RESULT = ORIGINAL_MARK_AS_TOUCHED(opts);
+          setTimeout(() => {
+          if (RFC_CONTROL.errors?.['required'] && !this.rfcNotificationShown) {
             this.mostrarNotificacionRfc();
           }
         }, 10);
         
-        return result;
+        return RESULT;
       };
     } 
   }
