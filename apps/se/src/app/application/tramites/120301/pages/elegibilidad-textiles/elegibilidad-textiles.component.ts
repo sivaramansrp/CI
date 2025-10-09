@@ -15,7 +15,7 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, Notificacion, SolicitanteQuery, SolicitanteState, } from '@ng-mf/data-access-user';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
@@ -267,6 +267,17 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   indice: number = 1;
 
   /**
+ * Estado del solicitante.
+ */
+  solicitante!: SolicitanteState
+
+  /** Indica si el solicitante es una persona moral.
+   * Se utiliza para determinar qué campos mostrar en el formulario.
+   */
+  esPersonaMoral: boolean = false;
+
+
+  /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
    * Subject privado utilizado con el operador takeUntil para cancelar automáticamente
    * todas las suscripciones activas cuando el componente es destruido.
@@ -335,6 +346,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private tramiteStore: Tramite120301Store,
     private tramiteQuery: Tramite120301Query,
+    private solicitanteQuery: SolicitanteQuery,
     private textilesState: ElegibilidadDeTextilesStore) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
@@ -538,6 +550,17 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
         })
       )
       .subscribe();
+
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.solicitante = state as SolicitanteState;
+          this.esPersonaMoral = this.solicitante.tipo_persona === 'M';
+        })
+      )
+      .subscribe();
+
   }
 
   /**
@@ -602,11 +625,13 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       requiere_descripcion_mercancia: true,
 
       solicitante: {
-        rfc: 'AAL0409235E6',
-        certificado_serial_number: '',
-        nombre: 'PRUEBA',
-        es_persona_moral: true
-      },
+        rfc: this.solicitante.rfc_original,
+        nombre: this.esPersonaMoral
+          ? this.solicitante.razon_social
+          : `${this.solicitante.nombre ?? ''} ${this.solicitante.ap_paterno ?? ''} ${this.solicitante.ap_materno ?? ''}`.trim(),
+        es_persona_moral: this.esPersonaMoral,
+        certificado_serial_number: '3082054030820428a00302010',
+    },
 
       representacion_federal: {
         cve_entidad_federativa: STATE_SOLICITUD.cve_entidad,

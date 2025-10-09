@@ -2,9 +2,9 @@
 import { ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { Location } from '@angular/common';
 
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
-import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, Usuario, WizardComponent } from '@ng-mf/data-access-user';
+import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, SolicitanteQuery, SolicitanteState, Usuario, WizardComponent } from '@ng-mf/data-access-user';
 import { GuadarSolicitudRequest } from '../../model/request/guardar-solicitud-request.model';
 import { GuardarService } from '../../services/guardar.service';
 import { IniciarService } from '../../services/iniciar.service';
@@ -109,9 +109,9 @@ export class SolicitudPageComponent implements OnInit {
    */
   public alertaNotificacion!: Notificacion;
 
-    /**
-   * Estado del tramite Folio
-   */
+  /**
+ * Estado del tramite Folio
+ */
   public folioTemporal: number = 0;
 
   /**
@@ -161,6 +161,16 @@ export class SolicitudPageComponent implements OnInit {
   datosUsuario: Usuario = USUARIO_INFO;
 
   /**
+   * Estado del solicitante.
+   */
+  solicitante!: SolicitanteState
+
+  /** Indica si el solicitante es una persona moral.
+   * Se utiliza para determinar qué campos mostrar en el formulario.
+   */
+  esPersonaMoral: boolean = false;
+
+  /**
    * Notificación que se muestra al usuario.
    * Se utiliza para mostrar mensajes de éxito, error o información.
    */
@@ -170,7 +180,8 @@ export class SolicitudPageComponent implements OnInit {
     private guardarService: GuardarService,
     private tramite130118Store: Tramite130118Store,
     private tramite130118Query: Tramite130118Query,
-  ) {}
+    private solicitanteQuery: SolicitanteQuery
+  ) { }
 
   /**
    * Datos de los pasos del asistente, incluyendo textos de botones y el índice actual.
@@ -196,6 +207,16 @@ export class SolicitudPageComponent implements OnInit {
           this.solicitudState = seccionState;
         })
       ).subscribe();
+
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.solicitante = state as SolicitanteState;
+          this.esPersonaMoral = this.solicitante.tipo_persona === 'M';
+        })
+      )
+      .subscribe();
   }
 
 
@@ -365,127 +386,129 @@ export class SolicitudPageComponent implements OnInit {
       },
 
       solicitante: {
-        rfc: 'AAL0409235E6',
-        nombre: 'IGNACIO EDUARDO',
-        es_persona_moral: true,
-        certificado_serial_number: '3082054030820428a00302010'
-      },
+        rfc: this.solicitante.rfc_original,
+        nombre: this.esPersonaMoral
+          ? this.solicitante.razon_social
+          : `${this.solicitante.nombre ?? ''} ${this.solicitante.ap_paterno ?? ''} ${this.solicitante.ap_materno ?? ''}`.trim(),
+        es_persona_moral: this.esPersonaMoral,
+        certificado_serial_number: '3082054030820428a00302010', // ejemplo
+     },
 
       representacion_federal: {
         cve_entidad_federativa: REGISTRO_FEDERAL.estado,
         cve_unidad_administrativa: REGISTRO_FEDERAL.representacionFederal
       }
-    };
+  };
 
     return this.guardarService.postSolicitud(PAYLOAD).pipe(
-      map((response) => {
+    map((response) => {
 
-        // Si la respuesta es exitosa, actualiza el ID de la solicitud en el store
-        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-          this.tramite130118Store.setIdSolicitud(response.datos.id_solicitud);
-          this.folioTemporal = response.datos.id_solicitud
-          return { exito: true };
-        }
+      // Si la respuesta es exitosa, actualiza el ID de la solicitud en el store
+      if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+        this.tramite130118Store.setIdSolicitud(response.datos.id_solicitud);
+        this.folioTemporal = response.datos.id_solicitud
+        return { exito: true };
+      }
 
-        const MENSAJE =
-          response?.error ||
-          response?.mensaje ||
-          response?.causa ||
-          'Ocurrió un error al guardar la solicitud.';
+      const MENSAJE =
+        response?.error ||
+        response?.mensaje ||
+        response?.causa ||
+        'Ocurrió un error al guardar la solicitud.';
 
-        const ERRORESMODELO = (response?.errores_modelo || []).map((error: any) => {
-          return {
-            campo: error.campo || 'general',
-            errores: Array.isArray(error.errores) ? error.errores : [String(error.errores)],
-          };
-        });
-
+      const ERRORESMODELO = (response?.errores_modelo || []).map((error: any) => {
         return {
-          exito: false,
-          MENSAJE,
-          erroresModelo: ERRORESMODELO,
-        } as ResultadoSolicitud;
-      }),
-      catchError((error) => {
-        const MENSAJE =
-          error?.error?.error ||
-          error?.message ||
-          'Error inesperado al guardar la solicitud.';
+          campo: error.campo || 'general',
+          errores: Array.isArray(error.errores) ? error.errores : [String(error.errores)],
+        };
+      });
 
-        return of({
-          exito: false,
-          MENSAJE,
-          erroresModelo: error?.error?.errores_modelo || []
-        });
-      }),
-      takeUntil(this.destroyNotifier$)
-    );
+      return {
+        exito: false,
+        MENSAJE,
+        erroresModelo: ERRORESMODELO,
+      } as ResultadoSolicitud;
+    }),
+    catchError((error) => {
+      const MENSAJE =
+        error?.error?.error ||
+        error?.message ||
+        'Error inesperado al guardar la solicitud.';
+
+      return of({
+        exito: false,
+        MENSAJE,
+        erroresModelo: error?.error?.errores_modelo || []
+      });
+    }),
+    takeUntil(this.destroyNotifier$)
+  );
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  convertirFechaISO(fecha: string): string {
-    const [DIA, MES, ANIO] = fecha.split('/');
-    return `${ANIO}-${MES}-${DIA}`;
-  }
+// eslint-disable-next-line class-methods-use-this
+convertirFechaISO(fecha: string): string {
+  const [DIA, MES, ANIO] = fecha.split('/');
+  return `${ANIO}-${MES}-${DIA}`;
+}
 
-  /**
-   * Método para manejar el evento de regreso a la sección de carga de documentos.
-   * Emite un evento para regresar a la sección de carga de documentos.
-   * {void} No retorna ningún valor.
-   */
-  // anteriorSeccionCargarDocumento(): void {
-  //   this.regresarSeccionCargarDocumentoEvento.emit();
-  // }
+/**
+ * Método para manejar el evento de regreso a la sección de carga de documentos.
+ * Emite un evento para regresar a la sección de carga de documentos.
+ * {void} No retorna ningún valor.
+ */
+// anteriorSeccionCargarDocumento(): void {
+//   this.regresarSeccionCargarDocumentoEvento.emit();
+// }
 
-  /**
-   * Método para manejar el evento de carga de documentos.
-   * Actualiza el estado de la sección de carga de documentos.
-   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * {void} No retorna ningún valor.
-   */
-  cargaRealizada(cargaRealizada: boolean): void {
-    this.seccionCargarDocumentos = cargaRealizada ? false : true;
-  }
+/**
+ * Método para manejar el evento de carga de documentos.
+ * Actualiza el estado de la sección de carga de documentos.
+ *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+ * {void} No retorna ningún valor.
+ */
+cargaRealizada(cargaRealizada: boolean): void {
+  this.seccionCargarDocumentos = cargaRealizada ? false : true;
+}
 
-  /**
-  * Método para manejar el evento de carga de documentos.
-  * Actualiza el estado del botón de carga de archivos.
-  *  carga - Indica si la carga de documentos está activa o no.
-  * {void} No retorna ningún valor.
-  */
-  manejaEventoCargaDocumentos(carga: boolean): void {
-    this.activarBotonCargaArchivos = carga;
-  }
+/**
+* Método para manejar el evento de carga de documentos.
+* Actualiza el estado del botón de carga de archivos.
+*  carga - Indica si la carga de documentos está activa o no.
+* {void} No retorna ningún valor.
+*/
+manejaEventoCargaDocumentos(carga: boolean): void {
+  this.activarBotonCargaArchivos = carga;
+}
 
-  /**
-   * Método para navegar a la siguiente sección del wizard.
-   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
-   */
-  siguiente(): void {
-    // Aqui se hara la validacion de los documentos cargdados
-    this.wizardComponent.siguiente();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
+/**
+ * Método para navegar a la siguiente sección del wizard.
+ * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+ */
+siguiente(): void {
+  // Aqui se hara la validacion de los documentos cargdados
+  this.wizardComponent.siguiente();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
 
-  /**
-   * Método para navegar a la sección anterior del wizard.
-   * Actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
-   */
-  anterior(): void {
-    this.wizardComponent.atras();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
+/**
+ * Método para navegar a la sección anterior del wizard.
+ * Actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+ */
+anterior(): void {
+  this.wizardComponent.atras();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
 
-  /**
-   * Emite un evento para cargar archivos.
-   * {void} No retorna ningún valor.
-   */
-  onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
+/**
+ * Emite un evento para cargar archivos.
+ * {void} No retorna ningún valor.
+ */
+onClickCargaArchivos(): void {
+  this.cargarArchivosEvento.emit();
+}
 
 }
