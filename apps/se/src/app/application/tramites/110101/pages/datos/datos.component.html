@@ -65,7 +65,7 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-            <app-tratados (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()"></app-tratados>
+            <app-tratados (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
             }
             @case (3) {
             <app-datos-mercancia></app-datos-mercancia>

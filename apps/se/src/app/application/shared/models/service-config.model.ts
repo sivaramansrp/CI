@@ -8,5 +8,8 @@ export interface ServiceConfig {
 
 export interface ModeloConfig {
   /** Bandera para actualizar modelos */
-  actualiarModelo: boolean;
+  actualizarModelo: boolean;
+
+  /** Bandera para actualizar vistas */
+  actualizarVista: boolean;
 }

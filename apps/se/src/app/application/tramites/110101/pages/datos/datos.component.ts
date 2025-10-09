@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil, tap } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TabEvaluarTratadosResponse } from '@ng-mf/data-access-user';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
@@ -15,6 +15,18 @@ import { Solicitante110101State } from '../../estados/tramites/solicitante110101
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Esta variable se utiliza para almacenar los tratados datos actualizados.
+   * Es un array de objetos de tipo EvaluarTratadosResponse.
+   */
+  tratadosDatosActualizados: TabEvaluarTratadosResponse[] = [];
+
+  /**
+   * Este evento se emite cuando los tratados datos son actualizados.
+   * Es un EventEmitter que emite un array de objetos de tipo EvaluarTratadosResponse.
+   */
+  @Output() tratadosEmitidos = new EventEmitter<TabEvaluarTratadosResponse[]>();
 
   /**
   * Esta variable se utiliza para almacenar el índice del subtítulo.
@@ -136,6 +148,16 @@ export class DatosComponent implements OnInit, OnDestroy {
     if (this.desactivado) {
       this.desactivado = false;
     }
+  }
+
+  /**
+   * @method onTratadosActualizados
+   * @description Maneja la actualización de los tratados.
+   * @param tratados - Array de objetos de tipo EvaluarTratadosResponse que contiene los tratados actualizados.
+   */
+  onTratadosActualizados(tratados: TabEvaluarTratadosResponse[]): void {
+    this.tratadosDatosActualizados = tratados;
+    this.tratadosEmitidos.emit(tratados);
   }
 
   /**

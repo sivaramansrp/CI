@@ -50,7 +50,9 @@
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
                     (enviarEvento)="enviarEvento($event)"
                     [habilitarFechasPorAceptacion]="config.habilitarFechas"
-                    [anexo222se]="config.anexo222se">
+                    [anexo222se]="config.anexo222se"
+                    [inputSentidos]="vistasModificacion110101.actualizarVista"
+                    [sentidoInput]="sentidoInputTramite110101">
                     </app-generar-dictamen>
                     }
                     @case (2) {
@@ -116,6 +118,7 @@
         </div>
 
         <div class="row mb-5 mt-5">
+            @if (!vistasModificacion110101.actualizarVista) {
             <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
                 [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
                 [envioDigital]="envioDigital" [opinion]="opinion"
@@ -123,6 +126,17 @@
                 (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
                 (tabSeleccionado)="onTabSeleccionado($event)">
             </app-reviewers-tabs>
+         }@else {
+            <app-reviewers-tabs-110101
+            [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
+                [envioDigital]="envioDigital" [opinion]="opinion"
+                [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
+                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+                (tabSeleccionado)="onTabSeleccionado($event)"
+                (tratadosParaEvaluar)="recibirTratadosDesdeReviewers($event)">
+            </app-reviewers-tabs-110101>
+         }
         </div>
     </div>
 </div>

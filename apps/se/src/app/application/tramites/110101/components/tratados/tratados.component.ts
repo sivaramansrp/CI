@@ -1,8 +1,8 @@
 
-import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TabEvaluarTratadosResponse, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -13,10 +13,10 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
-import { DatosInsumosEmpaques } from '../../models/response/solicitud-insumos-empaques-response.model';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
@@ -52,6 +52,13 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Evento que se emite cuando los tratados son actualizados.
+   * Se utiliza para notificar al componente padre sobre los cambios en los tratados.
+   */
+  @Output() tratadosActualizados = new EventEmitter<TabEvaluarTratadosResponse[]>(); 
+
    /**
    * Notificación actual que se muestra en el componente.
    *
@@ -107,6 +114,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   formularioTratados!: FormGroup;
 
+  dictaminador!: FormGroup;
+
   /**
   * **Subject utilizado para manejar la destrucción de suscripciones**
   * 
@@ -119,6 +128,25 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   public esFormularioSoloLectura: boolean = false;
+
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+
+  /**
+    * Instancia del modal de Bootstrap utilizada para abrir y cerrar el diálogo de agregar o editar mercancías.
+    * Se inicializa al abrir el modal y se utiliza para controlar su visibilidad desde el componente.
+    *
+    * @type {Modal}
+    * @private
+    * @memberof DatosMercanciaComponent
+    * @example
+    * this.modalInstance.show();
+    * this.modalInstance.hide();
+    */
+  private modalInstance!: Modal;
 
     /**
      * Representa el estado actual del solicitante (Solicitante) para el trámite 110101.
@@ -152,6 +180,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Se utiliza para alternar la visibilidad de la tabla según el estado de la aplicación.
    */
   mostrarTabla = true;
+
+  /**
+   * Referencia al elemento modal para agregar mercancías.
+  */
+  @ViewChild('modalAgregar', { static: false }) modalElement!: ElementRef;
 
    /** Almacena las filas seleccionadas de la tabla */
     public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
@@ -188,6 +221,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+      this.dictaminador = this.fb.group({
+      opcionSeleccionada: [''],
+    });
   }
 
   /**
@@ -201,7 +238,6 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
-    this.inicializarFormularioTratados();
     if (this.solicitudeState.respuestaServicioDatosTabla.length) {
       this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
 
@@ -587,8 +623,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     { encabezado: "Criterio de origen", clave: (item) => item.criterio_origen, orden: 3 },
     { encabezado: "Norma de origen", clave: (item) => item.norma_origen, orden: 4 },
     { encabezado: "Requisito especifico", clave: (item) => item.requisito_especifico, orden: 5 },
-    { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema, orden: 6 },
-    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador, orden: 7 },
+    { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'Aprobado' : 'Rechazado', orden: 6 },
+    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'Aprobado' : 'Rechazado', orden: 7 },
     { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
     { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
@@ -1130,6 +1166,7 @@ eliminarTratado(): void {
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.tratadosEvaluacionTablaDatos = response.datos ?? [];
+            this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -1210,6 +1247,68 @@ eliminarTratado(): void {
    */
   onSeleccionChangeEvaluacion(tratadoSeleccionado: EvaluarTratadosResponse[]) :void{
     this.tratadoSeleccionado = [...tratadoSeleccionado];
+  }
+
+  /**
+   * @method modificarRegistros
+   * @description Este método modifica los registros seleccionados en la tabla de evaluación de tratados.
+   * Actualiza la calificación dictaminada según la opción seleccionada en el formulario.
+   * Si no hay tratados seleccionados, muestra una advertencia en la consola.
+   * Finalmente, refresca la tabla y cierra el diálogo modal.
+   * @returns void
+   */
+  modificarRegistros(): void {
+    if (!this.tratadoSeleccionado) {
+      console.warn('No hay tratado seleccionado.');
+      return;
+    }
+
+    const OPCION = this.dictaminador.get('opcionSeleccionada')?.value;
+    const APROBADO = OPCION === 'true';
+
+    // Actualiza solo los tratados seleccionados dentro de la tabla completa
+    this.tratadosEvaluacionTablaDatos = this.tratadosEvaluacionTablaDatos.map(tratado => {
+      // Si este tratado está dentro de los seleccionados, actualiza
+      if (this.tratadoSeleccionado.some(sel => sel.id_criterio_tratado === tratado.id_criterio_tratado)) {
+        return {
+          ...tratado,
+          cal_aprobada_dictaminador: APROBADO,
+          calificacion_dictaminador: APROBADO ? 'APROBADO' : 'RECHAZADO'
+        };
+      }
+      return { ...tratado };
+    });
+
+    // Refresca la tabla
+    this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
+
+    this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
+
+    this.cerrarDialogo();
+  }
+
+  /**
+   * @method abrirModalDictaminador
+   * @description Método para abrir el modal de confirmación de eliminación de facturas.
+   * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
+   */
+  abrirModalDictaminador(): void {
+    if (this.modalElement) {
+      this.modalInstance = new Modal(this.modalElement.nativeElement);
+      this.modalInstance?.show();
+    }
+  }
+
+ /**
+   * Cierra el modal de agregar o editar mercancías.
+   * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
+   *
+   * @example
+   * this.cerrarDialogo();
+   * // El modal se oculta.
+   */
+  cerrarDialogo(): void {
+    this.modalInstance?.hide();
   }
 
 }
