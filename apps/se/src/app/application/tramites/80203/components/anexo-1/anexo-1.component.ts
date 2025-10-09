@@ -510,6 +510,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
+          // eslint-disable-next-line no-console
+          console.log("storeData--", seccionState);
           this.immexRegitroAnexoState = seccionState.immexRegistro;
           this.immexTableDatos = seccionState.immexTableDatos;
           this.fraccionTablaDatos = seccionState.fraccionTablaDatos;
@@ -588,26 +590,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
             
             this.permisoImmexDatos = RESPONSE_DATA.permisoImmexGridDatos;
             this.fraccionDatos = RESPONSE_DATA.fraccionGridDatos;
-
-            // if (this.permisoImmexDatos.length > 0) {
-            //   // this.immexRegistroform.patchValue({
-            //   //   fraccionArancelariaExportacion:
-            //   //     this.permisoImmexDatos[0].IMMEX_Columna_3,
-            //   // });
-            //   // this.mercanciaImportacionForm?.patchValue({
-            //   //   commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
-            //   //   commodityDescImportacion:
-            //   //     this.permisoImmexDatos[0].IMMEX_Columna_4,
-            //   // });
-            // }
-
-            // if (this.fraccionDatos.length > 0) {
-            //   this.mercanciaExportacionForm?.patchValue({
-            //     productoArancelariaExportacion:
-            //       this.fraccionDatos[0].FRACCION_Columna_2,
-            //     productoDescExportacion: this.fraccionDatos[0].FRACCION_Columna_5
-            //   });
-            // }
           }
         },
       });
@@ -623,7 +605,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerIngresoSelectList(tipo: 'importacion' | 'exportacion'): void {
-    const CLAVE_FRACCION = tipo === 'importacion' ? this.listaFilaSeleccionada?.fraccion : this.listaFilaSeleccionadaFraccion?.fraccionPadre;
+    const CLAVE_FRACCION = tipo === 'importacion' ? this.listaFilaSeleccionada?.fraccion : this.listaFilaSeleccionadaFraccion?.fraccionArancelaria.cveFraccion;
     this.catalogoService.nicosCatalogo(this.tramiteId, CLAVE_FRACCION ?? '')
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -688,35 +670,15 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
  showTableExportacion(): void {
   const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
-
-  if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
-    this.espectaculoAlertaAgregar = true;
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe introducir el número de permiso IMMEX.',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
-
-  this.espectaculoAlertaAgregar = false;
-  this.espectaculoAlerta = false;
   
-  this.obtenerpermisoImmexDatos();
+  this.obtenerpermisoImmexDatos(PERMISO_VALUE);
   
   this.showTableExport = true;
   this.showTableFractionExp = true;
 }
 
 
-obtenerpermisoImmexDatos(): void {
-  const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
-  
+obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
     this.espectaculoAlerta = true;
     this.nuevaNotificacion = {
@@ -772,19 +734,14 @@ obtenerpermisoImmexDatos(): void {
             let totalRecords = 0;
             
             if (esValidArray(API_DATOS.datos.datosConsultaProgramaDtos)) {
-              const IMMEX_RESPONSE: PermisoImmexGridDatos[] = this.permisoImmexDatosService
-                .mapApiResponseToPermisoImmexGridDatos(API_DATOS.datos.datosConsultaProgramaDtos);
-              
-              this.immexTableDatos = IMMEX_RESPONSE;
-              totalRecords += IMMEX_RESPONSE.length;
+              // this.immexTableDatos = IMMEX_RESPONSE;
+              this.immexTableDatos = API_DATOS.datos.datosConsultaProgramaDtos;
+              totalRecords += API_DATOS.datos.datosConsultaProgramaDtos.length;
             }
 
             if (esValidArray(API_DATOS.datos.productoExportacionDtoList)) {
-              const FRACCION_RESPONSE: fraccionInfo[] = this.permisoImmexDatosService
-                .mapApiResponseToFraccionExportacion(API_DATOS.datos.productoExportacionDtoList);
-              
-              this.fraccionTablaDatos = FRACCION_RESPONSE;
-              totalRecords += FRACCION_RESPONSE.length;
+              this.fraccionTablaDatos = API_DATOS.datos.productoExportacionDtoList;
+              totalRecords += API_DATOS.datos.productoExportacionDtoList.length;
             }
 
             this.immexRegistroStore.establecerDatos({ 
@@ -912,8 +869,8 @@ obtenerpermisoImmexDatos(): void {
     } else {
       this.obtenerIngresoSelectList('exportacion');
        this.mercanciaExportacionForm?.patchValue({
-        productoArancelariaExportacion: this.listaFilaSeleccionadaFraccion.clave,
-        productoDescExportacion: this.listaFilaSeleccionadaFraccion.descripcion
+        productoArancelariaExportacion: this.listaFilaSeleccionadaFraccion.fraccionArancelaria.cveFraccion,
+        productoDescExportacion: this.listaFilaSeleccionadaFraccion.fraccionArancelaria.descripcion
       });
       this.espectaculoAlerta = false;
       const MODAL_INSTANCIA = new Modal(
@@ -945,6 +902,94 @@ obtenerpermisoImmexDatos(): void {
    */
   showTableFractionExport(): void {
     this.showTableFractionExp = true;
+    const FRACCION_VALUE = this.immexRegistroform.get('fraccionArancelariaExportacion')?.value;
+    const FRACCION_DESC = this.immexRegistroform.get('FraccionDescExportacion')?.value;
+
+    if (!FRACCION_VALUE || FRACCION_VALUE.trim() === '') {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe introducir el número de fracción arancelaria.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (!this.listaFilaSeleccionada) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar un Permiso.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.espectaculoAlertaAgregar = false;
+    this.espectaculoAlerta = false;
+
+    this.obtenerFraccionDatos(FRACCION_VALUE, FRACCION_DESC); 
+  }
+
+  obtenerFraccionDatos(FRACCION_VALUE:string, FRACCION_DESC:string): void {
+
+    const PAYLOAD = {
+      "fraccion": FRACCION_VALUE,
+      "descFraccion": FRACCION_DESC,
+      "idProductoPadre": this.listaFilaSeleccionada ? this.listaFilaSeleccionada.numeroPrograma : '',
+      "fraccionPadre": this.listaFilaSeleccionada ? this.listaFilaSeleccionada.fraccion : ''
+    };
+
+    this.permisoImmexDatosService
+      .getFraccionArancelaria(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (esValidObject(response)) {
+            const API_DATOS = doDeepCopy(response);
+            
+            if (response.codigo !== "00") {
+              this.espectaculoAlerta = true;
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Error',
+                mensaje: API_DATOS.error || API_DATOS.mensaje || 'El permiso IMMEX solicitado no existe.',
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+              return;
+            }
+
+            if (esValidObject(API_DATOS.datos)) {
+              const DATOS = {
+                fraccionArancelaria: {
+                  ...API_DATOS.datos
+                }
+              }
+              this.immexRegistroStore.establecerDatos({
+                fraccionTablaDatos: [
+                  ...this.fraccionTablaDatos,
+                  DATOS
+                ]
+              })
+            }
+
+          }
+        }
+      });
   }
 
   /**
@@ -1181,11 +1226,11 @@ obtenerpermisoImmexDatos(): void {
     if (this.listaFilaSeleccionadaFraccion) {
       const SELECTED_IDS = new Set(
         [this.listaFilaSeleccionadaFraccion].map(
-          (item) => item.idFraccion
+          (item) => item.fraccionArancelaria.cveFraccion
         )
       );
       this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
-        (item) => !SELECTED_IDS.has(item.idFraccion)
+        (item) => !SELECTED_IDS.has(item.fraccionArancelaria.cveFraccion)
       );
       this.listaFilaSeleccionadaFraccion = null;
       this.immexRegistroStore.establecerDatos({
@@ -1240,7 +1285,30 @@ obtenerpermisoImmexDatos(): void {
   guardarMercanciaExportacion(): void {
     if (this.mercanciaExportacionForm.valid) {
       const VALOR = this.nicoTablaDatosExportacion;
-      this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosExportacion']: VALOR });
+
+      if (this.listaFilaSeleccionadaFraccion && this.listaFilaSeleccionadaFraccion.fraccionArancelaria) {
+
+        const SELECTED_FRACCION_ID = this.listaFilaSeleccionadaFraccion?.fraccionArancelaria.cveFraccion;
+        this.fraccionTablaDatos = this.fraccionTablaDatos.map(item => {
+          if (
+            SELECTED_FRACCION_ID !== undefined &&
+            item.fraccionArancelaria &&
+            item.fraccionArancelaria.cveFraccion === SELECTED_FRACCION_ID
+          ) {
+            return {
+              ...item,
+              fraccionArancelaria: {
+                ...item.fraccionArancelaria,
+                nicoDtos: VALOR
+              }
+            };
+          }
+          return item;
+        });
+
+        this.immexRegistroStore.establecerDatos({ fraccionTablaDatos: this.fraccionTablaDatos });
+      }
+      
       this.modalCancelar('Exportacion');
     } else {
       // Handle form validation errors

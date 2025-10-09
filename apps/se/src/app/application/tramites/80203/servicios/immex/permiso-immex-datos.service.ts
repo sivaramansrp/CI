@@ -11,7 +11,7 @@
  * // Inyección en un componente
  * constructor(private permisoImmexDatosService: PermisoImmexDatosService) {}
  */
-import { BuscarPayload, ImmexTablaJson, PermisoImmexGridDatos, fraccionInfo, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { BuscarPayload, FraccionArancelariaPayload, ImmexTablaJson, PermisoImmexGridDatos, fraccionInfo, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -92,49 +92,19 @@ export class PermisoImmexDatosService {
     }
 
     /**
-     * @summary Mapea la respuesta de la API a un arreglo de objetos PermisoImmexGridDatos.
-     * 
-     * @description
-     * Esta función toma un arreglo de respuestas de la API y lo transforma en un arreglo de objetos
-     * del tipo PermisoImmexGridDatos, asignando valores formateados y realizando conversiones necesarias.
-     * El campo `consecutivo` se genera automáticamente con formato de tres dígitos.
-     * 
-     * @param apiResponse Arreglo de objetos recibidos desde la API.
-     * @returns Un arreglo de objetos PermisoImmexGridDatos con los datos mapeados y formateados.
+     * @description Obtiene la fracción arancelaria realizando una petición POST al endpoint correspondiente.
+     * @param body Objeto de tipo `FraccionArancelariaPayload` que contiene los datos necesarios para la búsqueda de la fracción arancelaria.
+     * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+     * @throws Error si ocurre algún problema al obtener la lista de plantas.
      */
-    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-    mapApiResponseToPermisoImmexGridDatos(apiResponse: any[]): PermisoImmexGridDatos[] {
-      // eslint-disable-next-line complexity
-     return apiResponse.map((item, index) => {
-        return {
-          consecutivo: (index + 1).toString().padStart(3, '0'),
-          numeroPrograma: item.numeroPrograma,
-          fraccion: item.fraccion,
-          descripcion: item.descripcion,
-          umt: item.umt,
-          cantidadAutorizada: item.cantidadAutorizada?.toString(),
-          fechaInicio: item.fechaInicio,
-          fechaFin: item.fechaFin,
-          estatus: item.testado !== 'true'
-        };
-      });
+    getFraccionArancelaria(body: FraccionArancelariaPayload): Observable<JSONResponse> {
+      return this.httpClient.post<JSONResponse>(API_ROUTES('/sat-t80203','80203').buscarFraccionArancelaria, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES('/sat-t80203','80203').buscarFraccionArancelaria}`);
+          return throwError(() => ERROR);
+        })
+      );
     }
-    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-    mapApiResponseToFraccionExportacion(apiResponse: any[]): fraccionInfo[] {
-    // eslint-disable-next-line complexity
-      return apiResponse.map((item, index) => {
-        const FRACCION_ARANCELARIA = item.fraccionArancelaria || {};
-        
-        return {
-          idFraccion: (index + 1).toString(),
-          clave: FRACCION_ARANCELARIA.cveFraccion || item.cveFraccion ,
-          fraccionPadre: item.fraccionPadre || FRACCION_ARANCELARIA.fraccionPadre,
-          umt: FRACCION_ARANCELARIA.umt || item.umt,
-          descripcion: FRACCION_ARANCELARIA.descripcion || item.descripcion,
-          descripcionUsuario: FRACCION_ARANCELARIA.descripcionUsuario || item.descripcionUsuario,
-          solicitaBaja: item.testado,
-          estatus: item.estatus !== undefined ? item.estatus : ''
-        };
-      });
-    }
+
 }

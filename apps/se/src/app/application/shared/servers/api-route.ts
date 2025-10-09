@@ -54,4 +54,5 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarPermisoImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/agregar-anexo-premiso`,
     tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
+    buscarFraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
 });

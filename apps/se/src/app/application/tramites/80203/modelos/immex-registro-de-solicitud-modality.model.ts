@@ -415,7 +415,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Número secuencial del registro de fracción
      */
-    clave: (ele: fraccionInfo) => ele.idFraccion,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.idFraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -433,7 +433,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Código de fracción arancelaria según nomenclatura internacional
      */
-    clave: (ele: fraccionInfo) => ele.clave,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.cveFraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -451,7 +451,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción de la mercancía importada relacionada con esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.fraccionPadre,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.fraccionPadre,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -469,7 +469,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Unidad de Medida Técnica aplicable a esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.umt,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -487,7 +487,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: fraccionInfo) => ele.descripcion,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -505,7 +505,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción comercial específica del producto destinado a exportación
      */
-    clave: (ele: fraccionInfo) => ele.descripcionUsuario,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.descripcionUsuario,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -523,7 +523,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Información de solicitud de baja asociada a la fracción
      */
-    clave: (ele: fraccionInfo) => ele.solicitaBaja,
+    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.solicitaBaja,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -544,6 +544,22 @@ export const FRACCION_EXPORTACION = [
  * @module Tramites.IMMEX.Interfaces.Fraccion
  */
 export interface fraccionInfo {
+  fraccionArancelaria: fraccionArancelaria;
+}
+
+export interface fraccionArancelaria {
+  unidadMedida: string;
+  testado: string;
+  subPartida: string;
+  partida: string;
+  idProductoPadre: string;
+  fechaInicioVigencia: string;
+  fechaCaptura: string;
+  cveUsuario: string;
+  capitulo: string;
+  activo: boolean;
+  cveFraccion: string;
+  nicoDtos: nicoInfo[];
   /**
    * @description Número secuencial o identificador único del registro de fracción en la tabla.
    * Proporciona un identificador numérico para ordenar y referenciar los registros de fracciones arancelarias.
@@ -724,6 +740,14 @@ export interface PermisoImmexGridDatos {
    */
   consecutivo: string;
 
+  idProducto: string;
+
+  idMercanciaSub: number;
+
+  testado: string;
+
+  claveUsuario: string;
+
   /**
    * @description Número oficial del permiso IMMEX asignado por la autoridad competente.
    * Identificador único y oficial del permiso otorgado por la Secretaría de Economía bajo el programa IMMEX.
@@ -883,4 +907,14 @@ export interface BuscarPayload {
     tipoSolicitud: string;
     idProyecto: string;
     rfcSolicitante: string;
+}
+
+/**
+ * @interface FraccionArancelariaPayload
+ */
+export interface FraccionArancelariaPayload {
+  fraccion: string;
+  descFraccion: string;
+  idProductoPadre: string;
+  fraccionPadre: string;
 }
