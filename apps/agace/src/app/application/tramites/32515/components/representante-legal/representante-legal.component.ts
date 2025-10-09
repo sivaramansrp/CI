@@ -5,6 +5,8 @@ import {
   CategoriaMensaje, 
   Notificacion, 
   NotificacionesComponent, 
+  REG_X, 
+  REGEX_CORREO_ELECTRONICO, 
   TipoNotificacionEnum 
 } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -112,12 +114,21 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     const RFC_CONTROL = this.ninoFormGroup.get('rfc');
     if (RFC_CONTROL) {
       
-      const ORIGINAL_MARK_AS_TOUCHED = RFC_CONTROL.markAsTouched.bind(RFC_CONTROL);
-      RFC_CONTROL.markAsTouched = (opts?: any) => {
+      const ORIGINAL_MARK_AS_TOUCHED = RFC_CONTROL.markAsTouched.bind(RFC_CONTROL);      RFC_CONTROL.markAsTouched = (opts?: any) => {
         const RESULT = ORIGINAL_MARK_AS_TOUCHED(opts);
           setTimeout(() => {
+          console.log('RFC errors:', RFC_CONTROL.errors);
+          console.log('RFC value:', RFC_CONTROL.value);
           if (RFC_CONTROL.errors?.['required'] && !this.rfcNotificationShown) {
             this.mostrarNotificacionRfc();
+          }          
+          if (RFC_CONTROL.errors?.['pattern'] && !this.rfcNotificationShown) {
+            console.log('Showing RFC format notification');
+            this.mostrarNotificacionRfcFormato();
+          }
+          if (RFC_CONTROL.value && !REG_X.RFC_13_ALFANUM.test(RFC_CONTROL.value) && !this.rfcNotificationShown) {
+            console.log('Showing RFC format notification - invalid RFC format detected');
+            this.mostrarNotificacionRfcFormato();
           }
         }, 10);
         
@@ -133,12 +144,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     const CORREO_ELECTRONICO_CONTROL = this.ninoFormGroup.get('correoElectronico');
     if (CORREO_ELECTRONICO_CONTROL) {
       
-      const ORIGINAL_MARK_AS_TOUCHED = CORREO_ELECTRONICO_CONTROL.markAsTouched.bind(CORREO_ELECTRONICO_CONTROL);
-      CORREO_ELECTRONICO_CONTROL.markAsTouched = (opts?: any) => {
+      const ORIGINAL_MARK_AS_TOUCHED = CORREO_ELECTRONICO_CONTROL.markAsTouched.bind(CORREO_ELECTRONICO_CONTROL);      CORREO_ELECTRONICO_CONTROL.markAsTouched = (opts?: any) => {
         const RESULT = ORIGINAL_MARK_AS_TOUCHED(opts);
           setTimeout(() => {
           if (CORREO_ELECTRONICO_CONTROL.errors?.['required'] && !this.correoElectronicoNotificationShown) {
             this.mostrarNotificacionCorreoElectronico();
+          }
+          if (CORREO_ELECTRONICO_CONTROL.errors?.['pattern'] && !this.correoElectronicoNotificationShown) {
+            this.mostrarNotificacionCorreoElectronicoFormato();
+          }
+          if (CORREO_ELECTRONICO_CONTROL.value && !REGEX_CORREO_ELECTRONICO.test(CORREO_ELECTRONICO_CONTROL.value) && !this.correoElectronicoNotificationShown) {
+            this.mostrarNotificacionCorreoElectronicoFormato();
           }
         }, 10);
         
@@ -169,6 +185,26 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Muestra la notificación cuando el campo RFC no cumple con el formato
+   */
+  private mostrarNotificacionRfcFormato(): void {    
+    if (this.rfcNotificationShown) {
+      return;
+    }
+
+    this.rfcNotificationShown = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Existen datos incorrectos que no cumplen con el formato esperado.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  /**
    * Muestra la notificación cuando el campo correoElectronico es requerido pero está vacío
    */
   private mostrarNotificacionCorreoElectronico(): void {    
@@ -183,6 +219,27 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       modo: 'modal',
       titulo: '',
       mensaje: 'Debes ingresar un correo',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Muestra la notificación cuando el campo correoElectronico no cumple con el formato
+   */
+  private mostrarNotificacionCorreoElectronicoFormato(): void {    
+    if (this.correoElectronicoNotificationShown) {
+      return;
+    }
+
+    this.correoElectronicoNotificationShown = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Debes ingresar un correo válido',
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
