@@ -3,13 +3,12 @@ import {
   Catalogo, 
   CatalogoSelectComponent, 
   CatalogosSelect,
-  ConsultaioQuery, 
-  ConsultaioState,
   REGEX_CARACTERES_ESPECIALES,
   TituloComponent,
   ValidacionesFormularioService,
   dateLessThanOrEqualToday
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite230201.store';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
