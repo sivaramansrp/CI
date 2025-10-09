@@ -35,7 +35,14 @@ import { WizardComponent } from '@ng-mf/data-access-user';
  * Interfaz para definir la acción y el valor del botón.
  */
 interface AccionBoton {
+  /**
+   * Tipo de acción del botón (por ejemplo, 'cont' para continuar, 'back' para regresar).
+   * @property {string} accion - Tipo de acción del botón (por ejemplo, 'cont' para continuar, 'back' para regresar).
+   */
   accion: string;
+  /** El índice del paso al que se navega.
+   * @property {number} valor - El índice del paso al que se navega.
+   */
   valor: number;
 }
 

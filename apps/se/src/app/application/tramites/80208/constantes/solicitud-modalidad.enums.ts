@@ -31,10 +31,17 @@ export const PASOS = [
 
 /**
  * @const TEXTOS_REQUISITOS
- * @description Textos específicos relacionados con los requisitos del trámite IMMEX.
+ * @description Contiene los textos informativos y de ayuda relacionados con los requisitos del trámite IMMEX.
  *
- * @property {string} INSTRUCCIONES - Instrucciones específicas para los requisitos.
- * @property {string} ADJUNTAR - Texto para adjuntar nuevos documentos.
+ * @property {string} INSTRUCCIONES - HTML con instrucciones generales para el usuario sobre cómo manejar los documentos requeridos.
+ * @property {string} ADJUNTAR - HTML con indicaciones para adjuntar nuevos documentos en el sistema.
+ *
+ * @example
+ * // Para mostrar las instrucciones en el componente de requisitos:
+ * this.instruccionesHtml = TEXTOS_REQUISITOS.INSTRUCCIONES;
+ *
+ * // Para mostrar el texto de adjuntar documentos:
+ * this.adjuntarHtml = TEXTOS_REQUISITOS.ADJUNTAR;
  */
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
@@ -47,6 +54,11 @@ export const TEXTOS_REQUISITOS = {
 /**
  * @const SUCECESS_MESSAGE_STAGEONE
  * @description Mensaje de éxito mostrado al usuario después de completar la etapa uno del trámite IMMEX.
+ *
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar el mensaje de éxito al registrar la solicitud
+ * this.successMessage = SUCECESS_MESSAGE_STAGEONE;
  */
 export const SUCECESS_MESSAGE_STAGEONE = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`;
 
