@@ -5,6 +5,7 @@
  */
 import { ServicioInfo, ServicioInmex } from '../modelos/cambio-de-modalidad.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { EmpresaNacional } from '../../../shared/models/modelo-interface.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -28,10 +29,11 @@ export interface CambioModalidadState {
   rfcEmpresa: string;
   numeroPrograma: string;
   tiempoPrograma: string;
-  datos: ServicioInmex[];
+  datosAutorizados: ServicioInfo[];
+  datos: EmpresaNacional[];
   ServiciosDatos: ServicioInfo[];
   domiciliosSeleccionados: ServicioInfo[];
-  empresasSeleccionados: ServicioInmex[];
+  empresasSeleccionados: EmpresaNacional[];
   servicio?: string;
   descripcionDelServicio?: string;
   tipoDeServicio?: string;
@@ -40,6 +42,9 @@ export interface CambioModalidadState {
   denominacionSocial?: string;
   numeroIMMEX?: string;
   anoIMMEX?: string;
+  servicios?: ServicioInfo[];
+  cambioError?: boolean;
+  serviciosImmxError?: boolean;
 }
 
 /**
@@ -60,6 +65,7 @@ export function createInitialState(): CambioModalidadState {
     rfcEmpresa: '',
     numeroPrograma: '',
     tiempoPrograma: '',
+    datosAutorizados: [],
     datos: [],
     ServiciosDatos: [],
     domiciliosSeleccionados: [],
@@ -71,8 +77,10 @@ export function createInitialState(): CambioModalidadState {
     rfc: '',
     denominacionSocial: '',
     numeroIMMEX: '',
-    anoIMMEX: ''
-
+    anoIMMEX: '',
+    servicios: [],
+    cambioError: false,
+    serviciosImmxError: false,
   };
 }
 
@@ -239,7 +247,7 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
    *
    * @param datos - Los datos de servicio INMEX que se van a guardar.
    */
-  public setDatos(datos: ServicioInmex[]): void {
+  public setDatos(datos: EmpresaNacional[]): void {
     this.update((state) => ({
       ...state,
       datos,
@@ -255,6 +263,7 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     this.update((state) => ({
       ...state,
       ServiciosDatos,
+      servicios: [...(state?.servicios ?? []), ...ServiciosDatos],
     }));
   }
 
@@ -271,11 +280,38 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
   }
 
     /**
+   * Establece los datos autorizados en el estado.
+   *
+   * @param datosAutorizados - Los datos autorizados que se van a guardar.
+   */
+
+    datosAutorizados(datosAutorizados: ServicioInfo[]): void {
+    this.update((state) => ({
+      ...state,
+      datosAutorizados,
+      servicios: [...(state?.servicios ?? []), ...datosAutorizados],
+    }));
+  }
+
+  /**
+   * Establece y agrega servicios al estado.
+   * Combina los servicios existentes con los nuevos servicios proporcionados.
+   *
+   * @param servicios - Array de servicios que se van a agregar al estado existente.
+   */
+  setServicios(servicios: ServicioInfo[]): void {
+    this.update((state) => ({
+      ...state,
+      servicios: [...state?.servicios ?? [], ...servicios],
+    }));
+  }
+
+    /**
    * Establece los domicilios seleccionados en el estado.
    *
    * @param empresasSeleccionados - Las empresas seleccionadas que se van a guardar.
    */
-  public setEmpresasSeleccionados(empresasSeleccionados: ServicioInmex[]): void {
+  public setEmpresasSeleccionados(empresasSeleccionados: EmpresaNacional[]): void {
     this.update((state) => ({
       ...state,
       empresasSeleccionados,
@@ -375,6 +411,30 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
     this.update((state) => ({
       ...state,
       anoIMMEX,
+    }));
+  }
+
+  /**
+   * Establece el estado de error para el campo de cambio de modalidad.
+   *
+   * @param cambioError - Indica si existe un error en el campo de cambio de modalidad.
+   */
+  public setCambioError(cambioError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      cambioError,
+    }));
+  }
+
+  /**
+   * Establece el estado de error para el campo de servicios IMMX.
+   *
+   * @param serviciosImmxError - Indica si existe un error en el campo de servicios IMMX.
+   */
+  public setserviciosImmxError(serviciosImmxError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      serviciosImmxError,
     }));
   }
 
