@@ -408,8 +408,6 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
       clave: ENTIDAD_SELECCIONADA.clave ?? '',
       descripcion: ENTIDAD_SELECCIONADA.descripcion ?? ''
     });
-    
-    // Emit the event to parent component
     this.entidadFederativaSeleccionEvent.emit(ENTIDAD_SELECCIONADA);
   }
 

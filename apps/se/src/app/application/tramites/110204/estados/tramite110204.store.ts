@@ -424,6 +424,11 @@ export class Tramite110204Store extends Store<TramiteState> {
     });
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de fechas de idioma.
+   *
+   * @param idiomaDates - Un arreglo de objetos de tipo `Catalogo` que representa las fechas de idioma a establecer en el estado.
+   */
   public setIdiomaDates(idiomaDates: Catalogo[]): void {
     this.update((state) => ({ ...state, idiomaDates }));
   }

@@ -80,7 +80,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     /** Bandera que indica si se ha intentado validar el formulario para mostrar errores */
   validationAttempted: boolean = false;
 
-  procedure = '110204'
+  /**
+   * Identificador del procedimiento asociado a este componente.
+   * 
+   * @remarks
+   * El valor '110204' corresponde al código específico del trámite gestionado por este componente.
+   */
+  procedure = '110204';
 
   /**
    * @constructor
@@ -217,7 +223,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       this.validarFormulario();
     }
     });
-    // this.cargarRepresentacionFederal();
 
     if(this.formularioDeshabilitado){
       this.esFormularioSoloLectura = true;

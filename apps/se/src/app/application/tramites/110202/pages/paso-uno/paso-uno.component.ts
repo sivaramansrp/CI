@@ -69,10 +69,29 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
+   * 
+   * Esta propiedad permite acceder a los métodos y propiedades públicos del componente
+   * hijo `DatosCertificadoComponent` desde el componente padre, facilitando la interacción
+   * y manipulación de sus datos o comportamientos.
+   * 
+   * @see DatosCertificadoComponent
+   */
   @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
 
-  constructor(private cdr: ChangeDetectorRef, private consultaQuery: ConsultaioQuery,
-    public certificadoValidacionService: CertificadoValidacionService) {
+  /**
+   * Constructor de la clase PasoUnoComponent.
+   * 
+   * @param cdr Referencia al ChangeDetectorRef para controlar la detección de cambios manualmente.
+   * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite.
+   * @param certificadoValidacionService Servicio público para la validación de certificados.
+   */
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private consultaQuery: ConsultaioQuery,
+    public certificadoValidacionService: CertificadoValidacionService
+  ) {
     // Constructor no realiza ninguna acción en este caso
   }
 

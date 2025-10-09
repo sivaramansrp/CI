@@ -55,12 +55,31 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Referencia al componente DestinatarioComponent dentro de la vista.
+   * 
+   * Esta propiedad permite acceder a los métodos y propiedades públicos del componente
+   * hijo DestinatarioComponent desde el componente padre, facilitando la interacción
+   * y manipulación directa del mismo.
+   * 
+   * @see DestinatarioComponent
+   */
   @ViewChild(DestinatarioComponent) destinatarioComponent!: DestinatarioComponent;
 
   // Decorador ViewChild para acceder a la instancia del componente CertificadoDeOrigenComponent
   @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
 
+  /**
+   * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
+   * 
+   * Esta propiedad permite acceder a los métodos y propiedades públicas del componente
+   * hijo `DatosCertificadoComponent` desde el componente padre, facilitando la interacción
+   * y manipulación de sus datos o comportamientos.
+   * 
+   * @see DatosCertificadoComponent
+   */
   @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+  
   /**
    * Constructor del componente.
    * @param registro Servicio para obtener datos de catálogos.
