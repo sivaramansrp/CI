@@ -293,7 +293,8 @@ get ninoFormGroup(): FormGroup {
   { label: 'Costo neto AP', controlName: 'costoNetoAPEvaluar', placeholder: 'Costo neto AP', col: 4 },
   { label: 'Descripción juego', controlName: 'descripcionJuegoEvaluar', placeholder: 'Descripción juego', col: 4 },
   { label: 'Tipo Exportador', controlName: 'tipoExportadorEvaluar', placeholder: 'Tipo Exportador', col: 4 },
-  { label: 'Separación contable', controlName: 'separacionContableEvaluar', placeholder: 'Separación contable', col: 4 },
+  { label: '¿Desea usar la opción del método de separación contable?', controlName: 'separacionContableEvaluar',
+    type: 'radio', options: [{ label: 'Sí', value: true }, { label: 'No', value: false }], col: 12 },
 
   { section: 'Certificado Origen Titulo Mercancia A L A D I', sectionKey: 'aladi' },
 
@@ -463,7 +464,7 @@ get ninoFormGroup(): FormGroup {
       costoNetoAPEvaluar: [{value: '', disabled: true}],
       descripcionJuegoEvaluar: [{value: '', disabled: true}],
       tipoExportadorEvaluar: [{value: '', disabled: true}],
-      separacionContableEvaluar: [{value: '', disabled: true}],
+      separacionContableEvaluar: [{value: null, disabled: true}],
       valorTransaccionalFOBEvaluar: [{value: '', disabled: true}],
       clasificacionNALADIEvaluar: [{value: '', disabled: true}],
       descripcionNALADIEvaluar: [{value: '', disabled: true}],

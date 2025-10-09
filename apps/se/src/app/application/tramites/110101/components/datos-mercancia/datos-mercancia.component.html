@@ -261,19 +261,47 @@
       <ng-container *ngIf="campo.controlName && formEvaluarMercancia.get(campo.controlName)?.value">
         <div>
           <div [class]="'col-md-' + (campo.col || 4)">
-            <label [for]="campo.controlName" class="form-label">{{ campo.label }}</label>
-            <input
-              type="text"
-              [id]="campo.controlName"
-              class="form-control"
-              [formControlName]="campo.controlName"
-              [placeholder]="campo.placeholder"
-              [readonly]="esFormularioSoloLectura"
-            >
+            <ng-container *ngIf="campo.type === 'radio'">
+              <div class="row w-100 align-items-center">
+                <div class="col-md-7">
+                  <label class="form-label mb-0">{{ campo.label }}</label>
+                </div>
+                <div class="col-md-4 justify-content-end">
+                  <div class="d-inline-flex align-items-center gap-3">
+                    <ng-container *ngFor="let opcion of campo.options">
+                      <div class="form-check form-check-inline mb-0">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          [id]="campo.controlName + opcion.value"
+                          [value]="opcion.value"
+                          [formControlName]="campo.controlName"
+                          [disabled]="esFormularioSoloLectura"
+                        />
+                        <label class="form-check-label mb-0 ms-2" [for]="campo.controlName + opcion.value">
+                          {{ opcion.label }}
+                        </label>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!campo.type || campo.type === 'text'">
+              <label [for]="campo.controlName" class="form-label">{{ campo.label }}</label>
+              <input
+                *ngIf="formEvaluarMercancia.get(campo.controlName)?.value !== null"
+                type="text"
+                [id]="campo.controlName"
+                class="form-control"
+                [formControlName]="campo.controlName"
+                [placeholder]="campo.placeholder"
+                [readonly]="esFormularioSoloLectura"
+              />
+            </ng-container>
           </div>
         </div>
       </ng-container>
-
     </ng-container>
   </form>
 }

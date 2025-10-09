@@ -76,5 +76,7 @@ export interface CampoEvaluar {
   col?: number;           
   section?: string;     
   sectionKey?: string;    
+  type?: 'text' | 'radio';
+  options?: { label: string; value: boolean }[];
 }
 
