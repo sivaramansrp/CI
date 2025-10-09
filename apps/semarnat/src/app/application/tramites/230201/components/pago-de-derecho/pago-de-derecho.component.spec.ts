@@ -6,6 +6,7 @@ import { Tramite230201Query } from '../../estados/tramite230201.query';
 import { Tramite230201Store } from '../../estados/tramite230201.store';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
@@ -47,6 +48,7 @@ describe('PagoDeDerechoComponent', () => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule,PagoDeDerechoComponent],
       providers: [
+        provideHttpClient(),
         FormBuilder,
         { provide: MediodetransporteService, useValue: mockMedioDeTransporteService },
         { provide: Tramite230201Query, useValue: mockSolicitudQuery },

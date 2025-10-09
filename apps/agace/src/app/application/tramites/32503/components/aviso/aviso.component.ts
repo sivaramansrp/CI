@@ -1,3 +1,4 @@
+import { AdaceDatos, AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
 import {
   AlertComponent,
   CatalogoSelectComponent,
@@ -18,9 +19,8 @@ import {
   TituloComponent,
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
-import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { ENCABEZADAS_TABLA, FECHA_INGRESO, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
+import { ENCABEZADAS_TABLA, FECHA_INGRESO, RADIO_PARCIAL, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
@@ -237,6 +237,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Constante que representa los tipos de catálogo disponibles en el sistema.
    */
   TIPACA = TIPACA;
+
+   /**
+   * Opciones para el radio relacionado con la disminución parcial.
+   */
+  radioParcial = RADIO_PARCIAL;
+  
   /**
    * @property {any} TEXTOS
    * @description Constante que contiene textos o mensajes utilizados en el componente.
@@ -416,14 +422,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.tablaDeDatos.datos = [];
     this.tablaDeMercancia.datos = [];
 
-    this.inicializarDomicilioFormulario();
     this.cargarFederativa();
     this.cargarMunicipio();
     this.cargarColonias();
-    this.inicializarMercanciaFormulario();
+    this.cargarAvisoTabla();
     this.cargarFraccionArancelaria();
     this.cargarUnidadMedida();
     this.inicializarFormulario();
+    this.inicializarAvisoFormulario();
+    this.cargarDatosAdace();
   }
   /**
    * @method setValoresStore
@@ -578,7 +585,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       }),
       datosAviso: this.fb.group({
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
-        idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+        tieneIdTransaccionVucem: [this.tramiteState?.avisoFormulario?.tieneIdTransaccionVucem],
+        idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO), Validators.required]],
         motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
         fechaTranslado: [this.tramiteState?.avisoFormulario?.fechaTranslado, [Validators.required]],
       }),
@@ -597,8 +605,21 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
     });
     this.verificaTipoAviso();
-    this.inicializarEstadoFormulario();
   }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarAvisoFormulario(): void {
+    if (this.soloLectura) {
+      this.inicializarEstadoFormulario();
+    } else {
+      this.inicializarDomicilioFormulario();
+      this.inicializarMercanciaFormulario();
+    }  
+  }
+
   /**
    * Inicializa el estado de los formularios según el modo de solo lectura.
    * 
@@ -606,6 +627,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Si `soloLectura` es `true`, los formularios se deshabilitan; de lo contrario, se habilitan.
    */
   inicializarEstadoFormulario(): void {
+    this.inicializarDomicilioFormulario();
+    this.inicializarMercanciaFormulario();
     if (this.soloLectura) {
       this.avisoFormulario?.disable();
       this.domicilioFormulario?.disable();
@@ -1413,6 +1436,21 @@ export class AvisoComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
     }
+  }
+
+  cargarDatosAdace(): void {
+    this.avisoTrasladoService
+      .getAdaceDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response: AdaceDatos) => {
+        if (response && this.adaceFormulario) {
+          this.adaceFormulario.patchValue({
+            adace: response.adace || '',
+          });
+          // Update the store with the ADACE value
+          this.store.setAvisoFormularioAdace(response.adace || '');
+        }
+      });
   }
 
   /**
