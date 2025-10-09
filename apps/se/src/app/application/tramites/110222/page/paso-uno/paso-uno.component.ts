@@ -9,6 +9,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioDeCertificadoComponent } from '../../components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
@@ -33,35 +34,54 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
+   *
+   * Esta propiedad permite acceder a los métodos y propiedades públicos del componente
+   * hijo `DatosCertificadoComponent` desde el componente padre, facilitando la interacción
+   * y manipulación de sus datos o comportamientos.
+   *
+   * @see DatosCertificadoComponent
+   */
+  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+
   constructor(
     private consultaQuery: ConsultaioQuery,
     public validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService
-  ) { }
+  ) {}
 
   /**
    * @inheritdoc
-   * 
+   *
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al observable del estado de consulta, actualiza el estado local y 
+   * Suscribe al observable del estado de consulta, actualiza el estado local y
    * realiza acciones según si hay una actualización pendiente.
-   * 
+   *
    * @remarks
    * - Si existe un estado de consulta y requiere actualización, guarda los datos del formulario.
    * - Si no, establece la bandera de datos de respuesta como verdadera.
-   * 
+   *
    * @override
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState && this.consultaState.procedureId === '110222' &&
-      this.consultaState.update) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (
+      this.consultaState &&
+      this.consultaState.procedureId === '110222' &&
+      this.consultaState.update
+    ) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
-
   }
 
    /**
@@ -71,18 +91,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return this.destinatarioDeCertificadoComponent?.validateAllForms() ?? true;
   }
   /**
-* Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-* Luego reinicializa el formulario con los valores actualizados desde el store.
-*/
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormulario(): void {
     this.validarInicialmenteCertificadoService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.validarInicialmenteCertificadoService.actualizarEstadoFormulario(resp);
+          this.validarInicialmenteCertificadoService.actualizarEstadoFormulario(
+            resp
+          );
         }
       });
   }
@@ -103,5 +124,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /** Método público para validar todos los formularios del paso uno */
+  public validarTodo(): boolean {
+    let ES_VALIDA = true;
+    if (this.datosCertificadoComponent) {
+      if (!this.datosCertificadoComponent.validateAll()) {
+        ES_VALIDA = false;
+      }
+    } else {
+      ES_VALIDA = false;
+    }
+    return ES_VALIDA;
   }
 }

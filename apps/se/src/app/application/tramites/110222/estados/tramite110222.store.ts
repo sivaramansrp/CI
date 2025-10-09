@@ -209,6 +209,15 @@ export interface Tramite110222State {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
 }
 
 /**
@@ -345,7 +354,14 @@ export function createInitialState(): Tramite110222State {
       numeroRegistroFiscal: '',
       fax: '',
     },
-    optionsTipoFactura: []
+    optionsTipoFactura: [],
+    /** Lista de idiomas disponibles */
+    idiomaDatos: [],
+    /** Lista de entidades federativas disponibles */
+    entidadFederativaDatos: [],
+  
+    /** Lista de representaciones federales disponibles */
+    representacionFederalDatos: [],
   };
 }
 
@@ -800,6 +816,19 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       grupoRepresentativo: { ...state.grupoRepresentativo, lugar },
     }));
   }
+  /**
+   * Establece los datos del idioma en el almacén.
+   * 
+   * @param {Catalogo[]} idiomaDatos - Un array de objetos `Catalogo` con los datos del idioma.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
 
   /**
    * Actualiza el nombre del exportador en el grupo representativo.
@@ -814,6 +843,19 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     this.update((state) => ({
       ...state,
       grupoRepresentativo: { ...state.grupoRepresentativo, nombre },
+    }));
+  }
+  /**
+   * Establece los datos de la entidad federativa en el almacén.
+   * 
+   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
     }));
   }
 
@@ -913,6 +955,19 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     this.update((state) => ({
       ...state,
       grupoRepresentativo,
+    }));
+  } 
+  /**
+   * Establece los datos de la representación federal en el almacén.
+   * 
+   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
     }));
   }
 }
