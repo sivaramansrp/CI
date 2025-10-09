@@ -1,11 +1,9 @@
-/*
-* VistaUnoComponent
-*/
+// Importaciones necesarias para el manejo de rutas, componentes, constantes y modelos  
+// utilizados en la gestión de anexos del programa industrial.
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
 import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -18,6 +16,10 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
+
+import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
+import { AnexoUnoSeccionComponent } from '../../../../shared/components/anexo-uno-seccion/anexo-uno-seccion.component';
+
 /*
   * Componente para mostrar la vista del anexo uno en el trámite 80103.
   *
@@ -29,11 +31,10 @@ import { takeUntil } from 'rxjs';
   * @implements {OnInit}
   * @implements {OnDestroy}
   */
-
 @Component({
   selector: 'app-anexo-vista-uno',
   standalone: true,
-  imports: [CommonModule, AnexoUnoComponent],
+  imports: [CommonModule, AnexoUnoSeccionComponent],
   templateUrl: './anexo-vista-uno.component.html',
   styleUrl: './anexo-vista-uno.component.scss',
 })
@@ -64,15 +65,15 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Lista de encabezados del anexo Uno.
-   * @type {AnexoEncabezado[]}
+   * @type {AnexoUnoProducto[]}
    */
-  public anexoUnoTablaLista: AnexoUnoEncabezado[] = [];
+  public anexoUnoTablaLista: AnexoUnoProducto[] = [];
 
   /**
     * Lista de encabezados del anexo dos.
-    * @type {AnexoEncabezado[]}
+    * @type {AnexoFraccionAnarelaria[]}
     */
-  public anexoDosTablaLista: AnexoDosEncabezado[] = [];
+  public anexoDosTablaLista: AnexoFraccionAnarelaria[] = [];
 
   /**
  * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -88,14 +89,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @param {Tramite80101Store} store - Almacén de estado para gestionar los datos del trámite.
    * @param {Tramite80101Query} query - Consulta para obtener los datos del trámite.
    */
-
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
     private query: Tramite80101Query) { }
-/*
-* Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-*/
+// Inicializa las suscripciones para importar y exportar datos del Anexo Uno y Dos.  
+// Actualiza las listas locales si los datos recibidos contienen elementos.
   ngOnInit(): void {
+     // Se suscribe a los cambios en la lista del Anexo Dos desde el store.  
+    // Actualiza la variable local si la lista contiene elementos.
     this.query.selectImportarTablsDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((importarTablsDatos) => {
@@ -103,7 +104,8 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
           this.anexoUnoTablaLista = importarTablsDatos;
         }
       });
-
+// Se suscribe a los cambios en la lista del Anexo Tres desde el store.  
+// Actualiza la variable local si la lista contiene elementos.
     this.query.selectExportarTablsDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((exportarTablsDatos) => {
@@ -118,7 +120,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @param {T[]} event - Evento que contiene la lista de encabezados del anexo Uno.
    * @returns {void}
    */
-  public obtenerAnexoUnoDevolverLaLlamada(event: AnexoUnoEncabezado[]): void {
+  public obtenerAnexoUnoDevolverLaLlamada(event: AnexoUnoProducto[]): void {
     this.anexoUnoTablaLista = event ? event : [];
     this.store.setImportarDatosTabla(this.anexoUnoTablaLista);
     
@@ -128,7 +130,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @param {T[]} event - Evento que contiene la lista de encabezados del anexo Dos.
    * @returns {void}
    */
-   public obtenerAnexoDosDevolverLaLlamada(event: AnexoDosEncabezado[]): void {
+   public obtenerAnexoDosDevolverLaLlamada(event: AnexoFraccionAnarelaria[]): void {
     this.anexoDosTablaLista = event ? event : [];
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
@@ -151,6 +153,32 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
       this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });
+    }
+  }
+
+  /**
+   * Establece la lista de proyectos IMMEX en la tabla correspondiente del store.
+   *
+   * @param event - Arreglo de objetos de tipo ProyectoImmex que representa la nueva lista de proyectos a almacenar.
+   */
+  setProyectoImmex(event: ProyectoImmex[]): void {
+    this.store.setProyectoImmexTablaLista(event);
+  }
+
+  /**
+   * Maneja la obtención de datos de proveedor o cliente según el identificador recibido en el evento.
+   * 
+   * @param event - Objeto que contiene un arreglo de datos de tipo `ProveedorCliente` y un identificador opcional.
+   *   - `data`: Lista de objetos `ProveedorCliente` a procesar.
+   *   - `id`: Identificador opcional que determina si los datos corresponden a un cliente ('cliente') o a un proveedor.
+   * 
+   * Si el identificador es 'cliente', almacena los datos en la tabla uno; en caso contrario, los almacena en la tabla dos.
+   */
+  obtenerProveedorCliente(event: {data:ProveedorCliente[], id?:string}):void{
+    if(event.id ==='cliente'){
+      this.store.setProveedorClienteDatosTablaUno(event.data);
+    }else{
+      this.store.setProveedorClienteDatosTablaDos(event.data);
     }
   }
 
