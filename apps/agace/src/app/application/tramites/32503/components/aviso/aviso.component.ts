@@ -19,7 +19,7 @@ import {
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { ENCABEZADAS_TABLA, FECHA_INGRESO, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
+import { ENCABEZADAS_TABLA, FECHA_INGRESO, RADIO_PARCIAL, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
@@ -236,6 +236,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Constante que representa los tipos de catálogo disponibles en el sistema.
    */
   TIPACA = TIPACA;
+
+   /**
+   * Opciones para el radio relacionado con la disminución parcial.
+   */
+  radioParcial = RADIO_PARCIAL;
+  
   /**
    * @property {any} TEXTOS
    * @description Constante que contiene textos o mensajes utilizados en el componente.
@@ -578,6 +584,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       }),
       datosAviso: this.fb.group({
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
+        tieneIdTransaccionVucem: [this.tramiteState?.avisoFormulario?.tieneIdTransaccionVucem],
         idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO)]],
         motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
         fechaTranslado: [this.tramiteState?.avisoFormulario?.fechaTranslado, [Validators.required]],

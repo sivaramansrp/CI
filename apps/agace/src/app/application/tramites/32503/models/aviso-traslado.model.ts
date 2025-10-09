@@ -150,6 +150,7 @@ export interface AvisoFormulario {
   valorProgramaImmex: string;
   valorAnioProgramaImmex: string;
   tipoAviso: string;
+  tieneIdTransaccionVucem: string;
   idTransaccion: string;
   motivoProrroga: string;
   fechaTranslado: string;

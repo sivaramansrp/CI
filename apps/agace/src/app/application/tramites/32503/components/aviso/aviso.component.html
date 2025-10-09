@@ -36,7 +36,7 @@
         </div>
       </div>
     </ng-container>
-    <ng-titulo titulo="Datos de aviso" />
+    <ng-titulo titulo="Datos del aviso" />
     <ng-container formGroupName="datosAviso">
       <div class="row">
         <div class="col-md-12">
@@ -47,23 +47,42 @@
           </div>
           <div class="radio">
             <div class="col-md-4">
-              <app-input-radio [radioOptions]="TIPAVI" id="tipoAviso" formControlName="tipoAviso" (change)="verificaTipoAviso()"></app-input-radio>
+              <app-input-radio [radioOptions]="TIPAVI" [layout]="'horizontal'" id="tipoAviso" formControlName="tipoAviso" (change)="verificaTipoAviso()"></app-input-radio>
             </div>
           </div>
         </div>
       </div>
       <div class="row my-3">
-        <div class="col-md-8">
-          <div>
-            <label for="idTransaccion">ID de transacción VUCEM del aviso inicial</label>
-            <label for="puntos">:</label>
-          </div>
-          <div>
-            <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control" formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''" (keyup)="desinfectarAlfanumerico(datosAviso,'idTransaccion',$event)" (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
-            @if (obtenerMensajeError(datosAviso, 'idTransaccion')) {
-              <div class="text-danger mt-1">{{ obtenerMensajeError(datosAviso, 'idTransaccion') }}</div>
-            }
-          </div>
+        <div class="col-md-8" *ngIf="datosAviso.get('tipoAviso')?.value === 'prorroga'">
+             <label>¿Cuenta con el ID de transacción de VUCEM del Aviso inicial?:</label>
+            <div>
+             <app-input-radio
+               [radioOptions]="radioParcial"
+               [isRequired]="true"
+               [layout]="'horizontal'"
+               formControlName="tieneIdTransaccionVucem"
+             ></app-input-radio>
+            </div>
+        </div>
+        <div [ngClass]="datosAviso.get('tieneIdTransaccionVucem')?.value === 'si' ? 'col-md-8' : 'col-md-8'">
+          @if (datosAviso.get('tieneIdTransaccionVucem')?.value === 'si') {
+            <div>
+              <label for="idTransaccion">ID de transacción VUCEM del aviso inicial*</label>
+              <label for="puntos">:</label>
+            </div>
+            <div>
+              <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control" formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''" (keyup)="desinfectarAlfanumerico(datosAviso,'idTransaccion',$event)" (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
+              @if (obtenerMensajeError(datosAviso, 'idTransaccion')) {
+                <div class="text-danger mt-1">{{ obtenerMensajeError(datosAviso, 'idTransaccion') }}</div>
+              }
+            </div>
+          } @else {
+            <!-- Empty div to maintain layout when ID transaction is not shown -->
+            <div class="invisible">
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+            </div>
+          }
         </div>
         <div class="col-md-4">
           <div class="form-group datepicker-group">
