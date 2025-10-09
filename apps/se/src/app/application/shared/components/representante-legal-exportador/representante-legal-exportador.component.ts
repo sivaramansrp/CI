@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -100,13 +101,13 @@ export class RepresentanteLegalExportadorComponent
   @Output() formDatosDelDestinatarioEvent: EventEmitter<{
     formGroupName: string;
     campo: string;
-    valor: undefined;
-    metodoNombre: string;
+    VALOR: undefined;
+    METODO_NOMBRE: string;
   }> = new EventEmitter<{
     formGroupName: string;
     campo: string;
-    valor: undefined;
-    metodoNombre: string;
+    VALOR: undefined;
+    METODO_NOMBRE: string;
   }>();
 
   /**
@@ -156,38 +157,38 @@ export class RepresentanteLegalExportadorComponent
 
     this.campos.forEach((campo) => {
       if (!this.form.contains(campo.nombre)) {
-        const valorInicial = this.datosForm?.[campo.nombre] ?? '';
-        let validators = [];
+        const VALOR_INICIAL = this.datosForm?.[campo.nombre] ?? '';
+        const VALIDATORS = [];
         if (campo.required) {
-          validators.push(Validators.required);
+          VALIDATORS.push(Validators.required);
         }
         if (campo.maxlength) {
-          validators.push(Validators.maxLength(Number(campo.maxlength)));
+          VALIDATORS.push(Validators.maxLength(Number(campo.maxlength)));
         } else {
           if (campo.nombre === 'lugar' || campo.nombre === 'exportador') {
-            validators.push(Validators.maxLength(70));
+            VALIDATORS.push(Validators.maxLength(70));
           }
           if (campo.nombre === 'empresa') {
-            validators.push(Validators.maxLength(90));
+            VALIDATORS.push(Validators.maxLength(90));
           }
           if (campo.nombre === 'correo' || campo.nombre === 'correoElectronico') {
-            validators.push(Validators.maxLength(70));
+            VALIDATORS.push(Validators.maxLength(70));
           }
           if (campo.nombre === 'telfono') {
-            validators.push(Validators.maxLength(16));
+            VALIDATORS.push(Validators.maxLength(16));
           }
         }
         if (campo.nombre === 'correo' || campo.nombre === 'correoElectronico') {
-          validators.push(Validators.email);
+          VALIDATORS.push(Validators.email);
         }
         if (campo.nombre === 'telfono' || campo.nombre === 'fax' || campo.nombre === 'lada') {
-          validators.push(Validators.pattern('^[0-9]*$'));
+          VALIDATORS.push(Validators.pattern('^[0-9]*$'));
         }
         this.form.addControl(
           campo.nombre,
           this.fb.control(
-            valorInicial,
-            validators
+            VALOR_INICIAL,
+            VALIDATORS
           )
         );
       }
@@ -237,8 +238,8 @@ export class RepresentanteLegalExportadorComponent
     this.formDatosDelDestinatarioEvent.emit({
       formGroupName,
       campo,
-      valor: VALOR,
-      metodoNombre,
+      VALOR: VALOR,
+      METODO_NOMBRE: metodoNombre,
     });
   }
 

@@ -7,6 +7,8 @@ import {
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosDelDestinatarioComponent } from "../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component";
+import { DestinatarioComponent } from "../../../../shared/components/destinatario/destinatario.component";
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -14,7 +16,6 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { Subject } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
@@ -23,8 +24,6 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { DatosDelDestinatarioComponent } from "../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component";
-import { DestinatarioComponent } from "../../../../shared/components/destinatario/destinatario.component";
 
 interface FormValues {
   [key: string]: unknown;
@@ -162,79 +161,31 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
     this.registroFormulario = this.fb.group({
       grupoReceptor: this.fb.group({
         nombre: [this.solicitudState?.grupoReceptor?.nombre, []],
-        apellidoPrimer: [
-          this.solicitudState?.grupoReceptor?.apellidoPrimer,
-          [],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.grupoReceptor?.apellidoSegundo,
-          [],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.grupoReceptor?.numeroFiscal,
-          [Validators.required],
-        ],
+        apellidoPrimer: [this.solicitudState?.grupoReceptor?.apellidoPrimer, []],
+        apellidoSegundo: [this.solicitudState?.grupoReceptor?.apellidoSegundo, []],
+        numeroFiscal: [this.solicitudState?.grupoReceptor?.numeroFiscal, [Validators.required]],
         razonSocial: [this.solicitudState?.grupoReceptor?.razonSocial, []],
       }),
 
       grupoDeDirecciones: this.fb.group({
-        ciudad: [
-          this.solicitudState?.grupoDeDirecciones?.ciudad,
-          [Validators.required],
-        ],
-        calle: [
-          this.solicitudState?.grupoDeDirecciones?.calle,
-          [Validators.required],
-        ],
-        numeroLetra: [
-          this.solicitudState?.grupoDeDirecciones?.numeroLetra,
-          [Validators.required],
-        ],
+        ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required]],
+        calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required]],
+        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra,[Validators.required]],
         lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
-        telefono: [
-          this.solicitudState?.grupoDeDirecciones?.telefono,
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        fax: [
-          this.solicitudState?.grupoDeDirecciones?.fax,
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        correoElectronico: [
-          this.solicitudState?.grupoDeDirecciones?.correoElectronico,
-          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
-        ],
+        telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        fax: [this.solicitudState?.grupoDeDirecciones?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico,[Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
       }),
 
       grupoRepresentativo: this.fb.group({
-        lugar: [
-          this.solicitudState?.grupoRepresentativo?.lugar,
-          [Validators.required],
-        ],
-        nombreExportador: [
-          this.solicitudState?.grupoRepresentativo?.nombreExportador,
-          [Validators.required],
-        ],
-        empresa: [
-          this.solicitudState?.grupoRepresentativo?.empresa,
-          [Validators.required],
-        ],
-        cargo: [
-          this.solicitudState?.grupoRepresentativo?.cargo,
-          [Validators.required],
-        ],
+        lugar: [this.solicitudState?.grupoRepresentativo?.lugar, [Validators.required]],
+        nombreExportador: [this.solicitudState?.grupoRepresentativo?.nombreExportador, [Validators.required]],
+        empresa: [this.solicitudState?.grupoRepresentativo?.empresa, [Validators.required]],
+        cargo: [this.solicitudState?.grupoRepresentativo?.cargo, [Validators.required]],
         lada: [this.solicitudState?.grupoRepresentativo?.lada, []],
-        telefono: [
-          this.solicitudState?.grupoRepresentativo?.telefono,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        fax: [
-          this.solicitudState?.grupoRepresentativo?.fax,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        correoElectronico: [
-          this.solicitudState?.grupoRepresentativo?.correoElectronico,
-          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
-        ],
+        telefono: [this.solicitudState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        fax: [this.solicitudState?.grupoRepresentativo?.fax, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
       }),
     });
     this.inicializarEstadoFormulario();
@@ -316,9 +267,9 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
    * @param event Evento con el campo y valor a actualizar.
    * @returns {void}
    */
-  setValoresStore1(event: {formGroupName: string; campo: string; valor: undefined; metodoNombre: string;}): void {
-    const { valor, metodoNombre } = event;
-    (this.store as unknown as Record<string, (value: unknown) => void>)[metodoNombre]?.(valor);
+  setValoresStore1(event: {formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string;}): void {
+    const { VALOR, METODO_NOMBRE } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }
 
   /**
@@ -354,6 +305,10 @@ export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
   setFormValida(valido: boolean): void {
     this.datosDelDestinatarioValido = valido;
   }
+  /**
+   * 
+   * @param valido 
+   */
   setFormValidaDestinatario(valido: boolean): void {
     this.destinatarioValido = valido;
   }

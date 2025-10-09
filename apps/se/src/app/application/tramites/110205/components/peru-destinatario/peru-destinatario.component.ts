@@ -1,11 +1,3 @@
-/**
- * @component PeruDestinatarioComponent
- * @description
- * Componente responsable de manejar los datos de los formularios del destinatario y exportador
- * dentro del trámite zoosanitario para Perú. Permite la sincronización con el estado global,
- * incluyendo modo solo lectura, y guarda los valores ingresados en el store.
- */
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
@@ -177,9 +169,9 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
    * @param event Evento con el campo y valor a actualizar.
    * @returns {void}
    */
-  setValoresStore1(event: {formGroupName: string; campo: string; valor: undefined; metodoNombre: string;}): void {
-    const { valor, metodoNombre } = event;
-    (this.store as unknown as Record<string, (value: unknown) => void>)[metodoNombre]?.(valor);
+  setValoresStore1(event: {formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string;}): void {
+    const { VALOR, METODO_NOMBRE } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }
 
   /**

@@ -1,17 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { GrupoRepresentativo } from '../../models/peru-certificado.module';
 import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { Validators } from '@angular/forms';
-import {
-  REGEX_CORREO_ELECTRONICO,
-  REGEX_SOLO_DIGITOS,
-} from '@ng-mf/data-access-user';
-import { GrupoRepresentativo } from '../../models/peru-certificado.module';
 
 /**
  * @description
@@ -115,8 +112,11 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @readonly
    */
   public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
-
-    registroFormulario!: FormGroup;
+  /**
+   * Indica si el formulario de datos del destinatario es válido.
+   * Se utiliza para habilitar o deshabilitar la navegación en el asistente (wizard).
+   */
+  registroFormulario!: FormGroup;
 
 
   /**
@@ -186,7 +186,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-    
+
 
   /**
    * @method datosDelDestinatarioFunc
@@ -230,52 +230,41 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
-
-  setValoresStore1(event: {formGroupName: string; campo: string; valor: undefined; metodoNombre: string;}): void {
-    const { valor, metodoNombre } = event;
-    (this.store as unknown as Record<string, (value: unknown) => void>)[metodoNombre]?.(valor);
+/**
+   * @method setValoresStore1
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de destinatario.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStore1(event: { formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string; }): void {
+    const { VALOR, METODO_NOMBRE } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }
 
-/**
-   * Inicializa el formulario con los datos del estado de la solicitud.
-   */
+  /**
+     * Inicializa el formulario con los datos del estado de la solicitud.
+     */
   donanteDomicilio(): void {
     this.registroFormulario = this.fb.group({
-          grupoRepresentativo: this.fb.group({
-        lugar: [
-          this.exportadoState?.grupoRepresentativo?.lugar,
-          [Validators.required],
-        ],
-        nombre: [
-          this.exportadoState?.grupoRepresentativo?.nombre,
-          [Validators.required],
-        ],
-        empresa: [
-          this.exportadoState?.grupoRepresentativo?.empresa,
-          [Validators.required],
-        ],
-        cargo: [
-          this.exportadoState?.grupoRepresentativo?.cargo,
-          [Validators.required],
-        ],
+      grupoRepresentativo: this.fb.group({
+        lugar: [this.exportadoState?.grupoRepresentativo?.lugar, [Validators.required]],
+        nombre: [this.exportadoState?.grupoRepresentativo?.nombre, [Validators.required]],
+        empresa: [this.exportadoState?.grupoRepresentativo?.empresa, [Validators.required]],
+        cargo: [this.exportadoState?.grupoRepresentativo?.cargo, [Validators.required]],
         registroFiscal: [this.exportadoState?.grupoRepresentativo?.registroFiscal, []],
-        telefono: [
-          this.exportadoState?.grupoRepresentativo?.telefono,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        fax: [
-          this.exportadoState?.grupoRepresentativo?.fax,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        correo: [
-          this.exportadoState?.grupoRepresentativo?.correo,
-          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
-        ],
+        telefono: [this.exportadoState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        fax: [this.exportadoState?.grupoRepresentativo?.fax, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        correo: [this.exportadoState?.grupoRepresentativo?.correo, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
       }),
     });
   }
 
-   get grupoRepresentativo(): FormGroup {
+  /**
+   * Getter para el grupo representativo del formulario.
+   * @returns {FormGroup} El grupo representativo del formulario.
+   */
+
+  get grupoRepresentativo(): FormGroup {
     return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
   }
   /**
@@ -308,12 +297,12 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     this.store.setFormValida({ datosDestinatario: valida });
   }
 
-   /**
-   * @method ngOnDestroy
-   * @descripcion
-   * Hook del ciclo de vida que se llama cuando el componente se destruye.
-   * Limpia los recursos y suscripciones.
-   */
+  /**
+  * @method ngOnDestroy
+  * @descripcion
+  * Hook del ciclo de vida que se llama cuando el componente se destruye.
+  * Limpia los recursos y suscripciones.
+  */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

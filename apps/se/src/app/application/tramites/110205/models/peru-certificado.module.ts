@@ -128,7 +128,11 @@ export interface MercanciaTabla {
 export interface MercanciasHistorico {
   datos: MercanciaTabla[];
 }
-
+/**
+ * @interface GrupoRepresentativo
+ * @description
+ * Interfaz que representa los datos de un grupo representativo.
+ */
 export interface GrupoRepresentativo {
   lugar: string;
   nombreExportador: string;
