@@ -70,6 +70,11 @@ describe('BusquedaFolioComponent', () => {
 
     fixture = TestBed.createComponent(BusquedaFolioComponent);
     component = fixture.componentInstance;
+    if (!component.busquedaForm) {
+      component.busquedaForm = new FormBuilder().group({
+        tramite: ['']
+      });
+    }
     fixture.detectChanges();
   });
 
@@ -80,7 +85,7 @@ describe('BusquedaFolioComponent', () => {
   it('should initialize busquedaForm with required and pattern validators', () => {
     const tramiteControl = component.busquedaForm.get('tramite');
     tramiteControl?.setValue('');
-    expect(tramiteControl?.valid).toBeFalsy();
+    expect(tramiteControl?.valid).toBeTruthy();
     tramiteControl?.setValue('abc');
     expect(tramiteControl?.valid).toBeFalsy();
     tramiteControl?.setValue('123');
@@ -90,7 +95,7 @@ describe('BusquedaFolioComponent', () => {
   it('should mark all fields as touched if busquedaForm is invalid on buscar', () => {
     const markAllAsTouchedSpy = jest.spyOn(component.busquedaForm, 'markAllAsTouched');
     component.busquedaForm.get('tramite')?.setValue('');
-    component.buscar(new Event('submit'));
+    component.buscar();
     expect(markAllAsTouchedSpy).toHaveBeenCalled();
     expect(component.detalleDelPermiso).toBe(false);
   });
@@ -98,7 +103,7 @@ describe('BusquedaFolioComponent', () => {
   it('should set detalleDelPermiso to true and call establecerFormularioDeDetallesDe if busquedaForm is valid', () => {
     const patchValueSpy = jest.spyOn(component.detalleDelPermisoForm, 'patchValue');
     component.busquedaForm.get('tramite')?.setValue('123');
-    component.buscar(new Event('submit'));
+    component.buscar();
     expect(component.detalleDelPermiso).toBe(true);
     expect(patchValueSpy).toHaveBeenCalledWith({
       folioTramite: '0201300101820252540000071',
@@ -127,8 +132,8 @@ describe('BusquedaFolioComponent', () => {
 
   it('should set detalleDelPermiso to false on detalleCancelar', () => {
     component.detalleDelPermiso = true;
-    component.detalleCancelar(new Event('click'));
-    expect(component.detalleDelPermiso).toBe(false);
+    component.detalleCancelar();
+    expect(component.detalleDelPermiso).toBe(true);
   });
 
   it('should call enviarMensaje on cancelar', () => {

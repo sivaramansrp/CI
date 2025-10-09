@@ -1,89 +1,74 @@
-import { Component } from '@angular/core';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import {ERROR_FORMA_ALERT} from '../../constants/intropermiso.enum';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PASOS } from '../../constants/intropermiso.enum';
+/**
+ * El `IntroPermisoComponent` es el componente principal para gestionar el formulario de desistimiento de permiso.
+ * Este componente utiliza un asistente (wizard) para controlar la navegación entre los pasos del formulario y gestionar la información mostrada.
+ * Este componente permite la navegación entre los pasos del formulario, muestra alertas según el estado del servicio y gestiona los datos
+ * relacionados con el desistimiento de permiso.
+ */
+
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, PASOS, TODOS_PASOS } from '../../constants/intropermiso.enum';
+import { Subject, takeUntil } from 'rxjs';
+
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { DesistimientoDePermisoState, DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
+
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import {TODOS_PASOS} from '../../constants/intropermiso.enum';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
+/**
+ * Interfaz para manejar las acciones de los botones del asistente.
+ */
 interface AccionBoton {
   /**
-   * La acción que se realizará.
+   * Acción del botón (e.g., "cont" para continuar, "atras" para retroceder).
    */
   accion: string;
 
   /**
-   * El valor asociado a la acción.
+   * Valor asociado a la acción (índice del paso).
    */
   valor: number;
 }
+
 @Component({
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-
 })
-export class IntroPermisoComponent implements OnInit, OnDestroy{
+export class IntroPermisoComponent implements OnInit, OnDestroy {
   /**
- * @description Array de objetos que definen los pasos del formulario.
- * Cada objeto contiene información sobre un paso específico,
- * incluyendo su número, título y si está completado.
- * Este array permite la gestión de las secciones o pasos dentro del formulario.
- * @type {ListaPasosWizard[]}
- */
+   * Array de pasos del asistente.
+   */
   pasos: ListaPasosWizard[] = PASOS;
+
   /**
-   * @description Indicates whether the search section should be displayed.
-   * Controlled based on service messages.
-   * @type {boolean}
+   * Notificador para gestionar la destrucción de observables.
    */
-  mostrarBusqueda: boolean = false;
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
-    * @property {boolean} esFormaValido
-    * @description
-    * Indica si el formulario del paso actual es válido.
-    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
-    */
-  esFormaValido: boolean = false;
-
-
-  /**
-   * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
+   * Título del mensaje principal.
    */
-  infoAlert: string = 'info-alert';
-  /**
-   * @description Referencia al componente Wizard.
-   * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
-   * como `siguiente()` y `atras()`, para controlar la navegación entre los pasos.
-   * 
-   * @type {WizardComponent}
-   * @viewChild WizardComponent
-   */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  tituloMensaje: string | null = "Cancelación por solicitud de permisos";
 
   /**
-   * @description Índice actual del paso en el que se encuentra el usuario.
-   * Este índice se utiliza para determinar qué paso se muestra en cada momento.
-   * Los valores posibles de `indice` corresponden a los pasos definidos en el arreglo `pasos`.
-   * 
-   * @type {number}
-   * @default 1
+   * Clase CSS para mensajes de alerta.
+   */
+  dangerClass = 'alert-danger';
+
+  /**
+   * Referencia al componente Wizard para controlar la navegación.
+   */
+  @ViewChild('wizardRef') wizardComponent!: WizardComponent;
+
+  /**
+   * Índice actual del paso.
    */
   indice: number = 1;
 
   /**
-   * @description Objeto que contiene los datos de los pasos del formulario.
-   * Este objeto se utiliza para comunicar información entre el componente Agricultura
-   * y el componente Wizard, como el número total de pasos, el índice del paso actual
-   * y los textos de los botones de navegación (anterior y siguiente).
-   * 
-   * @type {DatosPasos}
+   * Configuración para los botones del asistente.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -93,95 +78,190 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
   };
 
   /**
-   * @property {PasoUnoComponent} pasoUnoComponent
-   * @description
-   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
-   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   * Mensaje de éxito para el primer paso.
+   */
+  mensajeDeTextoDeExito: string = "MENSAJE_DE_ÉXITO_ETAPA_UNO";
+
+  /**
+   * Controla la visibilidad de las alertas.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Estado de la solicitud.
+   */
+  solicitudState!: DesistimientoDePermisoState;
+
+  /**
+   * ID de la solicitud.
+   */
+  idSolicitudState: number | null = null;
+
+  /**
+   * ID del tipo de trámite.
+   */
+  idTipoTramite: string = '140105';
+
+  /**
+   * Evento para cargar archivos.
+   */
+  cargarArchivosEvento: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
+   * Control de sección de carga de documentos.
+   */
+  seccionCargarDocumentos: boolean = false;
+
+  /**
+       * Indica si la carga de documentos está en progreso.
+       * @type {boolean}
+       */
+      cargaEnProgreso: boolean = true;
+
+  /**
+   * Control para activar botón de carga de archivos.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Mensaje de alerta del formulario.
+   */
+  formErrorAlert: string = ERROR_FORMA_ALERT;
+
+  /**
+   * Mensaje de alerta.
+   */
+  alerta: string = TODOS_PASOS.Importante;
+
+  /**
+   * Clase CSS para alertas informativas.
+   */
+  infoAlert: string = 'info-alert';
+
+  /**
+   * Flag indicating whether the search section should be displayed.
+   */
+  public mostrarBusqueda: boolean = false;
+
+  /**
+   * Referencia al componente hijo paso uno
    */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
-   /**
-    * @property {string} formErrorAlert
-    * @description
-    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
-    */
-   public formErrorAlert = ERROR_FORMA_ALERT;
+  constructor(
+    private store: DesistimientoStore,
+    private query: DesistimientoQuery,
+    private servicioDeMensajes: ServicioDeMensajesService
+  ) {}
 
-    /**
-   * Variable utilizada para almacenar el tipo de alerta.
-   */
-  alerta = TODOS_PASOS.Importante;
-
-  /**
-   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
-   * del formulario.
-   * 
-   * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
-   * y el valor del índice del paso al que se debe navegar.
-   * 
-   * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
-   *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
-   *   (valor `cont`) o retroceder (valor `atras`).
-   * 
-   * @returns {void}
-   */
-/**
-   * @description Service for managing and receiving messages.
-   * Used to handle communication between components.
-   * @param {ServicioDeMensajesService} servicioDeMensajesService
-   */
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService){}
-/**
-   * @description Lifecycle method executed when the component initializes.
-   * Subscribes to the message service to update the search display state.
-   */
   ngOnInit(): void {
-    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
-      this.mostrarBusqueda = mensaje;
-    });
+    this.inicializarDatos();
+    this.suscribirAEstados();
   }
-  /**
-   * @description Lifecycle method executed when the component is destroyed.
-   * Resets the search display state to false.
-   */
+
   ngOnDestroy(): void {
-      this.mostrarBusqueda = false;
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
- 
+
   /**
-   * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
-   * @param e Acción del botón.
+   * Inicializa los datos del componente
    */
-  getValorIndice(e: AccionBoton): void {
-if (e.accion === 'cont') {
-  let isValid = true;
-
-    if (this.indice === 1 && this.pasoUnoComponent) {
-    isValid = this.pasoUnoComponent.validarFormularios();
+  private inicializarDatos(): void {
+    this.solicitudState = this.query.getValue();
+    this.idSolicitudState = this.solicitudState.idSolicitud;
   }
-  if (!isValid) {
-    this.esFormaValido = true;
+
+  /**
+   * Se suscribe a los estados de la aplicación
+   */
+  private suscribirAEstados(): void {
+    this.query.select()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(state => {
+        this.solicitudState = state;
+        this.idSolicitudState = state.idSolicitud;
+      });
+  }
+
+  /**
+   * Maneja el evento de navegación del asistente
+   */
+  getValorIndice(valor: AccionBoton): void {
+    if (valor.accion === 'cont') {
+      this.indice = valor.valor + 1;
+      this.datosPasos.indice = this.indice;
+      if (this.wizardComponent) {
+        this.wizardComponent.siguiente();
+      }
+    } else {
+      this.indice = valor.valor - 1;
+      this.datosPasos.indice = this.indice;
+      if (this.wizardComponent) {
+        this.wizardComponent.atras();
+      }
+    }
+
+    this.actualizarSeccionCargarDocumentos();
+  }
+
+  /**
+   * Actualiza la sección de carga de documentos según el paso actual
+   */
+  private actualizarSeccionCargarDocumentos(): void {
+    this.seccionCargarDocumentos = this.indice === 2;
+  }
+
+  /**
+   * Maneja el evento de carga de documentos
+   */
+  manejaEventoCargaDocumentos(event: boolean): void {
+    this.activarBotonCargaArchivos = event;
+  }
+
+  /**
+   * Maneja cuando la carga se ha realizado
+   */
+  cargaRealizada(realizada: boolean): void {
+    this.seccionCargarDocumentos = realizada ? false : true;
+  }
+
+  /**
+   * Maneja el progreso de carga
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    // Implementar lógica de progreso si es necesario
+     this.cargaEnProgreso = carga;
+  }
+
+  /**
+   * Botón anterior para paso 2
+   */
+  anterior(): void {
+    this.indice = 1;
     this.datosPasos.indice = this.indice;
-    return;
+    this.actualizarSeccionCargarDocumentos();
+    if (this.wizardComponent) {
+      this.wizardComponent.atras();
+    }
   }
 
-  this.esFormaValido = false;
-  this.indice = e.valor;
-  this.datosPasos.indice = this.indice;
+  /**
+   * Botón siguiente para paso 2
+   */
+  siguiente(): void {
+    this.indice = 3;
+    this.datosPasos.indice = this.indice;
+    this.actualizarSeccionCargarDocumentos();
+    if (this.wizardComponent) {
+      this.wizardComponent.siguiente();
+    }
+  }
 
-  this.wizardComponent.siguiente();
-  return;
-}
-
-  this.indice = e.valor;
-this.datosPasos.indice = this.indice;
-this.wizardComponent.atras();
-
-
-
-
-}
-
-
+  /**
+   * Maneja el clic en cargar archivos
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
 }

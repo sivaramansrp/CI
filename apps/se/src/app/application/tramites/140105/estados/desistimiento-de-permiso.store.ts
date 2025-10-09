@@ -2,6 +2,75 @@ import { Cancelacion, PermisosDatos, createDatosState } from '../models/cancelac
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * Interfaz que define la estructura del estado de desistimiento de permiso.
+ */
+export interface DesistimientoDePermisoState {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
+  
+  /** RFC del solicitante */
+  rfc: string;
+  
+  /** Nombre del solicitante */
+  nombre: string;
+  
+  /** Apellido paterno */
+  apPaterno: string;
+  
+  /** Apellido materno */
+  apMaterno: string;
+  
+  /** Teléfono */
+  telefono: string;
+  
+  /** Tipo de desistimiento */
+  tipoDesistimiento: string;
+  
+  /** Motivo de cancelación */
+  motivoCancelacion: string;
+  
+  /** Número de permiso */
+  numeroPermiso: string;
+  
+  /** Fecha de desistimiento */
+  fechaDesistimiento: string;
+  
+  /** Observaciones */
+  observaciones: string;
+  
+  /** Certificado Serial Number para firma electrónica */
+  certificadoSerialNumber: string;
+  
+  /** Certificado para firma electrónica */
+  certificado: string;
+  
+  /** Datos de cancelación legacy */
+  datos: Cancelacion[];
+}
+
+/**
+ * Función para crear el estado inicial
+ */
+function createInitialState(): DesistimientoDePermisoState {
+  return {
+    idSolicitud: 253688,
+    rfc: '',
+    nombre: '',
+    apPaterno: '',
+    apMaterno: '',
+    telefono: '',
+    tipoDesistimiento: '',
+    motivoCancelacion: '',
+    numeroPermiso: '',
+    fechaDesistimiento: '',
+    observaciones: '',
+    certificadoSerialNumber: '',
+    certificado: '',
+    datos: []
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,16 +82,16 @@ import { Injectable } from '@angular/core';
  *
  * @description
  * Esta clase extiende de `Store` de Akita y permite inicializar y actualizar el estado
- * de tipo `PermisosDatos`. Está diseñada para almacenar y manejar los datos relacionados
+ * de tipo `DesistimientoDePermisoState`. Está diseñada para almacenar y manejar los datos relacionados
  * con los trámites de cancelación, como el folio del trámite, tipo de solicitud, fracción arancelaria, etc.
  */
-export class DesistimientoStore extends Store<PermisosDatos> {
+export class DesistimientoStore extends Store<DesistimientoDePermisoState> {
 
   /**
-   * Constructor que inicializa la tienda con el estado inicial generado por `createDatosState()`.
+   * Constructor que inicializa la tienda con el estado inicial.
    */
   constructor() {
-    super(createDatosState());
+    super(createInitialState());
   }
 
   /**
@@ -40,5 +109,26 @@ export class DesistimientoStore extends Store<PermisosDatos> {
     this.update((_state) => ({
       datos,
     }));
+  }
+
+  /**
+   * Actualiza el ID de la solicitud
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update({ idSolicitud });
+  }
+
+  /**
+   * Actualiza los datos del solicitante
+   */
+  public setSolicitanteData(data: Partial<DesistimientoDePermisoState>): void {
+    this.update(data);
+  }
+
+  /**
+   * Actualiza los datos de firma electrónica
+   */
+  public setFirmaData(certificadoSerialNumber: string, certificado: string): void {
+    this.update({ certificadoSerialNumber, certificado });
   }
 }
