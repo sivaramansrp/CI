@@ -1,7 +1,7 @@
 import { AVISO, ConsultaioQuery, ConsultaioState, DatosPasos, ERROR_FORMA_ALERT, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent, WizardService, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user';
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { Observable, Subject, finalize, map, switchMap, take, tap } from 'rxjs';
+import { Observable, Subject, map, switchMap, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
@@ -303,6 +303,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -315,6 +316,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -526,7 +528,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 0,
+      "idSolicitud": this.solicitudState.idSolicitud || 0,
       "idTipoTramite": 80105,
       "rfc": "AAL0409235E6",
       "cveUnidadAdministrativa": "8101",

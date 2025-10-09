@@ -28,8 +28,10 @@ import {
 } from '@angular/forms';
 import { Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 import { AnioConstanciaService } from '../../services/catalogos/anio-constancia.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { GuardadoService } from '../../services/guardado.service';
@@ -105,15 +107,13 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
-   * @property {TplDetalleResponse} detalleCupo - Detalle del cupo fitosanitario.
-   */
-  @Input() detalleCupo!: TplDetalleResponse;
-
-  /**
    * @property {TplDetalleResponse} descripcionCupo - Detalle del cupo fitosanitario.
    */
   descripcionCupo!: TplDetalleResponse;
 
+
+  @Input()
+  numeroFolio: string = '';
   /**
    * @property {boolean} enviada - Indica si el formulario ha sido enviado para mostrar errores.
    */
@@ -317,7 +317,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     private tplService: TplService,
     private guardadoService: GuardadoService,
     private tramite120301: Tramite120301Store,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
   ) {
     // Lógica del constructor si es necesario
   }
@@ -422,11 +423,10 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     // Se eliminó el filtrado por cambio de entrada; ahora solo filtra al hacer clic en el botón Buscar
     const CURRENT_STATE = this.consultaioQuery.getValue();
     this.formularioDeshabilitado = CURRENT_STATE.readonly;
-    if (this.detalleCupo) {
+    if (this.numeroFolio && this.numeroFolio !== '') {
+      this.llenarFormularioConDatos(this.numeroFolio);
       this.guardarBandera = true;
       this.visualizarEvaluacion = false;
-      this.descripcionCupo = this.detalleCupo;
-      this.llenarFormularioConDatos(this.detalleCupo);
     }
     // Aplicar el estado del formulario inicial según el valor de solo lectura actual
     if (this.formularioDeshabilitado) {
@@ -437,7 +437,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
       this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
     }
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -468,22 +467,51 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @param datos - Datos del tipo TplDetalleResponse para llenar el formulario.
    * @description Llena el formulario con los datos proporcionados.
    */
-  llenarFormularioConDatos(datos: TplDetalleResponse): void {
-    this.fitosanitarioForm.patchValue({
-      fraccionArancelaria: datos.fraccion_arancelaria,
-      descripcionProducto: datos.descripcion_producto,
-      tratado: datos.tratado_bloque,
-      subproducto: datos.clasificacion_subproducto,
-      mecanismo: datos.mecanismo_asignacion,
-      typoCategoria: datos.categoria_textil,
-      typoRegimen: datos.regimen,
-      descripcionCategoriaTextil: datos.descripcion_categoria_textil,
-      PaisDestino: datos.pais_origen_destino,
-      unidadMedidaCategoriaTextil: datos.unidad_medida,
-      factorConversionCategoriaTextil: datos.factor_conversion,
-      fechaInicioVigencia: datos.fecha_inicio_vigencia,
-      fechaFinVigencia: datos.fecha_fin_vigencia
-    });
+  llenarFormularioConDatos(idFolio: string): void {
+    this.evaluacionSolicitud.getDetallesCupo(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.descripcionCupo = response.datos ?? {} as TplDetalleResponse;
+            this.fitosanitarioForm.patchValue({
+              fraccionArancelaria: this.descripcionCupo.fraccion_arancelaria,
+              descripcionProducto: this.descripcionCupo.descripcion_producto,
+              tratado: this.descripcionCupo.tratado_bloque,
+              subproducto: this.descripcionCupo.clasificacion_subproducto,
+              mecanismo: this.descripcionCupo.mecanismo_asignacion,
+              typoCategoria: this.descripcionCupo.categoria_textil,
+              typoRegimen: this.descripcionCupo.regimen,
+              descripcionCategoriaTextil: this.descripcionCupo.descripcion_categoria_textil,
+              PaisDestino: this.descripcionCupo.pais_origen_destino,
+              unidadMedidaCategoriaTextil: this.descripcionCupo.unidad_medida,
+              factorConversionCategoriaTextil: this.descripcionCupo.factor_conversion,
+              fechaInicioVigencia: this.descripcionCupo.fecha_inicio_vigencia,
+              fechaFinVigencia: this.descripcionCupo.fecha_fin_vigencia
+            });
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+    // this.fitosanitarioForm.patchValue({
+    //   fraccionArancelaria: datos.fraccion_arancelaria,
+    //   descripcionProducto: datos.descripcion_producto,
+    //   tratado: datos.tratado_bloque,
+    //   subproducto: datos.clasificacion_subproducto,
+    //   mecanismo: datos.mecanismo_asignacion,
+    //   typoCategoria: datos.categoria_textil,
+    //   typoRegimen: datos.regimen,
+    //   descripcionCategoriaTextil: datos.descripcion_categoria_textil,
+    //   PaisDestino: datos.pais_origen_destino,
+    //   unidadMedidaCategoriaTextil: datos.unidad_medida,
+    //   factorConversionCategoriaTextil: datos.factor_conversion,
+    //   fechaInicioVigencia: datos.fecha_inicio_vigencia,
+    //   fechaFinVigencia: datos.fecha_fin_vigencia
+    // });
   }
 
   /**

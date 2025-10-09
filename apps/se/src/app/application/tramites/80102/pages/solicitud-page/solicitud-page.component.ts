@@ -1,4 +1,3 @@
-import { Anexo1, ProveedorClienteDatosTabla } from '../../models/autorizacion-programa-nuevo.model';
 import {
   AlertComponent,
   BtnContinuarComponent,
@@ -16,25 +15,27 @@ import {
   formatearFechaYyyyMmDd,
   getValidDatos,
 } from '@ng-mf/data-access-user';
+import { Anexo1, ProveedorClienteDatosTabla } from '../../models/autorizacion-programa-nuevo.model';
 import {
   Component,
   EventEmitter,
-  inject,
   OnDestroy,
   OnInit,
   ViewChild,
+  inject,
 } from '@angular/core';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
-import { Observable, Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { USUARIO_INFO } from '../../enum/enum-80102';
@@ -45,7 +46,6 @@ import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
-import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -320,6 +320,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -332,6 +333,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -918,7 +920,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
-    "idSolicitud": 0,
+    "idSolicitud": this.solicitudState.idSolicitud || 0,
     "idTipoTramite": 80102,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",

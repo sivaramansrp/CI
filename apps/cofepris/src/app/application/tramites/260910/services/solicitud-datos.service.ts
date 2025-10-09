@@ -290,7 +290,7 @@ export class SolicitudDatosService {
     this.solicitudStore.setRfc(DATOS?.rfc);
     this.solicitudStore.setLegalRazonSocial(DATOS?.legalRazonSocial);
     this.solicitudStore.setApellidoPaterno(DATOS?.apellidoPaterno);
-    this.solicitudStore.setApellidoMeterno(DATOS?.apellidoMeterno);
+    this.solicitudStore.setApellidoMaterno(DATOS?.apellidoMaterno);
     this.solicitudStore.setMercanciasDatos(DATOS?.mercanciasDatos);
     this.solicitudStore.setSCIANDatos(DATOS?.SCIANDatos);
     this.solicitudStore.setManifesto(DATOS?.manifesto);

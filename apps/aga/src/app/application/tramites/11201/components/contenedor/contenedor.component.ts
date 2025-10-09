@@ -297,6 +297,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /**
+   * Constructor del componente ContenedorComponent.
+   * 
+   * Inicializa todas las dependencias necesarias y configura los objetos
+   * de catálogos con sus valores por defecto.
+   * 
+   * @param {FormBuilder} fb - Constructor de formularios reactivos
+   * @param {DatosTramiteService} datosTramiteService - Servicio para datos del trámite
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones
+   * @param {Tramite11201Store} tramite11201Store - Store del trámite
+   * @param {Tramite11201Query} tramite11201Query - Query del trámite
+   * @param {BsModalService} modalService - Servicio para modales
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultas
+   */
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
@@ -309,28 +323,33 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.transporteList = {
       catalogos: [],
       labelNombre: 'Tipo de transporte',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
     };
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
     };
     this.aduanaList = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
       required: true
     };
     this.contenedores = {
       catalogos: [],
       labelNombre: 'Tipo de equipo',
-      primerOpcion: 'Seleccione una opción',
+      primerOpcion: 'Seleccione un valor',
     };
   }
 
   /**
    * Método de inicialización del componente.
+   * 
+   * Configura las suscripciones al estado del trámite, inicializa el formulario,
+   * carga los catálogos necesarios y establece el estado inicial del componente.
+   * 
+   * @returns {void}
    */
   ngOnInit(): void {
     this.tramite11201Query.selectSolicitud$
@@ -363,7 +382,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método de destrucción del componente.
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * 
+   * Completa el Subject destroyNotifier$ para notificar a todas las suscripciones
+   * que deben completarse, evitando fugas de memoria.
+   * 
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -371,7 +395,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario reactivo.
+   * Inicializa el formulario reactivo con todos los campos necesarios.
+   * 
+   * Crea un FormGroup con campos para tipo de búsqueda, contenedor, fecha,
+   * aduana, transporte y otros datos relacionados con el trámite.
+   * 
+   * @returns {void}
    */
   public inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
@@ -567,7 +596,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cargar catálogos de datos.
+   * Cargar catálogos de datos desde el servicio.
+   * 
+   * Este método obtiene los catálogos de contenedores desde el servicio
+   * y actualiza la lista de contenedores disponibles para el formulario.
+   * 
+   * @returns {void}
    */
   cargarCatalogos(): void {
     // Cargar catálogo de contenedores

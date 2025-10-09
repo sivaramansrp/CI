@@ -4,7 +4,6 @@ import {
   CONFIGURACION_SERVICIO_IMMEX,
 } from '../../constantes/modificacion.enum';
 import {
-  
   CatalogoServices,
   CategoriaMensaje,
   ConsultaioQuery,
@@ -12,11 +11,7 @@ import {
   TablaSeleccion,
   TipoNotificacionEnum,
 } from '@ng-mf/data-access-user';
-import {
-  EmpresasNacionales,
-  ServicioAmpliacion,
-  ServicioAutorizado,
-} from '../../models/datos-info.model';
+import { EmpresaNacional, EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse } from '../../../../shared/models/modelo-interface.model';
 import {
   FormBuilder,
   FormGroup,
@@ -25,6 +20,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Input, OnDestroy, OnInit } from '@angular/core';
+import { ServicioAmpliacion, ServicioAutorizado } from '../../models/datos-info.model';
 import { Subject,Subscription,filter,map,shareReplay,takeUntil} from 'rxjs';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
@@ -39,10 +35,17 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { NotificacionesComponent } from '@ng-mf/data-access-user';
-import { ServicioItemResponse } from '../../../../shared/models/modelo-interface.model';
+import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 import { ServiciosService } from '../../../../shared/services/servicios.service';
 import {ViewChild} from '@angular/core';
 
+/**
+ * Componente para la gestión de ampliación de servicios IMMEX.
+ * @export
+ * @class AmpliacionServiciosComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-ampliacion-servicios',
   standalone: true,
@@ -70,11 +73,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   mercanciasSeleccionados: number[] = [];
   /**
-   * 
    * Lista de identificadores de la segunda tabla seleccionados.
-   * Este arreglo almacena los IDs de los elementos que el usuario ha elegido
+   * @type {number[]}
    */
-
   tablaDosSeleccionados: number[] = [];
 
   /**
@@ -89,9 +90,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
 @ViewChild('tablaB') tablaB!: TablaDinamicaComponent<ServicioAutorizado>;
 /**
  * Referencia a la tabla dinámica C.
- * @property {TablaDinamicaComponent<EmpresasNacionales>} tablaC
+ * @property {TablaDinamicaComponent<EmpresaNacional>} tablaC
  */
-@ViewChild('tablaC') tablaC!: TablaDinamicaComponent<EmpresasNacionales>;
+@ViewChild('tablaC') tablaC!: TablaDinamicaComponent<EmpresaNacional>;
   /**
    * Índice de la pestaña.
    * @property {number} tabindex
@@ -128,6 +129,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   rfcEmpresa: string = '';
 
   
+  /**
+   * Estado del trámite de ampliación de servicios.
+   * @type {AmpliacionServiciosState}
+   */
   tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
 
   /**
@@ -158,7 +163,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * Configuración de columnas para la tabla de domicilios.
    * @property {ConfiguracionColumna<EmpresasNacionales[]>} configuracionTabla
    */
-  configuracionTabla: ConfiguracionColumna<EmpresasNacionales>[] =
+  configuracionTabla: ConfiguracionColumna<EmpresaNacional>[] =
     CONFIGURACION_DOMICILIOS;
 
   /**
@@ -168,14 +173,18 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   configuracionTablaServicio: ConfiguracionColumna<ServicioAmpliacion>[] =
     CONFIGURACION_SERVICIO_IMMEX;
 
+  /**
+   * Configuración de columnas para la tabla de servicios autorizados.
+   * @type {ConfiguracionColumna<ServicioAutorizado>[]}
+   */
   configuracionTablaServicioAutorizado: ConfiguracionColumna<ServicioAutorizado>[] =
     CONFIGURACION_SERVICIO_AUTORIZADO;
 
   /**
    * Lista de empresas relacionadas con IMMEX.
-   * @property {EmpresasNacionales[]} empresas
+   * @property {EmpresaNacional[]} empresas
    */
-  empresas: EmpresasNacionales[] = [];
+  empresas: EmpresaNacional[] = [];
 
   /**
    * Datos de servicios IMMEX.
@@ -183,6 +192,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   datosImmex: ServicioAmpliacion[] = [];
 
+  /**
+   * Datos de servicios autorizados.
+   * @type {ServicioAutorizado[]}
+   */
   datosAutorizados:ServicioAutorizado[]=[];
 
    /**
@@ -206,9 +219,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
 
   /**
    * Empresas seleccionadas.
-   * @property {EmpresasNacionales[]} empresasSeleccionados
+   * @property {EmpresaNacional[]} empresasSeleccionados
    */
-  empresasSeleccionados: EmpresasNacionales[] = [];
+  empresasSeleccionados: EmpresaNacional[] = [];
 
   /**
  * @property {boolean} esHabilitarElDialogo
@@ -226,6 +239,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {boolean} esEliminar
    */
 
+  /**
+   * Indica si el diálogo de agregar empresas está habilitado.
+   * @type {boolean}
+   */
   esAgregarDos: boolean = false;
 
   /**
@@ -233,12 +250,20 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {boolean} esEliminar
    */
 
+  /**
+   * Indica si el diálogo de eliminar empresas está habilitado.
+   * @type {boolean}
+   */
   esEliminarDos: boolean = false;
   /**
    * Indica si se han recibido datos de respuesta.
    * @property {boolean} esDatosRespuesta
    */
 
+  /**
+   * Indica si no se ha seleccionado ninguna fila.
+   * @type {boolean}
+   */
   rowNotSeleccionada: boolean = false;
 
   /**
@@ -246,12 +271,20 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {boolean} esDatosRespuesta
    * */
 
+  /**
+   * Indica si no hay fila seleccionada.
+   * @type {boolean}
+   */
   noRowSelected: boolean = false;
 
    /**
    * Indica si se han recibido datos de respuesta.
    * @property {boolean} esDatosRespuesta
    * */
+   /**
+   * Indica si no hay fila seleccionada en la tabla C.
+   * @type {boolean}
+   */
    noRowSelectedTablaC: boolean = false;
 
 
@@ -271,8 +304,16 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
   
+  /**
+   * Identificador del trámite.
+   * @type {string}
+   */
   tramiteID:string ='80205';
 
+  /**
+   * Identificador del servicio IMMEX seleccionado.
+   * @type {string}
+   */
   serviciosImmexServId!:string;
 
   /**
@@ -288,7 +329,8 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private ampliacionServiciosStore: AmpliacionServiciosStore,
     private consultaioQuery: ConsultaioQuery,
-    private serviciosService: ServiciosService
+    private serviciosService: ServiciosService,
+    private notificacionesService: NotificacionesService
   ) {
        /**
      * Inicializa el formulario principal del componente con los campos necesarios.
@@ -391,10 +433,11 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   suscribirseADatos(): void {
     this.subscription.add(
       this.ampliacionServiciosQuery.select('empresas').subscribe((empresas) => {
-        this.empresas = empresas; // Update local empresas array when store data changes
+        this.empresas = empresas; // Actualiza el array local de empresas cuando cambian los datos del store
       })
     );
   }
+
  /**
   * Actualiza el grid de empresas nacionales.
   * @method actualizaGridEmpresasNacionales
@@ -402,19 +445,44 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   * @return {void}
   */
   getTablaDatos(): void {
-    this.ampliacionServiciosService.getTablaDatos()
+    this.serviciosService.postServiciosAutorizadosTabla(this.tramiteID,{
+      rfc: 'NOV0509053I7',
+      numeroPrograma: '2',
+      idPrograma: '121517',
+      tipoPrograma: 'TICPSE.IMMEX'
+    })
       .pipe(
         takeUntil(this.destroyNotifier$),
-        shareReplay(1)
+        shareReplay(1),
+        filter((data: BaseResponse<ServicioDtosKey>) => data.codigo === '00'),
+        map((data: BaseResponse<ServicioDtosKey>) => {
+          const SERVICIOS_ITEMS = data.datos?.servicioDtos || [];
+          return SERVICIOS_ITEMS
+            .filter((item: ServicioItemResponse) => item.idServicio !== null && item.idServicio !== undefined)
+            .map((item: ServicioItemResponse) => ({
+              idServicio: String(item.idServicio),
+              descripcion: item.descripcion,
+              descripcionTipo: item.descripcionTipo,
+              descripcionTestado: item.descripcionTestado,
+              estatus: item.estatus,
+              desEstatus: item.desEstatus,
+              idSolicitud: item.idSolicitud ? String(item.idSolicitud) : undefined,
+              solicitud: item.solicitud,
+              tipoServicio: item.tipoServicio,
+              claveServicio: item.claveServicio,
+              fecIniVigencia: item.fecIniVigencia,
+              fecFinVigencia: item.fecFinVigencia
+            } as unknown)) as ServicioAutorizado[];
+        })
       )
       .subscribe({
-        next: (data) => {
-          const DATOS = data as ServicioAutorizado[];
-          this.datosAutorizados = DATOS;
-          this.ampliacionServiciosStore.datosAutorizados(DATOS);
+        next: (datosAutorizados: ServicioAutorizado[]) => {
+          this.datosAutorizados = datosAutorizados;
+          this.ampliacionServiciosStore.datosAutorizados(this.datosAutorizados);
         },
-        error: (_error) => {
-          // Handle error appropriately
+        error: (error) => {
+          ServiciosService.generarAlertaDeError('Error al cargar datos autorizados');
+          console.error('Error loading authorized services:', error);
         }
       });
   }
@@ -535,7 +603,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
           }
         },
         error: (_error) => {
-          // Handle error appropriately
+          // Manejar el error apropiadamente
         }
       });
   }
@@ -661,7 +729,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
         next: (data) => {
           const DATOS = data.datos as Catalogo[];
           this.aduanaDeIngreso = DATOS;
-          this.formulario.get('entidadFederativa')?.setValue(this.tramiteState.aduanaDeIngresoSelecion.id || this.predeterminado);
+          this.formulario.get('entidadFederativa')?.setValue(this.tramiteState?.aduanaDeIngresoSelecion?.id || this.predeterminado);
         },
         error: (error) => {
           console.error('Error loading immexCatalogo:', error);
@@ -840,7 +908,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
 
   agregarServiciosAmpliacion(event?: Event): void {
-    // Prevent event propagation to avoid triggering parent form validation
+    // Prevenir la propagación del evento para evitar activar la validación del formulario padre
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -862,17 +930,31 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
 
     const PAYLOAD = {
       servicio: ID,
-      servicioSeleccionado: [ // No obligatorio
-        {
-            idServicio: 1,
-            claveServicio: 1
-        }
-      ],
+      servicioSeleccionado: this.datosAutorizados.map(item => ({
+        idServicio: Number(item.idServicio),
+        claveServicio: Number(item.claveServicio)
+      })),
       modalidad: this.tramiteID,
-      idPrograma: "105834"
+      idPrograma: "121517"
     };
 
     this.serviciosService.postServiciosImmexTabla(this.tramiteID, PAYLOAD).pipe(
+      filter((data: BaseResponse<Partial<ServicioItemResponse[]>>) => {
+        if (data.codigo !== '00') {
+            this.notificacionesService.showNotification({
+            tipoNotificacion: TipoNotificacionEnum.TOASTR,
+            categoria: CategoriaMensaje.ERROR,
+            modo: '',
+            titulo: 'Error',
+            mensaje: `${data.error}`,
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: ''
+          });
+          return false;
+        }
+        return true;
+      }),
       map((data: BaseResponse<Partial<ServicioItemResponse[]>>) => {
         return (data.datos ?? [])
           .filter((item): item is ServicioItemResponse => item !== undefined && item.descripcion !== null)
@@ -893,6 +975,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
           tipoServicio: datosImmex[0]?.tipoServicio,
           descripcionTipo: datosImmex[0]?.descripcionTipo,
           claveServicio: datosImmex[0]?.claveServicio,
+          descripcionTestado: datosImmex[0]?.descripcionTestado ?? '',
+          solicitud: datosImmex[0]?.solicitud ?? '',
+          fecIniVigencia: datosImmex[0]?.fecIniVigencia ?? '',
+          fecFinVigencia: datosImmex[0]?.fecFinVigencia ?? ''
         };
 
         // Actualizar el store con los nuevos datos
@@ -909,8 +995,8 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method eliminarEmpresasNacionales
    */
   eliminarEmpresasNacionales(): void {
-    const INDICE = this.empresas.findIndex(
-      (item: EmpresasNacionales) =>
+    const INDICE = (this.empresas as EmpresaNacional[]).findIndex(
+      (item: EmpresaNacional) =>
         item.descripcionServicio ===
         this.empresasSeleccionados[0]?.descripcionServicio
     );
@@ -929,40 +1015,71 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
-    if (
-      !this.rfcEmpresa?.trim() ||
-      !this.numeroPrograma?.trim() ||
-      !this.tiempoPrograma?.trim()
-    ) {
-      return; 
-    }
-
-    const SERVICIO_DATOS=(this.domiciliosSeleccionados[0]?.descripcion!==undefined)?this.domiciliosSeleccionados[0]?.descripcion:this.autorizadosSeleccionados[0]?.descripcion;
-    const DENOMINACION_DATOS=(this.domiciliosSeleccionados[0]?.descripcionTipo!==undefined)?this.domiciliosSeleccionados[0]?.descripcionTipo:this.autorizadosSeleccionados[0]?.descripcionTipo;
-  
-    const CUERPODATOS: EmpresasNacionales = {
-      idCompuestoEmpresa: "",
-      idServicioAutorizado: "",
-      idServicio: "1",
-      descripcionServicio: SERVICIO_DATOS,
-      rfc: this.rfcEmpresa,
-      razonSocial: DENOMINACION_DATOS,
+    this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
+      rfcEmpresaNacional: this.rfcEmpresa,
+      idServicio: this.domiciliosSeleccionados[0]?.idServicio ?? "8",
+      descripcionServicio: this.domiciliosSeleccionados[0]?.descripcion || this.autorizadosSeleccionados[0]?.descripcion || "",
+      modalidad: this.tramiteID,
       numeroPrograma: this.numeroPrograma,
-      tiempoPrograma: this.tiempoPrograma
-    };
-  
-    const DATOSACTUALIZADOS = [...this.empresas, CUERPODATOS];
-    this.ampliacionServiciosStore.setEmpresas(DATOSACTUALIZADOS);
-
-    this.rfcEmpresa = '';
-    this.numeroPrograma = '';
-    this.tiempoPrograma = '';
-  
-    this.ampliacionServiciosStore.setCamposEmpresa(
-      this.rfcEmpresa,
-      this.numeroPrograma,
-      this.tiempoPrograma
-    );
+      tiempoPrograma: this.tiempoPrograma,
+      idServicioAutorizado: this.autorizadosSeleccionados[0]?.idServicio || ""
+    })
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        shareReplay(1),
+        filter((data: BaseResponse<EmpresasNacionalesResponse>) => data.codigo === '00'),
+        map((data: BaseResponse<EmpresasNacionalesResponse>) => {
+          if(data?.datos?.empresasNacionales === null) {
+            this.notificacionesService.showNotification({
+            tipoNotificacion: TipoNotificacionEnum.TOASTR,
+            categoria: CategoriaMensaje.ERROR,
+            modo: '',
+            titulo: 'Error',
+            mensaje: `${data?.mensaje}`,
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: ''
+          });
+            return [];
+          }
+          const SERVICIOS_ITEMS = data.datos?.empresasNacionales || [];
+          return SERVICIOS_ITEMS
+            .filter((item: EmpresaNacional) => item.idServicio !== null && item.idServicio !== undefined)
+            .map((item: EmpresaNacional) => ({
+                idCompuestoEmpresa: item.idCompuestoEmpresa,
+                idServicioAutorizado: item.idServicioAutorizado,
+                idServicio: item.idServicio,
+                descripcionServicio: item.descripcionServicio,
+                rfc: item.rfc,
+                razonSocial: item.razonSocial,
+                numeroPrograma: item.numeroPrograma,
+                tiempoPrograma: item.tiempoPrograma
+            } as unknown)) as EmpresaNacional[];
+        }
+      ))
+      .subscribe({
+        next: (empresas: EmpresaNacional[]) => {
+          // Actualizar solo el store con los nuevos datos sin duplicar
+          this.ampliacionServiciosStore.setEmpresas(empresas);
+          
+          // Limpiar los campos del formulario
+          this.rfcEmpresa = '';
+          this.numeroPrograma = '';
+          this.tiempoPrograma = '';
+        },
+        error: (error) => {
+          this.notificacionesService.showNotification({
+            tipoNotificacion: TipoNotificacionEnum.TOASTR,
+            categoria: CategoriaMensaje.ERROR,
+            modo: '',
+            titulo: 'Error',
+            mensaje: `${error?.error}`,
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: ''
+          });
+        }
+      });  
   }
   
 
@@ -982,7 +1099,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   procesarDatosDelHijo(): void {
     const ID= this.formulario.value.entidadFederativa;
-    const SELECTED_DATOS = this.aduanaDeIngreso.find((item: any) => item.clave === ID);
+    const SELECTED_DATOS = this.aduanaDeIngreso.find((item: Catalogo) => item.clave === ID);
     const DATOS = { id: ID, descripcion: SELECTED_DATOS?.descripcion ?? '' };
     this.serviciosImmexServId = ID;
     this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(DATOS as Catalogo);
@@ -1027,7 +1144,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method seleccionarEmpresas
    * @param {any} empresas - Empresas seleccionadas.
    */
-  seleccionarEmpresas(empresas: EmpresasNacionales): void {
+  seleccionarEmpresas(empresas: EmpresaNacional): void {
     if (!empresas) {
       this.empresasSeleccionados = [];
       return;

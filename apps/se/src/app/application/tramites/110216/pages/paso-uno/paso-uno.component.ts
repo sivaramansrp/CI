@@ -7,7 +7,7 @@ import { CertificadosOrigenService } from '../../services/certificado-origen.ser
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 
 /**
@@ -22,7 +22,7 @@ import { Tramite110216Query } from '../../../../estados/queries/tramite110216.qu
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, DatosCertificadoComponent, HistoricoProductoresComponent, DestinatarioComponent, CertificadoOrigenComponent]
+  imports: [CommonModule, SolicitanteComponent, DatosCertificadoComponent, HistProductoresComponent, DestinatarioComponent, CertificadoOrigenComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**

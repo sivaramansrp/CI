@@ -1,29 +1,29 @@
-<div class="container">
+<div class="page">
   <div class="row">
     <div class="col-md-3">
       <div class="form-group">
         <h5 class="form-label text-start">Fracción arancelaria</h5>
         <p class="form-label text-start">
-          {{ proyectoImmexDatos.fraccionArancelaria }}
+          {{ selectedRow?.encabezadoFraccionArancelaria }}
         </p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
         <h5 class="form-label text-start">Anexo II</h5>
-        <p class="form-label text-start">{{ proyectoImmexDatos.anexoDos }}</p>
+        <p class="form-label text-start">{{ selectedRow?.encabezadoAnexoII }}</p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
         <h5 class="form-label text-start">Tipo</h5>
-        <p class="form-label text-start">{{ proyectoImmexDatos.tipo }}</p>
+        <p class="form-label text-start">{{ selectedRow?.encabezadoTipo }}</p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
         <h5 class="form-label text-start">UMT</h5>
-        <p class="form-label text-start">{{ proyectoImmexDatos.umt }}</p>
+        <p class="form-label text-start">{{ selectedRow?.encabezadoUmt }}</p> 
       </div>
     </div>
   </div>
@@ -93,7 +93,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="rfcTaxId"
-            >RFC de la parte firmante Tax ID*:</label
+            >RFC de la parte firmante / Tax ID*:</label
           >
           <input
             class="form-control min-hgt uppercase"
@@ -108,7 +108,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="razonSocial"
-            >Razón social de la parte firmante</label
+            >Razón social de la parte firmante:</label
           >
           <input
             class="form-control min-hgt uppercase"

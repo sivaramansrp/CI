@@ -1,4 +1,4 @@
-<div class="container">
+<div class="page">
   <div class="row">
     <div class="col-md-3">
       <div class="form-group">
@@ -80,7 +80,8 @@
           id="monedaNacionalMensual"
           formControlName="monedaNacionalMensual"
           type="number"
-          (input)="onIngreseNumerosPositivos($event, 'monedaNacionalMensual')"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>
@@ -98,7 +99,8 @@
           id="monedaNacionalDeDosPeriodos"
           formControlName="monedaNacionalDeDosPeriodos"
           type="number"
-          (input)="onIngreseNumerosPositivos($event, 'monedaNacionalDeDosPeriodos')"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>
@@ -115,7 +117,8 @@
           id="volumenMensual"
           formControlName="volumenMensual"
           type="number"
-          (input)="onIngreseNumerosPositivos($event, 'volumenMensual')"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>
@@ -133,7 +136,8 @@
           id="twoPeriodVolume"
           formControlName="twoPeriodVolume"
           type="number"
-          (input)="onIngreseNumerosPositivos($event, 'twoPeriodVolume')"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>

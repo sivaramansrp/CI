@@ -202,6 +202,9 @@ export interface Tramite110222State {
    * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
    */
   formulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
 }
 
 /**
@@ -327,7 +330,8 @@ export function createInitialState(): Tramite110222State {
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',      
-    }
+    },
+    optionsTipoFactura: []
   };
 }
 
@@ -437,10 +441,23 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * @param mercanciaTabla - Array de objetos `Mercancia` que representa la tabla de mercancías.
    */
   setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaTabla,
-    }));
+     this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
   }
 
   /**
@@ -741,6 +758,18 @@ export class Tramite110222Store extends Store<Tramite110222State> {
         ...state.formCertificado,
         ...values,
       },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
     }));
   }
 }

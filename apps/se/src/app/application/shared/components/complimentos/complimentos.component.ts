@@ -1,3 +1,4 @@
+import { AlphaNumericOnlyDirective } from '@libs/shared/data-access-user/src/tramites/directives/alpha-numeric-only/alpha-numeric-only.directive';
 /* eslint-disable class-methods-use-this */
 /**
  * Importaciones necesarias para el componente de empresas.
@@ -15,6 +16,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  UppercaseDirective,
   ValidacionesFormularioService,
   WEBPAGE,
 } from '@libs/shared/data-access-user/src';
@@ -80,7 +82,9 @@ import { TramiteStore } from '../../../estados/tramite.store';
     CatalogoSelectComponent,
     SelectPaisesComponent,
     InputFechaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    AlphaNumericOnlyDirective,
+    UppercaseDirective
   ],
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
@@ -329,10 +333,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   paisDatos: CatalogoPaises[] = [];
 
-/**
- * Notificación relacionada con accionistas extranjeros.
- * Se utiliza para mostrar mensajes o alertas específicas en la interfaz.
- */
+  /**
+   * Notificación relacionada con accionistas extranjeros.
+   * Se utiliza para mostrar mensajes o alertas específicas en la interfaz.
+   */
   public accionistasExtranjerosNotificacion!: Notificacion;
 
   /**
@@ -361,14 +365,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         })
       )
       .subscribe();
-      
-      if (this.datosSocioAccionistas) {
-        this.servicioDeFormularioService.registerArray('datosSocioAccionistas', this.datosSocioAccionistas);
-      }
 
-      if (this.datosSocioAccionistasExtrenjeros) {
-        this.servicioDeFormularioService.registerArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
-      }
+    if (this.datosSocioAccionistas) {
+      this.servicioDeFormularioService.registerArray('datosSocioAccionistas', this.datosSocioAccionistas);
+    }
+
+    if (this.datosSocioAccionistasExtrenjeros) {
+      this.servicioDeFormularioService.registerArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
+    }
   }
 
   /**
@@ -381,7 +385,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       this.formaComplimentos.patchValue({ fechaDeActa: fecha });
     }
   }
-  
+
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    * 
@@ -390,15 +394,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   private inicializarFormulario(): void {
     this.formaComplimentos = this.fb.group({
-      modalidad: [{ value: '', disabled: true }],
+      modalidad: [{ value: 'servicios', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
         paginaWWeb: ['', [Validators.required, Validators.maxLength(120), Validators.pattern(WEBPAGE)]],
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
-        fechaExpedicion: ['', Validators.required],
+        opinionPositiva: [{ value: 1, disabled: true }, Validators.required],
+        fechaExpedicion: ['05/04/2025', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
@@ -454,23 +458,28 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
       if (formName === 'datosGeneralisForm') {
         this.formaComplimentos.get('datosGeneralis')?.markAllAsTouched();
-      } 
-      if (formName === 'obligacionesFiscalesForm') { 
+      }
+      if (formName === 'obligacionesFiscalesForm') {
         this.formaComplimentos.get('obligacionesFiscales')?.markAllAsTouched();
-      } 
+      }
       if (formName === 'formaModificacionesForm') {
         this.formaComplimentos.get('formaModificaciones')?.markAllAsTouched();
       }
     })
   }
 
-  onInputMaxLength(event: Event, maxLength: number): void { 
-  const TARGET = event.target as HTMLInputElement;
-  let value = TARGET.value;
-  value = value.replace(/\D/g, '').slice(0, maxLength);
-  TARGET.value = value;
-  this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
-}
+  /**
+   * Limita la entrada de un campo de texto a un número máximo de caracteres numéricos.
+   * @param event Event del input
+   * @param maxLength 
+   */
+  onInputMaxLength(event: Event, maxLength: number): void {
+    const TARGET = event.target as HTMLInputElement;
+    let value = TARGET.value;
+    value = value.replace(/\D/g, '').slice(0, maxLength);
+    TARGET.value = value;
+    this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
+  }
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
@@ -536,24 +545,20 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === null ||
       DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === '' ||
       isNaN(Number(DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva))
-  ) {
-    if (!DATOS_TRANSFORMADOS.obligacionesFiscales) {
-      DATOS_TRANSFORMADOS.obligacionesFiscales = {};
+    ) {
+      if (!DATOS_TRANSFORMADOS.obligacionesFiscales) {
+        DATOS_TRANSFORMADOS.obligacionesFiscales = {};
+      }
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva = 1;
     }
-    DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva = 1;
-  }
 
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
     const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
-    this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
-    this.formaComplimentos.get('aceptarObligacionFiscal')?.setValue(ACEPTAR_OBLIGACION_FISCAL_VALUE, { emitEvent: false });
+    this.formaComplimentos.get('modalidad')?.setValue('Servicios', { emitEvent: false });
 
-    if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
-      this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
-    }
-  }
+ }
 
   /**
    * Transforms radio button values to the expected format
@@ -724,8 +729,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     if (this.datosSocioAccionistas.length) {
-        this.servicioDeFormularioService.setArray('datosSocioAccionistas', this.datosSocioAccionistas);
-      }
+      this.servicioDeFormularioService.setArray('datosSocioAccionistas', this.datosSocioAccionistas);
+    }
 
     if (this.datosSocioAccionistasExtrenjeros.length) {
       this.servicioDeFormularioService.setArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
@@ -742,28 +747,28 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     switch (tipoForma) {
       case TIPO_FORMA.DEFAULT:
         return this.fb.group({
-          taxId: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
-          razonSocial: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          pais: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          codigoPostal: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
-          estado: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          correoElectronico: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
+          taxId: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(12)]),
+          razonSocial: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+          pais: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+          codigoPostal: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(12)]),
+          estado: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+          correoElectronico: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
         return this.fb.group({
-          taxId: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
-          nombre: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200)]),
-          pais: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          codigoPostal: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
-          estado: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(250)]),
-          correoElectronico: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
-          apellidoPaterno: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200)]),
+          taxId: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(12)]),
+          nombre: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(200)]),
+          pais: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+          codigoPostal: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(12)]),
+          estado: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(250)]),
+          correoElectronico: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
+          apellidoPaterno: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(200)]),
         });
 
       case TIPO_FORMA.NATIONALIDAD_MEXICANA:
         return this.fb.group({
-          rfc: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [
+          rfc: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [
             Validators.required,
             Validators.minLength(12),
             Validators.maxLength(13),
@@ -776,19 +781,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-   /**
-   * Obtiene el formulario de datos según el tipo de formulario.
-   * @returns {FormGroup} El formulario correspondiente.
-   */
+  /**
+  * Obtiene el formulario de datos según el tipo de formulario.
+  * @returns {FormGroup} El formulario correspondiente.
+  */
   createDefaultGroup(): FormGroup {
     return this.fb.group({
-          taxId: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
-          razonSocial: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          pais: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          codigoPostal: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(12)]),
-          estado: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, Validators.required),
-          correoElectronico: this.fb.control({value : '', disabled: this.esFormularioSoloLectura ? true: false}, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
-        });
+      taxId: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(12)]),
+      razonSocial: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+      pais: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+      codigoPostal: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(12)]),
+      estado: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, Validators.required),
+      correoElectronico: this.fb.control({ value: '', disabled: this.esFormularioSoloLectura ? true : false }, [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]),
+    });
   }
 
   /**
@@ -862,7 +867,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     ).contains('formaDatos');
   }
 
- 
+
 
   /**
   * method loadComboUnidadMedida
@@ -891,9 +896,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
         );
-        
+
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
-        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo){
+        if (this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo) {
           this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
         }
       });
@@ -928,16 +933,16 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         this.servicioDeFormularioService.pushToArray('datosSocioAccionistasExtrenjeros', VALUE);
       }
     } else {
-    this.accionistasExtranjerosNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Los campos marcados con (*) son requeridos.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      this.accionistasExtranjerosNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Los campos marcados con (*) son requeridos.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
       };
     }
   }
@@ -1080,8 +1085,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: '',
-      mensaje: '¿Estás seguro de que quieres eliminar?',
+      titulo: 'Eliminar Accionista',
+      mensaje: '¿Desea eliminar a los accionistas?',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -1141,7 +1146,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
       }
     }
-    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
       {
         formaSocioAccionistas: {
           nationalidadMaxicana: VALUE.formaSocioAccionistas.nationalidadMaxicana,
@@ -1158,7 +1163,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   cambioFechaFinal(nuevo_valor: string): void {
     this.formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
-    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
       {
         obligacionesFiscales: {
           fechaExpedicion: nuevo_valor
@@ -1174,7 +1179,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   cambioFecha(nuevo_valor: string): void {
     this.formaComplimentos.get('formaModificaciones.fechaDeActa')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaDeActa(nuevo_valor);
-    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
       {
         formaModificaciones: {
           fechaDeActa: nuevo_valor
@@ -1348,6 +1353,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * Maneja la confirmación de la notificación para accionistas extranjeros.
+   * Si el usuario confirma, elimina la notificación correspondiente.
+   * @param confirmar Indica si el usuario confirmó la notificación.
+   */
+  confirmarAccionistasConfirmation(confirmar: boolean): void {
+    if (confirmar) {
+      if (this.accionistasExtranjerosNotificacion) {
+        this.accionistasExtranjerosNotificacion = undefined as unknown as Notificacion;
+      }
+    }
+  }
+
+  /**
  * Maneja la confirmación de la notificación para eliminar registros.
  * Si el usuario confirma, elimina la notificación correspondiente.
  * @param confirmar Indica si el usuario confirmó la notificación.
@@ -1417,18 +1435,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
-    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
       {
-        datosGeneralis: {
-          paginaWWeb: UPPERCASEVALUE
-        }
-      }
-    );
-  }
-
-  /**
-   * Handles input change for Localización field and converts to uppercase
-   * @param event Input event
         datosGeneralis: {
           paginaWWeb: UPPERCASEVALUE
         }
@@ -1449,7 +1457,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
-    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
       {
         datosGeneralis: {
           localizacion: UPPERCASEVALUE
@@ -1511,14 +1519,16 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
     if (VALOR) {
-      CONTROL?.setValue(VALOR, { emitEvent: true });
-      CONTROL?.markAsTouched({ onlySelf: true });
-      CONTROL?.updateValueAndValidity();
+      const NEW_VALUE = campo === 'taxId' ? VALOR.toUpperCase() : VALOR;
+      if (CONTROL.value !== NEW_VALUE) {
+        CONTROL.setValue(NEW_VALUE, { emitEvent: false });
+      }
+      CONTROL.markAsTouched({ onlySelf: true });
     } else {
       CONTROL?.markAsDirty();
       CONTROL?.markAsTouched();
     }
-    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
       {
         formaSocioAccionistas: {
           formaDatos: this.formaDatos.value
@@ -1536,24 +1546,24 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * Actualiza tanto el campo 'pais' en `camposFormularioDefault` como el campo correspondiente
    * en `camposFormularioTipoPersona` con las opciones obtenidas.
    */
-  getPais():void {
+  getPais(): void {
     this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-   const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === 'pais'
-        );
-        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-        this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
+      const INDICE = this.camposFormulario.findIndex(
+        (ele) => ele.campo === 'pais'
+      );
+      const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+        (ele) => ele.campo === PAIS
+      );
+      this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
 
-        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos
-          .filter((item: Catalogo) => item.clave !== undefined)
-          .map((item: Catalogo) => ({
-            ...item,
-            clave: Number(item.clave)
-          })) as CatalogoPaises[];
+      this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos
+        .filter((item: Catalogo) => item.clave !== undefined)
+        .map((item: Catalogo) => ({
+          ...item,
+          clave: Number(item.clave)
+        })) as CatalogoPaises[];
     });
-    
+
   }
 
   /**
@@ -1561,9 +1571,20 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
  * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
  * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
  */
-obtenerEstados():void {
+  obtenerEstados(): void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.estados = res.datos;
-    }); 
+    });
+  }
+
+  /**
+   * Maneja el cambio de estado en el formulario de modificaciones.
+   * Actualiza el valor del campo 'estado' en el formulario con la clave seleccionada.
+   * @param event Objeto del catálogo seleccionado.
+   */
+  estadoChange(event: Catalogo): void {
+    if (event) {
+      this.formaComplimentos.get('formaModificaciones.estado')?.setValue(event?.clave);
+    }
   }
 }

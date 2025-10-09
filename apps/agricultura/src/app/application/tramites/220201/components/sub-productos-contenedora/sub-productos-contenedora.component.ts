@@ -8,6 +8,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { Subject,map, takeUntil, } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
@@ -242,7 +243,8 @@ export class SubProductosContenedoraComponent implements OnDestroy {
   constructor(
     public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: ZoosanitarioQuery,
-    public fitosanitarioStore: ZoosanitarioStore
+    public fitosanitarioStore: ZoosanitarioStore,
+    private catalogoService: CatalogosService
   ) {
     /**
      * @inicializacion_catalogos
@@ -266,10 +268,51 @@ export class SubProductosContenedoraComponent implements OnDestroy {
      * La suscripción es automática y no requiere unsubscribe manual
      * ya que es una operación HTTP que se completa automáticamente.
      */
-    this.agriculturaApiService.obtenerProductoRespuestaPorUrl('productos.json').subscribe((resp) => {
-      this.catalogosDatos = resp;
-    });
     
+
+    this.catalogoService.obtieneCatalogoConsultaPaises(220201).subscribe((data) => {
+      this.catalogosDatos.paisOrigenList = data.datos ?? [];
+      this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoEspecies(220201).subscribe((data) => {
+      this.catalogosDatos.especieList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoUnidadesMedidaComerciales(220201).subscribe((data) => {
+      this.catalogosDatos.umcList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoUsosMercancia(220201).subscribe((data) => {
+      this.catalogosDatos.usoList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoFraccionesArancelarias(220201).subscribe((data) => {
+      this.catalogosDatos.fraccionArancelariaList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoRestricciones(220201).subscribe((data) => {
+      this.catalogosDatos.tipoRequisitoList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoTipoPresentacion(220201).subscribe((data) => {
+      this.catalogosDatos.presentacionList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoTipoPlanta(220201).subscribe((data) => {
+      this.catalogosDatos.tipoPlantaList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoSubtipoPresentacion(220201).subscribe((data) => {
+      this.catalogosDatos.tipoPresentacionList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoNico(220201).subscribe((data) => {
+      this.catalogosDatos.nicoList = data.datos ?? [];
+    });
+  
+
+
     /**
      * @suscripcion_estado_reactivo
      * @descripcion

@@ -13,6 +13,7 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import {AVISO} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -69,7 +70,7 @@ export class PeruCertificadoComponent implements OnDestroy {
    * @description
    * Contiene los textos informativos para el pago de derechos.
    */
-  public TEXTOS = PAGO_DE_DERECHOS;
+  public TEXTOS = AVISO.Aviso;
 
   /**
    * @property {Subject<void>} destroyNotifier$

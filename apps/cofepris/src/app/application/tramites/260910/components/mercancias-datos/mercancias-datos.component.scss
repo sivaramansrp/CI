@@ -1,3 +1,7 @@
 .cstm-ht {
     min-height: 100px;
 }
+
+::ng-deep .btn-group > .btn {
+  white-space: nowrap !important;
+}

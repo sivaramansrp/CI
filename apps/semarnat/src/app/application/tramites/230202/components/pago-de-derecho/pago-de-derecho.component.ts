@@ -92,7 +92,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',
     required: true,
-    primerOpcion: 'Selecciona un valor',
+    primerOpcion: 'Selecciona una opción',
     catalogos: [],
   };
 

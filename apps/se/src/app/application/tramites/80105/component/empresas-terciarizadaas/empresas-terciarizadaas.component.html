@@ -3,4 +3,5 @@
     [configuracionTablaDatos]="parentTablaConfig" 
     [estadosCatalogo]="(estadosCatalogo$ | async) || []"
     (estadosOpciones)="actualizarEstados($event)"
-    (seleccionadasDatos)="actualizarSeleccionadas($event)"></app-empresas>
+    (seleccionadasDatos)="actualizarSeleccionadas($event)" (buscarControladorasEmit)="obtenerTerciarizadasDisponibles($event)"
+    [disponiblesDatos]="disponiblesDatos" [rfcError]="rfcError"></app-empresas>
