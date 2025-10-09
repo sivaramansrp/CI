@@ -118,15 +118,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /** Método público para validar todos los formularios del paso uno */
-  public validateAll(): boolean {
-    let isValid = true;
+  public validarTodo(): boolean {
+    let ES_VALIDA = true;
     if (this.datosCertificadoComponent) {
       if (!this.datosCertificadoComponent.validateAll()) {
-        isValid = false;
+        ES_VALIDA = false;
       }
     } else {
-      isValid = false;
+      ES_VALIDA = false;
     }
-    return isValid;
+    return ES_VALIDA;
   }
 }

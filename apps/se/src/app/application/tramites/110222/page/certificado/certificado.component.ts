@@ -178,8 +178,8 @@ export class CertificadoComponent {
     if (!this.pasoUnoComponent) {
       return true;
     }
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validateAll();
-    if (!ISFORM_VALID_TOUCHED) {
+    const ES_FORMULARIO_VALIDO_TOCADO = this.pasoUnoComponent.validarTodo();
+    if (!ES_FORMULARIO_VALIDO_TOCADO) {
       return false;
     }
     return true;
