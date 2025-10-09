@@ -66,9 +66,9 @@ export class TramiteConfigService {
    * La clave es el `tramiteId` y el valor indica la propiedad `actualiarModelo`.
    */
   private actualizarModeloConfig: Record<number, ModeloConfig> = {
-    130118: { actualiarModelo: false },
-    120301: { actualiarModelo: false },
-    110101: { actualiarModelo: true },
+    130118: { actualizarModelo: false, actualizarVista: false },
+    120301: { actualizarModelo: false, actualizarVista: false },
+    110101: { actualizarModelo: true, actualizarVista: true },
   }
 
    /**

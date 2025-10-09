@@ -17,7 +17,19 @@ export interface GuardarDictamenRequest {
     fecha_fin_vigencia: string;
     /** Texto del dictamen */
     texto_dictamen: string;
-
     /** Id solicitud en algunos tramites */
     id_solicitud?: number;
+    /** Lista de criterios asociados a tratados */
+    criterios_tratados?: CriterioTratado[];
+}
+
+export interface CriterioTratado {
+  /** ID del criterio del tratado */
+  id_criterio_tratado?: number;
+  /** Indica si la calificación fue aprobada por el dictaminador */
+  calificacion_aprobada_dictaminador?: boolean;
+  /** ID del tratado o acuerdo relacionado */
+  id_tratado_acuerdo?: number;
+  /** Clave del tratado o acuerdo */
+  cve_tratadoAcuerdo?: string;
 }

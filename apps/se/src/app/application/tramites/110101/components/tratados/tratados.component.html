@@ -69,6 +69,49 @@
     <button class="btn btn-primary  me-2" >
       Requisito Proceso
     </button>
+    <button class="btn btn-primary  me-2" (click)="abrirModalDictaminador()" >
+      Calificación del dictaminador
+    </button>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregar" #modalAgregar tabindex="-1" aria-labelledby="modalAgregarLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form [formGroup]="dictaminador">
+          <div class="col-md-12">
+            <div class="form-check">
+              <input
+                  class="form-check-input"
+                  type="radio"
+                  name="opcionSeleccionada"
+                  id="radioSi"
+                  value="true"
+                  formControlName="opcionSeleccionada"
+                />
+                <label class="form-check-label" for="radioSi">Sí</label>
+            </div>
+            <div class="form-check">
+              <input  class="form-check-input"
+                  type="radio"
+                  name="opcionSeleccionada"
+                  id="radioNo"
+                  value="false"
+                  formControlName="opcionSeleccionada">
+              <label class="form-check-label" for="radioNo" >
+                No
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-end p-5 gap-3">
+        <button class="btn btn-primary ms-2" (click)="modificarRegistros()">Agregar</button>
+        <button class="btn btn-default" (click)="cerrarDialogo()">Cerrar</button>
+      </div>
+    </div>
   </div>
 </div>
 }

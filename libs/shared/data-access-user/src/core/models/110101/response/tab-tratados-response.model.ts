@@ -1,8 +1,8 @@
 /**
  * Modelo de response para criterios de tratados
  */
-export interface EvaluarTratadosResponse {
- /** ID del criterio de tratado */
+export interface TabEvaluarTratadosResponse {
+  /** ID del criterio de tratado */
   id_criterio_tratado: number;
 
   /** ID de la solicitud */
