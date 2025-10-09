@@ -190,3 +190,13 @@ export interface ConsultaDatos {
   avisoFormulario: AvisoFormulario;
   tablaDeDatos: AvisoTabla[]
 }
+
+
+/**
+ * Representa los datos de ADACE.
+ * @interface AdaceDatos
+ * @property {string} adace - Valor de ADACE obtenido del servicio.
+ */
+export interface AdaceDatos {
+  adace: string;
+}
