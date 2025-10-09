@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ImmexAmpliacionSensiblesRoutingModule } from './immex-ampliacion-sensibles-routing.module';
 import { PasoCargaDocumentoComponent } from '@libs/shared/data-access-user/src';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -30,6 +31,7 @@ import { ToastrService } from 'ngx-toastr';
     BtnContinuarComponent,
     CommonModule,
     AnexoComponent,
+    PasoFirmaComponent,
     PasoUnoComponent,
     FirmaElectronicaComponent,
     ImmexAmpliacionSensiblesRoutingModule,
