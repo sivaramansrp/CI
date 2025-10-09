@@ -1,4 +1,5 @@
 import { AlertComponent, BtnContinuarComponent, PasoFirmaComponent, WizardComponent } from "@libs/shared/data-access-user/src";
+import { CertificadoOrigenComponent } from "./components/certificado-origen/certificado-origen.component";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { PasoTresComponent } from "./pages/paso-tres/paso-tres.component";
@@ -21,7 +22,8 @@ import { ValidacionPosterioriRoutingModule } from "./validacion-posteriori-routi
     PasoUnoComponent,
     PasoTresComponent,
     AlertComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    CertificadoOrigenComponent
   ],
   exports: [],
   providers: [ToastrService]
