@@ -774,7 +774,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
 
   seleccionarDesplegableServicios(): void {
-    const ID = this.cambioDeModalidadForm.value.serviciosImmx.toString();
+    const ID = this.cambioDeModalidadForm.value?.serviciosImmx.toString() || '';
     this.serviciosImmexServId = ID;
     this.cambioModalidadStore.actualizarEstado({
       serviciosImmx: ID
