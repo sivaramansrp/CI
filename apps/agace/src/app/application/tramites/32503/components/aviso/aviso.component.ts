@@ -586,7 +586,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       datosAviso: this.fb.group({
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
         tieneIdTransaccionVucem: [this.tramiteState?.avisoFormulario?.tieneIdTransaccionVucem],
-        idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+        idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO), Validators.required]],
         motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
         fechaTranslado: [this.tramiteState?.avisoFormulario?.fechaTranslado, [Validators.required]],
       }),
