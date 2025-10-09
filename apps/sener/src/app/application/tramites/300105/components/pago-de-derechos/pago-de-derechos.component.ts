@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
@@ -113,12 +113,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        claveDeReferencia: [this.solicitudState?.claveDeReferencia],
-        cadenaDependencia: [this.solicitudState?.cadenaDependencia],
-        banco: [this.solicitudState?.banco],
-        llaveDePago: [this.solicitudState?.llaveDePago],
-        fechaPago: [this.solicitudState?.fechaPago],
-        importePago: [this.solicitudState?.importePago],
+        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required]],
+        cadenaDependencia: [this.solicitudState?.cadenaDependencia,[Validators.required]],
+        banco: [this.solicitudState?.banco,[Validators.required]],
+        llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required]],
+        fechaPago: [this.solicitudState?.fechaPago,[Validators.required]],
+        importePago: [this.solicitudState?.importePago,[Validators.required]],
       }),
     });
 
