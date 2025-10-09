@@ -34,9 +34,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   
   /** Notificación para mostrar mensajes al usuario */
   public nuevaNotificacion: Notificacion | null = null;
-  
+
   /** Flag to prevent duplicate RFC notifications */
   private rfcNotificationShown: boolean = false;
+
+  /** Flag to prevent duplicate correo electronico notifications */
+  private correoElectronicoNotificationShown: boolean = false;
 
 /**
  * Indica si el formulario está en modo solo lectura.
@@ -76,11 +79,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   establecerCambioDeValor(event: { campo: string; valor: string }): void {
     if (event) {
       this.cambioEnValoresStore(event.campo, event.valor);
-      
-      // Verificar si es el campo RFC
+        // Verificar si es el campo RFC
       if (event.campo === 'rfc') {
         if (event.valor && event.valor.trim() !== '') {
           this.rfcNotificationShown = false;
+        }
+        
+      }
+      // Verificar si es el campo correoElectronico
+      if (event.campo === 'correoElectronico') {
+        if (event.valor && event.valor.trim() !== '') {
+          this.correoElectronicoNotificationShown = false;
         }
         
       }
@@ -116,7 +125,28 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       };
     } 
   }
-  
+
+  /**
+   * Configura el monitoreo del campo correoElectronico con múltiples estrategias
+   */  
+  private configurarMonitoreoCorreoElectronico(): void {
+    const CORREO_ELECTRONICO_CONTROL = this.ninoFormGroup.get('correoElectronico');
+    if (CORREO_ELECTRONICO_CONTROL) {
+      
+      const ORIGINAL_MARK_AS_TOUCHED = CORREO_ELECTRONICO_CONTROL.markAsTouched.bind(CORREO_ELECTRONICO_CONTROL);
+      CORREO_ELECTRONICO_CONTROL.markAsTouched = (opts?: any) => {
+        const RESULT = ORIGINAL_MARK_AS_TOUCHED(opts);
+          setTimeout(() => {
+          if (CORREO_ELECTRONICO_CONTROL.errors?.['required'] && !this.correoElectronicoNotificationShown) {
+            this.mostrarNotificacionCorreoElectronico();
+          }
+        }, 10);
+        
+        return RESULT;
+      };
+    } 
+  }
+
   /**
    * Muestra la notificación cuando el campo RFC es requerido pero está vacío
    */
@@ -138,7 +168,36 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     };
   }
 
-  
+  /**
+   * Muestra la notificación cuando el campo correoElectronico es requerido pero está vacío
+   */
+  private mostrarNotificacionCorreoElectronico(): void {    
+    if (this.correoElectronicoNotificationShown) {
+      return;
+    }
+
+    this.correoElectronicoNotificationShown = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Debes ingresar un correo',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Handles closing the notification
+   */
+  cerrarNotificacion(): void {
+    this.nuevaNotificacion = null;
+    this.rfcNotificationShown = false;
+    this.correoElectronicoNotificationShown = false;
+  }
+
   /**
    * Hook de ciclo de vida - se ejecuta al iniciar el componente
    * Se suscribe al estado general del solicitante
@@ -160,9 +219,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    
-    setTimeout(() => {
+      setTimeout(() => {
       this.configurarMonitoreoRfc();
+      this.configurarMonitoreoCorreoElectronico();
     }, 500);
   }
 
