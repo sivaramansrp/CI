@@ -1,4 +1,5 @@
 import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoDeDomicilio, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110216/models/certificado-origen.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110216/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110216/models/certificado-origen.model';
 import { GrupoOperador } from '../../tramites/110216/models/certificado-origen.model';
@@ -105,6 +106,21 @@ export interface Tramite110216State {
    * Información del formulario de mercancía.
    */
   formularioMercancia: FormularioMercancia;
+
+  /**
+   * @property {Object} formulario - Otros datos de formularios auxiliares.
+   * @description
+   * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
+   */
+  formulario: { [key: string]: unknown};
+
+  /**
+   * @property {Object} datosProductorFormulario - Datos adicionales del productor.
+   * @description
+   * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
+   */
+  datosProductorFormulario: { [key: string]: unknown};
+
   /**
    * @property {HistoricoColumnas[]} productoresExportador
    * @description Lista de productores asociados al exportador.
@@ -224,6 +240,14 @@ export function createInitialState(): Tramite110216State {
     productoresExportador: [],
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
+    formulario:{
+      datosConfidencialesProductor: '',
+      productorMismoExportador: '',
+    },
+    datosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: '',      
+    }
   };
 }
 /**
@@ -1368,6 +1392,34 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({
       ...state,
       mercanciaDisponsiblesTablaDatos,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setAgregarFormDatosProductor(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      datosProductorFormulario: {
+        ...state.datosProductorFormulario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario histórico.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setFormHistorico(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formulario: {
+        ...state.formulario,
+        ...values,
+      },
     }));
   }
 }

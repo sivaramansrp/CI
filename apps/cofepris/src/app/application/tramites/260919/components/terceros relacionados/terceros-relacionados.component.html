@@ -212,7 +212,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-  <div class="container" *ngIf="esFormularioVisible">
+  <div *ngIf="esFormularioVisible">
     <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
       <ng-titulo titulo="Agregar destinatario (destino final)" />
       <ng-container formGroupName="agregarDestinatario">

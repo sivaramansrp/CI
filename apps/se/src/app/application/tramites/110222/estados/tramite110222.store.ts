@@ -202,6 +202,18 @@ export interface Tramite110222State {
    * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
    */
   formulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
+
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
 }
 
 /**
@@ -327,7 +339,15 @@ export function createInitialState(): Tramite110222State {
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',      
-    }
+    },
+    optionsTipoFactura: [],
+    /** Lista de idiomas disponibles */
+    idiomaDatos: [],
+    /** Lista de entidades federativas disponibles */
+    entidadFederativaDatos: [],
+  
+    /** Lista de representaciones federales disponibles */
+    representacionFederalDatos: [],
   };
 }
 
@@ -437,10 +457,23 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * @param mercanciaTabla - Array de objetos `Mercancia` que representa la tabla de mercancías.
    */
   setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaTabla,
-    }));
+     this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
   }
 
   /**
@@ -741,6 +774,60 @@ export class Tramite110222Store extends Store<Tramite110222State> {
         ...state.formCertificado,
         ...values,
       },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  /**
+   * Establece los datos del idioma en el almacén.
+   * 
+   * @param {Catalogo[]} idiomaDatos - Un array de objetos `Catalogo` con los datos del idioma.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la entidad federativa en el almacén.
+   * 
+   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la representación federal en el almacén.
+   * 
+   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
     }));
   }
 }

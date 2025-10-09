@@ -26,7 +26,6 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import radioOptionsNacional from '@libs/shared/theme/assets/json/120301/tipo-fabricantes-nacional.json';
@@ -38,8 +37,11 @@ import {
   Solicitud120301State,
   Tramite120301Store,
 } from '../../estados/tramites/tramite120301.store';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { DetalleEvaluaconSolicitudService } from '../../services/detalleEvaluaconSolicitud.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FabricanteResponse } from '../../models/response/fabricantes-response.model';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 import { HistoricoFabricantesService } from '../../services/historicoFabricantes.service';
 
@@ -86,15 +88,28 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
   imports: [
     TituloComponent,
     CommonModule,
-    ReactiveFormsModule,
-    InputCheckComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
     ModalModule,
     NotificacionesComponent,
+    ReactiveFormsModule,
   ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
+/**
+ * @property {string} numeroFolio - Número de folio del trámite.
+ */
+  @Input()
+  numeroFolio: string = '';
+  /**
+   * Almacena los fabricantes que serán evaluados.
+   */
+  fabricantesEvaluar: FabricanteResponse[] = [];
+
+  /**
+   * Indica si se debe mostrar la evaluación de fabricantes.
+   */
+  visualizarEvaluacion: boolean = false;
 
   /**
    * Método para ver detalle de un fabricante (usado en pruebas)
@@ -496,6 +511,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * todas las suscripciones activas cuando el componente es destruido.
    */
   fabricante: HistoricoColumns[] = [];
+  fabricanteEvaluacion: HistoricoColumns[] = [];
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
@@ -566,7 +582,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     private elegibilidadTextilesService: ElegibilidadTextilesService,
     private cdr: ChangeDetectorRef,
     private historicoFabricantesService: HistoricoFabricantesService,
-    private tramiteStore: Tramite120301Store
+    private tramiteStore: Tramite120301Store,
+    private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -635,6 +652,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
     if (this.formularioDeshabilitado) {
       this.historicoFabricantesForm.disable();
+      this.visualizarEvaluacion = true;
+      this.isFabricantes = false;
+    }
+    if (this.numeroFolio) {
+      this.consultarInformacionHistorico(this.numeroFolio);
     }
 
     if (this.historicoState.exportadorFabricanteMismo) {
@@ -655,6 +677,35 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       this.fabricante = [...this.historicoState.listaFabricantes];
       this.isFabricantes = true;
     }
+  }
+
+  /**
+   * Obtene
+   */
+  informacionHistorico!: FabricanteResponse;
+  consultarInformacionHistorico(idFolio: string): void {
+    this.evaluacionSolicitud.getDatosFabricante(idFolio)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            const DATOS = response.datos;
+            this.fabricanteEvaluacion = [{
+              numeroRegistroFiscal: DATOS?.numero_registro_fiscal ?? '',
+              nombreFabricante: DATOS?.nombre_fabricante ?? '',
+              direccion: DATOS?.direccion ?? '',
+              correoElectrónico: DATOS?.correo_electronico ?? '',
+              telefono: DATOS?.telefono ?? ''
+            }];
+            
+          } else {
+            console.error('Error en la respuesta del servicio:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
   }
 
   /**
@@ -936,7 +987,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
           if (resp.codigo === '00' && resp.datos) {
             this.isFabricantes = true;
             const FAB = resp.datos;
-
             // Mapear respuesta → HistoricoColumns
             const NUEVO_FABRICANTE: HistoricoColumns = {
               nombreFabricante: FAB.razon_social
@@ -949,12 +999,25 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
               correoElectrónico: FAB.correo_electronico ?? '',
               telefono: FAB.telefono ?? '',
             };
-
-            // Limpiar la tabla y agregar
-            this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
-            this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
-            this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
-            this.cancelar();
+            if (this.fabricante.length < 1) {
+              // Limpiar la tabla y agregar
+              this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
+              this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+              this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
+              this.cancelar();
+            }
+            else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'warning',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Ya existe un fabricante previamente seleccionado.',
+                cerrar: true,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
           } else {
             console.error('Error en la búsqueda:', resp.mensaje);
           }

@@ -2,7 +2,7 @@
  * Componente Angular para gestionar la información relacionada al trámite 80104.
  * Importa módulos y dependencias necesarias para formularios reactivos, gestión de estado y suscripciones.
  */
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy,OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
@@ -27,7 +27,8 @@ import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
     AlertComponent,
     FormsModule,
     ReactiveFormsModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './empresas.component.html',
   styleUrl: './empresas.component.scss'
@@ -41,6 +42,13 @@ export class EmpresasComponent implements OnInit, OnDestroy {
   @Output() seleccionadasDatos: EventEmitter<DisponsibleFiscal[]> = new EventEmitter();
 
   @Output() estadosOpciones: EventEmitter<Catalogo[]> = new EventEmitter();
+
+  /**
+   * Evento que se emite para solicitar la búsqueda de empresas controladoras.
+   * 
+   * Se dispara sin argumentos cuando se requiere actualizar o consultar la lista de controladoras.
+   */
+  @Output() buscarControladorasEmit: EventEmitter<{ rfc: string; estado: string }> = new EventEmitter<{ rfc: string; estado: string }>();
 
   /**
    * Título para la sección de empresas.
@@ -71,6 +79,36 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    * Formulario reactivo utilizado para la captura de la información de empresas.
    */
   empresasForm!: FormGroup;
+
+  /**
+   * Input para recibir datos de empresas disponibles desde el componente padre.
+   * Al cambiar, actualiza la lista de disponibles y sincroniza con el store.
+   */
+  @Input() set disponiblesDatos(value: DisponsibleFiscal[]) {
+    this.disponibles = value || [];
+    this.tramite80104Store.setDisponibles(this.disponibles);
+  }
+
+
+  /**
+   * Establece el estado de error para el RFC.
+   * 
+   * Cuando el valor es `true`, se muestra un modal indicando que el RFC no es válido.
+   * 
+   * @param value Indica si existe un error en el RFC.
+   */
+  @Input() set rfcError(value: boolean) {
+    if (value) {
+      this.notValidRfcModal();
+    }
+  }
+
+   /**
+* @description
+* Objeto que representa una nueva notificación.
+* Se utiliza para mostrar mensajes de alerta o información al usuario.
+*/
+  public NotValidRfcNotificacion!: Notificacion;
 
   /**
    * Lista de empresas disponibles para ser seleccionadas.
@@ -227,24 +265,7 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    */
   buscarControladoras(): void {
     if (this.empresasForm.valid) {
-      const DATA: DisponsibleFiscal[] = [
-        {
-          calle: 'LOMBARDINI PTE',
-          numeroExterior: '1353',
-          numeroInterior: 'yes',
-          codigoPostal: '81124',
-          colonia: 'OTRA NO ESPECIFICADA EN GUASAVE',
-          municipioDelegacion: 'EL CATALOGO',
-          entidadFederativa: this.estadosCatalogo.find(item => item.id === Number(this.empresasForm.value.estado))?.descripcion,
-          pais: 'ESTADOS UNIDOS MEXICANOS',        
-          registroFederalContribuyentes: this.solicitudState.rfc,
-          domicilioFiscalSolicitante: 'AV SAN DIEGO 137 PARQUE IND B QUINTANA EL MARQUES QUERETARO ESTADOS UNIDOS MEXICANOS',
-          razonSocial: 'CORPORACION MEXICANA DE COMPUTO S DE RL DE CV'
-        }
-      ];
-      // Asigna el arreglo a la variable que usa tu tabla
-      this.disponibles = DATA;
-      this.tramite80104Store.setDisponibles(DATA);
+      this.buscarControladorasEmit.emit(this.empresasForm.value);
     }
   }
 
@@ -278,6 +299,29 @@ export class EmpresasComponent implements OnInit, OnDestroy {
       })
     }
     this.seleccionadas = [];
+  }
+
+
+  /**
+   * Muestra una notificación de alerta cuando el RFC consultado no tiene ningún domicilio con tipo de planta válido.
+   * 
+   * La notificación es de tipo "alerta" y categoría "peligro", con modo de acción. 
+   * El mensaje indica la ausencia de domicilios válidos y se muestra durante 2000 ms.
+   * El botón de aceptar está disponible, mientras que el de cancelar no se muestra.
+   */
+  notValidRfcModal(): void {
+    this.NotValidRfcNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'El RFC consultado no tiene ningun domicilio con tipo de planta válido.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**

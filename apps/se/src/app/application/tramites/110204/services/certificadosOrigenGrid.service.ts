@@ -39,9 +39,9 @@ export class CertificadosOrigenGridService {
    * @method obtenerMercancia
    * @returns {Observable<Mercancia[]>} Observable con la lista de mercancías.
    */
-  obtenerMercancia(): Observable<Mercancias[]> {
+  obtenerMercancia(): Observable<Mercancia[]> {
     return this.http
-      .get<{ data: Mercancias[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
+      .get<{ data: Mercancia[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 

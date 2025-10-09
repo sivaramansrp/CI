@@ -1,4 +1,4 @@
-<div class="container">
+<div class="page">
   <div class="row">
     <div class="col-md-3">
       <div class="form-group">
@@ -44,7 +44,7 @@
           <app-catalogo-select
             [catalogo]="catagoriaSeleccionDatos"
             formControlName="catagoria"
-            [label]="'catagoria'"
+            [label]="'Categoría'"
             [required]="true"
             name="catagoria"
             [isDisabled]="formularioDeshabilitado"
@@ -80,6 +80,8 @@
           id="monedaNacionalMensual"
           formControlName="monedaNacionalMensual"
           type="number"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>
@@ -97,6 +99,8 @@
           id="monedaNacionalDeDosPeriodos"
           formControlName="monedaNacionalDeDosPeriodos"
           type="number"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>
@@ -113,6 +117,8 @@
           id="volumenMensual"
           formControlName="volumenMensual"
           type="number"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>
@@ -130,6 +136,8 @@
           id="twoPeriodVolume"
           formControlName="twoPeriodVolume"
           type="number"
+          min="0"
+          libRestringirNegativos
         />
       </div>
     </div>

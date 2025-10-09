@@ -1,7 +1,8 @@
 import { BandejaDeTareasPendientes, SeleccionadoDepartamento, SeleccionadoTramite } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BandejaDeSolicitudeService } from '../../../core/services/consultagenerica/bandeja-tareas-pendientes.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
@@ -17,7 +18,6 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
 import { TABLADECONFIGUACIONFUNCIONARIO, TABLADECONFIGUACIONSOLICITANTE } from '../../../core/enums/bandeja-de-solicitudes-funcionario-solicitante.enum';
-
 
 /**
  * Interfaz base para los elementos de la bandeja.
@@ -155,11 +155,19 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
    * Indica si la configuración de datos de la tabla está disponible.
    */
   public tieneConfiguracionTablaDatos: boolean = false;
+
+  /**
+   * Indica si se debe mostrar un mensaje de observación exitosa.
+   */
+  public labelExitoso: boolean | null = false;
+
+
   /*
    * Constructor que inyecta Router y ConsultaioStore
    */
   constructor(
     public router: Router,
+    private route: ActivatedRoute,
     private consultaioStore: ConsultaioStore,
     private bandejaDeSolicitudeService: BandejaDeSolicitudeService
   ) {}
@@ -170,7 +178,26 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
   ngOnInit(): void {
     this.mostrarColapsable(1);
     this.filterConfiguracionTabla();
+    
+     this.route.queryParams.subscribe((params) => {
+      if (params['labelExitoso'] === 'true') {
+        this.labelExitoso = true;
+
+        // Oculta el mensaje después de 5 segundos
+        setTimeout(() => {
+          this.labelExitoso = false;
+
+          // Limpia el parámetro de la URL
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { labelExitoso: null },
+            queryParamsHandling: 'merge',
+          });
+        }, 5000);
+      }
+    });
   }
+
   /*
    * Getter que retorna el formGroup interno
    */

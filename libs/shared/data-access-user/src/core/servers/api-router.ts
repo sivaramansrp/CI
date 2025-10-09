@@ -1,10 +1,63 @@
+/**
+ * @fileoverview Enrutador centralizado de APIs para el sistema VUCEM.
+ * 
+ * Este archivo contiene todas las rutas y endpoints de las APIs utilizadas en el sistema VUCEM,
+ * organizadas por funcionalidad y trámites. Proporciona una configuración centralizada para
+ * el acceso a servicios web, catálogos, autenticación y operaciones de trámites.
+ * 
+ * @description
+ * El enrutador incluye:
+ * - Rutas base y configuración de URLs
+ * - Endpoints de autenticación y usuarios
+ * - APIs de catálogos (aduanas, países, tratados, etc.)
+ * - Operaciones de trámites (130118, 231001, etc.)
+ * - Servicios de validación y consulta
+ * - Manejo de documentos y firmas electrónicas
+ * 
+ * @example
+ * ```typescript
+ * import { API_GET_PAISES, CATALOGO_TRATADO_ACUERDO } from './api-router';
+ * 
+ * // Usar endpoint estático
+ * const paisesUrl = API_GET_PAISES;
+ * 
+ * // Usar función generadora de endpoint
+ * const tratadosUrl = CATALOGO_TRATADO_ACUERDO('110219');
+ * ```
+ * 
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author Sistema VUCEM
+ */
+
 import { ENVIRONMENT } from "../../enviroments/enviroment";
 import { RFC_GENERICO } from "../constants/constantes-generales";
 
-const BASE_URL = `${ENVIRONMENT.URL_SERVER}`;
-const API_URL = '/auth/api';
 /**
- * URLs de API comunes
+ * URL base del servidor obtenida de las variables de entorno.
+ * @constant {string}
+ */
+const BASE_URL = `${ENVIRONMENT.URL_SERVER}`;
+
+/**
+ * Ruta base para los endpoints de autenticación.
+ * @constant {string}
+ */
+const API_URL = '/auth/api';
+
+/**
+ * Configuración centralizada de URLs comunes del sistema.
+ * 
+ * Contiene las rutas base y versiones de API utilizadas en todo el sistema VUCEM.
+ * Estas constantes se utilizan para construir endpoints completos y mantener
+ * consistencia en las rutas de la aplicación.
+ * 
+ * @example
+ * ```typescript
+ * const fullUrl = `${COMUN_URL.BASE_URL}${COMUN_URL.CATALOGO_URL}/paises`;
+ * ```
+ * 
+ * @since 1.0.0
  */
 export const COMUN_URL = {
   BASE_URL: `${ENVIRONMENT.API_HOST}/api/`,
@@ -15,43 +68,156 @@ export const COMUN_URL = {
   TRAMITE_URL: '/tramite',
 };
 
+/**
+ * Rutas de API para operaciones de usuarios del sistema.
+ * 
+ * Contiene los endpoints completos para realizar operaciones CRUD sobre usuarios,
+ * incluyendo creación, actualización y eliminación de cuentas de usuario.
+ * 
+ * @example
+ * ```typescript
+ * // Crear un nuevo usuario
+ * this.http.post(ROUTE.USER.CREATE, userData).subscribe(...);
+ * 
+ * // Actualizar usuario existente
+ * this.http.put(ROUTE.USER.UPDATE, updatedData).subscribe(...);
+ * ```
+ * 
+ * @see BASE_URL
+ * @see COMUN_URL.API_VERSION
+ * @since 1.0.0
+ */
 export const ROUTE = {
+  /**
+   * Endpoints para operaciones de usuarios.
+   */
   USER: {
+    /** Endpoint para crear un nuevo usuario */
     CREATE: `${BASE_URL}${COMUN_URL.API_VERSION}/user/create`,
+    /** Endpoint para actualizar un usuario existente */
     UPDATE: `${BASE_URL}${COMUN_URL.API_VERSION}/user/update`,
+    /** Endpoint para eliminar un usuario */
     DELETE: `${BASE_URL}${COMUN_URL.API_VERSION}/user/delete`,
   }
 };
 
 /**
- * Rutas de autenticación.
+ * Rutas de autenticación del sistema VUCEM.
+ * 
+ * Contiene los endpoints utilizados para procesos de autenticación y autorización
+ * de usuarios, incluyendo login con FIEL (Firma Electrónica) y otros métodos
+ * de autenticación soportados por el sistema.
+ * 
+ * @example
+ * ```typescript
+ * // Autenticarse con FIEL
+ * this.http.post(AUTH_ROUTE.LOGIN, credentials)
+ *   .subscribe(response => {
+ *     // Manejar respuesta de autenticación
+ *   });
+ * ```
+ * 
+ * @see BASE_URL
+ * @see API_URL
+ * @see COMUN_URL.API_VERSION
+ * @since 1.0.0
  */
 export const AUTH_ROUTE = {
+  /** 
+   * Endpoint para autenticación mediante FIEL (Firma Electrónica).
+   * Permite a los usuarios autenticarse usando su certificado digital. 
+   */
   LOGIN: `${BASE_URL}${API_URL}${COMUN_URL.API_VERSION}/auth/login/fiel`,
 };
 
 /**
- * Helper function para construir el endpoint de inicialización de trámites
- * @param procedureId - ID del procedimiento del trámite
- * @returns URL completa para el endpoint de inicialización
+ * Construye dinámicamente el endpoint para inicializar trámites del SAT.
+ * 
+ * Esta función helper genera la URL completa para iniciar el proceso de solicitud
+ * de cualquier trámite del SAT, utilizando el identificador del procedimiento
+ * proporcionado. Es útil para mantener consistencia en la construcción de URLs
+ * y facilitar el mantenimiento del código.
+ * 
+ * @param procedureId - Identificador único del procedimiento del trámite (ej: '110219', '130118')
+ * 
+ * @returns {string} URL completa y formateada para el endpoint de inicialización del trámite
+ * 
+ * @example
+ * ```typescript
+ * // Para trámite 110219
+ * const url = CONSTRUIR_ENDPOINT_INICIAR('110219');
+ * // Resultado: 'https://api.vucem.com/api/sat-t110219/solicitud/iniciar'
+ * 
+ * // Para trámite 130118
+ * const url2 = CONSTRUIR_ENDPOINT_INICIAR('130118');
+ * // Resultado: 'https://api.vucem.com/api/sat-t130118/solicitud/iniciar'
+ * ```
+ * 
+ * @see COMUN_URL.BASE_URL
+ * @since 1.0.0
+ * @author Sistema VUCEM
  */
 export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/solicitud/iniciar` }
 
 
 
 /**
- * API para recuperar el catálogo de aduanas
- * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
+ * Endpoint para recuperar el catálogo completo de aduanas del sistema.
+ * 
+ * Este endpoint proporciona información sobre todas las aduanas disponibles
+ * en el sistema VUCEM, incluyendo códigos, nombres y datos de contacto.
+ * 
+ * @constant {string}
+ * @example
+ * ```typescript
+ * this.http.get(`${BASE_URL}/${API_GET_ADUANA}`)
+ *   .subscribe(aduanas => {
+ *     this.listaAduanas = aduanas;
+ *   });
+ * ```
+ * 
+ * @see {@link https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas|Documentación API}
+ * @since 1.0.0
  */
 export const API_GET_ADUANA = 'catalogo/aduanas';
+
 /**
- * La clave de la aduana por la que se filtrará la información.
+ * Parámetro de consulta para filtrar información por clave de aduana.
+ * 
+ * Esta constante se utiliza como placeholder en URLs que requieren
+ * especificar una aduana particular. Debe ser reemplazada por el
+ * código real de la aduana antes de realizar la consulta.
+ * 
+ * @constant {string}
+ * @example
+ * ```typescript
+ * const url = API_GET_SECCION_ADUANA.replace(CLAVE_ADUANA_QUERY, '010');
+ * ```
+ * @since 1.0.0
  */
 export const CLAVE_ADUANA_QUERY = '{claveAduana}';
+
 /**
- * API para recuperar el catálogo de aduanas
- * @param CLAVE_ADUANA_QUERY La clave de la aduana seleccionada por el usuario
- * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
+ * Endpoint para recuperar las secciones de una aduana específica.
+ * 
+ * Permite obtener información detallada sobre las diferentes secciones
+ * o departamentos que conforman una aduana particular, utilizando su
+ * clave identificadora.
+ * 
+ * @constant {string}
+ * @example
+ * ```typescript
+ * const claveAduana = '010';
+ * const url = API_GET_SECCION_ADUANA.replace(CLAVE_ADUANA_QUERY, claveAduana);
+ * this.http.get(`${BASE_URL}/${url}`)
+ *   .subscribe(secciones => {
+ *     this.seccionesAduana = secciones;
+ *   });
+ * ```
+ * 
+ * @see CLAVE_ADUANA_QUERY
+ * @see {@link https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas|Documentación API}
+ * @since 1.0.0
  */
 export const API_GET_SECCION_ADUANA = `catalogo/seccion-aduanas/${CLAVE_ADUANA_QUERY}`;
 /**
@@ -640,3 +806,65 @@ export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
  */
 export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+ 
+
+
+/**
+ * Genera dinámicamente la ruta para el catálogo de tratados/acuerdos de la UE por bloque.
+ * 
+ * Esta función construye el endpoint específico para acceder al catálogo de tratados
+ * comerciales y acuerdos internacionales de la Unión Europea organizados por bloques
+ * comerciales, adaptado al trámite especificado.
+ * 
+ * @param TRAMITE - Identificador del trámite (ej: '110219', '130118') que determina
+ *                  el contexto y versión del catálogo a consultar
+ * 
+ * @returns {string} Ruta formateada del endpoint para consultar tratados/acuerdos UE
+ * 
+ * this.http.get(`${BASE_URL}/${rutaTratados}`)
+ *   .subscribe(tratados => {
+ *     this.tratadosUE = tratados;
+ *   });
+ * ```
+ * 
+ * @see COMUN_URL.BASE_URL
+ * @since 1.0.0
+ * @author Sistema VUCEM
+ */
+export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/tratado-acuerdo/${IDETIPOTRATADOACUERDO}/bloque`;
+
+/**
+ * Construye la ruta para el catálogo de medios de transporte disponibles.
+ * 
+ * Genera el endpoint para consultar los diferentes medios de transporte
+ * (terrestre, marítimo, aéreo, ferroviario) disponibles y válidos para
+ * el trámite especificado, incluyendo sus características y restricciones.
+ * 
+ * @param TRAMITE - Identificador del trámite que determina los medios de transporte aplicables
+ * 
+ * @returns {string} Endpoint para consultar el catálogo de medios de transporte
+ * 
+ * @example
+ * 
+ * this.transporteService.getMediosTransporte(rutaTransporte)
+ *   .subscribe(medios => {
+ *     this.mediosDisponibles = medios.filter(m => m.activo);
+ *   });
+ * ```
+ * 
+ * @see COMUN_URL.BASE_URL
+ * @since 1.0.0
+ * @author Sistema VUCEM
+ */
+
+/*
+ * API para obtener el catálogo de SELECCIONAR_REGLA
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/regla-3rs-immex
+ */
+export const CATALOGO_SELECCIONAR_REGLA = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/regla-3rs-immex`;
+
+/*
+ * API para obtener el catálogo de sectores
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/sectores
+ */
+export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/sectores`;

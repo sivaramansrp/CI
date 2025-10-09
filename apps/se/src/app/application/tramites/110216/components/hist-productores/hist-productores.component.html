@@ -1,0 +1,11 @@
+<app-historico-productores
+    (formHistoricoEvent)="setValoresStore($event)"
+    (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)"
+    [tramiteState]="tramiteState"
+    [agregarDatosProductor]="agregarDatosProductor"
+    [productoresExportador]="productoresExportador || []"
+    [ocultarFax]="ocultarFax"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
+    (formaValida)="formaValida($event)"
+    [mostrarMercanciasSeleccionadas]="false"
+    ></app-historico-productores>

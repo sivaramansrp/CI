@@ -1,7 +1,10 @@
 <div class="container">
+  @if(visualizarEvaluacion){
   <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
   <h6>Facturas disponible</h6>
+  }
   <form [formGroup]="formularioAsociacionFactura">
+    @if(visualizarEvaluacion){
     <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO"
       [configuracionTabla]="tableColumns" [datos]="facturasDisponible"
       (filaSeleccionada)="guardadoFila($event)"></app-tabla-dinamica>
@@ -18,6 +21,13 @@
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" (click)="asociarEvaluate()">Asociar</button>
     </div>
+    }
+    @if(!visualizarEvaluacion){
+    <h6>Facturas asociadas</h6>
+    <app-tabla-dinamica [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas"
+      (filaSeleccionada)="guardadoFilaAsociada($event)"></app-tabla-dinamica>
+    }
+    @if(visualizarEvaluacion){
     <h6>Facturas asociadas</h6>
     <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO"
       [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas"
@@ -25,9 +35,9 @@
     <div class="row mb-5">
       <div class="d-flex justify-content-end mt-3">
         <button type="submit" class="btn btn-danger" (click)="eliminarSeleccionado()">Eliminar seleccionado</button>
-
       </div>
     </div>
+    }
     <div class="row mb-5">
       <div class="col-6 ">
         <label for="message" class="form-label">Cantidad total:</label>
@@ -49,8 +59,6 @@
             'setCantidadFacturas'
             )" />
       </div>
-
-
     </div>
   </form>
 </div>

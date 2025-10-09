@@ -6,6 +6,8 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -45,7 +47,8 @@ import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    DetallesPlantasComponent
+    DetallesPlantasComponent,
+    NotificacionesComponent
   ],
   templateUrl: './empresas-subfabricante.component.html',
   styleUrl: './empresas-subfabricante.component.scss',
@@ -215,13 +218,34 @@ set formularioDatosSubcontratista(valor: FormGroup) {
   }
 }
 
-
   /**
    * Obtiene el formulario de datos del subcontratista.
    * @returns {FormGroup} - El formulario de datos del subcontratista.
    */
   get formularioDatosSubcontratista(): FormGroup {
     return this._formularioDatosSubcontratista;
+  }
+
+  
+   /**
+* @description
+* Objeto que representa una nueva notificación.
+* Se utiliza para mostrar mensajes de alerta o información al usuario.
+*/
+  public NotValidRfcNotificacion!: Notificacion;
+
+
+ /**
+   * Establece el estado de error para el RFC.
+   * 
+   * Cuando el valor es `true`, se muestra un modal indicando que el RFC no es válido.
+   * 
+   * @param value Indica si existe un error en el RFC.
+   */
+  @Input() set rfcError(value: boolean) {
+    if (value) {
+      this.notValidRfcModal();
+    }
   }
 
   /**
@@ -508,5 +532,27 @@ obtenerEstados():void {
       this.estadoCatalogo = res.datos;
     });
     
+  }
+
+  /**
+   * Muestra una notificación de alerta cuando el RFC consultado no tiene ningún domicilio con tipo de planta válido.
+   * 
+   * La notificación es de tipo "alerta" y categoría "peligro", con modo de acción. 
+   * El mensaje indica la ausencia de domicilios válidos y se muestra durante 2000 ms.
+   * El botón de aceptar está disponible, mientras que el de cancelar no se muestra.
+   */
+  notValidRfcModal(): void {
+    this.NotValidRfcNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'El RFC consultado no tiene ningun domicilio con tipo de planta válido.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 }

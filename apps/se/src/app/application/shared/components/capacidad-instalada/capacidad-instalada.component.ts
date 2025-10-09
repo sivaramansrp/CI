@@ -158,19 +158,32 @@ export class CapacidadInstaladaComponent implements OnInit {
       fraccionArancelariaProductoTerminado: [this.solicitudState.fraccionArancelariaProductoTerminado, Validators.required],
       umt: [this.solicitudState.umt, Validators.required],
       descripcionComercialProductoTerminado: [this.solicitudState.descripcionComercialProductoTerminado, Validators.required],
-      turnos: [this.solicitudState.turnos, [Validators.required, Validators.maxLength(3), Validators.pattern('^\\d{1,3}$')]],
-      horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required, Validators.maxLength(2), Validators.pattern('^\\d{1,2}$')]],
-      cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
-      cantidadMaquinaria: [this.solicitudState.cantidadMaquinaria, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      turnos: [this.solicitudState.turnos, [Validators.required]],
+      horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required]],
+      cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required]],
+      cantidadMaquinaria: [this.solicitudState.cantidadMaquinaria, [Validators.required]],
       descripcionMaquinaria: [this.solicitudState.descripcionMaquinaria, [Validators.required, Validators.maxLength(300)]],
       capacidadInstaladaMensual: [this.solicitudState.capacidadInstaladaMensual, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
-      capacidadInstaladaAnual: [this.solicitudState.capacidadInstaladaAnual, [Validators.required, Validators.maxLength(16)]],
+      capacidadInstaladaAnual: [this.solicitudState.capacidadInstaladaAnual, [Validators.required]],
       calculoCapacidadInstalada: [{ value: this.solicitudState.calculoCapacidadInstalada, disabled: true }, Validators.required],
       capacidadUtilizadaPct: [this.solicitudState.capacidadUtilizadaPct, Validators.required]
     });
 
   }
 
+/**
+ * Limita la entrada de un campo de texto a un número máximo de caracteres numéricos.
+ * @param event Event del input
+ * @param maxLength Longitud máxima permitida
+ * @param controlPath Ruta del control en el formulario
+ */
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '').slice(0, maxLength);
+  TARGET.value = value;
+  this.capacidadForm.get(controlPath)?.setValue(value, { emitEvent: false });
+}
   /**
   * Método que se ejecuta cuando el campo capacidadUtilizadaPct pierde el foco (blur).
   * Autopopula el valor de calculoCapacidadInstalada con el valor actual de capacidadUtilizadaPct.
