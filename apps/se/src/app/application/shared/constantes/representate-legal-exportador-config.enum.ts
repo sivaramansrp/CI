@@ -80,7 +80,77 @@ export const DEFAULT_REPRESENTATE_LEGAL_EXPORTADOR_CONFIG: FieldConfig[] = [
     storeStateName: 'setGrupoRepresentativoCorreoElectronico',
   },
 ];
-
+export const REPRESENTATE_LEGAL_EXPORTADOR_CONFIGUR: FieldConfig[] = [
+  {
+    nombre: 'lugar',
+    label: 'Lugar',
+    columna: 'col-md-8 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoLugar',
+  },
+  {
+    nombre: 'nombre',
+    label: 'Nombre del representante legal del exportador',
+    columna: 'col-md-8 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoNombreExportador',
+  },
+  {
+    nombre: '',
+    label: '',
+    columna: 'col-md-4 mb-3',
+  },
+  {
+    nombre: 'empresa',
+    label: 'Empresa',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoEmpresa',
+  },
+  {
+    nombre: 'cargo',
+    label: 'Cargo',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoCargo',
+  },
+  {
+    nombre: 'registroFiscal',
+    label: 'Número de registro fiscal:',
+    columna: 'col-md-4 mb-3',
+    tipo: 'text',
+    required: false,
+    storeStateName: 'setGrupoRepresentativoRegistroFiscal',
+  },
+  {
+    nombre: 'correo',
+    label: 'Correo electrónico',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoCorreoElectronico'
+  },
+  {
+    nombre: 'telefono',
+    label: 'Teléfono',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoTelefono',
+  },
+  {
+    nombre: 'fax',
+    label: 'FAX',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoFax',
+  },
+]
 /**
  * @description
  * Configuración de campos del formulario del representante legal del exportador
@@ -90,6 +160,70 @@ export const DEFAULT_REPRESENTATE_LEGAL_EXPORTADOR_CONFIG: FieldConfig[] = [
 export const REPRESENTATE_LEGAL_EXPORTADOR_CONFIG: {
   [key: string]: FieldConfig[];
 } = {
+  '110205': [
+     {
+    nombre: 'lugar',
+    label: 'Lugar',
+    columna: 'col-md-8 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoLugar',
+  },
+  {
+    nombre: '',
+    label: '',
+    columna: 'col-md-4 mb-3',
+    tipo: '',
+  },
+  {
+    nombre: 'nombreExportador',
+    label: 'Nombre del representante legal del exportador',
+    columna: 'col-md-8 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoNombreExportador',
+  },
+  {
+    nombre: '',
+    label: '',
+    columna: 'col-md-4 mb-3',
+    tipo: '',
+  },
+  {
+    nombre: 'empresa',
+    label: 'Empresa',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoEmpresa',
+  },
+
+  {
+    nombre: 'cargo',
+    label: 'Cargo',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoCargo',
+  },
+  {
+    nombre: 'telefono',
+    label: 'Teléfono',
+    columna: 'col-md-3 mb-3',
+    required: true,
+    tipo: 'text',
+    storeStateName: 'setGrupoRepresentativoTelefono',
+  },
+  {
+    nombre: 'correoElectronico',
+    label: 'Correo electrónico',
+    columna: 'col-md-4 mb-3',
+    required: true,
+    tipo: 'text',
+    tooltip: 'ejemplo@dominio.com',
+    storeStateName: 'setGrupoRepresentativoCorreoElectronico',
+  },
+  ],
   '110212': DEFAULT_REPRESENTATE_LEGAL_EXPORTADOR_CONFIG,
   '110214': [
     {
@@ -236,68 +370,6 @@ export const REPRESENTATE_LEGAL_EXPORTADOR_CONFIG: {
       tooltip: 'ejemplo@dominio.com',
     },
   ],
-  '110222': [
-    {
-      nombre: 'lugar',
-      label: 'Lugar',
-      columna: 'col-md-8 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-    {
-      nombre: 'nombre',
-      label: 'Nombre del representante legal del exportador',
-      columna: 'col-md-8 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-    {
-      nombre: '',
-      label: '',
-      columna: 'col-md-4 mb-3',
-    },
-    {
-      nombre: 'empresa',
-      label: 'Empresa',
-      columna: 'col-md-4 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-    {
-      nombre: 'cargo',
-      label: 'Cargo',
-      columna: 'col-md-4 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-    {
-      nombre: 'registroFiscal',
-      label: 'Número de registro fiscal:',
-      columna: 'col-md-4 mb-3',
-      tipo: 'text',
-      required: false,
-    },
-    {
-      nombre: 'correo',
-      label: 'Correo electrónico',
-      columna: 'col-md-4 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-    {
-      nombre: 'telefono',
-      label: 'Teléfono',
-      columna: 'col-md-4 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-    {
-      nombre: 'fax',
-      label: 'FAX',
-      columna: 'col-md-4 mb-3',
-      required: true,
-      tipo: 'text',
-    },
-  ],
+  '110222': REPRESENTATE_LEGAL_EXPORTADOR_CONFIGUR,
   '110223': DEFAULT_REPRESENTATE_LEGAL_EXPORTADOR_CONFIG,
 };

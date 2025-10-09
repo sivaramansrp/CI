@@ -80,7 +80,7 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
    * @description Estado actual del formulario exportador.
    * @private
    */
-  private exportadoState!: Tramite110205State;
+  public exportadoState!: Tramite110205State;
 
   /**
    * @property seccionState
@@ -125,11 +125,6 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
         this.formDestinatarioValues = estado;
       });
 
-    this.query.selectFormExportador$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((estado) => {
-        this.formExportadorValues = estado;
-      });
   }
 
   /**
@@ -176,16 +171,15 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
-
-  /**
-   * @method setValoresStoreExportador
+   /**
    * @description
-   * Actualiza el estado del store con los datos del formulario de exportador.
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
    * @param event Evento con el campo y valor a actualizar.
+   * @returns {void}
    */
-  setValoresStoreExportador(event: { formGroupName: string; campo: string; valor: undefined; storeStateName: string }): void {
-    const { campo: CAMPO, valor: VALOR } = event;
-    this.store.setFormExportador({ [CAMPO]: VALOR });
+  setValoresStore1(event: {formGroupName: string; campo: string; valor: undefined; metodoNombre: string;}): void {
+    const { valor, metodoNombre } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[metodoNombre]?.(valor);
   }
 
   /**

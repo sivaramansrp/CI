@@ -23,6 +23,12 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { DatosDelDestinatarioComponent } from "../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component";
+import { DestinatarioComponent } from "../../../../shared/components/destinatario/destinatario.component";
+
+interface FormValues {
+  [key: string]: unknown;
+}
 
 /**
  * Componente para gestionar los datos del destinatario.
@@ -31,19 +37,20 @@ import { takeUntil } from 'rxjs';
  * como datos personales, direcciones, información representativa y detalles de transporte.
  */
 @Component({
-  selector: 'app-destinatario',
+  selector: 'app-destinatario-tramite',
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
     ReactiveFormsModule,
     TooltipModule,
     RepresentanteLegalExportadorComponent,
-  ],
+    DatosDelDestinatarioComponent,
+    DestinatarioComponent
+],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioTramiteComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos del destinatario.
    */
@@ -84,7 +91,14 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
-
+  /** Valores actuales del formulario de datos del destinatario. */
+  formDatosDelDestinatarioValues!: FormValues;
+  /** Bandera de validez para datos-del-destinatario */
+  datosDelDestinatarioValido: boolean = false;
+  /** Valores actuales del formulario de destinatario. */
+  formDestinatarioValues!: FormValues;
+   /** Bandera de validez para destinatario */
+  destinatarioValido: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -289,13 +303,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @param {string} campo - El nombre del campo en el formulario.
    * @param {keyof Tramite110212Store} metodoNombre - El nombre del método en el store para actualizar el estado.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110212Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+
+ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
+    this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
 
   /**
@@ -304,16 +316,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @param event Evento con el campo y valor a actualizar.
    * @returns {void}
    */
-  setValoresStore1(event: {
-    formGroupName: string;
-    campo: string;
-    valor: undefined;
-    metodoNombre: string;
-  }): void {
+  setValoresStore1(event: {formGroupName: string; campo: string; valor: undefined; metodoNombre: string;}): void {
     const { valor, metodoNombre } = event;
-    (this.store as unknown as Record<string, (value: unknown) => void>)[
-      metodoNombre
-    ]?.(valor);
+    (this.store as unknown as Record<string, (value: unknown) => void>)[metodoNombre]?.(valor);
   }
 
   /**
@@ -341,5 +346,15 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   get grupoRepresentativo(): FormGroup {
     return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
+  }
+
+  /**
+   * Recibe validez del formulario de datos-del-destinatario
+   */
+  setFormValida(valido: boolean): void {
+    this.datosDelDestinatarioValido = valido;
+  }
+  setFormValidaDestinatario(valido: boolean): void {
+    this.destinatarioValido = valido;
   }
 }

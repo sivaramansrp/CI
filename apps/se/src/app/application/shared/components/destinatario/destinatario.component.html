@@ -6,106 +6,258 @@
         <div class="row">
           <div class="col-md-4 form-group">
             <label class="form-label" for="Calle">Calle*:</label>
-            <input type="text" id="calle" class="form-control" formControlName="calle" (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" /> @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched || formDestinatario.controls['calle'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['calle'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['calle'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
+            <input type="text" id="calle" class="form-control" formControlName="calle"
+              (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+            @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
+            formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['calle'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['calle'].errors?.['maxlength']) { <span
+                class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
-            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" /> @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched || formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['numeroLetra'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 30 caracteres </span> } </div> }
+            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+              (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+            @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
+            formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['numeroLetra'].errors?.['required']) { <span class="mensaje-error">Este
+                campo es obligatorio</span> } @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) {
+              <span class="mensaje-error"> Por favor, no escribas más de 30 caracteres </span> }
+            </div> }
           </div>
         </div>
         <div class="row">
           <div class="col-md-8 form-group">
             <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
-            <input type="text" id="ciudad" class="form-control" formControlName="ciudad" (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" /> @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched || formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['ciudad'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
+            <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
+              (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+            @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
+            formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['ciudad'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) { <span
+                class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true" name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)" (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')" [isDisabled]="true"></app-catalogo-select> @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched || formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid"> @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } </div> }
+            <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+              name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
+              (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
+            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched ||
+            formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid">
+              @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } </div> }
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 form-group">
             <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
-            <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" /> @if(formDestinatario.controls['correoElectronico'].invalid && (formDestinatario.controls['correoElectronico'].touched || formDestinatario.controls['correoElectronico'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['correoElectronico'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['correoElectronico'].errors?.['email']) { <span class="mensaje-error">Por favor, escribe una dirección de correo válida.</span> } </div> }
+            <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
+              (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+            @if(formDestinatario.controls['correoElectronico'].invalid &&
+            (formDestinatario.controls['correoElectronico'].touched ||
+            formDestinatario.controls['correoElectronico'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['correoElectronico'].errors?.['required']) { <span
+                class="mensaje-error">Este campo es obligatorio</span> }
+              @if(formDestinatario.controls['correoElectronico'].errors?.['email']) { <span class="mensaje-error">Por
+                favor, escribe una dirección de correo válida.</span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" /> @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched || formDestinatario.controls['telefono'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['telefono'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['telefono'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span> } @if(formDestinatario.controls['telefono'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
+            <input type="text" id="telefono" class="form-control" formControlName="telefono"
+              (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+            @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched ||
+            formDestinatario.controls['telefono'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['telefono'].errors?.['required']) { <span class="mensaje-error">Este campo
+                es obligatorio</span> } @if(formDestinatario.controls['telefono'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 30 caracteres</span> }
+              @if(formDestinatario.controls['telefono'].errors?.['pattern']) { <span class="mensaje-error">Por favor,
+                ingresa solo números</span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
-            <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" /> @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched || formDestinatario.controls['fax'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['fax'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> } @if(formDestinatario.controls['fax'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
+            <input type="text" id="fax" class="form-control" formControlName="fax"
+              (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+            @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched ||
+            formDestinatario.controls['fax'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['fax'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> }
+              @if(formDestinatario.controls['fax'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa
+                solo números</span> } </div> }
           </div>
         </div>
       </div>
-       <div *ngIf="camposDestinatarios">
+      <div *ngIf="camposDestinatarios">
         <div class="row">
           <div class="col-md-8 form-group">
             <label class="form-label" for="Calle">Calle*:</label>
-            <input type="text" id="calle" class="form-control" formControlName="calle" (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" /> @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched || formDestinatario.controls['calle'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['calle'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['calle'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
+            <input type="text" id="calle" class="form-control" formControlName="calle"
+              (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+            @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
+            formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['calle'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['calle'].errors?.['maxlength']) { <span
+                class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
-            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" /> @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched || formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['numeroLetra'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 30 caracteres </span> } </div> }
+            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+              (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+            @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
+            formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['numeroLetra'].errors?.['required']) { <span class="mensaje-error">Este
+                campo es obligatorio</span> } @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) {
+              <span class="mensaje-error"> Por favor, no escribas más de 30 caracteres </span> }
+            </div> }
           </div>
         </div>
         <div class="row">
           <div class="col-md-8 form-group">
             <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
-            <input type="text" id="ciudad" class="form-control" formControlName="ciudad" (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" /> @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched || formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['ciudad'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
+            <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
+              (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+            @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
+            formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['ciudad'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) { <span
+                class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
-            <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" /> @if(formDestinatario.controls['correoElectronico'].invalid && (formDestinatario.controls['correoElectronico'].touched || formDestinatario.controls['correoElectronico'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['correoElectronico'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['correoElectronico'].errors?.['email']) { <span class="mensaje-error">Por favor, escribe una dirección de correo válida.</span> } </div> }
+            <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
+              (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+            @if(formDestinatario.controls['correoElectronico'].invalid &&
+            (formDestinatario.controls['correoElectronico'].touched ||
+            formDestinatario.controls['correoElectronico'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['correoElectronico'].errors?.['required']) { <span
+                class="mensaje-error">Este campo es obligatorio</span> }
+              @if(formDestinatario.controls['correoElectronico'].errors?.['email']) { <span class="mensaje-error">Por
+                favor, escribe una dirección de correo válida.</span> } </div> }
           </div>
         </div>
         <div class="row">
-         <div class="col-md-4 form-group">
+          <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
-            <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" /> @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched || formDestinatario.controls['fax'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['fax'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> } @if(formDestinatario.controls['fax'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
+            <input type="text" id="fax" class="form-control" formControlName="fax"
+              (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+            @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched ||
+            formDestinatario.controls['fax'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['fax'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> }
+              @if(formDestinatario.controls['fax'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa
+                solo números</span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" /> @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched || formDestinatario.controls['telefono'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['telefono'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['telefono'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span> } @if(formDestinatario.controls['telefono'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
+            <input type="text" id="telefono" class="form-control" formControlName="telefono"
+              (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+            @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched ||
+            formDestinatario.controls['telefono'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['telefono'].errors?.['required']) { <span class="mensaje-error">Este campo
+                es obligatorio</span> } @if(formDestinatario.controls['telefono'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 30 caracteres</span> }
+              @if(formDestinatario.controls['telefono'].errors?.['pattern']) { <span class="mensaje-error">Por favor,
+                ingresa solo números</span> } </div> }
           </div>
         </div>
       </div>
       <ng-template #defaultTemplate>
-         <div class="row">
-        <div class="col-md-8 form-group">
-          <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
-          <input type="text" id="ciudad" class="form-control" formControlName="ciudad" (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" /> @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched || formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['ciudad'].errors?.['required']&& formDestinatario.controls['ciudad'].touched) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
-        </div></div>
+        <div class="row">
+          <div class="col-md-8 form-group">
+            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
+            <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
+              (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+            @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
+            formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['ciudad'].errors?.['required']&&
+              formDestinatario.controls['ciudad'].touched) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) { <span
+                class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-4 form-group">
             <label class="form-label" for="Calle">Calle*:</label>
-            <input type="text" id="calle" class="form-control" formControlName="calle" (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" /> @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched || formDestinatario.controls['calle'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['calle'].errors?.['required']&& formDestinatario.controls['calle'].touched) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['calle'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
+            <input type="text" id="calle" class="form-control" formControlName="calle"
+              (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+            @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
+            formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['calle'].errors?.['required']&& formDestinatario.controls['calle'].touched)
+              { <span class="mensaje-error">Este campo es obligatorio</span> }
+              @if(formDestinatario.controls['calle'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no
+                escribas más de 90 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
-            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" /> @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched || formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['numeroLetra'].errors?.['required']&& formDestinatario.controls['numeroLetra'].touched) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) { <span class="mensaje-error"> Por favor, no escribas más de 30 caracteres </span> } </div> }
+            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+              (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+            @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
+            formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['numeroLetra'].errors?.['required']&&
+              formDestinatario.controls['numeroLetra'].touched) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) { <span
+                class="mensaje-error"> Por favor, no escribas más de 30 caracteres </span> } </div> }
           </div> @if(!ocultarLada){ <div class="col-md-1 form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input type="text" id="lada" class="form-control" formControlName="lada" (change)="setValoresStore('formDestinatario','lada','setFormDestinatario')" /> @if(formDestinatario.controls['lada'].invalid && (formDestinatario.controls['lada'].touched || formDestinatario.controls['lada'].dirty || formDestinatario.controls['lada'].value)) { <div class="d-grid"> @if(formDestinatario.controls['lada'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } @if(formDestinatario.controls['lada'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 5 caracteres</span> } </div> }
+            <input type="text" id="lada" class="form-control" formControlName="lada"
+              (change)="setValoresStore('formDestinatario','lada','setFormDestinatario')" />
+            @if(formDestinatario.controls['lada'].invalid && (formDestinatario.controls['lada'].touched ||
+            formDestinatario.controls['lada'].dirty || formDestinatario.controls['lada'].value)) { <div class="d-grid">
+              @if(formDestinatario.controls['lada'].errors?.['pattern']) { <span class="mensaje-error">Por favor,
+                ingresa solo números</span> } @if(formDestinatario.controls['lada'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 5 caracteres</span> } </div> }
           </div> } <div class="col-md-3 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" /> @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched || formDestinatario.controls['telefono'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['telefono'].errors?.['required']&& formDestinatario.controls['telefono'].touched) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['telefono'].errors?.['maxlength']&& formDestinatario.controls['telefono'].touched) { <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span> } @if(formDestinatario.controls['telefono'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
+            <input type="text" id="telefono" class="form-control" formControlName="telefono"
+              (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+            @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched ||
+            formDestinatario.controls['telefono'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['telefono'].errors?.['required']&&
+              formDestinatario.controls['telefono'].touched) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['telefono'].errors?.['maxlength']&&
+              formDestinatario.controls['telefono'].touched) { <span class="mensaje-error">Por favor, no escribas más de
+                30 caracteres</span> } @if(formDestinatario.controls['telefono'].errors?.['pattern']) { <span
+                class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
           </div> @if(!ocultarFax){ <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
-            <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" pattern="^[0-9]*$" /> @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched || formDestinatario.controls['fax'].dirty)) { <div class="d-grid"> @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDestinatario.controls['fax'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> } @if(formDestinatario.controls['fax'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa solo números</span> } </div> }
+            <input type="text" id="fax" class="form-control" formControlName="fax"
+              (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" pattern="^[0-9]*$" />
+            @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched ||
+            formDestinatario.controls['fax'].dirty)) { <div class="d-grid">
+              @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if(formDestinatario.controls['fax'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> }
+              @if(formDestinatario.controls['fax'].errors?.['pattern']) { <span class="mensaje-error">Por favor, ingresa
+                solo números</span> } </div> }
           </div> } <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico*: </label>
               <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-              <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
-            </div> @if (formDestinatario.get('correoElectronico')?.invalid && (formDestinatario.get('correoElectronico')?.touched || formDestinatario.get('correoElectronico')?.dirty)) { <div class="d-grid"> @if (formDestinatario.get('correoElectronico')?.errors?.['required'] && formDestinatario.get('correoElectronico')?.touched) { <span class="mensaje-error">Este campo es obligatorio</span> } @if (formDestinatario.get('correoElectronico')?.errors?.['email']&& formDestinatario.get('correoElectronico')?.touched) { <span class="mensaje-error">Por favor, escribe una dirección de correo válida.</span> } @if(formDestinatario.controls['correoElectronico'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 70 caracteres</span> } </div> }
+              <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
+                (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+            </div> @if (formDestinatario.get('correoElectronico')?.invalid &&
+            (formDestinatario.get('correoElectronico')?.touched || formDestinatario.get('correoElectronico')?.dirty)) {
+            <div class="d-grid"> @if (formDestinatario.get('correoElectronico')?.errors?.['required'] &&
+              formDestinatario.get('correoElectronico')?.touched) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } @if (formDestinatario.get('correoElectronico')?.errors?.['email']&&
+              formDestinatario.get('correoElectronico')?.touched) { <span class="mensaje-error">Por favor, escribe una
+                dirección de correo válida.</span> }
+              @if(formDestinatario.controls['correoElectronico'].errors?.['maxlength']) { <span
+                class="mensaje-error">Por favor, no escribas más de 70 caracteres</span> } </div> }
           </div> @if(paisDestino){ <div class="col-md-8 form-group">
-            <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true" name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)" (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select> @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched || formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid"> @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } </div> }
+            <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+              name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
+              (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
+            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched ||
+            formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid">
+              @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es
+                obligatorio</span> } </div> }
           </div> }
         </div>
       </ng-template>
     </div>
-            <div *ngIf="!campoDestinatario && !camposDestinatarios">
-              <ng-container *ngTemplateOutlet="defaultTemplate"></ng-container>
-            </div>
+    <div *ngIf="!campoDestinatario && !camposDestinatarios">
+      <ng-container *ngTemplateOutlet="defaultTemplate"></ng-container>
+    </div>
   </form>
 </div>

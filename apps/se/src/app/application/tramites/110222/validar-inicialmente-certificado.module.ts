@@ -20,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
 import { RouterModule } from '@angular/router';
 import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialmente-certificado-routing.module';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     TituloComponent,
     AlertComponent,
     RepresentanteLegalComponent,
-  ]
+    RepresentanteLegalExportadorComponent
+]
 })
 export class ValidarInicialmenteCertificadoModule { }

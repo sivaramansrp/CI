@@ -6,6 +6,12 @@ import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { Validators } from '@angular/forms';
+import {
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_SOLO_DIGITOS,
+} from '@ng-mf/data-access-user';
+import { GrupoRepresentativo } from '../../models/peru-certificado.module';
 
 /**
  * @description
@@ -59,7 +65,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @memberof DestinatarioDeCertificadoComponent
    * @see FormValues
    */
-  formExportadorValues!: FormValues;
+  formExportadorValues!: GrupoRepresentativo;
 
   /**
    * @descripcion
@@ -71,7 +77,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Estado actual del formulario de exportador.
    */
-  private exportadoState!: Tramite110222State;
+  public exportadoState!: Tramite110222State;
 
   /**
    * @descripcion
@@ -110,6 +116,9 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    */
   public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
 
+    registroFormulario!: FormGroup;
+
+
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -140,11 +149,6 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
         this.formDestinatarioValues = estado;
       });
 
-    this.query.selectFormExportador$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((estado) => {
-        this.formExportadorValues = estado;
-      });
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -181,6 +185,8 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+    
 
   /**
    * @method datosDelDestinatarioFunc
@@ -225,6 +231,53 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
 
+  setValoresStore1(event: {formGroupName: string; campo: string; valor: undefined; metodoNombre: string;}): void {
+    const { valor, metodoNombre } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[metodoNombre]?.(valor);
+  }
+
+/**
+   * Inicializa el formulario con los datos del estado de la solicitud.
+   */
+  donanteDomicilio(): void {
+    this.registroFormulario = this.fb.group({
+          grupoRepresentativo: this.fb.group({
+        lugar: [
+          this.exportadoState?.grupoRepresentativo?.lugar,
+          [Validators.required],
+        ],
+        nombre: [
+          this.exportadoState?.grupoRepresentativo?.nombre,
+          [Validators.required],
+        ],
+        empresa: [
+          this.exportadoState?.grupoRepresentativo?.empresa,
+          [Validators.required],
+        ],
+        cargo: [
+          this.exportadoState?.grupoRepresentativo?.cargo,
+          [Validators.required],
+        ],
+        registroFiscal: [this.exportadoState?.grupoRepresentativo?.registroFiscal, []],
+        telefono: [
+          this.exportadoState?.grupoRepresentativo?.telefono,
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
+        fax: [
+          this.exportadoState?.grupoRepresentativo?.fax,
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
+        correo: [
+          this.exportadoState?.grupoRepresentativo?.correo,
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
+        ],
+      }),
+    });
+  }
+
+   get grupoRepresentativo(): FormGroup {
+    return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
+  }
   /**
    * @method setFormValida
    * @descripcion
@@ -255,24 +308,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     this.store.setFormValida({ datosDestinatario: valida });
   }
 
-  /**
-   * @method setValoresStore
-   * @descripcion
-   * Actualiza el almacén con un valor específico del formulario.
-   * @param form - El formulario que contiene el valor.
-   * @param campo - El campo del formulario cuyo valor se actualizará.
-   * @param metodoNombre - El método del almacén que se llamará para actualizar el valor.
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110222Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: Tramite110222Store) => void)(VALOR);
-  }
-
-  /**
+   /**
    * @method ngOnDestroy
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

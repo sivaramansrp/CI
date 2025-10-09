@@ -128,3 +128,12 @@ export interface MercanciaTabla {
 export interface MercanciasHistorico {
   datos: MercanciaTabla[];
 }
+
+export interface GrupoRepresentativo {
+  lugar: string;
+  nombreExportador: string;
+  empresa: string;
+  cargo: string;
+  telefono: string;
+  correoElectronico: string;
+}

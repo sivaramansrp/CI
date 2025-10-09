@@ -157,11 +157,37 @@ export class RepresentanteLegalExportadorComponent
     this.campos.forEach((campo) => {
       if (!this.form.contains(campo.nombre)) {
         const valorInicial = this.datosForm?.[campo.nombre] ?? '';
+        let validators = [];
+        if (campo.required) {
+          validators.push(Validators.required);
+        }
+        if (campo.maxlength) {
+          validators.push(Validators.maxLength(Number(campo.maxlength)));
+        } else {
+          if (campo.nombre === 'lugar' || campo.nombre === 'exportador') {
+            validators.push(Validators.maxLength(70));
+          }
+          if (campo.nombre === 'empresa') {
+            validators.push(Validators.maxLength(90));
+          }
+          if (campo.nombre === 'correo' || campo.nombre === 'correoElectronico') {
+            validators.push(Validators.maxLength(70));
+          }
+          if (campo.nombre === 'telfono') {
+            validators.push(Validators.maxLength(16));
+          }
+        }
+        if (campo.nombre === 'correo' || campo.nombre === 'correoElectronico') {
+          validators.push(Validators.email);
+        }
+        if (campo.nombre === 'telfono' || campo.nombre === 'fax' || campo.nombre === 'lada') {
+          validators.push(Validators.pattern('^[0-9]*$'));
+        }
         this.form.addControl(
           campo.nombre,
           this.fb.control(
             valorInicial,
-            campo.required ? [Validators.required] : []
+            validators
           )
         );
       }

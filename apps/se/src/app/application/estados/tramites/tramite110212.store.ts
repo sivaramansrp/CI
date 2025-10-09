@@ -121,6 +121,10 @@ export interface Tramite110212State {
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+   /** Formulario con los datos específicos del destinatario */
+  formDatosDelDestinatario: { [key: string]: unknown };
+   /** Formulario general del destinatario */
+  formDestinatario: { [key: string]: unknown };
 }
 
 /**
@@ -213,7 +217,27 @@ export function createInitialState(): Tramite110212State {
       numeroFactura: '',
     },
     mercanciaSeleccionadasTablaDatos: [],
-    mercanciaDisponsiblesTablaDatos: []
+    mercanciaDisponsiblesTablaDatos: [],
+     /** Formulario con información fiscal y general del destinatario */
+  formDatosDelDestinatario: {
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: ''
+  },
+   /** Formulario con información del destinatario (ubicación y contacto) */
+  formDestinatario: {
+    paisDestin: '',
+    ciudad: '',
+    calle: '',
+    numeroLetra: '',
+    lada: '',
+    telefono: '',
+    fax: '',
+    correoElectronico: ''
+  },
+
   };
 }
 /**
@@ -1292,6 +1316,28 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     this.update((state) => ({
       ...state,
       grupoRepresentativo,
+    }));
+  }
+
+  /**
+   * Actualiza el estado del formulario de datos del destinatario con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  setFormDestinatario(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
     }));
   }
 }

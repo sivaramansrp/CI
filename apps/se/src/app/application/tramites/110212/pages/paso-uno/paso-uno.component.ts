@@ -3,7 +3,7 @@ import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/d
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { DestinatarioTramiteComponent } from '../../components/destinatario/destinatario.component';
 import { Subject } from 'rxjs';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, CertificadoOrigenComponent, DestinatarioComponent, DatosCertificadoComponent]
+  imports: [CommonModule, SolicitanteComponent, CertificadoOrigenComponent, DestinatarioTramiteComponent, DatosCertificadoComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
@@ -43,7 +43,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente `DestinatarioComponent`.
    */
-  @ViewChild('destinatarioComp', { static: false }) destinatarioComp: DestinatarioComponent | undefined;
+  @ViewChild('destinatarioComp', { static: false }) destinatarioComp: DestinatarioTramiteComponent | undefined;
 
   /**
    * Referencia al componente `DatosCertificadoComponent`.

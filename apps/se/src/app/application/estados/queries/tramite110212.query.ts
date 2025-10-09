@@ -19,6 +19,21 @@ export class Tramite110212Query extends Query<Tramite110212State> {
   selectSolicitud$ = this.select((state) => {
     return state;
   });
+  /**
+    * Observable que emite los valores del formulario de datos del destinatario
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectFormDatosDelDestinatario$ = this.select((state) => {
+    return state.formDatosDelDestinatario;
+  });
+  
+   /**
+   * Observable que emite los valores del formulario de destinatario principal
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectFormDestinatario$ = this.select((state) => {
+    return state.formDestinatario;
+  });
 
   /**
    * Constructor de la clase Tramite110212Query.
