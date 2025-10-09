@@ -18,6 +18,7 @@
             [isDisabled]="esFormularioSoloLectura"
             [required]="sectorProductivo.required"
             (selectionChange)="actualizarCatseleccionados($event)"
+            (click)="marcarDesplegablesComoInteractuados()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-6">
@@ -31,6 +32,7 @@
             [isDisabled]="esFormularioSoloLectura"
             [required]="servicio.required"
             (selectionChange)="actualizarServicio($event)"
+            (click)="marcarDesplegablesComoInteractuados()"
           ></app-catalogo-select>
         </div>
       </div>
@@ -41,10 +43,8 @@
           </div>
         </div>
       </div>
-      @if (datosComunesForm.get('catseleccionados')?.value.length === 0 || datosComunesForm.get('servicio')?.value.length === 0) {
-        <div class="alert alert-warning">
-          <small>seleccionar un sector productivo o un servicio</small>
-        </div>
+      @if (((datosComunesForm.get('catseleccionados')?.value.length === 0 || datosComunesForm.get('catseleccionados')?.value === 0) && (datosComunesForm.get('servicio')?.value.length === 0 || datosComunesForm.get('servicio')?.value === 0)) && desplegablesInteractuados) {
+          <small class="mensaje-error">Debe seleccionar al menos un sector productivo o un servicio</small>
       }
       <div class="col-md-12 mt-4">
         <label class="form-label text-start">Señale si se encuentra al corriente en el cumplimiento de sus

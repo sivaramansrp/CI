@@ -157,6 +157,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   servicio: CatalogosSelect = {} as CatalogosSelect;
 
   /**
+   * Indicador para rastrear si se ha interactuado con los desplegables.
+   * 
+   * Se establece como true cuando el usuario hace clic en cualquiera
+   * de los desplegables (catseleccionados o servicio) para mostrar
+   * validaciones apropiadas.
+   * 
+   * @property {boolean} desplegablesInteractuados
+   */
+  desplegablesInteractuados = false;
+
+  /**
    * Catálogo para seleccionar el bimestre.
    * 
    * Opciones de períodos bimestrales utilizados para reportes
@@ -946,6 +957,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarCatseleccionados(valor: Catalogo): void {
+    this.desplegablesInteractuados = true;
     this.solicitud32604Store.actualizarCatseleccionados(valor.id);
   }
 
@@ -959,7 +971,20 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarServicio(valor: Catalogo): void {
+    this.desplegablesInteractuados = true;
     this.solicitud32604Store.actualizarServicio(valor.id);
+  }
+
+  /**
+   * Marca los desplegables como interactuados.
+   * 
+   * Se ejecuta cuando el usuario hace clic en cualquiera de los desplegables
+   * para habilitar la validación de selección requerida.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  marcarDesplegablesComoInteractuados(): void {
+    this.desplegablesInteractuados = true;
   }
 
   /**
