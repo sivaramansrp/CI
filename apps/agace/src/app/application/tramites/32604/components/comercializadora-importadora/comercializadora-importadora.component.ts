@@ -8,17 +8,33 @@
  */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { FECHA_DE_PAGO, TRANSPORTISTAS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputFecha, InputFechaComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { InputRadio, SolicitudRadioLista, TransportistasTable } from '../../models/empresas-comercializadoras.model';
-import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { Modal } from 'bootstrap';
+
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
+import {
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { FECHA_DE_PAGO, TRANSPORTISTAS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
+
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+
+import { InputRadio, SolicitudRadioLista, TransportistasTable } from '../../models/empresas-comercializadoras.model';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+
+import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 
 /**
  * Componente para la gestión de modalidades de comercializadoras importadoras.
@@ -41,7 +57,8 @@ import { Solicitud32604Query } from '../../estados/solicitud32604.query';
     TituloComponent,
     TablaDinamicaComponent,
     AgregarTransportistasComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    NotificacionesComponent
   ],
   templateUrl: './comercializadora-importadora.component.html',
   styleUrl: './comercializadora-importadora.component.scss',
@@ -141,6 +158,17 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @property {TransportistasTable[]} transportistasLista
    */
   transportistasLista: TransportistasTable[] = [];
+
+  /**
+   * Notificación utilizada para mostrar mensajes al usuario.
+   * 
+   * Objeto que contiene la configuración y contenido
+   * de las notificaciones que se muestran en la interfaz.
+   * 
+   * @public
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Referencia a la vista del modal de transportistas.
@@ -352,12 +380,17 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * Permite modificar el valor del programa IMMEX (Industria Manufacturera,
    * Maquiladora y de Servicios de Exportación) en el estado compartido.
    * Acepta valores tanto string como numéricos para mayor flexibilidad.
+   * Verifica si el valor es "Sí" para mostrar modal de restricción.
    * 
    * @param {string | number} valor - Valor del programa IMMEX a establecer
    * 
    * @memberof ComercializadoraImportadoraComponent
    */
   actualizarProgramaImmex(valor: string | number): void {
+    // Verificar condición para mostrar modal si selecciona "Sí"
+    if (valor === 1 || valor === '1' || valor === 'Si' || valor === 'Sí') {
+      this.abrirModal('Es Requisito obligatorio no contar con registro IMMEX, deberá de seleccionar la opción NO, de lo contrario no podrá continuar.');
+    }
     this.solicitud32604Store.actualizarProgramaImmex(valor);
   }
 
@@ -367,12 +400,17 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * Permite modificar el valor del radio button de importaciones en el
    * estado compartido. Este campo determina el tipo de importación
    * que se está gestionando en el formulario.
+   * Verifica si el valor es "No" para mostrar modal de información.
    * 
    * @param {string | number} valor - Valor del radio de importaciones a establecer
    * 
    * @memberof ComercializadoraImportadoraComponent
    */
   actualizarImportsRadio(valor: string | number): void {
+    // Verificar condición para mostrar modal si selecciona "No"
+    if (valor === 2 || valor === '2' || valor === 'No') {
+      this.abrirModal('Se debe efectuar en el semestre inmediato a la fecha en que ingresa su solicitud, importaciones por un valor en aduana no menor a $300,000,000.00');
+    }
     this.solicitud32604Store.actualizarImportsRadio(valor);
   }
   
@@ -409,6 +447,53 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
     this.seleccionDatos = evento;
   }
 
+  /**
+   * Cierra el modal de notificación.
+   * 
+   * Resetea la notificación actual para cerrar el modal.
+   * 
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  cerrarModal(): void {
+    this.nuevaNotificacion = {} as Notificacion;
+  }
+
+    /**
+   * Índice o identificador del elemento que se desea eliminar de la tabla de pedimentos.
+   * 
+   * Almacena la referencia del elemento seleccionado
+   * para operaciones de eliminación.
+   * 
+   * @property {number} elementoParaEliminar
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * Muestra una notificación en forma de modal con el mensaje proporcionado.
+   * 
+   * Configura y muestra un modal de notificación con características específicas
+   * como tipo de alerta, categoría de peligro y tiempo de espera. También
+   * almacena el índice del elemento que se desea eliminar para uso posterior.
+   * 
+   * @param {string} mensaje - El mensaje a mostrar en el modal de notificación
+   * @param {number} [i=0] - El índice del elemento a eliminar (opcional, por defecto 0)
+   * @memberof DatosComunesComponent
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
    * 

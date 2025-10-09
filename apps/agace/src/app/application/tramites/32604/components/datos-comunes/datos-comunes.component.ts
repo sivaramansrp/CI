@@ -6,23 +6,63 @@
  * y la interacción con modales para agregar información de empresa, subcontratados e instalaciones.
  */
 
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionAporteColumna, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, Pedimento, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS, INVENTARIOS_CONFIGURACION, NUMERO_DE_EMPLEADOS_CONFIGURACION, SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/empresas-comercializadoras.enum';
-import { Domicilios, InputRadio, Inventarios, NumeroDeEmpleados, SeccionSociosIC, SolicitudCatologoSelectLista, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { AgregarComponent } from '../agregar/agregar.component';
-import { CatalogoInicializacionService } from '../../services/catalogo-inicializacion.servicio';
 import { CommonModule } from '@angular/common';
-import { EmpresaComponent } from '../empresa/empresa.component';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-import { Instalaciones } from '../../constants/agregar.model';
+
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { ModificarComponent } from '../modificar/modificar.component';
+
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionAporteColumna,
+  ConfiguracionColumna,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  TablaConEntradaComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+
+import {
+  DOMICILIOS_CONFIGURACION_COLUMNAS,
+  INVENTARIOS_CONFIGURACION,
+  NUMERO_DE_EMPLEADOS_CONFIGURACION,
+  SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS
+} from '../../constants/empresas-comercializadoras.enum';
+
+import { Instalaciones } from '../../constants/agregar.model';
+
+import {
+  Domicilios,
+  InputRadio,
+  Inventarios,
+  NumeroDeEmpleados,
+  SeccionSociosIC,
+  SolicitudCatologoSelectLista,
+  SolicitudRadioLista
+} from '../../models/empresas-comercializadoras.model';
+
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
+
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+
+import { CatalogoInicializacionService } from '../../services/catalogo-inicializacion.servicio';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+
+import { AgregarComponent } from '../agregar/agregar.component';
+import { EmpresaComponent } from '../empresa/empresa.component';
+import { ModificarComponent } from '../modificar/modificar.component';
 
 /**
  * Componente principal para la gestión de datos comunes de la solicitud 32604.
@@ -51,7 +91,8 @@ import { Solicitud32604Query } from '../../estados/solicitud32604.query';
     TablaConEntradaComponent,
     ToastrModule,
     ModificarComponent,
-    EmpresaComponent
+    EmpresaComponent,
+    NotificacionesComponent
   ],
   providers: [EmpresasComercializadorasService, ToastrService],
   templateUrl: './datos-comunes.component.html',
@@ -386,6 +427,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @property {boolean} esFormularioSoloLectura
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Almacena los valores anteriores de los campos críticos para detectar cambios.
+   * 
+   * @property {Record<string, string | number | null | undefined>} valoresAnteriores
+   */
+  valoresAnteriores: Record<string, string | number | null | undefined> = {};
 
   /**
    * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
@@ -829,6 +877,44 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Muestra una notificación en forma de modal con el mensaje proporcionado.
+   * 
+   * Configura y muestra un modal de notificación con características específicas
+   * como tipo de alerta, categoría de peligro y tiempo de espera. Utiliza el
+   * mensaje dinámico proporcionado como parámetro e incluye un icono de cierre.
+   * 
+   * @param {string} mensaje - El mensaje a mostrar en el modal de notificación
+   * @param {number} [i=0] - El índice del elemento a eliminar (opcional, por defecto 0)
+   * @memberof DatosComunesComponent
+   */
+  opcionModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Cierra el modal de notificación.
+   * 
+   * Resetea la notificación actual para cerrar el modal.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cerrarModal(): void {
+    this.nuevaNotificacion = {} as Notificacion;
+  }
+
+  /**
    * Agrega un nuevo subcontratado a la lista y actualiza el estado global en el store.
    * 
    * Recibe los datos del subcontratado desde un evento, los agrega a la lista
@@ -937,6 +1023,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar199(valor: string | number): void {
+    this.verificarSeleccionesRadio('199', valor);
     this.solicitud32604Store.actualizar199(valor);
   }
 
@@ -950,6 +1037,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar200(valor: string | number): void {
+    this.verificarSeleccionesRadio('200', valor);
     this.solicitud32604Store.actualizar200(valor);
   }
 
@@ -963,6 +1051,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar201(valor: string | number): void {
+    this.verificarSeleccionesRadio('201', valor);
     this.solicitud32604Store.actualizar201(valor);
   }
 
@@ -1098,6 +1187,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar244(valor: string | number): void {
+    this.verificarSeleccionesRadio('244', valor);
     this.solicitud32604Store.actualizar244(valor);
   }
 
@@ -1137,6 +1227,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar246(valor: string | number): void {
+    this.verificarSeleccionesRadio('246', valor);
     this.solicitud32604Store.actualizar246(valor);
   }
 
@@ -1178,6 +1269,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar247(valor: string | number): void {
+    this.verificarSeleccionesRadio('247', valor);
     this.solicitud32604Store.actualizar247(valor);
   }
 
@@ -1191,6 +1283,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar248(valor: string | number): void {
+    this.verificarSeleccionesRadio('248', valor);
     this.solicitud32604Store.actualizar248(valor);
   }
 
@@ -1232,6 +1325,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizar249(valor: string | number): void {
+    this.verificarSeleccionesRadio('249', valor);
     this.solicitud32604Store.actualizar249(valor);
   }
 
@@ -1277,26 +1371,29 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   private verificarSeleccionesRadio(campo: string, valor: string | number): void {
     const SELECCIONES = {
-      '190': this.datosComunesForm.get('190')?.value,
-      '191': this.datosComunesForm.get('191')?.value,
-      '199': this.datosComunesForm.get('199')?.value,
-      '200': this.datosComunesForm.get('200')?.value,
-      '201': this.datosComunesForm.get('201')?.value,
-      '244': this.datosComunesForm.get('244')?.value,
-      '246': this.datosComunesForm.get('246')?.value,
-      '247': this.datosComunesForm.get('247')?.value,
-      '248': this.datosComunesForm.get('248')?.value,
-      '249': this.datosComunesForm.get('249')?.value,
+      '190': campo === '190' ? valor : this.datosComunesForm.get('190')?.value,
+      '191': campo === '191' ? valor : this.datosComunesForm.get('191')?.value,
+      '199': campo === '199' ? valor : this.datosComunesForm.get('199')?.value,
+      '200': campo === '200' ? valor : this.datosComunesForm.get('200')?.value,
+      '201': campo === '201' ? valor : this.datosComunesForm.get('201')?.value,
+      '244': campo === '244' ? valor : this.datosComunesForm.get('244')?.value,
+      '246': campo === '246' ? valor : this.datosComunesForm.get('246')?.value,
+      '247': campo === '247' ? valor : this.datosComunesForm.get('247')?.value,
+      '248': campo === '248' ? valor : this.datosComunesForm.get('248')?.value,
+      '249': campo === '249' ? valor : this.datosComunesForm.get('249')?.value,
       '250': campo === '250' ? valor : this.datosComunesForm.get('250')?.value,
       '251': campo === '251' ? valor : this.datosComunesForm.get('251')?.value,
     };
+    
+    // Verificar condiciones específicas para mostrar el modal
+    this.verificarCondicionesModal(SELECCIONES, campo);
     
     const SELECCIONES_AFIRMATIVAS = Object.entries(SELECCIONES)
       .filter(([, value]) => value === 1 || value === '1' || value === 'Si' || value === 'Sí')
       .map(([key]) => key);
     
     const SELECCIONES_NEGATIVAS = Object.entries(SELECCIONES)
-      .filter(([, value]) => value === 0 || value === '0' || value === 'No')
+      .filter(([, value]) => value === 2 || value === '2' || value === 'No')
       .map(([key]) => key);
 
     const SELECCIONES_PENDIENTES = Object.entries(SELECCIONES)
@@ -1306,6 +1403,103 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.procesarSelecciones(SELECCIONES_AFIRMATIVAS, SELECCIONES_NEGATIVAS, SELECCIONES_PENDIENTES);
 
     this.validarCamposRequeridos(SELECCIONES);
+  }
+
+  /**
+   * Verifica las condiciones específicas para mostrar el modal.
+   * 
+   * Evalúa individualmente cada campo para mostrar modales específicos:
+   * - Para campos 190, 191, 244: muestra modal cuando value = 2 ("No")
+   * - Para campos 199, 200, 201: muestra modal cuando value = 1 ("Sí")
+   * 
+   * @private
+   * @param {Record<string, string | number | null | undefined>} selecciones - Objeto con los valores actuales de todos los campos
+   * @param {string} campoModificado - El campo específico que fue modificado
+   * @memberof DatosComunesComponent
+   */
+  private verificarCondicionesModal(selecciones: Record<string, string | number | null | undefined>, campoModificado: string): void {
+    // Solo verificar el campo que fue modificado
+    this.verificarCondicionIndividual(campoModificado, selecciones[campoModificado]);
+  }
+
+  /**
+   * Verifica la condición específica de un campo individual.
+   * 
+   * @private
+   * @param {string} campo - El campo a verificar
+   * @param {string | number | null | undefined} valor - El valor del campo
+   * @memberof DatosComunesComponent
+   */
+  private verificarCondicionIndividual(campo: string, valor: string | number | null | undefined): void {
+    // Campos que requieren "No" (value = 2)
+    const CAMPOS_NO = ['190', '191', '244', '246', '250'];
+
+    // Campos que requieren "Sí" (value = 1)
+    const CAMPOS_SI = ['199', '200', '201', '247', '248', '249', '251'];
+
+    const ES_NO = valor === 2 || valor === '2' || valor === 'No';
+    const ES_SI = valor === 1 || valor === '1' || valor === 'Si' || valor === 'Sí';
+
+    // Mostrar modal individual para cada campo que cumple su condición
+    if (CAMPOS_NO.includes(campo) && ES_NO) {
+      this.mostrarModalParaCampo(campo, 'No');
+    } else if (CAMPOS_SI.includes(campo) && ES_SI) {
+      this.mostrarModalParaCampo(campo, 'Sí');
+    }
+  }
+
+  /**
+   * Muestra el modal específico para un campo.
+   * 
+   * @private
+   * @param {string} campo - El campo que activó el modal
+   * @param {string} _valor - El valor seleccionado (no utilizado en el mensaje)
+   * @memberof DatosComunesComponent
+   */
+  private mostrarModalParaCampo(campo: string, _valor: string): void {
+    // Campos que usan el mensaje estándar de RGCE
+    const CAMPOS_RGCE = ['190', '191', '199', '200', '201', '244', '246', '247', '248', '250', '251'];
+    
+    // Mensajes especiales para campos específicos
+    const MENSAJES_ESPECIALES: Record<string, string> = {
+      '249': 'Debe agregar por lo menos un control de inventarios.'
+    };
+
+    let mensaje: string;
+    
+    if (MENSAJES_ESPECIALES[campo]) {
+      // Usar mensaje especial para campos específicos
+      mensaje = MENSAJES_ESPECIALES[campo];
+    } else if (CAMPOS_RGCE.includes(campo)) {
+      // Usar mensaje estándar de RGCE para la mayoría de campos
+      mensaje = 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.';
+    } else {
+      // Mensaje por defecto para campos no configurados
+      mensaje = `Campo ${campo} cumple con los requisitos obligatorios.`;
+    }
+
+    this.opcionModal(mensaje);
+  }
+
+  /**
+   * Detecta cambios en los campos críticos y actualiza valores anteriores.
+   * 
+   * @private
+   * @param {Record<string, string | number | null | undefined>} selecciones - Valores actuales de los campos
+   * @returns {boolean} True si ha habido cambios en los campos críticos
+   */
+  private detectarCambiosEnCamposCriticos(selecciones: Record<string, string | number | null | undefined>): boolean {
+    const CAMPOS_CRITICOS = ['190', '191', '244', '199', '200', '201', '201', '246', '247', '248', '249', '250', '251'];
+    const HA_HABIDO_CAMBIOS = CAMPOS_CRITICOS.some(campo => 
+      this.valoresAnteriores[campo] !== selecciones[campo]
+    );
+
+    // Actualizar valores anteriores
+    CAMPOS_CRITICOS.forEach(campo => {
+      this.valoresAnteriores[campo] = selecciones[campo];
+    });
+
+    return HA_HABIDO_CAMBIOS;
   }
 
   /**

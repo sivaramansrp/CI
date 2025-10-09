@@ -117,7 +117,12 @@
         </div>
     </form>
 </div>
-
+@if (nuevaNotificacion) {
+  <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacion" 
+    (confirmacionModal)="cerrarModal()">
+  </lib-notificaciones>
+}
 <div class="modal fade" id="transportistas" tabindex="-1" aria-labelledby="modaltransportistas" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content mr-5px">
