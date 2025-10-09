@@ -23,6 +23,11 @@ import { StoreConfig } from '@datorama/akita';
 export interface Tramite110212State {
   /** ID de la solicitud */
   idSolicitud: number | null;
+  
+  /**
+   * El valor de observaciones.
+   */
+  observaciones: string;
 
   /**
    * Lista de mercancías disponibles.
