@@ -1,5 +1,5 @@
 import { Observable,catchError,map, throwError } from 'rxjs';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/modificacion.enum';
@@ -10,7 +10,7 @@ import { Mercancia } from '../models/modificacion.enum';
 export class CertificadoValidacionService {
 
   // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private catalogoServices: CatalogoServices) { }
 
   /**
    * Obtiene la lista de TratadoAcuerdo desde un archivo JSON local.
@@ -112,5 +112,25 @@ export class CertificadoValidacionService {
             })
           );
      }
+       getPaises(tramitesID: string): Observable<any[]> {
+    return this.catalogoServices.paisesBloqueCatalogo(tramitesID).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  /**
+   * Obtiene el catálogo de tratados/acuerdos asociados a un trámite.
+   * @param tramitesID - Identificador del trámite
+   * @param tratadoAsociado - Clave del tratado asociado
+   * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
+   */
+  getTratadoCertificado(tramitesID: string, tratadoAsociado: string): Observable<any[]> {
+    return this.catalogoServices
+      .tratadosAcuerdosCatalogo(tramitesID, tratadoAsociado)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+
+  }
 
 }
