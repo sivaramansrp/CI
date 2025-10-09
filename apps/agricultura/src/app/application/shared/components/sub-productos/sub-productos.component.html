@@ -159,7 +159,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label class="form-label form-group">Número de lote<span [ngClass]="{'mensaje-error':detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched}">*</span>:</label>
-                    <input type="text" class="form-control" formControlName="numeroLote" />
+                    <input type="text" class="form-control" formControlName="numeroLote" [maxlength]="16" />
                     <div
                         *ngIf="detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched">
                         <small class="mensaje-error">Este campo es obligatorio.</small>

@@ -74,7 +74,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Indica si la sección es colapsable.
    * @property {boolean} colapsable
    */
-  colapsable: boolean = false;
+  colapsable: boolean = true;
 
   /**
    * Grupo de formularios anidado para los datos de la solicitud.--220201
