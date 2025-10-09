@@ -9,6 +9,7 @@ import {
   REGEX_ALFANUMERICO_CON_ESPACIOS,
   REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
   REGEX_IMPORTE_PAGO,
+  REGEX_NICO,
   REGEX_NUMEROS,
   REGEX_NUMEROS_USD_2,
   REGEX_REEMPLAZAR,
@@ -709,9 +710,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.mercanciaFormulario = this.fb.group({
       claveFraccionArancelaria: [this.tramiteState?.mercanciaFormulario?.claveFraccionArancelaria || '', Validators.required],
       nico: [this.tramiteState?.mercanciaFormulario?.nico || '', [Validators.required, Validators.maxLength(2), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD_2), Validators.max(999999999999.99)]],
+      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD_2), AvisoComponent.validarLimiteEnteros]],
       claveUnidadMedida: [this.tramiteState?.mercanciaFormulario?.claveUnidadMedida || '', Validators.required],
-      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD_2), Validators.max(999999999999.99)]],
+      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD_2), AvisoComponent.validarLimiteEnteros]],
       descripcionMercancia: [this.tramiteState?.mercanciaFormulario?.descripcionMercancia || '', [Validators.required, Validators.maxLength(250)]],
       descripcionProceso: [this.tramiteState?.mercanciaFormulario?.descripcionProceso || '', [Validators.required, Validators.maxLength(250)]],
       numPedimentoExportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoExportacion || '', [Validators.required, Validators.maxLength(15)]],
@@ -759,6 +760,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
     if (CONTROL.hasError('maxlength')) {
       const REQUIRED_LENGTH = CONTROL.errors?.['maxlength']?.requiredLength;
       return `No debe exceder ${REQUIRED_LENGTH} caracteres.`;
+    }
+
+    if (CONTROL.hasError('excedeLimite')) {
+      return 'Por favor, escribe un valor menor o igual a 999999999999.99';
     }
 
     if (CONTROL.hasError('max')) {
@@ -875,32 +880,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method showModal
-   * @description Helper method to safely show Bootstrap modals with compatibility handling.
+   * @description Helper method to show Bootstrap modals using Bootstrap's native API.
    * @param {ElementRef} modalElement - The modal element reference to show.
    * @returns {void}
    */
   private static showModal(modalElement: ElementRef): void {
     try {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      
       const MODAL_EL = modalElement.nativeElement;
-      
-      MODAL_EL.classList.add('show');
-      MODAL_EL.style.display = 'block';
-      MODAL_EL.setAttribute('aria-modal', 'true');
-      MODAL_EL.removeAttribute('aria-hidden');
-      
-      const BACKDROP = document.createElement('div');
-      BACKDROP.className = 'modal-backdrop fade show';
-      BACKDROP.onclick = (): void => {
-        AvisoComponent.hideModal(modalElement);
-      };
-      document.body.appendChild(BACKDROP);
-      
-      document.body.classList.add('modal-open');
-      
+      const MODAL_INSTANCE = new Modal(MODAL_EL);
+      MODAL_INSTANCE.show();
     } catch (error) {
       console.error('Error showing modal:', error);
     }
@@ -908,23 +896,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
   /**
    * @method hideModal
-   * @description Helper method to hide Bootstrap modals.
+   * @description Helper method to hide Bootstrap modals using Bootstrap's native API.
    * @param {ElementRef} modalElement - The modal element reference to hide.
    * @returns {void}
    */
   private static hideModal(modalElement: ElementRef): void {
     try {
       const MODAL_EL = modalElement.nativeElement;
-      
-      MODAL_EL.classList.remove('show');
-      MODAL_EL.style.display = 'none';
-      MODAL_EL.setAttribute('aria-hidden', 'true');
-      MODAL_EL.removeAttribute('aria-modal');
-      
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_EL) || new Modal(MODAL_EL);
+      MODAL_INSTANCE.hide();
     } catch (error) {
       console.error('Error hiding modal:', error);
     }
@@ -1028,8 +1008,20 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   abiertoMercancia(esModificacion: boolean = false): void {
-    this.mostrarAlertaValidacionMercancia = false;
-    
+
+    if (!esModificacion && this.domicilioFormulario && this.domicilioFormulario.invalid) {
+      Object.keys(this.domicilioFormulario.controls).forEach(key => {
+        const CONTROL = this.domicilioFormulario.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      
+      this.mostrarAlertaValidacionDomicilio = true;
+      return;
+    }
+    this.mostrarAlertaValidacionDomicilio = false;
+
     if (esModificacion && this.filaSeleccionadaMercanciaLista && this.filaSeleccionadaMercanciaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaMercanciaLista[0];
       this.precargarDatosMercancia(REGISTRO_SELECCIONADO);
@@ -1040,18 +1032,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
 
     if (this.modalMercancia) {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      
-      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
-      if (WIN.bootstrap && WIN.bootstrap.Modal) {
-        const MODAL_INSTANCE = new WIN.bootstrap.Modal(this.modalMercancia.nativeElement);
-        MODAL_INSTANCE.show();
-      } else {
-        const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
-        MODAL_INSTANCE.show();
-      }
+      AvisoComponent.showModal(this.modalMercancia);
     }
   }
   /**
@@ -1085,7 +1066,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.mercanciaFormulario.valid) {
-      this.mostrarAlertaValidacionMercancia = false;
+
       
       const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
       const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
@@ -1118,7 +1099,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       this.mercanciaFormulario.reset();
       this.closeMercancia?.nativeElement?.click();
     } else {
-      this.mostrarAlertaValidacionMercancia = true;
+
       
       Object.keys(this.mercanciaFormulario.controls).forEach(key => {
         this.mercanciaFormulario.get(key)?.markAsTouched();
@@ -1134,8 +1115,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarDomicilio(): void {
+
+    if (this.domicilioFormulario.invalid) {
+     Object.keys(this.domicilioFormulario.controls).forEach(key => {
+        this.domicilioFormulario.get(key)?.markAsTouched();
+      });
+    }
+
     if (this.domicilioFormulario.valid) {
-      this.mostrarAlertaValidacionDomicilio = false;
+
       
       const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
       const NUEVO_ID = Date.now();
@@ -1165,12 +1153,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
       this.domicilioFormulario.reset();
       this.closeDomicilio.nativeElement.click();
-    } else {
-      this.mostrarAlertaValidacionDomicilio = true;
-      
-      Object.keys(this.domicilioFormulario.controls).forEach(key => {
-        this.domicilioFormulario.get(key)?.markAsTouched();
-      });
     }
   }
   /**
@@ -1221,6 +1203,132 @@ export class AvisoComponent implements OnInit, OnDestroy {
     const REEMPLAZAR = INPUT?.value.replace(this.REGEX_NUMEROS, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
+
+  /**
+   * @method limpiarSoloNumeros
+   * @description Método que replica exactamente el comportamiento del JSP: this.value = (this.value + '').replace(/[^0-9]/g, '');
+   * - Solo permite números (0-9)
+   * - Remueve cualquier carácter que no sea número
+   * - Funciona en tiempo real con keyup
+   *
+   * @param {Event} event - Evento del input.
+   * @returns {void}
+   */
+  limpiarSoloNumeros(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_NICO, '');
+      
+      // Actualizar control de formulario
+      this.mercanciaFormulario.get('nico')?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+  /**
+   * @method validarNumeroDecimal
+   * @description Método estático que replica la función validarNumeroDecimal del JSP.
+   * - Valida y formatea un número decimal con máximo de dígitos decimales especificados
+   * - NO trunca la parte entera, permite más de 12 dígitos para mostrar error
+   * 
+   * @param {string} valor - El valor a validar y formatear.
+   * @param {number} decimales - Número máximo de decimales permitidos.
+   * @returns {string} El valor validado y formateado.
+   */
+  static validarNumeroDecimal(valor: string, decimales: number): string {
+    if (!valor) {
+      return '';
+    }
+    
+    // Split into integer and decimal parts
+    const PARTES = valor.split('.');
+    const PARTE_ENTERA = PARTES[0] || '';
+    let PARTE_DECIMAL = PARTES[1] || '';
+    
+    // NO limitar la parte entera - permitir que el usuario escriba más para mostrar error
+    // La validación del límite se maneja en el FormControl con custom validator
+    
+    // Limit decimal part to specified decimales
+    if (PARTE_DECIMAL.length > decimales) {
+      PARTE_DECIMAL = PARTE_DECIMAL.substring(0, decimales);
+    }
+    
+    // Reconstruct the number
+    let RESULTADO = PARTE_ENTERA;
+    if (PARTES.length > 1) {
+      RESULTADO += '.' + PARTE_DECIMAL;
+    }
+    
+    return RESULTADO;
+  }
+
+  /**
+   * @method validarLimiteEnteros
+   * @description Validador personalizado para verificar que la parte entera no exceda 12 dígitos.
+   * 
+   * @param {AbstractControl} control - Control del formulario.
+   * @returns {ValidationErrors | null} Error si excede el límite, null si es válido.
+   */
+  static validarLimiteEnteros(control: { value: string }): { [key: string]: { valor: string; limite: number } } | null {
+    if (!control.value) {
+      return null;
+    }
+    
+    const VALOR = String(control.value);
+    const PARTES = VALOR.split('.');
+    const PARTE_ENTERA = PARTES[0] || '';
+    
+    if (PARTE_ENTERA.length > 12) {
+      return { 'excedeLimite': { valor: VALOR, limite: 12 } };
+    }
+    
+    return null;
+  }
+
+  /**
+   * @method limpiarNumeroDecimal
+   * @description Método que replica exactamente el comportamiento del JSP:
+   * - this.value = (this.value + '').replace(/[^0-9.]/g, '');
+   * - this.value = validarNumeroDecimal(this.value, 2);
+   * - Permite escribir más de 12 dígitos pero muestra error de validación
+   * - Funciona para campos cantidad y valorUSD
+   *
+   * @param {Event} event - Evento del input.
+   * @returns {void}
+   */
+  limpiarNumeroDecimal(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Paso 1: Replica exactamente - this.value = (this.value + '').replace(/[^0-9.]/g, '');
+      let VALOR = String(INPUT.value).replace(/[^0-9.]/g, '');
+      
+      // Paso 2: Replica exactamente - this.value = validarNumeroDecimal(this.value, 2);
+      // Pero ahora NO trunca la parte entera, solo los decimales
+      VALOR = AvisoComponent.validarNumeroDecimal(VALOR, 2);
+      
+      // Actualizar input y form control
+      INPUT.value = VALOR;
+      
+      // Determinar cuál campo está siendo editado basado en el ID del input
+      let CONTROL_CANTIDAD = null;
+      let CONTROL_VALOR_USD = null;
+      
+      if (INPUT.id === 'cantidad') {
+        CONTROL_CANTIDAD = this.mercanciaFormulario.get('cantidad');
+        CONTROL_CANTIDAD?.setValue(VALOR, { emitEvent: false });
+        // Forzar validación para mostrar error inmediatamente si excede 12 dígitos
+        CONTROL_CANTIDAD?.markAsTouched();
+        CONTROL_CANTIDAD?.updateValueAndValidity();
+      } else if (INPUT.id === 'valorUSD') {
+        CONTROL_VALOR_USD = this.mercanciaFormulario.get('valorUSD');
+        CONTROL_VALOR_USD?.setValue(VALOR, { emitEvent: false });
+        // Forzar validación para mostrar error inmediatamente si excede 12 dígitos
+        CONTROL_VALOR_USD?.markAsTouched();
+        CONTROL_VALOR_USD?.updateValueAndValidity();
+      }
+    }
+  }
+
   /**
    * @method limpiar
    * @description Método para limpiar el campo de archivo masivo en el formulario.

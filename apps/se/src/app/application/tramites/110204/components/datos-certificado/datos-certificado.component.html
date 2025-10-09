@@ -5,38 +5,32 @@
     <div class="row">
       <div class="col-md-8">
         <label for="justificacionDictamen" class="form-label">Observaciones:</label>
-        <textarea id="justificacionDictamen" formControlName="observacionesDates"  class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
+        <textarea id="justificacionDictamen" formControlName="observacionesDates" class="mb-4 h-20 w-100" placeholder=""
+          rows="6"></textarea>
       </div>
       <div class="row mb-3">
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Idioma'" [catalogo]="(idioma$ | async) || []" 
-          [required]="true" name="estado" formControlName="idiomaDates"
-          [isDisabled]="esFormularioSoloLectura"
-          (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
-          <div *ngIf="formDatosCertificado.get('idiomaDates')?.touched && formDatosCertificado.get('idiomaDates')?.invalid">
-          <small *ngIf="formDatosCertificado.get('idiomaDates')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-        </div>
+          <app-catalogo-select [label]="'Idioma'" [catalogo]="(idioma$ | async) || []" [required]="true" name="estado"
+            formControlName="idiomaDates"
+            (change)="setValoresStore(formDatosCertificado, 'idiomaDates', 'setIdiomaDates')"
+            [isDisabled]="esFormularioSoloLectura" (selectionChange)="idiomaSeleccion($event)"
+            [markTouched]="validationAttempted"></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <ng-titulo titulo="Representación federal" />
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="(entidadFederativas$ | async) || []" 
-          [required]="true" name="estado"formControlName="EntidadFederativaDates"
-          [isDisabled]="esFormularioSoloLectura"
-          (selectionChange)="entidadFederativaSeleccion($event)"></app-catalogo-select>
-          <div *ngIf="formDatosCertificado.get('EntidadFederativaDates')?.touched && formDatosCertificado.get('EntidadFederativaDates')?.invalid">
-          <small *ngIf="formDatosCertificado.get('EntidadFederativaDates')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-        </div>
+          <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="(entidadFederativas$ | async) || []"
+            [required]="true" name="estado" formControlName="EntidadFederativaDates"
+            (change)="setValoresStore(formDatosCertificado, 'formDatosCertificado', 'setRepresentacionFederalDatos')"
+            [isDisabled]="esFormularioSoloLectura" (selectionChange)="onChangeEntidad($event)"
+            [markTouched]="validationAttempted"></app-catalogo-select>
         </div>
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Representación federal'"  [catalogo]="(representacionFederal$ | async) || []" 
-          [required]="true" name="estado" formControlName="representacionFederalDates"
-          [isDisabled]="esFormularioSoloLectura"
-          (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
-          <div *ngIf="formDatosCertificado.get('representacionFederalDates')?.touched && formDatosCertificado.get('representacionFederalDates')?.invalid">
-          <small *ngIf="formDatosCertificado.get('representacionFederalDates')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-        </div>
+          <app-catalogo-select [label]="'Representación federal'" [catalogo]="(representacionFederal$ | async) || []"
+            [required]="true" name="estado" formControlName="representacionFederalDates"
+            [isDisabled]="esFormularioSoloLectura" [markTouched]="validationAttempted"
+            (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
         </div>
       </div>
     </div>

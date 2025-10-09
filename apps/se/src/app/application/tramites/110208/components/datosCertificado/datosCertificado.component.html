@@ -1,29 +1,7 @@
-<ng-titulo titulo="Datos del certificado" />
-<form [formGroup]="formDatosCertificado">
-    <div class="row">
-        <div class="col-md-8">
-            <label for="observaciones" class="form-label">Observaciones:</label>
-            <textarea id="observaciones" formControlName="observaciones"  class="form-control mb-4 textarea-height" placeholder="" rows="6" (change)="setValoresStore(formDatosCertificado,'observaciones', 'setObservaciones')"></textarea>
-          </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <app-catalogo-select [catalogo]="estado" [label]="'Idioma'"
-            [required]="true" name="idioma" formControlName="idioma" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="setValoresStore(formDatosCertificado,'idioma', 'setIdioma')"
-            ></app-catalogo-select>
-          </div>
-    </div>
-    <ng-titulo titulo="Representación federal" />
-    <div class="row">
-        <div class="col-md-4">
-            <app-catalogo-select [catalogo]="estado" [label]="'Entidad federativa'"
-            [required]="true" name="entidadFederativaCertificado" formControlName="entidadFederativaCertificado" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="setValoresStore(formDatosCertificado,'entidadFederativaCertificado', 'setEntidadFederativaCertificado')"
-            ></app-catalogo-select>
-        </div>
-        <div class="col-md-4">
-            <app-catalogo-select [catalogo]="estado" [label]="'Representación federal'"
-            [required]="true" name="representacionFederal" [isDisabled]="esFormularioSoloLectura ? true : false" formControlName="representacionFederal" (change)="setValoresStore(formDatosCertificado,'representacionFederal', 'setRepresentacionFederal')"
-            ></app-catalogo-select>
-        </div>
-    </div>
-</form>
+<app-datos-certificado-de [precisa]="precisa" [idioma]="idioma" [presenta]="presenta"
+    [idiomaDatos]="(idiomaDatos$ | async) || []" [idProcedimiento]="110208"
+    (formDatosCertificadoEvent)="setValoresStore($event)" (idiomaSeleccionEvent)="idiomaSeleccion($event)"
+    [entidadFederativaDatos]="(entidadFederativas$ | async) || []"
+    [representacionFederalDatos]="(representacionFederal$ | async) || []"
+    [esFormularioSoloLectura]="esFormularioSoloLectura" [datosFormCertificado]="formDatosCertificadoValues"
+    (formaValida)="setFormValida($event)"></app-datos-certificado-de>
