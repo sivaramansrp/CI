@@ -39,7 +39,10 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ProtestoDecirVerdadComponent,
     ProcesosComponent,
     NotificacionesComponent
-]
+],
+exports: [
+    DatosComponent,
+  ]
 })
 
 /**

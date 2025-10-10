@@ -30,7 +30,6 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   imports: [
     CommonModule,
     TituloComponent,
-    InputRadioComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule
   ],

@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -116,6 +116,10 @@ export class CertificadoDeOrigenComponent
    * Indica si el componente está en modo de solo lectura.
    */
   radioOptions = RADIO_OPTIONS;
+  /**
+   * Indica si el componente está en modo de solo lectura.
+   */
+  radioOptions = RADIO_OPTIONS;
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -173,6 +177,23 @@ export class CertificadoDeOrigenComponent
    */
   @Input() tratadoAcuerdo!: Catalogo[];
 
+  /**
+   * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
+   * @type {Catalogo[]}
+   */
+  tratadoAcuerdoCertificado?: Catalogo[];
+
+  /*
+   * Propiedad de entrada que recibe los datos de los países bloqueados.
+   * @type {Catalogo[]}
+   */
+  paisBloqueCertificado?: Catalogo[];
+
+  /**
+   * Propiedad de entrada que recibe el tratado seleccionado.
+   * @type {any}
+   */
+  @Output() tratadoSeleccionado = new EventEmitter<any>();
   /**
    * Propiedad de entrada que recibe los datos de los países bloqueados.
    * @type {Catalogo[]}
@@ -856,6 +877,8 @@ export class CertificadoDeOrigenComponent
     this.nuevaNotificacion = {} as Notificacion;
     this.inicializarFormularioArchivo();
     this.loadComboUnidadMedida();
+    this.getPaisBloque();
+    this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
       this.requerida = true;
     }
@@ -1296,6 +1319,56 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.get('primerApellido')?.enable({ emitEvent: false });
       this.formCertificado.get('segundoApellido')?.enable({ emitEvent: false });
     }
+  }
+
+  /**
+   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+   *
+   * @returns {void}
+   */
+  getTratado(): void {
+    this.service
+      .getTratadoCertificado(this.idProcedimiento.toString(), 'TITRAC.TA')
+      .subscribe((data) => {
+        this.tratadoAcuerdoCertificado = data as Catalogo[];
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
+   *
+   * @returns {void}
+   */
+  getPaisBloque(): void {
+    this.service
+      .getPaises(this.idProcedimiento.toString())
+      .subscribe((data) => {
+        this.paisBloqueCertificado = data as Catalogo[];
+      });
+  }
+
+  /**
+   * Getter para obtener el catálogo de tratados o acuerdos.
+   * Si `tratadoAcuerdoCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `tratadoAcuerdo`.
+   *
+   * @returns {Catalogo[]} El catálogo de tratados o acuerdos.
+   */
+  get catalogoTratado(): Catalogo[] {
+    return this.tratadoAcuerdoCertificado?.length
+      ? this.tratadoAcuerdoCertificado
+      : this.tratadoAcuerdo;
+  }
+
+  /**
+   * Getter para obtener el catálogo de países o bloques.
+   * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
+   *
+   * @returns {Catalogo[]} El catálogo de países o bloques.
+   */
+  get paisBloqueCertificadoGet(): Catalogo[] {
+    return this.paisBloqueCertificado?.length
+      ? this.paisBloqueCertificado
+      : this.paisBloqu;
   }
 
   /**

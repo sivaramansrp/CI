@@ -95,6 +95,7 @@ export interface Tramite110205State {
 export function createInitialState(): Tramite110205State {
   return {
     idSolicitud: 0,
+    idSolicitud: 0,
     formCertificado: {
       si: false,
       entidadFederativa: '',

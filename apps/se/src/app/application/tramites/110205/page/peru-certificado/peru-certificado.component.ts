@@ -82,6 +82,19 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {Tramite110205State} solicitudState
+   * @description
+   * Estado actual de la solicitud del trámite.
+   */
+  solicitudState!: Tramite110205State;
+
+   /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
    * URL de la página actual.
    */
   public solicitudState!: Tramite110205State;
@@ -137,6 +150,7 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     });
+
   }
 
   /**
@@ -152,55 +166,6 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   *
-   * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   *
-   * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
-   */
-  // getValorIndice(e: AccionBoton): void {
-  //   this.esFormaValido = false;
-
-  //   if (this.indice === 1 && e.accion === 'cont') {
-  //     const ISVALID = this.validarTodosFormulariosPasoUno();
-  //     if (!ISVALID) {
-  //       this.esFormaValido = true;
-  //       return;
-  //     }
-  //     this.obtenerDatosDelStore();
-  //   }
-
-  //   let indiceActualizado = e.valor;
-  //   if (e.accion === 'cont') {
-  //     indiceActualizado = e.valor + 1;
-  //   } else if (e.accion === 'ant') {
-  //     indiceActualizado = e.valor - 1;
-  //   }
-
-  //   // Validar que el nuevo índice esté dentro de los límites permitidos
-  //   if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-  //     // Actualizar el índice y datosPasos
-  //     this.indice = indiceActualizado;
-  //     this.datosPasos.indice = indiceActualizado;
-
-  //     if (e.accion === 'cont') {
-  //       this.wizardComponent.siguiente();
-  //     } else if (e.accion === 'ant') {
-  //       this.wizardComponent.atras();
-  //     }
-  //   }
-  // }
-
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   *
-   * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   *
-   * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
-   */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {

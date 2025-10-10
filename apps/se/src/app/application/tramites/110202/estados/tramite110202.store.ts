@@ -12,6 +12,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Este estado incluye catálogos, selecciones, formularios dinámicos, listas de mercancía, datos del destinatario y banderas de validación.
  */
 export interface TramiteState {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /** Lista de idiomas disponibles como catálogo */
   idiomaDatos: Catalogo[];
 
@@ -243,6 +246,9 @@ export interface Solicitud110202State {
  * @property destinatarioForm Formulario adicional para el destinatario.
  */
 export const INITIAL_STATE: TramiteState = {
+  /** ID de la solicitud */
+  idSolicitud: 0,
+
   /** Lista de alta planta (por ejemplo, plantas de producción registradas) */
   altaPlanta: [],
 
@@ -413,6 +419,19 @@ export class Tramite110202Store extends Store<TramiteState> {
 constructor() {
   super(INITIAL_STATE);
 }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
   /**
    * Establece el estado en el almacén.
    * 
