@@ -24,6 +24,8 @@ export interface IniciarDictamenResponse {
     ide_sent_dictamen: string;
     /** Sentido del dictamen */
     sentido_dictamen: string;
+    /** Nombre del sentido del dictamen */
+    nombre_sentido_dictamen?:string;
     /** Texto del dictamen */
     texto_dictamen: string;
     /** Justificación del dictamen */
