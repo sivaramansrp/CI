@@ -1,5 +1,6 @@
 <app-datos-del-destinatario
   [datosForm]="formDatosDelDestinatarioValues"
+  [idProcedimiento]="110202"
   (formDatosDelDestinatarioEvent)="setValoresStore($event)"
   (formaValida)="setFormValida($event)"
 ></app-datos-del-destinatario>
@@ -7,6 +8,7 @@
 <app-destinatario
   [paisDestino]="paisDestino"
   (paisDestionSeleccionEvent)="paisDestinSeleccion($event)"
+  [idProcedimiento]="110202"
   [paisDestin]="(paisDestin$ | async) || []"
   (formDestinatarioEvent)="setValoresStoreDe($event)"
   [datosForm]="formDestinatarioValues"
@@ -14,7 +16,7 @@
 ></app-destinatario>
 
 <div>
-  <form [formGroup]="destinatarioForm">
+  <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="row">
         <ng-titulo titulo="Detalles del transporte" />
