@@ -1,12 +1,12 @@
-import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, PasoFirmaComponent, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import {DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
+import { DatosPasos, ListaPasosWizard, PasoFirmaComponent,WizardComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, take, takeUntil } from 'rxjs';
+import { Tramite110202Store, TramiteState } from '../../estados/tramite110202.store';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { PASOS } from '../../constantes/modificacion.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
-import { TramiteState } from '../../estados/tramite110202.store';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -29,9 +29,8 @@ interface AccionBoton {
     WizardComponent,
     BtnContinuarComponent,
     PasoUnoComponent,
-    PasoDosComponent, 
-    AlertComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    AlertComponent
   ],
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
@@ -62,25 +61,6 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
-  ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([res]);
-    });
-
-     this.tramiteQuery.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((solicitud) => {
-        this.solicitudState = solicitud;
-      });
-  }
-   /** 
-   * Índice del paso actual del wizard.
-   * Representa la pestaña activa principal.
-   */
   /**
     * @property {string} formErrorAlert
     * @description
@@ -106,6 +86,12 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  
+  /**
+   * URL de la página actual.
+   */
+  public solicitudState!: TramiteState;
+
   /**
    * Datos de los pasos del asistente.
    * Incluye el número total de pasos, el índice del paso actual y los textos de los botones de navegación (Anterior, Continuar).
@@ -130,22 +116,33 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
   TEXTOS = PAGO_DE_DERECHOS;
 
   /**
-   * Estado actual de la solicitud del trámite.
-   * Este objeto contiene toda la información relevante sobre la solicitud, incluyendo formularios, listas y banderas de validación.
-   * Se obtiene a través del query `Tramite110202Query`.
-   * @type {TramiteState}
-   */
-  public solicitudState!:TramiteState;
-
-
-  /**
   * @property {boolean} esFormaValido
   * @description
   * Indica si el formulario del paso actual es válido.
   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
   */
   esFormaValido: boolean = false;
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
+    private certificadoValidacionService: CertificadoValidacionService,
+    private tramite110202Store:Tramite110202Store
 
+
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([res]);
+    });
+        this.tramiteQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          ).subscribe();
+      
+  }
   /**
    * Selecciona una pestaña del asistente (wizard).
    * Este método actualiza el índice del paso seleccionado y, por lo tanto, cambia el paso que se está mostrando.
@@ -167,19 +164,16 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.indice = 1;
-        this.datosPasos.indice = 1;
-      } else {
-        this.indice = 2;
-        this.datosPasos.indice = 2;
+        return;
       }
-
-    } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.obtenerDatosDelStore()
+    }
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
   }
@@ -235,6 +229,135 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
       return false;
     }
     return true;
+  }
+
+   /**
+  * Obtiene los datos del store y los guarda utilizando el servicio.
+  */
+  obtenerDatosDelStore(): void {
+    this.certificadoValidacionService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+        
+      });
+  }
+  
+/**
+ * Transforma un array de objetos en un nuevo formato.
+ * @param arr - array de objetos a transformar
+ * @returns array de objetos transformados
+ */
+buildMercanciaSeleccionadas(arr: any[]): any[] {
+return arr.map((item: any) => ({
+  id: item.id,
+  fraccion_arancelaria: item.fraccionArancelaria,
+  cantidad: item.cantidad,
+  unidad_medida: item.unidadMedida,
+  valor_mercancia: item.valorMercancia,
+  nombre_tecnico: item.nombreTecnico,
+  nombre_comercial: item.nombreComercial,
+  registro_producto: item.numeroRegistroProducto,
+  fecha_expedicion: item.fechaExpedicion,
+  fecha_vencimiento: item.fechaVencimiento,
+  tipo_factura: item.tipoFactura,
+  num_factura: item.numFactura,
+  complemento_descripcion: item.complementoDescripcion,
+  fecha_factura: item.fechaFactura,
+  umc:item.umc,
+}));
+
+}
+
+  /**
+   * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+   * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+   *
+   * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+   *
+   * @remarks
+   * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
+   * La llamada al servicio actualmente está comentada.
+   */
+  guardar(item: any): void {
+    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
+    const PAYLOAD = {
+      rfc_solicitante: 'AAL0409235E6',
+      idSolicitud: this.solicitudState?.idSolicitud || 0,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        nombre: "ACEROS ALVARADO S.A. DE C.V.",
+        actividad_economica: "Fabricación de productos de hierro y acero",
+        correo_electronico: "contacto@acerosalvarado.com",
+        domicilio: {
+          pais: "México",
+          codigo_postal: "06700",
+          estado: "Ciudad de México",
+          municipio_alcaldia: "Cuauhtémoc",
+          localidad: "Centro",
+          colonia: "Roma Norte",
+          calle: "Av. Insurgentes Sur",
+          numero_exterior: "123",
+          numero_interior: "Piso 5, Oficina A",
+          lada: "",
+          telefono: "123456"
+        }
+      },
+      certificado: {
+        tratado_acuerdo: item.tratado || '',
+        pais_bloque: item.pais,
+        fraccion_arancelaria: item.fraccionArancelaria,
+        registro_producto: item.registroProducto,
+        nombre_comercial: item.nombreComercial,
+        fecha_inicio: item.fechaFinal,
+        fecha_fin: item.fechaInicial,
+        numero_letra: item.numeroLetra1,
+        calle:item.calle1,
+        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
+      },
+ 
+      destinatario: {
+        nombre: item.formDatosDelDestinatario.nombres,
+        primer_apellido: item.formDatosDelDestinatario.primerApellido,
+        segundo_apellido: item.formDatosDelDestinatario.segundoApellido,
+        numero_registro_fiscal: item.formDatosDelDestinatario.numeroDeRegistroFiscal,
+        razon_social: item.formDatosDelDestinatario.razonSocial,
+        domicilio: {
+          ciudad_poblacion_estado_provincia: item.formDestinatario.ciudad,
+          calle: item.formDestinatario.calle,
+          numero_letra: item.formDestinatario.numeroLetra,
+          lada: item.formDestinatario.lada,
+          telefono: item.formDestinatario.telefono,
+          fax: item.formDestinatario.fax,
+          correo_electronico: item.formDestinatario.correoElectronico,
+          pais_destino: item.formDestinatario.paisDestin
+        },
+        medio_transporte: item.medioDeTransporteSeleccion.clave
+
+      },
+ 
+      datos_del_certificado: {
+        observaciones: item.formDatosCertificado.observacionesDates,
+        precisa: item.formDatosCertificado.precisaDates,
+        presenta: item.formDatosCertificado.precisaDates,
+        idioma: item.formDatosCertificado.idiomaDates,
+        representacion_federal: {
+          entidad_federativa: item.formDatosCertificado.EntidadFederativaDates,
+          representacion_federal: item.formDatosCertificado.representacionFederalDates
+        },
+        desea_obtener_certificado: "true",
+        justificacion: "nbhh"
+      }
+    };
+ 
+    this.certificadoValidacionService.guardarDatosPost(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+          this.tramite110202Store.setIdSolicitud(response.datos.id_solicitud || 0);
+          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+        }
+      },
+    });
   }
 
 }

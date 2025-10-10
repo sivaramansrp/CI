@@ -25,6 +25,7 @@ import { DestinatarioDeComponent } from '../../components/destinatario-de/destin
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DestinatarioDeComponent) destinatarioDeComponent!: DestinatarioDeComponent;
 
+  @ViewChild(CertificadoOrigenComponent) certificadoOrigenComponent!: CertificadoOrigenComponent;
   // Decorador ViewChild para acceder a la instancia del componente SolicitanteComponent
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
@@ -163,6 +164,14 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     } else {
       isValid = false;
+    }
+    if(this.certificadoOrigenComponent){
+      if (!this.certificadoOrigenComponent.validarFormulario()) {
+        isValid = false
+      }
+    }
+    else{
+      isValid = false
     }
     if (this.destinatarioDeComponent) {
       if (!this.destinatarioDeComponent.validateAll()) {

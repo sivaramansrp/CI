@@ -171,7 +171,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {Catalogo[]}
    */
   @Input() tratadoAcuerdo!: Catalogo[];
-
   /**
  * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
  * @type {Catalogo[]}
@@ -183,6 +182,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   * @type {Catalogo[]}
   */
   paisBloqueCertificado?: Catalogo[];
+  /**
+   * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
+   * @type {Catalogo[]}
+   */
+  pais?: Catalogo[];
 
   /**
    * Propiedad de entrada que recibe el tratado seleccionado.
@@ -632,7 +636,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   * description Carga la lista de derechos desde el servicio.
   */
   loadComboUnidadMedida(): void {
-    this.service.getDatos() // Llama al servicio para obtener los datos.
+    this.service.getDatos('110222') // Llama al servicio para obtener los datos.
       .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
       .subscribe((data): void => { // Maneja los datos recibidos.
         this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
@@ -1249,6 +1253,17 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     });
   }
 
+   /**
+   * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
+   * 
+   * @returns {void}
+   */
+  getPais():void{
+    this.service.getDatos(this.idProcedimiento.toString()).subscribe((data) => {
+      this.pais = data as Catalogo[];
+    });
+  }
+
   /**
    * Getter para obtener el catálogo de tratados o acuerdos.
    * Si `tratadoAcuerdoCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `tratadoAcuerdo`.
@@ -1271,6 +1286,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     return this.paisBloqueCertificado?.length
       ? this.paisBloqueCertificado
       : this.paisBloqu;
+  }
+
+  /**
+   * Getter para obtener el catálogo de países o bloques.
+   * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
+   * 
+   * @returns {Catalogo[]} El catálogo de países o bloques.
+   */
+  get paisGet(): Catalogo[]{
+    return this.pais?.length
+      ? this.pais
+      : this.paises;
   }
 
 
