@@ -11,7 +11,7 @@
       <app-paso-uno></app-paso-uno>
       }
       @case (2) {
-      <app-paso-dos></app-paso-dos>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110205" [procedureUrl]="'validar-certificado/peru'"></paso-firma>
       }
      }
       <btn-continuar
@@ -19,7 +19,7 @@
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
       @if(indice ===1){
-        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
+        <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
         }
     </div>
   </div>

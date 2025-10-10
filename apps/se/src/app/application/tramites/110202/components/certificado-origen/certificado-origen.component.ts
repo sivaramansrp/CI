@@ -429,8 +429,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['active']?.currentValue) {
-      this.getPaises();
-      this.getTratadoCertificado();
+      // this.getPaises();
+      // this.getTratadoCertificado();
     }
   }
   /**
@@ -440,7 +440,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy, OnChanges 
   ngOnInit(): void {
     this.mercanciatable();
     this.inicializarEstadoFormulario();
-
+ this.getPaises();
+      this.getTratadoCertificado();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),

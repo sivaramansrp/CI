@@ -20,6 +20,7 @@ import { Location } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RestringirNegativosDirective } from '@libs/shared/data-access-user/src/tramites/directives/restringir-negativos/restringir-negativos.directive';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
@@ -31,6 +32,7 @@ import { Validators } from '@angular/forms';
     TituloComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
+    RestringirNegativosDirective
   ],
   templateUrl: './complementar-fraccion.component.html',
   styleUrl: './complementar-fraccion.component.scss',

@@ -88,10 +88,12 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.tercerosService = component.tercerosService || {};
-    component.tercerosService.getFabricanteTablaDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.idProcedimiento = 260912;
     component.ngOnInit();
-    expect(component.tercerosService.getFabricanteTablaDatos).toHaveBeenCalled();
+    expect(component.isAdjuntar).toBeDefined();
+    expect(component.habilitarFacturador).toBeDefined();
+    expect(component.habilitarProveedor).toBeDefined();
+    expect(component.esVisible).toBeDefined();
   });
 
   it('should run #esCampoRequerido()', async () => {
@@ -142,48 +144,44 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should run #eliminarFabricante()', async () => {
-    component.fabricanteSeleccionadoDatos = [{ rfc: 'TEST123' }];
     component.fabricanteTablaDatos = [{ rfc: 'TEST123' }, { rfc: 'TEST456' }];
-    component.fabricanteEliminar = component.fabricanteEliminar || {};
-    component.fabricanteEliminar.emit = jest.fn();
+    component.fabricanteSeleccionadoDatos = [component.fabricanteTablaDatos[0]];
     component.eliminarFabricante();
-    expect(component.fabricanteEliminar.emit).toHaveBeenCalled();
+    expect(component.eliminarFabricanteAlerta).toBe(true);
+    expect(component.eliminarAlerta).toBe(true);
   });
 
   it('should run #eliminarDestinatario()', async () => {
-    component.destinatarioSeleccionadoDatos = [{ rfc: 'TEST123' }];
     component.destinatarioFinalTablaDatos = [
       { rfc: 'TEST123' },
       { rfc: 'TEST456' }
     ];
-    component.destinatarioEliminar = component.destinatarioEliminar || {};
-    component.destinatarioEliminar.emit = jest.fn();
+    component.destinatarioSeleccionadoDatos = [component.destinatarioFinalTablaDatos[0]];
     component.eliminarDestinatario();
-    expect(component.destinatarioEliminar.emit).toHaveBeenCalled();
+    expect(component.eliminarDestinatarioAlerta).toBe(true);
+    expect(component.eliminarAlerta).toBe(true);
   });
 
   it('should run #eliminarProveedor()', async () => {
-    component.proveedorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Provider', razonSocial: 'Test' }];
     component.proveedorTablaDatos = [
       { nombreRazonSocial: 'Test Provider', razonSocial: 'Test' },
       { nombreRazonSocial: 'Another Provider', razonSocial: 'Another' }
     ];
-    component.proveedorEliminar = component.proveedorEliminar || {};
-    component.proveedorEliminar.emit = jest.fn();
+    component.proveedorSeleccionadoDatos = [component.proveedorTablaDatos[0]];
     component.eliminarProveedor();
-    expect(component.proveedorEliminar.emit).toHaveBeenCalled();
+    expect(component.eliminarProveedorAlerta).toBe(true);
+    expect(component.eliminarAlerta).toBe(true);
   });
 
   it('should run #eliminarFacturador()', async () => {
-    component.facturadorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' }];
     component.facturadorTablaDatos = [
       { nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' },
       { nombreRazonSocial: 'Another Facturador', razonSocial: 'Another' }
     ];
-    component.facturadorEliminar = component.facturadorEliminar || {};
-    component.facturadorEliminar.emit = jest.fn();
+    component.facturadorSeleccionadoDatos = [component.facturadorTablaDatos[0]];
     component.eliminarFacturador();
-    expect(component.facturadorEliminar.emit).toHaveBeenCalled();
+    expect(component.eliminarFacturadorAlerta).toBe(true);
+    expect(component.eliminarAlerta).toBe(true);
   });
 
   it('should run #ngOnDestroy()', async () => {

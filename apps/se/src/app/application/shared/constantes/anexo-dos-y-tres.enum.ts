@@ -59,7 +59,7 @@ export const ANEXO_SERVICIO = [
  */
 export const ANEXO_TRES_ALERTA = `<p>
 
-Herramientas, equipos y accesorios de investigación, de seguridad industrial y de productos necesarios para la higiene, asepsia, y para la prevención y control de la contaminación ambiental de la planta productiva, manuales de trabajo y planos industriales así como equipo de telecomunicación y cómputo. Maquinaria aparatos, instrumentos y refacciones para el proceso productivo, equipo de laboratorio, de medición y de prueba de sus productos y los requeridos para el control de calidad,para capacitación de su personal, equipo para el manejo de materiales relacionados directamente con los bienes de exportación y otros vinculado con el proceso productivo, así como equipo para el desarrollo administrativo de la empresa, a importar al amparo del programa.</p>`;
+Herramientas, equipos y accesorios de investigación, de seguridad industrial y de productos necesarios para la higiene, asepsia, y para la prevención y control de la contaminación ambiental de la planta productiva, manuales de trabajo y planos industriales, así como equipo de telecomunicación y cómputo. Maquinaria, aparatos, instrumentos y refacciones para el proceso productivo, equipo de laboratorio, de medición y de prueba de sus productos y los requeridos para el control de calidad,para capacitación de su personal, equipo para el manejo de materiales relacionados directamente con los bienes de exportación y otros vinculado con el proceso productivo, así como equipo para el desarrollo administrativo de la empresa, a importar al amparo del programa.</p>`;
 
 /**
  * Constante que define un mensaje de alerta en formato HTML relacionado con 
@@ -289,35 +289,40 @@ export const ANEXO_IMPORTACION_SERVICIO = [
  */
 export const PROVEEDOR_CLIENTE_TABLA_CONFIG = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: ProveedorClienteTabla): string | undefined => ele.fraccion,
     orden: 1,
   },
   {
-    encabezado: 'Pais de origen',
+    encabezado: 'País de origen',
     clave: (ele: ProveedorClienteTabla): number | undefined => ele.paisDeOrigin,
     orden: 2,
+  },
+   {
+    encabezado: 'Rfc/Tax Id Proveedor',
+    clave: (ele: ProveedorClienteTabla): string => ele.rfcProveedor ?? '',
+    orden: 3,
   },
   {
     encabezado: 'Razón Social Proveedor',
     clave: (ele: ProveedorClienteTabla): string | undefined =>
-      ele.razonSocialProveedor,
-    orden: 3,
-  },
-  {
-    encabezado: 'Pais destino',
-    clave: (ele: ProveedorClienteTabla): string => ele.paisDestino,
+    ele.razonSocialProveedor,
     orden: 4,
   },
   {
-    encabezado: 'RFC/Tax ID Cliente',
-    clave: (ele: ProveedorClienteTabla): string => ele.rfcClinte,
+    encabezado: 'País destino',
+    clave: (ele: ProveedorClienteTabla): string => ele.paisDestino,
     orden: 5,
+  },
+  {
+    encabezado: 'Rfc/Tax Id Cliente',
+    clave: (ele: ProveedorClienteTabla): string => ele.rfcClinte,
+    orden: 6,
   },
   {
     encabezado: 'Razón Social',
     clave: (ele: ProveedorClienteTabla): string => ele.razonSocial,
-    orden: 6,
+    orden: 7,
   },
 ];
 

@@ -45,6 +45,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @property { {[key: string]: unknown} } formulario - Datos generales del formulario.
  */
 export interface Tramite110205State {
+  idSolicitud: number | null;
   formCertificado: {[key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
@@ -91,6 +92,7 @@ export interface Tramite110205State {
  */
 export function createInitialState(): Tramite110205State {
   return {
+    idSolicitud: 0,
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -233,6 +235,18 @@ export class Tramite110205Store extends Store<Tramite110205State> {
   }
 
   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
    * @method setFormCertificado
    * @description
    * Actualiza los datos del formulario de certificado.
@@ -268,7 +282,7 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de productor.
    * @param values Valores a actualizar en el formulario.
    */
-  setAgregarFormDatosProductor(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setAgregarFormDatosProductor(values: { [key: string]: string | number | boolean | null }): void {
     this.update((state) => ({
       agregarDatosProductorFormulario: {
         ...state.agregarDatosProductorFormulario,
@@ -324,11 +338,24 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza la tabla de mercancías en el almacén.
    * @param mercanciaTabla Array de objetos `Mercancia` que representa la tabla de mercancías.
    */
-  setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaTabla,
-    }));
+  public setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
   }
 
   /**

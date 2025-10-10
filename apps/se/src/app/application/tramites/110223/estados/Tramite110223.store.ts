@@ -10,6 +10,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Este estado contiene formularios, catálogos, listas, valores seleccionados y otros datos requeridos.
  */
 export interface TramiteState {
+    /** ID de la solicitud */
+    idSolicitud: number | null;
+
     /**
      * @property {DestinatarioForm} destinatarioForm - Formulario de destinatario.
      * @description
@@ -119,6 +122,9 @@ export interface TramiteState {
    * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
    */
   agregarDatosProductorFormulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
  
 }
 
@@ -129,6 +135,7 @@ export interface TramiteState {
  * Estado inicial que se utiliza para crear el store con valores por defecto.
  */
 export const INITIAL_STATE: TramiteState = {
+  idSolicitud: 0,
   selectedMercancia: {} as Mercancia,
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
@@ -194,6 +201,7 @@ export const INITIAL_STATE: TramiteState = {
       numeroRegistroFiscal: '',
       fax: '',      
     },
+    optionsTipoFactura: []
 };
 
 /**
@@ -211,6 +219,19 @@ export class Tramite110223Store extends Store<TramiteState> {
   constructor() {
     super(INITIAL_STATE);
   }
+
+   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
     /**
    * Elimina una o varias mercancías de la tabla.
    * @param ids Lista de IDs de mercancías a eliminar.
@@ -519,6 +540,18 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       ...state,
       selectedMercancia: {} as Mercancia,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
     }));
   }
 }

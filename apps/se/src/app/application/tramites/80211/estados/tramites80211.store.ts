@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Plantas } from '../modelos/registro-expansion.model';
+import { Plantas } from '../modelos/registro-solicitud-immex.model';
 
 /**
  * @interfaz
@@ -10,8 +11,12 @@ import { Plantas } from '../modelos/registro-expansion.model';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80211State {
-  /** Identificador de la solicitud actual. */
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
   idSolicitud: number | null;
+
+  modalidad: string;
+  folio: string;
+  ano: string;
   /**
    * Lista de identificadores de plantas disponibles.
    */
@@ -26,6 +31,16 @@ export interface Tramites80211State {
    * Indica si las plantas deben mostrarse en la interfaz.
    */
   showPlantas: boolean;
+
+  /**
+   * RFC de la empresa.
+   */
+  rfc: string;
+
+  /**
+   * Indica el estado actual del trámite.
+   */
+  estado: Catalogo[];
 }
 
 /**
@@ -38,10 +53,15 @@ export interface Tramites80211State {
  */
 export function createInitialState(): Tramites80211State {
   return {
-    plantasDisponibles: [],
-    plantasSeleccionadas: [],
-    showPlantas: false,
     idSolicitud: 0,
+    modalidad: '',
+    folio: '',
+    ano: '',
+    plantasDisponibles: [] as Plantas[],
+    plantasSeleccionadas: [] as Plantas[],
+    showPlantas: false,
+    rfc: '',
+    estado: [],
   };
 }
 
@@ -74,7 +94,7 @@ export class Tramite80211Store extends Store<Tramites80211State> {
    * @nombre establecerDatos
    * @descripción
    * Actualiza el estado con los valores proporcionados.
-   * 
+   *
    * @param {Partial<Tramites80211State>} values - Valores parciales para actualizar el estado.
    */
   public establecerDatos(values: Partial<Tramites80211State>): void {
@@ -83,16 +103,24 @@ export class Tramite80211Store extends Store<Tramites80211State> {
       ...values,
     }));
   }
-     /**
-   * Guarda el ID de la solicitud en el estado.
+
+  /**
+   * Establece las plantas buscadas para el subfabricante.
    *
-   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   * @param plantasBuscadas - Una lista de objetos de tipo `PlantasSubfabricante`
+   * que representan las plantas buscadas.
    */
-  public setIdSolicitud(idSolicitud: number): void {
+  setPlantasBuscadas(plantasDisponibles: Plantas[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponibles: plantasDisponibles,
+    }));
+  }
+
+  setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({
       ...state,
       idSolicitud,
     }));
   }
-
 }

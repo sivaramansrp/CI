@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DesistimientoDePermisoRoutingModule } from './desistimiento-de-permiso-routing.module';
 import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
 import { NgModule } from '@angular/core';
+import { NotificacionesComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -43,7 +44,8 @@ import { ToastrService } from 'ngx-toastr';
     TableComponent,
     InputRadioComponent,
     ToastrModule.forRoot(),
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   providers: [
     ToastrService

@@ -213,6 +213,10 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       llavePago: '',
       fechaPago: '',
     });
+    
+    // Marque los campos obligatorios como tocados para activar la visualización de validación
+    this.avisoForm.get('numeroOperacion')?.markAsTouched();
+    this.avisoForm.get('llavePago')?.markAsTouched();
   }
 
   /**

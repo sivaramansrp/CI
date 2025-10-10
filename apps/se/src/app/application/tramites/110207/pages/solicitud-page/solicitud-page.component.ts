@@ -1,12 +1,13 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { DatosPasos, ERROR_FORMA_ALERT } from '@ng-mf/data-access-user';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
 import { Subject, takeUntil } from 'rxjs';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -83,6 +84,29 @@ export class SolicitudPageComponent implements OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+    /**
+  * @property {boolean} esFormaValido
+  * @description
+  * Indica si el formulario del paso actual es válido.
+  * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+  */
+  esFormaValido: boolean = false;
+
+  /**
+  * @property {PasoUnoComponent} pasoUnoComponent
+  * @description
+  * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+  * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+  */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * @property {string} formErrorAlert
+   * @description
+   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * Constructor del componente.
    *
@@ -118,9 +142,36 @@ export class SolicitudPageComponent implements OnDestroy {
 
   /**
    * Obtiene el valor del índice de la acción del botón.
-   * @param e Acción del botón.
+   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
+   * 
+   * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
+   * 
+   * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = false;
+
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        this.indice = 1;
+        this.datosPasos.indice = 1;
+      } else {
+        this.indice = 2;
+        this.datosPasos.indice = 2;
+      }
+
+    } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.pasoNavegarPor(e);
+    }
+  }
+
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
+  pasoNavegarPor(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -130,6 +181,28 @@ export class SolicitudPageComponent implements OnDestroy {
       }
     }
   }
+
+    /**
+ * @method validarTodosFormulariosPasoUno
+ * @description
+ * Valida todos los formularios del componente `PasoUnoComponent`.
+ * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+ * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+ * Retorna `true` si todos los formularios son válidos.
+ *
+ * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+ */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validateAll();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Hook de ciclo de vida de Angular que se ejecuta al destruir el componente.
    *

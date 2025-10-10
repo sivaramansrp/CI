@@ -1,12 +1,12 @@
 import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PasoFirmaComponent,WizardComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject, take, takeUntil } from 'rxjs';
+import { Subject, map, take, takeUntil } from 'rxjs';
+import { Tramite110202Store, TramiteState } from '../../estados/tramite110202.store';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { PASOS } from '../../constantes/modificacion.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
-import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
-import { Tramite110202Store, TramiteState } from '../../estados/tramite110202.store';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -35,7 +35,7 @@ interface AccionBoton {
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
 })
-export class CartificadoValidacionPageComponent {
+export class CartificadoValidacionPageComponent implements OnDestroy {
   /**
   * @property {PasoUnoComponent} pasoUnoComponent
   * @description
@@ -189,6 +189,17 @@ export class CartificadoValidacionPageComponent {
       }
     }
   }
+/**
+ * Lógica de limpieza al destruir el componente.
+ * Este método se ejecuta cuando el componente es destruido y se utiliza para limpiar recursos y evitar fugas de memoria.
+ * Emite una señal para destruir los observables y completa el subject `destroyNotifier$`.
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    // Emite una señal para destruir los observables y evitar fugas de memoria
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
   /**
  * @method validarTodosFormulariosPasoUno
@@ -210,6 +221,7 @@ export class CartificadoValidacionPageComponent {
     }
     return true;
   }
+
    /**
   * Obtiene los datos del store y los guarda utilizando el servicio.
   */
@@ -222,6 +234,11 @@ export class CartificadoValidacionPageComponent {
       });
   }
   
+/**
+ * Transforma un array de objetos en un nuevo formato.
+ * @param arr - array de objetos a transformar
+ * @returns array de objetos transformados
+ */
 buildMercanciaSeleccionadas(arr: any[]): any[] {
 return arr.map((item: any) => ({
   id: item.id,

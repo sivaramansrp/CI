@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-titulo titulo="Histórico Productores" />
+    <ng-titulo titulo="Histórico productores" />
 
     <form [formGroup]="formulario">
         <div class="row">
@@ -57,10 +57,8 @@
                 </div>
             </div>
         </div>
-        <div class="table-container mt-5" *ngIf="tramiteState?.productorMismoExportador">
-            <div>
-                <p>Mercancías Seleccionadas</p>
-            </div>
+        <div class="table-container mt-5" *ngIf="tramiteState?.productorMismoExportador && mostrarMercanciasSeleccionadas">
+            <h6>Mercancías Seleccionadas</h6>
             @if(esTipoDeSeleccionado){
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
                 [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaDatos"

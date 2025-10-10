@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 
@@ -6,6 +7,8 @@ import { Injectable } from '@angular/core';
  * Interfaz que representa el estado de Solicitud260211.
  */
 export interface Solicitud110208State {
+    /** ID de la solicitud */
+    idSolicitud: number | null;
     /**
      * El valor de entidadFederativa.
      */
@@ -142,10 +145,8 @@ export interface Solicitud110208State {
      * El valor de observaciones.
      */
     observaciones: string;
-    /**
-     * El valor de idioma.
-     */
-    idioma: string;
+    /** Lista de idiomas disponibles. */
+    idioma: Catalogo[]
     /**
      * El valor de entidadFederativaCertificado.
      */
@@ -154,6 +155,28 @@ export interface Solicitud110208State {
      * El valor de representacionFederal.
      */
     representacionFederal: string;
+
+        /**
+   * Datos del formulario relacionados con los detalles del certificado.
+   * Estructura dinámica y flexible.
+   */
+  formDatosCertificado: { [key: string]: unknown };
+      /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
+
+    /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+    /** Representación federal seleccionada */
+  representacionFederalSeleccion: Catalogo;
+    /**
+   * Objeto que contiene banderas booleanas para validar formularios.
+   * Cada clave representa una sección del formulario.
+   */
+  formaValida: { [key: string]: boolean };
+
     
 }
 /**
@@ -162,6 +185,7 @@ export interface Solicitud110208State {
  */
 export function createInitialState(): Solicitud110208State {
     return {
+        idSolicitud:0,
         /**
          * El valor de entidadFederativa.
          */
@@ -301,7 +325,7 @@ export function createInitialState(): Solicitud110208State {
         /**
          * El valor de idioma.
          */
-        idioma: '',
+        idioma: [],
         /**
          * El valor de entidadFederativaCertificado.
          */
@@ -310,6 +334,31 @@ export function createInitialState(): Solicitud110208State {
          * El valor de representacionFederal.
          */
         representacionFederal: '',
+
+              /** Formulario de datos adicionales del certificado */
+  formDatosCertificado: {
+    observacionesDates: '',
+    idiomaDates: '',
+    precisaDates: '',
+    EntidadFederativaDates: '',
+    representacionFederalDates: '',
+  },
+      /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: [],
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: [],
+    /** Lista de idiomas disponibles */
+  idiomaDatos: [],
+    /** Representación federal seleccionada */
+  representacionFederalSeleccion: { id: -1, descripcion: '' },
+    /** Estado de validación de los diferentes formularios */
+  formaValida: {
+    certificado: true,
+    datos: true,
+    destinatrio: true,
+    datosDestinatario: true,
+  },
         
     };
 }
@@ -329,12 +378,26 @@ export function createInitialState(): Solicitud110208State {
 @StoreConfig({ name: 'tramite110208', resettable: true })
 
 export class Tramite110208Store extends Store<Solicitud110208State>{
+
+
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.
      */
     constructor() {
         super(createInitialState());
+    }
+
+    /**
+     * Guarda el ID de la solicitud en el estado.
+     *
+     * @param idSolicitud - El ID de la solicitud que se va a guardar.
+     */
+    public setIdSolicitud(idSolicitud: number): void {
+        this.update((state) => ({
+        ...state,
+        idSolicitud,
+        }));
     }
 
     /**
@@ -681,7 +744,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de idioma.
      * @param idioma - El valor de idioma.
      */
-    public setIdioma(idioma: string):void {
+    public setIdioma(idioma: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             idioma,
@@ -707,5 +770,94 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
             representacionFederal,
         }));
     }
+
+        /**
+    * Establece el catálogo de idiomaDatosSeleccion en el estado de la tienda.
+    *
+    * @param idiomaDatosSeleccion - Una lista de objetos de tipo `Catalogo` que representan las idiomaDatosSeleccion a establecer.
+    */
+      setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+        this.update((state) => ({
+          ...state,
+          idiomaDatosSeleccion,
+        }));
+      }
+
+      
+    /**
+   * Establece los valores del formulario de fechas del certificado en el almacén.
+   * 
+   * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormDatosCertificado(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Establece los datos de la representación federal en el almacén.
+   * 
+   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la entidad federativa en el almacén.
+   * 
+   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+    /**
+* Establece los representacionFederalSeleccion de países en el almacén.
+* 
+* @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+* 
+* @returns {void} - No devuelve ningún valor.
+*/
+  setRepresentacionFederalDatosSeleccion(representacionFederalSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
+  }
+
+    /**
+   * Establece el estado de validación del formulario en el almacén.
+   * 
+   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormValida(formaValida: { [key: string]: boolean }): void {
+    this.update((state) => {
+      const IS_VALID = { ...state.formaValida, ...formaValida };
+      return {
+        ...state,
+        formaValida: IS_VALID,
+      };
+    });
+  }
+
 } 
   

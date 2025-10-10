@@ -14,6 +14,14 @@ import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 export class Tramite110202Query extends Query<TramiteState> {
 
+   /**
+   * Selecciona el estado general del trámite.
+   * @returns {Observable<any>} - Observable con el estado del trámite.
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
   /**
    * Selecciona el estado general del trámite.
    * @returns {Observable<any>} - Observable con el estado del trámite.
@@ -174,12 +182,6 @@ export class Tramite110202Query extends Query<TramiteState> {
    */
   selectDestinatarioForm$ = this.select((state) => {
     return state.destinatarioForm;
-  });
-  /**
-   * Selecciona todo el estado de la solicitud.
-   */
-  selectSolicitud$ = this.select((state) => {
-    return state;
   });
 
   /**

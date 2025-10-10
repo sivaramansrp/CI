@@ -52,7 +52,7 @@ export class CertificadoValidacionService {
     private get apiRoutes(): ReturnType<typeof API_ROUTES> {
       return API_ROUTES(this._procedure, this._procedureNo);
     }
-
+  
   /**
    * Obtiene la lista de TratadoAcuerdo desde un archivo JSON local.
    * @method obtenerListaTratadoAcuerdo
@@ -312,13 +312,10 @@ getAllState(): Observable<TramiteState> {
       })
     );
   }
-buscarMercanciasCert(body: any): Observable<any> {
-  // return this.httpService.post<any>(
-  //   'http://localhost:8080/api/sat-t110202/solicitud/buscar-mercancias',
-  //   { body: body }
-  // );
-   return this.httpService.post<any>(this.apiRoutes.BUSCAR, { body: body });
-}
+
+  buscarMercanciasCert(body: any): Observable<any> {
+    return this.httpService.post<any>(this.apiRoutes.BUSCAR, { body: body });
+  }
 
 /**
  * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
@@ -326,8 +323,7 @@ buscarMercanciasCert(body: any): Observable<any> {
  * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
  * @returns Observable con la respuesta de la solicitud POST.
  */
-guardarDatosPost(body: any) : Observable<any>{
+guardarDatosPost(body: any): Observable<any> {
   return this.httpService.post<any>(this.apiRoutes.GUARDAR, { body: body });
-  // return this.httpService.post<any>('http://localhost:8080/api/sat-t110202/solicitud/guardar', { body: body });
 }
 }

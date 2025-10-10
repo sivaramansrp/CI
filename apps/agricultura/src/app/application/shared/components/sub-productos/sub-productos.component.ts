@@ -291,7 +291,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     });
 
     this.detalleForm = this.fb.group({
-      numeroLote: ['', Validators.required],
+      numeroLote: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       rangoDeFecha: ['si'],
       procesoStart: [''],
       procesoEnd: [''],
