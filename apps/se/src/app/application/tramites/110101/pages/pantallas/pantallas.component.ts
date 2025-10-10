@@ -151,7 +151,7 @@ export class PantallasComponent implements OnInit {
    * @param {AccionBoton} e - Objeto con la acción y el valor del nuevo índice.  
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e.valor > 0 && e.valor < 6) {
     this.guardarSolicitudCompleta(() => {
       this.indice = e.valor;
       if (e.accion === 'cont') {

@@ -43,6 +43,11 @@ import { Subject } from 'rxjs';
   styleUrl: './historico-productores.component.scss',
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
+
+  @Input() mostrarMercanciasSeleccionadas: boolean = true;
+
+  @Input() sortMercanciasTablaOrder: boolean = false;
+  
   /**
    * @description
    * Formulario principal para gestionar los datos de los productores.
@@ -196,7 +201,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  * Propiedad de salida que emite el valor del formulario cuando se actualiza.
  * @type {EventEmitter<undefined>}
  */
-  @Output() agregarDatosProductorFormularioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
+  @Output() agregarDatosProductorFormularioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: string | number | boolean | null; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: string | number | boolean | null; storeStateName: string }>();
 
   /**
  * Configuración de la tabla de selección.
@@ -241,7 +246,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @comando
    * Utilice esta propiedad para personalizar o acceder a la configuración de las columnas.
    */
-  mercanciaTablaConfiguracion: ConfiguracionColumna<MercanciaTabla>[] = CONFIGURACION_MERCANCIA;
+  mercanciaTablaConfiguracion!: ConfiguracionColumna<MercanciaTabla>[];
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -333,6 +338,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
+    this.mercanciaTablaConfiguracion = CONFIGURACION_MERCANCIA(this.sortMercanciasTablaOrder);
     this.initFormulario();
     this.inicializarEstadoFormulario();
     this.inicializarFormularioMercancia()
@@ -377,11 +383,11 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       fraccionArancelaria: [{ value: [], disabled: true }],
       nombreComercial: [{ value: [[]], disabled: true }],
       nombreTecnico: [{ value: [[]], disabled: true }],
-      numeroDeRegistroFiscal: ['',Validators.required],
+      numeroDeRegistroFiscal: ['', [Validators.required]],
       valorMercancia: [{ value: '', disabled: true }],
       complemento: [{ value: '', disabled: true }],
       numeroFactura: [{ value: [[]], disabled: true }],
-      tipoFactura: ['', [Validators.required, Validators.min(0)]],
+      tipoFactura: [''],
     });
   }
   /**
@@ -390,7 +396,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   initAgregarDatosProductorFormulario(): void {
     this.agregarDatosProductorFormulario = this.fb.group({
       numeroRegistroFiscal: ['', [Validators.required]],
-      fax: [[Validators.pattern(REGEX_SOLO_DIGITOS)]]
+      fax: ['', [Validators.pattern(REGEX_SOLO_DIGITOS)]]
     });
   }
 
@@ -506,7 +512,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   * @param {string} storeStateName - Nombre del estado del store para actualizar.
   */
   setValoresStoreAgregarForm(formGroupName: string, campo: string, storeStateName?: string): void {
-    const VALOR = this.agregarDatosProductorFormulario.get(campo)?.value;
+    const VALOR = this.agregarDatosProductorFormulario.get(campo)?.value ?? null;
     this.formaValida.emit(this.agregarDatosProductorFormulario.valid);
     this.agregarDatosProductorFormularioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName: storeStateName || '' });
 
@@ -609,6 +615,20 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
     this.nuevaNotificacionStatus = true;
+  }
+
+  /**
+   * Valida el formulario del componente.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+  public validarFormulario(): boolean {
+    let isValid = true;
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**

@@ -19,6 +19,25 @@ export const PASOS = [
   },
 ];
 
+/**
+ * Pasos para trámites que solo requieren dos pasos.
+ */
+export const PASOS2 = [
+    {
+        indice: 1,
+        titulo: 'Capturar solicitud',
+        activo: true,
+        completado: false,
+      },
+      {
+        indice: 2,
+        titulo: 'Firmar solicitud',
+        activo: false,
+        completado: false,
+      }
+
+]
+
 export const CONSTANTES = {
   EXP_CORREO: /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/,
 };

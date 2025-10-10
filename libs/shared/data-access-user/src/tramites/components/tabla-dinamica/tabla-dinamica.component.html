@@ -15,7 +15,7 @@
         } @if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <th></th>
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
-        <th>
+        <th [ngClass]="{'text-center': styleCenter}">
           <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
             (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo" [checked]="
               paginatedDatos.length ? filasSeleccionadas.length === paginatedDatos.length : false
@@ -23,8 +23,8 @@
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->
-        <th *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="onSort(col)">
-          <div class="d-flex align-items-center">
+        <th [ngClass]="{'text-center': styleCenter}" *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="onSort(col)">
+          <div class="align-items-center">
             {{ col.encabezado }}
             @if (showSort) {
             <span class="d-inline-flex flex-column align-items-center ms-2">
@@ -47,7 +47,7 @@
           </div>
         </th>
         @if(acciones && acciones.length){
-        <th>Acciones</th>
+        <th [ngClass]="{'text-center': styleCenter}">Acciones</th>
         }
       </tr>
     </thead>
@@ -60,7 +60,7 @@
         </td>
       </tr>
       <!-- Crear las filas de manera dinámica -->
-      <tr *ngFor="let fila of paginatedDatos; let i = index" (click)="onFilaClic(fila)">
+      <tr [ngStyle]="styleCenter ? {'text-align': 'center'} : {}" *ngFor="let fila of paginatedDatos; let i = index" (click)="onFilaClic(fila)">
         <!-- Botón de radio para seleccionar una fila -->
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
         <td>

@@ -14,6 +14,15 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para el paso dos del trámite de contenedores temporales.
+ * 
+ * Este componente maneja el formulario de pago de derechos, incluyendo
+ * la captura de información de líneas de captura y montos a pagar.
+ * Gestiona la interacción con el store del trámite para persistir datos.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-paso-dos',
   standalone: true,

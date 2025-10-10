@@ -96,7 +96,55 @@ export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[]
  * console.log(TEXTOS);
  * // Output: "La fecha indicada NO es correcta por que aún no concluye:"
  */
-export const TEXTOS = "La fecha indicada NO es correcta por que aún no concluye:";
+export const TEXTOS = `La fecha indicada NO es correcta por que aún no concluye:`;
+
+/**
+ * Mensaje de error para fechas que no corresponden al periodo seleccionado.
+ * @const PERIODO_TEXTO
+ * @description Constante que contiene un mensaje HTML indicando que las fechas proporcionadas 
+ * no corresponden al periodo seleccionado. El mensaje está centrado mediante CSS inline.
+ * @type {string}
+ * @example
+ * console.log(PERIODO_TEXTO);
+ * // Output: "<p style="text-align: center;">Las fechas sobre el periodo NO corresponden.</p>"
+ */
+export const PERIODO_TEXTO = `<p style="text-align: center;">Las fechas sobre el periodo NO corresponden.</p>`;
+
+/**
+ * Mensaje de error para registros duplicados.
+ * @const REGISTRO_TEXTO
+ * @description Constante que contiene un mensaje HTML indicando que el registro ya fue agregado previamente.
+ * El mensaje está centrado mediante CSS inline.
+ * @type {string}
+ * @example
+ * console.log(REGISTRO_TEXTO);
+ * // Output: "<p style="text-align: center;">El registro ya fue agregado.</p>"
+ */
+export const REGISTRO_TEXTO = `<p style="text-align: center;">El registro ya fue agregado.</p>`;
+
+/**
+ * Mensaje de error para periodo final menor al inicial.
+ * @const MENOR_TEXTO
+ * @description Constante que contiene un mensaje HTML indicando que el periodo final 
+ * es menor al periodo inicial. El mensaje está centrado mediante CSS inline.
+ * @type {string}
+ * @example
+ * console.log(MENOR_TEXTO);
+ * // Output: "<p style="text-align: center;">Periodo final es menor</p>"
+ */
+export const MENOR_TEXTO = `<p style="text-align: center;">Periodo final es menor</p>`;
+
+/**
+ * Mensaje de error para fechas de diferentes periodos.
+ * @const PERIODO_ERROR
+ * @description Constante que contiene un mensaje HTML indicando que se deben capturar 
+ * fechas del mismo periodo. El mensaje está centrado mediante CSS inline.
+ * @type {string}
+ * @example
+ * console.log(PERIODO_ERROR);
+ * // Output: "<p style="text-align: center;">Debe capturar fechas del mismo periodo.</p>"
+ */
+export const PERIODO_ERROR = `<p style="text-align: center;">Debe capturar fechas del mismo periodo.</p>`;
 
 /**
  * alert-danger

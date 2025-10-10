@@ -248,6 +248,14 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
 
   /** Dirección actual del ordenamiento aplicado en la tabla: ascendente o descendente. */
   public sortDirection: 'asc' | 'desc' = 'asc';
+
+  /**
+   * Indica si el contenido de las celdas de la tabla debe estar centrado.
+   * Cuando se establece en `true`, aplica estilos CSS para centrar el texto en las celdas de la tabla.
+   * @type {boolean}
+   * @default false
+   */
+  @Input() styleCenter: boolean = false;
   
   /**
  * Método del ciclo de vida que se ejecuta al inicializar el componente.

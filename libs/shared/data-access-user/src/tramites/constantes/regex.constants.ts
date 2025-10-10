@@ -1219,3 +1219,22 @@ export const INPUT_FILTER_NOMBRE_ALPHANUMERICO = /[A-Za-z0-9Ññ(), ]/;
  * Usado para filtrar entrada en tiempo real en campos de dirección
  */
 export const INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /[A-Za-z0-9,() ]/;
+
+/**
+ * Expresión regular para validar el formato del número de programa IMMEX.
+ * El formato esperado es: 123456/2023
+ * - Antes de la barra (/) puede haber entre 1 y 6 dígitos.
+ * - Después de la barra (/) debe haber exactamente 4 dígitos.
+ */
+export const REGEX_NUMERO_PROGRAMA_IMMEX = /^\d{1,6}[/]\d{4}$/;
+
+/**
+ * Expresión regular para encontrar caracteres que no sean números (0-9).
+ * Utilizada para filtrar o reemplazar caracteres no numéricos en campos NICO.
+ * 
+ * @example
+ * // Uso para limpiar una cadena manteniendo solo números
+ * const input = "ABC123DEF456";
+ * const soloNumeros = input.replace(REGEX_NICO, ''); // Resultado: "123456"
+ */
+export const REGEX_NICO = /[^0-9]/g;
