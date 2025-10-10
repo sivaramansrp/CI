@@ -1,24 +1,31 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 /**
  * Representa un catálogo con un identificador y una descripción.
  */
 export interface Catalogo {
- /** Identificador único del catálogo. */
- id: number;
- /** Descripción del catálogo. */
- descripcion: string;
+  /** Identificador único del catálogo. */
+  id: number;
+  /** Descripción del catálogo. */
+  descripcion: string;
 }
 /**
  * Estado inicial para la interfaz del trámite 110207.
  */
 export interface Solicitud110207State {
+  /** Indica si el certificado es requerido. */
+  paisBloques: Catalogo[];
+  /** Datos del formulario del certificado. */
+  formCertificado: { [key: string]: unknown };
+  /** Estado del trámite. */
+  estado: Catalogo;
   /** ID de la solicitud */
   idSolicitud: number | null;
   /** Lista de tratados disponibles. */
-  tratado: Catalogo[]
+  tratado: Catalogo[];
   /** Lista de países disponibles. */
-  pais: Catalogo[]
+  pais: Catalogo[];
   /** Fracción arancelaria seleccionada. */
   fraccionArancelaria: string;
   /** Número de registro del producto. */
@@ -38,11 +45,11 @@ export interface Solicitud110207State {
   /** Valor de presenta. */
   presenta: string;
   /** Lista de idiomas disponibles. */
-  idioma: Catalogo[]
+  idioma: Catalogo[];
   /** Lista de entidades disponibles. */
-  entidad: Catalogo[] 
+  entidad: Catalogo[];
   /** Lista de representaciones disponibles. */
-  representacion: Catalogo[] 
+  representacion: Catalogo[];
   /** Nombre del solicitante. */
   nombre: string;
   /** Primer apellido del solicitante. */
@@ -68,9 +75,9 @@ export interface Solicitud110207State {
   /** Correo electrónico del solicitante. */
   correoElectronico: string;
   /** Lista de naciones disponibles. */
-  nacion: Catalogo[]
+  nacion: Catalogo[];
   /** Lista de transportes disponibles. */
-  transporte: Catalogo[] 
+  transporte: Catalogo[];
   /** Fracción arancelaria de la mercancía. */
   fraccionMercanciaArancelaria: string;
   /** Nombre técnico de la mercancía. */
@@ -84,7 +91,7 @@ export interface Solicitud110207State {
   /** Cantidad de la mercancía. */
   cantidad: string;
   /** Lista de unidades de medida comercial (UMC). */
-  umc: Catalogo[] 
+  umc: Catalogo[];
   /** Valor de la mercancía. */
   valorDelaMercancia: string;
   /** Complemento de la descripción de la mercancía. */
@@ -94,9 +101,9 @@ export interface Solicitud110207State {
   /** Nombre comercial de la mercancía. */
   nombreComercialDelaMercancia: string;
   /** Lista de unidades de medida disponibles. */
-  unidadMedida: Catalogo[] 
+  unidadMedida: Catalogo[];
   /** Lista de tipos de factura disponibles. */
-  tipoFactura: Catalogo[] 
+  tipoFactura: Catalogo[];
   /** Fecha de la factura. */
   fecha: string;
   /** Número de la factura. */
@@ -113,6 +120,20 @@ export interface Solicitud110207State {
   puertoEmbarque: string;
   /** Puerto de desembarque. */
   puertoDesembarque: string;
+  /** Datos de la mercancía. */
+  formulario: { [key: string]: unknown };
+  /**
+   * Lista de datos de mercancía  disponibles para selección.
+   */
+  disponiblesDatos: Mercancia[];
+  /**
+   * Lista de mercancías añadidas a la tabla.
+   */
+  mercanciaTabla: Mercancia[];
+  /**
+   * Indica si los formularios son válidos.
+   */
+  formaValida: { [key: string]: boolean };
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110207.
@@ -120,6 +141,27 @@ export interface Solicitud110207State {
  */
 export function createInitialState(): Solicitud110207State {
   return {
+    formCertificado: {
+      si: false,
+      entidadFederativa: '',
+      bloque: '',
+      nombreComercialForm: '',
+      registroProductoForm: '',
+      fraccionArancelariaForm: '',
+      fechaInicioInput: '',
+      fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+      pais: '',
+      ciudad: '',
+      telefono: '',
+      correoElectronico: '',
+      numeroLetra: '',
+      calle: '',
+    },
     idSolicitud: 0,
     tratado: [],
     pais: [],
@@ -170,6 +212,24 @@ export function createInitialState(): Solicitud110207State {
     rutaCompleta: '',
     puertoEmbarque: '',
     puertoDesembarque: '',
+    formulario: {
+      datosConfidencialesProductor: '',
+      productorMismoExportador: '',
+    },
+    estado: {
+      id: -1,
+      descripcion: '',
+    },
+    paisBloques: [],
+    disponiblesDatos: [],
+    mercanciaTabla: [],
+    formaValida: {
+      certificado: false,
+      datos: false,
+      destinatrio: false,
+      datosDestinatario: false,
+      exportador: false,
+    },
   };
 }
 
@@ -182,7 +242,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     super(createInitialState());
   }
 
-    /**
+  /**
    * Guarda el ID de la solicitud en el estado.
    *
    * @param idSolicitud - El ID de la solicitud que se va a guardar.
@@ -193,7 +253,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
       idSolicitud,
     }));
   }
-  
+
   /**
    * Establece el valor de la casilla de verificación.
    * @param siCasilla Indica si la casilla está marcada.
@@ -238,7 +298,9 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la fracción arancelaria de la mercancía.
    * @param fraccionMercanciaArancelaria Cadena que representa la fracción arancelaria de la mercancía.
    */
-  public setfraccionMercanArancelaria(fraccionMercanciaArancelaria: string): void {
+  public setfraccionMercanArancelaria(
+    fraccionMercanciaArancelaria: string
+  ): void {
     this.update((state) => ({
       ...state,
       fraccionMercanciaArancelaria,
@@ -368,7 +430,9 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el valor de la casilla de verificación.
    * @param complementoDelaDescripcion Cadena que representa el valor de la casilla.
    */
-  public setcomplementodeladescripcion(complementoDelaDescripcion: string): void {
+  public setcomplementodeladescripcion(
+    complementoDelaDescripcion: string
+  ): void {
     this.update((state) => ({
       ...state,
       complementoDelaDescripcion,
@@ -388,7 +452,9 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el nombre comercial de la mercancía.
    * @param nombreComercialDelaMercancia Cadena que representa el nombre comercial de la mercancía.
    */
-  public setnombrecomercialdelamercancia(nombreComercialDelaMercancia: string): void {
+  public setnombrecomercialdelamercancia(
+    nombreComercialDelaMercancia: string
+  ): void {
     this.update((state) => ({
       ...state,
       nombreComercialDelaMercancia,
@@ -578,7 +644,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número o letra de la dirección del solicitante.
    * @param numeroLetra Cadena que representa el número o letra de la dirección.
    */
-  public setNumeroLetra(numeroLetra: string):void {
+  public setNumeroLetra(numeroLetra: string): void {
     this.update((state) => ({
       ...state,
       numeroLetra,
@@ -665,9 +731,9 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     }));
   }
   /**
-  * Establece el puerto de embarque.
-  * @param puertoEmbarque Cadena que representa el puerto de embarque.
-  */
+   * Establece el puerto de embarque.
+   * @param puertoEmbarque Cadena que representa el puerto de embarque.
+   */
   public setPuertoEmbarque(puertoEmbarque: string): void {
     this.update((state) => ({
       ...state,
@@ -675,10 +741,10 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     }));
   }
   /**
-     * Establece el puerto de desembarque.
-     * @param puertoDesembarque Cadena que representa el puerto de desembarque.
-     */
-  public setPuertoDesembarque(puertoDesembarque: string):void {
+   * Establece el puerto de desembarque.
+   * @param puertoDesembarque Cadena que representa el puerto de desembarque.
+   */
+  public setPuertoDesembarque(puertoDesembarque: string): void {
     this.update((state) => ({
       ...state,
       puertoDesembarque,
@@ -686,9 +752,124 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
   }
 
   /**
+   * @method setFormHistorico
+   * @description
+   * Actualiza los datos del formulario de formulario.
+   * @param values Valores a actualizar en el formulario.
+   */
+  setFormHistorico(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formulario: {
+        ...state.formulario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @method setmercanciaTabla
+   * @description
+   * Actualiza la tabla de mercancías en el almacén.
+   * @param mercanciaTabla Array de objetos `Mercancia` que representa la tabla de mercancías.
+   */
+  public setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+      // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
+  }
+
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+
+  /**
+   * @method setFormCertificadoGenric
+   * @description
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormCertificadoGenric(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @method setEstado
+   * @description
+   * Actualiza el estado seleccionado en el almacén.
+   * @param estado Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
+   */
+  setEstado(estado: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      estado,
+    }));
+  }
+
+   /**
+   * @method setFormValida
+   * @description
+   * Actualiza el estado de validación de los formularios en el almacén.
+   * @param formaValida Objeto que contiene los valores de validación para los formularios.
+   */
+  setFormValida(formaValida: { [key: string]: boolean }): void {
+    this.update((state) => {
+      const IS_VALID = { ...state.formaValida, ...formaValida };
+      return {
+        ...state,
+        formaValida: IS_VALID,
+      };
+    });
+  }
+
+   /**
+     * @method setBloque
+     * @description
+     * Actualiza los bloques de países en el almacén.
+     * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
+     */
+    setBloque(paisBloques: Catalogo[]): void {
+      this.update((state) => ({
+        ...state,
+        paisBloques,
+      }));
+    }
+
+  /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud():void {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }
