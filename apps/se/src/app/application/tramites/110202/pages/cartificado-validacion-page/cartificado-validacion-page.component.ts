@@ -178,6 +178,15 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Navega entre los pasos de un asistente (wizard) según la acción recibida.
+   *
+   * @param e - Objeto de tipo `AccionBoton` que contiene la acción a realizar y el valor del índice del paso.
+   * 
+   * - Actualiza el índice actual y el índice en `datosPasos` con el valor proporcionado.
+   * - Si el valor está entre 1 y 4 (inclusive), navega al siguiente paso si la acción es 'cont', 
+   *   o al paso anterior en caso contrario, utilizando los métodos del componente wizard.
+   */
   pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;

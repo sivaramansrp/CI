@@ -1,6 +1,6 @@
+import { GrupoRepresentativo, HistoricoColumnas } from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
-import {HistoricoColumnas} from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -49,14 +49,14 @@ export interface Tramite110205State {
   formCertificado: {[key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
-  mercanciaForm: {[key: string]: unknown};
+  mercanciaForm: { [key: string]: unknown };
   mercanciaTabla: Mercancia[];
-  formDatosCertificado: {[key: string]: unknown};
+  formDatosCertificado: { [key: string]: unknown };
   idiomaDatosSeleccion: Catalogo;
   entidadFederativaSeleccion: Catalogo;
   representacionFederalSeleccion: Catalogo;
-  formDatosDelDestinatario: {[key: string]: unknown};
-  formExportor: {[key: string]: unknown};
+  formDatosDelDestinatario: { [key: string]: unknown };
+  grupoRepresentativo: GrupoRepresentativo;
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -71,13 +71,13 @@ export interface Tramite110205State {
   numeroFactura: string;
   tipoFactura: Catalogo[];
   formaValida: { [key: string]: boolean };
-  formDestinatario: {[key: string]: unknown};
+  formDestinatario: { [key: string]: unknown };
   datosConfidencialesProductor?: boolean;
   productorMismoExportador?: boolean;
-  agregarDatosProductorFormulario: {[key: string]: unknown};
-  formulario: {[key: string]: unknown};
-  disponiblesDatos:Mercancia[];
-  procductoUno:HistoricoColumnas[];
+  agregarDatosProductorFormulario: { [key: string]: unknown };
+  formulario: { [key: string]: unknown };
+  disponiblesDatos: Mercancia[];
+  procductoUno: HistoricoColumnas[];
 }
 
 
@@ -173,15 +173,13 @@ export function createInitialState(): Tramite110205State {
     complementoDescripcion: '',
     numeroFactura: '',
     tipoFactura: [],
-    formExportor: {
+    grupoRepresentativo: {
       lugar: '',
-      exportador: '',
+      nombreExportador: '',
       empresa: '',
       cargo: '',
-      lada: '',
-      telfono: '',
-      fax: '',
-      correo: '',
+      telefono: '',
+      correoElectronico: '',
     },
     formaValida: {
       certificado: false,
@@ -200,16 +198,16 @@ export function createInitialState(): Tramite110205State {
       fax: '',
       correoElectronico: '',
     },
-    formulario:{
+    formulario: {
       datosConfidencialesProductor: '',
       productorMismoExportador: '',
     },
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
-      fax: '',      
+      fax: '',
     },
     disponiblesDatos: [],
-    procductoUno:[]
+    procductoUno: []
   };
 }
 
@@ -422,21 +420,6 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     this.update((state) => ({
       formDatosDelDestinatario: {
         ...state.formDatosDelDestinatario,
-        ...values,
-      },
-    }));
-  }
-
-  /**
-   * @method setFormExportador
-   * @description
-   * Actualiza los datos del formulario de exportador en el almacén.
-   * @param values Objeto que contiene los valores a actualizar en el formulario de exportador.
-   */
-  setFormExportador(values: { [key: string]: undefined | boolean | string | number | object }): void {
-    this.update((state) => ({
-      formExportor: {
-        ...state.formExportor,
         ...values,
       },
     }));
@@ -678,6 +661,102 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     this.update((state) => ({
       ...state,
       procductoUno,
+    }));
+  }
+  /**
+     * Actualiza el lugar en el grupo representativo.
+     *
+     * Este método permite establecer el lugar en el grupo representativo del trámite.
+     *
+     * @param {string} lugar - El lugar a establecer.
+     */
+  public setGrupoRepresentativoLugar(lugar: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lugar },
+    }));
+  }
+
+  /**
+   * Actualiza el nombre del exportador en el grupo representativo.
+   *
+   * Este método permite establecer el nombre del exportador en el grupo representativo del trámite.
+   *
+   * @param {string} nombre - El nombre del exportador a establecer.
+   */
+  public setGrupoRepresentativoNombreExportador(
+    nombreExportador: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, nombreExportador },
+    }));
+  }
+
+  /**
+   * Actualiza la empresa en el grupo representativo.
+   *
+   * Este método permite establecer la empresa en el grupo representativo del trámite.
+   *
+   * @param {string} empresa - La empresa a establecer.
+   */
+  public setGrupoRepresentativoEmpresa(empresa: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, empresa },
+    }));
+  }
+  /**
+   * Actualiza el cargo en el grupo representativo.
+   *
+   * Este método permite establecer el cargo en el grupo representativo del trámite.
+   *
+   * @param {string} cargo - El cargo a establecer.
+   */
+  public setGrupoRepresentativoCargo(cargo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, cargo },
+    }));
+  }
+
+
+  /**
+   * Actualiza el teléfono en el grupo representativo.
+   *
+   * Este método permite establecer el teléfono en el grupo representativo del trámite.
+   *
+   * @param {string} telefono - El teléfono a establecer.
+   */
+  public setGrupoRepresentativoTelefono(telefono: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, telefono },
+    }));
+  }
+
+  /**
+   * Actualiza el correo electrónico en el grupo representativo.
+   *
+   * Este método permite establecer el correo electrónico en el grupo representativo del trámite.
+   *
+   * @param {string} correoElectronico - El correo electrónico a establecer.
+   */
+  public setGrupoRepresentativoCorreoElectronico(
+    correoElectronico: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, correoElectronico },
+    }));
+  }
+
+  public setGrupoRepresentativo(
+    grupoRepresentativo: GrupoRepresentativo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo,
     }));
   }
 }

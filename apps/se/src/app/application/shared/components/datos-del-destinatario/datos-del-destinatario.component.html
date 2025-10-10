@@ -1,9 +1,9 @@
 <div class="container">
   <form [formGroup]="formDatosDelDestinatario">
-    <div class="row mt-5">
       <ng-titulo titulo="Datos del destinatario"></ng-titulo>
+    <div class="row">
       <div *ngIf="campoDestinatario; else defaultTemplate">
-        <div class="col-md-8 form-group">
+        <div class="col-md-4 form-group">
           <label class="form-label" for="nombres">Nombre(s)*:</label>
           <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" [maxlength]="150" />
           <div *ngIf="formDatosDelDestinatario.controls['nombres'].invalid && formDatosDelDestinatario.controls['nombres'].touched">

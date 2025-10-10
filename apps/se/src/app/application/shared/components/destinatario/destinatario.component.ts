@@ -1,14 +1,16 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { CAMPO_DE_DESTINATARIO, CAMPO_DE_DESTINATARIOS } from '../../constantes/modificacion.enum';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DestinatarioService } from '../../services/destinatario.service';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
-
-
+/**
+ * @description Componente para manejar los detalles de la mercancía.
+ * Proporciona entradas para configurar un formulario y opciones para productos, fracciones y unidades.
+ */
 @Component({
   selector: 'app-destinatario',
   standalone: true,
@@ -137,6 +139,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    */
   campoDestinatario = false;
 
+  // Indica si los campos de destinatarios están activos
+  camposDestinatarios = false;
+
   /**
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
@@ -160,6 +165,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    */
   ngOnInit(): void {
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
+    this.camposDestinatarios = CAMPO_DE_DESTINATARIOS.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
     this.getPaisDestino();
@@ -246,6 +252,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
   paisDestionSeleccion(estado: Catalogo): void {
     this.paisDestionSeleccionEvent.emit(estado)
   }
+  /**
+  /**
+   * Valida el formulario y marca los campos como tocados si es inválido
+   */
   validarFormularios(): boolean {
     if (this.formDestinatario.invalid) {
       this.formDestinatario.markAllAsTouched();
@@ -253,7 +263,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
     return true;
   }
-
+  /**
+   * Obtiene la lista de países de destino desde el servicio
+   */
   getPaisDestino(): void {
     this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
       this.paisDestinDestinatario = data as Catalogo[];
