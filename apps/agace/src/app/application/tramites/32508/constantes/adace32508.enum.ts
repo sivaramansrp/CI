@@ -56,7 +56,7 @@ export const FECHA_PAGO = {
   /** Etiqueta para la fecha de pago. */
   labelNombre: 'Fecha de pago',
   /** Indica si el campo es obligatorio. */
-  required: false,
+  required: true,
   /** Indica si el campo está habilitado. */
   habilitado: true,
 };

@@ -1,6 +1,7 @@
+import { Catalogo, HttpCoreService, JsonResponseCatalogo } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { Tramite110202Store, TramiteState } from '../estados/tramite110202.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { API_ROUTES } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
@@ -10,9 +11,35 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
 })
 export class CertificadoValidacionService {
 
-  constructor(private http: HttpClient,public tramite110222Store: Tramite110202Store) {
+  /**
+   * Almacena el nombre o identificador del procedimiento actual.
+   *
+   * @private
+   */
+  private _procedure: string = 'sat-t110202';
+
+  /**
+   * Almacena el nombre o identificador del procedimiento actual.
+   *
+   * @private
+   */
+  private _procedureNo: string = '';
+
+  constructor(
+    private http: HttpClient,
+    public tramite110222Store: Tramite110202Store,
+    public httpService: HttpCoreService) {
     // No se necesita lógica de inicialización adicional.
   }
+
+    /**
+     * Obtiene las rutas de la API específicas para el procedimiento actual.
+     *
+     * @returns Un objeto con las rutas de la API generadas por la función `API_ROUTES` usando el procedimiento actual.
+     */
+    private get apiRoutes(): ReturnType<typeof API_ROUTES> {
+      return API_ROUTES(this._procedure, this._procedureNo);
+    }
 
   /**
    * Obtiene la lista de TratadoAcuerdo desde un archivo JSON local.
@@ -53,9 +80,11 @@ export class CertificadoValidacionService {
    * @returns {Observable<Catalogo[]>} Observable con la lista de idiomas.
    */
   obtenerIdioma(): Observable<Catalogo[]> {
-    return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110202/idioma.json') // Solicita los datos del archivo JSON
-      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+    return this.httpService.get<Catalogo[]>(
+          this.apiRoutes.IDIOMA,
+          {},
+          false
+        );
   }
 
   /**
@@ -63,10 +92,12 @@ export class CertificadoValidacionService {
    * @method obtenerEntidadFederativa
    * @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas.
    */
-  obtenerEntidadFederativa(): Observable<Catalogo[]> {
-    return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110202/entidad-federativa.json') // Solicita los datos del archivo JSON
-      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  obtenerEntidadFederativa(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+          this.apiRoutes.ENTIDAD_FEDERATIVA,
+          {},
+          false
+        );
   }
 
   /**
@@ -74,10 +105,12 @@ export class CertificadoValidacionService {
    * @method obtenerRepresentacionFederal
    * @returns {Observable<Catalogo[]>} Observable con la lista de representaciones federales.
    */
-  obtenerRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110202/representacion-federal.json') // Solicita los datos del archivo JSON
-      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  obtenerRepresentacionFederal(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+          this.apiRoutes.REPRESENTACION_FEDERAL,
+          {},
+          false
+        );
   }
 
   /**

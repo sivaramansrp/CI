@@ -14,10 +14,12 @@ import { CommonModule } from '@angular/common';
 import { ImmexAmpliacionSensiblesRoutingModule } from './immex-ampliacion-sensibles-routing.module';
 import { PasoCargaDocumentoComponent } from '@libs/shared/data-access-user/src';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { ToastrService } from 'ngx-toastr';
 @NgModule({
   declarations: [
     PasoDosComponent,
@@ -29,6 +31,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     BtnContinuarComponent,
     CommonModule,
     AnexoComponent,
+    PasoFirmaComponent,
     PasoUnoComponent,
     FirmaElectronicaComponent,
     ImmexAmpliacionSensiblesRoutingModule,
@@ -39,6 +42,9 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     WizardComponent,
     PasoCargaDocumentoComponent,
     forwardRef(() => AnexarDocumentosComponent),
+  ],
+   providers: [
+    ToastrService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

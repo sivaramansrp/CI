@@ -149,7 +149,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-
+   this.getIdiomaDatos();
+      this.getEntidadDatos();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -195,8 +196,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['active']?.currentValue) {
-      this.getIdiomaDatos();
-      this.getEntidadDatos();
+      // this.getIdiomaDatos();
+      // this.getEntidadDatos();
     }
   }
   /**

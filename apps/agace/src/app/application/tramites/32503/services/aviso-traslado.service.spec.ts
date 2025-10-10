@@ -168,6 +168,7 @@ describe('AvisoTrasladoService', () => {
                     "valorProgramaImmex": "  programa IMMEX",
                     "valorAnioProgramaImmex": "Año de programa",
                     "tipoAviso": "prorroga",
+                    "tieneIdTransaccionVucem": "si",
                     "idTransaccion": "aviso inicial",
                     "motivoProrroga": "de la Prórroga",
                     "fechaTranslado": "15/10/2025",

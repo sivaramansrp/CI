@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -42,7 +42,7 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final:',
+  labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
 };
@@ -77,18 +77,18 @@ export const FECHA_FIN = {
     NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective),
     InputRadioComponent
-],
+  ],
   templateUrl: './certificado-de-origen.component.html',
   providers: [ToastrService],
   styleUrl: './certificado-de-origen.component.scss'
 })
 
 export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChanges {
- /**
- * Título mostrado en el componente.  
- * Puede ser personalizado desde el componente padre mediante [title].  
- * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
- */
+  /**
+  * Título mostrado en el componente.  
+  * Puede ser personalizado desde el componente padre mediante [title].  
+  * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
+  */
   @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
 
   /**
@@ -97,7 +97,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
  * Propiedad de entrada que controla la visualización del domicilio del tercer operador.
  * Cuando es true, muestra los campos relacionados con el domicilio del tercer operador.
  */
-@Input() domTercerOperador: boolean = false;
+  @Input() domTercerOperador: boolean = false;
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -111,10 +111,10 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   @Input() operador!: boolean;
 
 
-    /**
-     * Indica si el componente está en modo de solo lectura.
-     */
-   radioOptions = RADIO_OPTIONS;
+  /**
+   * Indica si el componente está en modo de solo lectura.
+   */
+  radioOptions = RADIO_OPTIONS;
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -173,6 +173,23 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   @Input() tratadoAcuerdo!: Catalogo[];
 
   /**
+ * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
+ * @type {Catalogo[]}
+ */
+  tratadoAcuerdoCertificado?: Catalogo[];
+
+  /*
+  * Propiedad de entrada que recibe los datos de los países bloqueados.
+  * @type {Catalogo[]}
+  */
+  paisBloqueCertificado?: Catalogo[];
+
+  /**
+   * Propiedad de entrada que recibe el tratado seleccionado.
+   * @type {any}
+   */
+  @Output() tratadoSeleccionado = new EventEmitter<any>();
+  /**
    * Propiedad de entrada que recibe los datos de los países bloqueados.
    * @type {Catalogo[]}
    */
@@ -199,10 +216,10 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   @Input() tableData!: Mercancia[];
 
-   /**
-     * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
-     */
-    public derechosList!: Catalogo[];
+  /**
+    * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
+    */
+  public derechosList!: Catalogo[];
 
   /**
    * Propiedad de entrada que recibe los datos de la mercancia guardada.
@@ -261,6 +278,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   @Output() filaClics = new EventEmitter<Mercancia>();
 
   /**
+   * Propiedad de salida que emite la fila seleccionada de mercancia.
+   * @type {EventEmitter<Mercancia>}
+   */
+  @Output() filaClicsMercanciaSelecction = new EventEmitter<Mercancia>();
+
+  /**
+ * Propiedad de salida que emite la fila seleccionada de mercancia.
+ * @type {EventEmitter<Mercancia>}
+ */
+  @Output() filaClicsMercanciaDisponibles = new EventEmitter<Mercancia>();
+
+  /**
   * Este evento emite un arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
   * @type {EventEmitter<Mercancia[]>}
   */
@@ -311,7 +340,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
    */
   fechaFin: boolean = false;
-  
+
   /**
    * @property {boolean} fechaFin
    * @description
@@ -381,9 +410,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
+  @Input() cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
-cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
+  cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
   /**
    * Datos de la bitácora obtenidos desde el servicio.
    * @type {Mercancia[]}
@@ -494,13 +523,13 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    */
   tableErrorMensajeError: boolean = false;
 
-    /**
-   * @property {boolean} requerida
-   * @description
-   * Indica si determinados campos del formulario son obligatorios según el tipo de procedimiento.
-   * Se establece como true cuando el ID del procedimiento está incluido en el arreglo REQUIREDA,
-   * lo que activa validaciones adicionales en ciertos campos del formulario.
-   */
+  /**
+ * @property {boolean} requerida
+ * @description
+ * Indica si determinados campos del formulario son obligatorios según el tipo de procedimiento.
+ * Se establece como true cuando el ID del procedimiento está incluido en el arreglo REQUIREDA,
+ * lo que activa validaciones adicionales en ciertos campos del formulario.
+ */
   requerida: boolean = false;
 
 
@@ -508,7 +537,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder,private service: CertificadoValidacionService,private validacionesService: ValidacionesFormularioService) {
+  constructor(private fb: FormBuilder, private service: CertificadoValidacionService, private validacionesService: ValidacionesFormularioService) {
 
     this.actualizarDatosFormularioSolicitud();
   }
@@ -526,7 +555,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
   createForm(): void {
     this.formCertificado = this.fb.group({
       si: [false],
-      rangoDeFecha:[],
+      rangoDeFecha: [],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
       fraccionArancelariaForm: ['', [Validators.maxLength(8), Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
@@ -534,27 +563,27 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
       nombreComercialForm: ['', [Validators.maxLength(200)]],
       fechaInicioInput: [''],
       fechaFinalInput: [''],
-      nombres: ['', [Validators.required,Validators.maxLength(20)]],
-      primerApellido: ['', [Validators.required,Validators.maxLength(20)]],
+      nombres: ['', [Validators.required, Validators.maxLength(20)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.required, Validators.maxLength(30)]],
-      razonSocial: ['',Validators.required],
-      calle: ['', [Validators.required,Validators.maxLength(90)]],
-      numeroLetra: ['', [Validators.required,Validators.maxLength(30)]],
-      numeroLetras: ['', [Validators.required,Validators.maxLength(30)]],
+      razonSocial: ['', Validators.required],
+      calle: ['', [Validators.required, Validators.maxLength(90)]],
+      numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
+      numeroLetras: ['', [Validators.required, Validators.maxLength(30)]],
       pais: [''],
-      ciudad: ['',Validators.required],
-      lada: ['',Validators.required],
-      telefono: ['',Validators.required],
+      ciudad: ['', Validators.required],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
       fax: [''],
-      correo: ['',Validators.required],
+      correo: ['', Validators.required],
       correoElectronico: [''],
       // Nuevos controles de formulario para el procedimiento 110222
-      calle1: ['',Validators.required],
-      numeroLetra1: ['',Validators.required],
-      ciudad1: ['',Validators.required],
+      calle1: ['', Validators.required],
+      numeroLetra1: ['', Validators.required],
+      ciudad1: ['', Validators.required],
       pais1: [''],
-      correo1: ['',Validators.required],
+      correo1: ['', Validators.required],
       telefono1: [''],
       fax1: ['']
     },
@@ -598,10 +627,10 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-   /**
-   * method loadComboUnidadMedida
-   * description Carga la lista de derechos desde el servicio.
-   */
+  /**
+  * method loadComboUnidadMedida
+  * description Carga la lista de derechos desde el servicio.
+  */
   loadComboUnidadMedida(): void {
     this.service.getDatos() // Llama al servicio para obtener los datos.
       .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
@@ -800,12 +829,14 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
     this.loadComboUnidadMedida();
-    if(REQUIREDA.includes(this.idProcedimiento)){
+    this.getPaisBloque();
+    this.getTratado();
+    if (REQUIREDA.includes(this.idProcedimiento)) {
       this.requerida = true;
     }
   }
   validarFormularios(): boolean {
-    if ((this.formCertificado.get('entidadFederativa')?.value !== '' && this.formCertificado.get('entidadFederativa')?.value !== null)&&(this.formCertificado.get('bloque')?.value!=='' && this.formCertificado.get('bloque')?.value !== null)) {
+    if ((this.formCertificado.get('entidadFederativa')?.value !== '' && this.formCertificado.get('entidadFederativa')?.value !== null) && (this.formCertificado.get('bloque')?.value !== '' && this.formCertificado.get('bloque')?.value !== null)) {
       return true;
     }
     this.formCertificado.markAllAsTouched();
@@ -902,6 +933,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    */
   abrirModificarModal(datos1: Mercancia): void {
     this.filaClics.emit(datos1);
+    this.filaClicsMercanciaDisponibles.emit(datos1)
   }
 
   /**
@@ -915,6 +947,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
   abrirModal(): void {
     if (this.seleccionadaguardarClicado.length > 0) {
       this.filaClics.emit(this.seletedccionadaguardarClicado);
+      this.filaClicsMercanciaSelecction.emit(this.seletedccionadaguardarClicado);
     }
     else {
       this.nuevaNotificacion = {
@@ -1191,6 +1224,54 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
       this.formCertificado.get('primerApellido')?.enable({ emitEvent: false });
       this.formCertificado.get('segundoApellido')?.enable({ emitEvent: false });
     }
-}
+  }
+  
+  /**
+   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+   * 
+   * @returns {void}
+   */
+  getTratado(): void {
+    this.service.getTratadoCertificado(this.idProcedimiento.toString(), 'TITRAC.TA').subscribe((data) => {
+      this.tratadoAcuerdoCertificado = data as Catalogo[];
+    });
+
+  }
+
+  /**
+   * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
+   * 
+   * @returns {void}
+   */
+  getPaisBloque():void{
+    this.service.getPaises(this.idProcedimiento.toString()).subscribe((data) => {
+      this.paisBloqueCertificado = data as Catalogo[];
+    });
+  }
+
+  /**
+   * Getter para obtener el catálogo de tratados o acuerdos.
+   * Si `tratadoAcuerdoCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `tratadoAcuerdo`.
+   * 
+   * @returns {Catalogo[]} El catálogo de tratados o acuerdos.
+   */
+  get catalogoTratado(): Catalogo[] {
+    return this.tratadoAcuerdoCertificado?.length
+      ? this.tratadoAcuerdoCertificado
+      : this.tratadoAcuerdo;
+  }
+
+  /**
+   * Getter para obtener el catálogo de países o bloques.
+   * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
+   * 
+   * @returns {Catalogo[]} El catálogo de países o bloques.
+   */
+  get paisBloqueCertificadoGet(): Catalogo[]{
+    return this.paisBloqueCertificado?.length
+      ? this.paisBloqueCertificado
+      : this.paisBloqu;
+  }
+
 
 }

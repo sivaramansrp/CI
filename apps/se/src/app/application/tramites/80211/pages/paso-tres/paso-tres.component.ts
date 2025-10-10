@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
-export class PasoTresComponent {
-}
+export class PasoTresComponent {}

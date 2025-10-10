@@ -13,8 +13,10 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import {AVISO} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
+import { Tramite110205State } from '../../estados/tramite110205.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -69,7 +71,7 @@ export class PeruCertificadoComponent implements OnDestroy {
    * @description
    * Contiene los textos informativos para el pago de derechos.
    */
-  public TEXTOS = PAGO_DE_DERECHOS;
+  public TEXTOS = AVISO.Aviso;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -77,6 +79,19 @@ export class PeruCertificadoComponent implements OnDestroy {
    * Notificador para gestionar la destrucción de suscripciones reactivas y evitar fugas de memoria.
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {Tramite110205State} solicitudState
+   * @description
+   * Estado actual de la solicitud del trámite.
+   */
+  solicitudState!: Tramite110205State;
+
+   /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
 
   /**
    * @constructor
@@ -97,6 +112,12 @@ export class PeruCertificadoComponent implements OnDestroy {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     });
+    this.tramiteQuery.selectPeru$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
   }
 
   /**

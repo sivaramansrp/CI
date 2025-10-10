@@ -7,7 +7,7 @@ import { ComplimentosService } from '../../services/complimentos.service';
 
 import { CATALOGO_TIPO, MontoDeInversion } from '../../constantes/complementar-planta.enum';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -88,10 +88,16 @@ export class MontosDeInversionComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
 
-/**  
- * Evento de salida que emite una lista de montos de inversión al componente padre.
- */
+  /**  
+   * Evento de salida que emite una lista de montos de inversión al componente padre.
+   */
   @Output() obtenerMontosInversionList: EventEmitter<MontoDeInversion[]> = new EventEmitter<MontoDeInversion[]>();
+
+/**
+ * Maneja el cambio de selección en la tabla de montos de inversión.
+ * @param event Evento que contiene la lista de filas seleccionadas en la tabla.
+ */
+  public seleccionados: MontoDeInversion[] = [];
 
   /**
    * Constructor del componente.
@@ -121,17 +127,17 @@ export class MontosDeInversionComponent implements OnInit {
   agregarMonto(): void {
 
     if (this.montosDeInversionForm.valid) {
-        this.agregarMontoNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'La operación se realizó exitosamente.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+      this.agregarMontoNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'La operación se realizó exitosamente.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       const VALOR_FORMULARIO = this.montosDeInversionForm.value;
       const NUEVO_MONTO: MontoDeInversion = {
         PLANTA: '',
@@ -142,7 +148,7 @@ export class MontosDeInversionComponent implements OnInit {
       };
       this.montosDeInversionDatos = [...this.montosDeInversionDatos, NUEVO_MONTO];
       this.montosDeInversionForm.reset();
-    } 
+    }
   }
   /**
    * Limpia el formulario de montos de inversión.
@@ -181,9 +187,9 @@ export class MontosDeInversionComponent implements OnInit {
     this.montosDeInversionForm = this.fb.group({
       tipos: [this.solicitudState.tipos],
       cantidad: [this.solicitudState.cantidad, [Validators.required]],
-      descripsion: [this.solicitudState.descripsion, [Validators.required , Validators.maxLength(1000)]],
+      descripsion: [this.solicitudState.descripsion, [Validators.required, Validators.maxLength(1000)]],
       mnx: [
-        this.solicitudState.mnx, [ Validators.required]
+        this.solicitudState.mnx, [Validators.required]
       ],
     });
   }
@@ -194,12 +200,12 @@ export class MontosDeInversionComponent implements OnInit {
    * @param maxLength Longitud máxima permitida
    */
   onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
-  const TARGET = event.target as HTMLInputElement;
-  let value = TARGET.value;
-  value = value.replace(/\D/g, '').slice(0, maxLength);
-  TARGET.value = value;
-  this.montosDeInversionForm.get(controlPath)?.setValue(value, { emitEvent: false });
-}
+    const TARGET = event.target as HTMLInputElement;
+    let value = TARGET.value;
+    value = value.replace(/\D/g, '').slice(0, maxLength);
+    TARGET.value = value;
+    this.montosDeInversionForm.get(controlPath)?.setValue(value, { emitEvent: false });
+  }
   /**
      * Método que actualiza el store con los valores del formulario.
      * 
@@ -218,5 +224,29 @@ export class MontosDeInversionComponent implements OnInit {
   regrasar(): void {
     this.obtenerMontosInversionList.emit(this.montosDeInversionDatos);
     this.cerrarPopup.emit();
+  }
+
+  /**
+   * Maneja el cambio de selección en la tabla de montos de inversión.
+   * @param event Evento que contiene la lista de filas seleccionadas en la tabla.
+   */
+  onSeleccionChange(event: MontoDeInversion[]): void {
+    this.seleccionados = event;
+  }
+  
+/**
+ * Elimina los montos de inversión seleccionados de la lista.
+ * @returns {void}
+ */
+  eliminarMonto(): void {
+    this.montosDeInversionDatos = this.montosDeInversionDatos.filter(
+      data => !this.seleccionados.some(sel =>
+        sel.TIPO === data.TIPO &&
+        sel.CANTIDAD === data.CANTIDAD &&
+        sel.DESCRIPCION === data.DESCRIPCION &&
+        sel.MONTO === data.MONTO
+      )
+    );
+    this.seleccionados = [];
   }
 }

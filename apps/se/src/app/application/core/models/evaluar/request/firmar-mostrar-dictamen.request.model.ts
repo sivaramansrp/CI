@@ -16,6 +16,8 @@ export interface MostrarFirmarRequest {
     texto_dictamen: string,
     /** Datos del solicitante */
     solicitante: Solicitante;
+    /** Lista de criterios asociados a tratados */
+    criterios_tratados?: CriterioTratado[];
 }
 
 /** Solicitante */
@@ -28,4 +30,13 @@ export interface Solicitante {
     apellido_paterno: string;
     /** Apellido materno del solicitante */
     apellido_materno: string;
+}
+
+export interface CriterioTratado {
+  /** ID del criterio del tratado */
+  id_criterio_tratado?: number;
+  /** Indica si la calificación fue aprobada por el dictaminador */
+  calificacion_aprobada_dictaminador?: boolean;
+  /** ID del tratado o acuerdo relacionado */
+  id_tratado_acuerdo?: number;
 }
