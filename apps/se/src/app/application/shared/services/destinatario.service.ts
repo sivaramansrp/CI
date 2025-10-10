@@ -9,18 +9,22 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DestinatarioService {
+  /** URL base del host para las solicitudes */
   host: string;
 
+  /** Constructor del servicio DestinatarioService */
   constructor(private catalogoServices: CatalogoServices) {
     this.host = `${COMUN_URL.BASE_URL}`
   }
 
+  /** Obtiene la lista de países de destino para el trámite especificado */
   getPaisDestino(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.paisesCatalogo(tramite).pipe(
         map(res => res?.datos ?? [])
       );
   }
 
+  /** Obtiene la lista de medios de transporte para el trámite especificado */
   getTransporte(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.catalogoMedioTransporte(tramite).pipe(
         map(res => res?.datos ?? [])

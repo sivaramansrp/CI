@@ -5,6 +5,10 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * @description Componente para manejar los detalles de la mercancía.
+ * Proporciona entradas para configurar un formulario y opciones para productos, fracciones y unidades.
+ */
 @Component({
   selector: 'app-datos-del-destinatario',
   standalone: true,

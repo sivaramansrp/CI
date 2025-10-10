@@ -1498,7 +1498,12 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       },
     }));
   }
-
+  /**
+   * @method setFormDestinatario
+   * @description
+   * Actualiza el estado de datos del destinatario en el almacén.
+   * @param datosDestinatario Objeto que contiene los datos del destinatario a actualizar.
+   * */
   setFormDestinatario(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDestinatario: {
