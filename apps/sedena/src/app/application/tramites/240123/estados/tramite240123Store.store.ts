@@ -167,6 +167,29 @@ export class Tramite240123Store extends Store<Tramite240123State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de datos de mercancía en la tabla.
+   * 
+   * Este método toma un array de detalles de mercancía y actualiza el estado del store.
+   * Si una mercancía ya existe (basado en el ID), se actualiza con los nuevos datos.
+   * Si no existe, se agrega como un nuevo elemento a la lista.
+   * 
+   * @param newMercancia - Array de objetos MercanciaDetalle que contienen los datos
+   *                       de mercancía a actualizar o agregar
+   * @returns void - No retorna valor, actualiza el estado interno del store
+   * 
+   * @example
+   * ```typescript
+   * const nuevasMercancias: MercanciaDetalle[] = [
+   *   { id: 1, nombre: 'Producto A', cantidad: 10 },
+   *   { id: 2, nombre: 'Producto B', cantidad: 5 }
+   * ];
+   * store.updateListMercanciaTablaDatos(nuevasMercancias);
+   * ```
+   * 
+   * @since 1.0.0
+   * @memberof Tramite240123Store
+   */
    public updateListMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
   this.update((state) => {
     const UPDATED_LIST = [...state.merccancialTablaDatos];

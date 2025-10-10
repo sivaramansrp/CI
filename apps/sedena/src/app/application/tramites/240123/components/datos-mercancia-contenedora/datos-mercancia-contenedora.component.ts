@@ -120,6 +120,21 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy,Aft
         this.monedaCatalogo = data;
       });
   }
+  /**
+   * Inicializa los valores del formulario después de que la vista del componente haya sido inicializada.
+   * 
+   * Este método se ejecuta después de que Angular haya completado la inicialización de la vista del componente
+   * y sus vistas hijas. Si existe información de datos (this.data), actualiza el formulario reactivo
+   * datosMercancia con los valores correspondientes de la mercancía contenedora.
+   * 
+   * @memberof DatosMercanciaContenedoraComponent
+   * @since 1.0.0
+   * @example
+   * ```typescript
+   * // El método se ejecuta automáticamente después de la inicialización de la vista
+   * // No requiere llamada manual
+   * ```
+   */
   ngAfterViewInit(): void {
     if (this.data) {
         this.datosMercancia.patchValue({
