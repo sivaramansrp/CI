@@ -1,9 +1,5 @@
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Output } from '@angular/core';
-
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
@@ -180,7 +176,16 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    */
   @Output() cerrar = new EventEmitter<void>();
 
-
+  /**
+   * El número total de registros a mostrar o procesar.
+   * 
+   * @notas
+   * Esta propiedad de entrada permite que el componente padre especifique la cantidad de registros
+   * relevante para el contexto actual, como el número de animales vivos en una contenedora.
+   * 
+   * @valorPorDefecto 0
+   */
+  @Input() cantidadRegistros: number = 0;
   /**
    * @constructor
    * @descripcion
@@ -299,6 +304,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
         })
       )
       .subscribe();
+      console.warn('cantidadRegistros', this.cantidadRegistros);
   }
 
   /**
@@ -408,7 +414,6 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    * Proporciona cadenas vacías como valores por defecto para evitar errores de formulario
    */
   private static getAdditionalFields(VALOR: FilaSolicitud): Partial<FilaSolicitud> {
-    console.warn('valor', VALOR);
     return {
       cantidadUMT: String(VALOR.cantidadUMT || ''),
       umt: VALOR.umt || '',
@@ -538,6 +543,13 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       id: formulario.id || Math.floor(Math.random() * 1000000),
       noPartida: formulario.noPartida || '',
       tipoRequisito: formulario.tipoRequisito || '',
+      descripcionTipoRequisito: formulario.descripcionTipoRequisito || '',
+      descripcionUMT: formulario.descripcionUMT || '',
+      descripcionUMC: formulario.descripcionUMC || '',
+      descripcionEspecie: formulario.descripcionEspecie || '',
+      descripcionPaisDeOrigen: formulario.descripcionPaisDeOrigen || '',
+      descripcionPaisDeProcedencia: formulario.descripcionPaisDeProcedencia || '',
+      descripcionUso: formulario.descripcionUso || '',
       requisito: formulario.requisito || '',
       numeroCertificadoInternacional: formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: formulario.fraccionArancelaria || '',

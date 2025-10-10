@@ -159,6 +159,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
   banderaCargaVentana: boolean = false;
 
   /**
+   * El número total de registros que se mostrarán o procesarán.
+   * 
+   * Esta propiedad de entrada permite que el componente padre especifique cuántos registros
+   * son relevantes para el contexto actual. Por defecto es 0 si no se proporciona.
+   */
+  @Input() cantidadRegistros: number = 0;
+
+  /**
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios reactivos.
@@ -197,6 +205,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       id: [0, Validators.required],
       noPartida: ['0'],
       tipoRequisito: ['', Validators.required],
+      descripcionTipoRequisito: [''],
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
@@ -206,12 +215,18 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umt: [{ value: '1', disabled: true }, Validators.required],
+      descripcionUMT: [''],
       cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
+      descripcionUMC: [''],
       especie: ['', Validators.required],
+      descripcionEspecie: [''],
       uso: ['', Validators.required],
+      descripcionUso: [''],
       paisDeOrigen: ['', Validators.required],
+      descripcionPaisDeOrigen: [''],
       paisDeProcedencia: ['', Validators.required],
+      descripcionPaisDeProcedencia: [''],
       sensibles: this.fb.array([]),
       modificado: [false], 
     });
@@ -360,14 +375,27 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       this.mercanciaForm.markAllAsTouched();
     }
     else {      
-
       const FUEMODIFICADO = this.mercanciaForm.get('modificado')?.value as boolean;
       const SENSIBLES_FORM_ARRAY = this.mercanciaForm.get('sensibles') as FormArray;
-      console.warn('FUEMODIFICADO', FUEMODIFICADO);
-      console.warn('noPartida', this.mercanciaForm.get('noPartida')?.value);
+      // Formatea cantidadUMC a dos decimales si es un número válido
+      let cantidadUMCValue = this.mercanciaForm.get('cantidadUMC')?.value || '';
+      if (cantidadUMCValue !== '' && !isNaN(Number(cantidadUMCValue))) {
+        cantidadUMCValue = Number(cantidadUMCValue).toFixed(2);
+      }
+
       this.mercanciaForm.patchValue({
-        noPartida: FUEMODIFICADO ? this.mercanciaForm.get('noPartida')?.value : (parseInt(this.mercanciaForm.get('noPartida')?.value || '0', 10) + 1),
-        id: FUEMODIFICADO ? (parseInt(this.mercanciaForm.get('id')?.value || '0', 10) + 1) : parseInt(this.mercanciaForm.get('id')?.value || '0', 10)
+        noPartida: FUEMODIFICADO ? this.mercanciaForm.get('noPartida')?.value : this.cantidadRegistros + 1,
+        id: FUEMODIFICADO ? (parseInt(this.mercanciaForm.get('id')?.value || '0', 10) + 1) : parseInt(this.mercanciaForm.get('id')?.value || '0', 10),
+        modificado: false,
+        descripcionTipoRequisito: this.catalogosDatos.tipoRequisitoList.find(item => item.clave === this.mercanciaForm.get('tipoRequisito')?.value)?.descripcion || '',        
+        descripcionEspecie: this.catalogosDatos.especieList.find(item => item.clave === this.mercanciaForm.get('especie')?.value)?.descripcion || '',
+        descripcionUMT: this.mercanciaForm.get('umt')?.value || '',
+        cantidadUMC: cantidadUMCValue,
+        descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.mercanciaForm.get('umc')?.value)?.descripcion || '',
+        descripcionUso: this.catalogosDatos.usoList.find(item => item.clave === this.mercanciaForm.get('uso')?.value)?.descripcion || '',
+        descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.mercanciaForm.get('paisDeOrigen')?.value)?.descripcion || '',
+        descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.mercanciaForm.get('paisDeProcedencia')?.value)?.descripcion || '',
+        certificadoInternacionalElectronico: this.mercanciaForm.get('numeroCertificadoInternacional')?.value || '',
       });
 
       SENSIBLES_FORM_ARRAY.clear();
@@ -415,6 +443,16 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+    this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
+        (response: BaseResponse<Catalogo>) => {
+          if (response && response.codigo === '00' && response.datos) {
+            this.mercanciaForm.get('umt')?.setValue(response.datos.descripcion);
+          } else {
+            this.mercanciaForm.get('umt')?.setValue('');
+          }
+        }
+      );
     
   }
 

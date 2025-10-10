@@ -318,7 +318,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
+        //Mantiene ordenados los datos por no de partida
+        if (datos.tablaDatos && datos.tablaDatos.length > 0) {
+          datos.tablaDatos.sort((a, b) => {
+            if (a.noPartida < b.noPartida) { return -1; }
+            if (a.noPartida > b.noPartida) { return 1; }
+            return 0;
+          });
+        }
         this.cuerpoTabla = datos.tablaDatos;
+        console.warn('Cuerpo tabla', this.cuerpoTabla);
       });
     this.crearFormulario();
     this.initActionFormBuild();
@@ -525,7 +534,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
-        { encabezado: 'Tipo de requisito', clave: (fila: FilaSolicitud): string => fila.tipoRequisito, orden: 2 },
+        { encabezado: 'Tipo de requisito', clave: (fila: FilaSolicitud): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
         { encabezado: 'Requisito', clave: (fila: FilaSolicitud): string => fila.requisito, orden: 3 },
         { encabezado: 'Número de Certificado Internacional', clave: (fila: FilaSolicitud): string => fila.numeroCertificadoInternacional, orden: 4 },
         { encabezado: 'Fracción arancelaria', clave: (fila: FilaSolicitud): string => fila.fraccionArancelaria, orden: 5 },
@@ -533,14 +542,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         { encabezado: 'Nico', clave: (fila: FilaSolicitud): string => fila.nico, orden: 7 },
         { encabezado: 'Descripción Nico', clave: (fila: FilaSolicitud): string => fila.descripcionNico, orden: 8 },
         { encabezado: 'Descripción', clave: (fila: FilaSolicitud): string => fila.descripcion, orden: 9 },
-        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.umt, orden: 10 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.descripcionUMT ?? '', orden: 10 },
         { encabezado: 'Cantidad UMT', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMT), orden: 11 },
-        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.umc, orden: 12 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.descripcionUMC ?? '', orden: 12 },
         { encabezado: 'Cantidad UMC', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMC), orden: 13 },
-        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.especie ?? '', orden: 14 },
-        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.uso, orden: 15 },
-        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.paisDeOrigen, orden: 16 },
-        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.paisDeProcedencia, orden: 17 },
+        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.descripcionEspecie ?? '', orden: 14 },
+        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.descripcionUso ?? '', orden: 15 },
+        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeOrigen ?? '', orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeProcedencia ?? '', orden: 17 },
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 18 }
       ];
     }
@@ -618,7 +627,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   modificarMercancia(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
     if (VALOR === 'yes') {
-      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+      const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
+      console.warn('abrir modal animales vivo', CANTIDAD_REGISTROS);
     }
     else if (VALOR === 'no') {
       this.modalRef.abrir(SubProductosContenedoraComponent);
@@ -671,7 +682,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       this.modalRef.abrir(SubProductosContenedoraComponent);
     }
     else if (this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
-      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+      const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
 
   }
@@ -682,7 +694,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {boolean}
   */
   validarFormulario(): boolean {
-     this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
+    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
     if (this.forma.valid) {
       return this.mensajeErrorTabla;
     }
