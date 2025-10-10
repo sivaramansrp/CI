@@ -98,6 +98,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
  * Cuando es true, muestra los campos relacionados con el domicilio del tercer operador.
  */
   @Input() domTercerOperador: boolean = false;
+
+  @Input() domTercerOperadorRadio: boolean = false;
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -578,6 +580,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       fax: [''],
       correo: ['', Validators.required],
       correoElectronico: [''],
+      domTercerOperador:[''],
       // Nuevos controles de formulario para el procedimiento 110222
       calle1: ['', Validators.required],
       numeroLetra1: ['', Validators.required],
@@ -1273,5 +1276,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       : this.paisBloqu;
   }
 
+
+  domTercerOperadorSelecction(evento: string | number): void{
+    this.formCertificado.patchValue({
+      domTercerOperador: evento
+    })
+  }
 
 }
