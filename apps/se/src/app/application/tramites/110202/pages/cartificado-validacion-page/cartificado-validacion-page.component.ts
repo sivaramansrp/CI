@@ -1,11 +1,12 @@
-import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, PasoFirmaComponent, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import {DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
+import { TramiteState } from '../../estados/tramite110202.store';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -28,12 +29,14 @@ interface AccionBoton {
     WizardComponent,
     BtnContinuarComponent,
     PasoUnoComponent,
-    PasoDosComponent, AlertComponent
+    PasoDosComponent, 
+    AlertComponent,
+    PasoFirmaComponent
   ],
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
 })
-export class CartificadoValidacionPageComponent {
+export class CartificadoValidacionPageComponent implements OnDestroy {
   /**
   * @property {PasoUnoComponent} pasoUnoComponent
   * @description
@@ -59,6 +62,25 @@ export class CartificadoValidacionPageComponent {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([res]);
+    });
+
+     this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
+   /** 
+   * Índice del paso actual del wizard.
+   * Representa la pestaña activa principal.
+   */
   /**
     * @property {string} formErrorAlert
     * @description
@@ -108,6 +130,15 @@ export class CartificadoValidacionPageComponent {
   TEXTOS = PAGO_DE_DERECHOS;
 
   /**
+   * Estado actual de la solicitud del trámite.
+   * Este objeto contiene toda la información relevante sobre la solicitud, incluyendo formularios, listas y banderas de validación.
+   * Se obtiene a través del query `Tramite110202Query`.
+   * @type {TramiteState}
+   */
+  public solicitudState!:TramiteState;
+
+
+  /**
   * @property {boolean} esFormaValido
   * @description
   * Indica si el formulario del paso actual es válido.
@@ -115,29 +146,6 @@ export class CartificadoValidacionPageComponent {
   */
   esFormaValido: boolean = false;
 
-
-  /**
-   * Constructor de la clase CartificadoValidacionPageComponent.
-   * 
-   * @param seccionStore - Servicio para gestionar el estado de las secciones del formulario.
-   * @param tramiteQuery - Servicio para consultar el estado y datos del trámite 110202.
-   * 
-   * Al inicializar el componente, se suscribe al observable `FormaValida$` del `tramiteQuery`.
-   * Cada vez que se emite un nuevo valor, actualiza el estado de la sección y la validez del formulario
-   * en el `seccionStore`. La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
-   * lo que previene fugas de memoria.
-   */
-  constructor(
-    private seccionStore: SeccionLibStore,
-    private tramiteQuery: Tramite110202Query
-  ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([res]);
-    });
-  }
   /**
    * Selecciona una pestaña del asistente (wizard).
    * Este método actualiza el índice del paso seleccionado y, por lo tanto, cambia el paso que se está mostrando.
@@ -195,6 +203,17 @@ export class CartificadoValidacionPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+/**
+ * Lógica de limpieza al destruir el componente.
+ * Este método se ejecuta cuando el componente es destruido y se utiliza para limpiar recursos y evitar fugas de memoria.
+ * Emite una señal para destruir los observables y completa el subject `destroyNotifier$`.
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    // Emite una señal para destruir los observables y evitar fugas de memoria
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**

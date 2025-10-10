@@ -1,8 +1,8 @@
 
-import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TabEvaluarTratadosResponse, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -13,7 +13,10 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
+import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
+import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
@@ -49,6 +52,13 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Evento que se emite cuando los tratados son actualizados.
+   * Se utiliza para notificar al componente padre sobre los cambios en los tratados.
+   */
+  @Output() tratadosActualizados = new EventEmitter<TabEvaluarTratadosResponse[]>(); 
+
    /**
    * Notificación actual que se muestra en el componente.
    *
@@ -65,6 +75,15 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @type {EventEmitter<void>}
    */
   @Output() habilitarPestana = new EventEmitter<void>();
+
+  /**
+   * Evento que se emite para deshabilitar o cerrar una pestaña en el flujo del trámite.
+   * Se utiliza para notificar al componente padre que la pestaña debe desactivarse.
+   *
+   * @event cerrarPestana
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrarPestana = new EventEmitter<void>();
 
   /**
    * Array de filas seleccionadas en la tabla de tratados.
@@ -95,6 +114,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   formularioTratados!: FormGroup;
 
+  dictaminador!: FormGroup;
+
   /**
   * **Subject utilizado para manejar la destrucción de suscripciones**
   * 
@@ -107,6 +128,25 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   public esFormularioSoloLectura: boolean = false;
+
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+
+  /**
+    * Instancia del modal de Bootstrap utilizada para abrir y cerrar el diálogo de agregar o editar mercancías.
+    * Se inicializa al abrir el modal y se utiliza para controlar su visibilidad desde el componente.
+    *
+    * @type {Modal}
+    * @private
+    * @memberof DatosMercanciaComponent
+    * @example
+    * this.modalInstance.show();
+    * this.modalInstance.hide();
+    */
+  private modalInstance!: Modal;
 
     /**
      * Representa el estado actual del solicitante (Solicitante) para el trámite 110101.
@@ -141,6 +181,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   mostrarTabla = true;
 
+  /**
+   * Referencia al elemento modal para agregar mercancías.
+  */
+  @ViewChild('modalAgregar', { static: false }) modalElement!: ElementRef;
+
+   /** Almacena las filas seleccionadas de la tabla */
+    public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
 
   public consultaState!: ConsultaioState;
     /**
@@ -161,7 +208,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private pantallaService: PantallasSvcService,
     private catalogosTramiteService: CatalogosTramiteService,
     private cd: ChangeDetectorRef,
-    private tratadosSolicitudService: TratadosSolicitudService
+    private tratadosSolicitudService: TratadosSolicitudService,
+    private evaluacionTratadosService: EvaluacionTratadosService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -173,6 +221,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+      this.dictaminador = this.fb.group({
+      opcionSeleccionada: [''],
+    });
   }
 
   /**
@@ -183,11 +235,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-     this.getCatalogoPaisBloques();
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
-    this.inicializarFormularioTratados();
     if (this.solicitudeState.respuestaServicioDatosTabla.length) {
       this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
 
@@ -207,6 +257,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
      
       this.getCatalogoCriterios(GETCATALOGO?.id_tratado_acuerdo.toString() ?? "");
         
+    }
+    if(this.consultaState.create === true){
+        this.getCatalogoPaisBloques();
     }
   }
 
@@ -536,6 +589,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
     public tratadosTablaDatos: TratadosTabla[] = [ ];
 
+  /**
+   * Datos de la tabla de evaluación de tratados.
+   * Este array contiene objetos de tipo `EvaluarTratadosResponse` que representan
+   * el resultado de la evaluación de los tratados ingresados.
+   */
+  public tratadosEvaluacionTablaDatos: EvaluarTratadosResponse[]= []
+
 /**
    * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
    * @type {TablaSeleccion}
@@ -549,16 +609,24 @@ export class TratadosComponent implements OnInit, OnDestroy {
         { encabezado: "Criterio de origen", clave: (item: RegistroDeSolicitudesTabla) => item.origen, orden: 3 }
     ];
 
-    public tablaSeleccionada: ConfiguracionColumna<TratadosTabla>[] = [
-      { encabezado: 'País o bloque', clave: (item: TratadosTabla) => item.pais, orden: 1 },
-      { encabezado: "Tratado o Acuerdo", clave: (item: TratadosTabla) => item.tratado, orden: 2 },
-      { encabezado: "Criterio de origen", clave: (item: TratadosTabla) => item.origen, orden: 3 },
-      { encabezado: "Norma de origen", clave: (item: TratadosTabla) => item.normaOrigen, orden: 4 },
-      { encabezado: "Requisito especifico", clave: (item: TratadosTabla) => item.requisitoEspecifico, orden: 5 },
-      { encabezado: "Calificación sistema", clave: (item: TratadosTabla) => item.calificacionSistema, orden: 6 },
-      { encabezado: "Calificación dictaminado", clave: (item: TratadosTabla) => item.calificacionDictaminad, orden: 7 },
-      { encabezado: "Otras instancias", clave: (item: TratadosTabla) => item.otrasInstancias, orden: 8 },
-      { encabezado: "Proceso de transformación", clave: (item: TratadosTabla) => item.procesoTransformacion, orden: 9 } ];
+  /**
+   * Configuración de la tabla de tratados seleccionados.
+   * 
+   * Define las columnas que se mostrarán en la tabla de evaluación de tratados,
+   * incluyendo encabezado, clave de acceso a los datos y orden de despliegue.
+   * 
+   * Cada columna se representa mediante un objeto de tipo `ConfiguracionColumna<EvaluarTratadosResponse>`.
+ */
+  public tablaSeleccionada: ConfiguracionColumna<EvaluarTratadosResponse>[] = [
+    { encabezado: 'País o bloque', clave: (item) => item.pais_bloque_nombre, orden: 1 },
+    { encabezado: "Tratado o Acuerdo", clave: (item) => item.tratado_acuerdo, orden: 2 },
+    { encabezado: "Criterio de origen", clave: (item) => item.criterio_origen, orden: 3 },
+    { encabezado: "Norma de origen", clave: (item) => item.norma_origen, orden: 4 },
+    { encabezado: "Requisito especifico", clave: (item) => item.requisito_especifico, orden: 5 },
+    { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'Aprobado' : 'Rechazado', orden: 6 },
+    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'Aprobado' : 'Rechazado', orden: 7 },
+    { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
+    { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
 
     /**
@@ -803,6 +871,7 @@ modificarTratado(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.formularioTratados.disable();
+       this.evaluacionTablaTratados();
     } else if (!this.esFormularioSoloLectura) {
       this.formularioTratados.enable();
     }
@@ -959,6 +1028,7 @@ onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) :void{
     this.formularioTratados.reset();
   }
 }
+
 /**
  * 
  * @returns boolean
@@ -984,6 +1054,10 @@ eliminarTratado(): void {
   this.tramite110101Store.setRespuestaServicioDatosTabla(this.respuestaServicioDatosTabla);
 
   this.selectedRows = [];
+  if(!this.respuestaServicioDatosTabla || this.respuestaServicioDatosTabla.length === 0){ 
+     this.cerrarPestana.emit();
+  }
+ 
 }
 
   /**
@@ -1022,14 +1096,219 @@ eliminarTratado(): void {
   };
     this.elementoParaEliminar = i;
   }
+
   /**
    *              
    * @param borrar
    * @description Elimina un pedimento de la lista si el parámetro `borrar` es `true`. 
    */
-eliminarPedimento(borrar: boolean): void {
+  eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
+  
+  /**
+   * @method InsumosEmpaques
+   * @description Consulta los insumos y/o empaques asociados a una solicitud a través del servicio.
+   * @returns {void}
+   */
+  insumosEmpaques(): void {
+    this.tratadosSolicitudService.getInsumosEmpaques(this.consultaState.id_solicitud, this.tratadoSeleccionado[0].id_tratado_acuerdo.toString(),
+      this.tratadoSeleccionado[0].id_bloque ?? 0, this.tratadoSeleccionado[0].cve_pais)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            //**TODO: Implementacion */
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error en la consulta de insumos empaques.',
+            mensaje: response?.causa || response?.mensaje || 'Error en la consulta de insumos empaques.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error en la consulta de insumos empaques.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+  /**
+   * Obtiene la evaluación de tratados para la solicitud actual y actualiza la tabla de evaluación.
+   *
+   * Este método llama al servicio `evaluacionTratadosService.getEvaluarTratados` pasando el ID de la solicitud.
+   * - Si la respuesta es exitosa (`CodigoRespuesta.EXITO`), actualiza `tratadosEvaluacionTablaDatos`.
+   * - Si ocurre un error o la respuesta es incorrecta, muestra una notificación de error.
+   */
+  evaluacionTablaTratados(): void {
+    this.evaluacionTratadosService.getEvaluarTratados(this.consultaState.id_solicitud)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.tratadosEvaluacionTablaDatos = response.datos ?? [];
+            this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error obtener tratados.',
+              mensaje: response.causa || response.mensaje || 'Error obtener tratados.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error obtener tratados.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+  /**
+   * @method CriterioTratadoResumen
+   * @description Consulta el resumen de valores de un criterio tratado por su identificador.
+   * @returns {void}
+   */
+  criterioTratadoResumen(): void {
+    this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_tratado_acuerdo.toString())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            //**TODO: Implementacion */
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error en la consulta de resumen de criterio tratado.',
+            mensaje: response?.causa || response?.mensaje || 'Error en la consulta de resumen de criterio tratado.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error en la consulta de resumen de criterio tratado.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+  /**
+   * Maneja el cambio de selección de la tabla tratados.
+   * @param tratadoSeleccionado 
+   */
+  onSeleccionChangeEvaluacion(tratadoSeleccionado: EvaluarTratadosResponse[]) :void{
+    this.tratadoSeleccionado = [...tratadoSeleccionado];
+  }
+
+  /**
+   * @method modificarRegistros
+   * @description Este método modifica los registros seleccionados en la tabla de evaluación de tratados.
+   * Actualiza la calificación dictaminada según la opción seleccionada en el formulario.
+   * Si no hay tratados seleccionados, muestra una advertencia en la consola.
+   * Finalmente, refresca la tabla y cierra el diálogo modal.
+   * @returns void
+   */
+  modificarRegistros(): void {
+    if (!this.tratadoSeleccionado) {
+      console.warn('No hay tratado seleccionado.');
+      return;
+    }
+
+    const OPCION = this.dictaminador.get('opcionSeleccionada')?.value;
+    const APROBADO = OPCION === 'true';
+
+    // Actualiza solo los tratados seleccionados dentro de la tabla completa
+    this.tratadosEvaluacionTablaDatos = this.tratadosEvaluacionTablaDatos.map(tratado => {
+      // Si este tratado está dentro de los seleccionados, actualiza
+      if (this.tratadoSeleccionado.some(sel => sel.id_criterio_tratado === tratado.id_criterio_tratado)) {
+        return {
+          ...tratado,
+          cal_aprobada_dictaminador: APROBADO,
+          calificacion_dictaminador: APROBADO ? 'APROBADO' : 'RECHAZADO'
+        };
+      }
+      return { ...tratado };
+    });
+
+    // Refresca la tabla
+    this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
+
+    this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
+
+    this.cerrarDialogo();
+  }
+
+  /**
+   * @method abrirModalDictaminador
+   * @description Método para abrir el modal de confirmación de eliminación de facturas.
+   * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
+   */
+  abrirModalDictaminador(): void {
+    if (this.modalElement) {
+      this.modalInstance = new Modal(this.modalElement.nativeElement);
+      this.modalInstance?.show();
+    }
+  }
+
+ /**
+   * Cierra el modal de agregar o editar mercancías.
+   * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
+   *
+   * @example
+   * this.cerrarDialogo();
+   * // El modal se oculta.
+   */
+  cerrarDialogo(): void {
+    this.modalInstance?.hide();
+  }
+
 }

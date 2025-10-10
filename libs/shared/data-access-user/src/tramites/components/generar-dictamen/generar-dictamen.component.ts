@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from "@angular/core";
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -9,6 +9,7 @@ import { ValidacionesFormularioService } from "../../../core/services/shared/val
 import { CriteriosResponse } from "../../../core/models/shared/criterios-response.model";
 import { DictamenForm } from "../../../core/models/shared/dictamen-form.model";
 import { IniciarAutorizacionResponse } from "../../../core/models/shared/iniciar-autorizar-dictamen-response.model";
+import { Subject } from "rxjs";
 
 
 
@@ -36,9 +37,17 @@ import { IniciarAutorizacionResponse } from "../../../core/models/shared/iniciar
   templateUrl: './generar-dictamen.component.html',
   styleUrl: './generar-dictamen.component.scss',
 })
-export class GenerarDictamenComponent implements OnInit, OnChanges {
+export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
+
   /**
-  
+   * @property {boolean} sentidoInput
+   * @description Indica si el input de sentido está habilitado.
+   * Si es true, el input de sentido está habilitado; si es false, está deshabilitado.
+   * Por defecto, el input de sentido está deshabilitado (false).
+   */
+  @Input() sentidoInput: boolean = false;
+
+  /**
    * Si es true, los antecedentes son editables; si es false, son de solo lectura.
    */
   @Input() public soloLectura = false;
@@ -71,6 +80,12 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @description Texto personalizado para el botón de cancelar.
    */
   @Input() public botonDeCancelar = '';
+
+   /**
+   * Indica si se debe mostrar un input de justificación.
+   * En unos tramites se muestra un input de justificacion.
+   */
+  @Input() inputSentidos!: boolean;
 
   /**
    * @property {boolean} isAntecedentes
@@ -124,6 +139,19 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @defaultValue true
    */
   @Input() public anexo222se = true;
+
+  /**
+   * @property {string} resultadoEvaluacion
+   * @description Almacena el resultado de la evaluación del dictamen.
+   */
+  public resultadoEvaluacion: string = '';
+
+  /** 
+   * @property {Subject<void>} destroy$ 
+   * @description Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroy$ = new Subject<void>();
+  
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para la creación y validación del formulario de dictamen.
@@ -184,6 +212,9 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
 
     if(this.soloLectura){
       this.dictamenForm.disable();
+    }
+    if(this.inputSentidos){
+      this.dictamenForm.removeControl('cumplimiento');
     }
   }
 
@@ -284,6 +315,10 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
         fechaFinVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_fin_vigencia,
       });
     }
+
+    if (changes['sentidoInput']) {
+      this.resultadoEvaluacion = this.sentidoInput ? 'Aceptado' : 'Rechazado';
+    }
   }
 
   /**
@@ -340,5 +375,14 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    */
   cancelar(): void {
     this.enviarEvento.emit({ events: "cancelar", datos: {} as DictamenForm });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida que se ejecuta cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

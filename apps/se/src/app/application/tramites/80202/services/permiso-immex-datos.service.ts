@@ -2,10 +2,14 @@ import { BuscarPayload, FraccionPayload, FraccionResponse, GuardarFraccionRespon
 import { ImmexAmpliacionSensiblesStore, ImmexRegistroState } from '../estados/immex-ampliacion-sensibles.store';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_ROUTES } from '../../../shared/servers/api-route';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { CadenaOriginalRequest } from '../../130118/model/request/cadena-original-request.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
 import { Injectable } from '@angular/core';
+import { PROC_80202 } from '../servers/api-routes';
 
 
 @Injectable({
@@ -93,6 +97,37 @@ export class PermisoImmexDatosService {
             })
           );
   }
+
+   /**
+         * Envía una solicitud de firma electrónica.
+         * @param idSolicitud - ID de la solicitud a firmar.
+         * @param body - Cuerpo de la solicitud de firma.
+         * @returns Observable con la respuesta del servidor.
+         */
+      enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<T>> {
+        return this.httpClient.post<BaseResponse<T>>(PROC_80202.API_POST_FIRMA(String(idSolicitud)), body).pipe(
+          map(response => response),
+          catchError(() => {
+            const ERROR = new Error(`Error al firmar solicitud con ID ${idSolicitud}`);
+            return throwError(() => ERROR);
+          })
+        );
+      }
+  
+       /**
+         * Obtiene la cadena original del trámite 130118.
+         * @param body Objeto que contiene los datos necesarios para generar la cadena original.
+         * @returns Un observable que emite la respuesta del servidor con la cadena original.
+         */
+        obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest): Observable<BaseResponse<T>> {
+          return this.httpClient.post<BaseResponse<T>>(PROC_80202.API_POST_CADENA_ORIGINAL(idSolicitud), body).pipe(
+            map((response) => response),
+            catchError(() => {
+              const ERROR = new Error(`Error al obtener la cadena original en ${PROC_80202.API_POST_CADENA_ORIGINAL(idSolicitud)}`);
+              return throwError(() => ERROR);
+            })
+          );
+        }
 
 
 }
