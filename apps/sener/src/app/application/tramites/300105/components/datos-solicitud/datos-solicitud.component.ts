@@ -172,13 +172,28 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   botonesMovimientos!: CrosslistBoton[];
 
+  
+
   /**
    * @property {string[]} listaOriginalMovimientos - Lista original de movimientos disponibles
    * @description Array que contiene todos los tipos de movimientos disponibles del catálogo,
    * utilizada como fuente de datos para la selección de operaciones aduaneras.
    * @default []
    */
-  listaOriginalMovimientos: string[] = [];
+  listaOriginalMovimientos: string[] = [
+    'ACAPULCO, PUERTO Y AEROPUERTO',
+    'ADUANA DE PANTACO',
+    'AEROPUERTO INT. DE LA CD DE MEXI',
+    'AEROPUERTO INTERNACIONAL FELIF',
+    'AGUA PRIETA',
+    'AGUASCALIENTES, AGS.',
+    'ALTAMIRA',
+    'CANCUN, AEROPUERTO',
+    'CD. CAMARGO, TAMPS.',
+    'CD. DEL CARMEN',
+    'CD. JUAREZ',
+    'CHIHUAHUA, CHIH.'
+  ];
 
   /**
    * @property {string[]} listSeleccionadaMovimientos - Lista de movimientos seleccionados
