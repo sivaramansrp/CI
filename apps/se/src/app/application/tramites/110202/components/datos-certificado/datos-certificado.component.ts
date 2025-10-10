@@ -70,6 +70,18 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Código del procedimiento asociado a la funcionalidad actual.
+   * 
+   * @remarks
+   * Actualmente está configurado como "110204" de manera temporal.
+   * Se debe cambiar a "110202" cuando la API correspondiente esté disponible.
+   * 
+   * @example
+   * procedure = "110202";
+   */
+  procedure = "110204"; // Need to change it to 110202 when api for 110202 will be ready
+
+  /**
    * Referencia al componente hijo DatosCertificadoDeComponent
    * Permite acceder al formulario y métodos del componente hijo
    */

@@ -18,6 +18,7 @@ import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 import { RouterModule } from '@angular/router';
 import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialmente-certificado-routing.module';
 
@@ -52,6 +53,7 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     TituloComponent,
     AlertComponent,
     RepresentanteLegalComponent,
+    RepresentanteLegalExportadorComponent,
     MercanciaComponent,
     PasoFirmaComponent
   ]
