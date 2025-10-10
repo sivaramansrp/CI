@@ -320,22 +320,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.store.setPaisDestinSeleccion(estado);
   }
 
-  
-  /**
-   * Carga los medios de transporte desde el servicio y los actualiza en el estado.
-   */
-  cargarMedioDeTransporte(): void {
-    this.destinatarioService
-      .getTransporte('110202')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => response.datos || [])
-      )
-      .subscribe((datos: Catalogo[]) => {
-        this.store.setMedioDeTransporte(datos);
-      });
-  }
-
   /**
   * Método llamado al destruir el componente. Limpia las suscripciones activas.
   */
