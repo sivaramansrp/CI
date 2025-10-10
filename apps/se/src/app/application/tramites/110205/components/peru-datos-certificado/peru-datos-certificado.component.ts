@@ -1,11 +1,12 @@
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 import { Tramite110205Store } from '../../estados/tramite110205.store';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 
 
 /**
@@ -42,20 +43,19 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
    * Almacena la lista de representaciones federales disponibles.
    */
   representacionFederal: Catalogo[] = [];
- 
-   /**
+
+  /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
-   public idProcedimiento = 110205;
-
+  public idProcedimiento = 110205;
 
   /**
    * @private
    * Sujeto utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * Este observable se completa cuando el componente se destruye.
-   * 
-   * @command Utilice `this.destroyNotifier$.next()` seguido de `this.destroyNotifier$.complete()` 
+   *
+   * @command Utilice `this.destroyNotifier$.next()` seguido de `this.destroyNotifier$.complete()`
    * en el método `ngOnDestroy` para liberar recursos.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -73,6 +73,12 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Referencia al componente hijo DatosCertificadoDeComponent
+   * Permite acceder al formulario y métodos del componente hijo
+   */
+  @ViewChild(DatosCertificadoDeComponent) datosCertificadoDeRef!: DatosCertificadoDeComponent;
+
+  /**
    * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -86,11 +92,11 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
     private query: Tramite110205Query,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.query.formDatosCertificado$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe(estado => {
+    this.query.formDatosCertificado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
         this.formDatosCertificadoValues = estado;
-    });
+      });
   }
 
   /**
@@ -113,33 +119,37 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de certificado.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
-}
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de certificado.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
+  }
 
   /**
    * @descripcion
    * Obtiene la lista de idiomas disponibles.
    */
   idiomOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('idioma.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.idiomaDatos = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.idiomaDatos = [];
-      },
-    });
+    this.peruCertificadoService
+      .obtenerMenuDesplegable('idioma.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.idiomaDatos = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.idiomaDatos = [];
+        },
+      });
   }
 
   /**
@@ -147,19 +157,18 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene la lista de entidades federativas disponibles.
    */
   entidadFederativasOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.entidadFederativas = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.entidadFederativas = [];
-      },
-    });
+    this.peruCertificadoService
+      .obtenerMenuDesplegable('entidadFederativas.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.entidadFederativas = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.entidadFederativas = [];
+        },
+      });
   }
 
   /**
@@ -167,19 +176,18 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene la lista de representaciones federales disponibles.
    */
   representacionFederalOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.representacionFederal = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.representacionFederal = [];
-      },
-    });
+    this.peruCertificadoService
+      .obtenerMenuDesplegable('representacionFederal.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.representacionFederal = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.representacionFederal = [];
+        },
+      });
   }
 
   /**
@@ -216,6 +224,29 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ datos: valida });
+  }
+
+  /**
+   * Método público para validar todos los formularios del componente datos-certificado.
+   * Valida el formulario del componente hijo DatosCertificadoDeComponent y actualiza el estado.
+   * @returns boolean indicando si todos los formularios son válidos
+   */
+  public validateAll(): boolean {
+    let valid = true;
+
+    // Validar el componente hijo datos-certificado-de
+    if (this.datosCertificadoDeRef) {
+      // Usar el método validarFormularios del componente hijo que marca los campos como touched
+      const IS_CHILD_FORM_VALID =
+        this.datosCertificadoDeRef.validarFormularios();
+      if (!IS_CHILD_FORM_VALID) {
+        valid = false;
+      }
+      // Actualizar el estado de validez en el store
+      this.setFormValida(IS_CHILD_FORM_VALID);
+    }
+
+    return valid;
   }
 
   /**

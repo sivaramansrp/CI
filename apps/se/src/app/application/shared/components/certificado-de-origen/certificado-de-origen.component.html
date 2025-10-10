@@ -656,13 +656,11 @@
 
     @if(mercanciasDisponibles){
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-      <button class="btn btn-primary" (click)="verificarRFCDos()" [disabled]="esFormularioSoloLectura">Buscar
-        mercancías</button>
+      <button class="btn btn-primary" (click)="verificarRFCDos()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
     </div>
     } @else {
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="buscarMercancia()">Mercancías
-        Disponibles</button>
+      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="buscarMercancia()">MercancíasDisponibles</button>
     </div>
     }
 

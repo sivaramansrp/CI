@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { Catalogo, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -20,7 +21,9 @@ import { Tramite110205Query } from '../../estados/tramite110205.query';
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CertificadoOrigenComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -112,12 +115,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   private seccionState!: SeccionLibState;
 
   /**
-  * @descripcion
-  * Indica si el formulario se encuentra en modo solo lectura.
-  */
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
 
-    /**
+  /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
@@ -125,10 +128,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
-   * 
+   *
    * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
    * Cuando es `false`, la mercancía fue ingresada manualmente por el usuario.
-   * 
+   *
    * @type {boolean}
    * @default false
    */
@@ -139,6 +142,17 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Referencia al elemento del modal de modificación.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * @property {CertificadoDeOrigenComponent} certificadoDeOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
+   * Permite acceder a los métodos y propiedades del componente de certificado de origen desde el componente padre.
+   */
+  @ViewChild('certificadoDeOrigen')
+  certificadoDeOrigen!: CertificadoDeOrigenComponent;
+
+  mercanciasDisponiblesTabla: boolean = false;
 
   /**
    * @descripcion
@@ -180,10 +194,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
-      this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {          
+        map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
@@ -201,37 +215,41 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
     this.estadoOpcion();
     this.paisOpcion();
-    this.datosTablaUno$=this.query.selectmercanciaTablaUno$;
+    this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
 
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de certificado.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-}
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de certificado.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+  }
 
   /**
    * @descripcion
    * Obtiene la lista de estados disponibles.
    */
   estadoOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('estados.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.estado = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.estado = [];
-      },
-    });
+    this.peruCertificadoService
+      .obtenerMenuDesplegable('estados.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.estado = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.estado = [];
+        },
+      });
   }
 
   /**
@@ -239,19 +257,18 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene la lista de países disponibles.
    */
   paisOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('pais.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.pais = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.pais = [];
-      },
-    });
+    this.peruCertificadoService
+      .obtenerMenuDesplegable('pais.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.pais = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.pais = [];
+        },
+      });
   }
 
   /**
@@ -259,24 +276,59 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService.obtenerTablaDatos('disponibles-datos.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (response: Mercancia[]) => {
-        if (response && Array.isArray(response)) {
-          this.disponiblesDatos = response as Mercancia[];
-          this.store.setDisponsiblesDatos(this.disponiblesDatos);
-        }
-        else {
-          this.disponiblesDatos = [];
-        }
+    // this.peruCertificadoService
+    //   .obtenerTablaDatos('disponibles-datos.json')
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe({
+    //     next: (response: Mercancia[]) => {
+    //       if (response && Array.isArray(response)) {
+    //         this.disponiblesDatos = response as Mercancia[];
+    //         this.store.setDisponsiblesDatos(this.disponiblesDatos);
+    //       } else {
+    //         this.disponiblesDatos = [];
+    //       }
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //       console.error('Error al obtener los datos:', error);
+    //     },
+    //   });
+
+    // Add a small delay to ensure ViewChild is initialized
+    setTimeout(() => {
+      this.processBuscarMercancias();
+    }, 100);
+  }
+
+  /**
+   * @descripcion
+   * Procesa la búsqueda de mercancías después de asegurar que los componentes estén inicializados.
+   */
+  private processBuscarMercancias(): void {
+    // Get selected catalog values from the store state
+    const SELECTED_ESTADO = this.certificadoState?.estado;
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques; // bloque is stored as an array
+
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {
+        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      pais: {
+        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
       },
-    });
+    };
+
+    console.log('Payload for buscarMercanciasCert:', PAYLOAD);
+
+    this.peruCertificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .subscribe((response) => {
+        this.datosTablaUno$ = of(response.datos || []);
+        this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+      });
+
+      console.log(this.datosTablaUno$);
+    this.mercanciasDisponiblesTabla = true;
   }
 
   /**
@@ -302,7 +354,10 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Abre el modal de modificación con los datos seleccionados.
    * @param disponiblesDatos - Los datos seleccionados para modificación.
    */
-  abrirModificarModal(disponiblesDatos: Mercancia,fromMercanciasDisponibles: boolean): void {
+  abrirModificarModal(
+    disponiblesDatos: Mercancia,
+    fromMercanciasDisponibles: boolean
+  ): void {
     this.datosSeleccionados = disponiblesDatos;
     this.fromMercanciasDisponibles = fromMercanciasDisponibles;
     this.store.setFormMercancia({ ...disponiblesDatos });
@@ -324,14 +379,14 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
 
   /**
    * Envía los datos de una mercancía al estado global (store) para su almacenamiento o actualización.
-   * 
+   *
    * Este método recibe un objeto de tipo `Mercancia`, lo encapsula dentro de un arreglo
    * y lo pasa al método `setmercanciaTabla` del store, con el fin de actualizar la lista
    * de mercancías en el estado de la aplicación.
    *
    * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o editada.
    */
-  emitmercaniasDatos(evento: Mercancia): void{
+  emitmercaniasDatos(evento: Mercancia): void {
     this.store.setmercanciaTabla([evento]);
   }
 
@@ -355,7 +410,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
     this.store.setFormValida({ certificado: valida });
   }
 
-
   /**
    * @descripcion
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
@@ -366,6 +420,27 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
   }
 
   /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.
    * Limpia los recursos y suscripciones.
@@ -373,5 +448,5 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  } 
+  }
 }

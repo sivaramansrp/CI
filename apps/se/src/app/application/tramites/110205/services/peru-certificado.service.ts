@@ -1,10 +1,19 @@
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
+import { Catalogo, HttpCoreService, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import {
+  MercanciasHistorico,
+  ProductorExportador,
+} from '../models/peru-certificado.module';
 import { Observable, map } from 'rxjs';
-import { Tramite110205State, Tramite110205Store } from '../estados/tramite110205.store';
+import {
+  Tramite110205State,
+  Tramite110205Store,
+} from '../estados/tramite110205.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { PROC_110205 } from '../servers/api-route'; 
+import { Tramite110205Query } from '../estados/tramite110205.query';
+
 
 /**
  * @service PeruCertificadoService
@@ -28,14 +37,14 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * });
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PeruCertificadoService {
-    /**
-     * @property {string} url
-     * @description Ruta base para acceder a los archivos JSON utilizados en el trámite 110205.
-     */
-    url: string = '../../../../../assets/json/110205/';
+  /**
+   * @property {string} url
+   * @description Ruta base para acceder a los archivos JSON utilizados en el trámite 110205.
+   */
+  url: string = '../../../../../assets/json/110205/';
 
   /**
    * @constructor
@@ -46,7 +55,9 @@ export class PeruCertificadoService {
    */
   constructor(
     private readonly http: HttpClient,
-    public tramite110205Store: Tramite110205Store
+    public httpService: HttpCoreService,
+    public tramite110205Store: Tramite110205Store,
+    public query: Tramite110205Query
   ) {}
 
   /**
@@ -61,9 +72,10 @@ export class PeruCertificadoService {
    */
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
     const BASE_URL = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(BASE_URL).pipe(
-      map(response => response.data)
-    );
+    console.log(BASE_URL);
+    return this.http
+      .get<RespuestaCatalogos>(BASE_URL)
+      .pipe(map((response) => response.data));
   }
 
   /**
@@ -78,6 +90,7 @@ export class PeruCertificadoService {
    */
   obtenerTablaDatos(fileName: string): Observable<Mercancia[]> {
     const JSON_URL = this.url + fileName;
+    console.log(JSON_URL);
     return this.http.get<Mercancia[]>(JSON_URL);
   }
 
@@ -88,7 +101,9 @@ export class PeruCertificadoService {
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
   obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http.get<ProductorExportador>('assets/json/110205/productor-exportador.json');
+    return this.http.get<ProductorExportador>(
+      'assets/json/110205/productor-exportador.json'
+    );
   }
 
   /**
@@ -98,7 +113,9 @@ export class PeruCertificadoService {
    * @returns {Observable<MercanciasHistorico>} Un observable que emite los datos del historial de mercancías.
    */
   obtenerMercancia(): Observable<MercanciasHistorico> {
-    return this.http.get<MercanciasHistorico>('assets/json/110205/mercancias-seleccionadas.json');
+    return this.http.get<MercanciasHistorico>(
+      'assets/json/110205/mercancias-seleccionadas.json'
+    );
   }
 
   /**
@@ -111,7 +128,7 @@ export class PeruCertificadoService {
   actualizarEstadoFormulario(DATOS: Tramite110205State): void {
     this.tramite110205Store.update((state) => ({
       ...state,
-      ...DATOS
+      ...DATOS,
     }));
   }
 
@@ -122,6 +139,28 @@ export class PeruCertificadoService {
    * @returns {Observable<Tramite110205State>} Observable que emite los datos de prellenado.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite110205State> {
-    return this.http.get<Tramite110205State>('assets/json/110205/datos-prefill.json');
+    return this.http.get<Tramite110205State>(
+      'assets/json/110205/datos-prefill.json'
+    );
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite110205State> {
+    return this.query.selectPeru$;
+  }
+  guardarDatosPost(body: any) {
+    return this.httpService.post<any>(PROC_110205.GUARDAR, { body: body });
+    // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
+  }
+
+  buscarMercanciasCert(body: any): Observable<any> {
+    // return this.httpService.post<any>(
+    //   'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
+    //   { body: body }
+    // );
+     return this.httpService.post<any>(PROC_110205.BUSCAR, { body: body });
   }
 }

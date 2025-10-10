@@ -1,10 +1,12 @@
-<app-certificado-de-origen 
+<app-certificado-de-origen #certificadoDeOrigen
     [operador]="operador"
     [tratadoAcuerdo]="estado || []"
     [paisBloqu]="pais || []"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
+    [mercanciasDisponiblesTabla]="mercanciasDisponiblesTabla"
+    
     [tableData]="(datosTablaUno$ | async) ||  []"
     (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
     (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"

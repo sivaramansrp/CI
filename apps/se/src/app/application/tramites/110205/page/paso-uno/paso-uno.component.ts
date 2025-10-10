@@ -6,10 +6,12 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
+import { PeruDatosCertificadoComponent } from '../../components/peru-datos-certificado/peru-datos-certificado.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -23,8 +25,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   indice: number = 1;
 
   /**
- * Esta variable se utiliza para almacenar el índice del subtítulo.
- */
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
   public consultaState!: ConsultaioState;
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
@@ -38,6 +40,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Referencia al componente SolicitanteComponent mediante ViewChild.
+   * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
+   */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * @property {CertificadoOrigenComponent} certificadoOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoOrigenComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de certificado de origen desde el componente padre.
+   */
+  @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoOrigenComponent;
+
+  /**
+   * @property {DatosCertificadoComponent} datosCertificado
+   * @description
+   * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
+   */
+  @ViewChild('DatosCertificado') datosCertificado!: PeruDatosCertificadoComponent;
+
+  /**
    * @constructor
    * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado del trámite.
    * @param {PeruCertificadoService} peruCertificadoService - Servicio para gestionar los datos del certificado de Perú.
@@ -46,7 +70,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
     public peruCertificadoService: PeruCertificadoService
-  ) { }
+  ) {}
 
   /**
    * @method ngOnInit
@@ -55,11 +79,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Si no se requiere actualización, habilita la visualización de los datos de respuesta.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState && this.consultaState.procedureId === '110205' &&
-      this.consultaState.update) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (
+      this.consultaState &&
+      this.consultaState.procedureId === '110205' &&
+      this.consultaState.update
+    ) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -72,9 +104,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.peruCertificadoService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
@@ -90,6 +121,48 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso uno: solicitante, certificado de origen y datos del certificado.
+   * Marca los controles como tocados si algún formulario es inválido para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificado) {
+      if (!this.datosCertificado.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    console.log('isValid', isValid, this.solicitante, this.certificadoOrigen, this.datosCertificado);
+
+    return isValid;
   }
 
   /**
