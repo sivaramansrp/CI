@@ -312,6 +312,7 @@ export class ServiciosComponent implements OnInit, OnDestroy,OnChanges {
 
       this.datosEmpresaExtranjera$.subscribe((datos) => {
         this.datosEmpresaExtranjera = datos;
+        this.servicioDeFormularioService.setArray('empresasExtranjera', this.datosEmpresaExtranjera);
       });
 
     this.formularioEmpresaExtranjera = this.fb.group({
@@ -422,6 +423,7 @@ ngOnChanges(): void {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.datos = datos; // Update local `datos` array when store data changes
+        this.servicioDeFormularioService.setArray('empresasNacionales', this.datos);
       })
   }
 
@@ -467,6 +469,7 @@ ngOnChanges(): void {
     // Subscribe to `datosImmex` from the store to keep the component updated reactively
     this.Tramite80102Query.selectDatosImmex$.subscribe((datosImmex) => {
       this.datosImmex = datosImmex; // Update local variable with the latest data from the store
+      this.servicioDeFormularioService.setArray('serviciosImmex', this.datosImmex);
     });
   }
 
