@@ -1,20 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-import { Subject } from 'rxjs';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-pago-de-derecho',
