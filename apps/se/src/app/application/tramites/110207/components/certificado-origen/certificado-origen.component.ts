@@ -189,11 +189,6 @@ export class CertificadoOrigenComponent
     private seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery
   ) {
-    this.query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$), delay(100))
-      .subscribe((estado) => {
-        //  this.formCertificadoValues = estado;
-      });
   }
 
   /**
