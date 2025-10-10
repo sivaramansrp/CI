@@ -311,24 +311,25 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    */
   public PeriodoError(): void {
     
-    if (this.cuerpoSolicitarTablaFila.some(item => (item.periodo !== this.periodoForm.value.periodo))) {
-        this.vistaAlerta = true;
-        this.textos = PERIODO_ERROR;
-      }
-      // Check if the fechas_sobre_el_periodo already exists in cuerpoSolicitarTablaFila
-      else if (
-        this.cuerpoSolicitarTablaFila.some(
-          item =>
-            item.fechas_sobre_el_periodo ===
-            (this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal),
-        )
-      ) {
-        this.vistaAlerta = true;
-        this.textos = REGISTRO_TEXTO;
-      }
-      else {
-        this.valorValido();
-      }
+    const SELECTEDPERIODODESC = this.periodoList.find(item => item.id === Number(this.periodoForm.value.periodo))?.descripcion || '';
+    if (this.cuerpoSolicitarTablaFila.some(item => item.periodo !== SELECTEDPERIODODESC)) {
+      this.vistaAlerta = true;
+      this.textos = PERIODO_ERROR;
+    }
+    // Check if the fechas_sobre_el_periodo already exists in cuerpoSolicitarTablaFila
+    else if (
+      this.cuerpoSolicitarTablaFila.some(
+      item =>
+        item.fechas_sobre_el_periodo ===
+        (this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal),
+      )
+    ) {
+      this.vistaAlerta = true;
+      this.textos = REGISTRO_TEXTO;
+    }
+    else {
+      this.valorValido();
+    }
     }
 
     /**
@@ -351,7 +352,7 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
       }
       else if (OperacionesDeComercioExterioComponent.isFinalDateInFutureOrPresent(FINALYEAR, FINALMONTH, CURRENTYEAR, CURRENTMONTH)) {
         this.vistaAlerta = true;
-        this.textos = TEXTOS + this.periodoForm.value.periodoFinal;
+        this.textos = `<p style="text-align: center;">${TEXTOS} ${this.periodoForm.value.periodoFinal}</p>`;
       }
       else if (OperacionesDeComercioExterioComponent.isFinalDateBeforeInitial(FINALYEAR, INITIALYEAR, FINALMONTH, INITIALMONTH)) {
         this.vistaAlerta = true;
