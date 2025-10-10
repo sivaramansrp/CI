@@ -259,15 +259,29 @@ export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
  */
 export const CAMPO_DE_DESTINATARIO = [110221, 110222, 110223];
 
+/**
+ * Identificadores de procedimientos que requieren campos de destinatarios.
+ * @type {number[]}
+ */
 export const CAMPO_DE_DESTINATARIOS = [110203];
 
+/**
+ * Identificadores de procedimientos que requieren campos de representante.
+ * @type {number[]}
+ */
 export const CAMPO_DE_REPRESENTANTE = [110202, 110223];
 
+/**
+ * Identificadores de procedimientos que requieren campos de transporte.
+ * @type {number[]}
+ */
 export const CAMPO_DE_TRANSPORTE = [110207, 110208];
 
+/**
+ * Identificadores de procedimientos que requieren campos de detalles.
+ * @type {number[]}
+ */
 export const CAMPO_DE_DETALLES = [110216, 110217];
-
-
 
 /**
  * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.

@@ -7,8 +7,10 @@ import { DestinatarioService } from '../../services/destinatario.service';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
-
-
+/**
+ * @description Componente para manejar los detalles de la mercancía.
+ * Proporciona entradas para configurar un formulario y opciones para productos, fracciones y unidades.
+ */
 @Component({
   selector: 'app-destinatario',
   standalone: true,
@@ -136,6 +138,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    * @memberof DestinatarioComponent
    */
   campoDestinatario = false;
+
+  // Indica si los campos de destinatarios están activos
   camposDestinatarios = false;
 
   /**
@@ -248,6 +252,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
   paisDestionSeleccion(estado: Catalogo): void {
     this.paisDestionSeleccionEvent.emit(estado)
   }
+  /**
+  /**
+   * Valida el formulario y marca los campos como tocados si es inválido
+   */
   validarFormularios(): boolean {
     if (this.formDestinatario.invalid) {
       this.formDestinatario.markAllAsTouched();
@@ -255,7 +263,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
     return true;
   }
-
+  /**
+   * Obtiene la lista de países de destino desde el servicio
+   */
   getPaisDestino(): void {
     this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
       this.paisDestinDestinatario = data as Catalogo[];
