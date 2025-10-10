@@ -320,7 +320,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.store.setPaisDestinSeleccion(estado);
   }
 
-
   /**
   * Método llamado al destruir el componente. Limpia las suscripciones activas.
   */
