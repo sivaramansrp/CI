@@ -267,11 +267,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
    * Obtiene la lista de países de destino desde el servicio
    */
   getPaisDestino(): void {
-    this.destinatarioService.getPaisDestino('110202').subscribe((data) => {
+    this.destinatarioService.getPaisDestino(this.idProcedimiento.toString()).subscribe((data) => {
       this.paisDestinDestinatario = data as Catalogo[];
     });
   }
-
   /**
   * Establece valores en el store y emite eventos relacionados con el formulario.
   *
