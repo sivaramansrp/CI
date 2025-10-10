@@ -30,6 +30,7 @@ import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/c
 import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tabs-response.model';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 
 import { AcuseDetalleService } from '@libs/shared/data-access-user/src/core/services/shared/detalleAcuse.service';
 import { AutorizarDictamenService } from '../core/services/autorizar-dictamen/autorizar-dictamen.service';
@@ -285,6 +286,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     private guardarService: GuardarDictamenService,
     private autorizarDictamenService: AutorizarDictamenService,
     private acuseDetalleService: AcuseDetalleService,
+    private evaluarSolicitudService: EvaluarSolicitudService,
     private fb: FormBuilder,
     private tramiteConfigService: TramiteConfigService
   ) {
@@ -983,6 +985,76 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  /**
+     * Descarga un archivo Excel con los datos de la solicitud.
+     *
+     * Llama al servicio `evaluarSolicitudService.getDescargarExcel` pasando el ID del trámite
+     * y la solicitud. Convierte la respuesta en Base64 a un archivo Blob y fuerza la descarga
+     * en el navegador con el nombre `datosRPE.xlsx`.
+     *
+     * Muestra notificaciones de error si la descarga falla o si la respuesta del servicio no es exitosa.
+     *
+     * @returns {void}
+     */
+    descargarSolicitud(): void {
+      this.evaluarSolicitudService.getDescargarExcel(this.tramite, this.guardarDatos.id_solicitud)
+        .subscribe({
+          next: (resp) => {
+            if (resp.codigo === CodigoRespuesta.EXITO) {
+            // Convertir Base64 a un Blob
+            const BASE64_DATA = resp.datos ?? '';
+            const BYTE_CHARACTERS = atob(BASE64_DATA);
+            const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+            for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+              BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+            }
+            const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+            const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+            // Crear enlace de descarga
+            const LINK = document.createElement('a');
+            LINK.href = window.URL.createObjectURL(BLOB);
+            LINK.download = 'datosRPE.xlsx';
+            LINK.click();
+  
+            // Liberar memoria
+            window.URL.revokeObjectURL(LINK.href);
+  
+    
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: resp.error || 'Error al descargar excel',
+                mensaje:
+                  resp.causa ||
+                  resp.mensaje ||
+                  'Error al descargar excel',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            }
+          },
+          error: (err) => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const MENSAJE = err?.error?.error || 'Error al descargar excel';
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
+        });
+    }
 
   /**
    * @method postOficioAutorizacion
