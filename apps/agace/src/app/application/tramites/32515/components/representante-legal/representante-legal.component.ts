@@ -245,9 +245,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     };
   }
-
+  
   /**
-   * Handles closing the notification
+   * Cierra la notificación actual y resetea los flags de notificación
    */
   cerrarNotificacion(): void {
     this.nuevaNotificacion = null;
