@@ -184,7 +184,7 @@ this.tramite130102Query.selectSeccionState$
     this.formDelTramite = this.fb.group({
       solicitud: [this.solicitudState?.solicitud],
   
-      //fraccion: [this.solicitudState?.fraccion, [Validators.required]],
+
       regimen: [this.solicitudState?.regimen, [Validators.required]],
       clasificacionRegimen: [this.solicitudState?.clasificacionRegimen, [Validators.required]],
     });
@@ -201,9 +201,8 @@ this.tramite130102Query.selectSeccionState$
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
     const VALOR = form.get(campo)?.value;
-    console.log(VALOR);
     (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
-    console.log(this.solicitudState);
+
   }
 
   /**
@@ -214,9 +213,11 @@ this.tramite130102Query.selectSeccionState$
    */
   obtenerClaficacionRegimen(form: FormGroup): void {  
     const cveRegimen = form.get('regimen')?.value;
-    console.log(cveRegimen);
+
     if (cveRegimen) {
-      this.catOctavaTemporalService.getClasificacionRegimenes(cveRegimen).subscribe((data) => {
+      this.catOctavaTemporalService.getClasificacionRegimenes(cveRegimen).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         this.catalogosArray[1] = data.datos.map((item, index) => ({
           id: index,  
           clave: item.clave,
@@ -264,8 +265,9 @@ this.tramite130102Query.selectSeccionState$
    * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
    */
   fetchRegimenes(): void {
-    this.catOctavaTemporalService.getRegimenes().subscribe((data) => {
-      console.log(data);
+    this.catOctavaTemporalService.getRegimenes().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
       this.catalogosArray[0] = data.datos.map((item) => ({
         id: parseInt(item.clave),
         clave: item.clave,

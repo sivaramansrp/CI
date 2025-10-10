@@ -297,7 +297,9 @@ export class PaisProcendenciaComponent implements OnInit {
    * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
    */
     obtenerBloques(): void {
-      this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
+      this.catOctavaTemporalService.getPaisesBloque().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
           id: item.id || index,
           clave: item.clave,
@@ -311,7 +313,9 @@ export class PaisProcendenciaComponent implements OnInit {
      * @param cveBloque Clave del bloque para obtener los países asociados.
      */
     obtenerPaisesBloque(cveBloque: string): void {
-      this.catOctavaTemporalService.getPaisesBloqueEsp(cveBloque).subscribe((data) => {
+      this.catOctavaTemporalService.getPaisesBloqueEsp(cveBloque).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         this.selectRangoDias = data.datos.map((item, index) => item.descripcion); 
         this.paisesFuente = data.datos.map((item, index) => ({  
           id: item.id || index,
@@ -319,7 +323,7 @@ export class PaisProcendenciaComponent implements OnInit {
           descripcion: item.descripcion,
         }));
       });
-      console.log(this.crosListaDePaises);
+
     } 
 
     changeBloque(form: FormGroup): void {

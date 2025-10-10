@@ -354,7 +354,9 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * Actualiza el catálogo de fracciones arancelarias con los datos obtenidos.
    */
   obtenerFracciones(): void {
-      this.catOctavaTemporalService.getFraccionArancelaria().subscribe((data) => {
+      this.catOctavaTemporalService.getFraccionArancelaria().pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
         this.fraccionF = data.datos.map((item, index) => ({
           id: index,
           clave: item.clave,
@@ -369,7 +371,9 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @param cveFraccion Clave de la fracción arancelaria para obtener las unidades de medida asociadas.
    */
   obtenerUnidadesMedida(cveFraccion: string): void {
-      this.catOctavaTemporalService.getUnidadesMedida(cveFraccion).subscribe((data) => {
+      this.catOctavaTemporalService.getUnidadesMedida(cveFraccion).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
         this.Unidad = data.datos.map((item, index) => ({    
           id: index,
           clave: item.clave,
@@ -385,7 +389,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    */
   onChangeFraccion(formDelLa: FormGroup): void {
     const CVE_FRACCION = formDelLa.get('fraccionArancelaria')?.value;
-    console.log(CVE_FRACCION);
+    
     this.obtenerUnidadesMedida(CVE_FRACCION);
   }
   

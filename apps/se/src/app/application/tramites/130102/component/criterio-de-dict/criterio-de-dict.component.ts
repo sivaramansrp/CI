@@ -128,8 +128,8 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
    * @param e - La solicitud de mercancía seleccionada.
    */
   fetchSolicitudMercancia(e: any): void {
-    console.log(e);
-    //this.seleccionadaSolicitudMercancia = e;
+
+  
   }
 
 
