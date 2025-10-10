@@ -7,7 +7,7 @@ import { CertificadoDeOrigenComponent } from '../../../../shared/components/cert
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
-import { MercanciaComponent } from '../mercancia/mercancia.component';
+import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
@@ -89,29 +89,36 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   pais: Catalogo[] = [];
 
   /**
-   * @description
-   * Listado de mercancías disponibles para el certificado.
-   * 
-   * Esta propiedad almacena todas las mercancías que pueden ser 
-   * seleccionadas y asociadas al certificado de origen.
-   * 
-   * @property {Mercancia[]} disponiblesDatos
-   * @memberof CertificadoOrigenComponent
-   * 
-   * @example
-   * ```typescript
-   * // Ejemplo de estructura de mercancías
-   * [
-   *   {
-   *     id: '001',
-   *     descripcion: 'Producto A',
-   *     valorMercancia: 1000
-   *     // ... otros campos
-   *   }
-   * ]
-   * ```
+   * Lista de mercancías disponibles.
+   *
+   * @type {Mercancia[]}
    */
   disponiblesDatos: Mercancia[] = [];
+
+  /**
+   * Indica si los datos de la mercancía provienen del listado de mercancías disponibles.
+   * 
+   * @type {boolean}
+   * @default false
+   * 
+   * @example
+   * // true: el usuario seleccionó una mercancía desde la lista disponible
+   * // false: la mercancía se está agregando manualmente
+   * this.fromMercanciasDisponibles = true;
+   */
+  fromMercanciasDisponibles: boolean = false;
+
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+  public idProcedimiento = 110211;
+
+  /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTablaUno$: Mercancia[] = [];
 
   /**
    * @description
@@ -569,17 +576,17 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
   }
 
   /**
-   * @descripcion
-   * Abre el modal de modificación con los datos seleccionados.
-   * @param disponiblesDatos - Los datos seleccionados para modificación.
+   * Método para abrir el modal de modificación.
    */
-  abrirModificarModal(disponiblesDatos: Mercancia): void {
-    this.datosSeleccionados = disponiblesDatos;
-    this.store.setFormMercancia({ ...disponiblesDatos });
-    if (this.modalInstance) {
-      this.modalInstance.show();
+    abrirModificarModal(datos1: Mercancia, fromMercanciasDisponibles: boolean): void {
+      this.datosSeleccionados = datos1;
+       this.fromMercanciasDisponibles = fromMercanciasDisponibles;
+      this.store.setFormMercancia({ ...datos1 });
+        
+      if (this.modalInstance) {
+        this.modalInstance.show();
+      }      
     }
-  }
 
   /**
    * @descripcion
@@ -604,6 +611,18 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     if(this.esFormularioSoloLectura){
       this.conseguirDisponiblesDatos();
     }
+  }
+
+  /**
+   * Emite los datos de una mercancía seleccionada o capturada y los almacena en el estado global.
+   * 
+   * Este método envuelve el objeto de tipo `Mercancia` en un arreglo y lo envía al store
+   * mediante el método `setMercanciaTabla`, para actualizar la lista de mercancías.
+   *
+   * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o modificada.
+   */
+  emitmercaniasDatos(evento: Mercancia): void{
+    this.store.setMercanciaTabla([evento]);
   }
 
   /**

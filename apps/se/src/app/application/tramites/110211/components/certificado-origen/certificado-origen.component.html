@@ -6,8 +6,9 @@
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
-    [tableData]="disponiblesDatos || []"
-    (filaClics)="abrirModificarModal($event)"
+    [tableData]="datosTablaUno$"
+    (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
+    (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
@@ -18,7 +19,12 @@
     [cargoDeMercancias]="true">
 </app-certificado-de-origen>
 
-<div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-mercancia #mercanciaRef [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()" [esFormularioSoloLectura]="esFormularioSoloLectura"></app-mercancia>
+</div> -->
+
+<div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+    <app-datos-mercancia-model [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados"  [fromMercanciasDisponibles]="fromMercanciasDisponibles" (guardarClicado)="abrirModificarModal($event, false)"
+        (cerrarClicado)="cerrarModificarModal()" [idProcedimiento]="idProcedimiento" (EMITMERCANIAS)="emitmercaniasDatos($event)"></app-datos-mercancia-model>
 </div>

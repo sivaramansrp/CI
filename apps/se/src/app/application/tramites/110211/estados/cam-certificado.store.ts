@@ -275,18 +275,6 @@ export class camCertificadoStore extends Store<CamState> {
 
       /**
        * @descripcion
-       * Actualiza la tabla de mercancías en el almacén.
-       * @param mercanciaTabla - Array de objetos `Mercancia` que representa la tabla de mercancías.
-       */
-      setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
-        this.update((state) => ({
-          ...state,
-          mercanciaTabla,
-        }));
-      }
-
-      /**
-       * @descripcion
        * Actualiza los datos del formulario de certificado en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
        */
@@ -630,4 +618,25 @@ setEstadoCompleto(values:CamState): void {
     ...values,
   }));
 }
+
+  public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
+  }
+
 }
