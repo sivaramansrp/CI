@@ -206,7 +206,9 @@ inicializarEstadoFormulario(): void {
   * @description Obtiene las opciones de entidades federativas.
   */
   obtenerEntidadesFederativas(): void {
-    this.catOctavaTemporalService.getEntidadesFederativas().subscribe((data) => {
+    this.catOctavaTemporalService.getEntidadesFederativas().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
       this.entidadFederativaLista = data.datos.map((item, index) => ({
         id: index,
         clave: item.clave,
@@ -221,7 +223,9 @@ inicializarEstadoFormulario(): void {
    * @returns void
    */
   obtenerUnidadesAdministrativas(cveEntidad: string): void {
-    this.catOctavaTemporalService.getUnidadesAdministrativas(cveEntidad).subscribe((data) => {
+    this.catOctavaTemporalService.getUnidadesAdministrativas(cveEntidad).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
       this.representacionFederalLista = data.datos.map((item, index) => ({  
         id: index,
         clave: item.clave,

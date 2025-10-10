@@ -125,7 +125,9 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    *  
    */
   obtienerDivisionesFraccion(): void {
-    this.catOctavaTemporalService.getDivisionesFraccionArancelaria().subscribe((data) => {
+    this.catOctavaTemporalService.getDivisionesFraccionArancelaria().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         this.catalogos = data.datos.map((item, index) => ({
           id: index,
           clave: item.clave,

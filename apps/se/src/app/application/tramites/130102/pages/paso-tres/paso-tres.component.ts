@@ -129,7 +129,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.solicitudState = seccionState;
           this.cadenaOriginal = seccionState.cadenaOriginal;
-          console.log(this.cadenaOriginal)
+
         })
       ).subscribe();
 
@@ -137,9 +137,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const URL_ACTUAL = this.router.url;
     const URL_SEPARADA = URL_ACTUAL.split('/');
     this.url = URL_SEPARADA.slice(0, 3).join('/');
-
-    // Obtener la cadena original del trámite
-   // this.obtenerCadenaOriginal();
   }
 
   /**
@@ -159,7 +156,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       cve_usuario_capturista: "Gubernamental",
       fecha_firma: "2025-07-01 20:01:25"
     };
-    console.log("ID SOLICITUD "+ this.solicitudState.idSolicitud)
+
     this.cadena.obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD).subscribe({
       next: (resp: any) => {
         if (resp.codigo !== '00') {
@@ -178,7 +175,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
       },
       error: (error: any) => {
-        console.error('Error al iniciar trámite:', error);
+
         const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
@@ -205,7 +202,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     fechaFin: string;
   }): void {
     this.datosFirmaReales = datos;
-    console.log(datos)
+
     this.obtieneFirma(datos.firma);
   }
 
@@ -218,7 +215,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     this.cadenaOriginal = this.solicitudState.cadenaOriginal;
 
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
-      console.error('Faltan datos para completar la firma');
+
       this.nuevaNotificacion = {
         tipoNotificacion: 'toastr',
         categoria: CategoriaMensaje.ERROR,
@@ -284,7 +281,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
+      
           if (!this.nuevaNotificacion) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',

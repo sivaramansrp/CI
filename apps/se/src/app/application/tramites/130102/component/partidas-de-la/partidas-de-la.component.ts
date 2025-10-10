@@ -369,7 +369,9 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   onBlurFraccionArancelaria(): void {
     const CVE_FRACCION = this.form.get('fraccionArancelariaTIGIE')?.value;
     if (CVE_FRACCION) {
-      this.catOctavaTemporalService.getTigieFraccion(CVE_FRACCION).subscribe((data) => {
+      this.catOctavaTemporalService.getTigieFraccion(CVE_FRACCION).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         if (data && data.datos && data.datos.length > 0) {
           this.fraccionArancelariaTigieData = data.datos;
 

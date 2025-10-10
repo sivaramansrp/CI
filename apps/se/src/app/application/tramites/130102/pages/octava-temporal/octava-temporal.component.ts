@@ -219,8 +219,10 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * @param numFolioTramite - Número de folio del trámite.
    */
   ejecutarNotificacion(numFolioTramite : string): void {
-      this.catOctavaTemporalService.getIniciarNotificacion(numFolioTramite ).subscribe((data) => {
-        console.log(data);
+      this.catOctavaTemporalService.getIniciarNotificacion(numFolioTramite ).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+
         if(data.codigo === '200'){
           alert(data.mensaje);
         } else {
@@ -231,7 +233,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
   } 
 
   generaContratoSolicitud(): SaveReglaOctavaRequest {
-    console.log('Generando contrato de solicitud...'+ JSON.stringify(this.solicitudState));
+
     const data: SaveReglaOctavaRequest = {
         cve_regimen: this.solicitudState.regimen || '',
         cve_clasificacion_regimen: this.solicitudState.clasificacionRegimen || '',
@@ -263,7 +265,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
         lista_fracciones_prosec: this.solicitudState.lista_fracciones_prosec || [],
     
     }
-    console.log('Datos para guardar la solicitud: ', JSON.stringify(data));
+
     return data;
   }
   /**
@@ -272,15 +274,13 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    */
   ejecutarGuardadoSolicitud(): void {
     this.generaContratoSolicitud();
-    const dataRequest : SaveReglaOctavaRequest = this.generaContratoSolicitud();//dataRequestROctavaTemporal;
+    const dataRequest : SaveReglaOctavaRequest = this.generaContratoSolicitud();
     this.catOctavaTemporalService.saveDataRequest(dataRequest).subscribe({
       next: (data) => {
         if(data.datos.id_solicitud){
-          console.log(data.datos.id_solicitud)
           this.tramite130102Store.setIdSolicitud(data.datos.id_solicitud);
           this.tramite130102Store.setDynamicFieldValue('idSolicitud', data.datos.id_solicitud);
           this.obtenerCadenaOriginal(data.datos.id_solicitud);
-         // this.ejecutarNotificacion(data.datos.id_solicitud.toString());
         } else {
 
           alert(`Error: ${data.codigo} - Causa: ${data.mensaje}`);
@@ -311,7 +311,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
         cve_usuario_capturista: "Gubernamental",
         fecha_firma: "2025-07-01 20:01:25"
       };
-      console.log("ID SOLICITUD "+ this.solicitudState.idSolicitud)
+   
       this.cadena.obtenerCadenaOriginal(String(idSol), PAYLOAD).subscribe({
         next: (resp: any) => {
           if (resp.codigo !== '00') {
@@ -325,14 +325,14 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
-            console.log('cadena original ', this.solicitudState.cadenaOriginal)
+   
             return;
           }
           this.tramite130102Store.setCadenaOriginal(resp.datos);
           this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
         },
         error: (error: any) => {
-          console.error('Error al iniciar trámite:', error);
+
           const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',

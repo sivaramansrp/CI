@@ -1,6 +1,6 @@
 {
   "name": "@ng-mf/source",
-  "version": "1.2.23",
+  "version": "1.2.22",
   "license": "MIT",
   "scripts": {
     "setup:local": "npm ci -f --legacy-peer-deps --prefer-offline --no-package-lock --no-audit --no-fund --progress=false",
@@ -16,7 +16,6 @@
   "dependencies": {
     "@angular-architects/module-federation": "^19.0.3",
     "@angular/animations": "18.0.4",
-    "@angular/cdk": "^20.2.7",
     "@angular/common": "18.0.4",
     "@angular/compiler": "18.0.4",
     "@angular/core": "18.0.4",
@@ -94,7 +93,7 @@
     "webpack-dev-server": "^4.0.0"
   },
   "overrides": {
-    "@nx/webpack": {
+    "@nx/webpack":  {
       "webpack": "5.91.0"
     }
   }
