@@ -1,5 +1,4 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 /**
@@ -152,10 +151,6 @@ export interface Solicitud110207State {
    * Lista de mercancías añadidas a la tabla.
    */
   mercanciaTabla: Mercancia[];
-  /**
-   * Indica si los formularios son válidos.
-   */
-  formaValida: { [key: string]: boolean };
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110207.
@@ -269,13 +264,6 @@ export function createInitialState(): Solicitud110207State {
     paisBloques: [],
     disponiblesDatos: [],
     mercanciaTabla: [],
-    formaValida: {
-      certificado: false,
-      datos: false,
-      destinatrio: false,
-      datosDestinatario: false,
-      exportador: false,
-    },
   };
 }
 
@@ -980,23 +968,6 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
       ...state,
       representacionFederalSeleccion,
     }));
-  }
-
-    /**
-   * Establece el estado de validación del formulario en el almacén.
-   * 
-   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setFormValida(formaValida: { [key: string]: boolean }): void {
-    this.update((state) => {
-      const IS_VALID = { ...state.formaValida, ...formaValida };
-      return {
-        ...state,
-        formaValida: IS_VALID,
-      };
-    });
   }
 
   /**
