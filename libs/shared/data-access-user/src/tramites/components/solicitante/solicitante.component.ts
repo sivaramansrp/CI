@@ -20,7 +20,7 @@ import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 // Se agregan las siguientes líneas para resolver errores de eslint.
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, SolicitanteStore } from '@ng-mf/data-access-user';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosGeneralesModel } from '../../../core/models/datos-generales.model';
@@ -76,6 +76,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private formServices: FormulariosService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitanteStore: SolicitanteStore
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -101,7 +102,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.guardarDatos.id_solicitud && (this.guardarDatos.procedureId === '130118' || this.guardarDatos.procedureId === '5701' 
-      || this.guardarDatos.procedureId === '120301')) {
+      || this.guardarDatos.procedureId === '120301' || this.guardarDatos.procedureId === '110101')) {
       this.getDatosSolicitanteEvaluar(this.guardarDatos.id_solicitud);
     } else {
       this.getDatosGenerales(this.RFC);
@@ -357,6 +358,15 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
           tap((response) => {
             if (response) {
               this.datosGenerales = response;
+
+              const IDENTIFICACION = response.datos.identificacion;
+
+              this.solicitanteStore.setRfc(response.datos.rfc_original ?? '');
+              this.solicitanteStore.setNombre(IDENTIFICACION.nombre ?? '');
+              this.solicitanteStore.setPaterno(IDENTIFICACION.ap_paterno ?? '');
+              this.solicitanteStore.setMaterno(IDENTIFICACION.ap_materno ?? '');
+              this.solicitanteStore.setRazonSocial(IDENTIFICACION.razon_social ?? '');
+              this.solicitanteStore.setTipoPersona(IDENTIFICACION.tipo_persona ?? '');
             }
           })
         )

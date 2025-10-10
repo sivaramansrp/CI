@@ -10,10 +10,9 @@ import { Tramite110212Store } from '../tramites/tramite110212.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110212Query extends Query<Tramite110212State> {
-
   /**
    * Observable que selecciona el estado completo del trámite.
-   * 
+   *
    * Este observable emite el estado actual del trámite 110212.
    */
   selectSolicitud$ = this.select((state) => {
@@ -21,12 +20,40 @@ export class Tramite110212Query extends Query<Tramite110212State> {
   });
 
   /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+  formDatosCertificado$ = this.select((state) => {
+    return state.formDatosCertificado;
+  });
+
+  /**
+   * Selecciona el catálogo de idiomas.s
+   */
+  selectIdioma$ = this.select((state) => state.idiomaDatos);
+
+  /**
+   * Selecciona los datos de la entidad federativa.
+   * @returns {Observable<any>} - Observable con los datos de la entidad federativa.
+   */
+  selectEntidadFederativa$ = this.select((state) => {
+    return state.entidadFederativaDatos;
+  });
+
+  /**
+   * Selecciona los datos de la representación federal.
+   * @returns {Observable<any>} - Observable con los datos de la representación federal.
+   */
+  selectrepresentacionFederal$ = this.select((state) => {
+    return state.representacionFederalDatos;
+  });
+
+  /**
    * Constructor de la clase Tramite110212Query.
-   * 
+   *
    * @param {Tramite110212Store} store - El store que contiene el estado del trámite 110212.
    */
-  constructor(
-    protected override store: Tramite110212Store) {
+  constructor(protected override store: Tramite110212Store) {
     super(store);
   }
 }
