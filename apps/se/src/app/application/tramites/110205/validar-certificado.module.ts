@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from "@ng-mf/data-access-user";
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
@@ -55,7 +55,8 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     RepresentanteLegalComponent,
     NotificacionesComponent,
     RepresentanteLegalExportadorComponent,
-    MercanciaComponent
+    MercanciaComponent,
+    PasoFirmaComponent
 ]
 })
 export class ValidarCertificadoModule { }
