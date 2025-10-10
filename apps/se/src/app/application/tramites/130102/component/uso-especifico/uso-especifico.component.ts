@@ -103,24 +103,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private catOctavaTemporalService: CatOctavaTemporalService
   ) { 
-  /* this.consultaioQuery.selectConsultaioState$
-         .pipe(
-           takeUntil(this.destroyNotifier$),
-           map((seccionState) => {
-             this.consultaState = seccionState;
-              
-            if (this.consultaState.update) {        
-            this.tramite130102Store.update((state) => ({
-              ...state,
-              lista_fracciones_prosec: ESPECIFICO_PREFILL
-            }));       
-            this.datosSocios = ESPECIFICO_PREFILL;
-           }
-             this.inicializarEstadoFormulario();
-           })
-         )
-         .subscribe();*/
-         // this.inicializarEstadoFormulario();
+
          this.inicializarFormulario();
   }
 
@@ -130,14 +113,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-    /*const USO_ESPECIFICO_TABLA = this.solicitudState.lista_fracciones_prosec;
-    if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) ) {
-      this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
-        this.datosSocios = data;
-      });
-      this.tramite130102Store.setDynamicFieldValue('lista_fracciones_prosec', this.datosSocios);
-      this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
-    }*/
+   
     this.obtienerDivisionesFraccion();
   }
 
@@ -198,35 +174,6 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
       descripcion: ['', [Validators.required, UsoEspicificoComponent.noLeadingSpacesValidator]],
     });
 
-/* this.tramite130102Query.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {  
-          this.solicitudState = seccionState;
-          
-         if (this.solicitudState?.lista_fracciones_prosec) {
-            const PRODUCTOS = this.solicitudState.lista_fracciones_prosec ;
-            this.datosSocios = [...PRODUCTOS];
-          }
-          
-          if (this.solicitudState?.lista_fracciones_prosec) {
-            this.usoEspicificoForm.patchValue({
-              fraccionArancelariaProsec: this.solicitudState.lista_fracciones_prosec
-            });
-          }
-        })
-      )
-      .subscribe();*/
-
-   
-   /* if (this.consultaState?.readonly) {
-      this.usoEspicificoForm.disable();
-      this.obtenerRequisitosFraccionArancelariaEsquema();
-    }
-    
-    if (this.consultaState?.update) {
-      this.obtenerRequisitosFraccionArancelariaEsquema();
-    }*/
   }
     /**
    * Asigna un valor del formulario al store.

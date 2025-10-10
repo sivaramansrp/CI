@@ -170,9 +170,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    /*this.formularioRegistroService.getFraccionArancelariaTIGIE().pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.fraccionArancelariaTIGIE = data;
-    });*/
+
 
     this.inicializarEstadoFormulario();
     this.formularioTotalCount();
@@ -180,15 +178,11 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const PARTIDAS_TABLA = this.solicitudState?.['partidas_tabla'];
     if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
-      /*this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
-        this.datosSocios = partidas;
-        this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
-      });*/
+
     }
 
     this.formForTotalCount.controls['cantidadTotal'].disable();
     this.formForTotalCount.controls['valorTotalUSD'].disable();
-    //this.formularioRegistroService.registrarFormulario('form', this.form);
     this.formularioRegistroService.registrarFormulario('formForTotalCount', this.formForTotalCount);
   }
 

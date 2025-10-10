@@ -182,13 +182,8 @@ inicializarEstadoFormulario(): void {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.formularioRegistroService.registrarFormulario('frmRepresentacion', this.frmRepresentacion);
-  /*this.formularioRegistroService.getEntidadesFederativas().subscribe(data => {
-    this.entidadFederativaLista = data;
-  });*/
     this.obtenerEntidadesFederativas();
-  /* this.formularioRegistroService.getRepresentacionesFederales().subscribe(data => {
-    this.representacionFederalLista = data;
-  });*/
+
   }
 
     /**
