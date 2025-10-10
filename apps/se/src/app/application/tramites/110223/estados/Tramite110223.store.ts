@@ -122,6 +122,9 @@ export interface TramiteState {
    * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
    */
   agregarDatosProductorFormulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
  
 }
 
@@ -198,6 +201,7 @@ export const INITIAL_STATE: TramiteState = {
       numeroRegistroFiscal: '',
       fax: '',      
     },
+    optionsTipoFactura: []
 };
 
 /**
@@ -536,6 +540,18 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       ...state,
       selectedMercancia: {} as Mercancia,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
     }));
   }
 }

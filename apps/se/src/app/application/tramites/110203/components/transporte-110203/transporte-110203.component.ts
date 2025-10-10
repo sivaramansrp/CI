@@ -2,12 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
-
-import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el transporte para el trámite 110203.
@@ -70,7 +68,7 @@ export class Transporte110203Component implements OnInit, OnDestroy {
    * Lista de opciones de medios de transporte cargadas desde un archivo JSON.
    * Cada opción representa un medio de transporte que el usuario puede seleccionar.
    */
-  public medio: Catalogo[] = mediocatalogo.medio;
+  public medio: Catalogo[] = [];
 
   /**
    * Estado de la solicitud 110203, que contiene el valor actual del campo 'medio'.
@@ -97,6 +95,12 @@ export class Transporte110203Component implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110203'
+   */
+  tramites: string = '110203';
+
+  /**
    * Inicializa el componente Transporte110203Component.
    *
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
@@ -113,7 +117,8 @@ export class Transporte110203Component implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
     private tramite110203Query: Tramite110203Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
   ) {
      /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -139,6 +144,8 @@ export class Transporte110203Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarFormulario();
     // Se pueden cargar datos adicionales si es necesario (por ejemplo, desde una API o archivo JSON)
+
+    this.obtenerMedioTransporte()
   }
 
   /**
@@ -171,6 +178,27 @@ export class Transporte110203Component implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110203Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Obtiene el catálogo de medios de transporte utilizando el servicio `catalogoService`
+   * y actualiza la propiedad `medio` con los datos recibidos.
+   * 
+   * Realiza la petición pasando los trámites actuales (`this.tramites`) y gestiona la suscripción
+   * para que se cancele automáticamente cuando el componente se destruya, usando `destroyNotifier$`.
+   * 
+   * @remarks
+   * Los datos recibidos se asignan a la propiedad `medio`. Si la respuesta no contiene datos,
+   * se asigna un arreglo vacío.
+   */
+  obtenerMedioTransporte(): void {
+    this.catalogoService.medioTransporteCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.medio = response?.datos ?? [];
+        }
+      });
   }
 
   /**

@@ -11,6 +11,7 @@
  * // Inyección en un componente
  * constructor(private permisoImmexDatosService: PermisoImmexDatosService) {}
  */
+import { BuscarPayload, FraccionArancelariaPayload, ImmexTablaJson, PermisoImmexGridDatos, fraccionInfo, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -18,8 +19,9 @@ import {
   ImmexRegistroState,
   ImmexRegistroStore,
 } from '../../estados/tramites/tramite80203.store';
-import { ImmexTablaJson, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_ROUTES } from '../../../../shared/servers/api-route';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 
 
 @Injectable({
@@ -71,4 +73,38 @@ export class PermisoImmexDatosService {
   actualizarEstadoFormulario(DATOS: immexRegistroform): void {
     this.tramite80203Store.setImmexRegistro(DATOS);
   }
+  /**
+   * @desc Obtiene el permiso IMMEX realizando una petición POST al endpoint correspondiente.
+   * @param body Objeto de tipo `BuscarPayload` que contiene los datos necesarios para la búsqueda del permiso IMMEX.
+   * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+   * @throws Error si ocurre algún problema al obtener la lista de plantas.
+   *
+   * @see [Compodoc](https://compodoc.app/)
+   */
+   getPermisoImmex(body: BuscarPayload): Observable<JSONResponse> {
+      return this.httpClient.post<JSONResponse>(API_ROUTES('/sat-t80203','80203').buscarPermisoImmex, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES('/sat-t80203','80203').buscarPermisoImmex}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    /**
+     * @description Obtiene la fracción arancelaria realizando una petición POST al endpoint correspondiente.
+     * @param body Objeto de tipo `FraccionArancelariaPayload` que contiene los datos necesarios para la búsqueda de la fracción arancelaria.
+     * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+     * @throws Error si ocurre algún problema al obtener la lista de plantas.
+     */
+    getFraccionArancelaria(body: FraccionArancelariaPayload): Observable<JSONResponse> {
+      return this.httpClient.post<JSONResponse>(API_ROUTES('/sat-t80203','80203').buscarFraccionArancelaria, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES('/sat-t80203','80203').buscarFraccionArancelaria}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
 }

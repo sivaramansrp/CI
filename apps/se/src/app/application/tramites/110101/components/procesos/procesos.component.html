@@ -1,0 +1,17 @@
+<div class="container mt-4">
+    <ng-titulo titulo="Procesos Productivos" />
+    <ng-alert [CONTENIDO]="'Selecciona los procesos de producción que utilizas para realizar la mercancía.'"></ng-alert>
+
+    <h6 class="fs-4">Procesos de Fabricación</h6>
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-tabla-dinamica 
+                [tipoSeleccionTabla]="tipoSeleccionTabla" 
+                [configuracionTabla]="configuracionTabla"
+                [datos]="procesosTablaDatos"
+                (listaDeFilaSeleccionada)="onSeleccionChange($event)"
+            ></app-tabla-dinamica>
+        </div>
+    </div>
+</div>

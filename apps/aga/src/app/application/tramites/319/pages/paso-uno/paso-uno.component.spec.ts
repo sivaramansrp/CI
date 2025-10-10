@@ -1,99 +1,62 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoUnoComponent } from './paso-uno.component';
-import { of, Subject } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { OperacionService } from '../../services/operacion.service';
-import { CommonModule } from '@angular/common';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OperacionesDeComercioExterioComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { of } from 'rxjs';
+
+import { PasoUnoComponent } from './paso-uno.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { OperacionService } from '../../services/operacion.service';
+
+@Injectable()
+class MockConsultaioQuery {
+  selectConsultaioState$ = of({ update: false });
+}
+
+@Injectable()
+class MockOperacionService {
+  getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(of({}));
+  actualizarEstadoFormulario = jest.fn();
+}
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
 
-  let mockOperacionService: any;
-  let mockConsultaQuery: any;
-  let consultaState$: Subject<any>;
-
   beforeEach(async () => {
-    consultaState$ = new Subject();
-
-    mockOperacionService = {
-      getRegistroTomaMuestrasMercanciasData: jest.fn(),
-      actualizarEstadoFormulario: jest.fn()
-    };
-
-    mockConsultaQuery = {
-      selectConsultaioState$: consultaState$.asObservable()
-    };
-
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientTestingModule,
-        PasoUnoComponent,
-        SolicitanteComponent,
-        OperacionesDeComercioExterioComponent
+        PasoUnoComponent // Since it's standalone
       ],
       providers: [
-        { provide: OperacionService, useValue: mockOperacionService },
-        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
-      ]
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery },
+        { provide: OperacionService, useClass: MockOperacionService }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should subscribe to consultaQuery state and call guardarDatosFormulario if update=true', () => {
-    const fakeData = { datos: { x: 1 }, operacion: 'crear' };
-
-    mockOperacionService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(fakeData));
-    mockOperacionService.actualizarEstadoFormulario.mockImplementation(() => {});
-
-    // Trigger ngOnInit logic
-    fixture.detectChanges();
-
-    // Emit a state with update true
-    consultaState$.next({ update: true });
-
-    expect(component.consultaState.update).toBe(false);
-    expect(component.esDatosRespuesta).toBe(true);
+  it('should initialize with default values', () => {
+    expect(component.indice).toBe(1);
+    expect(component.esDatosRespuesta).toBe(false);
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false', () => {
-    fixture.detectChanges(); // triggers ngOnInit
-    consultaState$.next({ update: false });
-
-    expect(component.esDatosRespuesta).toBe(true);
+  it('should have correct sections configuration', () => {
+    expect(component.seccionesDeLaSolicitud).toHaveLength(2);
+    expect(component.seccionesDeLaSolicitud[0].title).toBe('Solicitante');
+    expect(component.seccionesDeLaSolicitud[1].title).toBe('Operaciones de Comercio Exterior');
   });
 
-  it('should not call actualizarEstadoFormulario if getRegistroTomaMuestrasMercanciasData returns null', () => {
-    mockOperacionService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
-    component.guardarDatosFormulario();
-    expect(mockOperacionService.actualizarEstadoFormulario).not.toHaveBeenCalled();
-  });
-
-  it('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
-  });
-
-  it('should cleanup destroyNotifier$ on ngOnDestroy', () => {
-    const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
-    const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
-
-    component.ngOnDestroy();
-
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('should change tab index when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
   });
 });

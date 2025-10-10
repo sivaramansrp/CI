@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="banderaCargaVentana === false">
     <form [formGroup]="mercanciaForm">
         <ng-titulo titulo="Datos Generales de la Mercancía Animal" />
 
@@ -39,34 +39,22 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.fraccionArancelariaList"
                     formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
-                    name="fraccionArancelaria" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
+                    name="fraccionArancelaria" [isDisabled]="mercanciaForm.disabled"  (change)="setValoresStoreFraccion()"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción de la fracción arancelaria*</label>
-                <input type="text" class="form-control" formControlName="descripcionFraccion" maxlength="1000" />
-                <div *ngIf="mercanciaForm.get('descripcionFraccion')?.hasError('required') && mercanciaForm.get('descripcionFraccion')?.touched"
-                    class="text-danger">
-                    <small class="text-danger">Este campo es obligatorio</small>
-                </div>
-                <div *ngIf="mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') && mercanciaForm.get('descripcionFraccion')?.touched"
-                    class="text-danger">
-                    <small class="text-danger">Por favor, no escribas más de 1000 caracteres</small>
-                </div>
+                <input type="text" class="form-control" formControlName="descripcionFraccion"  id="descripcionFraccion"  />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.nicoList" formControlName="nico" [label]="'Nico'"
-                    [required]="true" name="nico" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
+                    name="nico" [isDisabled]="mercanciaForm.disabled" (change)="setValoresStoreFraccionNico()"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción Nico*</label>
-                <input type="text" class="form-control" formControlName="descripcionNico" name="descripcionNico" />
-                <div *ngIf="mercanciaForm.get('descripcionNico')?.hasError('required') && mercanciaForm.get('descripcionNico')?.touched"
-                    class="text-danger">
-                    <small class="text-danger">Este campo es obligatorio</small>
-                </div>
+                <input type="text" class="form-control" formControlName="descripcionNico" name="descripcionNico" />                
             </div>
         </div>
 
@@ -186,8 +174,12 @@
 
             <div class="row">
                 <div class="col-md-4 form-group">
-                    <label>Número de lote:</label>
+                    <label>Número de lote<span [ngClass]="{'mensaje-error':detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched}">*</span>:</label>
                     <input type="text" class="form-control" formControlName="numeroLote" [maxlength]="16" />
+                    <div
+                        *ngIf="detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched">
+                        <small class="mensaje-error">Este campo es obligatorio.</small>
+                    </div>
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Color/Pelaje:</label>
@@ -240,16 +232,16 @@
             <div class="col-md-12 d-flex justify-content-end">
                 <button type="button" class="btn btn-default ms-3" (click)="eliminarDetalle()">Elimiar Detalle</button>
                 <button type="button" class="btn btn-primary ms-3" (click)="agregarDetalle()">Agregar Detalle</button>
-                <button type="button" class="btn btn-default ms-3">Carga Por Archivo </button>
+                <button type="button" class="btn btn-default ms-3" (click)="abrirModalCargaMasivaAnimales()">Carga Por Archivo</button>
             </div>
         </div>
-    </form>
-
-    <div class="row my-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSensiblesTabla"
-            [datos]="sensiblesTablaDatos"
+        <div class="row my-5">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSensiblesTabla" 
+            [datos]="sensiblesTablaDatos" [showPagination]="true" [mode]="'client'" [totalItems]="sensiblesTablaDatos.length" [itemsPerPage]="5"
             (listaDeFilaSeleccionada)="sensiblesTablaSeleccionada = $event"></app-tabla-dinamica>
     </div>
+    </form>
+    
     <div class="row mt-2">
         <div class="col-md-12 d-flex justify-content-end">
             <button type="button" class="btn btn-default ms-3" (click)="limpiarAnimalesVivo()">Limpiar</button>
@@ -257,4 +249,24 @@
             <button type="button" class="btn btn-primary ms-3" (click)="agregarAnimales()">Agregar</button>
         </div>
     </div>
+    
 </div>
+
+<app-carga-detalle-mercancia  
+(listaEmitida)="recibirLista($event)" *ngIf="banderaCargaVentana"
+(accionDelHijo)="cerrarModalCargaMasivaAnimales()"
+(accionDelHijoLimpiaLista)="limpiarTablaCargasMasivasAnimales()"
+></app-carga-detalle-mercancia>
+
+
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        [forma]="datosServicio"
+        [invertirBotones]="true"
+        (confirmacionModal)="confirmacionModal($event)"
+    >
+    </lib-notificaciones>
+</section>
+}

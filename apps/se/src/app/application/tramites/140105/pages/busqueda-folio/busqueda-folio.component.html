@@ -1,35 +1,10 @@
-<div class="container">
 
-    <ng-titulo *ngIf="!detalleDelPermiso" titulo="Buscar permiso a cancelar" />
-    <ng-titulo *ngIf="detalleDelPermiso" titulo="Detalle del permiso" />
-    <div *ngIf="!detalleDelPermiso">
-        <form [formGroup]="busquedaForm">
-            <div class="row mt-5">
-                <div class="col-md-8">
-                    <label class="form-label" for="tramite">Folio trámite*:</label>
-                    <input type="text" class="form-control" id="tramite" formControlName="tramite">
-                    <div *ngIf="busquedaForm.controls['tramite'].invalid && busquedaForm.controls['tramite'].touched">
-                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['required']">*El campo no puede estar vacío.</small>
-                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['pattern']">*Solo se permiten números.</small>
-                      </div>
-                </div>
-            </div>
-        </form>
-        <div class="row">
-            <div class="col-md-8 d-flex justify-content-end"></div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="cancelar($event)">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="buscar($event)">Buscar</button>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="detalleDelPermiso">
+<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle del permiso</h5>
+      </div>
+        <div class="modal-body">
         <form [formGroup]="detalleDelPermisoForm">
             <div class="row">
                 <div class="col-md-4">
@@ -123,18 +98,16 @@
 
             </div>
         </form>
+        </div>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end"></div>
         </div>
-        <div class="row mt-5">
-            <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="detalleCancelar($event)">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="agregar($event)">Agregar</button>
-            </div>
-        </div>
+        <div class="modal-footer">
+        
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="detalleCancelar()">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="agregar($event)">Agregar</button>
+         
+        
+    </div>
     </div>
 </div>

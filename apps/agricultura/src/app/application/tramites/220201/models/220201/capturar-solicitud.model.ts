@@ -9,7 +9,9 @@
 import { Catalogo, PersonaTerceros } from "@ng-mf/data-access-user";
 import { DatosForma } from "./certificado-zoosanitario.model";
 import { DestinatarioForm } from "../../../220203/models/220203/importacion-de-acuicultura.module";
+import { Sensible } from "../../../../shared/models/datos-de-la-solicitue.model";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
+
 
 /**
  * Modelo que representa la solicitud completa con todos sus datos asociados.
@@ -227,6 +229,16 @@ export interface DatosParaMovilizacionNacional {
  * @property {string} paisDeProcedencia País de procedencia del producto.
  * @property {string} certificadoInternacionalElectronico Certificado internacional electrónico asociado.
  */
+/**
+ * Representa una fila de solicitud para el trámite 220201.
+ * Contiene información detallada sobre el producto, requisitos, certificados,
+ * fracciones arancelarias, cantidades, unidades de medida, país de origen y procedencia,
+ * así como datos específicos como especie, tipo de planta y presentación.
+ * 
+ * @remarks
+ * Esta interfaz es utilizada para capturar y manipular los datos de cada partida
+ * dentro de una solicitud en el sistema de agricultura.
+ */
 export interface FilaSolicitud {
   id?: number;
   /**
@@ -322,12 +334,16 @@ export interface FilaSolicitud {
    */
   plantaAutorizadaOrigen?: string;
   presentacion?: string;
+
+  sensibles?: Sensible[];
+
+  modificado?: boolean;
 }
 
 /**
  * Representa los datos de una solicitud en el trámite 220201.
  * @interface SolicitudData
- * @property {string} fechaCreacion Fecha en la que se creó la solicitud.
+ * @property {string} fecha_creacion Fecha en la que se creó la solicitud.
  * @property {string} mercancia Nombre o descripción de la mercancía solicitada.
  * @property {number} cantidad Cantidad de mercancía solicitada.
  * @property {string} proovedor Nombre del proveedor de la mercancía.
@@ -337,7 +353,7 @@ export interface SolicitudData {
   /**
    * Fecha en la que se creó la solicitud.
    */
-  fechaCreacion: string;
+  fecha_creacion: string;
   /**
    * Nombre o descripción de la mercancía solicitada.
    */
@@ -349,7 +365,7 @@ export interface SolicitudData {
   /**
    * Nombre del proveedor de la mercancía.
    */
-  proovedor: string;
+  proveedor: string;
 }
 
 /**
@@ -565,5 +581,10 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
     seletedExdora: params.seletedExdora || {} as DestinatarioForm
   }
-  
 }
+
+  export interface FraccionArancelariaDecripcionModel {
+    cve_fraccion: string;
+    descripcion: string;
+    id_fraccion: number;
+  }

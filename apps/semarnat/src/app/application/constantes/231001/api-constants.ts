@@ -1,4 +1,13 @@
 /**
+ * Constantes de endpoints y claves para el trámite 231001.
+ * Provee descripciones JSDoc para mejorar autocompletado y generación de documentación.
+ *
+ * Notas:
+ * - Muchas constantes contienen placeholders como '{tramite}', '{rfc}', '{idSolicitud}', etc.
+ *   Estos deben reemplazarse en tiempo de ejecución antes de invocar las rutas reales.
+ */
+
+/**
  * Tramite que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
@@ -10,16 +19,41 @@ export const TRAMITE = '{tramite}';
  */
 export const API_POST_SOLICITUD = 'sat-t231001/solicitud/guardar';
 
+/**
+ * Clave del capítulo de fracción arancelaria.
+ * Reemplace '{cveCapituloFraccion}' por la clave real del capítulo al construir la ruta.
+ * @constant {string}
+ */
 export const CVE_CAPITULO_FRACCION = '{cveCapituloFraccion}';
-export const CVE_PARTIDA_FRACCION = '{cveCapituloFraccion}';
-export const CVE_SUBPARTIDA_FRACCION = '{cveCapituloFraccion}';
+
+/**
+ * Clave de la partida de fracción arancelaria.
+ * Reemplace '{cvePartidaFraccion}' por la clave real de la partida al construir la ruta.
+ * @constant {string}
+ */
+export const CVE_PARTIDA_FRACCION = '{cvePartidaFraccion}';
+
+/**
+ * Clave de la subpartida de fracción arancelaria.
+ * Reemplace '{cveSubpartidaFraccion}' por la clave real de la subpartida al construir la ruta.
+ * @constant {string}
+ */
+export const CVE_SUBPARTIDA_FRACCION = '{cveSubpartidaFraccion}';
+
+/**
+ * Identificador del contribuyente (RFC) usado en rutas que requieren el RFC.
+ * Reemplace '{rfc}' por el RFC real al construir las rutas en tiempo de ejecución.
+ * @constant {string}
+ */
+export const RFC = '{rfc}';
+
 /**
  * API para obtener las fracciones arancelarias del tramite 231001.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-fracciones-arancelarias
  */
 export const API_GET_FRACCIONES_ARANCELARIAS =
   'sat-t231001/catalogo/' +
-  `fraccion-arancelaria/capitulo-fraccion/${CVE_CAPITULO_FRACCION}/partida-fraccion/${CVE_PARTIDA_FRACCION}/subpartida-fraccion/${CVE_SUBPARTIDA_FRACCION}`;
+  `capitulo-fraccion/${CVE_CAPITULO_FRACCION}/partida-fraccion/${CVE_PARTIDA_FRACCION}/subpartida-fraccion/${CVE_SUBPARTIDA_FRACCION}/fraccion-arancelaria`;
 
 /**
  * API para obtener los capítulos de fracción del tramite 231001.
@@ -28,42 +62,49 @@ export const API_GET_FRACCIONES_ARANCELARIAS =
 export const API_GET_CAPITULO_FRACCION =
   'sat-t231001/catalogo/capitulo-fraccion';
 
-  /**
-   * API para obtener las partidas de fracción del tramite 231001.
-   * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-partidas-fraccion
-   */
+/**
+ * API para obtener las partidas de fracción del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-partidas-fraccion
+ */
 
-  export const API_GET_PARTIDAS_FRACCION =
-  'sat-t231001/catalogo/partida-fraccion/capitulo-fraccion/' +
-  `${CVE_CAPITULO_FRACCION}`;
+export const API_GET_PARTIDAS_FRACCION = `sat-t231001/catalogo/capitulo-fraccion/${CVE_CAPITULO_FRACCION}/partida-fraccion`;
 
+/**
+ * API para obtener las subpartidas de fracción del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-subpartidas-fraccion
+ */
+export const API_GET_SUBPARTIDAS_FRACCION = `sat-t231001/catalogo/capitulo-fraccion/${CVE_CAPITULO_FRACCION}/partida-fraccion/${CVE_PARTIDA_FRACCION}/subpartida-fraccion`;
 
-  /**
-   * API para obtener las subpartidas de fracción del tramite 231001.
-   * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-subpartidas-fraccion
-   */
-  export const API_GET_SUBPARTIDAS_FRACCION =
-  'sat-t231001/catalogo/subpartida-fraccion/capitulo-fraccion/' +
-  `${CVE_CAPITULO_FRACCION}/partida-fraccion/${CVE_PARTIDA_FRACCION}`;
+/**
+ * API para obtener las unidades de medida del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-unidades-medida-comercial
+ */
+export const API_GET_UNIDAD_MEDIDA = `sat-t231001/catalogo/unidades-medida-comercial`;
 
+/**
+ * Catálogo de aduanas disponibles para el trámite 231001.
+ * Utilizar este endpoint para obtener la lista de aduanas habilitadas.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-aduanas
+ * @constant {string}
+ */
+export const GET_ADUANAS = `sat-t231001/catalogo/aduanas`;
 
-  /**
-   * API para obtener las unidades de medida del tramite 231001.
-   * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-unidades-medida-comercial
-   */
-  export const API_GET_UNIDAD_MEDIDA = `sat-t231001/catalogo/unidades-medida-comercial/tramite/${TRAMITE}`;
-
-
-  export const GET_ADUANAS = `sat-t231001/catalogo/aduanas`;
-  
 /**
  * API para obtener los datos de IMMEX por RFC.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Catalogos/consulta-no-autorizacion-immex
  */
 
-export const API_GET_IMMEX = 'sat-t231001/catalogo/no-autorizacion-immex/rfc';
+export const API_GET_IMMEX = `sat-t231001/catalogo/rfc/${RFC}/no-autorizacion-immex`;
 
+/**
+ * Alias para la ruta que guarda la solicitud del trámite 231001.
+ * Equivalente a API_POST_SOLICITUD. Preferir API_POST_SOLICITUD si existe coherencia en el código.
+ * @see API_POST_SOLICITUD
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/guardar
+ * @constant {string}
+ */
 export const API_POST_GUARDAR_SOLICITUD = 'sat-t231001/solicitud/guardar';
+
 /**
  * API para iniciar el tramite 231001.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/iniciar
@@ -73,6 +114,7 @@ export const API_GET_INICIO = 'sat-t231001/solicitud/iniciar';
 /**
  * ID de la solicitud que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el ID real de la solicitud.
+ * @constant {string}
  */
 export const IDSOLICITUD = '{idSolicitud}';
 
@@ -97,6 +139,7 @@ export const API_GET_CERTIFICADO_ANTIGUEDAD = `sat-t231001/certificado/antigueda
 /**
  * Constante para la clave de fracción arancelaria.
  * Debe ser reemplazada por la clave real de la fracción arancelaria.
+ * @constant {string}
  */
 export const CVEFRACCION = '{cveFraccion}';
 
@@ -145,6 +188,7 @@ export const API_GET_INICAR_DICTAMEN = `sat-t231001/tramite/${NUMFOLIOTRAMITE}/d
 /**
  * ID de la solicitud del dictamen que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el ID real de la solicitud del dictamen.
+ * @constant {string}
  */
 export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
 
@@ -211,6 +255,7 @@ export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = `sat-t231001/tramite/${
 /**
  * ID de la resolucion.
  * Este valor debe ser reemplazado por el ID real de la resolucion.
+ * @constant {string}
  */
 export const IDRESOLUCION = '{idResolucion}';
 
@@ -223,6 +268,7 @@ export const API_POST_RESOLUCION_GUARDAR = `sat-t${TRAMITE}/confirmar-notificaci
 /**
  * ID del requerimiento.
  * Este valor debe ser reemplazado por el ID real del requerimiento.
+ * @constant {string}
  */
 export const IDREQUERIMIENTO = '{idRequerimiento}';
 /**

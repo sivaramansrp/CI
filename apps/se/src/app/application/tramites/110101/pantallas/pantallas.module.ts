@@ -1,5 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+
+import { BtnContinuarComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { DatosComponent } from '../pages/datos/datos.component';
@@ -10,15 +11,17 @@ import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
+import { ProcesosComponent } from "../components/procesos/procesos.component";
 import { ProtestoDecirVerdadComponent } from '../components/protesto-decir-verdad/protesto-decir-verdad.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TratadosComponent } from '../components/tratados/tratados.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 @NgModule({
   declarations: [
     DatosComponent,
     PantallasComponent,
-    FirmarSolicitudComponent
+    FirmarSolicitudComponent,
   ],
   imports: [
     CommonModule,
@@ -33,7 +36,12 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TratadosComponent,
     BtnContinuarComponent,
     FirmaElectronicaComponent,
-    ProtestoDecirVerdadComponent
+    ProtestoDecirVerdadComponent,
+    ProcesosComponent,
+    NotificacionesComponent
+],
+exports: [
+    DatosComponent,
   ]
 })
 

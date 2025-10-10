@@ -268,7 +268,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    */
   getUnidadMedida(): void {
     this.catalogoService
-      .getUnidadMedida('231001')
+      .getUnidadMedida()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.comboUnidadMedida = data.datos.map((item) => ({
@@ -285,6 +285,9 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * - Si tiene valor, normaliza la clave a 2 dígitos y solicita las partidas asociadas.
    */
   changeCapituloFraccion(): void {
+    this.comboPartidaFraccion = [];
+    this.comboSubPartidaFraccion = [];
+    this.comboFraccionArancelariaParametros = [];
     if (!this.materiaPrimaForm) {
       return;
     }
@@ -326,6 +329,8 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * - Si tiene valor, normaliza claves a 2 dígitos y solicita las subpartidas asociadas.
    */
   changePartidaFraccion(): void {
+    this.comboSubPartidaFraccion = [];
+    this.comboFraccionArancelariaParametros = [];
     if (!this.materiaPrimaForm) {
       return;
     }
@@ -370,6 +375,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * - Si tiene valor, normaliza claves a 2 dígitos y solicita las fracciones arancelarias asociadas.
    */
   changeSubPartidaFraccion(): void {
+    this.comboFraccionArancelariaParametros = [];
     if (!this.materiaPrimaForm) {
       return;
     }

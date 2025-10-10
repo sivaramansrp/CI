@@ -1,6 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
+import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { RegistroService } from '../../services/registro.service';
 
 /**
@@ -51,6 +54,32 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Índice del paso actual.
    */
   indice: number = 1;
+
+  /**
+   * Referencia al componente DestinatarioComponent dentro de la vista.
+   * 
+   * Esta propiedad permite acceder a los métodos y propiedades públicos del componente
+   * hijo DestinatarioComponent desde el componente padre, facilitando la interacción
+   * y manipulación directa del mismo.
+   * 
+   * @see DestinatarioComponent
+   */
+  @ViewChild(DestinatarioComponent) destinatarioComponent!: DestinatarioComponent;
+
+  // Decorador ViewChild para acceder a la instancia del componente CertificadoDeOrigenComponent
+  @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+
+  /**
+   * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
+   * 
+   * Esta propiedad permite acceder a los métodos y propiedades públicas del componente
+   * hijo `DatosCertificadoComponent` desde el componente padre, facilitando la interacción
+   * y manipulación de sus datos o comportamientos.
+   * 
+   * @see DatosCertificadoComponent
+   */
+  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+  
   /**
    * Constructor del componente.
    * @param registro Servicio para obtener datos de catálogos.
@@ -105,6 +134,28 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+   /** Método público para validar todos los formularios del paso uno */
+  public validateAll(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigenComponent?.registroForm) {
+      if (this.certificadoDeOrigenComponent.registroForm.invalid) {
+        this.certificadoDeOrigenComponent.registroForm.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.datosCertificadoComponent) {
+      if (!this.datosCertificadoComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

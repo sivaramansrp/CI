@@ -256,6 +256,8 @@ export interface Tramite110221State {
     
   /** Lista de catálogos que representan unidades de medida comercial (UMCs). */
   umcs: Catalogo[];
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
 }
 
 /**
@@ -389,7 +391,8 @@ export function createInitialState(): Tramite110221State {
     complementoClasificacion: '',
   },
   factura:[],
-  umcs:[]
+  umcs:[],
+  optionsTipoFactura: []
   };
 }
 
@@ -842,5 +845,17 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   
   public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((state) => ({ ...state, mercanciaTabla }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
+    }));
   }
 }

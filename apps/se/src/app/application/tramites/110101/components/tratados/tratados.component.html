@@ -1,4 +1,4 @@
-@if (consultaState.parameter !== "READ_PROCEDURE") {
+@if (consultaState.create === true) {
   <ng-titulo titulo="Tratados y criterios solicitados" />
 <ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
 <form [formGroup]="formularioTratados">
@@ -27,7 +27,7 @@
   </div>
 </form>
 }
-@if (consultaState.parameter !== "READ_PROCEDURE") {
+@if (consultaState.create === true) {
 <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
 
 <h6 class="fs-4">País/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
@@ -50,36 +50,80 @@
 </div>
 }
 
-@if(consultaState.parameter === "READ_PROCEDURE"){
+@if(consultaState.create === false){
   <ng-titulo titulo="País/bloque-tratado/acuerdo seleccionados por el solicitante" />
 <div class="col-md-12">
-  <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"
-    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+  <app-tabla-dinamica 
+    [configuracionTabla]="tablaSeleccionada" 
+    [datos]="tratadosEvaluacionTablaDatos" 
+    [tipoSeleccionTabla]="tipoSeleccionTabla"
+    (listaDeFilaSeleccionada)="onSeleccionChangeEvaluacion($event)">
   </app-tabla-dinamica>
+   <div class=" text-end mt-5">
+    <button class="btn btn-primary me-2" (click)="criterioTratadoResumen()">
+      Resumen de valores
+    </button>
+    <button class="btn btn-primary  me-2" (click)="insumosEmpaques()">
+      Insumos
+    </button>
+    <button class="btn btn-primary  me-2" >
+      Requisito Proceso
+    </button>
+    <button class="btn btn-primary  me-2" (click)="abrirModalDictaminador()" >
+      Calificación del dictaminador
+    </button>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregar" #modalAgregar tabindex="-1" aria-labelledby="modalAgregarLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form [formGroup]="dictaminador">
+          <div class="col-md-12">
+            <div class="form-check">
+              <input
+                  class="form-check-input"
+                  type="radio"
+                  name="opcionSeleccionada"
+                  id="radioSi"
+                  value="true"
+                  formControlName="opcionSeleccionada"
+                />
+                <label class="form-check-label" for="radioSi">Sí</label>
+            </div>
+            <div class="form-check">
+              <input  class="form-check-input"
+                  type="radio"
+                  name="opcionSeleccionada"
+                  id="radioNo"
+                  value="false"
+                  formControlName="opcionSeleccionada">
+              <label class="form-check-label" for="radioNo" >
+                No
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-end p-5 gap-3">
+        <button class="btn btn-primary ms-2" (click)="modificarRegistros()">Agregar</button>
+        <button class="btn btn-default" (click)="cerrarDialogo()">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </div>
 }
 
-@if (isUruguay) {
-  <ng-titulo titulo="Otras Instancias para TLC-Uruguay" />
-  <ng-alert [CONTENIDO]="mensajeUruguay.ADJUNTAR"></ng-alert>
-   <form [formGroup]="formularioTratados">
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <lib-input-check [label]="'Acumulación'" [required]="false" [id]="'acumulación'"></lib-input-check>
-      </div>
-      <div class="col-md-4">
-        <lib-input-check [label]="'Bienes y Materiales Fungibles'" [required]="false" [id]="'bienes'"></lib-input-check>
-      </div>
-      <div class="col-md-4">
-        <lib-input-check [label]="'Materiales Intermedios'" [required]="false" [id]="'intermedio'"></lib-input-check>
-      </div>
-    </div>
-    <div class="col-md-8">
-      <app-catalogo-select [catalogo]="criteriosInstanciasCatalogo" formControlName="criterioInstancias" [label]="'Criterio Otras instancias'" [required]="false"
-        name="Criterio Otras instancias" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'criterioInstancias', 'setCriterioInstancia');getLabelFromCatalogData(criteriosInstanciasCatalogo,'criterioInstancias')"></app-catalogo-select>
-      </div>
-   </form>
+@for (pais of paisesInstancias; track pais) {
+  <app-otras-instancias
+    [pais]="pais"
+    [titulo]="instanciasConfig[pais].titulo"
+    [mensajeAlerta]="instanciasConfig[pais].alerta"
+    [catalogo]="instanciasConfig[pais].cargarCatalogo" 
+    [modificacionTxt]="instanciasConfig[pais].modificacionText">
+  </app-otras-instancias>
 }
 
 @if (nuevaNotificacion) {

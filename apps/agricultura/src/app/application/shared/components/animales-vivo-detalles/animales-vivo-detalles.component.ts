@@ -1,21 +1,25 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
-import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
 import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { CargaDetalleMercanciaComponent } from '../carga-masiva-detalle-mercancia/carga-detalle-mercancia.component';
+import { CommonModule } from '@angular/common';
+import { RegistroSolicitudService } from '../../../tramites/220201/services/220201/registro-solicitud/registro-solicitud.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-animales-vivo-detalles',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, NotificacionesComponent, CargaDetalleMercanciaComponent],
   templateUrl: './animales-vivo-detalles.component.html',
   styleUrl: './animales-vivo-detalles.component.scss',
 
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
+
 
   /**
    * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
@@ -120,12 +124,48 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @event
    */
   @Output() animalesVivoDetallesComponent = new EventEmitter<void>();
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion | null;
+
+  /**
+   * Obtiene el grupo de formulario 'datosServicio' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormGroup} El grupo de formulario 'datosServicio'.
+   */
+  get datosServicio(): FormGroup {
+    return this.detalleForm?.get('detalleForm') as FormGroup;
+  }
+
+  /**
+   * Guarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
+   */
+  public procesoModal!: string;
+
+  /**
+   * Almacena los datos relacionados con el archivo.
+   * 
+   * El tipo es desconocido (`unknown`) hasta que se asigne un valor específico.
+   * Puede contener información relevante sobre un archivo cargado o procesado en el componente.
+   */
+  datosArchivo: unknown = null;
+
+  /**
+   * Bandera que indica si la ventana ha terminado de cargarse.
+   * Se utiliza para controlar la visualización o inicialización de componentes dependientes de la carga.
+   */
+  banderaCargaVentana: boolean = false;
+
   /**
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios reactivos.
    */
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
   }
 
@@ -155,6 +195,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
       id: [0, Validators.required],
+      noPartida: ['0'],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
@@ -171,6 +212,8 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       uso: ['', Validators.required],
       paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
+      sensibles: this.fb.array([]),
+      modificado: [false], 
     });
 
     this.detalleForm = this.fb.group({
@@ -183,15 +226,18 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       numeroIdentificacion: [''],
       raza: [''],
       nombreCientifico: [''],
-      sexo: ['']
+      sexo: [''],
     });
 
     if (this.formularioSolicitud) {
+
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
+      this.sensiblesTablaDatos = [...(this.formularioSolicitud.sensibles || [])];
     }
   }
+
 
   /**
    * Agrega un nuevo detalle a la lista `sensiblesTablaDatos` utilizando los valores actuales del formulario `detalleForm`.
@@ -201,7 +247,30 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   agregarDetalle(): void {
-    this.sensiblesTablaDatos.push({
+
+    if (
+      this.detalleForm.value.numeroLote === '' || 
+      this.detalleForm.value.numeroLote === null
+    ) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar al menos un campo.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.detalleForm.get('numeroLote')?.markAsTouched();
+      return;
+    }
+
+    const SEXO_CATALOGO = this.catalogosDatos.sexoList.find(
+      (item: Catalogo) => item.clave === this.detalleForm.value.sexo
+    );
+    const DETALLE = {
+      noPartida: String(this.sensiblesTablaDatos.length + 1),
       NumeroLote: this.detalleForm.value.numeroLote,
       ColorPelaje: this.detalleForm.value.colorPelaje,
       EdadAnimal: this.detalleForm.value.edadAnimal,
@@ -211,8 +280,15 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       NumeroIdentificacion: this.detalleForm.value.numeroIdentificacion,
       Raza: this.detalleForm.value.raza,
       NombreCientifico: this.detalleForm.value.nombreCientifico,
-      Sexo: this.detalleForm.value.sexo
-    });
+      Sexo: SEXO_CATALOGO ? SEXO_CATALOGO.descripcion : '',
+      SexoClave: this.detalleForm.value.sexo,
+      Especie: this.detalleForm.value.especie,
+      Uso: this.detalleForm.value.uso,
+      PaisDeOrigen: this.detalleForm.value.paisDeOrigen,
+      PaisDeProcedencia: this.detalleForm.value.paisDeProcedencia,
+      
+    };
+    this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, DETALLE];
     this.detalleForm.reset();
   }
 
@@ -226,8 +302,33 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   eliminarDetalle(): void {
-    this.sensiblesTablaDatos = this.sensiblesTablaDatos.filter((item) => !this.sensiblesTablaSeleccionada.includes(item));
-    this.sensiblesTablaSeleccionada = [];
+
+      if (this.sensiblesTablaSeleccionada.length === 0) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar al menos un registro para eliminar.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
+
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        tamanioModal: 'md',
+        txtBtnCancelar: 'Cancelar',
+        txtBtnAceptar: 'Aceptar',
+      };
+      this.procesoModal = 'eliminar_solicitud';
   }
 
   /**
@@ -258,16 +359,114 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
     }
-    else {
-      this.agregarDatosFormulario.emit(
-        {
-          formulario: this.mercanciaForm.getRawValue(),
-          tablaDatos: this.sensiblesTablaDatos
+    else {      
+
+      const FUEMODIFICADO = this.mercanciaForm.get('modificado')?.value as boolean;
+      const SENSIBLES_FORM_ARRAY = this.mercanciaForm.get('sensibles') as FormArray;
+      console.warn('FUEMODIFICADO', FUEMODIFICADO);
+      console.warn('noPartida', this.mercanciaForm.get('noPartida')?.value);
+      this.mercanciaForm.patchValue({
+        noPartida: FUEMODIFICADO ? this.mercanciaForm.get('noPartida')?.value : (parseInt(this.mercanciaForm.get('noPartida')?.value || '0', 10) + 1),
+        id: FUEMODIFICADO ? (parseInt(this.mercanciaForm.get('id')?.value || '0', 10) + 1) : parseInt(this.mercanciaForm.get('id')?.value || '0', 10)
+      });
+
+      SENSIBLES_FORM_ARRAY.clear();
+      this.sensiblesTablaDatos.forEach(detalle => {
+        SENSIBLES_FORM_ARRAY.push(this.fb.group(detalle));
+      });
+      const NUEVOS_SENSIBLES = this.mercanciaForm.getRawValue();
+      // Si hay un registro seleccionado, actualízalo en sensiblesTablaDatos
+      if (this.sensiblesTablaSeleccionada.length === 1) {
+        const SELECCIONADO = this.sensiblesTablaSeleccionada[0];
+        const INDEX = this.sensiblesTablaDatos.findIndex(item => item === SELECCIONADO);
+
+        if (INDEX !== -1) {
+          
+          this.sensiblesTablaDatos[INDEX] = { ...NUEVOS_SENSIBLES, noPartida: SELECCIONADO.noPartida };
         }
-      );
+        this.sensiblesTablaSeleccionada = [];
+      } else {
+        // Si no hay selección, agrega normalmente
+        this.agregarDatosFormulario.emit(
+          {
+        formulario: NUEVOS_SENSIBLES,
+        tablaDatos: this.sensiblesTablaDatos
+          }
+        );
+      }
+      
       this.cerrar.emit();
     }
 
+  }
+
+  /**
+   * Actualiza los datos almacenados en el store.
+   * @method setValoresStore
+   */
+  setValoresStoreFraccion(): void {
+    const VALOR = this.mercanciaForm.value.fraccionArancelaria;
+    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220201, VALOR).subscribe(
+      (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
+        if (response && response.codigo === '00' && response.datos) {          
+          this.mercanciaForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+        } else {
+          this.mercanciaForm.get('descripcionFraccion')?.setValue('');
+        }
+      }
+    );
+    
+  }
+
+  /**
+   * Actualiza la descripción del NICO en el formulario `mercanciaForm`.
+   * 
+   * Este método obtiene la fracción arancelaria y el NICO seleccionados en el formulario,
+   * consulta la descripción correspondiente a través del servicio `registroSolicitudService`
+   * y actualiza el campo `descripcionNico` en el formulario. Si la respuesta es exitosa,
+   * se asigna la descripción obtenida; en caso contrario, se limpia el campo.
+   */
+  setValoresStoreFraccionNico(): void {
+    const VALOR_FRACCION = this.mercanciaForm.value.fraccionArancelaria;
+    const VALOR_NICO = this.mercanciaForm.value.nico;
+    this.registroSolicitudService.obtieneNicoDescripcion(220201, VALOR_FRACCION, VALOR_NICO).subscribe(
+      (response: BaseResponse<Catalogo>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.mercanciaForm.get('descripcionNico')?.setValue(response.datos);
+        } else {
+          this.mercanciaForm.get('descripcionNico')?.setValue('');
+        }
+      }
+    );
+  }
+
+  
+  /**
+   * Abre el modal para la carga masiva de animales vivos.
+   * Establece la bandera 'banderaCargaVentana' en true para mostrar el componente/modal correspondiente.
+   */
+  abrirModalCargaMasivaAnimales(): void {
+    this.banderaCargaVentana = true;
+  }
+
+  /**
+   * Cierra el modal de carga masiva de animales.
+   * 
+   * Establece la bandera `banderaCargaVentana` en `false` para ocultar la ventana modal
+   * utilizada en la carga masiva de animales vivos.
+   */
+  cerrarModalCargaMasivaAnimales(): void {
+    this.banderaCargaVentana = false;    
+  }
+
+  /**
+   * Limpia los datos de la tabla de cargas masivas de animales.
+   * 
+   * Esta función vacía el arreglo `sensiblesTablaDatos`, eliminando todos los registros actuales
+   * de la tabla relacionada con cargas masivas de animales vivos.
+   */
+  limpiarTablaCargasMasivasAnimales(): void {
+    this.sensiblesTablaDatos = [];
   }
 
   /**
@@ -279,5 +478,64 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Maneja la confirmación de acciones en un modal, dependiendo del proceso actual.
+   * 
+   * @param confirmar Indica si el usuario ha confirmado la acción en el modal.
+   * 
+   * Si el proceso actual es 'eliminar_solicitud' y el usuario confirma,
+   * elimina los elementos seleccionados de la tabla de datos sensibles,
+   * limpia la selección y reinicia el proceso del modal.
+   */
+  confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'eliminar_solicitud':
+        {
+          if (confirmar) {
+            this.sensiblesTablaDatos = this.sensiblesTablaDatos.filter((item) => !this.sensiblesTablaSeleccionada.includes(item));
+            this.sensiblesTablaSeleccionada = [];
+            this.procesoModal = '';
+          }
+          break;
+        }
+      default:
+        break;
+    }
+  }
+
+
+
+  
+  /**
+   * Recibe una lista de objetos y los transforma en instancias del tipo `Sensible`.
+   * 
+   * @param lista - Arreglo de objetos donde cada objeto representa los datos de un animal vivo,
+   *               con claves como 'Numero de lote', 'Color/Pelaje', 'Edad animal', etc.
+   * 
+   * El método mapea cada objeto de la lista a un objeto del tipo `Sensible`, asegurando que
+   * cada propiedad esté presente (o vacía si falta en el objeto original), y agrega los nuevos
+   * elementos al arreglo `sensiblesTablaDatos`.
+   * 
+   */
+  recibirLista(lista: Record<string, string>[]): void {
+
+    const NUEVOS_SENSIBLES: Sensible[] = lista.map((item, idx) => ({
+      noPartida: String(this.sensiblesTablaDatos.length + idx + 1),
+      NumeroLote: item['Numero de lote'] || '',
+      ColorPelaje: item['Color/Pelaje'] || '',
+      EdadAnimal: item['Edad animal'] || '',
+      FaseDesarrollo: item['Fase de desarrollo'] || '',
+      FuncionZootecnica: item['Función zootécnica'] || '',
+      NombreMercancia: item['Nombre de la mercancía'] || '',
+      NumeroIdentificacion: item['Número de identificación'] || '',
+      Raza: item['Raza'] || '',
+      NombreCientifico: item['Nombre científico'] || '',
+      Sexo: item['Sexo'] || '',
+      SexoClave: item['SexoClave'] || ''
+    }));
+    this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, ...NUEVOS_SENSIBLES];
+  }
+
 }
 

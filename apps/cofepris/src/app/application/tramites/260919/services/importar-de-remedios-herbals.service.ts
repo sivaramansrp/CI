@@ -243,5 +243,11 @@ getEstadoFisicoData(): Observable<Catalogo[]> {
   getPaisData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260919/pais.json');
   }
-  
+  /**
+ * Obtiene los datos del crosslist de mercancías desde un archivo JSON.
+ * @returns Observable con los datos del crosslist.
+ */
+getMercanciaCrosslistData(): Observable<unknown> {
+  return this.http.get<unknown>('assets/json/260919/mercancia-crosslist.json');
+}
 }

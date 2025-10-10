@@ -1,4 +1,4 @@
-import { Catalogo, CertificadoDisponibles, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CertificadoDisponibles, ConsultaioQuery, doDeepCopy, esValidArray, esValidObject,Notificacion, NotificacionesComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 /**
  * @descripcion
@@ -22,7 +23,7 @@ import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 @Component({
   selector: 'app-buscar-certificado-de-origen',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, NotificacionesComponent],
   templateUrl: './buscar-certificado-de-origen.component.html',
   styleUrl: './buscar-certificado-de-origen.component.scss',
 })
@@ -32,6 +33,11 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   buscarCertificadoDeOrigenFrom!: FormGroup;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  nuevaNotificacion!: Notificacion;
 
   /**
    * Arreglo de objetos `Catalogo` que representa los países o bloques.
@@ -78,7 +84,8 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private tramite110210Store: Tramite110210Store, 
     private tramite110210Query: Tramite110210Query,
     private consultaioQuery: ConsultaioQuery,
-    private certificadoService: CertificadoDisponiblesService
+    private certificadoService: CertificadoDisponiblesService,
+    private complimentosService: ComplimentosService
   ) {
     
      this.consultaioQuery.selectConsultaioState$
@@ -168,13 +175,17 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   obtenerPaisBloque(): void {
-    this.service.getPaisBloque().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: Catalogo[]) => {
-        this.paisBloque = data;
-      }
-    );
+    this.complimentosService.getPaisBloque().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.paisBloque = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
+      });
+    
   }
 
   /**
@@ -189,13 +200,16 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   obtenerTratadoAcuerdo(): void {
-    this.service.getTratadoAcuerdo().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.tratadoAcuerdo = data;
-      }
-    );
+    this.complimentosService.getTratadoAcuerdo().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.tratadoAcuerdo = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
+      });
   }
 
   /**
@@ -251,9 +265,53 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
             const CERTIFICADOS = data.filter(cert => cert.numeroDeCertificado === CVEREGISTROPRODUCTOR);
             if (CERTIFICADOS.length > 0) {
             this.tramite110210Store.setCertificadosDisponibles(CERTIFICADOS);
+            }else{
+              this.guardarObservacion();
             }
         }
       );
+  }
+  /**
+   * Actualiza el estado del grid de comercializadores de catálogos.
+   */
+  actualizaGridComercializadoresCatalogs(): void {
+     this.certificadoService.getData().pipe(
+        takeUntil(this.destroyed$)
+      ).subscribe(
+        (data: CertificadoDisponibles[]) => {
+            const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.value;
+            if (CVEREGISTROPRODUCTOR && CVEREGISTROPRODUCTOR !== '') {
+            this.tramite110210Store.setCertificadosDisponibles(data);
+            }else{
+              this.guardarObservacion();
+            }
+        }
+      );
+  }
+
+  
+  /**
+   * El método `guardarObservacion` en la clase `DetalleVDictamenComponent` es responsable de
+   * navegar a la ruta 'bandeja-de-tareas-pendientes' cuando es llamado. Este método se activa cuando
+   * ocurre una acción o evento específico en el componente, como guardar una observación o completar
+   * una tarea. Al llamar a `this.router.navigate(['bandeja-de-tareas-pendientes']);`, el método redirige
+   * al usuario a la ruta 'bandeja-de-tareas-pendientes' dentro de la aplicación.
+   * @method guardarObservacion
+   * @description Navega a la bandeja de tareas pendientes.
+   * @returns {void}
+   * @memberof DetalleVDictamenComponent
+   */
+  guardarObservacion(): void {
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: "Corrija los siguientes errores:",
+        mensaje: "El certificado de origen no existe",
+        cerrar: false,
+        txtBtnAceptar: "Aceptar",
+        txtBtnCancelar: "",
+      };
   }
   /**
    * @method validarFormulario

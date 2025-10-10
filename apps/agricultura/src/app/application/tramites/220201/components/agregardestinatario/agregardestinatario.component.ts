@@ -9,6 +9,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
@@ -29,7 +30,6 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   imports: [
     CommonModule,
     TituloComponent,
-    InputRadioComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule
   ],
@@ -100,6 +100,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   destinatarioForm!: FormGroup;
 
+  plantaTifForm!: FormGroup;
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear el formulario reactivo.
@@ -114,6 +116,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     public tercerosrelacionadosService: TercerosrelacionadosService,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+    private catalogoService: CatalogosService
   ) { }
 
   /**
@@ -167,6 +170,11 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
         }
       });
 
+    this.plantaTifForm = this.fb.group({
+      nombreEstablecimiento: [''],
+      numeroEstablecimiento: ['']
+    });
+
   }
 
   /**
@@ -185,11 +193,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method pairsCatalogChange
    */
   pairsCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.pairsCatalog = data;
-      });
+    this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.pairsCatalog = data.datos ?? [];
+    });
   }
 
   /**
@@ -197,11 +203,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.estadoCatalog = data;
-      });
+    this.catalogoService.obtieneCatalogoEntidadesFederativasGeneral(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.estadoCatalog = data.datos ?? [];
+    });
   }
 
   /**
@@ -209,11 +213,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method municipioCatalogChange
    */
   municipioCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('municipios.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.municipioCatalog = data;
-      });
+    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.municipioCatalog = data.datos ?? [];
+    });
   }
 
   /**
@@ -221,11 +223,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method coloniaCatalogChange
    */
   coloniaCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('colonias.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.coloniaCatalog = data;
-      });
+    this.catalogoService.obtieneCatalogoColonias(220201,'15058').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.coloniaCatalog = data.datos ?? [];
+    });
   }
 
   /**
@@ -279,6 +279,16 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     } else {
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+    }
+  }
+
+  onLimpiar(): void {
+    this.plantaTifForm.reset();
+  }
+
+  onBuscar(): void {
+    if (this.plantaTifForm.valid) {      
+      // Implementar lógica de búsqueda
     }
   }
 }

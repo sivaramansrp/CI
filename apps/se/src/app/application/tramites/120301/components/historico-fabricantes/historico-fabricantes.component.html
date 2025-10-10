@@ -7,7 +7,6 @@
         <label for="Tipo_de_Certificado">&iquest; EI exportador y el fabricante son la misma persona?</label>
       </div>
     </div>
-
     <app-input-radio [radioOptions]="radioOptions"
       [selectedValue]="historicoFabricantesForm.get('exportadorFabricanteMismo')?.value" [isRequired]="true"
       (valueChange)="onValueChange($event)" [layout]="'vertical'" (change)="
@@ -39,7 +38,6 @@
         <button class="btn btn-primary" (click)="fabricanteNuevo()">Fabricante nuevo</button>
       </div>
       <h6>Fabricante</h6>
-
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
         [datos]="fabricante" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
       <div class="row mb-3">
@@ -50,8 +48,12 @@
       </div>
     </div>
     }
-
   </form>
+  }
+  @if(visualizarEvaluacion){
+  <h6>Fabricante</h6>
+  <app-tabla-dinamica [configuracionTabla]="tableColumns" [datos]="fabricanteEvaluacion"
+    (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
   }
   @if(registraNumeroRegistro){
   <section>

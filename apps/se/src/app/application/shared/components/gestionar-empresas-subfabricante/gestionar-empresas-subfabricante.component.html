@@ -127,3 +127,9 @@
   </div>
  
 </div>
+
+  @if(nuevaNotificacion){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
+
+    

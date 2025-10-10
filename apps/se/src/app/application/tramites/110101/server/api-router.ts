@@ -1,3 +1,4 @@
+
 /**
  * cvePais de la solicitud que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el cvePais real de la solicitud.
@@ -15,6 +16,18 @@ export const CVETRATADOACUERDO = '{cveTratadoAcuerdo}';
  * Este valor debe ser reemplazado por el idTratadoAcuerdo real de la solicitud.
  */
 export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
+
+/**
+ * cveFraccion de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
+ */
+export const CVEFRACCION = '{cveFraccion}';
+
+/**
+ * cveFraccion de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
+ */
+export const IDSOLICITUD = '{idSolicitud}';
 
 /**
  *  URLs de catalogos
@@ -69,6 +82,12 @@ export const API_GET_CAT_DECLARACION_DATOS = (IDTIPOTRAMITE: string): string => 
 export const API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS = `sat-t110101/catalogo/criterios-otras-instancias`;
 
 /**
+ * API para el catalogo de paises activos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-paises
+ */
+export const API_GET_CAT_PAISES = `sat-t110101/catalogo/paises`;
+
+/**
  *  URLs de validacion de tratados y de tabla de tratados
  */
 
@@ -79,8 +98,94 @@ export const API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS = `sat-t110101/catalogo/crit
 export const API_POST_TRATADO_CRITERIO = `sat-t110101/solicitud/tratado/criterio`;
 
 /**
- * API para tabla tratados.
+ * API para configuracion tratados.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-configuracion-tratados
 */
-export const API_POST_SOLICITUD_TRATADOS = `sat-t110101/solicitud/tratados/configuracion`;
+export const API_POST_SOLICITUD_TRATADOS_CONFIGURACION = `sat-t110101/solicitud/tratados/configuracion`;
 
+/**
+ *  URLs de tab datos mercancia
+ */
+
+/**
+ * API para consultar los datos de la fracción arancelaria partida.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-datos-fraccion-arancelaria
+ */
+export const API_GET_FRACCION_ARANCELARIA_PARTIDA = (CVEFRACCION: string): string => `sat-t110101/fraccion-arancelaria/${CVEFRACCION}/partida`;
+
+/**
+ * API para validar fracción arancelaria.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/valida-fraccion-arancelaria
+ */
+export const API_POST_FRACCION_ARANCELARIA_VALIDAR = `sat-t110101/fraccion/validar`;
+
+/**
+ * API para validar insumo.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/validar-insumo
+ */
+export const API_POST_VALIDAR_INSUMO = `sat-t110101/solicitud/insumo/validar`;
+
+/**
+ * API para validar empaque.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/validar-empaque
+ */
+export const API_POST_VALIDAR_EMPAQUE = `sat-t110101/solicitud/empaque/validar`;
+
+/**
+ * API para guardar solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/guardar-solicitud
+ */
+export const API_POST_GUARDAR_SOLICITUD = `sat-t110101/solicitud/guardar`;
+
+
+/**
+ * API para generar la cadena original para la solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original
+ */
+export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+
+/**
+ * API para firmar la solicitud del tramite 110101.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar_2
+ */
+export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t110101/solicitud/${IDSOLICITUD}/firmar`;
+
+/**
+ *  URLs de evaluacion tratados
+ */
+
+/**
+ * API para obtener los datos de la tabla tratados evaluar
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-tratado-acuerdo-by-id
+ */
+export const API_GET_TRATADOS_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/tratado-acuerdo`;
+
+/**
+ * API para consultar los insumos y empaques de una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-insumos-empaques
+ */
+export const API_GET_INSUMOS_EMPAQUES = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/insumos-empaques`;
+
+/**
+ * API para consultar el resumen del criterio tratado.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-criterio-tratado-by-id 
+ */
+export const API_GET_CRITERIO_TRATADO_RESUMEN = (IDCRITERIOTRATADO: string): string => `sat-t110101/tramite/tratado/${IDCRITERIOTRATADO}/resumen`;
+
+/**
+ *  URLs de evaluacion mercancia
+ */
+/**
+ * API para obtener los datos de la tabla tratados evaluar
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-mercancia-by-id
+ */
+export const API_GET_MERCANCIA_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/mercancia`;
+
+/**
+ *  URLs de evaluacion protesto
+*/
+/**
+ * API para obtener la declaracion en evaluar
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-declaraciones-by-id-solicitud
+ */
+export const API_GET_PROTESTO_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/declaraciones`;

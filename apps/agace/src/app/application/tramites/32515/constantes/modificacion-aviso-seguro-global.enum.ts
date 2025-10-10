@@ -1,4 +1,4 @@
-import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
+import { INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, INPUT_FILTER_NOMBRE_ALPHANUMERICO, INPUT_FILTER_RFC_ALPHANUMERICO, PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, PATRON_NUMERO_DECIMAL_3_18, REGEX_CORREO_ELECTRONICO, REGEX_ENTERO_O_DECIMAL_10_2, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_NOMBRE_ALPHANUMERICO, REGEX_RFC_ALPHANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
 
 /**
  * Lista de pasos del proceso de captura y firma de solicitud.
@@ -37,11 +37,17 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'text', // Tipo de campo
     desactivado: false, // Indica si está deshabilitado
     soloLectura: false, // Indica si solo es de lectura
-    validadores: [{ tipo: 'required', mensaje: '' }, {
+    validadores: [{ tipo: 'required'}, {
         tipo: 'maxlength',
         valor: 50,
         
-      }], // Validadores asociados
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
+      }
+    ], // Validadores asociados
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, // Filtro de entrada para caracteres permitidos
     marcadorDePosicion: '', // Texto de placeholder
     valorPredeterminado: '', // Valor inicial
     marginTop: 0, // Margen superior personalizado
@@ -54,11 +60,17 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }, {
+    validadores: [{ tipo: 'required'}, {
         tipo: 'maxlength',
         valor: 50,
         
-      }],
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
+      }
+    ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -83,8 +95,12 @@ export const REPRESENTANTE_LEGAL = [
         valor: 13,
         
       },
-      { tipo: 'pattern', valor: PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, mensaje: 'Solo se permiten letras mayúsculas, números y los símbolos' }
+      { 
+        tipo: 'pattern',
+        valor: REGEX_RFC_ALPHANUMERICO,
+      }
     ],
+    inputFilter: INPUT_FILTER_RFC_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -103,7 +119,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS}],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -122,7 +138,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS}],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -141,7 +157,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS}],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -160,8 +176,10 @@ export const REPRESENTANTE_LEGAL = [
         valor: 15,
         
       },
-      { tipo: 'pattern', valor: REGEX_TELEFONO, mensaje: 'Solo se permiten números.' }],
-  
+      { tipo: 'pattern', 
+        valor: REGEX_NOMBRE_ALPHANUMERICO
+      }],
+    inputFilter: INPUT_FILTER_NOMBRE_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -180,8 +198,9 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO, mensaje: 'Formato de correo electrónico inválido.' }
+      { tipo: 'pattern', valor: REGEX_NOMBRE_ALPHANUMERICO }
     ],
+    inputFilter: INPUT_FILTER_NOMBRE_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -250,7 +269,7 @@ export const DATOS_DEL_SEGURO = [
       },
       {
         tipo: 'pattern',
-        valor: PATRON_NUMERO_DECIMAL_10_2,
+        valor: REGEX_ENTERO_O_DECIMAL_10_2,
         mensaje: 'No cumple con el formato esperado: 9999999999.99'
       }
     ],
@@ -277,7 +296,7 @@ export const DATOS_DEL_SEGURO = [
       },
       {
         tipo: 'pattern',
-        valor: PATRON_NUMERO_DECIMAL_10_2,
+        valor: REGEX_ENTERO_O_DECIMAL_10_2,
         mensaje: 'No cumple con el formato esperado: 9999999999.99'
       }
     ],
@@ -337,10 +356,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_PATRON_ALFANUMERICO,
-        mensaje: 'Solo se permiten letras y números.'
+        valor: REGEX_RFC_ALPHANUMERICO
       }
     ],
+    inputFilter: INPUT_FILTER_RFC_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -362,10 +381,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_ALFANUMERICO_CON_ESPACIOS,
-        mensaje: 'Solo se permiten letras, números y espacios.'
+        valor: REGEX_NOMBRE_ALPHANUMERICO
       }
     ],
+    inputFilter: INPUT_FILTER_NOMBRE_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -380,9 +399,10 @@ export const INFORMACION_DE_COMPANIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Selecciona una opción',
     valorPredeterminado: '',
     marginTop: 2,
+    markTouched: false
   },
   {
     id: 'informacionCompania.municipioDemarcacionTerritorial',
@@ -393,9 +413,10 @@ export const INFORMACION_DE_COMPANIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Selecciona una opción',
     valorPredeterminado: '',
     marginTop: 2,
+    markTouched: false
   },
   {
     id: 'informacionCompania.colonia',
@@ -406,9 +427,10 @@ export const INFORMACION_DE_COMPANIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Selecciona una opción',
     valorPredeterminado: '',
     marginTop: 2,
+    markTouched: false
   },
   {
     id: 'datosDelSeguro.localidad',
@@ -417,18 +439,19 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,    validadores: [{ tipo: 'required' },
+    soloLectura: false,
+    validadores: [{ tipo: 'required' },
       {
         tipo: 'maxlength',
         valor: 15
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
       
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -441,17 +464,18 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,    validadores: [{ tipo: 'required' },
+    soloLectura: false,
+    validadores: [{ tipo: 'required' },
        {
         tipo: 'maxlength',
         valor: 250
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -464,7 +488,8 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,    validadores: [{ tipo: 'required' },
+    soloLectura: false,
+    validadores: [{ tipo: 'required' },
 
        {
         tipo: 'maxlength',
@@ -472,10 +497,10 @@ export const INFORMACION_DE_COMPANIA = [
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -489,20 +514,21 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-    habilitado: true,    validadores: [
+    validadores: [
       {
         tipo: 'maxlength',
         valor: 50
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
   },
   {
     id: 'datosDelSeguro.codigoPostal',
@@ -511,17 +537,18 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,    validadores: [{ tipo: 'required' },
+    soloLectura: false,
+    validadores: [{ tipo: 'required' },
       {
         tipo: 'maxlength',
         valor: 50
       },
       {
         tipo: 'pattern',
-        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
-        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO
       }
     ],
+    inputFilter: INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -539,3 +566,13 @@ export const ERROR_FORMA_ALERT =
   </div>
 </div>
 `;
+
+/**
+ * @constant NOTIFICACION_DE_TITULO
+ * @description
+ * Mensaje de advertencia que se muestra al usuario antes de culminar el trámite.
+ * Informa que debe verificar todos los datos capturados y los documentos adjuntos,
+ * ya que posteriormente a la firma no será posible modificar o eliminar la información.
+ */
+export const NOTIFICACION_DE_TITULO =
+  'Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.';

@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TabEvaluarTratadosResponse } from '@ng-mf/data-access-user';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
+import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
+import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 110101
@@ -13,6 +15,18 @@ import { PantallasSvcService } from '../../services/pantallas-svc.service';
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Esta variable se utiliza para almacenar los tratados datos actualizados.
+   * Es un array de objetos de tipo EvaluarTratadosResponse.
+   */
+  tratadosDatosActualizados: TabEvaluarTratadosResponse[] = [];
+
+  /**
+   * Este evento se emite cuando los tratados datos son actualizados.
+   * Es un EventEmitter que emite un array de objetos de tipo EvaluarTratadosResponse.
+   */
+  @Output() tratadosEmitidos = new EventEmitter<TabEvaluarTratadosResponse[]>();
 
   /**
   * Esta variable se utiliza para almacenar el índice del subtítulo.
@@ -27,6 +41,13 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Almacena el estado actual del proceso Consultaio para este componente.
    */
   public consultaState!: ConsultaioState;
+
+   /**
+   * Representa el estado actual de la solicitud para el trámite 110101.
+   * Esta propiedad contiene toda la información relevante sobre la solicitud del solicitante,
+   * encapsulada en la interfaz `Solicitante110101State`.
+  */
+  public solicitudeState!: Solicitante110101State;
 
   /**
   * @property desactivado
@@ -45,7 +66,8 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private pantallasSvc: PantallasSvcService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private solicitanteQuery: Solicitante110101Query,
   ) {
 
   }
@@ -58,13 +80,30 @@ export class DatosComponent implements OnInit, OnDestroy {
    * - Asegura que la suscripción se limpie correctamente utilizando el observable `destroyNotifier$` para evitar fugas de memoria.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    }
-    this.checkParameterAndEnableTabs();
+    // Suscripción a consultaState
+  this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      tap((seccionState) => {
+        this.consultaState = seccionState;
+
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        }
+
+        this.checkParameterAndEnableTabs();
+      })
+    )
+    .subscribe();
+
+  this.solicitanteQuery.selectSolicitante$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      tap((seccionState) => {
+        this.solicitudeState = seccionState;
+      })
+    )
+    .subscribe();
   }
   /**
    * Este método se utiliza para verificar si el parámetro existe y habilitar las pestañas
@@ -108,6 +147,29 @@ export class DatosComponent implements OnInit, OnDestroy {
   habilitarPestana(): void {
     if (this.desactivado) {
       this.desactivado = false;
+    }
+  }
+
+  /**
+   * @method onTratadosActualizados
+   * @description Maneja la actualización de los tratados.
+   * @param tratados - Array de objetos de tipo EvaluarTratadosResponse que contiene los tratados actualizados.
+   */
+  onTratadosActualizados(tratados: TabEvaluarTratadosResponse[]): void {
+    this.tratadosDatosActualizados = tratados;
+    this.tratadosEmitidos.emit(tratados);
+  }
+
+  /**
+   * Deshabilita (cierra) la pestaña actual.
+   *
+   * @example
+   * this.cerrarPestana();
+   * // La pestaña pasa de estar habilitada a deshabilitada.
+   */
+  cerrarPestana(): void {
+    if (!this.desactivado) {
+      this.desactivado = true;
     }
   }
 
