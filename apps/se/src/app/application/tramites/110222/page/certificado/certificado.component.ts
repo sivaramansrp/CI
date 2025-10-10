@@ -14,9 +14,9 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ERROR_FORMA_ALERT, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, takeUntil} from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject} from 'rxjs';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { Tramite110222State } from '../../estados/tramite110222.store';
 /**
