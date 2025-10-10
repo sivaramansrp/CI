@@ -1,4 +1,4 @@
-import { Cancelacion, PermisosDatos, createDatosState } from '../models/cancelacion-de-solicitus.model';
+import { Cancelacion, PermisosDatos, Plantas, createDatosState } from '../models/cancelacion-de-solicitus.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -47,6 +47,11 @@ export interface DesistimientoDePermisoState {
   
   /** Datos de cancelación legacy */
   datos: Cancelacion[];
+
+   /**
+   * Lista de identificadores de plantas seleccionadas.
+   */
+  plantasSeleccionadas: Plantas[];
 }
 
 /**
@@ -54,7 +59,7 @@ export interface DesistimientoDePermisoState {
  */
 function createInitialState(): DesistimientoDePermisoState {
   return {
-    idSolicitud: 253688,
+    idSolicitud: 202808106,
     rfc: '',
     nombre: '',
     apPaterno: '',
@@ -67,7 +72,8 @@ function createInitialState(): DesistimientoDePermisoState {
     observaciones: '',
     certificadoSerialNumber: '',
     certificado: '',
-    datos: []
+    datos: [],
+    plantasSeleccionadas: [] as Plantas[],
   };
 }
 

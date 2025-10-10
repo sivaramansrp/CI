@@ -5,9 +5,9 @@
         <h1>{{ tituloMensaje || null }}</h1>
       </div>
       <div class="col-12">
-        @if (esFormaValido) {
+        @if (!esFormaValido && formularioIntentado) {
         <div
-          class="alert alert-info alert-danger"
+          class="alert alert-info alert-danger text-center"
           [innerHTML]="formErrorAlert"
         ></div>
         }

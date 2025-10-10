@@ -59,6 +59,57 @@ export interface Cancelacion {
    * para fines estadísticos y de control.
    */
   usd: string;
+
+  // Additional fields populated by folio validation
+  /**
+   * ID único de la resolución del trámite
+   */
+  idResolucion?: string;
+
+  /**
+   * Número de resolución asociado al trámite
+   */
+  numeroResolucion?: string;
+
+  /**
+   * Clasificación específica del régimen
+   */
+  clasificacionRegimen?: string;
+
+  /**
+   * Fecha de vigencia de la resolución
+   */
+  vigenciaResolucion?: string;
+
+  /**
+   * Valor autorizado en USD
+   */
+  valorAutorizado?: string;
+
+  /**
+   * Fecha de inicio de la resolución
+   */
+  inicioResolucion?: string;
+
+  /**
+   * Valor solicitado en USD
+   */
+  valorSolicitado?: string;
+
+  /**
+   * Cantidad solicitada de importación/exportación
+   */
+  cantidadImportarExportarSolicitada?: string;
+
+  /**
+   * Cantidad de importación/exportación
+   */
+  cantidadImportarExportar?: string;
+
+  /**
+   * Indicador si es general
+   */
+  general?: string;
 }
 
 /**
@@ -89,6 +140,21 @@ export interface PermisosDatos {
   motivoCancelacion?: string;
 }
 
+export interface Plantas {
+  id: string;
+  calle: string;
+  numExterior: string;
+  numInterior: string;
+  codigoPostal: string;
+  colonia: string;
+  municipio: string;
+  entidadFederativa: string;
+  pais: string;
+  registroFederal: string;
+  domicilio: string;
+  razon: string;
+}
+
 /**
  * Función para crear el estado inicial de los datos de permiso.
  * Esta función crea y devuelve un objeto de tipo PermisosDatos, 
@@ -109,3 +175,10 @@ export function createDatosState(params: Partial<PermisosDatos> = {}): PermisosD
         motivoCancelacion: params.motivoCancelacion || '',
     }
 }
+
+/*
+  * Mensaje de alerta que se muestra cuando hay errores relacionados con los servicios.
+  * Este mensaje se utiliza para informar al usuario que debe agregar al menos un servicio
+  * antes de poder continuar con el trámite.
+  */
+export const ERROR_SERVICIO_ALERT = `(Debe agregar al menos un servicio) es un campo requerido`;

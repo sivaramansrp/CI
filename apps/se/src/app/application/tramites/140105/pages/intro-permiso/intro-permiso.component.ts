@@ -6,15 +6,19 @@
  */
 
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS, TODOS_PASOS } from '../../constants/intropermiso.enum';
-import { Subject, takeUntil } from 'rxjs';
-
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, RegistroSolicitudService, WizardComponent } from '@ng-mf/data-access-user';
 import { DesistimientoDePermisoState, DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
+import { ERROR_FORMA_ALERT, PASOS, TODOS_PASOS } from '../../constants/intropermiso.enum';
+import { Observable, Subject, catchError, map, switchMap, take, takeUntil, throwError } from 'rxjs';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
-
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
+import { ToastrService } from 'ngx-toastr';
+
+
 
 /**
  * Interfaz para manejar las acciones de los botones del asistente.
@@ -88,6 +92,11 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   esFormaValido: boolean = false;
 
   /**
+   * Indica si se ha intentado validar el formulario al menos una vez.
+   */
+  formularioIntentado: boolean = false;
+
+  /**
    * Estado de la solicitud.
    */
   solicitudState!: DesistimientoDePermisoState;
@@ -143,6 +152,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
    */
   public mostrarBusqueda: boolean = false;
 
+
   /**
    * Referencia al componente hijo paso uno
    */
@@ -151,6 +161,8 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   constructor(
     private store: DesistimientoStore,
     private query: DesistimientoQuery,
+    private registroSolicitudService: RegistroSolicitudService,
+     private toastrService: ToastrService,
     private servicioDeMensajes: ServicioDeMensajesService
   ) {}
 
@@ -187,22 +199,111 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   /**
    * Maneja el evento de navegación del asistente
    */
-  getValorIndice(valor: AccionBoton): void {
-    if (valor.accion === 'cont') {
-      this.indice = valor.valor + 1;
-      this.datosPasos.indice = this.indice;
-      if (this.wizardComponent) {
-        this.wizardComponent.siguiente();
+  // getValorIndice(valor: AccionBoton): void {
+  //   if (valor.accion === 'cont') {
+  //     this.indice = valor.valor + 1;
+  //     this.datosPasos.indice = this.indice;
+  //     if (this.wizardComponent) {
+  //       this.wizardComponent.siguiente();
+  //     }
+  //   } else {
+  //     this.indice = valor.valor - 1;
+  //     this.datosPasos.indice = this.indice;
+  //     if (this.wizardComponent) {
+  //       this.wizardComponent.atras();
+  //     }
+  //   }
+
+  //   this.actualizarSeccionCargarDocumentos();
+  // }
+
+   getValorIndice(e: AccionBoton): void {
+    if (this.indice === 1) {
+      const FORM_VALIDO = this.pasoUnoComponent?.validarFormularios() ?? false;
+      this.esFormaValido = FORM_VALIDO;
+      this.formularioIntentado = true;
+
+      if (!this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        this.formErrorAlert = 'Favor de verificar los campos que marcan error.';
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
       }
+
+      this.onGuardar().pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
+        next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
+          if (respuesta.codigo !== '00') {
+            const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = false;
+            this.formularioIntentado = true;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+            this.esFormaValido = true;
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+            this.wizardComponent.siguiente();
+            if (respuesta.datos?.id_solicitud) {
+              this.idSolicitudState = respuesta.datos.id_solicitud;
+              this.store.setIdSolicitud(respuesta.datos.id_solicitud);
+            }
+            this.toastrService.success(respuesta.mensaje);
+        },
+        error: (error) => {
+          this.formErrorAlert = ServiciosService.generarAlertaDeError(error.error || 'Error al procesar la solicitud');
+          this.esFormaValido = false;
+          this.formularioIntentado = true;
+          this.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        }
+      });
+      
     } else {
-      this.indice = valor.valor - 1;
-      this.datosPasos.indice = this.indice;
-      if (this.wizardComponent) {
-        this.wizardComponent.atras();
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
+  }
 
-    this.actualizarSeccionCargarDocumentos();
+   /**
+   * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
+   * y enviar los datos al servidor.
+   * @returns {Observable<BaseResponse<{ id_solicitud: number }>>}
+   */
+  onGuardar(): Observable<BaseResponse<{ id_solicitud: number }>> {
+    return this.query.selectTramite$.pipe(
+      take(1), // Tomar solo el primer valor para evitar loops
+      map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
+      switchMap(FORM_PAYLOAD => {
+        return (this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD) as Observable<BaseResponse<{ id_solicitud?: number }>>).pipe(
+          map((response: BaseResponse<{ id_solicitud?: number }>) => {
+            // Adapt the response to the expected type
+            return {
+              ...response,
+              datos: {
+                id_solicitud: response.datos?.id_solicitud ?? 0
+              }
+            } as BaseResponse<{ id_solicitud: number }>;
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('Error al guardar:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
