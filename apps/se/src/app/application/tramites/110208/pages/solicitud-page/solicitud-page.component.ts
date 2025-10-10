@@ -1,10 +1,13 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modificacion.enum";
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Solocitud110208Service } from '../../services/service110208.service';
+import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
 /**
  * Componente para la página de solicitud.
@@ -21,6 +24,35 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    */
   indice: number = 1;
 
+  
+    /**
+  * @property {boolean} esFormaValido
+  * @description
+  * Indica si el formulario del paso actual es válido.
+  * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+  */
+  esFormaValido: boolean = false;
+
+  /**
+  * @property {PasoUnoComponent} pasoUnoComponent
+  * @description
+  * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+  * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+  */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Estado actual de la 110208.
+   * @type {Solicitud110208State}
+   */
+  public solicitudState!: Solicitud110208State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
   /**
    * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
    * @param consultaQuery Consulta a los datos del store.
@@ -29,7 +61,16 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solocitud110208Service: Solocitud110208Service,
-  ) {}
+    public tramite110208Store: Tramite110208Store,
+    private tramite110208Query: Tramite110208Query,
+  ) {
+    this.tramite110208Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
+  }
 
   /**
    * Constante de alerta utilizada en el componente.
@@ -132,24 +173,61 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    * 
    * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
    * 
-   * @param {AccionBoton} e Acción del botón (cont o atras) y el valor asociado a la acción.
-   * @returns {void}
+   * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+    this.esFormaValido = false;
 
-      // Dependiendo de la acción, avanza o retrocede en el wizard
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        this.indice = 1;
+        this.datosPasos.indice = 1;
+      } else {
+        this.indice = 2;
+        this.datosPasos.indice = 2;
+      }
+
+    } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.pasoNavegarPor(e);
+    }
+  }
+
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
+  pasoNavegarPor(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
       if (e.accion === 'cont') {
-        // Si la acción es 'cont', avanza al siguiente paso
         this.wizardComponent.siguiente();
       } else {
-        // Si la acción es 'atras', retrocede al paso anterior
         this.wizardComponent.atras();
       }
     }
+  }
+
+    /**
+ * @method validarTodosFormulariosPasoUno
+ * @description
+ * Valida todos los formularios del componente `PasoUnoComponent`.
+ * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+ * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+ * Retorna `true` si todos los formularios son válidos.
+ *
+ * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+ */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validateAll();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
   /**
    * Hook de destrucción del componente. Limpia las suscripciones activas para evitar fugas de memoria.

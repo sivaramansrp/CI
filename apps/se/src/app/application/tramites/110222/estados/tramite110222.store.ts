@@ -10,6 +10,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * 
  */
 export interface Tramite110222State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * @property {Object} formCertificado - Datos del formulario principal de certificado.
    * @description
@@ -205,6 +208,15 @@ export interface Tramite110222State {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
 }
 
 /**
@@ -220,6 +232,7 @@ export interface Tramite110222State {
  */
 export function createInitialState(): Tramite110222State {
   return {
+    idSolicitud: 0,
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -331,7 +344,14 @@ export function createInitialState(): Tramite110222State {
       numeroRegistroFiscal: '',
       fax: '',      
     },
-    optionsTipoFactura: []
+    optionsTipoFactura: [],
+    /** Lista de idiomas disponibles */
+    idiomaDatos: [],
+    /** Lista de entidades federativas disponibles */
+    entidadFederativaDatos: [],
+  
+    /** Lista de representaciones federales disponibles */
+    representacionFederalDatos: [],
   };
 }
 
@@ -355,6 +375,18 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     super(createInitialState());
   }
 
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
   /**
    * @descripcion
    * Actualiza los datos del formulario de certificado.
@@ -770,6 +802,48 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     this.update((state) => ({
       ...state,
       optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  /**
+   * Establece los datos del idioma en el almacén.
+   * 
+   * @param {Catalogo[]} idiomaDatos - Un array de objetos `Catalogo` con los datos del idioma.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la entidad federativa en el almacén.
+   * 
+   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la representación federal en el almacén.
+   * 
+   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
     }));
   }
 }

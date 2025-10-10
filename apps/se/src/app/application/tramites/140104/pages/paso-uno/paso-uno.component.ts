@@ -6,7 +6,8 @@ import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.s
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import {CancelacionDeCertificadosComponent} from '../../components/cancelacion-de-certificados/cancelacion-de-certificados.component';
+import { ViewChild } from '@angular/core';
 /**
  * Componente `PasoUnoComponent` que representa el primer paso del flujo de solicitud.
  * Controla el índice de la sección activa del formulario multipaso y gestiona
@@ -67,6 +68,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Subject para notificar la destrucción del componente y cancelar suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Referencia al componente hijo SolicitanteComponent para acceso a sus métodos y propiedades */
+  @ViewChild(CancelacionDeCertificadosComponent) cancelacionComp!: CancelacionDeCertificadosComponent;
 
   /**
    * Constructor del componente.
@@ -148,6 +152,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe((mensaje) => {
         this.mostrarDevolverFacturas = mensaje;
       });
+  }
+  /**
+   * Valida todos los formularios del paso uno incluyendo solicitante, certificado, datos y destinatario
+   * @returns true si todos los formularios son válidos, false en caso contrario
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+    if (this.cancelacionComp?.cuposDisponiblesTabla) {
+      if (this.cancelacionComp.cuposDisponiblesTabla.length===0) {
+       
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+   
+
+    return isValid;
   }
 
   /**

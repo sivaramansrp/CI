@@ -16,7 +16,7 @@
     },
     "paisProcedencisCrossList": {
         "label": {
-            "tituluDeLaIzquierda": "Pais de origen",
+            "tituluDeLaIzquierda": "País de procedencia:",
             "derecha": "Pais(es) seleccionado(s)"
         },
         "fechas": [

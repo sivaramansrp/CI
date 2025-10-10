@@ -16,6 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
 import {AVISO} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
+import { Tramite110205State } from '../../estados/tramite110205.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -80,6 +81,19 @@ export class PeruCertificadoComponent implements OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {Tramite110205State} solicitudState
+   * @description
+   * Estado actual de la solicitud del trámite.
+   */
+  solicitudState!: Tramite110205State;
+
+   /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
    * @constructor
    * @description
    * Constructor del componente. Se encarga de suscribirse a `FormaValida$` del `Tramite110205Query`
@@ -98,6 +112,12 @@ export class PeruCertificadoComponent implements OnDestroy {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     });
+    this.tramiteQuery.selectPeru$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
   }
 
   /**

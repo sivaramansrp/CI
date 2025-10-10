@@ -1,59 +1,62 @@
 <div class="container">
     <div class="row">
-        <ul class="nav nav-tabs">
-
-            <li [ngClass]="indice === 1 ? 'active' : ''">
-                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
-            </li>
-
-
-            <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Tratados</a>
-            </li>
+         <ul class="nav nav-tabs">
+            @if (consultaState.create === true) {
+                <li [ngClass]="indice === 1 ? 'active' : ''">
+                    <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+                </li>
 
 
-            @if (consultaState.parameter === "READ_PROCEDURE") {
+                <li [ngClass]="indice === 2 ? 'active' : ''">
+                    <a data-toggle="tab" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Tratados</a>
+                </li>
 
-            <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
-                    (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Protesto de Decir Verdad</a>
-            </li>
-            } @else {
-
-            @if (consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO" || bandejaSolicitud) {
-
-            <li [ngClass]="{ active: indice === 3 }">
-                <a data-toggle="tab" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
-            </li>
-            } @else {
-
-            <li [ngClass]="{ active: indice === 3, disabled: desactivado }">
+                <li [ngClass]="{ active: indice === 3, disabled: desactivado }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)"
-                    [class.disabled]="desactivado">Datos de la mercancia</a>
-            </li>
-            }
-            }
+                        [class.disabled]="desactivado">Datos de la mercancia</a>
+                </li>
 
-
-            @if (consultaState.parameter !== "READ_PROCEDURE") {
-            @if (consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO" || bandejaSolicitud) {
-
-            <li [ngClass]="{ active: indice === 4 }">
-                <a data-toggle="tab" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Datos adicionales</a>
-            </li>
-            } @else {
-
-            <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
+                 <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)"
                     [class.disabled]="desactivado">Datos adicionales</a>
-            </li>
+                </li>
+                @if (this.solicitudeState.tab_procesos === true) {
+                    <li [ngClass]="indice === 5 ? 'active' : ''">
+                        <a data-toggle="tab" (keyup)="seleccionaTab(5)" (click)="seleccionaTab(5)">Procesos</a>
+                    </li>
+                }
             }
+
+            @if (consultaState.create === false) {
+                <li [ngClass]="indice === 1 ? 'active' : ''">
+                    <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+                </li>
+
+                <li [ngClass]="indice === 3 ? 'active' : ''">
+                 <a data-toggle="tab" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)"
+                    [class.disabled]="desactivado">Mercancia</a>
+                </li>
+                 <li [ngClass]="indice === 2 ? 'active' : ''">
+                    <a data-toggle="tab" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Tratados</a>
+                </li>
+                <li [ngClass]="indice === 6? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
+                    (keydown.space)="seleccionaTab(6)" role="button" tabindex="3">Protesto de Decir Verdad</a>
+               </li>
+
             }
-            @if (this.solicitudeState.tab_procesos === true) {
-            <li [ngClass]="indice === 5 ? 'active' : ''">
-                <a data-toggle="tab" (keyup)="seleccionaTab(5)" (click)="seleccionaTab(5)">Procesos</a>
-            </li>
-            }
+
+           
+
+
+           
+
+           <!--  <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
+                <a data-toggle="tab" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)"
+                    [class.disabled]="desactivado">Datos adicionales</a>
+            </li> -->
+           
+            
         </ul>
 
         <ng-container>
@@ -62,24 +65,21 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-            <app-tratados (habilitarPestana)="habilitarPestana()"></app-tratados>
+            <app-tratados (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
             }
             @case (3) {
-            @if (consultaState.parameter === "READ_PROCEDURE") {
-            <app-protesto-decir-verdad></app-protesto-decir-verdad>
-            } @else {
             <app-datos-mercancia></app-datos-mercancia>
             }
-            }
             @case (4) {
-            @if (consultaState.parameter !== "READ_PROCEDURE") {
             <app-datos-adicionales></app-datos-adicionales>
-            }
             }
             @case (5) {
              @if (this.solicitudeState.tab_procesos === true) {
             <app-procesos></app-procesos>
             }
+            }
+            @case (6) {
+             <app-protesto-decir-verdad></app-protesto-decir-verdad>
             }
             }
         </ng-container>
