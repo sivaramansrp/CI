@@ -178,8 +178,16 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
  */
   tratadoAcuerdoCertificado?: Catalogo[];
 
+  /*
+  * Propiedad de entrada que recibe los datos de los países bloqueados.
+  * @type {Catalogo[]}
+  */
   paisBloqueCertificado?: Catalogo[];
 
+  /**
+   * Propiedad de entrada que recibe el tratado seleccionado.
+   * @type {any}
+   */
   @Output() tratadoSeleccionado = new EventEmitter<any>();
   /**
    * Propiedad de entrada que recibe los datos de los países bloqueados.
@@ -1217,24 +1225,48 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       this.formCertificado.get('segundoApellido')?.enable({ emitEvent: false });
     }
   }
+  
+  /**
+   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+   * 
+   * @returns {void}
+   */
   getTratado(): void {
     this.service.getTratadoCertificado(this.idProcedimiento.toString(), 'TITRAC.TA').subscribe((data) => {
       this.tratadoAcuerdoCertificado = data as Catalogo[];
     });
 
   }
+
+  /**
+   * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
+   * 
+   * @returns {void}
+   */
   getPaisBloque():void{
     this.service.getPaises(this.idProcedimiento.toString()).subscribe((data) => {
       this.paisBloqueCertificado = data as Catalogo[];
     });
   }
 
+  /**
+   * Getter para obtener el catálogo de tratados o acuerdos.
+   * Si `tratadoAcuerdoCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `tratadoAcuerdo`.
+   * 
+   * @returns {Catalogo[]} El catálogo de tratados o acuerdos.
+   */
   get catalogoTratado(): Catalogo[] {
     return this.tratadoAcuerdoCertificado?.length
       ? this.tratadoAcuerdoCertificado
       : this.tratadoAcuerdo;
   }
 
+  /**
+   * Getter para obtener el catálogo de países o bloques.
+   * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
+   * 
+   * @returns {Catalogo[]} El catálogo de países o bloques.
+   */
   get paisBloqueCertificadoGet(): Catalogo[]{
     return this.paisBloqueCertificado?.length
       ? this.paisBloqueCertificado

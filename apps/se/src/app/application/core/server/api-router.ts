@@ -52,3 +52,9 @@ export const API_BUSCAR_DATOS_GRID = (TRAMITE: string) : string => `sat-t${TRAMI
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t80211/solicitud/empresas-terciarizadas/buscar-datos-grid-plantas
  */
 export const API_BUSCAR_TERCIARIZADAS = (TRAMITE: string): string => `sat-t${TRAMITE}/solicitud/empresas-terciarizadas/buscar-datos-grid-plantas`;
+
+/**
+ * API para descargar datos solicitud en evaluacion.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Evalua-Solicitud/excel-solicitud
+ */
+export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/excel`;

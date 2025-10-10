@@ -12,6 +12,31 @@ import { Injectable } from '@angular/core';
  * @description
  * Servicio para gestionar las operaciones relacionadas con el cambio de modalidad.
  * Proporciona métodos para obtener datos simulados, servicios IMMEX y cambios de modalidad desde archivos JSON.
+ * 
+ * @example
+ * // Inyectar el servicio en un componente
+ * constructor(private cambioModalidadService: CambioModalidadService) {}
+ * 
+ * // Obtener datos simulados
+ * this.cambioModalidadService.getDatosSimulados().subscribe(data => { ... });
+ * 
+ * @see CambioDeModalidadForm
+ * @see CambioModalidadResponse
+ * @see RespuestaCatalogos
+ * @see CambioModalidadState
+ * @see CambioModalidadStore
+ * @see CambioModalidadQuery
+ * @see HttpCoreService
+ * @see HttpClient
+ * 
+ * @compodoc
+ */
+/**
+ * @compodoc
+ * @description
+ * Servicio Angular para gestionar el cambio de modalidad en el trámite 80208.
+ * Proporciona métodos para obtener datos simulados, servicios IMMEX, y realizar operaciones sobre el estado del formulario.
+ * Utiliza HttpClient y HttpCoreService para la comunicación con APIs y archivos JSON locales.
  */
 @Injectable({
   providedIn: 'root'
@@ -127,8 +152,8 @@ export class CambioModalidadService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: CambioModalidadState): Observable<any> {
-    return this.httpService.post<any>(`${ENVIRONMENT.API_HOST}/api/solicitud/guardar`, { body: body });
+  guardarDatosPost(body: CambioModalidadState): Observable<CambioModalidadResponse> {
+    return this.httpService.post<CambioModalidadResponse>(`${ENVIRONMENT.API_HOST}/api/solicitud/guardar`, { body: body });
   }
 
 } 
