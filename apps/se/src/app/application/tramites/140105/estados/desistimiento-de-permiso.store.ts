@@ -52,6 +52,12 @@ export interface DesistimientoDePermisoState {
    * Lista de identificadores de plantas seleccionadas.
    */
   plantasSeleccionadas: Plantas[];
+
+  /** Clave de entidad federativa */
+  claveEntidadFederativa: string;
+
+  /** ID del tipo de trámite */
+  idTipoTramite: number;
 }
 
 /**
@@ -60,7 +66,7 @@ export interface DesistimientoDePermisoState {
 function createInitialState(): DesistimientoDePermisoState {
   return {
     idSolicitud: 202808106,
-    rfc: '',
+    rfc: 'AAL0409235E6',
     nombre: '',
     apPaterno: '',
     apMaterno: '',
@@ -74,6 +80,8 @@ function createInitialState(): DesistimientoDePermisoState {
     certificado: '',
     datos: [],
     plantasSeleccionadas: [] as Plantas[],
+    claveEntidadFederativa: '09',
+    idTipoTramite: 140105,
   };
 }
 
@@ -136,5 +144,26 @@ export class DesistimientoStore extends Store<DesistimientoDePermisoState> {
    */
   public setFirmaData(certificadoSerialNumber: string, certificado: string): void {
     this.update({ certificadoSerialNumber, certificado });
+  }
+
+  /**
+   * Actualiza la clave de entidad federativa
+   */
+  public setClaveEntidadFederativa(claveEntidadFederativa: string): void {
+    this.update({ claveEntidadFederativa });
+  }
+
+  /**
+   * Actualiza el ID del tipo de trámite
+   */
+  public setIdTipoTramite(idTipoTramite: number): void {
+    this.update({ idTipoTramite });
+  }
+
+  /**
+   * Actualiza los datos de configuración del trámite
+   */
+  public setTramiteConfig(claveEntidadFederativa: string, idTipoTramite: number): void {
+    this.update({ claveEntidadFederativa, idTipoTramite });
   }
 }

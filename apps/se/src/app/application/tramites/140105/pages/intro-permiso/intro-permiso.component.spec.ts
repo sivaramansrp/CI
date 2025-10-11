@@ -5,13 +5,40 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Component } from '@angular/core';
 import { IntroPermisoComponent } from './intro-permiso.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
+import { RegistroSolicitudService } from '@ng-mf/data-access-user';
+import { ToastrService, provideToastr } from 'ngx-toastr';
 
 @Injectable()
-class MockServicioDeMensajesService { }
+class MockServicioDeMensajesService {
+  mensaje$ = observableOf({});
+}
+
+@Injectable()
+class MockDesistimientoStore {
+  update = jest.fn();
+  setIdSolicitud = jest.fn();
+}
+
+@Injectable()
+class MockDesistimientoQuery {
+  selectTramite$ = observableOf({
+    rfc: 'TEST123',
+    claveEntidadFederativa: '09',
+    idTipoTramite: 140105
+  });
+}
+
+@Injectable()
+class MockRegistroSolicitudService {
+  postGuardarDatos = jest.fn().mockReturnValue(observableOf({ success: true }));
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -39,7 +66,7 @@ describe('IntroPermisoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [
         IntroPermisoComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
@@ -47,13 +74,26 @@ describe('IntroPermisoComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: ServicioDeMensajesService, useClass: MockServicioDeMensajesService }
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+        { provide: ServicioDeMensajesService, useClass: MockServicioDeMensajesService },
+        { provide: DesistimientoStore, useClass: MockDesistimientoStore },
+        { provide: DesistimientoQuery, useClass: MockDesistimientoQuery },
+        { provide: RegistroSolicitudService, useClass: MockRegistroSolicitudService }
       ]
     }).overrideComponent(IntroPermisoComponent, {
 
     }).compileComponents();
     fixture = TestBed.createComponent(IntroPermisoComponent);
     component = fixture.debugElement.componentInstance;
+    
+    // Initialize component properties needed for tests
+    component.destroyNotifier$ = {
+      next: jest.fn(),
+      complete: jest.fn()
+    };
   });
 
   afterEach(() => {

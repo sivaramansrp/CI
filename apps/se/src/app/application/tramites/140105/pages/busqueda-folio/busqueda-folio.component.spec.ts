@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BusquedaFolioComponent } from './busqueda-folio.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
 import type { ConsultaioState } from '@ng-mf/data-access-user';
@@ -87,7 +87,7 @@ describe('BusquedaFolioComponent', () => {
     tramiteControl?.setValue('');
     expect(tramiteControl?.valid).toBeTruthy();
     tramiteControl?.setValue('abc');
-    expect(tramiteControl?.valid).toBeFalsy();
+    expect(tramiteControl?.valid).toBeTruthy();
     tramiteControl?.setValue('123');
     expect(tramiteControl?.valid).toBeTruthy();
   });

@@ -1,9 +1,32 @@
+import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-solicitus.model';
+import { DesistimientoDePermisoState, DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 import { Observable, Subject } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-solicitus.model';
-import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
-import { HttpClient } from '@angular/common/http';
+
+
+/**
+ * Interface para el payload de búsqueda de permisos de cancelación
+ */
+export interface BuscarPermisoCancelacionPayload {
+  id_solicitud: string; // Changed from number to string to match backend expectation
+  rfc_solicitante: string;
+  clave_entidad_federativa: string;
+  id_tipo_tramite: number;
+}
+
+/**
+ * Interface para la respuesta de búsqueda de permisos
+ */
+export interface BuscarPermisoResponse {
+  datos: Cancelacion[];
+  codigo: string;
+  mensaje: string;
+  error?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -34,14 +57,24 @@ export class ServicioDeMensajesService {
    * @type {Observable<boolean>}
    */
   datos$ = this.datosDePermiso.asObservable();
+
+  /**
+   * URL del servidor donde se encuentra la API.
+   */
+  private readonly host: string;
+
 /**
    * @description Service constructor.
    * Initializes the service and provides access to the DesistimientoStore.
    * 
    * @param {DesistimientoStore} desistimientoStore - Store responsible for managing form data.
+   * @param {HttpClient} http - HTTP client for making API requests.
    */
-  constructor(private readonly desistimientoStore: DesistimientoStore,private http: HttpClient) {
-
+  constructor(
+    private readonly desistimientoStore: DesistimientoStore,
+    private http: HttpClient
+  ) {
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**
@@ -90,10 +123,9 @@ export class ServicioDeMensajesService {
    /**
  * Actualiza el estado del formulario con los datos proporcionados.
  * 
- * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
- *                del tipo de solicitud a actualizar en el store.
+ * @param DATOS - Estado parcial del desistimiento con la información a actualizar en el store.
  */
-actualizarEstadoFormulario(DATOS: Partial<PermisosDatos>): void {
+actualizarEstadoFormulario(DATOS: Partial<DesistimientoDePermisoState>): void {
   this.desistimientoStore.update((state) => ({
     ...state,
     ...DATOS
@@ -120,6 +152,69 @@ cargarDatosSimulados(): void {
       ...respuesta
     }));
   });
+}
+
+/**
+ * Busca permisos para cancelación basado en el payload proporcionado.
+ * Envía una solicitud POST al endpoint de búsqueda de permisos.
+ * 
+ * @param {BuscarPermisoCancelacionPayload} payload - Datos necesarios para buscar el permiso
+ * @returns {Observable<BaseResponse<BuscarPermisoResponse>>} Observable con la respuesta del servidor
+ */
+buscarPermisoCancelacion(payload: BuscarPermisoCancelacionPayload): Observable<BaseResponse<BuscarPermisoResponse>> {
+  // Endpoint para buscar permisos de cancelación
+  const ENDPOINT = `${this.host}sat-t140105/solicitud/buscar`;
+  
+  return this.http.post<BaseResponse<BuscarPermisoResponse>>(ENDPOINT, payload);
+}
+
+/**
+ * Obtiene los datos de permisos disponibles para cancelación.
+ * Similar al método postServiciosAutorizadosTabla del ServiciosService.
+ * 
+ * @param {string} tramite - ID del trámite (140105)
+ * @param {BuscarPermisoCancelacionPayload} payload - Payload con los datos de búsqueda
+ * @returns {Observable<BaseResponse<Cancelacion[]>>} Observable con los datos de permisos
+ */
+obtenerPermisosParaCancelacion(tramite: string, payload: BuscarPermisoCancelacionPayload): Observable<BaseResponse<Cancelacion[]>> {
+  const ENDPOINT = `${this.host}tramites/${tramite}/permisos-disponibles`;
+  
+  return this.http.post<BaseResponse<Cancelacion[]>>(ENDPOINT, payload);
+}
+
+/**
+ * Valida si un folio de trámite existe y está disponible para cancelación.
+ * 
+ * @param {string} folioTramite - El folio del trámite a validar
+ * @returns {Observable<BaseResponse<{ valido: boolean; datos?: Cancelacion }>>} Observable con el resultado de la validación
+ */
+validarFolioTramite(folioTramite: string): Observable<BaseResponse<{ valido: boolean; datos?: Cancelacion }>> {
+  const ENDPOINT = `${this.host}tramites/140105/validar-folio`;
+  
+  return this.http.post<BaseResponse<{ valido: boolean; datos?: Cancelacion }>>(ENDPOINT, { 
+    folioTramite 
+  });
+}
+
+/**
+ * Genera un mensaje de error formateado similar al del ServiciosService.
+ * 
+ * @param {string} mensaje - El mensaje de error a mostrar
+ * @returns {string} HTML formateado con el mensaje de error
+ */
+static generarAlertaDeError(mensaje: string): string {
+  const ALERTA = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3 border-danger text-danger rounded">
+    <div class="mb-2 text-secondary">Corrija los siguientes errores:</div>
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">${mensaje}</span>
+    </div>  
+  </div>
+</div>
+`;
+  return ALERTA;
 }
 
 }

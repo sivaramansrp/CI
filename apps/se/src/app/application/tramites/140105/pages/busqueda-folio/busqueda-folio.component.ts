@@ -115,8 +115,6 @@ export class BusquedaFolioComponent implements OnDestroy {
    * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
   public buscar(): void {
-    
-
     this.detalleDelPermiso = true;
     this.establecerFormularioDeDetallesDe();
   }
