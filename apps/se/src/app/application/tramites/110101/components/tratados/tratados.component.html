@@ -114,6 +114,37 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalInsumoEmpaques" #modalInsumoEmpaques tabindex="-1" aria-labelledby="modalAgregarLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form [formGroup]="dictaminador">
+          <div class="col-md-12">
+            @if (tratadosInsumosTablaDatos.length > 0) {
+              <ng-titulo titulo="Insumos (materias prima, partes y piezas)" />
+              <app-tabla-dinamica 
+              [configuracionTabla]="tablaInsumos" 
+              [datos]="tratadosInsumosTablaDatos">
+              </app-tabla-dinamica>
+            }
+            @if (tratadosEmpaquesTablaDatos.length > 0) {
+              <ng-titulo titulo="Envases y empaques para la venta al menudeo" />
+              <app-tabla-dinamica 
+              [configuracionTabla]="tablaEmpaques" 
+              [datos]="tratadosEmpaquesTablaDatos">
+              </app-tabla-dinamica> 
+            }
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-end p-5 gap-3">
+        <button class="btn btn-default" (click)="cerrarDialogo()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 }
 
 @for (pais of paisesInstancias; track pais) {
