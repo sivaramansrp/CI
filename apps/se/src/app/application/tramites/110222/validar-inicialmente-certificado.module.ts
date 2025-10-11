@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from "@ng-mf/data-access-user";
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CertificadoComponent } from './page/certificado/certificado.component';
@@ -18,6 +18,7 @@ import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 import { RouterModule } from '@angular/router';
 import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialmente-certificado-routing.module';
 
@@ -52,7 +53,9 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     TituloComponent,
     AlertComponent,
     RepresentanteLegalComponent,
-    MercanciaComponent
+    RepresentanteLegalExportadorComponent,
+    MercanciaComponent,
+    PasoFirmaComponent
   ]
 })
 export class ValidarInicialmenteCertificadoModule { }

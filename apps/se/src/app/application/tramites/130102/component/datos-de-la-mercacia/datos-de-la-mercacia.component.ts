@@ -29,11 +29,12 @@ import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/
 import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Solicitud130102State, Tramite130102Store } from '../../../130102/estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 
 /**
@@ -56,7 +57,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
 export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
-   defaultSelect: string = 'Nuevo';
+   defaultSelect: string = 'CONDMER.N';
   /** 
   * @description Indica si el formulario es de solo lectura.
   */
@@ -100,7 +101,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * compo doc
    * @property {Catalogo[]} fraccionF - Catálogo de fracciones arancelarias.
    */
-  fraccionF: Catalogo[] = fractionValues;
+  fraccionF: Catalogo[] = [];
 /** 
 * @description Estado de la solicitud 130102, obtenido desde el store.
 */
@@ -117,11 +118,13 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
   constructor(private http: HttpClient,
-     private fb: FormBuilder,
+    private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
+
   ) {
     this.consultaioQuery.selectConsultaioState$
          .pipe(
@@ -140,10 +143,10 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
   ngOnInit(): void {
-     this.inicializarEstadoFormulario();
-   
-   this.fetchProductoOptions();
-   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
+    this.inicializarEstadoFormulario();
+    this.fetchProductoOptions();
+    this.obtenerFracciones();
+    this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
   }
   /**
    * compo doc
@@ -181,7 +184,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   * Suscribe al estado de la solicitud para obtener los datos necesarios.
 */
   inicializarFormulario():void{
- this.tramite130102Query.selectSolicitud$
+ this.tramite130102Query.selectSeccionState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -310,7 +313,10 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Carga las opciones de productos desde el JSON.
    */
   fetchProductoOptions(): void {
-    this.producto = productoOptions?.options;
+    this.producto = [
+      { "label": "Nuevo", "value": "CONDMER.N" },
+      { "label": "Usado", "value": "CONDMER.U" }
+    ]
   }
 
   /**
@@ -341,6 +347,54 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
     }
     return null;
   }
+
+
+  /**
+   * Método para obtener las fracciones arancelarias desde el servicio CatOctavaTemporalService.
+   * Actualiza el catálogo de fracciones arancelarias con los datos obtenidos.
+   */
+  obtenerFracciones(): void {
+      this.catOctavaTemporalService.getFraccionArancelaria().pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
+        this.fraccionF = data.datos.map((item, index) => ({
+          id: index,
+          clave: item.clave,
+          descripcion: `${item.clave} - ${item.descripcion}`,
+        }));  
+      });
+    }
+
+  /**
+   * Método para obtener las unidades de medida asociadas a una fracción arancelaria específica.
+   * Actualiza el catálogo de unidades de medida con los datos obtenidos.
+   * @param cveFraccion Clave de la fracción arancelaria para obtener las unidades de medida asociadas.
+   */
+  obtenerUnidadesMedida(cveFraccion: string): void {
+      this.catOctavaTemporalService.getUnidadesMedida(cveFraccion).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
+        this.Unidad = data.datos.map((item, index) => ({    
+          id: index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+      });
+    }
+
+  /**
+   * Maneja el cambio en la fracción arancelaria seleccionada.
+   * Obtiene las unidades de medida asociadas a la fracción seleccionada.
+   * @param formDelLa Formulario reactivo que contiene el campo de fracción arancelaria.
+   */
+  onChangeFraccion(formDelLa: FormGroup): void {
+    const CVE_FRACCION = formDelLa.get('fraccionArancelaria')?.value;
+    
+    this.obtenerUnidadesMedida(CVE_FRACCION);
+  }
+  
+  
+
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Emite y completa el observable para evitar fugas de memoria.
