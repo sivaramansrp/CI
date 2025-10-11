@@ -1,5 +1,5 @@
-<div class="container mt-4">
-  @if(esFormularioSoloLectura === false){
+<div [hidden]="esFormularioSoloLectura" class="container mt-4">
+
     <ng-titulo titulo="Mercancía" />
     <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="warningAlert"></ng-alert>
     <form [formGroup]="formMercancia">
@@ -136,7 +136,7 @@
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar envases</button>
       </div>
     }
-  }
+ 
 </div>
 
 <div class="modal fade" id="modalAgregar" #modalAgregar tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
