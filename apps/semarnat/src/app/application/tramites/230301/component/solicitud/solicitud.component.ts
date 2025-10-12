@@ -98,7 +98,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.crearDesistimientoForm();
-    this.getFromdata();
+    this.getFormdata();
     if(this.formularioDeshabilitado) {
       this.formDesistimiento.disable();
     }
@@ -136,7 +136,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Actualiza el formulario con los datos obtenidos.
    * @returns {void}
    */
-  getFromdata(): void {
+  getFormdata(): void {
     this.desistimientoService
       .getDesistimientoSolicitud('solictud.json')
       .pipe(takeUntil(this.destroyNotifier$))

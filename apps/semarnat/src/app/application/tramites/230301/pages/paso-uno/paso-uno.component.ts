@@ -198,7 +198,7 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    ngOnInit(): void {
       if (this.consultaState && this.consultaState.procedureId === '230301' &&
       this.consultaState.update) {
-      this.guardarDatosFormulario();
+      this.cargarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
@@ -231,7 +231,7 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
   }
 
   /**
-   * @method guardarDatosFormulario
+   * @method cargarDatosFormulario
    * @description Método para cargar y procesar datos existentes del formulario desde el servidor.
    * Obtiene los datos de registro de toma de muestras de mercancías y actualiza el estado
    * del formulario con la información recuperada. Este método es esencial para la funcionalidad
@@ -258,7 +258,7 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    * @see {@link DesistimientoSolicitudService.actualizarEstadoFormulario} - Método para actualizar estado
    * @see {@link esDatosRespuesta} - Propiedad que se actualiza tras cargar datos
    */
-  guardarDatosFormulario(): void {
+  cargarDatosFormulario(): void {
     this.desistimientoSolicitudService
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)).subscribe((resp) => {
