@@ -193,8 +193,8 @@
               [catalogo]="umc || []"
               [label]="'UMC'"
               [required]="true"
-              name="estado"
-              formControlName="umc"
+              name="umc"
+              (selectionChange)="selectionUMC($event)"
               [markTouched]="mercanciaForm.get('umc')?.touched ?? false"
             ></app-catalogo-select>
           </div>
@@ -356,7 +356,7 @@
               [label]="'Tipo de factura'"
               [required]="true"
               name="tipoFactura"
-              formControlName="tipoFactura"
+              (selectionChange)="selectionTipoFactura($event)"
               [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"
             ></app-catalogo-select>
           </div>
@@ -367,7 +367,7 @@
               [label]="'Tipo de factura / Referencia'"
               [required]="true"
               name="tipoFacturaReferencia"
-              formControlName="tipoFactura"
+              (selectionChange)="selectionTipoFactura($event)"
               [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"
             ></app-catalogo-select>
           </div>
