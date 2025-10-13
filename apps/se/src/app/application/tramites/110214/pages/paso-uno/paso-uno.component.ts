@@ -50,7 +50,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
  * Proporciona acceso a sus métodos y propiedades.
  */
-@ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoDeOrigenComponent;
+@ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoOrigenComponent;
 
 /** Índice que representa la pestaña activa en el componente. */
 indice: number = 1;
@@ -169,7 +169,7 @@ private isCertificadoOrigenComponentValid: boolean = false;
     this.isHistProductoresComponentValid = this.tramiteQuery.getValue().formValidity?.histProductores ?? false;
 
     if (!this.isCertificadoOrigenComponentValid) {
-      this.certificadoOrigenComponent?.validarFormularios(); 
+      this.certificadoOrigenComponent?.validarFormulario(); 
     }
 
     if (!this.isDatosCertificadoComponentValid) {

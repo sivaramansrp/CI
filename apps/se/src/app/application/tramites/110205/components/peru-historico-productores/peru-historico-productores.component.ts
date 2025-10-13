@@ -53,8 +53,10 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
    /** Indica si el formulario es válido. */
     public isFormValid: boolean = false;
   
+    /** Observable que expone la lista de productores exportador agregados al store. */
     public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
-  
+
+    /** Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite. */
     public mercanciaProductores$!: Observable<MercanciaTabla[]>;
 
     /**

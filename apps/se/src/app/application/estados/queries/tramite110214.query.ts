@@ -43,10 +43,16 @@ export class Tramite110214Query extends Query<Tramite110214State> {
     return state;
   });
 
+  /**
+ * Observable que expone la lista de productores exportador agregados al estado del trámite.
+ */
   selectAgregarProductoresExportador$ = this.select((state) => {
     return state.agregarProductoresExportador;
   });
 
+  /**
+ * Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite.
+ */
   selectMercanciaProductores$ = this.select((state) => {
     return state.mercanciaProductores;
   });

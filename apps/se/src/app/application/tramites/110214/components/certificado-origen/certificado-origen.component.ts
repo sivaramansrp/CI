@@ -41,6 +41,11 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy
 {
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+ * Proporciona acceso a sus métodos y propiedades.
+ */
+@ViewChild('CertificadoDeOrigenComponent', { static: false }) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -397,6 +402,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ certificado: valida });
+    this.store.setFormValidity('certificadoOrigen', valida);
   }
 
   /**
@@ -406,6 +412,20 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
+  }
+
+  /**
+   * @description
+   * Valida los campos principales del formulario de certificado.
+   * Verifica que los campos `entidadFederativa` y `bloque` tengan valores válidos
+   * (no vacíos ni nulos). Si ambos son válidos, retorna `true`.
+   * En caso contrario, marca todos los controles del formulario como "touched"
+   * y retorna `false`.
+   *
+   * @returns {boolean} `true` si el formulario es válido; `false` en caso contrario.
+   */
+  validarFormulario(): void { 
+    this.certificadoDeOrigenComponent?.validarFormularios();
   }
 
   /**

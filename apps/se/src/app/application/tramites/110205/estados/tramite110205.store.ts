@@ -780,6 +780,10 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     }));
   }
 
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
     setAgregarProductoresExportador(productor: HistoricoColumnas): void {
       this.update((state) => ({
         ...state,
@@ -790,6 +794,10 @@ export class Tramite110205Store extends Store<Tramite110205State> {
       }));
     }
 
+    /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
     setMercanciaProductores(mercancia: MercanciaTabla[]): void {
       this.update((state) => ({
         ...state,

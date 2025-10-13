@@ -12,6 +12,7 @@ import {
 import {
   CategoriaMensaje,
   DatosPasos,
+  JSONResponse,
   ListaPasosWizard,
   Notificacion,
   TipoNotificacionEnum,
@@ -181,7 +182,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
         return; // Detener ejecución si los formularios son inválidos
       }
-      this.isPeligro = true;
+      this.isPeligro = false;
     }
 
     // Verifica si el valor de la acción está en el rango adecuado
@@ -266,8 +267,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
      * @param data - Los datos que se desean guardar y enviar al servidor.
      * @returns void
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    guardar(data: Tramite110214State): Promise<any> {
+    guardar(data: Tramite110214State): Promise<JSONResponse> {
       const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.agregarProductoresExportador);
       const PRODUCTORES_POR_EXPORTADOR = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.productoresExportador);
       const MERCANCIAS_PRODUCDOR = this.validarInicialmenteCertificadoService.buildMercanciasProductor(data.mercanciaProductores);
@@ -334,7 +334,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
                 this.store.setIdSolicitud(0);
               }
             }
-            resolve(response);
+            resolve({
+              id: response['id'] ?? 0,
+              descripcion: response['descripcion'] ?? '',
+              codigo: response['codigo'] ?? '',
+              data: response['data'] ?? response['datos'] ?? null,
+              ...response
+            } as JSONResponse);
           },
           error: (error) => {
             reject(error);
@@ -357,7 +363,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return this.validarInicialmenteCertificadoService.getAllState().pipe(
         take(1),
         switchMap(data => this.guardar(data)),
-        map(response => {
+        map((response) => {
           const OK = response.codigo === '00';
           if (OK) {
             this.toastrService.success(response.mensaje);
