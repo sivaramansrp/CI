@@ -51,7 +51,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   valor!: string;
 
   /** Indica si se debe mostrar la segunda tabla */
-  @Input() isSegundaTabla : boolean = true;
+  @Input() isSegundaTabla? : boolean = true;
 
   /**
    * Notificador para destruir las suscripciones.

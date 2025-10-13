@@ -75,16 +75,16 @@
                         @switch (indiceDictamen) {
                         @case (1) {
                         <app-capturar-requerimiento 
-                            [isTipoRequerimiento]="false" 
-                            [isAreaSolicitante]="false"
-                            [isJustificacionRequerimiento]="true"
+                            [isTipoRequerimiento]="requerimientoConfig.isTipoRequerimiento" 
+                            [isAreaSolicitante]="requerimientoConfig.isAreaSolicitante "
+                            [isJustificacionRequerimiento]="requerimientoConfig.isJustificacionRequerimiento"
                             [iniciarResponse]="this.dataIniciarRequerimiento"
                             (formChanged)="onFormRequerimientoChanged($event)">
                         </app-capturar-requerimiento>
                         }
                         @case (2) {
                         <app-solicitar-documentos 
-                        [isSegundaTabla]="false">
+                        [isSegundaTabla]="requerimientoConfig.isSegundaTabla">
                         </app-solicitar-documentos>
                         }
                         }

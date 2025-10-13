@@ -59,6 +59,7 @@ import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firm
 import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
 
 import { ModeloConfig, ServiceConfig } from '../shared/models/service-config.model';
+import { RequerimientoConfig } from '../shared/models/requerimiento-config.model';
 import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
@@ -334,6 +335,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   config!: TramiteConfig;
 
+  /** * @property {RequerimientoConfig} requerimientoConfig
+   * @description Configuración de requerimientos específica del trámite, obtenida del servicio TramiteConfigService.
+   */
+  requerimientoConfig!: RequerimientoConfig;
+
   /**
    * @property {ServiceConfig} serviceConfig
    * @description Configuración de servicios específicos del trámite, obtenida del servicio TramiteConfigService.
@@ -394,6 +400,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.config = this.tramiteConfigService.getConfig(this.tramite);
     this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
+    this.requerimientoConfig = this.tramiteConfigService.getRequerimientoConfig(this.tramite);
     this.vistasModificacion110101 = this.tramiteConfigService.getModeloConfig(this.tramite);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
