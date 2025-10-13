@@ -314,6 +314,12 @@ export class CertificadoOrigenComponent
         }
       });
 
+       this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.pais = estado.paisBloques;
+      });
+
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
      */
@@ -349,6 +355,7 @@ export class CertificadoOrigenComponent
         .subscribe({
           next: (data) => {
             this.pais = data as Catalogo[];
+            this.store.setBloque(this.pais);
           },
           error: (error: HttpErrorResponse) => {
             console.error('Error al obtener los datos:', error);

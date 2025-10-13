@@ -2,6 +2,7 @@
     [operador]="operador"
     [tratadoAcuerdo]="(estados$ | async) || []"
     [paisBloqu]="pais"
+    [paises]="pais"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="buscarrMercancia()"
@@ -21,6 +22,7 @@
     [idProcedimiento]="idProcedimiento"
     (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
     [domicilioTercer]="true" 
+    [domTercerOperadorRadio]="true"
     [domTercerOperador]="false">
 </app-certificado-de-origen>
 

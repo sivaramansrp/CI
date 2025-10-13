@@ -49,7 +49,7 @@ export const FECHA_FACTURA_REFERENCIA = {
 /**
  * IDs de procedimientos para los campos de fracción arancelaria.
  */
-export const FRACCION_ARANCELARIA_IDS = [110205, 110212, 110222, 110207, 110208, 110214, 110217];
+export const FRACCION_ARANCELARIA_IDS = [110205, 110212, 110222, 110207, 110208, 110214, 110217, 110221];
 
 /**
  * IDs de procedimientos para la clasificación NALADI.
@@ -74,7 +74,7 @@ export const CLASIFICACION_NALADISA_2002_IDS = [110204];
 /**
  * IDs de procedimientos para el campo “Número de factura de referencia”.
  */
-export const N_FACTURA_REFERENCIA_IDS = [110204, 110222];
+export const N_FACTURA_REFERENCIA_IDS = [110204, 110221, 110222];
 
 /**
  * IDs de procedimientos para el campo “Número de factura”.
@@ -94,7 +94,7 @@ export const NOMBRE_EN_INGLES_IDS = [110205, 110212, 110207, 110208, 110214, 110
 /**
  * IDs de procedimientos para el campo “Otras instancias”.
  */
-export const OTRAS_INSTANCIAS_IDS = [110205, 110222, 110214, 110217];
+export const OTRAS_INSTANCIAS_IDS = [110205, 110222, 110214, 110217, 110221];
 
 /**
  * IDs de procedimientos para el campo “Criterio para conferir origen”.
@@ -104,19 +104,19 @@ export const CRITERIO_PARA_CONFERIR_ORIGEN_IDS = [110205, 110212, 110207, 110208
 /**
  * IDs de procedimientos para el campo “Criterio para trato preferencial”.
  */
-export const CRITERIO_PARA_TRATO_PREFERENCIAL_IDS = [110222, 110214];
+export const CRITERIO_PARA_TRATO_PREFERENCIAL_IDS = [110222, 110214, 110221];
 
 /**
  * Identificadores asociados al valor de la mercancía.
  * @type {number[]}
  */
-export const VALOR_MERCANCIA_IDS = [110204, 110205, 110212, 110222, 110207, 110208, 110214, 110217];
+export const VALOR_MERCANCIA_IDS = [110204, 110205, 110212, 110222, 110207, 110208, 110214, 110217, 110221];
 
 /**
  * Identificadores asociados al valor del contenido regional.
  * @type {number[]}
  */
-export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214];
+export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214,110221];
 
 /**
  * Identificadores asociados a la fecha de la factura.
@@ -128,31 +128,35 @@ export const FECHA_FACTURA_IDS = [110204, 110205, 110212, 110207, 110217];
  * Identificadores asociados a la fecha de la factura de referencia.
  * @type {number[]}
  */
-export const FECHA_FACTURA_REFERENCIA_IDS = [110222];
+export const FECHA_FACTURA_REFERENCIA_IDS = [110221,110222];
 
 /**
  * Identificadores asociados al tipo de factura.
  * @type {number[]}
  */
-export const TIPO_DE_FACTURA_IDS = [110204, 110205, 110212, 110207, 110208, 110217];
+export const TIPO_DE_FACTURA_IDS = [110204, 110205, 110212, 110207, 110208, 110217, 110221];
 
 /**
  * Identificadores asociados al tipo de factura de referencia.
  * @type {number[]}
  */
-export const TIPO_DE_FACTURA_REFERENCIA_IDS = [110222];
+export const TIPO_DE_FACTURA_REFERENCIA_IDS = [110221, 110222];
 
 /**
  * Identificadores asociados al número de serie.
  * @type {number[]}
  */
-export const NUMERO_DE_SERIE_IDS = [110222, 110214];
+export const NUMERO_DE_SERIE_IDS = [110222, 110214, 110221];
 
 /**
  * Identificadores asociados a la marca.
  * @type {number[]}
  */
 export const MARCA_IDS = [110207, 110208];
+
+export const UNIDAD_MEDIDA_COMERCIALIZACION_IDS = [110221];
+
+export const UMC_IDS = [110201, 110202, 110204, 110205, 110207, 110208, 110210, 110211,110214, 110216, 110217, 110219, 110222, 110223];
 
 /* =====================================================
  *                 CAMPOS REQUERIDOS

@@ -26,12 +26,15 @@ import {
   REQUIRED_VALOR_MERCANCIA,
   TIPO_DE_FACTURA_IDS,
   TIPO_DE_FACTURA_REFERENCIA_IDS,
+  UMC_IDS,
+  UNIDAD_MEDIDA_COMERCIALIZACION_IDS,
   VALOR_CONTENIDO_REGIONAL_IDS,
   VALOR_MERCANCIA_IDS,
 } from '../../constantes/mercancia.enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CatalogoServices,
   REGEX_PATRON_DECIMAL_15_4,
   REGEX_PATRON_DECIMAL_16_4,
 } from '@ng-mf/data-access-user';
@@ -162,6 +165,14 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Lista de unidades de medida y clasificación (UMC) disponibles.
    */
   umc: Catalogo[] = [];
+
+ optionsUMC: Catalogo[] = [];
+
+  /**
+   * @descripcion
+   * Lista de unidades de medida y clasificación (UMC) disponibles.
+   */
+  umcMedida: Catalogo[] = [];
 
   /**
    * @descripcion
@@ -334,6 +345,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   MARCA: number[] = MARCA_IDS;
 
+  UNIDAD_MEDIDA_COMERCIALIZACION: number[] = UNIDAD_MEDIDA_COMERCIALIZACION_IDS;
+
+  UMC: number[] = UMC_IDS;
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -347,7 +361,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private readonly fb: FormBuilder,
     private mercanciaService: MercanciaService,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    public catalogoServices: CatalogoServices
   ) {}
 
   /**
@@ -360,8 +375,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((s) => (this.seccionState = s));
 
-    this.umcOpcion();
-    this.facturasOpcion();
+    // this.umcOpcion();
+    this.getUmc();
+    this.getUnidadesMedidaComercial();
+    this.getTipoFactura();
+    // this.facturasOpcion();
     this.initActionFormBuild();
   }
 
@@ -537,39 +555,39 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * @descripcion
    * Obtiene la lista de unidades de medida y clasificación (UMC) disponibles.
    */
-  umcOpcion(): void {
-    this.mercanciaService
-      .obtenerMenuDesplegable('umc.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.umc = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.umc = [];
-        },
-      });
-  }
+  // umcOpcion(): void {
+  //   this.mercanciaService
+  //     .obtenerMenuDesplegable('umc.json')
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.umc = data as Catalogo[];
+  //       },
+  //       error: (error: HttpErrorResponse) => {
+  //         console.error('Error al obtener los datos:', error);
+  //         this.umc = [];
+  //       },
+  //     });
+  // }
 
   /**
    * @descripcion
    * Obtiene la lista de facturas disponibles.
    */
-  facturasOpcion(): void {
-    this.mercanciaService
-      .obtenerMenuDesplegable('factura.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.factura = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.factura = [];
-        },
-      });
-  }
+  // facturasOpcion(): void {
+  //   this.mercanciaService
+  //     .obtenerMenuDesplegable('factura.json')
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.factura = data as Catalogo[];
+  //       },
+  //       error: (error: HttpErrorResponse) => {
+  //         console.error('Error al obtener los datos:', error);
+  //         this.factura = [];
+  //       },
+  //     });
+  // }
 
   /**
    * @descripcion
@@ -729,4 +747,33 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       umc: evento.id,
     });
   }
+
+  /**
+   * Obtiene la lista de Unidades de Medida de la Cantidad (UMC) desde el servicio `catalogoServices`
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.  
+   *  Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'umc' en `optionsUMC` con las opciones obtenidas.
+   */
+  getUmc(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices.unidadMasaBrutaCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.optionsUMC = res.datos ?? [];
+    });
+  }
+
+
+  getUnidadesMedidaComercial(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices.unidadesMedidaComercialCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.umcMedida = res.datos ?? [];
+    });
+  }
+
+  getTipoFactura(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices.tipoFacturaCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.factura = res.datos ?? [];
+    });
+  }
+
 }
