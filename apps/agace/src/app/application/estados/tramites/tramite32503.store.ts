@@ -90,6 +90,7 @@ export function createInitialState(): Tramite32503State {
       valorProgramaImmex: '',
       valorAnioProgramaImmex: '',
       tipoAviso: '',
+      tieneIdTransaccionVucem: '',
       idTransaccion: '',
       motivoProrroga: '',
       fechaTranslado: '',
@@ -461,6 +462,18 @@ export class Tramite32503Store extends Store<Tramite32503State> {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, tipoAviso },
+    }));
+  }
+
+  /**
+   * Actualiza el tipo de aviso en el formulario de aviso.
+   * 
+   * @param {string} tipoAviso - El tipo de aviso.
+   */
+  public setAvisoFormularioTieneIdTransaccionVucem(tieneIdTransaccionVucem: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, tieneIdTransaccionVucem },
     }));
   }
 

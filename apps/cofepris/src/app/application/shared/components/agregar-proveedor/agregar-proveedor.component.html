@@ -268,6 +268,9 @@
      <div *ngIf="habilitarNacionalidad === true">
       <div class="row mt-5">
       <h4 class="mt-4">Domicilio</h4>
+      </div>
+      @if(agregarProveedorForm.get('nacionalidad')?.value === nacionalStr){
+      <div class="row">
       <div class="col-md-4">
         <label class="form-label">País<span [ngClass]="agregarProveedorForm.controls['pais'].errors?.['required'] && agregarProveedorForm.controls['pais'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
@@ -308,7 +311,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Municipio/alcaldía:</label>
+        <label class="form-label">Municipio/alcaldía*:</label>
         <input
           type="text"
           class="form-control"
@@ -317,7 +320,7 @@
         />
       </div>
       </div>
-      @if(agregarProveedorForm.get('nacionalidad')?.value === nacionalStr){
+      
       <div class="row">
         <div class="col-md-4">
         <label class="form-label">Localidad<span [ngClass]="agregarProveedorForm.controls['localidad'].errors?.['required'] && agregarProveedorForm.controls['localidad'].touched ? 'text-danger' : ''">*</span>:</label>
@@ -354,6 +357,83 @@
         />
       </div>
       </div>
+      }
+      @if(agregarProveedorForm.get('nacionalidad')?.value === 'Extranjero'){
+        <div class="row">
+        <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
+          formControlName="pais"
+          [label]="'País'"
+          [required]="true"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="
+            estaDeshabilitadoDesplegable ||
+            elementosDeshabilitados.includes('pais')
+          "
+          [markTouched]="agregarProveedorForm.get('pais')?.touched ?? false"
+        ></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Estado</label>
+          <span
+            *ngIf="elementosRequeridos.includes('estado') || chequeoValidacionAlGuardar"
+            [ngClass]="{'text-danger': agregarProveedorForm.get('estado')?.touched && agregarProveedorForm.get('estado')?.invalid}"
+            >*</span><span class="form-label">:</span>
+          <input
+            type="text"
+            class="form-control"
+            maxlength="255"
+            formControlName="estado"
+            [ngClass]="esInvalido('estado') ? 'required' : ''"
+          />
+          <div *ngIf="esInvalido('estado')" class="text-danger">
+            <small
+              *ngIf="agregarProveedorForm.controls['estado'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+            <small
+              *ngIf="agregarProveedorForm.controls['estado'].errors?.['pattern']"
+            >
+              Existen datos incorrectos que no cumplen con el formato esperado.
+            </small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Código postal o equivalente<span
+      *ngIf="idProcedimiento === 260911"
+      [ngClass]="agregarProveedorForm.controls['codigoPostal'].errors?.['required'] && agregarProveedorForm.controls['codigoPostal'].touched ? 'text-danger' : ''"
+      >*</span
+    >:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="codigoPostal"
+            maxlength="12"
+            [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
+          />
+          <div class="text-danger">
+            <small
+              *ngIf="agregarProveedorForm.controls['codigoPostal'].errors?.['pattern']"
+            >
+              Existen datos incorrectos que no cumplen con el formato esperado.
+            </small>
+          </div>
+          <div class="text-danger" *ngIf="idProcedimiento === 260911">
+            <small
+              *ngIf="agregarProveedorForm.controls['codigoPostal'].errors?.['required'] && agregarProveedorForm.controls['codigoPostal'].touched"
+            >
+              Este campo es obligatorio
+            </small>
+            <small
+              *ngIf="agregarProveedorForm.controls['codigoPostal'].errors?.['pattern']"
+            >
+              Existen datos incorrectos que no cumplen con el formato esperado.
+            </small>
+        </div>
+        </div>
+        </div>
       }
       <div class="row"><div class="col-md-8">
         <label class="form-label">Calle<span [ngClass]="agregarProveedorForm.controls['calle'].errors?.['required'] && agregarProveedorForm.controls['calle'].touched ? 'text-danger' : ''">*</span>:</label>

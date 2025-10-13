@@ -5,7 +5,7 @@
  * relacionados con el registro de la solicitud IMMEX.
  */
 
-import { ALERT, ERROR_FORMA_ALERT } from '../../constantes/modificacion.constants';
+import { ALERT, ERROR_CAMPOS_FALTANTES, ERROR_FORMA_ALERT } from '../../constantes/modificacion.constants';
 import { AVISO, RegistroSolicitudService, esValidObject, getValidDatos} from '@ng-mf/data-access-user';
 import { AmpliacionServiciosState, Tramite80206Store } from '../../estados/tramite80206.store';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -197,14 +197,16 @@ tramiteId: string = '80206';
     this.esFormaValido = false;
     
     // Validar formularios antes de continuar desde el paso uno
-    if (this.indice === 1 && e.accion === 'cont') {
-      const ES_VALIDO = this.validarTodosFormulariosPasoUno();
-      
-      if (!ES_VALIDO) {
-        this.esFormaValido = true;
-        return; // Detener ejecución si los formularios son inválidos
+   if (this.indice === 1 && e.accion === 'cont') {
+        const ES_VALIDO = this.validarTodosFormulariosPasoUno();
+        
+        if (!ES_VALIDO) {
+          this.esFormaValido = true;
+          // Determinar qué mensaje mostrar basado en los datos
+          this.determinarMensajeError();
+          return; // Detener ejecución si los formularios son inválidos
+        }
       }
-    }
     
     
     const PAYLOAD = buildGuardarPayload(this.solicitudState);
@@ -260,6 +262,24 @@ tramiteId: string = '80206';
     console.error('El componente wizard no está disponible para navegar al paso anterior');
   }
  
+  }
+  /**
+   * Determina qué mensaje de error mostrar basado en el estado de los datos
+   */
+  private determinarMensajeError(): void {
+    const TIENEDATA_IMMEX = this.solicitudState.datosImmex && this.solicitudState.datosImmex.length > 0;
+    const TIENEDATA_IMPORTACION = this.solicitudState.datosImportacion && this.solicitudState.datosImportacion.length > 0;
+    
+    if (!TIENEDATA_IMMEX && !TIENEDATA_IMPORTACION) {
+      // No hay datos en ninguna tabla - mostrar ERROR_FORMA_ALERT
+      this.formErrorAlert = ERROR_FORMA_ALERT;
+    } else if (TIENEDATA_IMMEX && TIENEDATA_IMPORTACION) {
+      // Hay datos en ambas tablas - mostrar ERROR_CAMPOS_FALTANTES
+      this.formErrorAlert = ERROR_CAMPOS_FALTANTES;
+    } else {
+      // Casos mixtos (una tabla tiene datos, la otra no) - mostrar ERROR_FORMA_ALERT
+      this.formErrorAlert = ERROR_FORMA_ALERT;
+    }
   }
 /**
  * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.

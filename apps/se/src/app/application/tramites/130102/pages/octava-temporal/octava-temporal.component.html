@@ -20,11 +20,11 @@
            <app-datos (alertaEvento)="mostrarAlerta = $event"></app-datos>
             }
             @case (2) {
-                <app-paso-tres></app-paso-tres>
+                <app-paso-tres [procedure]="130102" [procedureUrl]="'octava-temporal/solicitante'"></app-paso-tres>
                  }
             }
         </div>
-        <btn-continuar [dePadre]="consultaState.readonly ? false : true" [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+        <btn-continuar [dePadre]="consultaState.readonly ? false : true" [datos]="datosPasos" (continuarEvento)="getValorIndice($event);"></btn-continuar>
          @if (mostrarAlerta) {
  <ng-alert [CONTENIDO]="avisoContrnido"></ng-alert>
 }

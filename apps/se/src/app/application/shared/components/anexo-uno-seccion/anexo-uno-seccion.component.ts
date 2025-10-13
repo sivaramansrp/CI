@@ -238,6 +238,11 @@ public mostrarProveedorClientesPopup: boolean = false;
    */
   public complementarState!: ComplementarState;
 
+  /**
+ * Lista de datos de clientes que se muestran en la tabla dinámica del Anexo Uno.
+ */
+clienteTablaLista: ProveedorCliente[] = [];
+
 /**
  * 
  * @constructor
@@ -973,6 +978,7 @@ agregarProyectoImmex(): void {
 
     // Agregar los datos transformados a la lista de proyectos IMMEX
     this.proyectoImmexTablaLista.push(TRANSFORMED_DATA);
+    this.proyectoImmexTablaLista = [...this.proyectoImmexTablaLista];
     this.setProyectoImmex();
 
     // Reiniciar el formulario
@@ -988,17 +994,43 @@ agregarProyectoImmex(): void {
  * @description Método que agrega un nuevo proveedor o cliente. Valida el formulario y, si es válido, agrega los datos a la lista de proveedores y clientes.
  */
 agregarProveedorCliente(): void {
-  if (this.formularioProveedorCliente.valid) {
+    if (this.formularioProveedorCliente.valid) {
+    const FORM_DATA = this.formularioProveedorCliente.value;
+
+    const TRANSFORMED_DATA = {
+      ...FORM_DATA,
+      rfcTaxClient: this.proveedorClienteModalContext === 'cliente' ? FORM_DATA.rfc : '',
+      rfcTaxIdProveedor: this.proveedorClienteModalContext === 'proveedor' ? FORM_DATA.rfc : '',
+      razonsocialCliente: this.proveedorClienteModalContext === 'cliente' ? FORM_DATA.razonSocialCliente : '',
+      razonSocialProveedor: this.proveedorClienteModalContext === 'proveedor' ? FORM_DATA.razonSocialCliente : '',
+      fraccion: this.proveedorClienteModalContext === 'cliente' 
+        ? this.selectedFraccionRowUno?.fraccionArancelaria || ''
+        : this.selectedFraccionRowDos?.anexoFraccionExportacion || '',
+      paisDestino: this.proveedorClienteModalContext === 'cliente' ? FORM_DATA.paisDestino : '',
+      paisDeOrigen: this.proveedorClienteModalContext === 'proveedor' ? FORM_DATA.paisDestino : '',
+      descripcionComercial: FORM_DATA.descripcionComercial
+    };
+
+    if (this.proveedorClienteModalContext === 'cliente') {
+      this.clienteTablaLista.push(TRANSFORMED_DATA);
+      this.clienteTablaLista = [...this.clienteTablaLista];
+    } else {
+      this.proveedorTablaLista.push(TRANSFORMED_DATA);
+      this.proveedorTablaLista = [...this.proveedorTablaLista];
+    }
+
     if (this.proveedorClienteDatos) {
-      this.proveedorClienteDatos.data = this.proveedorTablaLista;
+      this.proveedorClienteDatos.data = this.proveedorClienteModalContext === 'cliente' 
+        ? this.clienteTablaLista 
+        : this.proveedorTablaLista;
+      this.proveedorClienteDatos.id = this.proveedorClienteModalContext;
+      
       this.obtenerProveedorCliente.emit({
         data: this.proveedorClienteDatos.data ?? [],
         id: this.proveedorClienteDatos.id
       });
     }
-    const FORM_DATA = this.formularioProveedorCliente.value;
 
-    this.proveedorTablaLista.push(FORM_DATA);
     this.formularioProveedorCliente.reset();
   }
 }

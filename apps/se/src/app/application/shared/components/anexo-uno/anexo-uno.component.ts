@@ -140,24 +140,35 @@ export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
     | AnexoDosEncabezado
     | AnexoUnoEncabezado;
 
-
-  @Input()
   /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
+  @Input()
   set formularioDatosSubcontratista(valor: FormGroup) {
     this.anexoUnoFormGroup.setValue(valor.value);
   }
 
+  /** Obtiene el formulario de datos del subcontratista.
+   * @returns Formulario reactivo con los datos del subcontratista.
+   */
+  get formularioDatosSubcontratista(): FormGroup {
+    return this.anexoUnoFormGroup;
+  }
 
-  @Input()
   /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
-  set formularioDatosSubcontratistaDos(valor: FormGroup) {
+  @Input() set formularioDatosSubcontratistaDos(valor: FormGroup) {
     this.anexoDosFormGroup.setValue(valor.value);
+  }
+
+  /** Obtiene el formulario de datos del subcontratista dos.
+   * @returns Formulario reactivo con los datos del subcontratista dos.
+   */
+  get formularioDatosSubcontratistaDos(): FormGroup {
+    return this.anexoDosFormGroup;
   }
 
   /**
@@ -381,7 +392,7 @@ export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
     const OBJECTO_IDX: AnexoUnoEncabezado = {
       encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
-        this.anexoUnoFormGroup.get('descripcion')?.value,
+        (this.anexoUnoFormGroup.get('descripcion')?.value ?? '').toUpperCase(),
       estatus: false,
       encabezadoFraccionArancelaria: this.anexoUnoFormGroup.get('fraccionArancelaria')
         ?.value,
@@ -415,7 +426,7 @@ export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
     const OBJECTO_IDX: AnexoDosEncabezado = {
       encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
-        this.anexoDosFormGroup.get('descripcion')?.value,
+        (this.anexoDosFormGroup.get('descripcion')?.value ?? '').toUpperCase(),
       estatus: false,
       encabezadoFraccionExportacion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,

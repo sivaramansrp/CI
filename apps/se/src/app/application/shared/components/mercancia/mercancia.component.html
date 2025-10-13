@@ -99,9 +99,7 @@
             formControlName="criterioParaTratoPreferencial"
           />
         </div>
-        } 
-
-        @if(NORMA_ORIGEN.includes(idProcedimiento)) {
+        } @if(NORMA_ORIGEN.includes(idProcedimiento)) {
         <div class="row mt-3 mb-3">
           <div class="col-md-8">
             <label for="normaOrigen">Norma origen:</label>
@@ -121,8 +119,7 @@
             formControlName="nombreIngles"
           />
         </div>
-        } 
-         @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) {
+        } @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) {
         <div class="col-md-6 mt-2">
           <label for="valorDeContenidoRegional"
             >Valor de contenido regional:</label
@@ -133,8 +130,7 @@
             formControlName="valorDeContenidoRegional"
           />
         </div>
-        }
-        @if(OTRAS_INSTANCIAS.includes(idProcedimiento)){
+        } @if(OTRAS_INSTANCIAS.includes(idProcedimiento)){
         <div class="col-md-6">
           <label for="otrasInstancias">Otras instancias:</label>
           <input
@@ -154,8 +150,14 @@
             formControlName="criterioParaConferirOrigen"
           />
         </div>
-        } 
+        }
         <div class="row mt-3 mb-3">
+          @if(MARCA.includes(idProcedimiento)) {
+          <div class="col-md-6 mt-2">
+            <label for="marca">Marca:</label>
+            <input type="text" class="form-control" formControlName="marca" />
+          </div>
+          }
           <div class="col-md-6">
             <label for="cantidad"
               >Cantidad<span
@@ -191,8 +193,8 @@
               [catalogo]="umc || []"
               [label]="'UMC'"
               [required]="true"
-              name="estado"
-              formControlName="umc"
+              name="umc"
+              (selectionChange)="selectionUMC($event)"
               [markTouched]="mercanciaForm.get('umc')?.touched ?? false"
             ></app-catalogo-select>
           </div>
@@ -282,8 +284,7 @@
             </div>
             }
           </div>
-          }
-           @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <input-fecha
               [datos]="fechaFacturaReferencia"
@@ -300,9 +301,7 @@
             </div>
             }
           </div>
-          }
-
-          @if(N_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          } @if(N_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <label for="numeroFactura">N° factura / Referencia:</label>
             <input
@@ -350,38 +349,31 @@
             </div>
             }
           </div>
-          }
-          @if(TIPO_DE_FACTURA.includes(idProcedimiento)) {
+          } @if(TIPO_DE_FACTURA.includes(idProcedimiento)) {
           <div class="col-md-4 mr-2">
             <app-catalogo-select
               [catalogo]="factura || []"
               [label]="'Tipo de factura'"
               [required]="true"
               name="tipoFactura"
-              formControlName="tipoFactura"
+              (selectionChange)="selectionTipoFactura($event)"
               [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"
             ></app-catalogo-select>
           </div>
-        }
-
-        @if(TIPO_DE_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          } @if(TIPO_DE_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4 mr-2">
             <app-catalogo-select
               [catalogo]="factura || []"
               [label]="'Tipo de factura / Referencia'"
               [required]="true"
               name="tipoFacturaReferencia"
-              formControlName="tipoFactura"
+              (selectionChange)="selectionTipoFactura($event)"
               [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"
             ></app-catalogo-select>
           </div>
-        }
-
-        @if(NUMERO_DE_SERIE.includes(idProcedimiento)) {
+          } @if(NUMERO_DE_SERIE.includes(idProcedimiento)) {
           <div class="col-md-4">
-            <label for="numeroDeSerie"
-              >Número de serie:</label
-            >
+            <label for="numeroDeSerie">Número de serie:</label>
             <input
               type="text"
               class="form-control"
@@ -389,7 +381,6 @@
             />
           </div>
           }
-        
         </div>
       </form>
     </div>

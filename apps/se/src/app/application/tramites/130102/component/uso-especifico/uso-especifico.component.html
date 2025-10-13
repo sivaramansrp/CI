@@ -5,16 +5,15 @@
     <form [formGroup]="usoEspicificoForm">
         <div class="row">
             <div class="col-8">
-                <app-catalogo-select 
+                <app-catalogo-select-clave
                [label]="'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)'" 
-                (change)="obtenerRequisitosFraccionArancelariaEsquema(); setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
+                (change)="setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
-               [required]="true"
-                 [isDisabled]="consultaState.readonly ? true : false"
+                [required]="true"
                  [tooltipQuestionCircle]="true"
                  [tooltipQuestionCircleText]="'Especifica la fracción arancelaria del producto en el que se utilizará la mercancía a importar'"
-               ></app-catalogo-select>
+               ></app-catalogo-select-clave>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
@@ -38,13 +37,13 @@
         ></span>
                 </label>
                 <textarea id="descripcionFraccionProsec" class="form-control height" rows="3"
-                    formControlName="descripción"></textarea>
-                    @if (usoEspicificoForm.controls['descripción'].invalid && usoEspicificoForm.controls['descripción'].touched) {
+                    formControlName="descripcion"></textarea>
+                    @if (usoEspicificoForm.controls['descripcion'].invalid && usoEspicificoForm.controls['descripcion'].touched) {
                         <div class="text-danger">
-                          @if (usoEspicificoForm.controls['descripción'].errors?.['required']) {
+                          @if (usoEspicificoForm.controls['descripcion'].errors?.['required']) {
                             <small>Descripción es obligatoria.</small>
                           }
-                          @if (usoEspicificoForm.controls['descripción'].errors?.['leadingSpaces']) {
+                          @if (usoEspicificoForm.controls['descripcion'].errors?.['leadingSpaces']) {
                             <small>No se permiten espacios al inicio del campo.</small>
                           }
                         </div>
@@ -55,7 +54,7 @@
          
         
             <div class="container text-end mt-5">
-                <button class="btn btn-primary" (click)="agregar()" [disabled]="consultaState.readonly">Agregar</button>
+                <button class="btn btn-primary" (click)="agregar()" >Agregar</button>
             </div>
         
     </form>
@@ -70,14 +69,12 @@
           [configuracionTabla]="configuracionTabla"
           [datos]="datosSocios"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-          [disableSeleccionTablaCheckBox]="consultaState.readonly"
-          [desactivarEmitirEvento]="!consultaState.readonly"
           (listaDeFilaSeleccionada)="alCambiarSeleccion($event)"
         
         ></app-tabla-dinamica>
     </div>
     <div class="container text-end mt-5">
-        <button class="btn btn-danger" [disabled]="consultaState.readonly"  (click)="eliminarSeleccionadas()">Eliminar seleccionado</button>
+        <button class="btn btn-danger"  (click)="eliminarSeleccionadas()">Eliminar seleccionado</button>
     </div>
 </div>
  @if (alertaNotificacion) {

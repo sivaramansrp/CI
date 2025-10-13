@@ -48,15 +48,15 @@
         <h6>Complemento de planta</h6>
         <app-tabla-dinamica [configuracionTabla]="complementoDePlantaEncabezado"
           [tipoSeleccionTabla]="complecomplementoDePlantaTableSelection"
-          [datos]="complementoDePlantaDatos"></app-tabla-dinamica>
+          [datos]="complementoDePlantaDatos"  (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
         <ul class="pagination d-flex justify-content-center">
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
       </div>
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2" (click)="limpiar()">Eliminar</button>
-          <button class="btn btn-primary" (click)="agregarComplemento()">Editar</button>
+          <button class="btn btn-default me-2" (click)="eliminarComplemento()">Eliminar</button>
+          <button class="btn btn-primary" (click)="editarComplemento()">Editar</button>
         </div>
       </div>
       <form class="container" [formGroup]="complimentosPlantaForma">
@@ -82,11 +82,11 @@
       <div class="row mt-5">
         <h6>Complemento de planta</h6>
         <app-tabla-dinamica [configuracionTabla]="complementoPlanta"
-          [tipoSeleccionTabla]="complementoPlantaTableSelection" [datos]="complementoPlantaDatos"></app-tabla-dinamica>
+          [tipoSeleccionTabla]="complementoPlantaTableSelection" [datos]="complementoPlantaDatos" (listaDeFilaSeleccionada)="onSeleccionPlantaChange($event)"></app-tabla-dinamica>
       </div>
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2" (click)="eliminarComplementoPlanta()">Eliminar</button>
         </div>
       </div>
 
@@ -105,6 +105,12 @@
 @if (exitosamenteNotificacion) {
 <section class="exito-modal">
   <lib-notificaciones [notificacionInput]="exitosamenteNotificacion">
+  </lib-notificaciones>
+</section>
+}
+@if (nuevaNotificacionEditor) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionEditor">
   </lib-notificaciones>
 </section>
 }

@@ -12,12 +12,13 @@
  */
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/peru-certificado.model';
 import { ERROR_FORMA_ALERT } from '../../../120601/constantes/definiciones.enum';
 import { PASOS } from '../../constantes/peru-certificado.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject } from 'rxjs';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
+import { Tramite110221State } from '../../estados/tramite110221.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -94,11 +95,29 @@ export class CertificadoComponent {
   public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
+   * Estado actual de la solicitud, obtenido del store.
+   * @type {Tramite110221State}
+   */
+  solicitudState!: Tramite110221State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
    * Inyecta los servicios necesarios y suscribe a la validación de la forma para actualizar el estado de la sección.
    * @param seccionStore Servicio para manejar el estado de la sección.
    * @param tramiteQuery Query para consultar el estado del trámite.
    */
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110221Query) {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
   }
 
   /**
