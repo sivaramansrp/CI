@@ -623,6 +623,18 @@ setEstadoCompleto(values:CamState): void {
   }));
 }
 
+  /**
+   * @method setMercanciaTabla
+   * @description Actualiza la lista de mercancías en la tabla del estado del trámite.
+   *
+   * Este método permite agregar una nueva mercancía o actualizar una existente en la tabla de mercancías.
+   * Si la mercancía tiene un `id` de 0, se considera una nueva entrada y se le asigna un nuevo `id`.
+   * Si la mercancía ya tiene un `id` mayor que 0, se actualiza la entrada existente con los nuevos datos.
+   *
+   * @param {Mercancia[]} mercanciaTabla - Lista de mercancías a actualizar en el estado.
+   *
+   * @returns {void}
+   */
   public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((STATE) => {
       const LISTAEXISTENTE = STATE.mercanciaTabla || [];

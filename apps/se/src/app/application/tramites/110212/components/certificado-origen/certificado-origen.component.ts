@@ -306,7 +306,6 @@ export class CertificadoOrigenComponent
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: Mercancia[]) => {
-          console.log('hi from conseguir');
           if (response && Array.isArray(response)) {
             this.disponiblesDatos = response as Mercancia[];
             this.store.setDisponsiblesDatos(this.disponiblesDatos);
