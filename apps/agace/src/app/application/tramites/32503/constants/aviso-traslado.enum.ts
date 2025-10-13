@@ -53,6 +53,14 @@ export const FECHA_INGRESO = {
 };
 
 /**
+ * Opciones para el radio relacionado con la disminución parcial.
+ */
+export const RADIO_PARCIAL = [
+  { label: 'Sí', value: 'si' },
+  { label: 'No', value: 'no' },
+];
+
+/**
  * Tipos de aviso disponibles.
  * 
  * Define los valores y etiquetas para los tipos de aviso.

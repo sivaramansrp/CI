@@ -64,6 +64,7 @@ export interface DatosDeLaSolicitud {
  * Representa una interfaz para los datos sensibles relacionados con un animal.
  */
 export interface Sensible {
+  noPartida: string;
   /**
    * Número de lote al que pertenece el animal.
    */

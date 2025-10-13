@@ -14,6 +14,7 @@ import {
 
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectClaveComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select-clave/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import SolicitudMercanciaValues from 'libs/shared/theme/assets/json/130102/solicitud_mercancia.json';
 
@@ -22,11 +23,12 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import {
   Solicitud130102State,
   Tramite130102Store,
-} from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+} from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
@@ -37,6 +39,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   imports: [
     TituloComponent,
     CatalogoSelectComponent,
+    CatalogoSelectClaveComponent,
     CommonModule,
     ReactiveFormsModule,
   ],
@@ -57,7 +60,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
    * Solicitudes de mercancía disponibles.
    * @type {Catalogo[]} - Las solicitudes de mercancía disponibles.
    */
-  solicitudMercanciaLista: Catalogo[] = SolicitudMercanciaValues;
+  solicitudMercanciaLista: Catalogo[] = [];
 
   /**
    * Solicitud de mercancía seleccionada.
@@ -90,7 +93,8 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -101,15 +105,46 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
         })
       )
       .subscribe();
+
+      
+    this.tramite130102Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map(state => ({
+          fraccionArancelaria: state.fraccionArancelaria,
+          regimen: state.regimen,
+          clasificacionRegimen: state.clasificacionRegimen
+        }))
+      )
+      .subscribe(({ fraccionArancelaria, regimen, clasificacionRegimen }) => {
+        if (fraccionArancelaria && regimen && clasificacionRegimen) {
+          this.obtenerCatEsquemaRegla();
+        }
+      });
   }
 
   /**
    * Maneja la selección de una solicitud de mercancía.
    * @param e - La solicitud de mercancía seleccionada.
    */
-  fetchSolicitudMercancia(e: Catalogo): void {
-    this.seleccionadaSolicitudMercancia = e;
+  fetchSolicitudMercancia(e: any): void {
+
+  
   }
+
+
+  obtenerCatEsquemaRegla(): void {
+    this.catOctavaTemporalService.getEsquemaReglaOctava(
+      this.solicitudState.fraccionArancelaria || '', 
+      this.solicitudState.regimen || '', 
+      this.solicitudState.clasificacionRegimen || '').subscribe((data) => {
+      this.solicitudMercanciaLista = data.datos.map((item, index) => ({
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    }); 
+  } 
 
   /**
    * Asigna un valor del formulario al store.
@@ -138,6 +173,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
       'frmCriterioDictamen',
       this.frmCriterioDictamen
     );
+    
   }
 /** 
     * Inicializa el formulario de criterio de dictamen.
@@ -145,7 +181,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
   
     inicializarFormulario(): void {
     this.subscription.add(
-      this.tramite130102Query.selectSolicitud$
+      this.tramite130102Query.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {

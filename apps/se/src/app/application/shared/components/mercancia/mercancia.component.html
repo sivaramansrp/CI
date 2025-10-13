@@ -88,7 +88,18 @@
           </div>
         </div>
 
-        @if(NORMA_ORIGEN.includes(idProcedimiento)) {
+        @if(CRITERIO_PARA_TRATO_PREFERENCIAL.includes(idProcedimiento)) {
+        <div class="col-md-6 mt-2">
+          <label for="criterioParaTratoPreferencial"
+            >Criterio para trato preferencial:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            formControlName="criterioParaTratoPreferencial"
+          />
+        </div>
+        } @if(NORMA_ORIGEN.includes(idProcedimiento)) {
         <div class="row mt-3 mb-3">
           <div class="col-md-8">
             <label for="normaOrigen">Norma origen:</label>
@@ -106,6 +117,17 @@
             type="text"
             class="form-control"
             formControlName="nombreIngles"
+          />
+        </div>
+        } @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) {
+        <div class="col-md-6 mt-2">
+          <label for="valorDeContenidoRegional"
+            >Valor de contenido regional:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            formControlName="valorDeContenidoRegional"
           />
         </div>
         } @if(OTRAS_INSTANCIAS.includes(idProcedimiento)){
@@ -129,10 +151,24 @@
           />
         </div>
         }
-
         <div class="row mt-3 mb-3">
+          @if(MARCA.includes(idProcedimiento)) {
+          <div class="col-md-6 mt-2">
+            <label for="marca">Marca:</label>
+            <input type="text" class="form-control" formControlName="marca" />
+          </div>
+          }
           <div class="col-md-6">
-            <label for="cantidad">Cantidad<span [ngClass]="{'text-center': mercanciaForm.controls['cantidad'].invalid && mercanciaForm.controls['cantidad'].touched}">*</span>:</label>
+            <label for="cantidad"
+              >Cantidad<span
+                [ngClass]="{
+                  'text-center':
+                    mercanciaForm.controls['cantidad'].invalid &&
+                    mercanciaForm.controls['cantidad'].touched
+                }"
+                >*</span
+              >:</label
+            >
             <input
               type="number"
               class="form-control"
@@ -157,17 +193,25 @@
               [catalogo]="umc || []"
               [label]="'UMC'"
               [required]="true"
-              name="estado"
-              formControlName="umc"
+              name="umc"
+              (selectionChange)="selectionUMC($event)"
               [markTouched]="mercanciaForm.get('umc')?.touched ?? false"
             ></app-catalogo-select>
           </div>
         </div>
 
         <div class="row mb-3">
+          @if(VALOR_MERCANCIA.includes(idProcedimiento)) {
           <div class="col-md-6">
             <label for="valorMercancia"
-              >Valor de la mercancía (dólares)<span [ngClass]="{'text-center': mercanciaForm.controls['valorMercancia'].invalid && mercanciaForm.controls['valorMercancia'].touched}">*</span>:</label
+              >Valor de la mercancía (dólares)<span
+                [ngClass]="{
+                  'text-center':
+                    mercanciaForm.controls['valorMercancia'].invalid &&
+                    mercanciaForm.controls['valorMercancia'].touched
+                }"
+                >*</span
+              >:</label
             >
             <input
               type="number"
@@ -188,9 +232,17 @@
             </div>
             }
           </div>
+          }
           <div class="col-md-6">
             <label for="complementoDescripcion"
-              >Complemento de la descripción<span [ngClass]="{'text-center': mercanciaForm.controls['complementoDescripcion'].invalid && mercanciaForm.controls['complementoDescripcion'].touched}">*</span>:</label
+              >Complemento de la descripción<span
+                [ngClass]="{
+                  'text-center':
+                    mercanciaForm.controls['complementoDescripcion'].invalid &&
+                    mercanciaForm.controls['complementoDescripcion'].touched
+                }"
+                >*</span
+              >:</label
             >
             <textarea
               class="mb-4 h-20 w-100 form-control"
@@ -213,7 +265,9 @@
             }
           </div>
         </div>
+
         <div class="row mb-3">
+          @if(FECHA_FACTURA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <input-fecha
               [datos]="fechaFactura"
@@ -230,8 +284,24 @@
             </div>
             }
           </div>
-
-          @if(N_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          <div class="col-md-4">
+            <input-fecha
+              [datos]="fechaFacturaReferencia"
+              [deshabilitarFuturas]="true"
+              [setFecha]="mercanciaForm.get('fechaFactura')?.value"
+              (valorCambiado)="cambioFechaFactura($event)"
+            ></input-fecha>
+            @if (esInvalido('fechaFactura')) {
+            <div class="d-grid">
+              @if (mercanciaForm.controls['fechaFactura'].errors?.['required'])
+              {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
+          </div>
+          } @if(N_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <label for="numeroFactura">N° factura / Referencia:</label>
             <input
@@ -279,17 +349,38 @@
             </div>
             }
           </div>
-          }
+          } @if(TIPO_DE_FACTURA.includes(idProcedimiento)) {
           <div class="col-md-4 mr-2">
             <app-catalogo-select
               [catalogo]="factura || []"
               [label]="'Tipo de factura'"
               [required]="true"
               name="tipoFactura"
-              formControlName="tipoFactura"
+              (selectionChange)="selectionTipoFactura($event)"
               [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"
             ></app-catalogo-select>
           </div>
+          } @if(TIPO_DE_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          <div class="col-md-4 mr-2">
+            <app-catalogo-select
+              [catalogo]="factura || []"
+              [label]="'Tipo de factura / Referencia'"
+              [required]="true"
+              name="tipoFacturaReferencia"
+              (selectionChange)="selectionTipoFactura($event)"
+              [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"
+            ></app-catalogo-select>
+          </div>
+          } @if(NUMERO_DE_SERIE.includes(idProcedimiento)) {
+          <div class="col-md-4">
+            <label for="numeroDeSerie">Número de serie:</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="numeroDeSerie"
+            />
+          </div>
+          }
         </div>
       </form>
     </div>

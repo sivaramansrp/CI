@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { CambioDeModalidadComponent } from '../../component/cambio-de-modalidad/cambio-de-modalidad.component';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
@@ -55,11 +55,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Referencia al componente SolicitanteComponent.
+   * Permite interactuar con el formulario del solicitante y acceder a sus métodos y propiedades.
+   * @type {SolicitanteComponent}
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
     /**
      * Referencia al componente CambioDeModalidadComponent.
      * Permite interactuar con el formulario de cambio de modalidad.
      */
-    @ViewChild(CambioDeModalidadComponent) cambioDeModalidadComponent!: CambioDeModalidadComponent;
+    @ViewChild('cambioDeModalidadRef') cambioDeModalidadComponent!: CambioDeModalidadComponent;
 
   /**
    * @constructor
@@ -157,6 +164,41 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([true]);
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * @method validarFormularios
+   * @description
+   * Este método valida tanto el formulario del solicitante como el formulario de cambio de modalidad.
+   * Para el formulario del solicitante, verifica que existe y que es válido. Si es inválido, marca todos los campos como tocados.
+   * Para el componente de cambio de modalidad, ejecuta su método de validación interno.
+   * Si cualquiera de los formularios es inválido o no existe, retorna false.
+   * 
+   * @returns {boolean} True si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.cambioDeModalidadComponent) {
+      if (!this.cambioDeModalidadComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**

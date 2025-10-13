@@ -1,6 +1,6 @@
+import { AVISO, ConsultaioQuery, ConsultaioState, DatosPasos, ERROR_FORMA_ALERT, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent, WizardService, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user';
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos, ERROR_FORMA_ALERT, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent, WizardService, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, switchMap, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
@@ -192,6 +192,11 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
  * @default false
  */
   public esFormaValido!: boolean;
+
+    /**
+     * Texto del aviso de privacidad simplificado.
+     */
+    TEXTOS = AVISO.Aviso;
 
   /**
    * Constructor del componente `PasoCapturarSolicitudComponent`.

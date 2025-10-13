@@ -61,6 +61,7 @@ export interface AccionBoton {
  * Incluye información como ID, tax ID, nombre, entidad federativa y dirección.
  */
 export interface DatosEmpresaExtranjera {
+  servicioExt?: string;
   id: string;
   taxIdEmpresaExt: string;
   nombreEmpresaExt: string;

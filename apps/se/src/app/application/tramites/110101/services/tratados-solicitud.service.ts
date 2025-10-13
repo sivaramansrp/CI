@@ -1,13 +1,17 @@
-import { API_POST_SOLICITUD_TRATADOS_CONFIGURACION, API_POST_TRATADO_CRITERIO } from "../server/api-router";
+import { API_GET_CRITERIO_TRATADO_RESUMEN, API_GET_INSUMOS_EMPAQUES, API_POST_SOLICITUD_TRATADOS_CONFIGURACION, API_POST_TRATADO_CRITERIO } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { CriterioConfiguracionRequest } from "../models/request/tratado-configuracion-request.model";
 import { CriterioConfiguracionResponse } from "../models/response/tratado-configuracion-response.model";
 import { CriterioTratadoResponse } from "../models/response/tratado-criterio-response.model";
+import { DatosInsumosEmpaques } from "../models/response/solicitud-insumos-empaques-response.model";
+import { DatosSolicitudCriterio } from "../models/response/tratado-criterio-resumen-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
-import { HttpClient } from "@angular/common/http";
+
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { TratadoAcuerdoCriterioRequest } from "../models/request/tratado-criterio-request.model";
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +19,6 @@ import { TratadoAcuerdoCriterioRequest } from "../models/request/tratado-criteri
 
 export class TratadosSolicitudService {
 
-  
   /**
      * URL base del servidor al que se realizarán las solicitudes relacionadas con el tramite 110101.
      * Esta variable almacena la dirección del host para los servicios tratados solicitud.
@@ -31,25 +34,57 @@ export class TratadosSolicitudService {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
-/**
- * Validar si es posible agregar criterios de tratado a una solicitud.
- * 
- * @param PAYLOAD - Datos de validación de criterios de tratado
- * @returns Observable con la respuesta de validación del servidor
- */
+  /**
+   * Validar si es posible agregar criterios de tratado a una solicitud.
+   * 
+   * @param PAYLOAD - Datos de validación de criterios de tratado
+   * @returns Observable con la respuesta de validación del servidor
+   */
   postTratadoCriterio(PAYLOAD: TratadoAcuerdoCriterioRequest): Observable<BaseResponse<CriterioTratadoResponse[]>> {
     const ENDPOINT = `${this.host}${API_POST_TRATADO_CRITERIO}`;
     return this.http.post<BaseResponse<CriterioTratadoResponse[]>>(ENDPOINT, PAYLOAD);
   }
 
-/**
- * Valida las configuraciones de acuerdo a los criterios y tratados seleccionados.
- * 
- * @param PAYLOAD - Datos de validación de configuracion de criterios de tratado
- * @returns Observable con la respuesta de validación del servidor
- */
+  /**
+   * Valida las configuraciones de acuerdo a los criterios y tratados seleccionados.
+   * 
+   * @param PAYLOAD - Datos de validación de configuracion de criterios de tratado
+   * @returns Observable con la respuesta de validación del servidor
+   */
   postTratadoConfiguracion(PAYLOAD: CriterioConfiguracionRequest[]): Observable<BaseResponse<CriterioConfiguracionResponse>> {
     const ENDPOINT = `${this.host}${API_POST_SOLICITUD_TRATADOS_CONFIGURACION}`;
     return this.http.post<BaseResponse<CriterioConfiguracionResponse>>(ENDPOINT, PAYLOAD);
+  }
+
+  /**
+   * Consulta los insumos y/o empaques dado el identificador de la solicitud, 
+   * identidificador de tratado acuerdo y la clave de país o identificador de bloque
+   * 
+   * @param idSolicitud - Identificador único de la solicitud sobre la que se realiza la consulta.
+   * @param idTratadoAcuerdo - Identificador del tratado o acuerdo comercial asociado a la solicitud.
+   * @param idBloque - Identificador del bloque económico.
+   * @param clavePais - Clave del país al que pertenece la solicitud o donde aplica el tratado.
+   * @return Observable con la respuesta de validación del servidor
+   */
+  getInsumosEmpaques(idSolicitud: string, idTratadoAcuerdo: string, idBloque: number, clavePais: string): Observable<BaseResponse<DatosInsumosEmpaques>> {
+    const ENDPOINT = `${this.host}` + API_GET_INSUMOS_EMPAQUES(idSolicitud);
+
+    const PARAMS = new HttpParams().set('idTratadoAcuerdo', String(idTratadoAcuerdo))
+      .set('idBloque', String(idBloque))
+      .set('clavePais', String(clavePais));
+    return this.http.get<BaseResponse<DatosInsumosEmpaques>>(ENDPOINT, { params: PARAMS });
+  } 
+
+  /**
+   * Obtiene el resumen de un criterio de tratado específico.
+   * Realiza la petición al endpoint correspondiente y devuelve la información
+   * relacionada con la solicitud.
+   * 
+   * @param idCriterioTratado 
+   * @returns Observable con la respuesta de validación del servidor
+   */
+  getCriterioTratadoResumen(idCriterioTratado: string): Observable<BaseResponse<DatosSolicitudCriterio>>{
+    const ENDPOINT = `${this.host}` + API_GET_CRITERIO_TRATADO_RESUMEN(idCriterioTratado);
+    return this.http.get<BaseResponse<DatosSolicitudCriterio>>(ENDPOINT);
   }
 }
