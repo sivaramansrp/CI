@@ -6,6 +6,8 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion, 
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -41,6 +43,7 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
     CatalogoSelectComponent,
     TituloComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent,
     UppercaseDirective
   ],
   templateUrl: './proveedor-cliente.component.html',
@@ -120,6 +123,14 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
    */
   public complementarState!: ComplementarState;
+
+   /**
+   * Contiene la notificación relacionada con la acción de agregar elementos.
+   * 
+   * Esta notificación puede mostrar mensajes de éxito, advertencia o error
+   * según el resultado del proceso de agregado.
+   */
+  public agregarNotification!: Notificacion;
 
   /**
    * Fila seleccionada del tipo AnexoUnoEncabezado.
@@ -252,6 +263,20 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * @returns {void}
    */
   aggregar(): void {
+  this.agregarNotification = {
+    tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'La operación se realizó exitosamente.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
+
+
     const PROVEEDOR_CLIENTE: ProveedorClienteTabla = {
       fraccion: this.fraccionTablaDatos?.encabezadoFraccion,
       paisDestino: this.obtenerValorPaisDeDestino(

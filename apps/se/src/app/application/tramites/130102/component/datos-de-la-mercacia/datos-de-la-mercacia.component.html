@@ -48,15 +48,13 @@
       </div>
     </div>
     <div class="form-group">
-      <app-catalogo-select
-        [catalogo]="fraccionF"
-        [label]="'Fracción arancelaria'"
-        [required]="true"
-        (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria')"
-        [placeholder]="'Seleccione un documento'"
-        formControlName="fraccionArancelaria"
-        [isDisabled]="esFormularioSoloLectura ? true : false"
-      ></app-catalogo-select>
+      <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
+      <select class="form-control form-select" formControlName="fraccionArancelaria" (change)="setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria'); onChangeFraccion(formDelLa)">
+        <option [ngValue]="null">Selecciona una opción</option>
+        <option *ngFor="let frac of fraccionF" [value]="frac.clave">
+          {{ frac.descripcion }}
+        </option>
+      </select>
       @if (formDelLa.controls['fraccionArancelaria'].invalid && formDelLa.controls['fraccionArancelaria'].touched) {
         <div class="text-danger">
           @if (formDelLa.controls['fraccionArancelaria'].errors?.['required']) {
@@ -68,17 +66,13 @@
     </div>
     <div class="row">
       <div class="col-md-4 form-group">
-        <app-catalogo-select
-          [catalogo]="Unidad"
-          [label]="'Unidad de medida'"
-          [required]="true"
-          (change)="fetchUnidad(); setValoresStore(formDelLa,'unidadMedida', 'setUnidadMedida') "
-         [placeholder]="'Seleccione una unidad de medida'"
-         formControlName="unidadMedida"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
-            [tooltipQuestionCircle]="true"
-            [tooltipQuestionCircleText]="'Unidad de medida de la tarifa'"
-        ></app-catalogo-select>
+        <label for="unidadMedida" class="form-label">Unidad de medida*:</label>
+      <select class="form-control form-select" formControlName="unidadMedida" (change)="fetchUnidad(); setValoresStore(formDelLa,'unidadMedida', 'setUnidadMedida')">
+        <option [ngValue]="null">Selecciona una opción</option>
+        <option *ngFor="let uni of Unidad" [value]="uni.clave">
+          {{ uni.descripcion }}
+        </option>
+      </select>
         @if (formDelLa.controls['unidadMedida'].invalid && formDelLa.controls['unidadMedida'].touched) {
           <div class="text-danger">
             @if (formDelLa.controls['unidadMedida'].errors?.['required']) {
@@ -89,7 +83,7 @@
         
       </div>
       <div class="col-md-4 form-group">
-        <label class="form-label" for="nombre_imp"
+        <label class="form-label" for="cantidad"
           >Cantidad<span class="require">*</span>:</label
         >
         <input

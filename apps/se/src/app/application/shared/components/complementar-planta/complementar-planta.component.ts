@@ -12,7 +12,7 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-import { CATALOGO_TIPO, COMPLEMENTO_DE_PLANTA, COMPLEMENTO_PLANTA,ComplementarPlantaState,ComplementoDePlanta,PERMANCERA_OPTIONS, } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO, COMPLEMENTO_DE_PLANTA, COMPLEMENTO_PLANTA, ComplementarPlantaState, ComplementoDePlanta, PERMANCERA_OPTIONS, } from '../../constantes/complementar-planta.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
@@ -38,6 +38,14 @@ import { Location } from '@angular/common';
   styleUrl: './complementar-planta.component.scss',
 })
 export class ComplementarPlantaComponent implements OnInit {
+  /**
+   * Selección de filas para complementoPlantaDatos
+   */
+  seleccionadosPlanta: ComplementarPlantaState[] = [];
+  /**
+   * Selección de filas para complementoDePlantaDatos
+   */
+  public seleccionados: ComplementoDePlanta[] = [];
 
   /**
    * Formulario para gestionar la información complementaria de planta.
@@ -124,10 +132,10 @@ export class ComplementarPlantaComponent implements OnInit {
    * @property {Array} complementoDePlantaDatos
    */
   complementoDePlantaDatos: ComplementoDePlanta[] = [];
-/**
- * Datos para la tabla de complemento de planta.
- * @property {Array} complementoPlantaDatos
- */
+  /**
+   * Datos para la tabla de complemento de planta.
+   * @property {Array} complementoPlantaDatos
+   */
   complementoPlantaDatos: ComplementarPlantaState[] = [];
   /**
    * Evento que se emite al cerrar el popup.
@@ -136,14 +144,14 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
 
-/**  
- * Evento de salida que emite una lista de objetos ComplementoDePlanta al componente padre.
- */
+  /**  
+   * Evento de salida que emite una lista de objetos ComplementoDePlanta al componente padre.
+   */
   @Output() obtenerComplementarPlantaList: EventEmitter<ComplementoDePlanta[]> = new EventEmitter<ComplementoDePlanta[]>();
 
-/**  
- * Evento de salida que emite una lista de estados de firmantes hacia el componente padre.
- */
+  /**  
+   * Evento de salida que emite una lista de estados de firmantes hacia el componente padre.
+   */
   @Output() obtenerFirmantesList: EventEmitter<ComplementarPlantaState[]> = new EventEmitter<ComplementarPlantaState[]>();
 
   /**
@@ -151,6 +159,15 @@ export class ComplementarPlantaComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
   public exitosamenteNotificacion!: Notificacion;
+
+  /**
+    * Notificación para editor de complemento.
+   */
+  public nuevaNotificacionEditor!: Notificacion;
+  /**
+  * Índice de la capacidad instalada que se está editando actualmente.
+  */
+  editingIndex: number | null = null;
 
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
@@ -165,7 +182,7 @@ export class ComplementarPlantaComponent implements OnInit {
       fetchaDeFinDeVigencia: [this.solicitudState.fetchaDeFinDeVigencia, Validators.required],
     });
 
-    this.complimentosPlantaForma= this.fb.group({
+    this.complimentosPlantaForma = this.fb.group({
       rfcFirmante: [this.solicitudState.rfcFirmante, Validators.required],
       tipoFirmante: [this.solicitudState.tipoFirmante, Validators.required],
     });
@@ -243,28 +260,37 @@ export class ComplementarPlantaComponent implements OnInit {
         FECHA_DE_FIRMA_DOCUMENTO: '',
         FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO: '',
       };
-      this.complementoDePlantaDatos = [
-        ...this.complementoDePlantaDatos,
-        NUEVA_FILA
-      ];
+
+      if (this.editingIndex !== null && this.editingIndex > -1 && NUEVA_FILA !== null) {
+        this.complementoDePlantaDatos[this.editingIndex] = NUEVA_FILA;
+        this.complementoDePlantaDatos = [...this.complementoDePlantaDatos];
+        this.editingIndex = null;
+
+      } else if (NUEVA_FILA !== null) {
+        this.complementoDePlantaDatos = [
+          ...this.complementoDePlantaDatos,
+          NUEVA_FILA,
+        ];
+      }
+
+      this.seleccionados = [];
       this.complementarForm.reset();
     }
   }
-/**
- * Agrega un nuevo firmante a la lista de datos.
- */
-  agregarFirmante():void{
-    if(this.complimentosPlantaForma.valid)
-  {
-    const VALORES_FORMULARIO = this.complimentosPlantaForma.value;
-    const NUEVO_FIRMANTE: ComplementarPlantaState = {
-      rfcFirmante: VALORES_FORMULARIO.rfcFirmante || '',
-      nombreRazonFirmante: '',
-      tipoFirmante: VALORES_FORMULARIO.tipoFirmante || '',
-    };
-    this.complementoPlantaDatos=[...this.complementoPlantaDatos ,NUEVO_FIRMANTE]
-    this.complimentosPlantaForma.reset();
-  }
+  /**
+   * Agrega un nuevo firmante a la lista de datos.
+   */
+  agregarFirmante(): void {
+    if (this.complimentosPlantaForma.valid) {
+      const VALORES_FORMULARIO = this.complimentosPlantaForma.value;
+      const NUEVO_FIRMANTE: ComplementarPlantaState = {
+        rfcFirmante: VALORES_FORMULARIO.rfcFirmante || '',
+        nombreRazonFirmante: '',
+        tipoFirmante: VALORES_FORMULARIO.tipoFirmante || '',
+      };
+      this.complementoPlantaDatos = [...this.complementoPlantaDatos, NUEVO_FIRMANTE]
+      this.complimentosPlantaForma.reset();
+    }
   }
 
   /**
@@ -302,6 +328,88 @@ export class ComplementarPlantaComponent implements OnInit {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
     const VALOR = form.get(campo)?.value;
     (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  /**
+   * Maneja la selección de filas en la tabla de complemento de planta.
+   * @param event - Evento que contiene la lista de filas seleccionadas en la tabla.
+   */
+  onSeleccionChange(event: ComplementoDePlanta[]): void {
+    this.seleccionados = event;
+  }
+  /**
+   * Elimina los complementos seleccionados de la lista de datos.
+   * @param event - Evento que contiene la lista de filas seleccionadas en la tabla.
+   */
+  eliminarComplemento(): void {
+    if (this.seleccionados.length > 0) {
+      this.complementoDePlantaDatos = this.complementoDePlantaDatos.filter(
+        row => !this.seleccionados.some(sel =>
+          JSON.stringify(sel) === JSON.stringify(row)
+        )
+      );
+      this.seleccionados = [];
+    }
+  }
+
+  /**
+   * Edita el complemento seleccionado en la lista de datos.
+   * Permite modificar los campos del complemento seleccionado.
+   */
+  editarComplemento(): void {
+    if (this.seleccionados?.length === 1) {
+      const SELECTED = this.seleccionados[0];
+      this.complementarForm.patchValue({
+        permanecera: SELECTED.PERMANECERA_MERCANCIA_PROGRAMA,
+        tipo: SELECTED.TIPO_DOCUMENTO,
+        fechaDeFirma: SELECTED.FECHA_DE_FIRMA,
+        fetchaDeFinDeVigencia: SELECTED.FECHA_DE_FIN_DE_VIGENCIA,
+      });
+
+      setTimeout(() => {
+        const NATIVE_EL = document.querySelector(
+          'app-catalogo-select[formControlName="permanecera"] select'
+        ) as HTMLElement | null;
+        if (NATIVE_EL) {
+          NATIVE_EL.focus();
+        }
+      }, 0);
+      this.editingIndex = this.complementoDePlantaDatos.findIndex(row => row === SELECTED);
+    }
+    else if (!this.seleccionados || this.seleccionados.length === 0) {
+      this.nuevaNotificacionEditor = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe elegir un registro de complemento para actualizar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+  }
+
+  /**
+   * Maneja la selección de filas en la tabla de complemento de planta.
+   * @param event - Evento que contiene la lista de filas seleccionadas en la tabla.
+   */
+  onSeleccionPlantaChange(event: ComplementarPlantaState[]): void {
+    this.seleccionadosPlanta = event;
+  }
+
+  /**
+   * Elimina los complementos seleccionados de la lista de datos.
+   * @param event - Evento que contiene la lista de filas seleccionadas en la tabla.
+   */
+  eliminarComplementoPlanta(): void {
+    if (this.seleccionadosPlanta.length > 0) {
+      this.complementoPlantaDatos = this.complementoPlantaDatos.filter(
+        row => !this.seleccionadosPlanta.some(sel =>
+          sel.rfcFirmante === row.rfcFirmante && sel.tipoFirmante === row.tipoFirmante
+        )
+      );
+      this.seleccionadosPlanta = [];
+    }
   }
 
 }
