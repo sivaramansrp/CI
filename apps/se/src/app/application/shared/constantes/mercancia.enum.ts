@@ -122,7 +122,7 @@ export const VALOR_CONTENIDO_REGIONAL_IDS = [110222];
  * Identificadores asociados a la fecha de la factura.
  * @type {number[]}
  */
-export const FECHA_FACTURA_IDS = [110204, 110205, 110212, 110207, 110211];
+export const FECHA_FACTURA_IDS = [110204, 110205, 110212, 110207];
 
 /**
  * Identificadores asociados a la fecha de la factura de referencia.
