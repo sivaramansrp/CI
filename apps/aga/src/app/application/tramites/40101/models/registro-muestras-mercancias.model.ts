@@ -597,6 +597,13 @@ export interface UnidadTabla {
   numeroPlaca: string;
   paisEmisor: string;
   estado: string;
+
+  // 🆕 Added missing fields from your data
+  colorVehiculo: string;
+  descripcion: string;
+  estado2daPlaca: string;
+  numero2daPlaca: string;
+  paisEmisor2daPlaca: string;
 }
 
 /**

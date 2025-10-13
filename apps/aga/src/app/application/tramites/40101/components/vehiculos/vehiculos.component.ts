@@ -99,9 +99,11 @@ export class VehiculosComponent implements OnInit {
    */
   eliminarFilaUnidad(): void {
     if (this.filasUnidadSeleccionadas.length > 0) {
-      this.unidadesTablaConfig.datos = this.unidadesTablaConfig.datos.filter(
+      const CURRENTUNIDAS = this.tramiteQuery.getValue().unidadesArrastre || [];
+      const UPDATEDUNIDAS = CURRENTUNIDAS.filter(
         (item) => !this.filasUnidadSeleccionadas.includes(item)
       );
+      this.store.setUnidadesArrastre(UPDATEDUNIDAS);
       this.filasUnidadSeleccionadas = [];
       this.editarIndiceUnitario = null;
       this.unidadFormulario.reset();
@@ -494,6 +496,22 @@ export class VehiculosComponent implements OnInit {
    * - Configura la habilitación/deshabilitación dinámica de los campos 'descripcion' según el tipo seleccionado.
    */
   ngOnInit(): void {
+    this.tramiteQuery.select(state => state.parqueVehicular).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(data => {
+      if (data) {
+        this.vehiculosTablaConfig.datos = data;
+      }
+
+    });
+    this.tramiteQuery.select(state => state.unidadesArrastre).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(data => {
+      if (data) {
+        this.unidadesTablaConfig.datos = data;
+      }
+    });
+
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -506,7 +524,7 @@ export class VehiculosComponent implements OnInit {
     this.seleccionarPestana('parquevehicular');
     this.inicializarFormulario();
     this.cargarTipoDeVehiculo();
-    
+
     // Carga el catálogo de países emisores de placas.
     this.modificarTerrestreService.obtenerPaisEmisor()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -662,7 +680,7 @@ export class VehiculosComponent implements OnInit {
    */
   private configurarTablasConDescripciones(): void {
     // Actualizar solo las columnas que necesitan mostrar descripciones en lugar de IDs
-    
+
     // Para tabla de vehículos
     const TIPO_VEHICULO_COL = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'Tipo de vehículo');
     if (TIPO_VEHICULO_COL) {
@@ -728,30 +746,9 @@ export class VehiculosComponent implements OnInit {
    */
   eliminarFilaVehiculo(): void {
     if (this.vehiculoSeleccionado.length > 0) {
-      const NUMEROS_A_ELIMINAR = new Set(this.vehiculoSeleccionado.map(v => v.numero).filter(Boolean));
-      const IDS_A_ELIMINAR = new Set(this.vehiculoSeleccionado.map(v => v.idDeVehiculo).filter(Boolean));
-      const PLACAS_MARCAS_A_ELIMINAR = new Set(
-        this.vehiculoSeleccionado
-          .filter(v => v.numeroPlaca && v.marca)
-          .map(v => `${v.numeroPlaca}|${v.marca}`)
-      );
-
-      this.vehiculosTablaConfig.datos = this.vehiculosTablaConfig.datos.filter(vehiculo => {
-        if (vehiculo.numero && NUMEROS_A_ELIMINAR.has(vehiculo.numero)) {
-          return false;
-        }
-        if (vehiculo.idDeVehiculo && IDS_A_ELIMINAR.has(vehiculo.idDeVehiculo)) {
-          return false;
-        }
-        if (vehiculo.numeroPlaca && vehiculo.marca) {
-          const COMBO_ID = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
-          if (PLACAS_MARCAS_A_ELIMINAR.has(COMBO_ID)) {
-            return false;
-          }
-        }
-
-        return !this.vehiculoSeleccionado.includes(vehiculo);
-      });
+      const CURRENTVEHICULOS = this.tramiteQuery.getValue().parqueVehicular || [];
+      const UPDATEDVEHICULOS = CURRENTVEHICULOS.filter(vehiculo => !this.vehiculoSeleccionado.includes(vehiculo));
+      this.store.setParqueVehicular(UPDATEDVEHICULOS);
       this.vehiculoSeleccionado = [];
       this.indiceEdicion = null;
       this.vehiculoFormulario.reset();
@@ -1030,14 +1027,13 @@ export class VehiculosComponent implements OnInit {
     if (this.vehiculoFormulario.valid) {
       const VALOR_FORMULARIO = this.vehiculoFormulario.getRawValue();
       if (this.indiceEdicion !== null) {
-        Object.assign(this.vehiculosTablaConfig.datos[this.indiceEdicion], VALOR_FORMULARIO);
-        this.vehiculosTablaConfig.datos = [...this.vehiculosTablaConfig.datos];
+        const CURRENTVEHICULOS = [...(this.tramiteQuery.getValue().parqueVehicular || [])];
+        CURRENTVEHICULOS[this.indiceEdicion] = VALOR_FORMULARIO;
+        this.store.setParqueVehicular(CURRENTVEHICULOS);
         this.indiceEdicion = null;
       } else {
-        this.vehiculosTablaConfig.datos = [
-          ...this.vehiculosTablaConfig.datos,
-          VALOR_FORMULARIO,
-        ];
+        const CURRENTVEHICULOS = this.tramiteQuery.getValue().parqueVehicular || [];
+        this.store.setParqueVehicular([...CURRENTVEHICULOS, VALOR_FORMULARIO]);
       }
       // Incrementa automáticamente el ID para el próximo vehículo
       const ID_MAXIMO = Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0));
@@ -1146,14 +1142,13 @@ export class VehiculosComponent implements OnInit {
     if (this.unidadFormulario.valid) {
       const VALOR_FORMULARIO = this.unidadFormulario.getRawValue();
       if (this.editarIndiceUnitario !== null) {
-        Object.assign(this.unidadesTablaConfig.datos[this.editarIndiceUnitario], VALOR_FORMULARIO);
-        this.unidadesTablaConfig.datos = [...this.unidadesTablaConfig.datos];
+        const CURRENTUNIDADAS = [...(this.tramiteQuery.getValue().unidadesArrastre || [])];
+        CURRENTUNIDADAS[this.editarIndiceUnitario] = VALOR_FORMULARIO;
+        this.store.setUnidadesArrastre(CURRENTUNIDADAS);
         this.editarIndiceUnitario = null;
       } else {
-        this.unidadesTablaConfig.datos = [
-          ...this.unidadesTablaConfig.datos,
-          VALOR_FORMULARIO,
-        ];
+        const CURRENTUNIDADAS = this.tramiteQuery.getValue().unidadesArrastre || [];
+        this.store.setUnidadesArrastre([...CURRENTUNIDADAS, VALOR_FORMULARIO]);
       }
       // Incrementa automáticamente el ID para la próxima unidad de arrastre
       const ID_MAXIMO_UNIDAD = Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculoUnidad) || 0));

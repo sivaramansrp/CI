@@ -33,16 +33,16 @@
             "style": "kebab-case"
           }
         ],
-        "sort-imports": [
-          "error",
-          {
-            "ignoreCase": false,
-            "ignoreDeclarationSort": false,
-            "ignoreMemberSort": false,
-            "memberSyntaxSortOrder": ["none", "all", "single"],
-            "allowSeparatedGroups": true
-          }
-        ],
+        // "sort-imports": [
+        //   "error",
+        //   {
+        //     "ignoreCase": false,
+        //     "ignoreDeclarationSort": false,
+        //     "ignoreMemberSort": false,
+        //     // "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+        //     "allowSeparatedGroups": true
+        //   }
+        // ],
         "@typescript-eslint/consistent-generic-constructors": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "prefer-const": "error",

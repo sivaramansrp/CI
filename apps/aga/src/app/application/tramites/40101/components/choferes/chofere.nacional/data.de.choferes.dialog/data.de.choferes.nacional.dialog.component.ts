@@ -192,11 +192,11 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
 
     if (this.formChoferes.valid) {
       const DATOS = this.formChoferes.getRawValue() as DatosDelChoferNacional;
-      DATOS.pais = this.paisList.find(p => String(p.clave) === String(DATOS.pais))?.descripcion || '';
-      DATOS.estado = this.estadoList.find(e => String(e.clave) === String(DATOS.estado))?.descripcion || '';
-      DATOS.municipioAlcaldia = this.municipioList.find(m => String(m.clave) === String(DATOS.municipioAlcaldia))?.descripcion || '';
-      DATOS.colonia = this.coloniaList.find(c => String(c.clave) === String(DATOS.colonia))?.descripcion || '';
-      DATOS.paisDeResidencia = this.paisList.find(p => String(p.clave) === String(DATOS.paisDeResidencia))?.descripcion || '';
+      DATOS.pais = this.paisList.find(p => String(p.clave) === String(DATOS.pais))?.clave || '';
+      DATOS.estado = this.estadoList.find(e => String(e.clave) === String(DATOS.estado))?.clave || '';
+      DATOS.municipioAlcaldia = this.municipioList.find(m => String(m.clave) === String(DATOS.municipioAlcaldia))?.clave || '';
+      DATOS.colonia = this.coloniaList.find(c => String(c.clave) === String(DATOS.colonia))?.clave || '';
+      DATOS.paisDeResidencia = this.paisList.find(p => String(p.clave) === String(DATOS.paisDeResidencia))?.clave || '';
 
       if (this.isEditando && this.indiceEditando !== null) {
         this.addModalEvent.emit({ datos: DATOS, indice: this.indiceEditando });

@@ -194,8 +194,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
           .pipe(takeUntil(this.destroyed$))
       );
       this.paisList = DATA || [];
-      const valueNational = this.paisList.length > 0 ? this.paisList[0].clave : ""
-      this.formChoferes.controls['nacionalidad'].setValue(valueNational);
+      const VALUENATIONAL = this.paisList.length > 0 ? this.paisList[0].clave : ""
+      this.formChoferes.controls['nacionalidad'].setValue(VALUENATIONAL);
     } catch (error) {
       // Manejo de errores si es necesario
     }
@@ -226,7 +226,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {void}
    */
   onEstadoChange(value: Catalogo): void {
-    if (!value) return;
+    if (!value) { return; }
     this.chofer40101Store.setDriver('extranjero', { estado: value.clave });
     this.fetchMunicipiosByEstado(value);
   }
@@ -257,7 +257,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {void}
    */
   onMunicipioChange(value: Catalogo): void {
-    if (!value) return;
+    if (!value) { return; }
     this.chofer40101Store.setDriver('extranjero', { municipioAlcaldia: value.clave });
     this.fetchColoniasByMunicipio(value);
   }
@@ -349,13 +349,13 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       this.isLoading = false;
       return;
     }
-    const nss = this.formChoferes.get('numeroDelSeguroSocial')?.value
+    const NSS = this.formChoferes.get('numeroDelSeguroSocial')?.value
     await this.chofer40101Service
-      .obtenerDatos(nss)
+      .obtenerDatos(NSS)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((response: ApiResponseChofer) => {
         if (response) {
-          const datosMapped: ChoferesExtranjeros = {
+          const DATOSTOMAPPED: ChoferesExtranjeros = {
             ...response.datos,
             nombre: response.datos.nombre ?? '',
             primerApellido: response?.datos?.primer_apellido ?? '',
@@ -376,7 +376,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
             correoElectronico: response.datos?.domicilio?.correo_electronico ?? '',
             telefono: response.datos?.domicilio?.telefono ?? '',
           };
-          this.completarFormularioConDatos(datosMapped);
+          this.completarFormularioConDatos(DATOSTOMAPPED);
           this.isLoading = false;
         }
       });
@@ -405,12 +405,18 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
 
     if (this.formChoferes.valid) {
       const DATA = this.formChoferes.getRawValue() as ChoferesExtranjeros;
-      DATA.pais = this.paisList.find(p => p.id === Number(DATA.pais))?.descripcion || '';
+      DATA.pais = this.paisList.find(p => p.id === Number(DATA.pais))?.clave || '';
+      DATA.segundoApellido = this.paisList.find(p => p.id === Number(DATA.segundoApellido))?.clave || ''
       // DATA.estado = this.estadoList.find(e => e.id === Number(DATA.estado))?.descripcion || '';
       DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(DATA.paisDeResidencia))?.descripcion || '';
-
+      if (this.isEditando && this.indiceEditando !== null) {
+        // this.addModalEvent.emit({ datos: DATOS, indice: this.indiceEditando });
+        this.addModalEvent.emit({ datos: DATA, indice: this.indiceEditando as number });
+      } else {
+        this.addModalEvent.emit({ datos: DATA });
+        // this.addModalEvent.emit({ datos: DATOS });
+      }
       // Aquí puedes realizar la lógica para guardar los datos del chofer
-      this.addModalEvent.emit({ datos: DATA, indice: this.indiceEditando as number });
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

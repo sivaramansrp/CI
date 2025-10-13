@@ -5,6 +5,9 @@ import {
   ApiResponseSolicitante,
   DatosUnidad,
   DatosVehiculo,
+  DirectorGeneralData,
+  UnidadTabla,
+  VehiculoTabla
 } from '../models/registro-muestras-mercancias.model';
 /**
  * Estado de la store para el trámite 40101.
@@ -14,6 +17,9 @@ import {
 export interface Tramite40101State {
   datosVehiculo: DatosVehiculo;
   datosUnidad: DatosUnidad;
+  directorGeneral: DirectorGeneralData | null;
+  parqueVehicular: VehiculoTabla[];
+  unidadesArrastre: UnidadTabla[];
   solicitanteDatas: ApiResponseSolicitante['datos'];
   seccion: boolean[];
   formaValida: boolean[];
@@ -56,6 +62,9 @@ export function createInitialState(): Tramite40101State {
       paisEmisor2daPlaca: '',
       descripcion: '',
     },
+    directorGeneral: null,
+    parqueVehicular: [],
+    unidadesArrastre: [],
     solicitanteDatas: {
       caat_existe: false,
       mostrar_director_general: true,
@@ -527,5 +536,17 @@ export class Tramite40101Store extends Store<Tramite40101State> {
 
   public establecerFormaValida(formaValida: boolean[]): void {
     this.update({ formaValida });
+  }
+
+  public setDirectorGeneral(directorGeneral: DirectorGeneralData): void {
+    this.update({ directorGeneral });
+  }
+
+  public setParqueVehicular(parqueVehicular: VehiculoTabla[]): void {
+    this.update({ parqueVehicular });
+  }
+
+  public setUnidadesArrastre(unidadesArrastre: UnidadTabla[]): void {
+    this.update({ unidadesArrastre });
   }
 }

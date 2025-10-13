@@ -82,13 +82,13 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
     if (this.datosDelChoferExtranjerosSelected.length === 0) {
       return;
     }
-    const seleccionado = this.datosDelChoferExtranjerosSelected[0];
-    const fullDriverList = this.chofer40101Query.getValue().driversExtranjero;
-    const indice = fullDriverList.findIndex(item => item.data === seleccionado);
-    this.datosChofere = seleccionado;
+    const SELECTIONADO = this.datosDelChoferExtranjerosSelected[0];
+    const FULLDRIVERLIST = this.chofer40101Query.getValue().driversExtranjero;
+    const INDICE = FULLDRIVERLIST.findIndex(item => item.data === SELECTIONADO);
+    this.datosChofere = SELECTIONADO;
     setTimeout(() => {
-      if (this.datosDeChoferesDialogComponent && indice !== -1) {
-        this.datosDeChoferesDialogComponent.editarRegistro(seleccionado, indice);
+      if (this.datosDeChoferesDialogComponent && INDICE !== -1) {
+        this.datosDeChoferesDialogComponent.editarRegistro(SELECTIONADO, INDICE);
       }
     });
     this.openModal(template);
@@ -99,12 +99,12 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
 
   deleteSelectedRow(): void {
     if (this.datosDelChoferExtranjerosSelected.length > 0) {
-      const fullDriverList = this.chofer40101Query.getValue().driversExtranjero;
-      const indicesToDelete = this.datosDelChoferExtranjerosSelected.map(selectedDriver => {
-        return fullDriverList.findIndex(item => item.data === selectedDriver);
+      const FULLDRIVERLIST = this.chofer40101Query.getValue().driversExtranjero;
+      const INDICESTODELETE = this.datosDelChoferExtranjerosSelected.map(selectedDriver => {
+        return FULLDRIVERLIST.findIndex(item => item.data === selectedDriver);
       }).filter(index => index !== -1).sort((a, b) => b - a);
 
-      indicesToDelete.forEach(index => {
+      INDICESTODELETE.forEach(index => {
         this.chofer40101Store.deleteDriver('extranjero', index);
       });
 
@@ -132,6 +132,7 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
     } else {
       this.chofer40101Store.addDriver('extranjero', evento.datos);
     }
+
     this.datosDelChoferExtranjerosSelected = [];
     if (this.tablaDinamicaComponent) {
       this.tablaDinamicaComponent.listaDeFilaSeleccionada.emit([]);

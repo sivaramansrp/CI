@@ -1,9 +1,9 @@
 import { ApiResponse, Catalogo } from '@libs/shared/data-access-user/src';
-import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { ApiResponseChofer, ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { Chofer40101Store } from './chofer40101.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /**
@@ -23,6 +23,18 @@ export class Chofer40101Service {
    * URL base del servidor para realizar solicitudes HTTP.
    */
   private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
+
+  private static getApiHeaders(): HttpHeaders {
+    const CLAVEUSUARIO = localStorage.getItem('ClaveUsuario') || '';
+    const RFC = localStorage.getItem('Rfc') || '';
+    const CVEROLE = localStorage.getItem('CveRole') || '';
+
+    return new HttpHeaders({
+      'ClaveUsuario': CLAVEUSUARIO,
+      'Rfc': RFC,
+      'CveRole': CVEROLE
+    });
+  }
 
   /**
  * Recupera datos simulados para el Director General.
@@ -146,7 +158,7 @@ export class Chofer40101Service {
    * @returns Un observable con el catálogo de países emisores.
    */
   getPaisEmisor(): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/paises')
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/paises', { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -228,7 +240,7 @@ export class Chofer40101Service {
   * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
   */
   getEstadosPorPaisMex(): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/entidades-federativas')
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/entidades-federativas', { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -242,7 +254,7 @@ export class Chofer40101Service {
   getMunicipiosPorEstado(
     claveEstado: string
   ): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101/catalogo/entidad-federativa/${claveEstado}/municipio-o-alcaldia`)
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101/catalogo/entidad-federativa/${claveEstado}/municipio-o-alcaldia`, { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -260,7 +272,7 @@ export class Chofer40101Service {
   getColoniasPorMunicipio(
     clave: string
   ): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101//catalogo/municipio-o-alcaldia/${clave}/colonia`)
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101/catalogo/municipio-o-alcaldia/${clave}/colonia`, { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -319,10 +331,10 @@ export class Chofer40101Service {
    */
   obtenerDatos(nss: string): Observable<ApiResponseChofer> {
     const FULL_URL = `/api/sat-t140101/chofer/detalles/nss/${nss}`;
-    return this.http.get<ApiResponseChofer>(FULL_URL);
+    return this.http.get<ApiResponseChofer>(FULL_URL, { headers: Chofer40101Service.getApiHeaders() });
   }
 
-  loadInitialDrivers(type: 'nacional' | 'extranjero', drivers: any[]): void {
+  loadInitialDrivers(type: 'nacional' | 'extranjero', drivers: (DatosDelChoferNacional | ChoferesExtranjeros)[]): void {
     this.chofer40101Store.loadInitialDrivers(type, drivers);
   }
 }

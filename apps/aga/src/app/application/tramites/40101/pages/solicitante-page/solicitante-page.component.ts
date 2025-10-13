@@ -1,14 +1,65 @@
+import { ApiResponseSolicitante, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
+import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
 import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_40101, WizardComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Subject, combineLatest } from 'rxjs';
+import { Tramite40101State, Tramite40101Store } from '../../estado/tramite40101.store';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { Tramite40101Query } from '../../estado/tramite40101.query';
-import { Tramite40101Store, Tramite40101State } from '../../estado/tramite40101.store';
+import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+import { DirectorGeneralQuery } from '../../estado/director-general.query';
 
 interface AccionBoton {
   accion: string;
   valor: number;
+}
+
+export interface DriverNacional {
+  rfc: string;
+  curp: string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  numeroDeGafete: string;
+  vigenciaGafete: string;
+  ciudad: string;
+  pais: string;
+  codigoPostal: string;
+  estado: string;
+  municipioAlcaldia: string;
+  localidad: string;
+  colonia: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  correoElectronico: string;
+  telefono: string;
+  paisDeResidencia: string;
+}
+
+// 🟩 Extranjero driver coming from choferesState.driversExtranjero
+export interface DriverExtranjero {
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  numeroDeGafete: string;
+  vigenciaGafete: string;
+  numeroDelSeguroSocial: string;
+  identificadorFiscal: string;
+  nacionalidad: string;
+  ciudad: string;
+  pais: string;
+  codigoPostal: string;
+  estado: string;
+  municipioAlcaldia: string;
+  localidad: string;
+  colonia: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  correoElectronico: string;
+  telefono: string;
+  paisDeResidencia: string;
 }
 
 @Component({
@@ -77,7 +128,10 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   constructor(
     private tramite40101Query: Tramite40101Query,
-    private tramite40101Store: Tramite40101Store
+    private tramite40101Store: Tramite40101Store,
+    private modificarTerrestreService: modificarTerrestreService,
+    private chofer40101Query: Chofer40101Query,
+    private directorQuery: DirectorGeneralQuery
   ) { }
 
   ngOnInit(): void {
@@ -136,12 +190,136 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 6) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (e.accion === 'cont' && e.valor === 2) {
+      const CHOFERES$ = this.chofer40101Query.select();
+      const TRAMITE$ = this.tramite40101Query.select();
+      const DIRECTOR$ = this.directorQuery.select()
+
+      combineLatest([CHOFERES$, TRAMITE$, DIRECTOR$]).pipe(
+        take(1)
+      ).subscribe(([choferesState, tramiteState, directorateState]) => {
+        // mapChoferNacional
+        const MAPCHOFERNACIONAL = (driver: DriverNacional) => ({
+          chofer_datos: {
+            rfc: driver.rfc,
+            curp: driver.curp,
+            nombre: driver.nombre,
+            primer_apellido: driver.primerApellido,
+            segundo_apellido: driver.segundoApellido,
+            numero_de_gafete: driver.numeroDeGafete,
+            vigencia_del_gafete: driver.vigenciaGafete,
+          },
+          domicilio_fiscal: {
+            ciudad: driver.ciudad,
+            pais: driver.pais,
+            codigo_postal: driver.codigoPostal,
+            estado: driver.estado,
+            municipio: driver.municipioAlcaldia,
+            localidad: driver.localidad,
+            colonia: driver.colonia,
+            calle: driver.calle,
+            numero_exterior: driver.numeroExterior,
+            numero_interior: driver.numeroInterior,
+            correo_electronico: driver.correoElectronico,
+            telefono: driver.telefono,
+            pais_de_residencia: driver.paisDeResidencia,
+          }
+        });
+
+        const MAPCHOFEREXTRANJERO = (driver: DriverExtranjero) => ({
+          chofer_datos: {
+            nombre: driver.nombre,
+            primer_apellido: driver.primerApellido,
+            segundo_apellido: driver.segundoApellido,
+            numero_de_gafete: driver.numeroDeGafete,
+            vigencia_del_gafete: driver.vigenciaGafete,
+            num_del_seg_social: driver.numeroDelSeguroSocial,
+            num_de_iden_fisc: driver.identificadorFiscal,
+            nacionalidad: driver.nacionalidad,
+          },
+          domicilio_fiscal: {
+            ciudad: driver.ciudad,
+            pais: driver.pais,
+            codigo_postal: driver.codigoPostal,
+            estado: driver.estado,
+            municipio: driver.municipioAlcaldia,
+            localidad: driver.localidad,
+            colonia: driver.colonia,
+            calle: driver.calle,
+            numero_exterior: driver.numeroExterior,
+            numero_interior: driver.numeroInterior,
+            correo_electronico: driver.correoElectronico,
+            telefono: driver.telefono,
+            pais_de_residencia: driver.paisDeResidencia,
+          }
+        });
+
+        const PAYLOAD = {
+          choferes_nacionales: (choferesState.driversNacional || []).filter(d => d.status !== 'deleted').map(d => MAPCHOFERNACIONAL(d.data as DriverNacional)),
+          choferes_extranjeros: (choferesState.driversExtranjero || []).filter(d => d.status !== 'deleted').map(d => MAPCHOFEREXTRANJERO(d.data as DriverExtranjero)),
+          // director_general: {
+          //   nombre: directorateState.nombre, primer_apellido: directorateState.primerApellido, segundo_apellido: directorateState.segundoApellido
+          // },
+          director_general: null,
+          vehiculos: {
+            parque_vehicular: tramiteState.parqueVehicular.map((data) => {
+              return {
+                numero_identificacion_vehicular: data.numero || "", // maps from "numero"
+                tipo_vehiculo: data.tipoDeVehiculo || "", // maps from "tipoDeVehiculo"
+                id_vehiculo: String(data.idDeVehiculo || ""), // convert to string as per schema
+                numero_placas: data.numeroPlaca || "",
+                pais_emisor: data.paisEmisor || "",
+                estado_provincia: data.estado || "",
+                color_vehiculo: Number(data.colorVehiculo) || 0, // backend expects number
+                numero_economico: data.numuroEconomico || "", // typo in frontend key
+                numero_2da_placa: data.numero2daPlaca || "",
+                estado_emisor_2da_placa: data.estado2daPlaca || "",
+                pais_emisor_2da_placa: data.paisEmisor2daPlaca || "",
+                descripcion_vehiculo: data.descripcion || "",
+                marca: data.marca || "",
+                modelo: data.modelo || "",
+                anio: data.ano || "", // schema uses “anio”
+                transponder: data.transponder || "",
+              };
+            }) || [],
+            unidades_arrastre: (tramiteState.unidadesArrastre || []).map((data) => {
+              return {
+                numero_identificacion_vehicular: data.vinVehiculo || "", // maps from "vinVehiculo"
+                tipo_vehiculo: "", // not provided — leave blank or map if available
+                id_vehiculo: String(data.idDeVehiculoUnidad || ""), // convert to string
+                numero_placas: data.numeroPlaca || "",
+                pais_emisor: data.paisEmisor || "",
+                estado_provincia: data.estado || "",
+                color_vehiculo: Number(data.colorVehiculo) || 0, // backend expects number
+                numero_economico: data.numeroEconomico || "",
+                numero_2da_placa: data.numero2daPlaca || "",
+                estado_emisor_2da_placa: data.estado2daPlaca || "",
+                pais_emisor_2da_placa: data.paisEmisor2daPlaca || "",
+                descripcion_vehiculo: data.descripcion || "",
+                tipo_vehiculo_arrastre: data.tipoDeUnidadArrastre || "", // maps directly
+                id_vehiculo_arrastre: String(data.idDeVehiculoUnidad || ""), // same ID reused
+                color_vehiculo_arrastre: Number(data.colorVehiculo) || 0, // same color reused
+                descripcion_unidad_arrastre: data.descripcion || "", // same description reused
+              };
+            })
+          }
+        };
+
+        this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe(() => {
+          if (e.valor > 0 && e.valor < 6) {
+            this.indice = e.valor;
+            this.wizardComponent.siguiente();
+          }
+        });
+      });
+    } else {
+      if (e.valor > 0 && e.valor < 6) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
