@@ -415,7 +415,10 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
       });
   }
 
-
+/**
+ *  Verifica si un campo del formulario es inválido.
+ * @param field - Nombre del campo a verificar.
+ */
   isInvalid(field: string): boolean | undefined {
     const CONTROL = this.formularioParaRecuentoTotal.get(field);
     return (CONTROL?.invalid && CONTROL?.touched) || !this.esFormValido;
