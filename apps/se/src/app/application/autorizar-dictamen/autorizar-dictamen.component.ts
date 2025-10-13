@@ -39,6 +39,7 @@ import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/c
 import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/enums/consulta-generica.enum';
 import { CodigoRespuesta } from '../core/enum/se-core-enum';
+import { Firma } from '../core/models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
@@ -46,7 +47,7 @@ import { ObservacionRequest } from '../core/models/autorizar-requerimiento/reque
 import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
-import { ServiceConfig } from '../shared/models/service-config.model';
+import { ModeloConfig, ServiceConfig } from '../shared/models/service-config.model';
 
 @Component({
   selector: 'app-autorizar-dictamen',
@@ -264,6 +265,23 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   */
   serviceConfig!: ServiceConfig;
 
+  /**
+  * @property {ModeloConfig} serviceConfigModelo
+  * @description Configuración de modelo específicos del trámite, obtenida del servicio TramiteConfigService.
+  */
+  serviceConfigModelo!: ModeloConfig;
+
+  /**
+   * @property {string} sello
+   * @description Sello digital del documento.
+   */
+  sello!: string;
+
+  /**
+   * @property {string} firmaOficioCadena
+   * @description Cadena original del oficio de autorización o rechazo que se va a firmar.
+   */
+  firmaOficioCadena!: string;
 
   /**
    * @constructor
@@ -316,6 +334,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
 
     this.config = this.tramiteConfigService.getConfig(this.tramite);
     this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
+    this.serviceConfigModelo = this.tramiteConfigService.getModeloConfig(this.tramite);
   }
 
   /**
@@ -848,6 +867,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
             this.cadenaOriginal = resp.datos?.cadena_original;
             this.isDictamen = false;
             this.isFirma = true;
+            this.firmaOficioCadena = resp.datos?.firma_oficios.cadena_original || '';
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -911,6 +931,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
     const NUMFOLIO = this.guardarDatos.folioTramite;
+    this.sello = FIRMAHEX;
 
     const PAYLOAD: FirmaAutorizarDictamenRequest = {
       id_accion: this.guardarDatos.action_id,
@@ -1067,7 +1088,16 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   postOficioAutorizacion(): void {
-    this.autorizarDictamenService.postOficioAutorizacion(this.tramite, Number(this.guardarDatos.id_solicitud))
+    const PAYLOAD: Firma = {
+      cadena_original: encodeToISO88591Hex(this.firmaOficioCadena),
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+      clave_rol: 'Autorizador',
+      sello: this.sello
+    }
+    const PAYLOADSEND = this.serviceConfigModelo.actualizarModelo ? PAYLOAD : null;
+    this.autorizarDictamenService.postOficioAutorizacion(this.tramite, Number(this.guardarDatos.id_solicitud), PAYLOADSEND)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === "00" && resp.datos) {
@@ -1122,7 +1152,16 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   postOficioRechazado(): void {
-    this.autorizarDictamenService.postOficioRechazado(this.tramite, Number(this.guardarDatos.id_solicitud))
+    const PAYLOAD: Firma = {
+      cadena_original: encodeToISO88591Hex(this.firmaOficioCadena),
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+      clave_rol: 'Autorizador',
+      sello: this.sello
+    } 
+    const PAYLOADSEND = this.serviceConfigModelo.actualizarModelo ? PAYLOAD : null;
+    this.autorizarDictamenService.postOficioRechazado(this.tramite, Number(this.guardarDatos.id_solicitud), PAYLOADSEND)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === "00" && resp.datos) {

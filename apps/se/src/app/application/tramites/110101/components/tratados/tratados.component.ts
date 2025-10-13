@@ -1152,6 +1152,24 @@ eliminarTratado(): void {
   }
 
   /**
+   * Abre el modal de error.
+   */
+  abrirModalGlobalAccion(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'La acción no es permitida para este tipo de criterio',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  }
+    
+
+  /**
    *              
    * @param borrar
    * @description Elimina un pedimento de la lista si el parámetro `borrar` es `true`. 
@@ -1168,6 +1186,17 @@ eliminarTratado(): void {
    * @returns {void}
    */
   insumosEmpaques(): void {
+    if(this.tratadoSeleccionado.length === 0) {
+      this.abrirModal();
+      return;
+    }
+    if(this.tratadoSeleccionado[0].criterio_origen.trim() === 'OTROS' ||
+      this.tratadoSeleccionado[0].criterio_origen.trim() === 'B' ||
+      this.tratadoSeleccionado[0].criterio_origen.trim() === 'OTRASINST' ||
+      (this.tratadoSeleccionado[0].cve_pais.trim() === 'PAN' && this.tratadoSeleccionado[0].tratado_acuerdo.trim() === '505')
+    ) {
+      this.abrirModalGlobalAccion();
+    }
     this.tratadosSolicitudService.getInsumosEmpaques(this.consultaState.id_solicitud, this.tratadoSeleccionado[0].id_tratado_acuerdo.toString(),
       this.tratadoSeleccionado[0].id_bloque ?? null, this.tratadoSeleccionado[0].cve_pais)
       .pipe(takeUntil(this.destroy$))
@@ -1267,6 +1296,10 @@ eliminarTratado(): void {
    * @returns {void}
    */
   criterioTratadoResumen(): void {
+    if(this.tratadoSeleccionado.length === 0) {
+      this.abrirModal();
+      return;
+    }
     this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_tratado_acuerdo.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1356,6 +1389,10 @@ eliminarTratado(): void {
    * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
    */
   abrirModalDictaminador(): void {
+    if(this.tratadoSeleccionado.length === 0) {
+      this.abrirModal();
+      return;
+    }
     if (this.modalElement) {
       this.modalInstance = new Modal(this.modalElement.nativeElement);
       this.modalInstance?.show();

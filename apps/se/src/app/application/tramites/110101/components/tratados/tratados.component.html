@@ -69,9 +69,11 @@
     <button class="btn btn-primary  me-2" >
       Requisito Proceso
     </button>
-    <button class="btn btn-primary  me-2" (click)="abrirModalDictaminador()" >
-      Calificación del dictaminador
-    </button>
+    @if (this.consultaState.parameter === "EvaluarSolicitud") {
+      <button class="btn btn-primary  me-2" (click)="abrirModalDictaminador()" >
+        Calificación del dictaminador
+      </button>
+    }
   </div>
 </div>
 

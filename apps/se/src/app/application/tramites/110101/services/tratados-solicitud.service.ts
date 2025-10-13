@@ -67,12 +67,21 @@ export class TratadosSolicitudService {
    * @param clavePais - Clave del país al que pertenece la solicitud o donde aplica el tratado.
    * @return Observable con la respuesta de validación del servidor
    */
-  getInsumosEmpaques(idSolicitud: string, idTratadoAcuerdo: string, idBloque: number | null, clavePais: string): Observable<BaseResponse<InsumosEmpaquesResponse>> {
+  getInsumosEmpaques(idSolicitud: string, idTratadoAcuerdo?: string, idBloque?: number | null, clavePais?: string): Observable<BaseResponse<InsumosEmpaquesResponse>> {
     const ENDPOINT = `${this.host}` + API_GET_INSUMOS_EMPAQUES(idSolicitud);
+    let PARAMS = new HttpParams();
 
-    const PARAMS = new HttpParams().set('idTratadoAcuerdo', String(idTratadoAcuerdo))
-      .set('idBloque', String(idBloque))
-      .set('clavePais', String(clavePais));
+      if (idTratadoAcuerdo !== null && idTratadoAcuerdo !== '') {
+        PARAMS = PARAMS.set('idTratadoAcuerdo', String(idTratadoAcuerdo));
+      }
+
+      if (idBloque !== null) { 
+        PARAMS = PARAMS.set('idBloque', String(idBloque));
+      }
+
+      if (clavePais !== null && clavePais !== '') {
+        PARAMS = PARAMS.set('clavePais', String(clavePais));
+      }
     return this.http.get<BaseResponse<InsumosEmpaquesResponse>>(ENDPOINT, { params: PARAMS });
   } 
 
