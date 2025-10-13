@@ -374,12 +374,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.seccionQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((s) => (this.seccionState = s));
-
-    // this.umcOpcion();
     this.getUmc();
     this.getUnidadesMedidaComercial();
     this.getTipoFactura();
-    // this.facturasOpcion();
     this.initActionFormBuild();
   }
 
@@ -553,44 +550,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @descripcion
-   * Obtiene la lista de unidades de medida y clasificación (UMC) disponibles.
-   */
-  // umcOpcion(): void {
-  //   this.mercanciaService
-  //     .obtenerMenuDesplegable('umc.json')
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.umc = data as Catalogo[];
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         console.error('Error al obtener los datos:', error);
-  //         this.umc = [];
-  //       },
-  //     });
-  // }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de facturas disponibles.
-   */
-  // facturasOpcion(): void {
-  //   this.mercanciaService
-  //     .obtenerMenuDesplegable('factura.json')
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.factura = data as Catalogo[];
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         console.error('Error al obtener los datos:', error);
-  //         this.factura = [];
-  //       },
-  //     });
-  // }
-
-  /**
-   * @descripcion
    * Acepta los datos del formulario, los guarda en el almacén y emite los eventos correspondientes.
    */
   acceptar(agregar: boolean): void {
@@ -761,7 +720,14 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-
+/**
+ * @description
+ * Obtiene el catálogo de unidades de medida comercial a partir del identificador del trámite actual.
+ * Llama al servicio de catálogos y actualiza la lista `umcMedida` con los datos recibidos.
+ * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+ *
+ * @returns {void}
+ */
   getUnidadesMedidaComercial(): void {
     const TRAMITES_ID = this.idProcedimiento.toString();
     this.catalogoServices.unidadesMedidaComercialCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
@@ -769,6 +735,14 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
+  /**
+ * @description
+ * Obtiene el catálogo de tipos de factura a partir del identificador del trámite actual.
+ * Llama al servicio de catálogos y actualiza la lista `factura` con los datos recibidos.
+ * La suscripción se controla mediante `takeUntil` para liberar recursos correctamente.
+ *
+ * @returns {void}
+ */
   getTipoFactura(): void {
     const TRAMITES_ID = this.idProcedimiento.toString();
     this.catalogoServices.tipoFacturaCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
