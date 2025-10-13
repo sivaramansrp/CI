@@ -116,7 +116,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
 
-    // this.store.setPestanaActiva(this.indice);
   }
   /**
    * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
@@ -135,7 +134,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setIdioma(respuesta.datos.idioma);
           this.store.setEntidadFederativa(respuesta.datos.entidadFederativa);
           this.store.setRepresentacionFederal(respuesta.datos.representacionFederal);
-          this.store.setGrupoReceptor(String(respuesta.datos.grupoReceptor));
+          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor.toString());
           this.store.setGrupoDeDirecciones(respuesta.datos.grupoDeDirecciones);
           this.store.setGrupoRepresentativo(respuesta.datos.grupoRepresentativo);
           this.store.setGrupoDeTransporte(respuesta.datos.grupoDeTransporte);

@@ -9,8 +9,16 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
   providedIn: 'root'
 })
 export class CertificadosOrigenGridService {
-  constructor(private http: HttpClient, private store: Tramite110216Store) { }
 
+ 
+/**
+ * @constructor
+ * Constructor del servicio CertificadosOrigenGridService.
+ * 
+ * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON locales.
+ * @param {Tramite110216Store} store - Store para gestionar el estado del trámite 110216.
+ */
+constructor(private http: HttpClient, private store: Tramite110216Store) { }
   /**
    * Obtiene la lista de estados desde un archivo JSON local.
    * @method obtenerListaEstado
