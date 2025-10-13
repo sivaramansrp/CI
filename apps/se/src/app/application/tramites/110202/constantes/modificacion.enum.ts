@@ -212,5 +212,6 @@ export const MERCANCIA_PREFILL: Mercancia[] = [
     fraccionNaladiSa93: 'NAL93',
     fraccionNaladiSa96: 'NAL96',
     fraccionNaladiSa02: 'NAL02',
+    criterioParaClasificacion: 'Criterion'
   }
 ];

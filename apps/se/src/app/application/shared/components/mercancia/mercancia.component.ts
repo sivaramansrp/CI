@@ -3,9 +3,11 @@ import {
   CLASIFICACION_NALADISA_1996_IDS,
   CLASIFICACION_NALADISA_2002_IDS,
   CLASIFICACION_NALADI_IDS,
+  CRITERIO_PARA_CLASIFICATION,
   CRITERIO_PARA_CONFERIR_ORIGEN_IDS,
   CRITERIO_PARA_TRATO_PREFERENCIAL_IDS,
   FECHA,
+  FECHA_DE_PAGO,
   FECHA_FACTURA_IDS,
   FECHA_FACTURA_REFERENCIA,
   FECHA_FACTURA_REFERENCIA_IDS,
@@ -323,6 +325,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   MARCA: number[] = MARCA_IDS;
 
   /**
+   * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
+   */
+  CRITERIO_PARA_CLASIFICATION: number[]= CRITERIO_PARA_CLASIFICATION;
+
+  /**
+   * Contiene los identificadores en los que el campo "Fecha de pago" es obligatorio.
+   */
+  FECHA_DE_PAGO: number[]= FECHA_DE_PAGO;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -405,6 +417,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
       criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
       criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
+      criterioParaClasificacion: [{ value: this.datosSeleccionados?.criterioParaClasificacion, disabled: true }],
+      fechaDePago: [{ value: this.datosSeleccionados?.fechaDePago, disabled: true}],
       valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
@@ -606,6 +620,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
       complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
       complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
+      criterioParaClasificacion: FALLBACK(MERCANIADATO.criterioParaClasificacion),
+      fechaDePago: FALLBACK(MERCANIADATO.fechaDePago),
       fraccionNaladi: MERCANIADATO.fraccionNaladi,
       fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
       fraccionNaladiSa96: MERCANIADATO.fraccionNaladiSa96,

@@ -196,3 +196,13 @@ export const REQUIRED_NUMERO_FACTURA: number[] = [110212, 110211];
  * IDs de procedimientos en los que el campo “Tipo de factura” es obligatorio.
  */
 export const REQUIRED_TIPO_FACTURA: number[] = [110204, 110205, 110222];
+
+/**
+ * IDs de procedimientos en los que el campo “Criterio para clasificación” es obligatorio.
+ */
+export const CRITERIO_PARA_CLASIFICATION: number[] = [110211];
+
+/**
+ * IDs de procedimientos en los que el campo “Fecha de pago” es obligatorio.
+ */
+export const FECHA_DE_PAGO: number[] = [110211];

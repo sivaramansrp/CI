@@ -119,6 +119,17 @@
             formControlName="nombreIngles"
           />
         </div>
+        } @if(CRITERIO_PARA_CLASIFICATION.includes(idProcedimiento)) {
+        <div class="col-md-6 mt-2">
+          <label for="criterioParaClasificacion"
+            >Criterio para clasificación:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            formControlName="criterioParaClasificacion"
+          />
+        </div>
         } @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) {
         <div class="col-md-6 mt-2">
           <label for="valorDeContenidoRegional"
@@ -284,7 +295,18 @@
             </div>
             }
           </div>
-          } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          } @if(FECHA_DE_PAGO.includes(idProcedimiento)) {
+            <div class="col-md-4">
+              <label for="fechaDePago"
+                >Fecha de pago:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="fechaDePago"
+              />
+            </div>
+            } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <input-fecha
               [datos]="fechaFacturaReferencia"

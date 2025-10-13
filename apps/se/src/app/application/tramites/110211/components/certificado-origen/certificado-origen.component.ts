@@ -344,9 +344,17 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
+  /**
+   * @description
+   * Referencia al componente de certificado de origen.
+   */
   @ViewChild('certificadoDeOrigenRef') certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
-  @ViewChild('mercanciaRef') mercanciaComponent!: MercanciaComponent;
 
+  /**
+   * @description
+   * Referencia al componente de mercancías.
+   */
+  @ViewChild('mercanciaRef') mercanciaComponent!: MercanciaComponent;
 
 
   /**
