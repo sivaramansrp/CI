@@ -162,12 +162,40 @@ export interface Tramite110214State {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+  /**
+   * @description
+   * Representa la estructura principal del estado o modelo de datos relacionado con el formulario de certificado.
+   */
   formaValida: { [key: string]: boolean };
+  /**
+   * @description
+   * Lista de mercancías disponibles para seleccionar o procesar dentro del formulario.
+   */
   disponiblesDatos: Mercancia[];
+  /**
+   * @description
+   * Tabla que contiene las mercancías registradas o agregadas por el usuario.
+   */
   mercanciaTabla: Mercancia[];
+  /**
+   * @description
+   * Objeto que contiene los valores actuales del formulario de certificado.
+   */
   formCertificado: { [key: string]: unknown };
+  /**
+   * @description
+   * Estado seleccionado del catálogo correspondiente.
+   */
   estado: Catalogo;
+  /**
+   * @description
+   * Objeto que almacena los valores individuales del formulario de mercancía.
+   */
   mercanciaForm: { [key: string]: unknown };
+  /**
+   * @description
+   * Identificador o nombre del bloque actual del formulario o proceso.
+   */
   bloque: string;
 }
 
@@ -1323,7 +1351,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     }));
   }
 
-    /**
+  /**
    * Establece el estado de bloque.
    * @param bloque - El valor de bloque.
    */

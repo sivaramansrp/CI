@@ -176,10 +176,30 @@ export interface Solicitud110208State {
    * Cada clave representa una sección del formulario.
    */
   formaValida: { [key: string]: boolean };
+  /**
+   * @description
+   * Lista de mercancías disponibles para seleccionar o procesar.
+   */
   disponiblesDatos: Mercancia[];
+  /**
+   * @description
+   * Tabla que contiene las mercancías agregadas o registradas en el formulario.
+   */
   mercanciaTabla: Mercancia[];
+  /**
+   * @description
+   * Contiene los valores del formulario de certificado.
+   */
   formCertificado: { [key: string]: unknown };
+  /**
+   * @description
+   * Estado o catálogo seleccionado actualmente.
+   */
   estado: Catalogo;
+  /**
+   * @description
+   * Objeto que almacena los valores del formulario de mercancía.
+   */
   mercanciaForm: { [key: string]: unknown };
 }
 /**
