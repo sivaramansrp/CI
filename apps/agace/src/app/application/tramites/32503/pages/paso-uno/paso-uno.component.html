@@ -14,12 +14,6 @@
       @switch (indice) {
       @case (1) {
       <solicitante #Solicitante></solicitante>
-      @if (consultaDatos.parameter === "READ_PROCEDURE"){
-        <div class="row col-md-4">
-          <label>ADACE:</label>
-          <input type="text" class="form-control" value="Occidente" readonly/>
-        </div>
-      }
       }@case (2) {
       @if (esDatosRespuesta) {
       <app-aviso></app-aviso>

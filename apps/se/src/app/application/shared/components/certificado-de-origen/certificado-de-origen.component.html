@@ -441,7 +441,7 @@
       <ng-titulo titulo="Domicilio del tercer operador" />
       <div class="row" *ngIf="idProcedimiento === 110205">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País'" [required]="false" name="estado"
+          <app-catalogo-select [catalogo]="paisGet" [label]="'País'" [required]="false" name="estado"
             formControlName="pais" (selectionChange)="tipoSeleccion($event)" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(
                       'formCertificado',

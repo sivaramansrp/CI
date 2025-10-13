@@ -177,3 +177,25 @@ export interface Respuesta<T> {
    */
   message: string;
 }
+
+/**
+ * Interfaz que representa los datos de pago de derechos.
+ * @export
+ * @interface PageDeDerechosData
+ */
+export interface PageDeDerechosData {
+  /**
+   * Clave de referencia del pago.
+   */
+  claveDeReferencia: string;
+
+  /**
+   * Cadena de dependencia asociada al pago.
+   */
+  cadenaPagoDependencia: string;
+
+  /**
+   * Importe del pago.
+   */
+  impPago: string;
+}

@@ -37,7 +37,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <label for="descripcion" class="form-label text-start"
-            >Descripción comersial*:</label
+            >Descripción comercial*:</label
           >
           <textarea
             id="descripcion"
@@ -96,10 +96,10 @@
             >RFC de la parte firmante / Tax ID*:</label
           >
           <input
-            class="form-control min-hgt"
+            class="form-control min-hgt uppercase"
             id="rfcTaxId"
             formControlName="rfcTaxId"
-            type="number"
+            type="text"
           />
         </div>
       </div>
@@ -111,7 +111,7 @@
             >Razón social de la parte firmante:</label
           >
           <input
-            class="form-control min-hgt"
+            class="form-control min-hgt uppercase"
             id="razonSocial"
             formControlName="razonSocial"
             type="text"
@@ -174,3 +174,9 @@
     </div>
   </div>
 </div>
+@if (agregarNotification) {
+<section>
+    <lib-notificaciones [notificacionInput]="agregarNotification">
+    </lib-notificaciones>
+</section>
+}

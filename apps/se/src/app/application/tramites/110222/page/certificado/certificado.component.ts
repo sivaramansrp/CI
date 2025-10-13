@@ -14,10 +14,11 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ERROR_FORMA_ALERT, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil} from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { Tramite110222State } from '../../estados/tramite110222.store';
 /**
  * @component CertificadoComponent
  * @description
@@ -36,6 +37,7 @@ import { Tramite110222Query } from '../../estados/tramite110222.query';
   styleUrl: './certificado.component.scss',
 })
 export class CertificadoComponent {
+
   /**
    * Array de pasos del wizard.
    * @type {Array<ListaPasoWizard>}
@@ -77,6 +79,14 @@ export class CertificadoComponent {
     txtBtnSig: 'Continuar',
   };
 
+  solicitudState!: Tramite110222State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @type {Subject<void>}
@@ -112,10 +122,14 @@ export class CertificadoComponent {
    * @param seccionStore Servicio para manejar el estado de la sección.
    * @param tramiteQuery Query para consultar el estado del trámite.
    */
-  constructor(
-    private seccionStore: SeccionLibStore,
-    private tramiteQuery: Tramite110222Query
-  ) {}
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query) {
+    this.tramiteQuery.selectTramite$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
+  }
 
   /**
    * Obtiene el valor del índice de la acción del botón.
@@ -127,6 +141,11 @@ export class CertificadoComponent {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
+    if (e.accion === 'cont') {
+      if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
+        return;
+      }
+    }
 
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
