@@ -868,3 +868,17 @@ export const CATALOGO_SELECCIONAR_REGLA = (TRAMITE: string) : string => `sat-t${
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/sectores
  */
 export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/sectores`;
+
+/*
+  * API para obtener el catálogo de tratados y acuerdos por país
+  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
+  */
+export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratado-acuerdo`;
+
+/**
+ * 
+ * @param TRAMITE 
+ * @param CLAVEBLOQUE 
+ * @returns 
+ */
+export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;

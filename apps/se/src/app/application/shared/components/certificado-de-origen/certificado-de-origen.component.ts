@@ -178,6 +178,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
  */
   tratadoAcuerdoCertificado?: Catalogo[];
 
+  /** 
+   * Propiedad de entrada que recibe los datos de los países.
+  */
+  pais?:Catalogo[];
+
   /*
   * Propiedad de entrada que recibe los datos de los países bloqueados.
   * @type {Catalogo[]}
@@ -741,6 +746,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @param {Catalogo} estado El estado seleccionado.
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
+    // this.getOnlyPais(estado?.clave)
     this.tipoEstadoSeleccionEvent.emit(estado);
   }
 
