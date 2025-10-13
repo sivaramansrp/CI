@@ -200,7 +200,7 @@ export interface FormularioMercancia {
  * nombre comercial y fechas de inicio y fin.
  */
 export interface GrupoTratado {
-  tratado: string;
+  tratado: string; 
   pais: string;
   fraccionArancelaria: string;
   numeroRegistro: string;

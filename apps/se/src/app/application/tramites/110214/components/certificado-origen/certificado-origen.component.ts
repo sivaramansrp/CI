@@ -291,6 +291,9 @@ pedimentos: Array<Pedimento> = [];
      * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
      */
   ngOnInit(): void {
+    this.cargarTratado();
+    this.cargarPais();
+    
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -312,20 +315,18 @@ pedimentos: Array<Pedimento> = [];
       .subscribe();
       
      
-      this.validarInicialmenteCertificadoService.obtenerMercanciasDisponibles()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((respuesta) => {
-      this.mercanciaDisponsiblesTablaDatos = respuesta;
-      this.inicializarFormularioMercancia(); 
-    });
+    //   this.validarInicialmenteCertificadoService.obtenerMercanciasDisponibles()
+    // .pipe(takeUntil(this.destroyNotifier$))
+    // .subscribe((respuesta) => {
+    //   this.mercanciaDisponsiblesTablaDatos = respuesta;
+    //   this.inicializarFormularioMercancia(); 
+    // });
 
     this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
     this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
-    this.cargarTratado();
-    this.cargarPais();
   }
   /**
    * Establece valores en el store a partir de un formulario.
@@ -339,7 +340,12 @@ pedimentos: Array<Pedimento> = [];
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110214Store, childGroupName?: string): void {
     const VALOR = childGroupName ? form.get([childGroupName, campo])?.value : form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    if (campo === 'pais') { 
+      const PAIS_VALOR = this.optionsPais.find(item => item.id === Number(VALOR))?.descripcion || '';
+      (this.store[metodoNombre] as (value: unknown) => void)(PAIS_VALOR);
+    } else {
+      (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
     this.store.setFormValidity('certificadoOrigen', this.formularioCertificado.valid);
   }
 
@@ -563,21 +569,17 @@ static restrictFutureDates(): ValidatorFn {
    * Este método obtiene los datos de mercancías disponibles y los asigna a la propiedad `mercanciaDisponsiblesTablaDatos`.
    */
   cargarMercanciasDisponibles(): void {
-    const NUEVA_MERCANCIA: DisponiblesTabla = {
-      fraccionArancelaria: this.formularioCertificado.get('grupoTratado.fraccionArancelaria')?.value || '',
-      numeroRegistroProductos: this.formularioCertificado.get('grupoTratado.numeroRegistro')?.value || '',
-      nombreComercial: this.formularioCertificado.get('grupoTratado.nombreComercial')?.value || '',
-      nombreTecnico: 'Composiciones constituidas por polialquifenol-formaldehido oxietilado y/o polioxipropileno oxietilado, aunque contengan solventes orgánicos, para la fabricación de de hulsificantes para la industria petrolera.', 
-      fechaExpedicion: this.formularioCertificado.get('grupoTratado.fechaInicial')?.value || '',
-      fechaVencimiento: this.formularioCertificado.get('grupoTratado.fechaFinal')?.value || '', 
+    const PAYLOAD = {
+      rfcExportador: "AAL0409235E6",
+      tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState.grupoTratado?.tratado || '105' },
+      pais: { cvePais: this.solicitudState.grupoTratado?.pais || '' }
     };
   
-    this.validarInicialmenteCertificadoService.obtenerMercanciasDisponibles()
+    this.validarInicialmenteCertificadoService.obtenerMercanciasDisponibles(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(respuesta => {
-       
-        this.mercanciaDisponsiblesTablaDatos = [...respuesta, NUEVA_MERCANCIA];
-      });
+      this.mercanciaDisponsiblesTablaDatos = [...(respuesta as DisponiblesTabla[])];
+    });
   }
 
   /**

@@ -229,7 +229,7 @@ export function createInitialState(): Tramite110214State {
       numeroFactura: '',
       tipoFactura: '',
     },
-    grupoTratado: {
+    grupoTratado: { 
       tratado: '',
       pais: '',
       fraccionArancelaria: '',
@@ -852,7 +852,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   public setGrupoTratadoTratado(tratado: string): void {
     this.update((state) => ({
       ...state,
-      grupoTratado: { ...state.grupoTratado, tratado },
+      grupoTratado: { ...state.grupoTratado, tratado: String(tratado) },
     }));
   }
 

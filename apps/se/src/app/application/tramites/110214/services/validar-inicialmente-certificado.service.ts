@@ -1,5 +1,5 @@
 import { CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
-import { HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
+import { HttpCoreService, JSONResponse, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -71,8 +71,8 @@ export class ValidarInicialmenteCertificadoService {
    * 
    * @returns {Observable<DisponiblesTabla[]>} Un observable con la lista de mercancías disponibles.
    */
-  obtenerMercanciasDisponibles(): Observable<DisponiblesTabla[]> {
-    return this.http.get<DisponiblesTabla[]>('assets/json/110214/mercancia-disponsible.json');
+  obtenerMercanciasDisponibles(body: Record<string, unknown>): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110214.BUSCAR_MERCANCIAS, { body: body });
   }
 
   /**
@@ -192,8 +192,25 @@ export class ValidarInicialmenteCertificadoService {
       "pais_bloque": data.grupoTratado.pais,
       "fraccion_arancelaria": data.grupoTratado.fraccionArancelaria,
       "nombre_comercial": data.grupoTratado.nombreComercial,
+      "registro_producto": data.grupoTratado.numeroRegistro,
       "fecha_inicio": formatearFechaYyyyMmDd(data.grupoTratado.fechaInicialInput),
       "fecha_fin": formatearFechaYyyyMmDd(data.grupoTratado.fechaFinalInput),
+      "realizo_tercer_operador": {
+        "tercer_operador": data.tercerOperador,
+        "nombre": data.grupoReceptor.nombre,
+        "primer_apellido": data.grupoReceptor.apellidoPrimer,
+        "segundo_apellido": data.grupoReceptor.apellidoSegundo,
+        "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
+        "razon_social": data.grupoReceptor.razonSocial
+      },
+      "domicilio_tercer_operador": {
+        "pais": "",
+        "ciudad": data.grupoDeDirecciones.ciudad,
+        "calle": data.grupoDeDirecciones.calle,
+        "numero_letra": data.grupoDeDirecciones.numeroLetra,
+        "telefono": data.grupoDeDirecciones.telefono,
+        "correo_electronico": data.grupoDeDirecciones.correoElectronico
+      },
       "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaSeleccionadasTablaDatos),
     }
   }
