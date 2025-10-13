@@ -151,8 +151,7 @@ export class Tramite110216Query extends Query<Tramite110216State> {
   selectmercanciaTabla$ = this.select((state) => {
     return state.mercanciaTabla;
   });
-  datosProductorFormulario$ = this.select((state) => state.formDatosProductor);
-formulario$ = this.select((state) => state.formHistorico);
+  
   /**
    * Constructor de la clase Tramite110216Query.
    * 
