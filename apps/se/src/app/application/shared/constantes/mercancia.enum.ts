@@ -49,7 +49,7 @@ export const FECHA_FACTURA_REFERENCIA = {
 /**
  * IDs de procedimientos para los campos de fracción arancelaria.
  */
-export const FRACCION_ARANCELARIA_IDS = [110205, 110212, 110222];
+export const FRACCION_ARANCELARIA_IDS = [110205, 110212, 110216, 110222];
 
 /**
  * IDs de procedimientos para la clasificación NALADI.
@@ -79,7 +79,7 @@ export const N_FACTURA_REFERENCIA_IDS = [110204, 110222];
 /**
  * IDs de procedimientos para el campo “Número de factura”.
  */
-export const N_FACTURA_IDS = [110205, 110212];
+export const N_FACTURA_IDS = [110205, 110212, 110216];
 
 /**
  * IDs de procedimientos para el campo “Norma de origen”.
@@ -89,17 +89,17 @@ export const NORMA_ORIGEN_IDS = [110204];
 /**
  * IDs de procedimientos para el campo “Nombre en inglés”.
  */
-export const NOMBRE_EN_INGLES_IDS = [110205, 110212];
+export const NOMBRE_EN_INGLES_IDS = [110205, 110212, 110216];
 
 /**
  * IDs de procedimientos para el campo “Otras instancias”.
  */
-export const OTRAS_INSTANCIAS_IDS = [110205, 110222];
+export const OTRAS_INSTANCIAS_IDS = [110205,110216, 110222];
 
 /**
  * IDs de procedimientos para el campo “Criterio para conferir origen”.
  */
-export const CRITERIO_PARA_CONFERIR_ORIGEN_IDS = [110205, 110212];
+export const CRITERIO_PARA_CONFERIR_ORIGEN_IDS = [110205, 110212,110216];
 
 /**
  * IDs de procedimientos para el campo “Criterio para trato preferencial”.
@@ -110,7 +110,7 @@ export const CRITERIO_PARA_TRATO_PREFERENCIAL_IDS = [110222];
  * Identificadores asociados al valor de la mercancía.
  * @type {number[]}
  */
-export const VALOR_MERCANCIA_IDS = [110204, 110205, 110212, 110222];
+export const VALOR_MERCANCIA_IDS = [110204, 110205, 110212,110216, 110222];
 
 /**
  * Identificadores asociados al valor del contenido regional.
@@ -134,7 +134,7 @@ export const FECHA_FACTURA_REFERENCIA_IDS = [110222];
  * Identificadores asociados al tipo de factura.
  * @type {number[]}
  */
-export const TIPO_DE_FACTURA_IDS = [110204, 110205, 110212];
+export const TIPO_DE_FACTURA_IDS = [110204, 110205, 110216, 110212];
 
 /**
  * Identificadores asociados al tipo de factura de referencia.
