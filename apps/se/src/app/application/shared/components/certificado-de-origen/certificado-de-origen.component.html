@@ -547,18 +547,12 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="paisBloqueCertificadoGet" [label]="'País / Bloque'" [required]="true" name="estado"
           formControlName="bloque" (selectionChange)="tipoSeleccion($event)" [isDisabled]="esFormularioSoloLectura"
+          [markTouched]="formCertificado.get('bloque')?.touched??false"
           (change)="setValoresStore(
                     'formCertificado',
                   'bloque',
                   'setFormCertificadoGenric')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-        @if(formCertificado.get('bloque')?.invalid && (formCertificado.get('bloque')?.touched ||
-        formCertificado.get('bloque')?.dirty)) {
-        <div class="d-grid">
-          @if(formCertificado.get('bloque')?.errors?.['required']) {
-          <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-        }
+     
       </div>
     </div>
     <div class="row mb-3">
