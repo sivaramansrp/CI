@@ -193,30 +193,58 @@ export class SolicitudPageComponent implements OnDestroy {
 * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
 * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
 * */
-  buildMercanciaSeleccionadas(arr: any[]): any[] {
-    return arr.map((item: any) => ({
-      id: item.id,
-      fraccion_arancelaria: item.fraccionArancelaria,
-      fraccion_naladi: item.fraccionNaladi,
-      fraccion_naladi_sa93: item.fraccionNaladiSa93,
-      fraccion_naladi_sa96: item.fraccionNaladiSa96,
-      fraccion_naladi_sa02: item.fraccionNaladiSa02,
-      nombre_tecnico: item.nombreTecnico,
-      nombre_comercial: item.nombreComercial,
-      registro_producto: item.numeroDeRegistrodeProductos,
-      fecha_expedicion: item.fechaExpedicion,
-      fecha_vencimiento: item.fechaVencimiento,
-      tipo_factura: item.tipoFactura,
-      num_factura: item.numFactura,
-      complemento_descripcion: item.complementoDescripcion,
-      fecha_factura: item.fechaFactura,
-      cantidad: item.cantidad,
-      umc: item.umc,
-      unidad_medida: item.unidadMedidaMasaBruta,
-      valor_mercancia: item.valorMercancia
-    }));
+  buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
+  const RESULT: unknown[] = [];
 
-  }
+  array.forEach((arr) => {
+    const ITEM = arr as {
+      id?: number;
+      fraccionArancelaria?: string;
+      fraccionNaladi?: string;
+      fraccionNaladiSa93?: string;
+      fraccionNaladiSa96?: string;
+      fraccionNaladiSa02?: string;
+      nombreTecnico?: string;
+      nombreComercial?: string;
+      numeroDeRegistrodeProductos?: string;
+      fechaExpedicion?: string;
+      fechaVencimiento?: string;
+      tipoFactura?: string;
+      numFactura?: string;
+      complementoDescripcion?: string;
+      fechaFactura?: string;
+      cantidad?: string;
+      umc?: string;
+      unidadMedidaMasaBruta?: string;
+      valorMercancia?: string;
+    };
+
+    RESULT.push({
+      id: ITEM.id || null,
+      fraccion_arancelaria: ITEM.fraccionArancelaria || '',
+      fraccion_naladi: ITEM.fraccionNaladi || '',
+      fraccion_naladi_sa93: ITEM.fraccionNaladiSa93 || '',
+      fraccion_naladi_sa96: ITEM.fraccionNaladiSa96 || '',
+      fraccion_naladi_sa02: ITEM.fraccionNaladiSa02 || '',
+      nombre_tecnico: ITEM.nombreTecnico || '',
+      nombre_comercial: ITEM.nombreComercial || '',
+      registro_producto: ITEM.numeroDeRegistrodeProductos || '',
+      fecha_expedicion: ITEM.fechaExpedicion || '',
+      fecha_vencimiento: ITEM.fechaVencimiento || '',
+      tipo_factura: ITEM.tipoFactura || '',
+      num_factura: ITEM.numFactura || '',
+      complemento_descripcion: ITEM.complementoDescripcion || '',
+      fecha_factura: ITEM.fechaFactura || '',
+      cantidad: ITEM.cantidad || '',
+      umc: ITEM.umc || '',
+      unidad_medida: ITEM.unidadMedidaMasaBruta || '',
+      valor_mercancia: ITEM.valorMercancia || ''
+    });
+  });
+
+  return RESULT;
+}
+
 
   /**
 * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
