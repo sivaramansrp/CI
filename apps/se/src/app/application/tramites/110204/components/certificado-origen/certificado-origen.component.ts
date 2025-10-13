@@ -412,9 +412,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Busca la mercancia y actualiza los datos en el store.
    */
   buscarrMercancia(): void {
-
+       const PAYLOAD = {
+      rfcExportador: "AAL0409235E6",
+      tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
+      pais: { cvePais: this.formCertificado['bloque'] || '' }
+    };
       this.certificadoService
-        .obtenerMercancia()
+        .buscarMercanciasCert(PAYLOAD)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe(
           (data: Mercancia[]) => {
