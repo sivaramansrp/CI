@@ -180,6 +180,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   idiomaSeleccion(): void {
     this.setValoresStore(this.formDatosCertificado, 'idioma', 'setIdioma');
+    this.store.setFormValidity('datosCertificado', this.formDatosCertificado.valid);
   }
 
   /**
@@ -201,6 +202,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   entidadFederativaSeleccion(): void {
     this.setValoresStore(this.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
+    this.store.setFormValidity('datosCertificado', this.formDatosCertificado.valid);
   }
 
   /**
@@ -222,31 +224,16 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   representacionFederalSeleccion(): void {
     this.setValoresStore(this.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
+    this.store.setFormValidity('datosCertificado', this.formDatosCertificado.valid);
   }
   /**
    * Valida el formulario de datos del certificado.
    * 
    * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
    */
-public validarFormulario(): boolean {
-  let isValid = true;
-
-
-// Verifica si el formulario 'formDatosCertificado' está inicializado.
-// Si no está inicializado, muestra un error en la consola y retorna false.
-if (!this.formDatosCertificado) {
-    return false;
-}
-
-// Verifica si el formulario 'formDatosCertificado' es inválido.
-// Si es inválido, marca todos los campos como tocados y establece 'isValid' en false.
-if (this.formDatosCertificado.invalid) {
+  public validarFormulario(): void {
     this.formDatosCertificado.markAllAsTouched();
-    isValid = false;
-}
-
-  return isValid;
-}
+  }
   /**
    * Actualiza el estado del store con el valor seleccionado en el formulario.
    * 

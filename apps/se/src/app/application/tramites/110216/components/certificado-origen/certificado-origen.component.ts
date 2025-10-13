@@ -857,6 +857,13 @@ this.mercanciaSeleccionadasTablaDatos = []
   }
 
   /**
+   * Valida el formulario de datos del certificado.
+   */
+  public validarFormulario(): void {
+    this.formularioCertificado.markAllAsTouched();
+  }
+
+  /**
    * Limpia los observables al destruir el componente.
    * 
    * Este método emite un valor en el `destroyNotifier$` y completa el observable para evitar fugas de memoria.

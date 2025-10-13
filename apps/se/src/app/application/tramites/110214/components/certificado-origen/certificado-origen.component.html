@@ -65,13 +65,13 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado / Acuerdo'" [required]="true" id="tratado"
             formControlName="tratado" [markTouched]="grupoTratado.get('tratado')?.touched??false"
-            (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "
+            (change)=" setValoresStore(formularioCertificado, 'tratado', 'setGrupoTratadoTratado', 'grupoTratado') "
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais"
             formControlName="pais" [markTouched]="grupoTratado.get('pais')?.touched??false"
-            (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"
+            (change)="setValoresStore(formularioCertificado, 'pais', 'setGrupoTratadoPais', 'grupoTratado')"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
@@ -80,19 +80,19 @@
           <label>Fracción arancelaria:</label>
           <input type="text" class="form-control" formControlName="fraccionArancelaria"  maxlength="8"
             [ngClass]="isValid(grupoTratado,'fraccionArancelaria') ? 'required' : ''"
-            (change)=" setValoresStore( grupoTratado, 'fraccionArancelaria', 'setGrupoTratadoFraccionArancelaria' ) " />
+            (change)="setValoresStore(formularioCertificado, 'fraccionArancelaria', 'setGrupoTratadoFraccionArancelaria', 'grupoTratado') " />
         </div>
         <div class="col-md-4">
           <label># Registro producto:</label>
           <input type="text" class="form-control" formControlName="numeroRegistro"  maxlength="12"
             [ngClass]="isValid(grupoTratado,'numeroRegistro') ? 'required' : ''"
-            (change)=" setValoresStore( grupoTratado, 'numeroRegistro', 'setGrupoTratadoNumeroRegistro' ) " />
+            (change)="setValoresStore(formularioCertificado, 'numeroRegistro', 'setGrupoTratadoNumeroRegistro', 'grupoTratado') " />
         </div>
         <div class="col-md-4">
           <label>Nombre comercial:</label>
           <input type="text" class="form-control" formControlName="nombreComercial" maxlength="200"
             [ngClass]="isValid(grupoTratado,'nombreComercial') ? 'required' : ''"
-            (change)=" setValoresStore( grupoTratado, 'nombreComercial', 'setGrupoTratadoNombreComercial' ) " />
+            (change)="setValoresStore(formularioCertificado, 'nombreComercial', 'setGrupoTratadoNombreComercial', 'grupoTratado') " />
         </div>
       </div>
       <div class="row mt-3">
@@ -126,6 +126,7 @@
     <ng-container>
       <div class="table-container mt-5">
         <app-tabla-dinamica [configuracionTabla]="disponiblesEncabezados"
+          [datos]="mercanciaDisponsiblesTablaDatos"
           (filaClic)="disponiblesSeleccionDeFilas($event)"></app-tabla-dinamica>
       </div>
     </ng-container>

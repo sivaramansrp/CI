@@ -337,9 +337,10 @@ pedimentos: Array<Pedimento> = [];
    * @param {string} campo - El nombre del campo en el formulario.
    * @param {keyof Tramite110214Store} metodoNombre - El nombre del método del store que será llamado.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110214Store): void {
-    const VALOR = form.get(campo)?.value;
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110214Store, childGroupName?: string): void {
+    const VALOR = childGroupName ? form.get([childGroupName, campo])?.value : form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.store.setFormValidity('certificadoOrigen', this.formularioCertificado.valid);
   }
 
   /**
@@ -566,7 +567,7 @@ static restrictFutureDates(): ValidatorFn {
       fraccionArancelaria: this.formularioCertificado.get('grupoTratado.fraccionArancelaria')?.value || '',
       numeroRegistroProductos: this.formularioCertificado.get('grupoTratado.numeroRegistro')?.value || '',
       nombreComercial: this.formularioCertificado.get('grupoTratado.nombreComercial')?.value || '',
-      nombreTecnico: '', 
+      nombreTecnico: 'Composiciones constituidas por polialquifenol-formaldehido oxietilado y/o polioxipropileno oxietilado, aunque contengan solventes orgánicos, para la fabricación de de hulsificantes para la industria petrolera.', 
       fechaExpedicion: this.formularioCertificado.get('grupoTratado.fechaInicial')?.value || '',
       fechaVencimiento: this.formularioCertificado.get('grupoTratado.fechaFinal')?.value || '', 
     };
@@ -816,20 +817,10 @@ static restrictFutureDates(): ValidatorFn {
   }
   /**
    * Valida el formulario de datos del certificado.
-   * 
-   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
    */
-public validarFormulario(): boolean {
-  let isValid = true;
-
-  if (this.formularioCertificado.invalid) {
+  public validarFormulario(): void {
     this.formularioCertificado.markAllAsTouched();
-    isValid = false;
   }
-
-
-  return isValid;
-}
   /**
    * Método que se ejecuta al destruir el componente.
    * 

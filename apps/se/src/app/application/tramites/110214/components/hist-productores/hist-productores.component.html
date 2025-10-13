@@ -1,4 +1,4 @@
-<app-historico-productores (formHistoricoEvent)="setValoresStore($event)"
+<app-historico-productores #HistoricoProductoresComponent (formHistoricoEvent)="setValoresStore($event)"
     (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)" [tramiteState]="tramiteState"
     [agregarDatosProductor]="agregarDatosProductor" [productoresExportador]="productoresExportador || []"
     [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"

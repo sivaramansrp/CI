@@ -1,12 +1,12 @@
 import { CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
-import { HttpCoreService, JsonResponseCatalogo } from '@libs/shared/data-access-user/src';
+import { HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PROC_110214 } from '../servers/api-route';
 import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
-import { Tramite110214State } from '../../../estados/tramites/tramite110214.store';
 import { Tramite110214Query } from '../../../estados/queries/tramite110214.query';
+import { Tramite110214State } from '../../../estados/tramites/tramite110214.store';
 /**
  * Servicio para validar inicialmente los datos del certificado en el trámite 110214.
  * 
@@ -149,13 +149,14 @@ export class ValidarInicialmenteCertificadoService {
   }
 
   /**
-     * Obtiene todos los datos del estado almacenado en el store.
-     * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
-     */
-    getAllState(): Observable<Tramite110214State> {
-      return this.tramite110214Query.allStoreData$;
-    }
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite110214State> {
+    return this.tramite110214Query.allStoreData$;
+  }
 
+    /** Construye el objeto destinatario a partir del estado del trámite 110214. */
   // eslint-disable-next-line class-methods-use-this
   buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
     return data.map(item => ({
@@ -169,6 +170,7 @@ export class ValidarInicialmenteCertificadoService {
     }));
   }
 
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
   // eslint-disable-next-line class-methods-use-this
   buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
     return data.map(item => ({
@@ -181,5 +183,76 @@ export class ValidarInicialmenteCertificadoService {
       "complementoDescripcion": item.complementoDescripcion,
       "rfcProductor": item.rfcProductor1
     }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildCertificado(data: Tramite110214State): unknown {
+    return {
+      "tratado_acuerdo": data.grupoTratado.tratado,
+      "pais_bloque": data.grupoTratado.pais,
+      "fraccion_arancelaria": data.grupoTratado.fraccionArancelaria,
+      "nombre_comercial": data.grupoTratado.nombreComercial,
+      "fecha_inicio": formatearFechaYyyyMmDd(data.grupoTratado.fechaInicialInput),
+      "fecha_fin": formatearFechaYyyyMmDd(data.grupoTratado.fechaFinalInput),
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaSeleccionadasTablaDatos),
+    }
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildCertificadoMercancia(data: SeleccionadasTabla[]): unknown {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    return data.map((item) => ({
+      ...item,
+      id: 0,
+      fraccion_arancelaria: item.fraccionArancelaria ?? '',
+      cantidad: item.cantidad ?? '',
+      unidad_medida: item.unidadMedida ?? '',
+      valor_mercancia: item.valorMercancia ?? '',
+      tipo_factura: item.tipoFactura ?? '',
+      num_factura: item.numFactura ?? '',
+      complemento_descripcion: item.complementoDescripcion ?? '',
+      fecha_factura: item.fechaFactura ?? '',
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildDestinatario(data: Tramite110214State): unknown {
+    return {
+      "nombre": data.grupoReceptor.nombre,
+      "primer_apellido": data.grupoReceptor.apellidoPrimer,
+      "segundo_apellido": data.grupoReceptor.apellidoSegundo,
+      "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
+      "razon_social": data.grupoReceptor.razonSocial,
+      "domicilio": {
+          "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad,
+          "calle": data.grupoDeDirecciones.calle,
+          "numero_letra": data.grupoDeDirecciones.numeroLetra,
+          "lada": "HG",
+          "telefono": data.grupoDeDirecciones.telefono,
+          "fax": 4444444,
+          "correo_electronico": data.grupoDeDirecciones.correoElectronico,
+          "pais_destino": "IND"
+      },
+      "medio_transporte": "MEDTR.01"
+    }
+  }
+
+  /** Construye el objeto de datos para el certificado a partir del estado del trámite 110214. */
+  buildDatosCertificado(data: Tramite110214State): unknown {
+    return {
+      "observaciones": data.observaciones ?? '',
+      "precisa": "wertyu",
+      "presenta": "qwertyu",
+      "idioma": data.idioma ?? 0,
+      "representacion_federal": {
+          "entidad_federativa": data.entidadFederativa ?? 0,
+          "representacion_federal": data.representacionFederal ?? 0
+      },
+      "desea_obtener_certificado": true,
+      "justificacion": "qwertyui"
+    }
   }
 }

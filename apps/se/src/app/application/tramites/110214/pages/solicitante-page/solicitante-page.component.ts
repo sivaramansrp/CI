@@ -181,12 +181,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
         return; // Detener ejecución si los formularios son inválidos
       }
+      this.isPeligro = true;
     }
 
     // Verifica si el valor de la acción está en el rango adecuado
     if (e.valor > 0 && e.valor <= this.pasos.length) {
       // Actualiza el índice del paso basado en el valor de la acción
-      // this.indice = e.valor;
 
       // Dependiendo de la acción, avanza o retrocede en el wizard
       if (e.accion === 'cont') {
@@ -270,6 +270,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     guardar(data: Tramite110214State): Promise<any> {
       const PRODUCTORES_POR_EXPORTADOR = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.agregarProductoresExportador);
       const MERCANCIAS_PRODUCDOR = this.validarInicialmenteCertificadoService.buildMercanciasProductor(data.mercanciaProductores);
+      const CERTIFICADO = this.validarInicialmenteCertificadoService.buildCertificado(data);
+      const DESTINATARIO = this.validarInicialmenteCertificadoService.buildDestinatario(data);
+      const DATOS_CERTIFICADO = this.validarInicialmenteCertificadoService.buildDatosCertificado(data);
       const PAYLOAD = {
         "esDeGuardar": true,
         "tipoDeSolicitud": "guardar",
@@ -279,7 +282,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         "cveUnidadAdministrativa": "8101",
         "costoTotal": 10000.5,
         "certificadoSerialNumber": "1234567890ABCDEF",
-        "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+        // "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
         "numeroFolioTramiteOriginal": "TRM-2023-00001",
         "nombre": "Juan",
         "apPaterno": "Pérez",
@@ -294,13 +297,15 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         },
         "solicitud": {
           "certificadoOrigen": {
-            "datosConfidencialesProductor": "",
-            "productorMismoExportador": "",
+            "datosConfidencialesProductor": data.formulario['datosConfidencialesProductor'],
+            "productorMismoExportador": data.formulario['productorMismoExportador'],
             "productoresPorExportador": [...PRODUCTORES_POR_EXPORTADOR],
             "mercanciasProductor": [...MERCANCIAS_PRODUCDOR]
           }
-        }
-        
+        },
+        "certificado": CERTIFICADO,
+        "destinatario": DESTINATARIO,
+        "datos_del_certificado": DATOS_CERTIFICADO,
       }
       return new Promise((resolve, reject) => {
         this.validarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe({

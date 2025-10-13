@@ -140,6 +140,13 @@ export interface Tramite110216State {
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+
+  formValidity?: {
+    datosCertificado?: boolean;
+    destinatario?: boolean;
+    histProductores?: boolean;
+    certificadoOrigen?: boolean;
+  };
 }
 
 /**
@@ -247,7 +254,8 @@ export function createInitialState(): Tramite110216State {
     datosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',      
-    }
+    },
+    formValidity: {},
   };
 }
 /**
@@ -1419,6 +1427,21 @@ export class Tramite110216Store extends Store<Tramite110216State> {
       formulario: {
         ...state.formulario,
         ...values,
+      },
+    }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
       },
     }));
   }

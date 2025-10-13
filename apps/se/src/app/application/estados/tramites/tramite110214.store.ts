@@ -157,6 +157,13 @@ export interface Tramite110214State {
   agregarProductoresExportador: HistoricoColumnas[];
 
   mercanciaProductores: MercanciaTabla[];
+
+  formValidity?: {
+    datosCertificado?: boolean;
+    destinatario?: boolean;
+    histProductores?: boolean;
+    certificadoOrigen?: boolean;
+  };
 }
 
 /**
@@ -252,7 +259,8 @@ export function createInitialState(): Tramite110214State {
     },
     optionsTipoFactura: [],
     agregarProductoresExportador: [],
-    mercanciaProductores: []
+    mercanciaProductores: [],
+    formValidity: {},
   };
 }
 /**
@@ -1171,6 +1179,10 @@ public setGrupoOperador(grupoOperador: GrupoOperador): void {
     }));
   }
 
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
   setAgregarProductoresExportador(productor: HistoricoColumnas): void {
     this.update((state) => ({
       ...state,
@@ -1181,10 +1193,30 @@ public setGrupoOperador(grupoOperador: GrupoOperador): void {
     }));
   }
 
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
   setMercanciaProductores(mercancia: MercanciaTabla[]): void {
     this.update((state) => ({
       ...state,
       mercanciaProductores: mercancia,
     }));
   }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
+    }));
+  }
+
 }

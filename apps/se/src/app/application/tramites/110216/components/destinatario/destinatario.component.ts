@@ -291,4 +291,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   get grupoRepresentativo(): FormGroup {
     return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
   }
+
+  /**
+   * Valida el formulario del destinatario.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+  public validarFormulario(): void {
+    this.registroFormulario.markAllAsTouched();
+  }
 }

@@ -114,8 +114,6 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.cargarProductorPorExportador();
-    this.cargarMercancia();
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -138,6 +136,8 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
+    this.cargarProductorPorExportador();
 
     if (this.solicitudState.optionsTipoFactura.length === 0) {
       this.facturaOpcion();

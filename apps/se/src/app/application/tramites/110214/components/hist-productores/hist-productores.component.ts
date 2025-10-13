@@ -1,5 +1,5 @@
-import { AgregarDatosProductorFormulario, Catalogo, HistoricoColumnas, MercanciaTabla, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/validar-inicialmente-certificado.model';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110214State, Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { CommonModule } from '@angular/common';
@@ -18,6 +18,11 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   styleUrl: './hist-productores.component.scss',
 })
 export class HistProductoresComponent implements OnInit, OnDestroy {
+
+  /** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
+   * Permite gestionar sus métodos y propiedades.
+   */
+  @ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
 
   /**
    * Estado actual del trámite.
@@ -81,11 +86,10 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   */
   public esFormularioSoloLectura: boolean = false;
 
-  /** Indica si el formulario es válido. */
-  public isFormValid: boolean = false;
-
+  /** Observable que expone la lista de productores exportador agregados al store. */
   public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
 
+  /** Observable que expone la lista de mercancia al store. */
   public mercanciaProductores$!: Observable<MercanciaTabla[]>;
 
   /**
@@ -229,7 +233,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
 
   /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
-    this.isFormValid = event;
+    this.store.setFormValidity('histProductores', event);
   }
 
   /**
@@ -237,8 +241,8 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * 
    * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
    */
-  public validarFormulario(): boolean {
-    return this.isFormValid;
+  public validarFormulario(): void {
+    this.historicoProductoresComponent.validarFormulario();
   }
 
 /**

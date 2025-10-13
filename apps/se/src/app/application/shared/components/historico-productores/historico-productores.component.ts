@@ -630,13 +630,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * 
    * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
    */
-  public validarFormulario(): boolean {
-    let isValid = true;
-    if (this.formulario.invalid) {
-      this.formulario.markAllAsTouched();
-      isValid = false;
-    }
-    return isValid;
+  public validarFormulario(): void {
+    this.formulario.markAllAsTouched();
   }
 
   /**

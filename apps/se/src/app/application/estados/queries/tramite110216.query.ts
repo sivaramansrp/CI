@@ -12,6 +12,11 @@ import { Tramite110216Store } from '../tramites/tramite110216.store';
 export class Tramite110216Query extends Query<Tramite110216State> {
 
   /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
+  /**
    * @descripcion
    *  Observable que selecciona los datos del formulario de certificado.
    */ 
