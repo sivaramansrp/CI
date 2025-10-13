@@ -6,7 +6,7 @@ import {
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
@@ -54,6 +54,11 @@ import { takeUntil } from 'rxjs';
   styleUrl: './administrar-residuos.component.scss',
 })
 export class AdministrarResiduosComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario es válido.
+   */
+  @Input() esFormValido!: boolean;
+
   /**
    * Datos del encabezado de la tabla
    */
@@ -130,7 +135,6 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
    */
   aduanas!: Catalogo[];
 
-  esFormaValido: boolean = false;
   /**
    * Mensaje de error del formulario para mostrar en el alert.
    *
@@ -409,5 +413,11 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
           clave: item.clave,
         }));
       });
+  }
+
+
+  isInvalid(field: string): boolean | undefined {
+    const CONTROL = this.formularioParaRecuentoTotal.get(field);
+    return (CONTROL?.invalid && CONTROL?.touched) || !this.esFormValido;
   }
 }
