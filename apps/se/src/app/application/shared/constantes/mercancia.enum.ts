@@ -161,7 +161,7 @@ export const MARCA_IDS = [110207];
 /**
  * IDs de procedimientos en los que el campo “Fecha de factura” es obligatorio.
  */
-export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212, 110211];
+export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212];
 
 /**
  * IDs de procedimientos en los que el campo “Cantidad” es obligatorio.
