@@ -234,53 +234,73 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
      * Método para manejar las acciones de los botones del wizard.
      */
+    // Commented out code block for now
+    // getValorIndice(e: AccionBoton): void {
+    //   // Validar formularios antes de continuar desde el paso uno
+    //   const NEXT_INDEX =
+    //       e.accion === 'cont' ? e.valor + 1 :
+    //       e.accion === 'ant' ? e.valor - 1 :
+    //       e.valor;
+    //   if (this.indice === 1 && e.accion === 'cont') {
+    //     const ES_VALIDO = this.validarFormulariosPasoActual();
+    //     if (!ES_VALIDO) {
+    //       this.isPeligro = true;
+    //       this.peligroTexto = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
+    //       this.mostrarNotificacionError();
+  
+    //       return; // Detener ejecución si los formularios son inválidos
+    //     }
+    //     this.isPeligro = true;
+    //   }
+  
+    //   // Verifica si el valor de la acción está en el rango adecuado
+    //   if (e.valor > 0 && e.valor <= this.pasos.length) {
+    //     // Actualiza el índice del paso basado en el valor de la acción
+  
+    //     // Dependiendo de la acción, avanza o retrocede en el wizard
+    //     if (e.accion === 'cont') {
+    //       this.shouldNavigate$()
+    //       .subscribe((shouldNavigate) => {
+    //         if (shouldNavigate) {
+    //           this.indice = NEXT_INDEX;
+    //           this.datosPasos.indice = NEXT_INDEX;
+    //           this.wizardService.cambio_indice(NEXT_INDEX);
+    //           this.wizardComponent.siguiente();
+    //         } else {
+    //           this.indice = e.valor;
+    //           this.datosPasos.indice = e.valor;
+    //         }
+    //       });
+    //     } else {
+    //       // this.wizardComponent.atras();
+    //       this.indice = NEXT_INDEX;
+    //       this.datosPasos.indice = NEXT_INDEX;
+    //       this.wizardComponent.atras();
+    //     }
+  
+    //     // Actualiza el paso activo en el store
+    //     this.store.setPasoActivo(this.indice);
+    //   }
+    // }
     getValorIndice(e: AccionBoton): void {
-      // Validar formularios antes de continuar desde el paso uno
-      const NEXT_INDEX =
-          e.accion === 'cont' ? e.valor + 1 :
-          e.accion === 'ant' ? e.valor - 1 :
-          e.valor;
-      if (this.indice === 1 && e.accion === 'cont') {
-        const ES_VALIDO = this.validarFormulariosPasoActual();
-        if (!ES_VALIDO) {
-          this.isPeligro = true;
-          this.peligroTexto = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
-          this.mostrarNotificacionError();
-  
-          return; // Detener ejecución si los formularios son inválidos
-        }
-        this.isPeligro = true;
+    // Verifica si el valor de la acción está en el rango adecuado
+    if (e.valor > 0 && e.valor < 5) {
+      // Actualiza el índice del paso basado en el valor de la acción
+      this.indice = e.valor;
+
+      // Dependiendo de la acción, avanza o retrocede en el wizard
+      if (e.accion === 'cont') {
+        // Si la acción es 'cont', avanza al siguiente paso
+        this.wizardComponent.siguiente();
+      } else {
+        // Si la acción es 'atras', retrocede al paso anterior
+        this.wizardComponent.atras();
       }
-  
-      // Verifica si el valor de la acción está en el rango adecuado
-      if (e.valor > 0 && e.valor <= this.pasos.length) {
-        // Actualiza el índice del paso basado en el valor de la acción
-  
-        // Dependiendo de la acción, avanza o retrocede en el wizard
-        if (e.accion === 'cont') {
-          this.shouldNavigate$()
-          .subscribe((shouldNavigate) => {
-            if (shouldNavigate) {
-              this.indice = NEXT_INDEX;
-              this.datosPasos.indice = NEXT_INDEX;
-              this.wizardService.cambio_indice(NEXT_INDEX);
-              this.wizardComponent.siguiente();
-            } else {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-            }
-          });
-        } else {
-          // this.wizardComponent.atras();
-          this.indice = NEXT_INDEX;
-          this.datosPasos.indice = NEXT_INDEX;
-          this.wizardComponent.atras();
-        }
-  
-        // Actualiza el paso activo en el store
-        this.store.setPasoActivo(this.indice);
-      }
+
+      // Actualiza el paso activo en el store
+      this.store.setPasoActivo(this.indice);
     }
+  }
 
     /**
    * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
@@ -349,7 +369,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         },
         "solicitante": {
     
-        }
+        },
+        
       }
       return new Promise((resolve, reject) => {
         this.certificadosOrigenService.guardarDatosPost(PAYLOAD).subscribe({
