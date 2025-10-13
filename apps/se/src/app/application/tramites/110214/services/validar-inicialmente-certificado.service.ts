@@ -2,6 +2,7 @@ import { CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, Res
 import { HttpCoreService, JSONResponse, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 import { Observable } from 'rxjs';
 import { PROC_110214 } from '../servers/api-route';
 import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
@@ -160,7 +161,6 @@ export class ValidarInicialmenteCertificadoService {
   // eslint-disable-next-line class-methods-use-this
   buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
     return data.map(item => ({
-      "consecutivo": item.id,
       "nombreCompleto": item.nombreProductor,
       "rfc": item.numeroRegistroFiscal,
       "direccionCompleta": item.direccion,
@@ -179,6 +179,7 @@ export class ValidarInicialmenteCertificadoService {
       "descUnidadMedidaComercial": item.unidadMedida,
       "valorTransaccional": item.valorMercancia,
       "descFactura": item.fetchFactura,
+      "fechaFactura": item.fetchFactura,
       "numeroFactura": item.numeroFactura,
       "complementoDescripcion": item.complementoDescripcion,
       "rfcProductor": item.rfcProductor1
@@ -188,35 +189,35 @@ export class ValidarInicialmenteCertificadoService {
   /** Construye el objeto destinatario a partir del estado del trámite 110214. */
   buildCertificado(data: Tramite110214State): unknown {
     return {
-      "tratado_acuerdo": data.grupoTratado.tratado,
-      "pais_bloque": data.grupoTratado.pais,
-      "fraccion_arancelaria": data.grupoTratado.fraccionArancelaria,
-      "nombre_comercial": data.grupoTratado.nombreComercial,
-      "registro_producto": data.grupoTratado.numeroRegistro,
-      "fecha_inicio": formatearFechaYyyyMmDd(data.grupoTratado.fechaInicialInput),
-      "fecha_fin": formatearFechaYyyyMmDd(data.grupoTratado.fechaFinalInput),
+      "tratado_acuerdo": data.formCertificado['entidadFederativa'],
+      "pais_bloque": data.formCertificado['bloque'],
+      "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'],
+      "nombre_comercial": data.formCertificado['nombreComercialForm'],
+      "registro_producto": data.formCertificado['registroProductoForm'],
+      "fecha_inicio": formatearFechaYyyyMmDd(data.formCertificado['fechaInicioInput'] as string),
+      "fecha_fin": formatearFechaYyyyMmDd(data.formCertificado['fechaFinalInput'] as string),
       "realizo_tercer_operador": {
-        "tercer_operador": data.tercerOperador,
-        "nombre": data.grupoReceptor.nombre,
-        "primer_apellido": data.grupoReceptor.apellidoPrimer,
-        "segundo_apellido": data.grupoReceptor.apellidoSegundo,
-        "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
-        "razon_social": data.grupoReceptor.razonSocial
+        "tercer_operador": data.formCertificado['si'] as boolean,
+        "nombre": data.formCertificado['nombres'] as string,
+        "primer_apellido": data.formCertificado['primerApellido'] as string,
+        "segundo_apellido": data.formCertificado['segundoApellido'] as string,
+        "numero_registro_fiscal": data.formCertificado['numeroDeRegistroFiscal'] as string,
+        "razon_social": data.formCertificado['razonSocial'] as string
       },
       "domicilio_tercer_operador": {
-        "pais": "",
-        "ciudad": data.grupoDeDirecciones.ciudad,
-        "calle": data.grupoDeDirecciones.calle,
-        "numero_letra": data.grupoDeDirecciones.numeroLetra,
-        "telefono": data.grupoDeDirecciones.telefono,
-        "correo_electronico": data.grupoDeDirecciones.correoElectronico
+        "pais": data.formCertificado['pais'] as string,
+        "ciudad": data.formCertificado['ciudad'] as string,
+        "calle": data.formCertificado['calle'] as string,
+        "numero_letra": data.formCertificado['numeroLetra'] as string,
+        "telefono": data.formCertificado['telefono'] as string,
+        "correo_electronico": data.formCertificado['correo'] as string
       },
-      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaSeleccionadasTablaDatos),
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla),
     }
   }
 
   /** Construye el objeto destinatario a partir del estado del trámite 110214. */
-  buildCertificadoMercancia(data: SeleccionadasTabla[]): unknown {
+  buildCertificadoMercancia(data: Mercancia[]): unknown {
     if (!Array.isArray(data)) {
       return [];
     }
@@ -226,10 +227,10 @@ export class ValidarInicialmenteCertificadoService {
       id: 0,
       fraccion_arancelaria: item.fraccionArancelaria ?? '',
       cantidad: item.cantidad ?? '',
-      unidad_medida: item.unidadMedida ?? '',
+      unidad_medida: item.umc ?? '',
       valor_mercancia: item.valorMercancia ?? '',
       tipo_factura: item.tipoFactura ?? '',
-      num_factura: item.numFactura ?? '',
+      num_factura: item.numeroFactura ?? '',
       complemento_descripcion: item.complementoDescripcion ?? '',
       fecha_factura: item.fechaFactura ?? '',
     }));
@@ -253,6 +254,14 @@ export class ValidarInicialmenteCertificadoService {
           "correo_electronico": data.grupoDeDirecciones.correoElectronico,
           "pais_destino": "IND"
       },
+      "generalesRepresentanteLegal": {
+          "lugarRegistro": data.grupoRepresentativo.lugar,
+          "nombre": data.grupoRepresentativo.nombreExportador,
+          "razonSocial": data.grupoRepresentativo.empresa,
+          "puesto": data.grupoRepresentativo.cargo,
+          "telefono": data.grupoRepresentativo.telefono,
+          "correoElectronico": data.grupoRepresentativo.correoElectronico
+        },
       "medio_transporte": "MEDTR.01"
     }
   }
@@ -261,15 +270,11 @@ export class ValidarInicialmenteCertificadoService {
   buildDatosCertificado(data: Tramite110214State): unknown {
     return {
       "observaciones": data.observaciones ?? '',
-      "precisa": "wertyu",
-      "presenta": "qwertyu",
       "idioma": data.idioma ?? 0,
       "representacion_federal": {
           "entidad_federativa": data.entidadFederativa ?? 0,
           "representacion_federal": data.representacionFederal ?? 0
-      },
-      "desea_obtener_certificado": true,
-      "justificacion": "qwertyui"
+      }
     }
   }
 }

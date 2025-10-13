@@ -268,7 +268,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     guardar(data: Tramite110214State): Promise<any> {
-      const PRODUCTORES_POR_EXPORTADOR = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.agregarProductoresExportador);
+      const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.agregarProductoresExportador);
+      const PRODUCTORES_POR_EXPORTADOR = this.validarInicialmenteCertificadoService.buildProductoresPorExportador(data.productoresExportador);
       const MERCANCIAS_PRODUCDOR = this.validarInicialmenteCertificadoService.buildMercanciasProductor(data.mercanciaProductores);
       const CERTIFICADO = this.validarInicialmenteCertificadoService.buildCertificado(data);
       const DESTINATARIO = this.validarInicialmenteCertificadoService.buildDestinatario(data);
@@ -293,15 +294,30 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         "domicilio": {
         },
         "solicitante": {
-   
+          "rfc": "AAL0409235E6",
+          "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+          "actividad_economica": "Fabricación de productos de hierro y acero",
+          "correo_electronico": "contacto@acerosalvarado.com",
+          "domicilio": {
+            "pais": "México",
+            "codigo_postal": "06700",
+            "estado": "Ciudad de México",
+            "municipio_alcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numero_exterior": "123",
+            "numero_interior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+          }
         },
         "solicitud": {
-          "certificadoOrigen": {
-            "datosConfidencialesProductor": data.formulario['datosConfidencialesProductor'],
-            "productorMismoExportador": data.formulario['productorMismoExportador'],
-            "productoresPorExportador": [...PRODUCTORES_POR_EXPORTADOR],
-            "mercanciasProductor": [...MERCANCIAS_PRODUCDOR]
-          }
+          "datosConfidencialesProductor": data.formulario['datosConfidencialesProductor'],
+          "productorMismoExportador": data.formulario['productorMismoExportador'],
+          "productoresPorExportador": [...PRODUCTORES_POR_EXPORTADOR],
+          "mercanciasProductor": [...MERCANCIAS_PRODUCDOR],
+          "ProductoresPorExportadorSeleccionados": [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS]
         },
         "certificado": CERTIFICADO,
         "destinatario": DESTINATARIO,

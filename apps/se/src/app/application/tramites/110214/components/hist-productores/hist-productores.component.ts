@@ -120,6 +120,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.productoresExportador = seccionState.productoresExportador || [];
         })
       )
       .subscribe();
@@ -197,7 +198,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
     this.certificadoDeService.obtenerProductorPorExportador()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(respuesta => {
-        this.productoresExportador = respuesta.datos;
+        this.store.setProductoresExportador(respuesta.datos);
       });
   }
 

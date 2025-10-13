@@ -169,7 +169,7 @@ private isCertificadoOrigenComponentValid: boolean = false;
     this.isHistProductoresComponentValid = this.tramiteQuery.getValue().formValidity?.histProductores ?? false;
 
     if (!this.isCertificadoOrigenComponentValid) {
-      this.certificadoOrigenComponent?.validarFormulario();
+      this.certificadoOrigenComponent?.validarFormularios(); 
     }
 
     if (!this.isDatosCertificadoComponentValid) {

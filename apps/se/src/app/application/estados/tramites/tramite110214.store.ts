@@ -272,7 +272,7 @@ export function createInitialState(): Tramite110214State {
       numeroSerie: '',
       fecha: '',
       numeroFactura: '',
-      tipoFactura: '',
+      tipoFactura: ''
     },
     grupoTratado: { 
       tratado: '',
@@ -334,6 +334,12 @@ export function createInitialState(): Tramite110214State {
       correoElectronico: '',
       numeroLetra: '',
       calle: '',
+      pais1: '',
+      ciudad1: '',
+      telefono1: '',
+      correoElectronico1: '',
+      numeroLetra1: '',
+      calle1: '',
     },
     estado: {
       id: -1,
