@@ -170,8 +170,9 @@
               >:</label
             >
             <input
-              type="number"
+              type="text"
               class="form-control"
+              maxlength="22"
               formControlName="cantidad"
             />
             @if(mercanciaForm.controls['cantidad'].invalid ) {
@@ -227,7 +228,8 @@
               >:</label
             >
             <input
-              type="number"
+              type="text"
+              maxlength="22"
               class="form-control"
               formControlName="valorMercancia"
             />

@@ -411,7 +411,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   initActionFormBuild(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionArancelaria: [this.datosSeleccionados?.fraccionArancelaria],
+      fraccionArancelaria: [{value:this.datosSeleccionados?.fraccionArancelaria, disabled: true}],
       fraccionNaladi: [
         { value: this.datosSeleccionados?.fraccionNaladi, disabled: true },
       ],
