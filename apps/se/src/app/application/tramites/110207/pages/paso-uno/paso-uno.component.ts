@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { RegistroService } from '../../services/registro.service';
@@ -138,9 +138,9 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    /** Método público para validar todos los formularios del paso uno */
   public validateAll(): boolean {
     let isValid = true;
-    if (this.certificadoDeOrigenComponent?.registroForm) {
-      if (this.certificadoDeOrigenComponent.registroForm.invalid) {
-        this.certificadoDeOrigenComponent.registroForm.markAllAsTouched();
+    if (this.certificadoDeOrigenComponent?.formCertificado) {
+      if (this.certificadoDeOrigenComponent.formCertificado.invalid) {
+        this.certificadoDeOrigenComponent.formCertificado.markAllAsTouched();
         isValid = false;
       }
     } else {

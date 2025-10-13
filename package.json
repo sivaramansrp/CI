@@ -1,6 +1,6 @@
 {
   "name": "@ng-mf/source",
-  "version": "1.2.20",
+  "version": "1.2.22",
   "license": "MIT",
   "scripts": {
     "setup:local": "npm ci -f --legacy-peer-deps --prefer-offline --no-package-lock --no-audit --no-fund --progress=false",

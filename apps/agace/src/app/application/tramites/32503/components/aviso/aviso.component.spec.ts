@@ -18,6 +18,18 @@ jest.mock('bootstrap', () => ({
   }))
 }));
 
+// Mock Modal.getInstance
+const MockedModal = Modal as jest.MockedClass<typeof Modal>;
+MockedModal.getInstance = jest.fn().mockImplementation((element) => {
+  if (!element) {
+    throw new Error('Cannot get instance of null element');
+  }
+  return {
+    show: jest.fn(),
+    hide: jest.fn()
+  };
+});
+
 
 
 describe('AvisoComponent', () => {
@@ -46,6 +58,7 @@ describe('AvisoComponent', () => {
       obtenerColonias: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Colonia 1' }] })),
       obtenerAvisoTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Aviso 1' }] })),
       obtenerMercanciaTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Mercancía 1' }] })),
+      getAdaceDatos: jest.fn().mockReturnValue(of({ adace: 'MOCK_ADACE_VALUE' })),
     };
 
     tramiteQueryMock = {

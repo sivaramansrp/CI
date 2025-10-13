@@ -26,6 +26,10 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './peru-certificado.component.html',
   styleUrl: './peru-certificado.component.scss',
 })
+
+export class PeruCertificadoComponent implements OnDestroy {
+  @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
+
 export class PeruCertificadoComponent implements OnInit, OnDestroy {
   /**
    * @property {ListaPasoWizard[]} pasos

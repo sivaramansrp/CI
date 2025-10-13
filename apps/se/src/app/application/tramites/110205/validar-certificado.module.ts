@@ -18,6 +18,7 @@ import { PeruDestinatarioComponent } from './components/peru-destinatario/peru-d
 import { PeruHistoricoProductoresComponent } from './components/peru-historico-productores/peru-historico-productores.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 import { RouterModule } from '@angular/router';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
 
@@ -53,6 +54,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     AlertComponent,
     RepresentanteLegalComponent,
     NotificacionesComponent,
+    RepresentanteLegalExportadorComponent,
     MercanciaComponent,
     PasoFirmaComponent
 ]

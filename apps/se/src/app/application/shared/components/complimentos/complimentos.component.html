@@ -61,7 +61,7 @@
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG"
           [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
-          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
+          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="true">
         </input-fecha>
         <div
           *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.hasError('required') && formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.touched">
@@ -146,7 +146,8 @@
                 <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
                   onkeyup="this.value = this.value.toUpperCase();"
                   onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
-                  [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''" />
+                  [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''"
+                   (input)="onRFCInputChange($event)" />
               </div>
               <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.touched">
                 <p class="mensaje-error" *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required')">
