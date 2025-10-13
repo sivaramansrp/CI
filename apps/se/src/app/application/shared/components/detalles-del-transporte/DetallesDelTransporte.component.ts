@@ -61,7 +61,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
 
   /** Obtiene la lista de medios de transporte desde el servicio */
   getMedioTransporte(): void {
-    this.destinatarioService.getTransporte('110202').subscribe((data) => {
+    this.destinatarioService.getTransporte(this.idProcedimiento.toString()).subscribe((data) => {
       this.medioDeTransporte = data as Catalogo[];
     });
   }

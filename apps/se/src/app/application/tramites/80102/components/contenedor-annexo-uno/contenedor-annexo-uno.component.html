@@ -16,7 +16,7 @@
 <ng-container *ngIf="mostrarComplementarFraccionPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-complementar-fraccion-vista (cerrarPopup)="cerrarComplementarFraccion()"></app-complementar-fraccion-vista>
+      <app-complementar-fraccion-vista [descripcion]="selectedFraccion ?? ''" (cerrarPopup)="cerrarComplementarFraccion()" (guardarComplementarFraccion)="onGuardarComplementarFraccion($event)"></app-complementar-fraccion-vista>
     </div>
   </div>
 </ng-container>
