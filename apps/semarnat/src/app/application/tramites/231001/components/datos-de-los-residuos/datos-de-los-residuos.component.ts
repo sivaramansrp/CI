@@ -549,4 +549,12 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     this.materiaPrimaForm.get('cantidadEnLetra')?.disable();
     this.closeModal();
   }
+
+  /**
+   * Revisa si el control es valido
+   */
+  isInvalid(controlName: string): boolean | undefined {
+    const CONTROL = this.materiaPrimaForm?.get(controlName);
+    return CONTROL?.invalid && (CONTROL?.dirty || CONTROL?.touched);
+  }
 }

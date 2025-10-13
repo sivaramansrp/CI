@@ -118,23 +118,38 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
   anexoTressDatosDos: EventEmitter<DatosAnexotressUno> =
     new EventEmitter<DatosAnexotressUno>(true);
 
-  @Input()
   /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
+  @Input()
   set formularioDatosSubcontratista(valor: FormGroup) {
     this.anexoDosFormGroup.setValue(valor.value);
   }
 
+  /**
+   * Obtiene el formulario de datos del subcontratista.
+   * @returns Formulario reactivo con los datos del subcontratista.
+   */
+  get formularioDatosSubcontratista(): FormGroup {
+    return this.anexoDosFormGroup;
+  }
 
-   @Input()
   /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
+   @Input()
   set formularioDatosDosSubcontratista(valor: FormGroup) {
     this.anexoTresFormGroup.setValue(valor.value);
+  }
+
+  /**
+   * Obtiene el formulario de datos del subcontratista.
+   * @returns Formulario reactivo con los datos del subcontratista.
+   */
+  get formularioDatosDosSubcontratista(): FormGroup {
+    return this.anexoTresFormGroup;
   }
   /**
 * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -310,7 +325,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
+      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value?.toUpperCase() || '',
       estatus: false,
     };
     if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
@@ -400,7 +415,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
+      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value?.toUpperCase() || '',
       estatus: false,
     };
     if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {

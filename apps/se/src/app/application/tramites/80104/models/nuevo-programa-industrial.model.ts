@@ -1,4 +1,5 @@
 import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { AnexoFraccionAnarelaria, AnexoUnoProducto } from "../../../shared/models/complimentos-seccion.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
@@ -132,8 +133,8 @@ export interface AnnexoDosTres {
  * - `seccionActiva`: Cadena que indica la sección activa actual.
  */
 export interface AnnexoUno {
-  exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla: AnexoUnoEncabezado[];
+  exportarDatosTabla: AnexoFraccionAnarelaria[];
+  importarDatosTabla: AnexoUnoProducto[];
   datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
   proveedorClienteDatosTabla: ProveedorCliente[];

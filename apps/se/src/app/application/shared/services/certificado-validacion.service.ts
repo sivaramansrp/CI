@@ -1,5 +1,5 @@
-import { Observable,catchError,map, throwError } from 'rxjs';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/modificacion.enum';
@@ -10,7 +10,7 @@ import { Mercancia } from '../models/modificacion.enum';
 export class CertificadoValidacionService {
 
   // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private catalogoServices: CatalogoServices) { }
 
   /**
    * Obtiene la lista de TratadoAcuerdo desde un archivo JSON local.
@@ -99,18 +99,41 @@ export class CertificadoValidacionService {
       .get<{ data: Catalogo[] }>('assets/json/110202/umc.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
- /**
-     * @method getDatos
-     * Método para obtener datos desde un archivo JSON.
-     * @returns {Observable<unknown>} Un Observable que emite los datos obtenidos o un error.
-     */
-    getDatos(): Observable<unknown> {
-        return this.http.get('assets/json/110222/pagoderechos.json') // Realiza una solicitud GET al archivo JSON.
-          .pipe(
-            catchError((error: unknown) => { // Maneja errores en la solicitud.
-              return throwError(() => error); // Lanza el error para que pueda ser manejado por el suscriptor.
-            })
-          );
-     }
+  /**
+      * @method getDatos
+      * Método para obtener datos desde un archivo JSON.
+      * @returns {Observable<unknown>} Un Observable que emite los datos obtenidos o un error.
+      */
+  getDatos(tramitesID: string): Observable<any[]> {
+    return this.catalogoServices.paisesCatalogo(tramitesID).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+  
+  /**
+   * Obtiene la lista de países bloqueados para un trámite específico.
+   * @param tramitesID - Identificador del trámite
+   * @returns Observable con un arreglo de países bloqueados (o vacío si no hay datos)
+   */
+  getPaises(tramitesID: string): Observable<any[]> {
+    return this.catalogoServices.paisesBloqueCatalogo(tramitesID).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  /**
+   * Obtiene el catálogo de tratados/acuerdos asociados a un trámite.
+   * @param tramitesID - Identificador del trámite
+   * @param tratadoAsociado - Clave del tratado asociado
+   * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
+   */
+  getTratadoCertificado(tramitesID: string, tratadoAsociado: string): Observable<any[]> {
+    return this.catalogoServices
+      .tratadosAcuerdosCatalogo(tramitesID, tratadoAsociado)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+
+  }
 
 }

@@ -137,29 +137,35 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
  * @property {number} orden - El orden en el que se debe mostrar la columna.
  * */
 export const CONFIGURACION_EMPRESA_ECTRANJERA = [
+    {
+    encabezado: 'Servicio',
+    clave: (ele: DatosEmpresaExtranjera): string | undefined =>
+      ele.servicioExt,
+    orden: 1,
+  },
   {
     encabezado: 'Tax ID',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.taxIdEmpresaExt,
-    orden: 1,
+    orden: 2,
   },
   {
     encabezado: 'Nombre del empresa',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.nombreEmpresaExt,
-    orden: 2,
+    orden: 3,
   },
   {
     encabezado: 'País',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.entidadFederativaEmpresaExt,
-    orden: 2,
+    orden: 4,
   },
   {
     encabezado: 'Dirección',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.direccionEmpresaExtranjera,
-    orden: 2,
+    orden: 5,
   },
 ];
 

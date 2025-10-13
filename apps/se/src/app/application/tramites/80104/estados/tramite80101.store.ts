@@ -1,8 +1,8 @@
 import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex } from '../../../shared/models/complimentos-seccion.model';
 import { AnnexoDosTres, AnnexoUno, DisponsibleFiscal } from '../models/nuevo-programa-industrial.model';
 import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
-import { ProveedorCliente, ProyectoImmex } from '../../../shared/models/complimentos-seccion.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -851,7 +851,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Este método actualiza el estado del componente añadiendo o reemplazando 
    * los datos de la tabla de importación en la propiedad `annexoUno`.
    */
-  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
+  setImportarDatosTabla(importarDatosTabla:AnexoUnoProducto[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -867,7 +867,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param exportarDatosTabla - Un arreglo de objetos de tipo `AnexoDosEncabezado` que contiene los datos a exportar.
    */
-  setExportarDatosTabla(exportarDatosTabla:AnexoDosEncabezado[]):void{
+  setExportarDatosTabla(exportarDatosTabla:AnexoFraccionAnarelaria[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
