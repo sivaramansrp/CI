@@ -262,6 +262,8 @@ export interface DatosParaMovilizacionNacional {
  * del trámite específico.
  */
 export interface FilaSolicitud {
+  [key: string]: unknown;
+
   id?: number;
   /**
    * Número de partida.
