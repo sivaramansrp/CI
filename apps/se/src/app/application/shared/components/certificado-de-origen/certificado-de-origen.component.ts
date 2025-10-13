@@ -186,7 +186,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
    * @type {Catalogo[]}
    */
-  pais?: Catalogo[];
+  circulacion?: Catalogo[];
 
   /**
    * Propiedad de entrada que recibe el tratado seleccionado.
@@ -834,6 +834,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     this.inicializarFormularioArchivo();
     this.loadComboUnidadMedida();
     this.getPaisBloque();
+    this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
       this.requerida = true;
@@ -1260,7 +1261,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   getPais():void{
     this.service.getDatos(this.idProcedimiento.toString()).subscribe((data) => {
-      this.pais = data as Catalogo[];
+      this.circulacion = data as Catalogo[];
     });
   }
 
@@ -1295,8 +1296,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @returns {Catalogo[]} El catálogo de países o bloques.
    */
   get paisGet(): Catalogo[]{
-    return this.pais?.length
-      ? this.pais
+    return this.circulacion?.length
+      ? this.circulacion
       : this.paises;
   }
 
