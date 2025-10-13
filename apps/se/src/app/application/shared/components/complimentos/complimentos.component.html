@@ -61,7 +61,7 @@
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG"
           [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
-          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
+          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="true">
         </input-fecha>
         <div
           *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.hasError('required') && formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.touched">

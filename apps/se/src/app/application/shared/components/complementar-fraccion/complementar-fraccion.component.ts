@@ -210,5 +210,21 @@ export class ComplementarFraccionComponent implements OnInit {
     this.cerrarPopup.emit();
   }
 
-  
+  /**
+   * Restringe la entrada del usuario a solo números positivos.
+   * 
+   * Este método se ejecuta cuando el usuario ingresa un valor en un campo del formulario.
+   * Elimina cualquier carácter que no sea un dígito (`0-9`) del valor ingresado,
+   * actualiza el campo del formulario correspondiente sin emitir eventos de cambio.
+   * 
+   * @param event Evento de entrada generado por el campo de texto.
+   * @param fieldName Nombre del campo del formulario que se desea actualizar.
+   */
+  onIngreseNumerosPositivos(event: Event, fieldName: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '');
+  TARGET.value = value;
+  this.complimentarForm.get(fieldName)?.setValue(value, { emitEvent: false });
+}
 }
