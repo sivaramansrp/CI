@@ -634,20 +634,27 @@ obtenerInformacionFraccionImportacion(): void {
    *
    */
   validarFormulario(): boolean {
-    let isValid = true;
+     let isValid = true;
 
-    if (this.formularioInfoRegistro) {
-      this.formularioInfoRegistro.markAllAsTouched();
-      this.formularioInfoRegistro.updateValueAndValidity();
+  // if (this.formularioInfoRegistro) {
+  //   this.formularioInfoRegistro.markAllAsTouched();
+  //   this.formularioInfoRegistro.updateValueAndValidity();
 
-      if (this.formularioInfoRegistro.invalid) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
+  //   if (this.formularioInfoRegistro.invalid) {
+  //     isValid = false;
+  //   }
+  // } else {
+  //   isValid = false;
+  // }
+
+ const HAS_IMMEX_DATA = this.datosImmex && this.datosImmex.length > 0;
+  const HAS_IMPORTACION_DATA = this.datosImportacion && this.datosImportacion.length > 0;
   
-   return isValid;
+  if (!HAS_IMMEX_DATA || !HAS_IMPORTACION_DATA) {
+    isValid = false;
+  }
+ 
+  return isValid;
 }
   
 }
