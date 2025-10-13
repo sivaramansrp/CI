@@ -23,6 +23,30 @@ export const FECHA = {
 };
 
 /**
+ * @descripcion
+ * Constante que define las propiedades de la fecha de pago en el formulario.
+ */
+export const FECHA_PAGO = {
+  /**
+   * @descripcion
+   * Etiqueta asociada al campo de fecha.
+   */
+  labelNombre: 'Fecha de Pago',
+
+  /**
+   * @descripcion
+   * Indica si el campo de fecha es obligatorio.
+   */
+  required: true,
+
+  /**
+   * @descripcion
+   * Indica si el campo de fecha está habilitado.
+   */
+  habilitado: true,
+};
+
+/**
  * Configuración del campo "Fecha de factura / Referencia".
  * Contiene información sobre su etiqueta, obligatoriedad y estado de habilitación.
  */

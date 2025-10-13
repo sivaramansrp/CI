@@ -11,6 +11,7 @@ import {
   FECHA_FACTURA_IDS,
   FECHA_FACTURA_REFERENCIA,
   FECHA_FACTURA_REFERENCIA_IDS,
+  FECHA_PAGO,
   FRACCION_ARANCELARIA_IDS,
   MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
@@ -164,6 +165,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Fecha final para el formulario.
    */
   fechaFactura: InputFecha = FECHA;
+
+  /**
+   * @descripcion
+   * Fecha final para el formulario.
+   */
+  fechaDePago: InputFecha = FECHA_PAGO;
 
   /**
    * @descripcion
@@ -417,8 +424,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
       criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
       criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
-      criterioParaClasificacion: [{ value: this.datosSeleccionados?.criterioParaClasificacion }],
-      fechaDePago: [{ value: this.datosSeleccionados?.fechaDePago }],
+      criterioParaClasificacion: [this.datosSeleccionados?.criterioParaClasificacion ?? null],
+      fechaDePago: [ this.datosSeleccionados?.fechaDePago ?? null],
       valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
@@ -670,6 +677,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   public cambioFechaFactura(nuevo_valor: string): void {
     this.mercanciaForm.patchValue({
       fechaFactura: nuevo_valor,
+    });
+  }
+
+  /**
+   * @summary Actualiza `fechaDePago` y sincroniza con el store.
+   * @description Setea el valor, marca el control como tocado/modificado y persiste vía `setFechaDePago`.
+   * @param {string} nuevo_valor Fecha seleccionada (p. ej., '2025-09-04').
+   * @returns {void}
+   */
+  public cambioFechaDePago(nuevo_valor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDePago: nuevo_valor,
     });
   }
 
