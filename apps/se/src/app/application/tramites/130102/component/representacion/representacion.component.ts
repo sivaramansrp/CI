@@ -12,8 +12,8 @@ import {
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -21,6 +21,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 /**
  * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.
@@ -92,7 +93,8 @@ export class RepresentacionComponent implements OnInit, OnDestroy {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-     private consultaioQuery: ConsultaioQuery
+    private catOctavaTemporalService: CatOctavaTemporalService,
+    private consultaioQuery: ConsultaioQuery
     
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -138,7 +140,7 @@ inicializarEstadoFormulario(): void {
    * @description Inicializa el formulario reactivo y sus validaciones.
    */
   inicializarFormulario(): void {
-  this.tramite130102Query.selectSolicitud$
+  this.tramite130102Query.selectSeccionState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -180,12 +182,8 @@ inicializarEstadoFormulario(): void {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.formularioRegistroService.registrarFormulario('frmRepresentacion', this.frmRepresentacion);
-  this.formularioRegistroService.getEntidadesFederativas().subscribe(data => {
-    this.entidadFederativaLista = data;
-  });
-   this.formularioRegistroService.getRepresentacionesFederales().subscribe(data => {
-    this.representacionFederalLista = data;
-  });
+    this.obtenerEntidadesFederativas();
+
   }
 
     /**
@@ -200,12 +198,52 @@ inicializarEstadoFormulario(): void {
     (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
+
+
+  /*
+  * Obtiene las opciones de entidades federativas.    
+  * @returns void
+  * @description Obtiene las opciones de entidades federativas.
+  */
+  obtenerEntidadesFederativas(): void {
+    this.catOctavaTemporalService.getEntidadesFederativas().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+      this.entidadFederativaLista = data.datos.map((item, index) => ({
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    });
+  }
+
   /**
-   * Obtiene las opciones de entidades federativas.
+   * Obtiene las unidades administrativas basadas en la entidad seleccionada.
+   * @param cveEntidad Clave de la entidad para obtener las unidades administrativas.
    * @returns void
    */
-  fetchEntidadFederativa(e: Catalogo): void {
-    this.seleccionadaEntidadFederativa = e;
+  obtenerUnidadesAdministrativas(cveEntidad: string): void {
+    this.catOctavaTemporalService.getUnidadesAdministrativas(cveEntidad).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+      this.representacionFederalLista = data.datos.map((item, index) => ({  
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    });
+  }
+
+  /**
+   * maneja el cambio en la selección de la entidad federativa y actualiza las unidades administrativas.
+   * @param form - Formulario reactivo.
+   * @return void
+   */
+  onChangeEntidad(form: FormGroup): void {
+    const cveEntidad = form.get('entidad')?.value;
+    if (cveEntidad) {
+      this.obtenerUnidadesAdministrativas(cveEntidad);
+    }
   }
 
   /**

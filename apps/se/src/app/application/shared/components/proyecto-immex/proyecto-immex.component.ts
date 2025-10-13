@@ -5,6 +5,7 @@ import {
   ProyectoImmexEncabezado,
 } from '../../models/nuevo-programa-industrial.model';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -31,6 +32,7 @@ import { Validators } from '@angular/forms';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './proyecto-immex.component.html',
   styleUrl: './proyecto-immex.component.scss',
@@ -111,6 +113,14 @@ export class ProyectoImmexComponent implements OnInit {
   public complementarState!: ComplementarState;
 
   /**
+   * Contiene la notificación relacionada con la acción de agregar una empresa o elemento.
+   * 
+   * Se utiliza para mostrar mensajes al usuario, como confirmaciones de éxito,
+   * advertencias o errores durante el proceso de agregado.
+   */
+  public agregarNotification!: Notificacion;
+
+  /** 
    * Fila seleccionada del tipo AnexoUnoEncabezado.
    * Se utiliza para almacenar y manipular la fila actualmente activa o seleccionada en la tabla.
    */
@@ -204,6 +214,18 @@ export class ProyectoImmexComponent implements OnInit {
    * @returns {void}
    */
   aggregar(): void {
+    this.agregarNotification = {
+    tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'La operación se realizó exitosamente.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
     if (this.esTablaeleccionada && this.seleccionList.length) {
       const OBJECTO_IDX: ProyectoImmexEncabezado = {
         ...this.seleccionList[0],

@@ -198,9 +198,9 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: REGEX_NOMBRE_ALPHANUMERICO }
+      { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO }
     ],
-    inputFilter: INPUT_FILTER_NOMBRE_ALPHANUMERICO,
+    inputFilter: REGEX_CORREO_ELECTRONICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
