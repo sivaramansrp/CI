@@ -99,14 +99,14 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.tramiteState = seccionState;
+          this.tramiteState = seccionState as { [key: string]: unknown };
         })
       )
       .subscribe();
 
     this.tramiteQuery.datosProductorFormulario$.pipe(
       takeUntil(this.destroyNotifier$), map((seccionState) => {
-        this.agregarDatosProductor = seccionState;
+        this.agregarDatosProductor = seccionState as { [key: string]: unknown };
       })
     ).subscribe();
 

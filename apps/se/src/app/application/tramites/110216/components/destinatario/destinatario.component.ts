@@ -54,7 +54,15 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Tramite110216State;
+  public solicitudState!: Tramite110216State & {
+    grupoReceptor?: {
+      nombre?: string;
+      apellidoPrimer?: string;
+      apellidoSegundo?: string;
+      numeroFiscal?: string;
+      razonSocial?: string;
+    };
+  };
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.

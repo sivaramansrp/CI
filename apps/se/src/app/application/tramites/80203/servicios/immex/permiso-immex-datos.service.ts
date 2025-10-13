@@ -11,7 +11,7 @@
  * // Inyección en un componente
  * constructor(private permisoImmexDatosService: PermisoImmexDatosService) {}
  */
-import { BuscarPayload, FraccionArancelariaPayload, ImmexTablaJson, PermisoImmexGridDatos, fraccionInfo, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { BuscarPayload, FraccionArancelariaPayload, ImmexRegistroform, ImmexTablaJson } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -67,10 +67,10 @@ export class PermisoImmexDatosService {
 
     /**
    * Actualiza el estado del formulario en el store de Akita con los datos proporcionados.
-   * @param {immexRegistroform} DATOS - Datos del formulario de registro IMMEX.
+   * @param {ImmexRegistroform} DATOS - Datos del formulario de registro IMMEX.
    * @returns {void}
    */
-  actualizarEstadoFormulario(DATOS: immexRegistroform): void {
+  actualizarEstadoFormulario(DATOS: ImmexRegistroform): void {
     this.tramite80203Store.setImmexRegistro(DATOS);
   }
   /**
