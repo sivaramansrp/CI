@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
+import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
+import { Tramite110203Query } from '../../estados/tramite110203.query';
 
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el trámite 110203.

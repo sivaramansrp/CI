@@ -16,6 +16,7 @@ export class Tramite110222Query extends Query<Tramite110222State> {
   selectTramite$ = this.select((state) => {
     return state;
   });
+ 
 
   /**
    * Selecciona si todos los valores de la forma son válidos.

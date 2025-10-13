@@ -14,11 +14,12 @@ import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.modu
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ERROR_FORMA_ALERT, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, takeUntil} from 'rxjs';
+import { Subject, take, takeUntil} from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
-import { Tramite110222State } from '../../estados/tramite110222.store';
+import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 /**
  * @component CertificadoComponent
  * @description
@@ -122,7 +123,9 @@ export class CertificadoComponent {
    * @param seccionStore Servicio para manejar el estado de la sección.
    * @param tramiteQuery Query para consultar el estado del trámite.
    */
-  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query) {
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query,
+     private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
+    private tramite110222Store: Tramite110222Store) {
     this.tramiteQuery.selectTramite$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
@@ -130,6 +133,15 @@ export class CertificadoComponent {
       });
 
   }
+
+   obtenerDatosDelStore(): void {
+      this.ValidarInicialmenteCertificadoService.getAllState()
+        .pipe(take(1))
+        .subscribe(data => {
+          this.guardar(data);
+          
+        });
+    }
 
   /**
    * Obtiene el valor del índice de la acción del botón.
@@ -157,6 +169,7 @@ export class CertificadoComponent {
         this.indice = 2;
         this.datosPasos.indice = 2;
       }
+      this.obtenerDatosDelStore();
     } else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
@@ -202,5 +215,107 @@ export class CertificadoComponent {
       return false;
     }
     return true;
+  }
+  /**
+   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+   * */
+buildMercanciaSeleccionadas(arr: any[]): any[] {
+return arr.map((item: any) => ({
+  id: item.id,
+  fraccion_arancelaria: item.fraccionArancelaria,
+  cantidad: item.cantidad,
+  unidad_medida: item.unidadMedida,
+  valor_mercancia: item.valorMercancia,
+  nombreTecnico: item.nombreTecnico,
+  nombre_comercial: item.nombreComercial,
+  registro_producto: item.numeroRegistroProducto,
+  fechaExpedicion: item.fechaExpedicion,
+  fechaVencimiento: item.fechaVencimiento,
+  tipo_factura: item.tipoFactura,
+  num_factura: item.numFactura,
+  complemento_descripcion: item.complementoDescripcion,
+  fecha_factura: item.fechaFactura,
+  umc:item.umc,
+}));
+
+}
+  guardar(item: any): void {
+    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
+    const PAYLOAD = {
+      rfc_solicitante: 'AAL0409235E6',
+      idSolicitud: this.solicitudState.idSolicitud || 0,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        nombre: "ACEROS ALVARADO S.A. DE C.V.",
+        actividad_economica: "Fabricación de productos de hierro y acero",
+        correo_electronico: "contacto@acerosalvarado.com",
+        domicilio: {
+          pais: "México",
+          codigo_postal: "06700",
+          estado: "Ciudad de México",
+          municipio_alcaldia: "Cuauhtémoc",
+          localidad: "Centro",
+          colonia: "Roma Norte",
+          calle: "Av. Insurgentes Sur",
+          numero_exterior: "123",
+          numero_interior: "Piso 5, Oficina A",
+          lada: "",
+          telefono: "123456"
+        }
+      },
+      certificado: {
+        tratado_acuerdo: item.tratado || '',
+        pais_bloque: item.pais,
+        fraccion_arancelaria: item.fraccionArancelaria,
+        registro_producto: item.registroProducto,
+        nombre_comercial: item.nombreComercial,
+        fecha_inicio: item.fechaFinal,
+        fecha_fin: item.fechaInicial,
+        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
+      },
+ 
+      destinatario: {
+        nombre: item.nombre,
+        primer_apellido: item.apellidoPrimer,
+        segundo_apellido: item.apellidoSegundo,
+        numero_registro_fiscal: item.numeroFiscal,
+        razon_social: item.razonSocial,
+        domicilio: {
+          ciudad_poblacion_estado_provincia: item.ciudad,
+          calle: item.calle,
+          numero_letra: item.numeroLetra,
+          lada: item.lada,
+          telefono: item.telefono,
+          fax: item.fax,
+          correo_electronico: item.correoElectronico,
+          pais_destino: item.nacion
+        },
+        medio_transporte: item.transporte
+      },
+ 
+      datos_del_certificado: {
+        observaciones: item.observaciones,
+        precisa: item.presica,
+        presenta: item.presenta,
+        idioma: item.idioma,
+        representacion_federal: {
+          entidad_federativa: item.entidad,
+          representacion_federal: item.representacion
+        },
+        desea_obtener_certificado: item.casillaVerificacion,
+        justificacion: item.justificacion
+      }
+    };
+ 
+    this.ValidarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+          this.tramite110222Store.setIdSolicitud(response.datos.id_solicitud || 0);
+          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+        }
+      },
+    });
   }
 }

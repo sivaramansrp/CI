@@ -1,15 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  Solicitud110203State,
-  Tramite110203Store,
-} from '../../../../estados/tramites/tramite110203.store';
+
 import { Subject, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { Tramite110203Query } from '../../estados/tramite110203.query';
+import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
 
 @Component({
   selector: 'app-tecnicos',

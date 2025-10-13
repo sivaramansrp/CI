@@ -1,4 +1,20 @@
-<div class="container" [formGroup]="destinatarioForm">
+<app-datos-del-destinatario
+  [datosForm]="formDatosDelDestinatarioValues"
+  [idProcedimiento]="110203"
+  (formDatosDelDestinatarioEvent)="setValoresStores($event)"
+  (formaValida)="setFormValida($event)"
+></app-datos-del-destinatario>
+
+<app-destinatario
+  [idProcedimiento]="110203"
+  (formDestinatarioEvent)="setValoresStoreDe($event)"
+  [datosForm]="formDestinatarioValues"
+  (formaValida)="setFormValidaDestinatario($event)"
+></app-destinatario>
+
+<!-- old code -->
+
+<!-- <div class="container" [formGroup]="destinatarioForm">
   <ng-titulo titulo="Datos del destinatario"></ng-titulo>
   <div>
     <div class="row">
@@ -132,4 +148,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

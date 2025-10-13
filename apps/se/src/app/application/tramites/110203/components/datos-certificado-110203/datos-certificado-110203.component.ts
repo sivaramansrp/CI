@@ -6,14 +6,14 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 
-import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 
 import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 
 import mercanciasFromDatos from '@libs/shared/theme/assets/json/110203/mercancias-from-datos.json';
 
 import { REGEX_RFC,REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
+import { Tramite110203Query } from '../../estados/tramite110203.query';
 
 
 /**

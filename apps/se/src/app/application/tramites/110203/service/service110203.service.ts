@@ -2,8 +2,7 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { Solicitud110203State, Tramite110203Store } from '../../../estados/tramites/tramite110203.store';
+import { Solicitud110203State, Tramite110203Store } from '../estados/tramite110203.store';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +32,7 @@ this.tramite110203Store.setOrigen(DATOS.origen);
 this.tramite110203Store.setDestino(DATOS.destino);
 this.tramite110203Store.setExpedicion(DATOS.expedicion);
 this.tramite110203Store.setVencimiento(DATOS.vencimiento);
-this.tramite110203Store.setNombre(DATOS.nombre);
+this.tramite110203Store.setNombre(DATOS.nombres);
 this.tramite110203Store.setPrimer(DATOS.primer);
 this.tramite110203Store.setSegundo(DATOS.segundo);
 this.tramite110203Store.setFiscal(DATOS.fiscal);

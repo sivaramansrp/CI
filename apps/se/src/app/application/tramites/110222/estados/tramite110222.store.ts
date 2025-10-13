@@ -388,7 +388,6 @@ export class Tramite110222Store extends Store<Tramite110222State> {
   constructor() {
     super(createInitialState());
   }
-
     /**
    * Guarda el ID de la solicitud en el estado.
    *

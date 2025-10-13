@@ -12,11 +12,11 @@ import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Solocitud110203Service } from '../../service/service110203.service';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
-import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+import { Tramite110203Query } from '../../estados/tramite110203.query';
+import { Tramite110203Store } from '../../estados/tramite110203.store';
 
 
 /**

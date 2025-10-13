@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 import { PROC_110222 } from '../servers/api-route';
+import { Tramite110222Query } from '../estados/tramite110222.query';
 
 /**
  * @descripcion
@@ -28,7 +29,8 @@ export class ValidarInicialmenteCertificadoService {
   constructor(
     private readonly http: HttpClient,
     public tramite110222Store: Tramite110222Store,
-    public httpService: HttpCoreService
+    public httpService: HttpCoreService,
+    private tramite110222Query: Tramite110222Query
   ) { }
 
   /**
@@ -124,5 +126,31 @@ export class ValidarInicialmenteCertificadoService {
       {},
       false
     );
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: any) {
+    return this.httpService.post<any>(PROC_110222.GUARDAR, { body: body });
+    // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Tramite110222State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite110222State> {
+    return this.tramite110222Query.selectTramite$;
+  }
+  buscarMercanciasCert(body: any): Observable<any> {
+    // return this.httpService.post<any>(
+    //   'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
+    //   { body: body }
+    // );
+     return this.httpService.post<any>(PROC_110222.BUSCAR, { body: body });
   }
 }

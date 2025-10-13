@@ -186,7 +186,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
    * @type {Catalogo[]}
    */
-  pais?: Catalogo[];
+  circulacion?: Catalogo[];
 
   /**
    * Propiedad de entrada que recibe el tratado seleccionado.
@@ -582,7 +582,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       fax: [''],
       correo: ['', Validators.required],
       correoElectronico: [''],
-      // Nuevos controles de formulario para el procedimiento 110222
       calle1: ['', Validators.required],
       numeroLetra1: ['', Validators.required],
       ciudad1: ['', Validators.required],
@@ -631,17 +630,17 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  /**
-  * method loadComboUnidadMedida
-  * description Carga la lista de derechos desde el servicio.
-  */
-  loadComboUnidadMedida(): void {
-    this.service.getDatos('110222') // Llama al servicio para obtener los datos.
-      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
-      .subscribe((data): void => { // Maneja los datos recibidos.
-        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
-      });
-  }
+  // /**
+  // * method loadComboUnidadMedida
+  // * description Carga la lista de derechos desde el servicio.
+  // */
+  // loadComboUnidadMedida(): void {
+  //   this.service.getDatos('110222') // Llama al servicio para obtener los datos.
+  //     .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+  //     .subscribe((data): void => { // Maneja los datos recibidos.
+  //       this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
+  //     });
+  // }
 
   /**
  * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
@@ -829,11 +828,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
-    this.applyTercerOperadorValidation(); // Add validation for procedure 110222
+    this.applyTercerOperadorValidation(); 
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
-    this.loadComboUnidadMedida();
+    // this.loadComboUnidadMedida();
     this.getPaisBloque();
+    this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
       this.requerida = true;
@@ -1260,7 +1260,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   getPais():void{
     this.service.getDatos(this.idProcedimiento.toString()).subscribe((data) => {
-      this.pais = data as Catalogo[];
+      this.circulacion = data as Catalogo[];
     });
   }
 
@@ -1289,14 +1289,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   }
 
   /**
-   * Getter para obtener el catálogo de países o bloques.
+   * Getter para obtener el catálogo de países.
    * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
-   * 
-   * @returns {Catalogo[]} El catálogo de países o bloques.
+   * @returns {Catalogo[]} El catálogo de países.
    */
   get paisGet(): Catalogo[]{
-    return this.pais?.length
-      ? this.pais
+    return this.circulacion?.length
+      ? this.circulacion
       : this.paises;
   }
 
