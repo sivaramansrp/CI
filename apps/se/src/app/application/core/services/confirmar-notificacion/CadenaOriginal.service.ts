@@ -32,10 +32,9 @@ export class CadenaOriginalService {
    * @param PAYLOAD - Datos requeridos para la generación de la cadena original
    * @returns Observable con la respuesta del servidor que incluye la cadena original generada
    */
-  postCadenaOriginal(numFolio: string, PAYLOAD: CadenaOriginalRequest):
+  postCadenaOriginal(tramite: string, numFolio: string, PAYLOAD: CadenaOriginalRequest):
     Observable<BaseResponse<string>> {
-    const ENDPOINT = `${this.host}` +
-      API_POST_CADENA_ORIGINAL.replace(NUMFOLIOTRAMITE, numFolio);
+    const ENDPOINT = `${this.host}${API_POST_CADENA_ORIGINAL(tramite, numFolio)}`;
 
     return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
   }
