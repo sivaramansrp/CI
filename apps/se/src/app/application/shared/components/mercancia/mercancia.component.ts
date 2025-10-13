@@ -34,6 +34,14 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  InputFecha,
+  InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+} from '@libs/shared/data-access-user/src';
+import {
   CatalogoServices,
   REGEX_PATRON_DECIMAL_15_4,
   REGEX_PATRON_DECIMAL_16_4,
@@ -54,18 +62,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  InputFecha,
-  InputFechaComponent,
-  Notificacion,
-  NotificacionesComponent,
-  SeccionLibQuery,
-  SeccionLibState,
-} from '@libs/shared/data-access-user/src';
 import { Subject, delay, of, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../models/modificacion.enum';
 import { MercanciaService } from '../../services/mercancia.service';
 import { ValidationErrors } from '@angular/forms';
@@ -166,7 +165,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   umc: Catalogo[] = [];
 
- optionsUMC: Catalogo[] = [];
+  /**
+   * @description
+   * Lista de opciones disponibles para las Unidades de Medida Comercial (UMC).
+   * Se utiliza para poblar menús desplegables o listas de selección en el formulario.
+   */
+  optionsUMC: Catalogo[] = [];
 
   /**
    * @descripcion
@@ -345,8 +349,19 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   MARCA: number[] = MARCA_IDS;
 
+  /**
+   * @description
+   * Contiene los identificadores de las unidades de medida utilizadas para la comercialización.
+   * Estos valores se obtienen de la constante `UNIDAD_MEDIDA_COMERCIALIZACION_IDS`
+   * y se utilizan para filtrar o validar las unidades disponibles en el sistema.
+   */
   UNIDAD_MEDIDA_COMERCIALIZACION: number[] = UNIDAD_MEDIDA_COMERCIALIZACION_IDS;
 
+  /**
+   * @description
+   * Contiene los identificadores de las unidades de medida de comercialización.
+   * Se utiliza para referenciar las unidades válidas dentro del flujo de captura o validación.
+   */
   UMC: number[] = UMC_IDS;
   /**
    * @descripcion
@@ -408,7 +423,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   initActionFormBuild(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionArancelaria: [{value:this.datosSeleccionados?.fraccionArancelaria, disabled: true}],
+      fraccionArancelaria: [
+        { value: this.datosSeleccionados?.fraccionArancelaria, disabled: true },
+      ],
       fraccionNaladi: [
         { value: this.datosSeleccionados?.fraccionNaladi, disabled: true },
       ],
@@ -709,45 +726,53 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Obtiene la lista de Unidades de Medida de la Cantidad (UMC) desde el servicio `catalogoServices`
-   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.  
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.
    *  Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
    * Actualiza el campo 'umc' en `optionsUMC` con las opciones obtenidas.
    */
   getUmc(): void {
     const TRAMITES_ID = this.idProcedimiento.toString();
-    this.catalogoServices.unidadMasaBrutaCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.optionsUMC = res.datos ?? [];
-    });
-  }
-
-/**
- * @description
- * Obtiene el catálogo de unidades de medida comercial a partir del identificador del trámite actual.
- * Llama al servicio de catálogos y actualiza la lista `umcMedida` con los datos recibidos.
- * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
- *
- * @returns {void}
- */
-  getUnidadesMedidaComercial(): void {
-    const TRAMITES_ID = this.idProcedimiento.toString();
-    this.catalogoServices.unidadesMedidaComercialCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.umcMedida = res.datos ?? [];
-    });
+    this.catalogoServices
+      .unidadMasaBrutaCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.optionsUMC = res.datos ?? [];
+      });
   }
 
   /**
- * @description
- * Obtiene el catálogo de tipos de factura a partir del identificador del trámite actual.
- * Llama al servicio de catálogos y actualiza la lista `factura` con los datos recibidos.
- * La suscripción se controla mediante `takeUntil` para liberar recursos correctamente.
- *
- * @returns {void}
- */
-  getTipoFactura(): void {
+   * @description
+   * Obtiene el catálogo de unidades de medida comercial a partir del identificador del trámite actual.
+   * Llama al servicio de catálogos y actualiza la lista `umcMedida` con los datos recibidos.
+   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
+  getUnidadesMedidaComercial(): void {
     const TRAMITES_ID = this.idProcedimiento.toString();
-    this.catalogoServices.tipoFacturaCatalogo(TRAMITES_ID).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.factura = res.datos ?? [];
-    });
+    this.catalogoServices
+      .unidadesMedidaComercialCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.umcMedida = res.datos ?? [];
+      });
   }
 
+  /**
+   * @description
+   * Obtiene el catálogo de tipos de factura a partir del identificador del trámite actual.
+   * Llama al servicio de catálogos y actualiza la lista `factura` con los datos recibidos.
+   * La suscripción se controla mediante `takeUntil` para liberar recursos correctamente.
+   *
+   * @returns {void}
+   */
+  getTipoFactura(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices
+      .tipoFacturaCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.factura = res.datos ?? [];
+      });
+  }
 }
