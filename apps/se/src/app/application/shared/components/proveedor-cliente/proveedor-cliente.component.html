@@ -22,7 +22,7 @@
         <div class="form-group">
           <app-catalogo-select
             [catalogo]="paisDestinoCatalog"
-            [label]="'País Destino'"
+            [label]="'País destino'"
             [required]="true"
             [isDisabled]="false"
             name="paisDestino"
@@ -38,7 +38,7 @@
         <div class="form-group">
           <label class="form-label" for="rfc">RFC/TAXID Cliente*:</label>
           <input
-            class="form-control min-hgt"
+            class="form-control min-hgt uppercase"
             id="rfc"
             formControlName="rfc"
             type="text"
@@ -54,7 +54,7 @@
             >Razón social Cliente*:</label
           >
           <input
-            class="form-control min-hgt"
+            class="form-control min-hgt uppercase"
             id="razonSocialCliente"
             formControlName="razonSocialCliente"
             type="text"
@@ -120,3 +120,9 @@
     </button>
   </div>
 </div>
+@if (agregarNotification) {
+<section>
+    <lib-notificaciones [notificacionInput]="agregarNotification">
+    </lib-notificaciones>
+</section>
+}

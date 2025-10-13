@@ -1,4 +1,5 @@
 import { 
+    API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL,
     API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION,
     API_GET_SOLICITUDES_NICO_DESCRIPCION,
     API_GET_SOLICITUDES_RECENTES,
@@ -89,6 +90,11 @@ export class RegistroSolicitudService {
      */
     obtieneUnidadMedida(tramite: number, cveFraccion: string): Observable<BaseResponse<Catalogo>> {
         const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_UNIDAD_MEDIDA(tramite.toString(), cveFraccion)}`;
+        return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
+    }
+
+    cargaArchivoMasivoMercanciaAnimal(tramite: number, archivo: File): Observable<BaseResponse<Catalogo>> {
+        const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL(tramite.toString(), archivo)}`;
         return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
     }
 

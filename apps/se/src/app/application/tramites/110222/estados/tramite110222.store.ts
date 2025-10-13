@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { GrupoRepresentativo } from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -10,12 +11,15 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * 
  */
 export interface Tramite110222State {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
+
   /**
    * @property {Object} formCertificado - Datos del formulario principal de certificado.
    * @description
    * Contiene información básica del certificado, como entidad federativa, bloque, nombre comercial, registro de producto, fracción arancelaria y fechas.
    */
-  formCertificado: { [key: string]: unknown};
+  formCertificado: { [key: string]: unknown };
   /**
    * @property {Catalogo} estado - Estado seleccionado.
    * @description
@@ -33,7 +37,7 @@ export interface Tramite110222State {
    * @description
    * Contiene información específica de la mercancía, como fracción arancelaria, nombre comercial, técnico e inglés, descripción, criterios de trato preferencial, valor regional, número de serie, cantidad y unidad de medida.
    */
-  mercanciaForm: { [key: string]: unknown};
+  mercanciaForm: { [key: string]: unknown };
   /**
    * @property {Mercancia[]} mercanciaTabla - Tabla de mercancías agregadas.
    * @description
@@ -45,7 +49,7 @@ export interface Tramite110222State {
    * @description
    * Contiene campos como observaciones, idioma, entidad federativa y representación federal.
    */
-  formDatosCertificado: { [key: string]: unknown};
+  formDatosCertificado: { [key: string]: unknown };
   /**
    * @property {Catalogo} idiomaDatosSeleccion - Idioma seleccionado.
    * @description
@@ -69,13 +73,16 @@ export interface Tramite110222State {
    * @description
    * Contiene información del destinatario del certificado, como nombres, apellidos, número de registro fiscal y razón social.
    */
-  formDatosDelDestinatario: { [key: string]: unknown};
+  formDatosDelDestinatario: { [key: string]: unknown };
   /**
    * @property {Object} formExportor - Datos del exportador.
    * @description
    * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
    */
-  formExportor: { [key: string]: unknown};
+  formExportor: { [key: string]: unknown };
+
+  grupoRepresentativo: GrupoRepresentativo;
+
   /**
    * @property {string} fraccionArancelaria - Fracción arancelaria seleccionada.
    * @description
@@ -171,7 +178,7 @@ export interface Tramite110222State {
    * @description
    * Contiene información del destinatario del certificado, como país, ciudad, número de teléfono, fax y correo electrónico.
    */
-  formDestinatario: { [key: string]: unknown};
+  formDestinatario: { [key: string]: unknown };
   /**
    * @property {boolean} [datosConfidencialesProductor] - Indica si los datos del productor son confidenciales.
    * @description
@@ -195,16 +202,25 @@ export interface Tramite110222State {
    * @description
    * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
    */
-  agregarDatosProductorFormulario: { [key: string]: unknown};
+  agregarDatosProductorFormulario: { [key: string]: unknown };
   /**
    * @property {Object} formulario - Otros datos de formularios auxiliares.
    * @description
    * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
    */
-  formulario: { [key: string]: unknown};
+  formulario: { [key: string]: unknown };
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
 }
 
 /**
@@ -220,6 +236,7 @@ export interface Tramite110222State {
  */
 export function createInitialState(): Tramite110222State {
   return {
+    idSolicitud: 0,
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -298,11 +315,21 @@ export function createInitialState(): Tramite110222State {
     tipoFactura: [],
     formExportor: {
       lugar: '',
-      exportador: '',
+      nombreExportador: '',
       empresa: '',
       cargo: '',
       lada: '',
-      telfono: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+    grupoRepresentativo: {
+      lugar: '',
+      nombre: '',
+      empresa: '',
+      cargo: '',
+      registroFiscal: '',
+      telefono: '',
       fax: '',
       correo: '',
     },
@@ -323,15 +350,22 @@ export function createInitialState(): Tramite110222State {
       fax: '',
       correoElectronico: '',
     },
-    formulario:{
+    formulario: {
       datosConfidencialesProductor: '',
       productorMismoExportador: '',
     },
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
-      fax: '',      
+      fax: '',
     },
-    optionsTipoFactura: []
+    optionsTipoFactura: [],
+    /** Lista de idiomas disponibles */
+    idiomaDatos: [],
+    /** Lista de entidades federativas disponibles */
+    entidadFederativaDatos: [],
+  
+    /** Lista de representaciones federales disponibles */
+    representacionFederalDatos: [],
   };
 }
 
@@ -355,12 +389,24 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     super(createInitialState());
   }
 
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
   /**
    * @descripcion
    * Actualiza los datos del formulario de certificado.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormCertificado(values: { [key: string]: unknown}): void {
+  setFormCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -374,7 +420,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario histórico.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormHistorico(values: { [key: string]: unknown}): void {
+  setFormHistorico(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formulario: {
         ...state.formulario,
@@ -388,7 +434,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de productor.
    * @param values - Valores a actualizar en el formulario.
    */
-  setAgregarFormDatosProductor(values: { [key: string]: unknown}): void {
+  setAgregarFormDatosProductor(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       agregarDatosProductorFormulario: {
         ...state.agregarDatosProductorFormulario,
@@ -426,7 +472,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de mercancía en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de mercancía.
    */
-  setFormMercancia(values: { [key: string]: unknown}): void {
+  setFormMercancia(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       mercanciaForm: {
         ...state.mercanciaForm,
@@ -465,7 +511,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de certificado en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormDatosCertificado(values: { [key: string]: unknown}): void {
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -515,7 +561,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de destinatario en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
    */
-  setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
         ...state.formDatosDelDestinatario,
@@ -529,7 +575,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de exportador en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de exportador.
    */
-  setFormExportador(values: { [key: string]: unknown}): void {
+  setFormExportador(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formExportor: {
         ...state.formExportor,
@@ -738,7 +784,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de destinatario en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
    */
-  setFormDestinatario(values: { [key: string]: unknown}): void {
+  setFormDestinatario(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDestinatario: {
         ...state.formDestinatario,
@@ -752,7 +798,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de certificado de manera genérica.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormCertificadoGenric(values: { [key: string]: unknown}): void {    
+  setFormCertificadoGenric(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -770,6 +816,174 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     this.update((state) => ({
       ...state,
       optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  /**
+  * Actualiza el lugar en el grupo representativo.
+  *
+  * Este método permite establecer el lugar en el grupo representativo del trámite.
+  *
+  * @param {string} lugar - El lugar a establecer.
+  */
+  public setGrupoRepresentativoLugar(lugar: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lugar },
+    }));
+  }
+  /**
+   * Establece los datos del idioma en el almacén.
+   * 
+   * @param {Catalogo[]} idiomaDatos - Un array de objetos `Catalogo` con los datos del idioma.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza el nombre del exportador en el grupo representativo.
+   *
+   * Este método permite establecer el nombre del exportador en el grupo representativo del trámite.
+   *
+   * @param {string} nombre - El nombre del exportador a establecer.
+   */
+  public setGrupoRepresentativoNombreExportador(
+    nombre: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, nombre },
+    }));
+  }
+  /**
+   * Establece los datos de la entidad federativa en el almacén.
+   * 
+   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la empresa en el grupo representativo.
+   *
+   * Este método permite establecer la empresa en el grupo representativo del trámite.
+   *
+   * @param {string} empresa - La empresa a establecer.
+   */
+  public setGrupoRepresentativoEmpresa(empresa: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, empresa },
+    }));
+  }
+  /**
+   * Actualiza el cargo en el grupo representativo.
+   *
+   * Este método permite establecer el cargo en el grupo representativo del trámite.
+   *
+   * @param {string} cargo - El cargo a establecer.
+   */
+  public setGrupoRepresentativoCargo(cargo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, cargo },
+    }));
+  }
+
+  /**
+   * Actualiza la lada en el grupo representativo.
+   *
+   * Este método permite establecer la lada en el grupo representativo del trámite.
+   *
+   * @param {string} lada - La lada a establecer.
+   */
+  public setGrupoRepresentativoLada(lada: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lada },
+    }));
+  }
+  public setGrupoRepresentativoRegistroFiscal(registroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, registroFiscal },
+    }));
+  }
+
+  /**
+   * Actualiza el teléfono en el grupo representativo.
+   *
+   * Este método permite establecer el teléfono en el grupo representativo del trámite.
+   *
+   * @param {string} telefono - El teléfono a establecer.
+   */
+  public setGrupoRepresentativoTelefono(telefono: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, telefono },
+    }));
+  }
+
+  /**
+   * Actualiza el fax en el grupo representativo.
+   *
+   * Este método permite establecer el fax en el grupo representativo del trámite.
+   *
+   * @param {string} fax - El fax a establecer.
+   */
+  public setGrupoRepresentativoFax(fax: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, fax },
+    }));
+  }
+
+  /**
+   * Actualiza el correo electrónico en el grupo representativo.
+   *
+   * Este método permite establecer el correo electrónico en el grupo representativo del trámite.
+   *
+   * @param {string} correoElectronico - El correo electrónico a establecer.
+   */
+  public setGrupoRepresentativoCorreoElectronico(
+    correo: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, correo },
+    }));
+  }
+  public setGrupoRepresentativo(
+    grupoRepresentativo: GrupoRepresentativo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo,
+    }));
+  } 
+  /**
+   * Establece los datos de la representación federal en el almacén.
+   * 
+   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
     }));
   }
 }

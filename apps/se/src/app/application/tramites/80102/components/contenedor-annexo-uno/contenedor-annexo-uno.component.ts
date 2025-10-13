@@ -139,6 +139,22 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
 
   proveedorClienteDatosTablaId?:string;
 
+/**
+ * Identificador de la tabla seleccionada.
+ * 
+ * @type {string}
+ */
+  public selectedTableId: string = '';
+
+/**
+ * Fracción seleccionada por el usuario.
+ * 
+ * Puede ser una cadena o `null` si no hay ninguna seleccionada.
+ * 
+ * @type {string | null}
+ */
+  public selectedFraccion: string | null = null;
+
   /**
    * Constructor de la clase ContenedorAnnexoUnoComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -288,6 +304,8 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
       this.store.setDatosParaNavegar(event.datos);
 
       if (event && event.catagoria === 'complementar-fraccion' && event.datos) {
+        this.selectedFraccion = event.datos.encabezadoFraccion;
+        this.selectedTableId = event.id;
         this.mostrarComplementarFraccionPopup = true;
       } else if (event.catagoria === 'contenedor-proveedor-cliente') {
         this.mostrarProveedorClientePopup = true;
@@ -343,6 +361,60 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
        this.store.setProveedorClienteDatosTablaDos($event); 
   }
 
+  }
+
+  /**
+   * Guarda los valores complementarios de una fracción en la tabla correspondiente.
+   *
+   * Dependiendo del tipo de tabla seleccionada (`IMPORT` o no), actualiza los valores
+   * de moneda y volumen (mensual y anual) en la lista correspondiente (`anexoUnoTablaLista` o `anexoDosTablaLista`)
+   * usando la descripción de la fracción como identificador.
+   *
+   * @param data Objeto que contiene la información de la fracción a complementar:
+   *  - descripcion: Identificador de la fracción.
+   *  - monedaNacionalMensual: Valor mensual en moneda nacional (opcional).
+   *  - monedaNacionalDeDosPeriodos: Valor anual en moneda nacional (opcional).
+   *  - volumenMensual: Volumen mensual (opcional).
+   *  - twoPeriodVolume: Volumen anual (opcional).
+   */
+  onGuardarComplementarFraccion(data: {
+    descripcion: string;
+    monedaNacionalMensual?: number;
+    monedaNacionalDeDosPeriodos?: number;
+    volumenMensual?: number;
+    twoPeriodVolume?: number;
+  }): void {
+    if (this.selectedTableId === 'IMPORT') {
+      const IDX = this.anexoUnoTablaLista.findIndex(
+        (item) => item.encabezadoFraccion === data.descripcion
+      );
+      if (IDX !== -1) {
+        this.anexoUnoTablaLista[IDX].encabezadoValorEnMonedaMensual =
+          data.monedaNacionalMensual ?? 0;
+        this.anexoUnoTablaLista[IDX].encabezadoValorEnMonedaAnual =
+          data.monedaNacionalDeDosPeriodos ?? 0;
+        this.anexoUnoTablaLista[IDX].encabezadoVolumenMensual =
+          data.volumenMensual ?? 0;
+        this.anexoUnoTablaLista[IDX].encabezadoVolumenAnual =
+          data.twoPeriodVolume ?? 0;
+        this.anexoUnoTablaLista = [...this.anexoUnoTablaLista]; 
+      }
+    } else {
+      const IDX = this.anexoDosTablaLista.findIndex(
+        (item) => item.encabezadoFraccion === data.descripcion
+      );
+      if (IDX !== -1) {
+        this.anexoDosTablaLista[IDX].encabezadoValorEnMonedaMensual =
+          data.monedaNacionalMensual ?? 0;
+        this.anexoDosTablaLista[IDX].encabezadoValorEnMonedaAnual =
+          data.monedaNacionalDeDosPeriodos ?? 0;
+        this.anexoDosTablaLista[IDX].encabezadoVolumenMensual =
+          data.volumenMensual ?? 0;
+        this.anexoDosTablaLista[IDX].encabezadoVolumenAnual =
+          data.twoPeriodVolume ?? 0;
+        this.anexoDosTablaLista = [...this.anexoDosTablaLista];
+    }
+  }
   }
 
   /**

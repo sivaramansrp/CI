@@ -378,7 +378,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <label class="form-label" for="numeroLetra">Número y/o letra4<span *ngIf="!requerida">*</span>:</label>
+          <label class="form-label" for="numeroLetra">Número y/o letra<span *ngIf="!requerida">*</span>:</label>
           <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
             (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')"
              [ngClass]="isValid(formCertificado, 'numeroLetra') ? 'required' : ''"  />
@@ -441,7 +441,7 @@
       <ng-titulo titulo="Domicilio del tercer operador" />
       <div class="row" *ngIf="idProcedimiento === 110205">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País'" [required]="false" name="estado"
+          <app-catalogo-select [catalogo]="paisGet" [label]="'País'" [required]="false" name="estado"
             formControlName="pais" (selectionChange)="tipoSeleccion($event)" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(
                       'formCertificado',
@@ -528,7 +528,7 @@
     <ng-titulo titulo="Tratado y país o bloque" />
     <div class="row mb-3">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'" [required]="true"
+        <app-catalogo-select [catalogo]="catalogoTratado" [label]="'Tratado / Acuerdo'" [required]="true"
           name="estado" formControlName="entidadFederativa" (selectionChange)="tipoEstadoSeleccion($event)"
           [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(
                         'formCertificado',
@@ -545,7 +545,7 @@
       </div>
 
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true" name="estado"
+        <app-catalogo-select [catalogo]="paisBloqueCertificadoGet" [label]="'País / Bloque'" [required]="true" name="estado"
           formControlName="bloque" (selectionChange)="tipoSeleccion($event)" [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(
                     'formCertificado',
@@ -791,4 +791,3 @@
   </lib-notificaciones>
 </section>
 }
-

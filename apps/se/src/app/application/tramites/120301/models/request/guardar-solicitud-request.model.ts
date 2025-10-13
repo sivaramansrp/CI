@@ -135,7 +135,7 @@ export interface Solicitante {
     /** Número de serie del certificado */
     certificado_serial_number: string;
     /** Nombre del solicitante */
-    nombre: string;
+    nombre: string | null;
     /** Indica si es persona moral */
     es_persona_moral: boolean;
 }

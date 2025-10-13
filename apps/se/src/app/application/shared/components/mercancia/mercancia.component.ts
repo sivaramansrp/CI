@@ -10,6 +10,7 @@ import {
   FECHA_FACTURA_REFERENCIA,
   FECHA_FACTURA_REFERENCIA_IDS,
   FRACCION_ARANCELARIA_IDS,
+  MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
   NORMA_ORIGEN_IDS,
   NUMERO_DE_SERIE_IDS,
@@ -316,6 +317,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   NUMERO_DE_SERIE: number[] = NUMERO_DE_SERIE_IDS;
 
   /**
+   * Contiene los identificadores asociados a la marca.
+   * @type {number[]}
+   */
+  MARCA: number[] = MARCA_IDS;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -393,18 +400,19 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [{ value: '', disabled: true }],
-      nombreIngles: [{ value: '', disabled: true }],
-      otrasInstancias: [{ value: '', disabled: true }],
-      criterioParaConferirOrigen: [{ value: '', disabled: true }],
-      criterioParaTratoPreferencial: [{ value: '', disabled: true }],
-      valorDeContenidoRegional: [{ value: '', disabled: true }],
+      normaOrigen: [{ value: this.datosSeleccionados.normaOrigen, disabled: true }],
+      nombreIngles: [{ value: this.datosSeleccionados.nombreIngles, disabled: true }],
+      otrasInstancias: [{ value: this.datosSeleccionados.otrasInstancias, disabled: true }],
+      criterioParaConferirOrigen: [{ value: this.datosSeleccionados.criterioParaConferirOrigen, disabled: true }],
+      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados.criterioParaTratoPreferencial, disabled: true }],
+      valorDeContenidoRegional: [{ value: this.datosSeleccionados.valorDeContenidoRegional, disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
+      marca: [this.datosSeleccionados?.marca ?? null],
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [

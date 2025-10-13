@@ -23,7 +23,7 @@ import { StoreConfig } from '@datorama/akita';
 export interface Tramite110212State {
   /** ID de la solicitud */
   idSolicitud: number | null;
-  
+
   /**
    * El valor de observaciones.
    */
@@ -34,29 +34,29 @@ export interface Tramite110212State {
    * 
    * @type {Mercancia[]}
    */
-  disponiblesDatos:Mercancia[];
+  disponiblesDatos: Mercancia[];
 
   /** Lista de idiomas disponibles. */
   idioma: string | null;
 
-      /** Lista de idiomas disponibles como catálogo */
+  /** Lista de idiomas disponibles como catálogo */
   idiomaDatos: Catalogo[];
 
   /** Lista de entidades federativas disponibles */
   entidadFederativaDatos: Catalogo[];
 
-    /**
-   * Entidad federativa seleccionada.
-   */
+  /**
+ * Entidad federativa seleccionada.
+ */
   entidadFederativa: string | null;
 
 
   /** Lista de representaciones federales disponibles */
   representacionFederalDatos: Catalogo[];
 
-    /**
-   * Representación federal seleccionada.
-   */
+  /**
+ * Representación federal seleccionada.
+ */
   representacionFederal: string | null;
 
   /**
@@ -137,6 +137,10 @@ export interface Tramite110212State {
    * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  /** Formulario con los datos específicos del destinatario */
+  formDatosDelDestinatario: { [key: string]: unknown };
+  /** Formulario general del destinatario */
+  formDestinatario: { [key: string]: unknown };
 
   /**
    * Datos del formulario relacionados con los detalles del certificado.
@@ -176,7 +180,7 @@ export function createInitialState(): Tramite110212State {
     representacionFederal: null,
     datosConfidencialesProductor: false,
     productorMismoExportador: false,
-    disponiblesDatos:[],
+    disponiblesDatos: [],
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',
@@ -252,6 +256,26 @@ export function createInitialState(): Tramite110212State {
     },
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
+    /** Formulario con información fiscal y general del destinatario */
+    formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: ''
+    },
+    /** Formulario con información del destinatario (ubicación y contacto) */
+    formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      calle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: ''
+    },
+
     /** Formulario de datos adicionales del certificado */
     formDatosCertificado: {
       observacionesDates: '',
@@ -359,13 +383,13 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     }));
   }
 
-    /**
-   * Actualiza el idioma seleccionado para el trámite.
-   *
-   * Este método permite establecer el idioma seleccionado en el trámite.
-   *
-   * @param {Catalogo[]} idioma - El idioma a establecer.
-   */
+  /**
+ * Actualiza el idioma seleccionado para el trámite.
+ *
+ * Este método permite establecer el idioma seleccionado en el trámite.
+ *
+ * @param {Catalogo[]} idioma - El idioma a establecer.
+ */
   public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -373,13 +397,13 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     }));
   }
 
-    /**
-   * Actualiza la entidad federativa seleccionada para el trámite.
-   *
-   * Este método permite establecer la entidad federativa seleccionada en el trámite.
-   *
-   * @param {string} entidadFederativa - La entidad federativa a establecer.
-   */
+  /**
+ * Actualiza la entidad federativa seleccionada para el trámite.
+ *
+ * Este método permite establecer la entidad federativa seleccionada en el trámite.
+ *
+ * @param {string} entidadFederativa - La entidad federativa a establecer.
+ */
   public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
@@ -462,7 +486,7 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     });
   }
 
-      /**
+  /**
 * Establece el catálogo de idiomaDatosSeleccion en el estado de la tienda.
 *
 * @param idiomaDatosSeleccion - Una lista de objetos de tipo `Catalogo` que representan las idiomaDatosSeleccion a establecer.
@@ -1361,18 +1385,18 @@ export class Tramite110212Store extends Store<Tramite110212State> {
    * @returns {void}
    */
   public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: Mercancia[]): void {
-     this.update((STATE) => {
+    this.update((STATE) => {
       const LISTAEXISTENTE = STATE.mercanciaSeleccionadasTablaDatos || [];
       const NUEVOARTICULO = { ...mercanciaSeleccionadasTablaDatos[0] };
 
-      if (NUEVOARTICULO.id === 0) {  
+      if (NUEVOARTICULO.id === 0) {
         // Agregar nuevo elemento con una identificación generada
         NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
         const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
         return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
       }
 
-     // Actualizar el elemento existente cuando id > 0
+      // Actualizar el elemento existente cuando id > 0
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
@@ -1449,12 +1473,23 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   }
 
   /**
-   * Establece los valores del formulario de fechas del certificado en el almacén.
-   *
-   * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
-   *
-   * @returns {void} - No devuelve ningún valor.
+   * Actualiza el estado del formulario de datos del destinatario con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
    */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario, ...values,
+      },
+    }));
+  }
+  /*
+     * Establece los valores del formulario de fechas del certificado en el almacén.
+     *
+     * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
+     *
+     * @returns {void} - No devuelve ningún valor.
+     */
   setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosCertificado: {
@@ -1463,7 +1498,20 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       },
     }));
   }
-
+  /**
+   * @method setFormDestinatario
+   * @description
+   * Actualiza el estado de datos del destinatario en el almacén.
+   * @param datosDestinatario Objeto que contiene los datos del destinatario a actualizar.
+   * */
+  setFormDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
   /**
    * @method setDatosConfidencialesProductor
    * @description

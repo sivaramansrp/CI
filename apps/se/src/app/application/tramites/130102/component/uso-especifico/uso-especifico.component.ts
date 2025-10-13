@@ -15,10 +15,12 @@ import { TituloComponent } from "libs/shared/data-access-user/src/tramites/compo
 import fraccionOptionJson from 'libs/shared/theme/assets/json/130102/fracciónarancelaria-options.json';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectClaveComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select-clave/catalogo-select.component';
+
 import { CommonModule } from '@angular/common';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -26,11 +28,13 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
 import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { ESPECIFICO_PREFILL, FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { FraccionesProsecRequest } from '../../models/request/regla-octava-request.model';
 
 @Component({
   selector: 'app-uso-especifico',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent,NotificacionesComponent],
+  imports: [TituloComponent, CatalogoSelectComponent, CatalogoSelectClaveComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent,NotificacionesComponent],
   templateUrl: './uso-especifico.component.html',
   styleUrl: './uso-especifico.component.scss'
 })
@@ -48,14 +52,9 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     configuracionTabla =FRACCIONES_ANARCIA_TABLA;
 /**
  * @description Lista de fracciones arancelarias PROSEC.
- * @type {FraccionArancelariaProsec[]}
+ * @type {FraccionesProsecRequest[]}
  */
-     datosSocios: FraccionArancelariaProsec[] = [
-      {
-    fraccionArancelariaProsec: 12345678,
-    descripción: 'Producto químico para uso industrial'
-  },
-     ];
+     datosSocios: FraccionesProsecRequest[] = [];
 
   /**
    * @description Formulario para el uso específico.
@@ -68,7 +67,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * @description Opciones del catálogo de fracción arancelaria.
    * @type {Catalogo[]}
    */
-  catalogos: Catalogo[] = fraccionOptionJson;
+  catalogos: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud 130102, obtenido desde el store.
@@ -83,7 +82,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
  * Filas seleccionadas en la tabla.  
  * Contiene objetos de tipo `FraccionArancelariaProsec`.  
  */  
-filasSeleccionadas: FraccionArancelariaProsec[] = []; 
+ filasSeleccionadas: FraccionesProsecRequest[] = []; 
  /**
    * Notificación para mostrar alertas al usuario.
    */
@@ -101,25 +100,11 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
   ) { 
-   this.consultaioQuery.selectConsultaioState$
-         .pipe(
-           takeUntil(this.destroyNotifier$),
-           map((seccionState) => {
-             this.consultaState = seccionState;
-              
-            if (this.consultaState.update) {        
-            this.tramite130102Store.update((state) => ({
-              ...state,
-              uso_especifico_tabla: ESPECIFICO_PREFILL
-            }));       
-            this.datosSocios = ESPECIFICO_PREFILL;
-           }
-             this.inicializarEstadoFormulario();
-           })
-         )
-         .subscribe();
+
+         this.inicializarFormulario();
   }
 
   /**
@@ -128,15 +113,30 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-    const USO_ESPECIFICO_TABLA = this.solicitudState?.['uso_especifico_tabla'];
-    if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) && this.consultaState.readonly) {
-      this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
-        this.datosSocios = data;
-      });
-      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
-      this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
-    }
+   
+    this.obtienerDivisionesFraccion();
   }
+
+
+  /**
+   * Obtiene las divisiones de la fracción arancelaria seleccionada y actualiza el catálogo.
+   * @param cveFraccion Clave de la fracción arancelaria para obtener las divisiones correspondientes.
+   * @returns void
+   *  
+   */
+  obtienerDivisionesFraccion(): void {
+    this.catOctavaTemporalService.getDivisionesFraccionArancelaria().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.catalogos = data.datos.map((item, index) => ({
+          id: index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+    });
+  }
+
+
 
   /**
    * @method inicializarEstadoFormulario
@@ -173,38 +173,9 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
    
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: ['', Validators.required],
-      descripción: ['', [Validators.required, UsoEspicificoComponent.noLeadingSpacesValidator]],
+      descripcion: ['', [Validators.required, UsoEspicificoComponent.noLeadingSpacesValidator]],
     });
 
- this.tramite130102Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {  
-          this.solicitudState = seccionState;
-          
-          if (this.solicitudState?.['uso_especifico_tabla']) {
-            const PRODUCTOS = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
-            this.datosSocios = [...PRODUCTOS];
-          }
-          
-          if (this.solicitudState?.fraccionArancelariaProsec) {
-            this.usoEspicificoForm.patchValue({
-              fraccionArancelariaProsec: this.solicitudState.fraccionArancelariaProsec
-            });
-          }
-        })
-      )
-      .subscribe();
-
-   
-    if (this.consultaState?.readonly) {
-      this.usoEspicificoForm.disable();
-      this.obtenerRequisitosFraccionArancelariaEsquema();
-    }
-    
-    if (this.consultaState?.update) {
-      this.obtenerRequisitosFraccionArancelariaEsquema();
-    }
   }
     /**
    * Asigna un valor del formulario al store.
@@ -225,8 +196,8 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
    */
   obtenerRequisitosFraccionArancelariaEsquema(): void {
     const DESCRIPCION = 'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)';
-    this.usoEspicificoForm.get('descripción')?.setValue(DESCRIPCION);
-    this.tramite130102Store.setDynamicFieldValue('descripción', DESCRIPCION);
+    this.usoEspicificoForm.get('descripcion')?.setValue(DESCRIPCION);
+    this.tramite130102Store.setDynamicFieldValue('descripcion', DESCRIPCION);
   }
 
   /**
@@ -265,21 +236,21 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
    
     if (this.usoEspicificoForm.valid) {
      
-      const FRACCIONID = Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value);
-      const FRACCIONDESCRIPCION = this.obtenerFraccionArancelariaProsec();
-      const DESCRIPCION = this.usoEspicificoForm.get('descripción')?.value?.trim();
+      const FRACCIONID = (this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value);
+     // const FRACCIONDESCRIPCION = this.obtenerFraccionArancelariaProsec();
+      const DESCRIPCION = this.usoEspicificoForm.get('descripcion')?.value?.trim();
 
       const EXISTS = this.datosSocios.some(item =>
-        item.fraccionArancelariaProsec === FRACCIONID
+        item.clave === FRACCIONID
       );
 
-      if (!EXISTS && FRACCIONID && DESCRIPCION) {
-        const ESPECIFICO: FraccionArancelariaProsec = {
-          fraccionArancelariaProsec: FRACCIONID,
-          descripción: DESCRIPCION,
+      if (!EXISTS &&FRACCIONID && DESCRIPCION) {
+        const ESPECIFICO: FraccionesProsecRequest = {
+          clave: FRACCIONID,
+          fraccion: DESCRIPCION,
         };
         this.datosSocios = [...this.datosSocios, ESPECIFICO];
-        this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
+        this.tramite130102Store.setDynamicFieldValue('lista_fracciones_prosec', this.datosSocios);
          this.usoEspicificoForm.reset();
         this.initializeFormDefaults();
      
@@ -304,7 +275,7 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
  * Actualiza las filas seleccionadas en la tabla.
  * @param filas - Arreglo de objetos seleccionados de tipo `FraccionArancelariaProsec`.
  */
-  alCambiarSeleccion(filas: FraccionArancelariaProsec[]):void {
+  alCambiarSeleccion(filas: FraccionesProsecRequest[]):void {
   this.filasSeleccionadas = filas;
   }
   /**
@@ -368,7 +339,7 @@ onConfirmacionModal(aceptado: boolean): void {
 private initializeFormDefaults(): void {
   this.usoEspicificoForm.patchValue({
     fraccionArancelariaProsec: '',
-    descripción: ''
+    descripcion: ''
   });
 }
 
