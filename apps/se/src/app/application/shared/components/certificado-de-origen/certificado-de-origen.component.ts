@@ -1,25 +1,70 @@
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
-import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
+  AlertComponent,
+  InputCheckComponent,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  Notificacion,
+  SoloLetrasNumerosDirective,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  BOTON_DE_OPCION_VER,
+  CARGA_MERCANCIA_EXPORT,
+  CARGA_MERCANCIA_SELECCIONADAS,
+  CONFIGURACION_MERCANCIA,
+  CONFIGURACION_MERCANCIA_TABLA,
+  FECHA_ID,
+  MERCANCIA_SELECCIONADAS,
+  REQUIREDA,
+  TEXTOS_REQUISITOS,
+} from '../../constantes/modificacion.enum';
+import { Catalogo, CatalogoSelectComponent, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  forwardRef,
+} from '@angular/core';
+import {
+  ConfiguracionColumna,
+  MenusDesplegables,
+} from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
-import { EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user'
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
-import { ToastrService } from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { RADIO_OPTIONS } from '../../../tramites/110214/constants/validar-inicialmente-certificado.enum';
 
-
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
- * 
+ *
  * @constant
  * @type {Object}
  * @property {string} labelNombre - El nombre de la etiqueta para la fecha de inicio.
@@ -34,7 +79,7 @@ export const FECHA_INICIO = {
 
 /**
  * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
- * 
+ *
  * @constant
  * @type {Object}
  * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
@@ -60,7 +105,7 @@ export const FECHA_FIN = {
   labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
-}
+};
 
 @Component({
   selector: 'app-certificado-de-origen',
@@ -76,6 +121,7 @@ export const FECHA_FIN = {
     AlertComponent,
     NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective),
+    InputRadioComponent,
     InputRadioComponent,
   ],
   templateUrl: './certificado-de-origen.component.html',
@@ -100,6 +146,14 @@ export class CertificadoDeOrigenComponent
    * Cuando es true, muestra los campos relacionados con el domicilio del tercer operador.
    */
   @Input() domTercerOperador: boolean = false;
+
+  /**
+   * @description
+   * Indica si el radio button correspondiente al tercer operador está seleccionado.
+   * Este valor se recibe como una entrada desde el componente padre.
+   */
+  @Input() domTercerOperadorRadio: boolean = false;
+
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -112,10 +166,6 @@ export class CertificadoDeOrigenComponent
    */
   @Input() operador!: boolean;
 
-  /**
-   * Indica si el componente está en modo de solo lectura.
-   */
-  radioOptions = RADIO_OPTIONS;
   /**
    * Indica si el componente está en modo de solo lectura.
    */
@@ -438,6 +488,11 @@ export class CertificadoDeOrigenComponent
   @Input() cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] =
     CARGA_MERCANCIA_SELECCIONADAS;
 
+  /**
+   * @description
+   * Configuración de las columnas disponibles para mostrar la tabla de mercancías.
+   * Utiliza la constante `CARGA_MERCANCIA_EXPORT` como valor inicial para definir las columnas y su formato.
+   */
   cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] =
     CARGA_MERCANCIA_EXPORT;
   /**
@@ -615,6 +670,7 @@ export class CertificadoDeOrigenComponent
         fax: [''],
         correo: ['', Validators.required],
         correoElectronico: [''],
+        domTercerOperador: [''],
         // Nuevos controles de formulario para el procedimiento 110222
         calle1: ['', Validators.required],
         numeroLetra1: ['', Validators.required],
@@ -677,7 +733,8 @@ export class CertificadoDeOrigenComponent
    * description Carga la lista de derechos desde el servicio.
    */
   loadComboUnidadMedida(): void {
-    this.service.getDatos('110222') // Llama al servicio para obtener los datos.
+    this.service
+      .getDatos('110222') // Llama al servicio para obtener los datos.
       .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
       .subscribe((data): void => {
         // Maneja los datos recibidos.
@@ -887,6 +944,17 @@ export class CertificadoDeOrigenComponent
       this.requerida = true;
     }
   }
+
+  /**
+   * @description
+   * Valida los campos principales del formulario de certificado.
+   * Verifica que los campos `entidadFederativa` y `bloque` tengan valores válidos
+   * (no vacíos ni nulos). Si ambos son válidos, retorna `true`.
+   * En caso contrario, marca todos los controles del formulario como "touched"
+   * y retorna `false`.
+   *
+   * @returns {boolean} `true` si el formulario es válido; `false` en caso contrario.
+   */
   validarFormularios(): boolean {
     if (
       this.formCertificado.get('entidadFederativa')?.value !== '' &&
@@ -1421,5 +1489,19 @@ export class CertificadoDeOrigenComponent
    */
   public get bloqueValue(): string | null {
     return this.formCertificado?.get('bloque')?.value || null;
+  }
+  
+  /**
+   * @description
+   * Actualiza el valor del campo `domTercerOperador` dentro del formulario de certificado
+   * cuando el usuario selecciona una opción en el radio button o lista correspondiente.
+   *
+   * @param {string | number} evento Valor seleccionado que se asignará al campo `domTercerOperador`.
+   * @returns {void}
+   */
+  domTercerOperadorSelecction(evento: string | number): void {
+    this.formCertificado.patchValue({
+      domTercerOperador: evento,
+    });
   }
 }

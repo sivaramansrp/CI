@@ -32,13 +32,9 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
-  Notificacion,
-  NotificacionesComponent,
-  SeccionLibQuery,
-  SeccionLibState,
-} from '@libs/shared/data-access-user/src';
+  REGEX_PATRON_DECIMAL_15_4,
+  REGEX_PATRON_DECIMAL_16_4,
+} from '@ng-mf/data-access-user';
 import {
   Component,
   EventEmitter,
@@ -55,14 +51,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  InputFecha,
+  InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+} from '@libs/shared/data-access-user/src';
 import { Subject, delay, of, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../models/modificacion.enum';
 import { MercanciaService } from '../../services/mercancia.service';
-import { REGEX_PATRON_DECIMAL_15_4 } from '@ng-mf/data-access-user';
-import { REGEX_PATRON_DECIMAL_16_4 } from '@ng-mf/data-access-user';
 import { ValidationErrors } from '@angular/forms';
 
 export function validarCantidad(
@@ -123,6 +125,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Output() tablaSeleccionEvent = new EventEmitter();
 
+  /**
+   * @description
+   * Evento que emite los datos relacionados con las mercancías al componente padre.
+   * Se utiliza para notificar cambios o actualizaciones en la lista de mercancías.
+   */
   @Output() EMITMERCANIAS = new EventEmitter();
 
   /**
@@ -137,6 +144,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() datosSeleccionados!: Mercancia;
 
+  /**
+   * @description
+   * Indica si el componente se está utilizando desde la sección de mercancías disponibles.
+   * Este valor se recibe como entrada desde el componente padre y controla el comportamiento o la vista del componente.
+   */
   @Input() fromMercanciasDisponibles: boolean = false;
 
   /**
@@ -400,12 +412,33 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [{ value: this.datosSeleccionados.normaOrigen, disabled: true }],
-      nombreIngles: [{ value: this.datosSeleccionados.nombreIngles, disabled: true }],
-      otrasInstancias: [{ value: this.datosSeleccionados.otrasInstancias, disabled: true }],
-      criterioParaConferirOrigen: [{ value: this.datosSeleccionados.criterioParaConferirOrigen, disabled: true }],
-      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados.criterioParaTratoPreferencial, disabled: true }],
-      valorDeContenidoRegional: [{ value: this.datosSeleccionados.valorDeContenidoRegional, disabled: true }],
+      normaOrigen: [
+        { value: this.datosSeleccionados?.normaOrigen, disabled: true },
+      ],
+      nombreIngles: [
+        { value: this.datosSeleccionados?.nombreIngles, disabled: true },
+      ],
+      otrasInstancias: [
+        { value: this.datosSeleccionados?.otrasInstancias, disabled: true },
+      ],
+      criterioParaConferirOrigen: [
+        {
+          value: this.datosSeleccionados?.criterioParaConferirOrigen,
+          disabled: true,
+        },
+      ],
+      criterioParaTratoPreferencial: [
+        {
+          value: this.datosSeleccionados?.criterioParaTratoPreferencial,
+          disabled: true,
+        },
+      ],
+      valorDeContenidoRegional: [
+        {
+          value: this.datosSeleccionados?.valorDeContenidoRegional,
+          disabled: true,
+        },
+      ],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
@@ -423,7 +456,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
         ],
       ],
       umc: [
-        this.datosSeleccionados?.umc,
+        this.datosSeleccionados?.umc ? this.datosSeleccionados?.umc : '',
         REQUIRED_UMC.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
@@ -457,7 +490,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       ],
       numeroDeSerie: [''],
       tipoFactura: [
-        this.datosSeleccionados?.tipoFactura,
+        this.datosSeleccionados?.tipoFactura
+          ? this.datosSeleccionados?.tipoFactura
+          : '',
         REQUIRED_TIPO_FACTURA.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
@@ -667,5 +702,31 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  /**
+   * @descripcion
+   * Actualiza el valor del control 'tipoFactura' en el formulario reactivo
+   * 'mercanciaForm' cuando el usuario selecciona un tipo de factura del catálogo.
+   *
+   * @param evento Objeto del tipo Catalogo que contiene la opción seleccionada.
+   */
+  selectionTipoFactura(evento: Catalogo): void {
+    this.mercanciaForm.patchValue({
+      tipoFactura: evento.id,
+    });
+  }
+
+  /**
+   * @descripcion
+   * Actualiza el valor del control 'umc' en el formulario reactivo
+   * 'mercanciaForm' cuando el usuario selecciona una unidad de medida del catálogo.
+   *
+   * @param evento Objeto del tipo Catalogo que contiene la opción seleccionada.
+   */
+  selectionUMC(evento: Catalogo): void {
+    this.mercanciaForm.patchValue({
+      umc: evento.id,
+    });
   }
 }
