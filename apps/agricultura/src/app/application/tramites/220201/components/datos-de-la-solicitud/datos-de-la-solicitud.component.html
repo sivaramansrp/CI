@@ -130,6 +130,10 @@
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
               <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
             <small class="mensaje-error">Este campo es obligatorio.</small>
+
+         
+
+
           </div>
         </div>
       </div>
@@ -160,3 +164,21 @@
   </div>
 </div>
 <app-modal #modalRef></app-modal>
+
+
+   prueba
+          <app-tabla-expandida 
+              [columns]="columns" 
+              [data]="cuerpoTabla"
+              [expandible]="true"
+              [nestedContent]="nestedTableTemplate"
+              (rowExpanded)="onRowExpanded($event)">
+            </app-tabla-expandida>
+
+            <ng-template #nestedTableTemplate let-row>
+              <app-tabla-expandida
+                [columns]="nestedColumns"
+                [data]="row.sensibles"
+                [expandible]="false">
+              </app-tabla-expandida>
+            </ng-template>

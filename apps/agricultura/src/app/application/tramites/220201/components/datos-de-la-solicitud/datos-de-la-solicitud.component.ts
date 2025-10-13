@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import {CatalogosService} from '../../services/220201/catalogos/catalogos.service'
 import { HttpClient } from '@angular/common/http';
 
@@ -14,14 +14,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { CONFIGURACION_SENSIBLES } from '../../../../shared/constantes/datos-de-la-solicitue.enum';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
+import { Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-expandida.component';
+
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -47,8 +52,9 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
     CatalogoSelectComponent,
     InputRadioComponent,
     AlertComponent,
-    TablaDinamicaComponent,
     NotificacionesComponent,
+    TablaDinamicaComponent,
+    TablaDinamicaExpandidaComponent,
     ModalComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -276,6 +282,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   messageDeError: string = '';
 
   /**
+   * @description Configuración de las columnas para la tabla de datos sensibles.
+   * Utiliza la constante CONFIGURACION_SENSIBLES para definir las columnas.
+   * @type {ConfiguracionColumna<Sensible>[]}
+   */
+  configuracionSensiblesTabla: ConfiguracionColumna<Sensible>[] = CONFIGURACION_SENSIBLES;
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
@@ -333,6 +346,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.initActionFormBuild();
 
     this.nuevaNotificacion = {} as Notificacion;
+
   }
 
   ngAfterViewInit(): void {
@@ -718,6 +732,42 @@ onFilaClic(event: SolicitudData): void {
   }
 }
 
+columns: ColumnConfig[] = [
+    { encabezado: 'No. partida', clave: 'noPartida', width: '30%' },
+    { encabezado: 'Tipo de requisito', clave: 'tipoRequisito', width: '20%' },
+    { encabezado: 'Requisito', clave: 'requisito', width: '20%' },
+    { encabezado: 'Número de Certificado Internacional', clave: 'numeroCertificadoInternacional', width: '30%' },
+    { encabezado: 'Fracción arancelaria', clave: 'fraccionArancelaria', width: '30%' },
+    { encabezado: 'Descripción de la fracción', clave: 'descripcionFraccion', width: '30%' },
+    { encabezado: 'Nico', clave: 'nico', width: '30%' },
+    { encabezado: 'Descripción Nico', clave: 'descripcionNico', width: '30%' },
+    { encabezado: 'Descripción', clave: 'descripcion', width: '30%' },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: 'umt', width: '30%' },
+    { encabezado: 'Cantidad UMT', clave: 'cantidadUMT', width: '30%' },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: 'umc', width: '30%' },
+    { encabezado: 'Cantidad UMC', clave: 'cantidadUMC', width: '30%' },
+    { encabezado: 'Especie', clave: 'especie', width: '30%' },
+    { encabezado: 'Uso', clave: 'uso', width: '30%' },
+    { encabezado: 'País de origen', clave: 'paisOrigen', width: '30%' },
+    { encabezado: 'País de procedencia', clave: 'paisProcedencia', width: '30%' },
+    { encabezado: 'Tipo de presentación', clave: 'tipoPresentacion', width: '30%' },
+    { encabezado: 'Tipo planta', clave: 'tipoPlanta', width: '30%' },
+    { encabezado: 'Planta autorizada de origen', clave: 'plantaAutorizadaOrigen', width: '30%' },
+    { encabezado: 'Certificado Internacional Electrónico', clave: 'certificadoInternacionalElectronico', width: '30%' },
+  ];
+
+  nestedColumns: ColumnConfig[] = [
+    { encabezado: 'ColorPelaje', clave: 'ColorPelaje', width: '50%' },
+    { encabezado: 'SexoClave', clave: 'SexoClave', width: '50%' }
+  ];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  onRowExpanded(row: any): void {
+    // Aquí puedes cargar los datos para la tabla anidada si es necesario
+    console.warn('Fila expandida:', row);
+  }
+
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
@@ -728,6 +778,5 @@ onFilaClic(event: SolicitudData): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 
 }
