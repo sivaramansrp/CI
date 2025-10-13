@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
@@ -11,6 +11,7 @@ import { MercanciaComponent } from '../../../../shared/components/mercancia/merc
 import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 
 /**
  * @description
@@ -97,22 +98,32 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * Indica si los datos de la mercancía provienen del listado de mercancías disponibles.
-   * 
-   * @type {boolean}
-   * @default false
-   * 
-   * @example
-   * // true: el usuario seleccionó una mercancía desde la lista disponible
-   * // false: la mercancía se está agregando manualmente
-   * this.fromMercanciasDisponibles = true;
    */
   fromMercanciasDisponibles: boolean = false;
+
+  /**
+   * @descripcion
+   * Indica si hay mercancías disponibles.
+   */
+  mercanciasDisponibles: boolean = true;
+
+   /**
+   * @descripcion
+   * Indica si el campo de mercancías está activo.
+   */
+  cargoDeMercancias: boolean = true;
 
   /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
   public idProcedimiento = 110211;
+
+  /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTabla$: Mercancia[] = [];
 
   /**
    * @descripcion
@@ -204,30 +215,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * ```
    */
   tablaSeleccionEvent: boolean = false;
-
-  /**
-   * @description
-   * Observable que emite los datos para la tabla de mercancías.
-   * 
-   * Este observable se suscribe a los cambios en el estado de la tabla
-   * de mercancías y proporciona los datos actualizados para su visualización.
-   * 
-   * @property {Observable<Mercancia[]>} datosTabla$
-   * @memberof CertificadoOrigenComponent
-   * 
-   * @example
-   * ```typescript
-   * // En el template
-   * <tabla-dinamica
-   *   [datos]="datosTabla$ | async"
-   *   [columnas]="configuracionColumnas">
-   * </tabla-dinamica>
-   * 
-   * // En el componente
-   * this.datosTabla$ = this.query.selectmercanciaTabla$;
-   * ```
-   */
-  datosTabla$: Observable<Mercancia[]> = of([]);
 
   /**
    * @description
@@ -374,6 +361,14 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   esFormularioSoloLectura:boolean = false;
 
   /**
+   * Configuración de las columnas de la tabla de carga de mercancías.
+   * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
+   *
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
+
+  /**
    * @description
    * Constructor del componente CertificadoOrigen.
    * 
@@ -467,13 +462,14 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.certificadoState = state as CamState;
+          this.datosTablaUno$ = state.disponiblesDatos;
+          this.datosTabla$ = state.mercanciaSeleccionadasTablaDatos;
         })
       )
       .subscribe();
 
     this.estadoOpcion();
     this.paisOpcion();
-    this.datosTabla$ = this.query.selectmercanciaTabla$
   }
   
   /**
@@ -529,23 +525,31 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.camCertificadoService.obtenerTablaDatos('disponibles-datos.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (response: Mercancia[]) => {
-        if (response && Array.isArray(response)) {
-          this.disponiblesDatos = response as Mercancia[];
-        }
-        else {
-          this.disponiblesDatos = [];
-        }
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.disponiblesDatos = [];
-      },
-    });
+    this.camCertificadoService
+      .obtenerTablaDatos('disponibles-datos.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: Mercancia[]) => {
+          if (response && Array.isArray(response)) {
+            this.disponiblesDatos = response as Mercancia[];
+            this.store.setDisponsiblesDatos(this.disponiblesDatos);
+          } else {
+            this.disponiblesDatos = [];
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
+  }
+
+  /**
+   * @descripcion
+   * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
+   * @param {Mercancia[]} evento - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+   */
+  guardarClicado(evento: Mercancia[]): void {
+    this.datosTabla$ = evento;
   }
 
   /**
