@@ -417,8 +417,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
       criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
       criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
-      criterioParaClasificacion: [{ value: this.datosSeleccionados?.criterioParaClasificacion, disabled: true }],
-      fechaDePago: [{ value: this.datosSeleccionados?.fechaDePago, disabled: true}],
+      criterioParaClasificacion: [{ value: this.datosSeleccionados?.criterioParaClasificacion }],
+      fechaDePago: [{ value: this.datosSeleccionados?.fechaDePago }],
       valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
