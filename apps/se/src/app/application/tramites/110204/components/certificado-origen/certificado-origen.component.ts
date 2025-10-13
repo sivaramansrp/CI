@@ -16,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
-
 /**
  * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
  * 
@@ -411,24 +410,62 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   /**
    * Busca la mercancia y actualiza los datos en el store.
    */
-  buscarrMercancia(): void {
-       const PAYLOAD = {
-      rfcExportador: "AAL0409235E6",
-      tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
-      pais: { cvePais: this.formCertificado['bloque'] || '' }
-    };
-      this.certificadoService
-        .buscarMercanciasCert(PAYLOAD)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
-          (data: Mercancia[]) => {
-            this.store.setbuscarMercancia(data);
-          },
-          () => {
-            this.toastr.error('Error al buscar Mercancia');
-          }
-        );
-  }
+buscarrMercancia(): void {
+  console.log(this.formCertificado,'formCertificado');
+  
+  const PAYLOAD = {
+    rfcExportador: 'AAL0409235E6',
+    tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
+    pais: { cvePais: this.formCertificado['bloque'] || '' },
+  };
+
+ this.certificadoService
+  .buscarMercanciasCert(PAYLOAD)
+  .pipe(takeUntil(this.destroyNotifier$))
+  .subscribe({
+    next: (response: any) => {
+      const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map((item: any) => ({
+        id: item.idMercancia,
+        fraccionArancelaria: item.fraccionArancelaria || '',
+        numeroDeRegistrodeProductos: item.numeroRegistro || '',
+        fechaExpedicion: item.fraccionArancelaria || '',
+        fechaVencimiento: item.fraccionArancelaria || '',
+        nombreTecnico: item.fraccionArancelaria || '',
+        nombreComercial: item.fraccionArancelaria || '',
+        fraccionNaladi: item.fraccionArancelaria || '',
+        fraccionNaladiSa93: item.fraccionArancelaria || '',
+        fraccionNaladiSa96: item.fraccionArancelaria || '',
+        fraccionNaladiSa02: item.fraccionArancelaria || '',
+        criterioParaConferirOrigen: item.fraccionArancelaria || '',
+        valorDeContenidoRegional: item.fraccionArancelaria || '',
+        normaOrigen: item.fraccionArancelaria || '',
+        cantidad: '',
+        umc: '',
+        tipoFactura: '',
+        valorMercancia: '',
+        fechaFinalInput: '',
+        numeroFactura: '',
+        unidadMedidaMasaBruta: '',
+        complementoClasificacion: '',
+        complementoDescripcion: '',
+        nalad: '',
+        fechaFactura: '',
+        marca: '',
+        nombreIngles: '',
+        otrasInstancias: '',
+        criterioParaTratoPreferencial: '',
+        numeroDeSerie: '',
+      }));
+
+      this.store.setbuscarMercancia(MAPPED_DATA);
+    },
+    error: () => {
+      this.toastr.error('Error al buscar Mercancia');
+    },
+  });
+}
+
+
 
   /**
    * @method abrirModalCargaPorArchivo
