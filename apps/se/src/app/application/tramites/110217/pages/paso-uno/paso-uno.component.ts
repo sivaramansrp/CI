@@ -7,7 +7,7 @@ import { CertificadoOrigenComponent } from '../../components/certificado-origen/
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { Destinatario110217Component } from '../../components/destinatario/destinatario.component';
 import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
@@ -27,7 +27,7 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
     CommonModule,
     SolicitanteComponent,
     DatosCertificadoComponent,
-    DestinatarioComponent,
+    Destinatario110217Component,
     CertificadoOrigenComponent,
     HistProductoresComponent
   ],
@@ -59,9 +59,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @ViewChild('certificadoOrigenRef') certificadoOrigenComp!: CertificadoDeOrigenComponent;
 
   /**
-   * Referencia al componente `DestinatarioComponent`.
+   * Referencia al componente `Destinatario110217Component`.
    */
-  @ViewChild('destinatarioRef') destinatarioComp!: DestinatarioComponent;
+  @ViewChild('destinatarioRef') destinatarioComp!: Destinatario110217Component;
 
   /**
    * Referencia al componente `DatosCertificadoComponent`.
@@ -216,8 +216,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
     
     // Tab 4: Destinatario  
-    if (tabIndex === 4 && this.destinatarioComp?.registroFormulario) {
-      isValid = this.destinatarioComp.registroFormulario.valid;
+    if (tabIndex === 4 && this.destinatarioComp?.validateAllForms) {
+      isValid = this.destinatarioComp.validateAllForms();
     }
     
     // Tab 5: Datos certificado
@@ -261,8 +261,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.certificadoOrigenComp.formCertificado.markAllAsTouched();
       }
       
-      if (this.indice === 4 && this.destinatarioComp?.registroFormulario) {
-        this.destinatarioComp.registroFormulario.markAllAsTouched();
+      if (this.indice === 4 && this.destinatarioComp?.markAllFormsAsTouched) {
+        this.destinatarioComp.markAllFormsAsTouched();
       }
       
       if (this.indice === 5 && this.datosCertificadoComp?.formDatosCertificado) {
