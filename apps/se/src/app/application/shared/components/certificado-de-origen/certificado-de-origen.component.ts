@@ -231,6 +231,11 @@ export class CertificadoDeOrigenComponent
    */
   tratadoAcuerdoCertificado?: Catalogo[];
 
+  /** 
+   * Propiedad de entrada que recibe los datos de los países.
+  */
+  pais?:Catalogo[];
+
   /*
    * Propiedad de entrada que recibe los datos de los países bloqueados.
    * @type {Catalogo[]}
@@ -866,6 +871,10 @@ export class CertificadoDeOrigenComponent
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.tipoEstadoSeleccionEvent.emit(estado);
+    this.formCertificado.get('bloque')?.setValue('')
+    if (estado.clave !== undefined) {
+      this.getPaisBloque(estado.clave);
+    }
   }
 
   /**
@@ -951,7 +960,6 @@ export class CertificadoDeOrigenComponent
     this.nuevaNotificacion = {} as Notificacion;
     this.inicializarFormularioArchivo();
     this.loadComboUnidadMedida();
-    this.getPaisBloque();
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
@@ -1413,11 +1421,10 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getTratado(): void {
-    this.service
-      .getTratadoCertificado(this.idProcedimiento.toString(), 'TITRAC.TA')
-      .subscribe((data) => {
-        this.tratadoAcuerdoCertificado = data as Catalogo[];
-      });
+    this.service.getTratadoCertificado(this.idProcedimiento.toString()).subscribe((data) => {
+      this.tratadoAcuerdoCertificado = data as Catalogo[];
+    });
+
   }
 
   /**
@@ -1425,12 +1432,10 @@ export class CertificadoDeOrigenComponent
    *
    * @returns {void}
    */
-  getPaisBloque(): void {
-    this.service
-      .getPaises(this.idProcedimiento.toString())
-      .subscribe((data) => {
-        this.paisBloqueCertificado = data as Catalogo[];
-      });
+  getPaisBloque(clave:string):void{
+    this.service.getPaises(this.idProcedimiento.toString(),clave).subscribe((data) => {
+      this.paisBloqueCertificado = data as Catalogo[];
+    });
   }
 
    /**

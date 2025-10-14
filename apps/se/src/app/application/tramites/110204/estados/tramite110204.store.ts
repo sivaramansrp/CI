@@ -72,7 +72,7 @@ export interface TramiteState {
    * @description
    * Contiene campos como observaciones, idioma, entidad federativa y representación federal.
    */
-  formDatosCertificado: { [key: string]: unknown};
+  formDatosCertificado: { [key: string]: unknown };
 
   /**
    * Objeto que contiene datos del formulario de mercancía.
@@ -201,6 +201,18 @@ export const INITIAL_STATE: TramiteState = {
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: '',
+    pais: '',
+    ciudad: '',
+    telefono: '',
+    correo: '',
+    numeroLetra: '',
+    calle: '',
+    si: false,
   },
   formDatosCertificado: {
     observacionesDates: '',
@@ -320,7 +332,7 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Actualiza los datos del formulario de certificado en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormDatosCertificado(values: { [key: string]: unknown}): void {
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -448,14 +460,14 @@ export class Tramite110204Store extends Store<TramiteState> {
       const LISTAEXISTENTE = STATE.mercanciaTabla || [];
       const NUEVOARTICULO = { ...mercanciaTabla[0] };
 
-      if (NUEVOARTICULO.id === 0) {  
+      if (NUEVOARTICULO.id === 0) {
         // Agregar nuevo elemento con una identificación generada
         NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
         const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
         return { ...STATE, mercanciaTabla: UPDATEDLIST };
       }
 
-     // Actualizar el elemento existente cuando id > 0
+      // Actualizar el elemento existente cuando id > 0
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );

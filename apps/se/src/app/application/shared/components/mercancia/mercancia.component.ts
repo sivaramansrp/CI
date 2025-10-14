@@ -378,7 +378,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     private mercanciaService: MercanciaService,
     private seccionQuery: SeccionLibQuery,
     public catalogoServices: CatalogoServices
-  ) {}
+  ) { }
 
   /**
    * @descripcion
@@ -389,7 +389,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.seccionQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((s) => (this.seccionState = s));
-    this.getUmc();
+    if (this.UNIDAD_MEDIDA_COMERCIALIZACION.includes(this.idProcedimiento)) {
+      this.getUmc();
+    }
     this.getUnidadesMedidaComercial();
     this.getTipoFactura();
     this.initActionFormBuild();
@@ -407,13 +409,13 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * - Si cambia `fromMercanciasDisponibles`, se actualiza su valor en la propiedad correspondiente.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['datosSeleccionados'].currentValue) {
-      this.datosSeleccionados = changes['datosSeleccionados'].currentValue;
+    if (changes['datosSeleccionados']?.currentValue) {
+      this.datosSeleccionados = changes['datosSeleccionados']?.currentValue;
       this.initActionFormBuild();
     }
-    if (changes['fromMercanciasDisponibles'].currentValue) {
+    if (changes['fromMercanciasDisponibles']?.currentValue) {
       this.fromMercanciasDisponibles =
-        changes['fromMercanciasDisponibles'].currentValue;
+        changes['fromMercanciasDisponibles']?.currentValue;
     }
   }
 
@@ -707,7 +709,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionTipoFactura(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      tipoFactura: evento.id,
+      tipoFactura: evento.clave,
     });
   }
 
@@ -720,7 +722,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionUMC(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      umc: evento.id,
+      umc: evento.clave,
     });
   }
 
@@ -736,7 +738,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .unidadMasaBrutaCatalogo(TRAMITES_ID)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
-        this.optionsUMC = res.datos ?? [];
+        this.umcMedida = res.datos ?? [];
       });
   }
 
@@ -754,7 +756,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .unidadesMedidaComercialCatalogo(TRAMITES_ID)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
-        this.umcMedida = res.datos ?? [];
+        this.optionsUMC = res.datos ?? [];
       });
   }
 
