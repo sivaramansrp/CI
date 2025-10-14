@@ -42,7 +42,7 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final:',
+  labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
 };

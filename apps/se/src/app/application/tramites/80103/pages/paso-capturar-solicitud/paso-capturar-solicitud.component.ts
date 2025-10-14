@@ -20,11 +20,12 @@
  */
 import { AVISO, ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, Usuario, WizardService, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user'
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, finalize, map, switchMap, take, tap } from 'rxjs';
+import { Observable, Subject, map, switchMap, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
@@ -36,7 +37,6 @@ import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
 import { takeUntil } from 'rxjs';
-import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 
 /*
 *  * Componente para gestionar el paso de captura de solicitud en el trámite 80103.
@@ -323,6 +323,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -335,6 +336,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
