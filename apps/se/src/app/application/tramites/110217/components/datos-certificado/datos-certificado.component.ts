@@ -18,14 +18,26 @@ import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.s
 })
 export class DatosCertificadoComponent implements OnDestroy, OnInit {
   
-  // Variable booleana que indica si es necesario o no (precisa) en el formulario
-  precisa: boolean = true;
+  /**
+   * Controla la visibilidad del campo "Precisa" en el formulario de datos del certificado.
+   * Para el trámite 110217, este campo está oculto (false).
+   * @type {boolean}
+   */
+  precisa: boolean = false;
   
-  // Variable booleana que indica si el idioma está habilitado o no
+  /**
+   * Controla la visibilidad del campo "Idioma" en el formulario de datos del certificado.
+   * Para el trámite 110217, este campo está visible (true).
+   * @type {boolean}
+   */
   idioma: boolean = true;
   
-  // Variable booleana que indica si presenta está habilitado o no
-  presenta: boolean = true;
+  /**
+   * Controla la visibilidad del campo "Presenta" en el formulario de datos del certificado.
+   * Para el trámite 110217, este campo está oculto (false).
+   * @type {boolean}
+   */
+  presenta: boolean = false;
 
   /**
    * Formulario reactivo que contiene los datos del certificado.
