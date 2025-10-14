@@ -16,6 +16,7 @@ import { ExpedicionCertificadoService } from '../../services/expedicion-certific
 @Component({
   selector: 'app-solicitud-expedicion',
   templateUrl: './solicitud-expedicion-page.component.html',
+  styleUrls: ['./solicitud-expedicion-page.component.scss'],
 })
 export class SolicitudExpedicionPageComponent {
 

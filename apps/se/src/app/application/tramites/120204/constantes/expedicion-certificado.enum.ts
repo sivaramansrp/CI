@@ -36,7 +36,10 @@ export const ERROR_FORMA_ALERT =
       <strong>Corrija los siguientes errores:</strong>
     </div>
     <div class="col-md-12">
+    <span class="">1.</span>
+    <span>
       El certificado no ha sido capturado
+    </span>
     </div>
   </div>
 </div>
