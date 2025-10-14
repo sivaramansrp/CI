@@ -575,7 +575,24 @@ public setGrupoDeTransporteNumeroVuelo(numeroVuelo: string): void {
     ...state,
     grupoDeTransporte: { ...state.grupoDeTransporte, numeroVuelo },
   }));
-}}
+}
+
+/**
+   * Establece los representacionFederalSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
+  }
+}
 
 
 
