@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -34,7 +34,7 @@ export interface ColumnConfig {
         ])
     ]
 })
-export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown } = { [key: string]: unknown }> {
+export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown } = { [key: string]: unknown }> implements OnInit {
     /**
      * Un arreglo de objetos de configuración de columnas que se utiliza para definir
      * la estructura y el comportamiento de la tabla dinámica. Cada objeto en el arreglo
@@ -161,6 +161,18 @@ export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown 
     /** Evento que se emite cuando el usuario cambia la cantidad de elementos por página en la tabla. */
     @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter<number>();
 
+
+      @Input() tableId!: string;
+
+
+    ngOnInit(): void {
+        this.paginatedDatos = [...this.data];
+        
+        // Si no se ha proporcionado un ID de tabla, se genera uno aleatorio.
+        this.tableId = this.tableId ? this.tableId : 'tabla_' + Math.floor(Math.random() * 1000000);
+        this.getUpdatePagination();
+      }
+
     /**
      * Alterna la expansión de una fila en la tabla dinámica.
      * 
@@ -282,6 +294,7 @@ export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown 
         }
 
     }
+    
 }
 
 

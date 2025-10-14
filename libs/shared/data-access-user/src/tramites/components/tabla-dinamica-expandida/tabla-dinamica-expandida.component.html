@@ -1,31 +1,25 @@
 <div class="table-responsive table-wrapper">
-    <table class="table table-striped table-bordered mb-2">
+    <table class="table table-striped table-bordered mb-2" id="{{ tableId }}">
         <thead>
             <tr>
                 <th *ngIf="expandible" style="width: 50px"></th>
-                <th>
-                    <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
-                        (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-                        [checked]="paginatedDatos.length ? filasSeleccionadas.length === paginatedDatos.length : false
-                    " [disabled]="disableSeleccionTablaCheckBox" />
-                </th>
                 <th *ngFor="let col of columns" [style.width]="col.width">{{col.encabezado}}</th>
             </tr>
         </thead>
         <tbody>
-            <ng-container *ngFor="let item of data; let i = index">
+            <ng-container *ngFor="let item of paginatedDatos; let i = index">
                 <tr>
                     <td *ngIf="expandible">
-                        <input type="checkbox" [checked]="isSelected(i)" (change)="onSelectRow($event, i)">
                         <button class="btn btn-link p-0" (click)="toggleRow(i)"
                             [attr.aria-expanded]="expandedIndex === i">
                             <i class="bi" [ngClass]="{
                             'bi-dash': expandedIndex === i,
                             'bi-plus': expandedIndex !== i
                         }"></i>
-                        </button>
+                        </button> 
                     </td>
                     <td *ngFor="let col of columns" class="">{{item[col.clave]}}</td>
+                    
                 </tr>
                 <tr *ngIf="expandedIndex === i && expandible">
                     <td [attr.colspan]="columns.length + 1">
@@ -39,7 +33,6 @@
         </tbody>
     </table>
 </div>
-pp
 <app-table-pagination *ngIf="showPagination" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage"
     [currentPage]="currentPage" (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
 </app-table-pagination>

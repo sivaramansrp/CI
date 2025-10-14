@@ -23,7 +23,8 @@
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->
-        <th [ngClass]="{'text-center': styleCenter}" *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="onSort(col)">
+        <th [ngClass]="{'text-center': styleCenter}" *ngFor="let col of obtenerConfiguracionOrdenada()"
+          (click)="onSort(col)">
           <div class="align-items-center">
             {{ col.encabezado }}
             @if (showSort) {
@@ -61,84 +62,83 @@
       </tr>
       <!-- Crear las filas de manera dinámica -->
       <ng-container *ngFor="let fila of paginatedDatos; let i = index">
-        <tr *ngIf="expandedIndex === i && expandible">
-                    <td [attr.colspan]="columns.length + 1">
-                        <div class="nested-table p-3" [@expandCollapse]>
-                            <ng-container *ngTemplateOutlet="nestedContent; context: { $implicit: fila }">
-                            </ng-container>
-                        </div>
-                    </td>
-                </tr> 
-        <tr [ngStyle]="styleCenter ? {'text-align': 'center'} : {}"  (click)="onFilaClic(fila)">
+        <tr [ngStyle]="styleCenter ? {'text-align': 'center'} : {}" (click)="onFilaClic(fila)">
+
+          <!-- Botón de radio para seleccionar una fila -->
+          @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
           <td>
+            <input class="cursor-pointer" type="radio" [name]="'filaSeleccionada_' + tableId"
+              [(ngModel)]="idFilaSeleccionada" [value]="i" (change)="seleccionarFila($event, i, fila)"
+              [checked]="idFilaSeleccionada === i" aria-label="Seleccionar" [disabled]="disableSeleccionTablaRadio" />
+          </td>
+
+          } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
+          <td>
+            <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i"
+              (change)="cambiarEstadoCheckbox($event, i)" [checked]="filasSeleccionadas.includes(i)"
+              aria-label="Seleccionar" [disabled]="disableSeleccionTablaCheckBox" />
             <button class="btn btn-link p-0" (click)="toggleRow(i)" *ngIf="expandible"
-                            [attr.aria-expanded]="expandedIndex === i">
-                            <i class="bi" [ngClass]="{
+              [attr.aria-expanded]="expandedIndex === i">
+              <i class="bi" [ngClass]="{
                             'bi-dash': expandedIndex === i,
                             'bi-plus': expandedIndex !== i
                         }"></i>
-                        </button>
+            </button>
           </td>
-        <!-- Botón de radio para seleccionar una fila -->
-        @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
-        <td>
-          <input class="cursor-pointer" type="radio" [name]="'filaSeleccionada_' + tableId"
-            [(ngModel)]="idFilaSeleccionada" [value]="i" (change)="seleccionarFila($event, i, fila)"
-            [checked]="idFilaSeleccionada === i" aria-label="Seleccionar" [disabled]="disableSeleccionTablaRadio" />
-        </td>
 
-        } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
-        <td>
-          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i" 
-            (change)="cambiarEstadoCheckbox($event, i)" [checked]="filasSeleccionadas.includes(i)"
-            aria-label="Seleccionar" [disabled]="disableSeleccionTablaCheckBox" />
-        </td>
+          } @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
+          <td>
+            <button id="button" class="cursor-pointer btn btn-primary" type="button" name="filaSeleccionada" [value]="i"
+              (click)="cambiarValor({ row: fila, column: '' })" aria-label="Seleccionar" [disabled]="desactivarButton">
+              {{ obtenerTextoBoton(fila) }}
+            </button>
+          </td>
 
-        } @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
-        <td>
-          <button id="button" class="cursor-pointer btn btn-primary" type="button" name="filaSeleccionada" [value]="i"
-            (click)="cambiarValor({ row: fila, column: '' })" aria-label="Seleccionar" [disabled]="desactivarButton">
-            {{ obtenerTextoBoton(fila) }}
-          </button>
-        </td>
-        
-        }
+          }
 
-        <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()"
-          (click)="col.hiperenlace ? cambiarValor({ row: fila, column: '' }) : null"
-          [ngClass]="{ 'cursor-pointer': col.hiperenlace }">
-          {{ col.clave(fila) || ' ' }}
-        </td>
-        @if(acciones.length > 0){
-        <td class="align-icon">
-          @if(acciones.length > 0){ @for(accion of acciones; track $index){
-          @switch(accion){ @case(accionesEnum.VER){
-          <i class="bi bi-eye color-icon-eye" (click)="alternarValor.emit({ row: fila, column: 'VER' })"
-            style="cursor: pointer"></i>
-          } @case(accionesEnum.EDITAR){
-          <i class="bi bi-pencil color-icon-edit" (click)="alternarValor.emit({ row: fila, column: 'EDITAR' })"
-            style="cursor: pointer"></i>
-          } @case(accionesEnum.ELIMINAR){
-          <i class="bi bi-trash color-icon-trash" (click)="alternarValor.emit({ row: fila, column: 'ELIMINAR' })"
-            style="cursor: pointer"></i>
-          } @case(accionesEnum.DESCARGAR){
-          <i class="bi bi-download color-icon-download" (click)="alternarValor.emit({ row: fila, column: 'DESCARGAR' })"
-            style="cursor: pointer"></i>
-          } } } }
-        </td>
-        }
-      </tr>
-           
-      </ng-container>      
+          <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
+          <td *ngFor="let col of obtenerConfiguracionOrdenada()"
+            (click)="col.hiperenlace ? cambiarValor({ row: fila, column: '' }) : null"
+            [ngClass]="{ 'cursor-pointer': col.hiperenlace }">
+            {{ col.clave(fila) || ' ' }}
+          </td>
+          @if(acciones.length > 0){
+          <td class="align-icon">
+            @if(acciones.length > 0){ @for(accion of acciones; track $index){
+            @switch(accion){ @case(accionesEnum.VER){
+            <i class="bi bi-eye color-icon-eye" (click)="alternarValor.emit({ row: fila, column: 'VER' })"
+              style="cursor: pointer"></i>
+            } @case(accionesEnum.EDITAR){
+            <i class="bi bi-pencil color-icon-edit" (click)="alternarValor.emit({ row: fila, column: 'EDITAR' })"
+              style="cursor: pointer"></i>
+            } @case(accionesEnum.ELIMINAR){
+            <i class="bi bi-trash color-icon-trash" (click)="alternarValor.emit({ row: fila, column: 'ELIMINAR' })"
+              style="cursor: pointer"></i>
+            } @case(accionesEnum.DESCARGAR){
+            <i class="bi bi-download color-icon-download"
+              (click)="alternarValor.emit({ row: fila, column: 'DESCARGAR' })" style="cursor: pointer"></i>
+            } } } }
+          </td>
+          }
+
+        </tr>
+        <tr *ngIf="expandedIndex === i && expandible">
+          <td [attr.colspan]="columns.length + 1" colspan="12">
+            <div class="nested-table p-3" [@expandCollapse]>
+              <ng-container *ngTemplateOutlet="nestedContent; context: { $implicit: fila }">
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
 </div>
-  @if (isInvalida) {
-  <div class="mensaje-error mt-2">
-    Este campo es obligatorio
-  </div>
-  }
-  <app-table-pagination *ngIf="showPagination" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage"
-    [currentPage]="currentPage" (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
-  </app-table-pagination>
+@if (isInvalida) {
+<div class="mensaje-error mt-2">
+  Este campo es obligatorio
+</div>
+}
+<app-table-pagination *ngIf="showPagination" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage" (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
+</app-table-pagination>

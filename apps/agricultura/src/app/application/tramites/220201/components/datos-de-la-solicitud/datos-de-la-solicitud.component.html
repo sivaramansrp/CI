@@ -131,17 +131,19 @@
         </div>
         <div class="col-md-12">
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [nestedContent]="tablauno"
-            [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="true" [tableId]="'tabla-mercancias'"
+            [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="this.datosDelaSolicitud.value.tipoMercancia === 'yes'" [tableId]="'tabla-mercancias'"
             (listaDeFilaSeleccionada)="seleccionTabla($event)" (rowExpanded)="onRowExpanded($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+          <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
+            <small class="mensaje-error">Este campo es obligatorio.</small>
+          </div>
+        </div>
+        <div class="col-md-12">
           <ng-template #tablauno let-row>
             <app-tabla-expandida [columns]="nestedColumns" [data]="row.sensibles" [expandible]="false" [showPagination]="true"
               [mode]="'client'" [totalItems]="row.sensibles.length" [itemsPerPage]="5">
             </app-tabla-expandida>
-          </ng-template>            
-          <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
-            <small class="mensaje-error">Este campo es obligatorio.</small>
-          </div>
+          </ng-template> 
         </div>
       </div>
       @if(!esFormularioSoloLectura){

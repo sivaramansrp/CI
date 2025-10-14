@@ -5,8 +5,8 @@
     </div>
   } @else {
     <div class="d-flex align-items-center">
-    <label class="me-2" for="">Pagina</label>
-    <select class="form-select" (change)="onItemsPerPageChange($event)">
+    <label class="me-2" for=""></label>
+    <select class="form-select" (change)="onItemsPerPageChange($event)" style="display: none;">
       <option
         *ngFor="let option of [5, 10, 20, 50]"
         [selected]="option === itemsPerPage"
@@ -14,7 +14,7 @@
         {{ option }}
       </option>
     </select>
-    <label class="ms-2" for="">de</label>
+    <label class="ms-2" for=""></label>
   </div>
 
   <nav *ngIf="totalPages > 1">
