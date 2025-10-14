@@ -1089,7 +1089,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   postOficioAutorizacion(): void {
     const PAYLOAD: Firma = {
-      cadena_original: encodeToISO88591Hex(this.firmaOficioCadena),
+      cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
       fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
@@ -1153,7 +1153,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   postOficioRechazado(): void {
     const PAYLOAD: Firma = {
-      cadena_original: encodeToISO88591Hex(this.firmaOficioCadena),
+      cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
       fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
