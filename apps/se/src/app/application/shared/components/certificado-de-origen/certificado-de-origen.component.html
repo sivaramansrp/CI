@@ -1219,6 +1219,7 @@
         <ng-titulo titulo="Mercancías disponibles" />
       </div>
     </div>
+    
     } @if(mercanciasDisponiblesTabla){
     <div class="row">
       <app-tabla-dinamica
@@ -1229,12 +1230,17 @@
       ></app-tabla-dinamica>
     </div>
     } @else{
-    <app-tabla-dinamica
-      [configuracionTabla]="configuracionTabla"
-      [datos]="tableData || []"
-      [tipoSeleccionTabla]="seleccionTabla"
-      (filaClic)="abrirModificarModal($event)"
-    ></app-tabla-dinamica>
+      <div class="row">
+        <div class="table-scroll">
+            <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="tableData || []"
+            [tipoSeleccionTabla]="seleccionTabla"
+            (filaClic)="abrirModificarModal($event)"
+          ></app-tabla-dinamica>
+        </div>
+      </div>
+    
     } @if (cargoDeMercancias) {
     <div class="row">
       <div class="col-md-12">

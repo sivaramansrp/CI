@@ -168,8 +168,9 @@
               >:</label
             >
             <input
-              type="number"
+              type="text"
               class="form-control"
+              maxlength="22"
               formControlName="cantidad"
             />
             @if(mercanciaForm.controls['cantidad'].invalid ) {
@@ -186,9 +187,10 @@
             </div>
             }
           </div>
+          @if(UNIDAD_MEDIDA_COMERCIALIZACION.includes(idProcedimiento)){
           <div class="col-md-6">
             <app-catalogo-select
-              [catalogo]="umc || []"
+              [catalogo]="umcMedida || []"
               [label]="'UMC'"
               [required]="true"
               name="umc"
@@ -196,6 +198,18 @@
               [markTouched]="mercanciaForm.get('umc')?.touched ?? false"
             ></app-catalogo-select>
           </div>
+          } @if(UMC.includes(idProcedimiento)){
+          <div class="col-md-6">
+            <app-catalogo-select
+              [catalogo]="optionsUMC"
+              [label]="'UMC'"
+              [required]="true"
+              name="umc"
+              (selectionChange)="selectionUMC($event)"
+              [markTouched]="mercanciaForm.get('umc')?.touched ?? false"
+            ></app-catalogo-select>
+          </div>
+          }
         </div>
 
         <div class="row mb-3">
@@ -212,7 +226,8 @@
               >:</label
             >
             <input
-              type="number"
+              type="text"
+              maxlength="22"
               class="form-control"
               formControlName="valorMercancia"
             />

@@ -28,6 +28,11 @@ export class Tramite110214Query extends Query<Tramite110214State> {
       return state.formulario;
     });
 
+    /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
 
   /**
    * Observable que selecciona el estado completo del trámite.
@@ -36,6 +41,20 @@ export class Tramite110214Query extends Query<Tramite110214State> {
    */
   selectSolicitud$ = this.select((state) => {
     return state;
+  });
+
+  /**
+ * Observable que expone la lista de productores exportador agregados al estado del trámite.
+ */
+  selectAgregarProductoresExportador$ = this.select((state) => {
+    return state.agregarProductoresExportador;
+  });
+
+  /**
+ * Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite.
+ */
+  selectMercanciaProductores$ = this.select((state) => {
+    return state.mercanciaProductores;
   });
 
   /**

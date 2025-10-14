@@ -1,11 +1,9 @@
 import { AlphaNumericOnlyDirective } from '@libs/shared/data-access-user/src/tramites/directives/alpha-numeric-only/alpha-numeric-only.directive';
-/* eslint-disable class-methods-use-this */
 /**
  * Importaciones necesarias para el componente de empresas.
  * Incluye servicios, modelos, componentes compartidos y decoradores de Angular.
  */
 import {
-  CATALOGOS_ID,
   Catalogo,
   CatalogosService,
   EMAIL,

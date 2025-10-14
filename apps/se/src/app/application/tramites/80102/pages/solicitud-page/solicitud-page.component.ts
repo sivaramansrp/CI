@@ -5,17 +5,17 @@ import {
   ConsultaioState,
   DatosPasos,
   ERROR_FORMA_ALERT,
+  JSONResponse,
   ListaPasosWizard,
   PasoFirmaComponent,
   SeccionLibStore,
   Usuario,
   WizardComponent,
   WizardService,
+  doDeepCopy,
   esValidObject,
-  formatearFechaYyyyMmDd,
   getValidDatos,
 } from '@ng-mf/data-access-user';
-import { Anexo1, ProveedorClienteDatosTabla } from '../../models/autorizacion-programa-nuevo.model';
 import {
   Component,
   EventEmitter,
@@ -363,12 +363,13 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
         take(1),
         switchMap(data => this.guardar(data)),
         map(response => {
-          const OK = response.codigo === '00';
+          const API_DATOS = doDeepCopy(response);
+          const OK = API_DATOS.codigo === '00';
           if (OK) {
-            this.toastrService.success(response.mensaje);
+            this.toastrService.success(API_DATOS.mensaje);
           } else {
             this.padreBtn = true;
-            this.toastrService.error(response.mensaje);
+            this.toastrService.error(API_DATOS.mensaje);
           }
           return OK;
         })
@@ -403,26 +404,22 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
  /**
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private complimentosBase = complimentos;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private plantasSubmanufacturerasBase: any[] = plantasSubmanufactureras;
+  private plantasSubmanufacturerasBase = plantasSubmanufactureras;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un planta.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private plantasBase: any[] = planta;
+  private plantasBase = planta;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un notarios.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private notariosBase: any[] = notarios;
+  private notariosBase = notarios;
 
 /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -435,470 +432,6 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  /**
- * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
- * utilizando un objeto base como plantilla y datos complementarios para completar
- * los campos faltantes.
- *
- * @param data Primer arreglo de socios/accionistas.
- * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
- *
- * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
- *          con la información de los dos arreglos de entrada.
- *
- * @example
- * const socios = buildComplimentos(listaA, listaB, BASE, datos);
- */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildComplimentos(data: Record<string, any>, base: Record<string, any>): any {
-    return {
-      ...base,
-      notario: {
-        ...base['notario'],
-        rfc: data['datosComplimentos'].formaModificaciones.rfc,
-        numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
-        numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
-        entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
-        fechaActa: formatearFechaYyyyMmDd(data['datosComplimentos'].formaModificaciones.fechaDeActa)
-      },
-      modalidad: data['datosComplimentos'].modalidad,
-      booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
-      descripcionSistemasMedicion: data['datosComplimentos'].datosGeneralis.paginaWWeb,
-      descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
-      capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
-      numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
-      nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
-
-    };
-  }
-
-  /**
- * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
- * utilizando un objeto base como plantilla y datos complementarios para completar
- * los campos faltantes.
- *
- * @param arr1 Primer arreglo de socios/accionistas.
- * @param arr2 Segundo arreglo de socios/accionistas.
- * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
- * @param data Objeto con datos complementarios necesarios para completar el payload.
- *
- * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
- *          con la información de los dos arreglos de entrada.
- *
- * @example
- * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
- */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
-    const BASE_OBJECT = base[0];
-    const CLONED_BASE = structuredClone ? structuredClone(BASE_OBJECT) : JSON.parse(JSON.stringify(BASE_OBJECT));
-    const MAP_TO_PAYLOAD = (item: Record<string, unknown>): Record<string, unknown> => ({
-      ...CLONED_BASE,
-      nombre: item['nombre'] ?? '',
-      apellidoPaterno: item['apellidoPaterno'] ?? '',
-      apellidoMaterno: item['apellidoMaterno'] ?? '',
-      rfc: item['rfc'] ?? '',
-      correoElectronico: item['correoElectronico'] ?? '',
-      razonSocial: item['razonSocial'] ?? '',
-      estadoEvaluacionEntidad: item['estado'] ?? '',
-      estadoEntidad: item['estado'] ?? '',
-      cvePaisOrigen: item['pais'] ?? '',
-      rfcExtranjero: item['taxId'] ?? '',
-      domicilio: {
-        codigoPostal: item['codigoPostal'] ?? '',
-      }
-    });
-
-    return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
-  }
-/**
- * Genera un array de empresas nacionales combinando datos de entrada con una base.
- * @param array - Datos dinámicos con propiedades como servicio, RFC, año y número IMMEX.
- * @param base - Plantilla base con valores por defecto para cada empresa.
- * @returns Array de objetos que fusiona la base con los datos del array.
- * @example buildEmpresaacionales(input, base) => [{ rfc: 'RFC123', razonSocial: 'Empresa X', idServicio: 'S01', ... }]
- */
-  // eslint-disable-next-line class-methods-use-this
-  buildEmpresaNacionales(array: any[] = [], base: unknown[]): unknown[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,      
-      idServicio :arr.servicio?? '',
-      rfc:arr.registroContribuyentes?? '',
-      tiempoPrograma:arr.anoIMMEX?? '',
-      numeroPrograma:arr.numeroIMMEX?? '',
-      razonSocial:arr.denominacionSocial?? '',
-        });
-      });
-    });
-    return RESULT;
-  }
-/**
- * Construye un array de empresas extranjeras combinando datos de entrada con una base.
- * @param array - Datos dinámicos con propiedades como dirección, servicio y nombre.
- * @param base - Plantilla base con valores por defecto para cada empresa extranjera.
- * @returns Array de objetos fusionando la base con los datos del array.
- * @example buildEmpresaExtranjera(input, base) => [{ nombre: 'Empresa X', idServicio: 'S01', idDireccionSol: 'Dirección Y' }]
- */
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
-  buildEmpresaExtranjera(array: any[] = [], base: unknown[]): unknown[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,     
-        idDireccionSol:arr.direccionEmpresaExtranjera,
-        idServicio:arr.servicio,
-        nombre:arr.nombreEmpresa,
-        });
-      });
-    });
-    return RESULT;
-  }
-
-
-
-
-  /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
-    const RESULT = [
-      {
-          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
-          "idTipoTramite": 80102,
-          "cveDeclaracion": "123"
-      }
-    ];
-    return RESULT;
-  }
-
-  /**
- * Build plantasControladoras by taking the base array
- * and appending the length of each key in empresasSeleccionadas
- * to every planta item.
- *
- * @param array  Object with keys whose values are arrays
- * @param base            Existing plantasControladoras array
- */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildComplementosTablaPayload(array: any[], base: unknown[]): unknown[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-          rfc: arr.rfc || arr.taxId,
-          correoElectronico: arr.correoElectronico,
-          razonSocial: arr.razonSocial,
-          nombre: arr.nombre,
-          apellidoPaterno: arr.apellidoPaterno,
-          apellidoMaterno: arr.apellidoMaterno,
-          domicilioSolicitud: {
-            codigoPostal: arr.codigoPostal || arr.cp,
-            informacionExtra: arr.estado
-          }
-        });
-      });
-    });
-    return RESULT;
-  }
-
-
- // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
- /**
-   * Construye el objeto `anexo` a partir de los datos proporcionados.
-   *
-   * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
-   * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
-   *
-   * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
-   * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
-   * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
-   *
-   * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
-   */
-  buildAnexo(data: any) {
-    const buildAnexoItem = (item: Anexo1) => ({
-      descripcion: item.encabezadoFraccion,
-      idTipoBien: 0,
-      idBienComercial: 0,
-      testado: true,
-      contadorGrid: null,
-      descripcionTestado: item.encabezadoDescripcion,
-    });
- 
-    const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
-      idProveedor: item.idProveedor,
-      paisOrigen: item.paisOrigen,
-      rfcProveedor: item.rfcProveedor,
-      razonProveedor: item.razonProveedor,
-      paisDestino: item.paisDestino,
-      rfcCliente: item.rfcClinte,
-      razonCliente: item.razonSocial,
-      domicilio: item.domicilio,
-      testado: item.testado,
-      idProductoP: item.idProductoP,
-      descTestado: item.descTestado,
-    });
- 
-    const buildDatosParaNavegar = (datos: any) => ({
-      anexoII: datos?.encabezadoAnexoII,
-      tipo: datos?.encabezadoTipo,
-      unidadMedida: datos?.encabezadoAnexoII,
-      categoria: datos?.encabezadoCategoria,
-      descripcion: datos?.encabezadoDescripcionComercial,
-      valorMensual: datos?.encabezadoVolumenMensual,
-      valorAnual: datos?.encabezadoVolumenAnual,
-      volumenMensual: datos?.encabezadoValorEnMonedaMensual,
-      volumenAnual: datos?.encabezadoValorEnMonedaAnual,
-      testado: true,
-      fecFinVigencia: null,
-      volumenAnualSolicitado: null,
-    });
- 
-    const buildAnexoDos = (item: any) => ({
-      fraccionExportacion: item.encabezadoFraccionExportacion,
-      fraccionImportacion: item.encabezadoFraccionImportacion,
-      descFraccionImpo: item.encabezadoDescripcionComercial,
-      claveFraccionAnexo: item.encabezadoAnexoII,
-      idProducto: item.encabezadoIdProducto,
-      fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
-      fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
-      fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
-      fraccionVolumenMensual: item?.encabezadoValorEnMonedaMensual,
-      fraccionVolumenAnual: item?.encabezadoVolumenAnual,
-      categoriaFraccion: item.encabezadoCategoria,
-      tipoFraccion: item.encabezadoTipo,
-      umt: item.encabezadoUmt,
-    });
- 
-    const proyectoImmexDatos = (item: any) => ({
-      tipoDocumento: item.encabezadoTipoDocument,
-      descripcion: item.encabezadoDescripcionOtro,
-      fechaFirma: item.encabezadoFechaFirma,
-      fechaVigencia: item.encabezadoFechaVigencia,
-      rfcFirmante: item.encabezadoRfc,
-      razonFirmante: item.encabezadoRazonFirmante,
-      testado: true,
-      fecFinVigencia: item.encabezadoFechaVigencia,
-    });
- 
-    /**
-     * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
-     *
-     * @param item - Objeto que contiene la información del proveedor y cliente.
-     * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
-     */
-    const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
-      paisOrigen: item.paisOrigen,
-      rfcProveedor: item.rfcProveedor,
-      razonProveedor: item.razonProveedor,
-      paisDestino: item.paisDestino,
-      rfcCliente: item.rfcClinte,
-      razonCliente: item.razonSocial,
-      domicilio: item.domicilio,
-      descTestado: item.descTestado,
-    });
- 
-    return {
-      anexo: {
-        ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
-        ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
-        proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.importarDatosTabla[0] || {}),
-        tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
-        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
-        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
-      },
-    };
-  }
-
-/**
- * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
- *
- * @param arr Arreglo de objetos con datos de entrada (opcional).
- * @param base Objeto base que se fusiona con los datos específicos de cada planta.
- * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantasSubmanufactureras(array: any[] = [], base: unknown[]): unknown[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-      empresaCalle: arr.calle ?? '',
-      empresaNumeroInterior: arr.numInterior ?? '',
-      empresaNumeroExterior: arr.numExterior ?? '',
-      empresaCodigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.colonia ?? '',
-      empresaDelegacionMunicipio: arr.municipio ?? '',
-      empresaEntidadFederativa: arr.entidadFederativa ?? '',
-      empresaPais: arr.pais ?? '',
-      rfc: arr.rfc ?? '',
-      domicilioFiscal: arr.domicilioFiscal ?? '',
-      razonSocial: arr.razonSocial ?? '',
-       datosComplementarios: Array.isArray((ITEM as any)?.datosComplementarios)
-          ? (ITEM as any).datosComplementarios.map((dc:any) => ({
-              idPlantaC: dc.idPlantaC ?? '',
-              idDato: dc.idDato ?? '',
-              amparoPrograma: dc.amparoPrograma ?? '',              
-            }))
-          : []
-        });
-      });
-    });
-    return RESULT;
-  }
-
-/**
- * Construye un arreglo de objetos de plantas basado en una estructura base común.
- * 
- * @param arr Arreglo de datos de entrada para cada planta.
- * @param base Objeto base que se combina con los datos específicos de cada planta.
- * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
- */
-    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
-
-    // eslint-disable-next-line complexity
-    const mapCapacidadInstalada = (item: any) => ({
-      idPlantaCa: item.PLANTA ?? "",
-      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
-      umt: item.UMT ?? "",
-      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
-      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
-      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
-      turnos: (item.TURNOS ?? "").toString(),
-      horasTurno: (item.HORAS_POR_TURNO ?? "").toString(),
-      cantidadEmpleados: (item.CANTIDAD_EMPLEADOS ?? "").toString(),
-      cantidadMaquinaria: (item.CANTIDAD_MAQUINARIA ?? "").toString(),
-      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
-      capacidadMensual: (item.CAPACIDAD_INSTALADA_MENSUAL ?? "").toString(),
-      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
-      testado: "1",
-      claveServicio: item.CLAVE_SERVICIO ?? "",
-      cveTipoServicio: item.CVE_TIPO_SERVICIO ?? "",
-      descripcionServicio: item.DESCRIPCION_SERVICIO ?? "",
-      descTestado: item.DESC_TESTADO ?? "",
-      fraccionVista: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO ?? "",
-      idCapacidad: item.ID_CAPACIDAD ?? "",
-      tipoServicio: item.TIPO_SERVICIO ?? "",
-    });
-
-    const MAP_MONTOS_INVERSION = (item: any) => ({
-      idPlantaM: item.PLANTA ?? "",
-      tipo: item.TIPO ?? "",
-      cantidad: item.CANTIDAD ?? "",
-      descripcion: item.DESCRIPCION ?? "",
-      monto: item.MONTO ?? "",
-    })
-
-    const MAP_EMPLEADOS = (item: any) => ({
-      idPlantaE: item.PLANTA ?? '',
-      totalEmpleados: item.TOTAL ?? '',
-      directos: item.DIRECTOS ?? '',
-      cedula: item.CEDULA_DE_CUOTAS ?? '',
-      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
-      indirectos: item.INDIRECTOS ?? '',
-      contrato: item.CONTRATO ?? '',
-      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
-      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
-      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
-      rfcEmpresa: item.RFC ?? '',
-      razonEmpresa: item.RAZON_SOCIAL ?? '',
-    })
-
-    const MAP_COMPLEMENTAR = (item: any) => ({
-      idPlantaC: item.PLANTA ?? '' ,
-      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
-      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
-      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
-      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
-      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
-      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
-      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
-    })
-
-    const MAP_FIRMANTES = (item:any) => ({
-      tipoFirmante: item.tipoFirmante ?? '',
-    })
-
-    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
-    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
-    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
-    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
-    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
- 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let RESULT: any[] = [];
-    array.forEach(arr => {
-      // eslint-disable-next-line complexity
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-          idPlanta: arr.planta ?? '',
-          calle: arr.calle ?? '',
-          numeroExterior: arr.numeroExterior ?? '',
-          numeroInterior: arr.numeroInterior ?? '',
-          codigoPostal: arr.codigoPostal ?? '',
-          localidad: arr.localidad ?? '',
-          colonia: arr.colonia ?? '',
-          delegacionMunicipio: arr.delegacionMunicipio ?? '',
-          entidadFederativa: arr.entidadFederativa ?? '',
-          pais: arr.pais ?? '',
-          rfc: arr.registroFederalDeContribuyentes ?? '',
-          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-          razonSocial: arr.razonSocial ?? '',
-        });
-      });
-    });
-    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
-    return RESULT_DATA;
-  }
-
-/**
- * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
- *
- * @param arr Arreglo de objetos con datos de entrada (opcional).
- * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
- * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildDatosFederatarios(array: any[] = [], base: unknown[]): unknown[] {
-    const RESULT: any[] = [];
-    array.forEach(arr => {
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-      nombreNotario: arr.nombre ?? '',
-      apellidoMaterno: arr.segundoApellido ?? '',
-      apellidoPaterno: arr.primerApellido ?? '',
-      numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
-      numeroNotaria: arr.numeroDeNotaria ?? '',
-      entidadFederativa: arr.estado ?? '',
-      delegacionMunicipio: arr.estadoOptions ?? '',
-        });
-      });
-    });
-    return RESULT;
-  }
 
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
@@ -906,17 +439,23 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns void
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): Promise<any> {
-    const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
-    const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
-    const ANEXO_ALL = this.buildAnexo(data);
-    const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
-    const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-    const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
-    const EMPRESAS_NACIONALES = this.buildEmpresaNacionales(data.datos,this.empresasNacionales);
-    const EMPRESAS_EXTRANJERAS = this.buildEmpresaExtranjera(data.datosEmpresaExtranjera,this.empresasExtranjeras);
+  guardar(data: Tramite80102State): Promise<JSONResponse> {
+    const SOLICITUD = this.autorizacionProgrmaNuevoService.buildComplimentos(data as unknown as Record<string, unknown>, this.complimentosBase);
+    const DECLARACION_SOLICUTUD_ENTRIES = this.autorizacionProgrmaNuevoService.buildDeclaracionSolicitudEntries(data as unknown as Record<string, unknown>);
+    const PLANTAS = this.autorizacionProgrmaNuevoService.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
+    const ANEXO_ALL = this.autorizacionProgrmaNuevoService.buildAnexo(data);
+    const PLANTAS_SUBMANUFACTURERAS = this.autorizacionProgrmaNuevoService.buildPlantasSubmanufactureras(
+      Array.isArray(this.plantasSubmanufacturerasBase) ? this.plantasSubmanufacturerasBase : [this.plantasSubmanufacturerasBase],
+      Array.isArray(data.empressaSubFabricantePlantas?.plantasSubfabricantesAgregar) ? data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar : []
+    );
+    const NOTARIOS = this.autorizacionProgrmaNuevoService.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
+    const SOCIOS_ACCIONISTAS = this.autorizacionProgrmaNuevoService.buildSociosAccionistas(
+      Array.isArray(data.tablaDatosComplimentos) ? data.tablaDatosComplimentos : [],
+      Array.isArray(data.tablaDatosComplimentosExtranjera) ? data.tablaDatosComplimentosExtranjera : [],
+      Array.isArray(this.sociosAccionistas) ? this.sociosAccionistas[0] : this.sociosAccionistas
+    );
+    const EMPRESAS_NACIONALES = this.autorizacionProgrmaNuevoService.buildEmpresaNacionales(data.datos,this.empresasNacionales);
+    const EMPRESAS_EXTRANJERAS = this.autorizacionProgrmaNuevoService.buildEmpresaExtranjera(data.datosEmpresaExtranjera,this.empresasExtranjeras);
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
@@ -941,27 +480,27 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     },
     "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
     "notarios":[...NOTARIOS],
-    "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
-    "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
+    "anexoII": Array.isArray(ANEXO_ALL.anexo['ANEXOII']) ? [...ANEXO_ALL.anexo['ANEXOII']] : [],
+    "anexoIII": Array.isArray(ANEXO_ALL.anexo['ANEXOIII']) ? [...ANEXO_ALL.anexo['ANEXOIII']] : [],
     "mercanciaImportacion": [
       {
         "listaProveedores": [
-          ...ANEXO_ALL.anexo.proveedorCliente
+          ...(Array.isArray(ANEXO_ALL.anexo['proveedorCliente']) ? ANEXO_ALL.anexo['proveedorCliente'] : [])
         ],
         "complemento": {
-          ...ANEXO_ALL.anexo.datosParaNavegar
+          ...(typeof ANEXO_ALL.anexo['datosParaNavegar'] === 'object' && ANEXO_ALL.anexo['datosParaNavegar'] !== null ? ANEXO_ALL.anexo['datosParaNavegar'] : {})
         },
-        "anexoI": [...ANEXO_ALL.anexo.tableDos]
+        "anexoI": Array.isArray(ANEXO_ALL.anexo['tableDos']) ? [...ANEXO_ALL.anexo['tableDos']] : []
       }
     ],
     "fraccionArancelaria":[
         {
-          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+          "listaProveedores": Array.isArray(ANEXO_ALL.anexo['proveedorClienteDos']) ? [...ANEXO_ALL.anexo['proveedorClienteDos']] : []
         }
       ],
      "productoExportacionDtoList": [
         {
-          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+          "proyectosImmex": Array.isArray(ANEXO_ALL.anexo['proyectoimex']) ? [...ANEXO_ALL.anexo['proyectoimex']] : []
         }
       ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
@@ -974,9 +513,10 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
 
     return new Promise((resolve, reject) => {
       this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
-        if(esValidObject(response) && esValidObject(response.datos)) {
-          if(getValidDatos(response.datos.id_solicitud)) {
-            this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud);
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+          if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+            this.tramite80102Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
           } else {
             this.tramite80102Store.setIdSolicitud(0);
           }
