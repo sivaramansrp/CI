@@ -20,6 +20,13 @@ export interface ProgramaACancelar {
     tipoPrograma: string; 
     estatus: string; 
 }
+
+export interface ProgramaACancelarPayload {
+    rfc: string;
+    discriminatorValue: string;
+
+}
+
 /**
  * Constante que representa el identificador de la tabla de cancelaciones disponibles.
  */

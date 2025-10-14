@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ProgramaACancelarComponent } from '../../components/programaACancelar/programaACancelar.component';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 
 /**
@@ -60,6 +61,16 @@ export class DatosComponent implements OnInit, OnDestroy {
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
   public esFormularioSoloLectura: boolean = false;
+
+  /** Estado del formulario, indica si es válido o no. */
+  public formFieldValidado: boolean = true;
+  
+  /**
+   * Referencia al componente `programaACancelarComponent`.
+   */
+  @ViewChild('programaACancelarComponent', { static: false }) programaACancelarComponent: ProgramaACancelarComponent | undefined;
+
+  @Input() idTipoTramite!: string;
 
   /**
    * Constructor de la clase.
@@ -129,6 +140,29 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+public validarFormularios(): boolean {
+  let allFormsValid = true;
+  if (this.programaACancelarComponent) {
+    if(this.programaACancelarComponent?.isFormValido() === false) {
+      this.formFieldValidado = false;
+      return false;
+    }
+    this.formFieldValidado = true;
+    if (this.programaACancelarComponent?.radioId === null || this.programaACancelarComponent?.radioId === undefined || this.programaACancelarComponent?.radioId === -1) {
+      allFormsValid = false;
+    }
+  }
+  return allFormsValid;
+}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.

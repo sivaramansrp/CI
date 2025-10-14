@@ -11,16 +11,18 @@
       <h1>Firmar</h1>
       <ng-alert [CONTENIDO]="TEXTOS.FIRMAR.alerta"></ng-alert>
       }
+      @if(indice ===1 && !esFormaValido) {
+      <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
+      }
       <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) {
       @case (1) {
-      <app-datos></app-datos>
+      <app-datos [idTipoTramite]="idTipoTramite" #datosComponent></app-datos>
       }
       @case (2) {
-      <app-firmar-solicitud></app-firmar-solicitud>
-
+      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="140101" [procedureUrl]="'solicitud-de-cancelacion/solicitante'"></paso-firma>
       }
 
 

@@ -6,12 +6,14 @@ import { ProgramaACancelar} from '../../shared/models/programa-cancelar.model';
  * Interfaz que representa la estructura de un programa.
  */
 export interface Programa {
-  folioPrograma: string;
-  idProgramaSeleccionado: string;
-  modalidad: string;
-  representacionFederal: string;
-  tipoPrograma: string;
-  estatus: string;
+  folioPrograma: string; 
+  idProgramaSeleccionado?: string; 
+  modalidad: string; 
+  representacionFederal: string; 
+  tipoPrograma: string; 
+  estatus: string; 
+  fechaInicioVigencia: string;
+  idProgramaAutorizado: string;
 }
 
 /**
@@ -23,6 +25,7 @@ export interface Programa {
  */
 export interface Programa140101State {
 
+  idSolicitud:number,
   /**
    * Observaciones de la solicitud
    */
@@ -56,6 +59,7 @@ export interface Programa140101State {
  */
 export function createInitialState(): Programa140101State {
   return {
+    idSolicitud:0,
     solicitudObservaciones: '', // Valor inicial vacío para las observaciones
     confirmar: false, // Valor inicial para confirmar en falso
     radio: -1, // Valor inicial para la selección de radio
@@ -67,6 +71,8 @@ export function createInitialState(): Programa140101State {
       representacionFederal: '', // Representación federal
       tipoPrograma: '', // Tipo de programa
       estatus: '', // Estatus del programa
+      fechaInicioVigencia: '', // Fecha de inicio de vigencia
+      idProgramaAutorizado: '', // ID del programa autorizado
     }
   };
 }
@@ -141,6 +147,17 @@ export class Tramite140101Store extends Store<Programa140101State> {
     this.update((state) => ({
       ...state,
       datos: estado,
+    }));
+  }
+
+  /**
+   * Actualiza el ID de la solicitud.
+   * @param idSolicitud Nuevo ID de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

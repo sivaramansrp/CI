@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent,FirmaElectronicaComponent, SolicitanteComponent,TituloComponent,WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent,FirmaElectronicaComponent, PasoFirmaComponent, SolicitanteComponent,TituloComponent,WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -29,6 +29,7 @@ import { SolicitudDeCancelacionRoutingModule } from './solicitud-de-cancelacion-
     TituloComponent, // Componente para mostrar títulos
     AlertComponent, // Componente para mostrar alertas
     WizardComponent, // Componente para el asistente de pasos
+    PasoFirmaComponent, // Componente para el paso de firma
   ],
   // Proveedores de servicios que estarán disponibles en este módulo
   providers: [

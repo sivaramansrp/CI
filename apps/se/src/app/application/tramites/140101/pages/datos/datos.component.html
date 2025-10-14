@@ -16,19 +16,12 @@
             </li>
         </ul>
         <ng-container>
-            <!-- Contenedor para el contenido dinámico según el índice -->
-            @switch (indice) {
-            @case (1) {
-                <!-- Caso 1: Mostrar componente "Solicitante" -->
-                <solicitante #Solicitante></solicitante>
-            }
-            @case (2) {
-                 @if(esDatosRespuesta){
-                <!-- Caso 2: Mostrar componente "app-programa-a-cancelar" -->
-                <app-programa-a-cancelar [soloLectura]="esFormularioSoloLectura"></app-programa-a-cancelar>
-                 }
-            }
-            }
+            <!-- Caso 1: Mostrar componente "Solicitante" -->
+            <solicitante [hidden]="indice !== 1" #Solicitante></solicitante>
+                @if(esDatosRespuesta){
+            <!-- Caso 2: Mostrar componente "app-programa-a-cancelar" -->
+            <app-programa-a-cancelar [hidden]="indice !== 2" [soloLectura]="esFormularioSoloLectura" [idTipoTramite]="idTipoTramite" #programaACancelarComponent></app-programa-a-cancelar>
+                }
         </ng-container>
     </div>
 </div>

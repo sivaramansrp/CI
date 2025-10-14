@@ -12,13 +12,15 @@
 
 
 export interface ProgramaACancelar {
-
     folioPrograma: string; 
-    idProgramaSeleccionado: string; 
+    idProgramaSeleccionado?: string; 
     modalidad: string; 
     representacionFederal: string; 
     tipoPrograma: string; 
     estatus: string; 
+    fechaInicioVigencia: string;
+    idProgramaAutorizado: string;
+    
 }
 /**
  * Constante que representa el identificador de la tabla de cancelaciones disponibles.

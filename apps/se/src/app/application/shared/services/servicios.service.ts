@@ -1,6 +1,7 @@
-import { API_BUSCAR_DATOS_GRID, API_BUSCAR_TERCIARIZADAS } from '../../core/server/api-router';
+import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_DATOS_GRID, API_BUSCAR_TERCIARIZADAS } from '../../core/server/api-router';
 import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
 import { PlantasDisponiblesPayload, PlantasDisponiblesResponse } from '../models/modelo-interface.model';
+import { ProgramaACancelar, ProgramaACancelarPayload } from '../models/ProgramaACancelar.model';
 import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_EMPRESAS_NACIONALES, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
@@ -69,6 +70,16 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
     Observable<BaseResponse<PlantasDisponiblesResponse[]>> {
       const ENDPOINT = `${this.host}${API_BUSCAR_TERCIARIZADAS(tramite.toString())}`;
       return this.http.post<BaseResponse<PlantasDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
+  }
+  
+  /**
+   * Obtiene los datos del programa a cancelar desde un archivo JSON local.
+   * 
+   * @returns Observable que emite los datos del programa a cancelar.
+   */
+  obtenerDatos(tramite: string, PAYLOAD: ProgramaACancelarPayload): Observable<BaseResponse<ProgramaACancelar[]>> {
+    const ENDPOINT = `${this.host}${API_BUSCAR_CANCELACIONES_GRID(tramite.toString())}`;
+    return this.http.post<BaseResponse<ProgramaACancelar[]>>(ENDPOINT, PAYLOAD);
   }
   
 static generarAlertaDeError(mensajes:string): string {
