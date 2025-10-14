@@ -7,18 +7,18 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DATOS_EMPRESA } from '@ng-mf/data-access-user';
-import DatosSucursal from 'libs/shared/theme/assets/json/120602/branchSelData.json';
-import ExtranjerosDatos from 'libs/shared/theme/assets/json/120602/extranjeros.json';
+import DatosSucursal from '@libs/shared/theme/assets/json/120602/branchSelData.json';
+import ExtranjerosDatos from '@libs/shared/theme/assets/json/120602/extranjeros.json';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import { ListaDesplegable } from '../../model/listaDesplegable .model';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import TableDataDatos from 'libs/shared/theme/assets/json/120602/table-data.json';
+import TableDataDatos from '@libs/shared/theme/assets/json/120602/table-data.json';
 import { Tramite120602Query } from '../../../../estados/queries/tramite120602.query';
-import dropDownDatos from 'libs/shared/theme/assets/json/120602/drop-down.json'
-import radioButtonMexicana from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
-import radioButtonPersona from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
+import dropDownDatos from '@libs/shared/theme/assets/json/120602/drop-down.json'
+import radioButtonMexicana from '@libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
+import radioButtonPersona from '@libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
 /**
  * Metadatos del componente 'DatosEmpresaComponent'.
  */
@@ -181,8 +181,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
         this.solicitudState = seccionState;
       })
     )
-    .subscribe((data) => {
-    });
+    .subscribe();
     this.formularioEmpresa = this.fb.group({
       estado: [{value: this.solicitudState.estado, disabled: true}],
       representacionFederal: [this.solicitudState.representacionFederal, Validators.required],
