@@ -243,6 +243,13 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   mostrarBoton: boolean = false;
 
   /**
+   * Indica si se muestra el botón de búsqueda en el componente.
+   * Se inicializa en false.
+   * @default false
+   */
+  mostrarBuscarBoton: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param solicitudDatosService Servicio para datos de solicitud
    * @param solicitud260910Store Almacén para estado de solicitud
@@ -335,7 +342,10 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
-      estado: [{ value: this.solicitud260910State.estado, disabled: true }, [Validators.required]],
+      estado: [
+        { value: this.solicitud260910State.estado, disabled: true },
+        [Validators.required],
+      ],
       municipio: [
         { value: this.solicitud260910State.municipio, disabled: true },
         [Validators.required, Validators.maxLength(120)],
@@ -364,14 +374,28 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
-      avisoDeFuncionamiento: [{ value: this.solicitud260910State.avisoDeFuncionamiento, disabled: true }],
+      avisoDeFuncionamiento: [
+        {
+          value: this.solicitud260910State.avisoDeFuncionamiento,
+          disabled: true,
+        },
+      ],
       licenciaSanitaria: [
         { value: this.solicitud260910State.licenciaSanitaria, disabled: true },
       ],
       liveFreshFrozen: [this.solicitud260910State.liveFreshFrozen],
-      regimen: [{ value: this.solicitud260910State.regimen, disabled: true }, [Validators.required]],
-      aduana: [{ value: this.solicitud260910State.aduana, disabled: true }, [Validators.required]],
-      hacerlos: [{ value: this.solicitud260910State.hacerlos, disabled: true }, [Validators.required]],
+      regimen: [
+        { value: this.solicitud260910State.regimen, disabled: true },
+        [Validators.required],
+      ],
+      aduana: [
+        { value: this.solicitud260910State.aduana, disabled: true },
+        [Validators.required],
+      ],
+      hacerlos: [
+        { value: this.solicitud260910State.hacerlos, disabled: true },
+        [Validators.required],
+      ],
       rfc: [
         { value: this.solicitud260910State.rfc, disabled: true },
         [Validators.required, Validators.maxLength(13)],
@@ -388,7 +412,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         { value: this.solicitud260910State.apellidoMaterno, disabled: true },
         [Validators.maxLength(30)],
       ],
-      manifesto: [{ value: this.solicitud260910State.manifesto, disabled: true }],
+      manifesto: [
+        { value: this.solicitud260910State.manifesto, disabled: true },
+      ],
     });
 
     this.claveSCIANForm = this.fb.group({
@@ -464,7 +490,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: Solicitud) => {
           this.solicitud260910Store.setRfc(respuesta.rfc);
-          this.solicitud260910Store.setLicenciaSanitaria(respuesta.licenciaSanitaria);
+          this.solicitud260910Store.setLicenciaSanitaria(
+            respuesta.licenciaSanitaria
+          );
           this.solicitud260910Store.setRegimen(respuesta.regimen);
           this.solicitud260910Store.setAduana(respuesta.aduana);
           this.solicitud260910Store.setEstado(respuesta.estado);
@@ -732,6 +760,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Actualiza el estado de los formularios según el modo de solo lectura.
    */
   actualizarEstadoFormulario(): void {
+    this.mostrarBuscarBoton = true;
     if (this.solicitudForm.get('tipoOperacion')?.value === 'PRO') {
       this.solicitudForm.disable();
       this.solicitudForm.get('tipoOperacion')?.enable();
@@ -888,6 +917,36 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   setManifesto(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud260910Store.setManifesto(VALOR);
+  }
+
+  /**
+   * Busca representante legal por RFC.
+   * @returns {void}
+   */
+  buscarRepresentanteLegal(rfc: string): void {
+    if (rfc.length > 0) {
+      this.solicitudDatosService
+        .buscarRepresentanteLegal()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (respuesta) => {
+            this.solicitudForm.patchValue({
+              legalRazonSocial: respuesta.nombreRazonSocial,
+              apellidoPaterno: respuesta.apellidoPaterno,
+              apellidoMaterno: respuesta.apellidoMaterno,
+            });
+            this.solicitud260910Store.setLegalRazonSocial(
+              respuesta.nombreRazonSocial
+            );
+            this.solicitud260910Store.setApellidoPaterno(
+              respuesta.apellidoPaterno
+            );
+            this.solicitud260910Store.setApellidoMaterno(
+              respuesta.apellidoMaterno
+            );
+          },
+        });
+    }
   }
 
   /**
