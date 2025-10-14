@@ -14,6 +14,20 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
 })
 
 export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
+  /**
+   * Marca todos los campos del formulario como tocados y retorna si el formulario es válido.
+   */
+  public validateAll(): boolean {
+    if ((this as any).formHistorico) {
+      Object.values((this as any).formHistorico.controls).forEach(control => {
+        const c = control as import('@angular/forms').AbstractControl;
+        c.markAsTouched();
+        c.updateValueAndValidity();
+      });
+      return (this as any).formHistorico.valid;
+    }
+    return true;
+  }
 
   /**
    * @property {boolean} ocultarFax

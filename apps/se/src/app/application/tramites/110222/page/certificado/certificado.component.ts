@@ -38,7 +38,7 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   styleUrl: './certificado.component.scss',
 })
 export class CertificadoComponent {
-
+ 
   /**
    * Array de pasos del wizard.
    * @type {Array<ListaPasoWizard>}
@@ -221,7 +221,7 @@ export class CertificadoComponent {
    * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
    * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
    * */
-buildMercanciaSeleccionadas(arr: any[]): any[] {
+  buildMercanciaSeleccionadas(arr: any[]): any[] {
 return arr.map((item: any) => ({
   id: item.id,
   fraccion_arancelaria: item.fraccionArancelaria,
@@ -240,7 +240,7 @@ return arr.map((item: any) => ({
   umc:item.umc,
 }));
 
-}
+  }
   guardar(item: any): void {
     const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
     const PAYLOAD = {
@@ -266,6 +266,20 @@ return arr.map((item: any) => ({
         }
       },
       certificado: {
+        nombre: item.nombre,
+        primerApellido: item.primerApellido,
+        segundoApellido: item.segundoApellido,
+        registro_fiscal: item.numeroDeRegistroFiscal,
+        razon_social: item.razonSocial,
+        domicilio: {
+          calle: item.calle,
+          numero_letra: item.numeroLetra,
+          ciudad_poblacion_estado_provincia: item.ciudad,
+          pais_destino: item.nacion,
+          correo_electronico: item.correoElectronico,
+          telefono: item.telefono,
+          fax: item.fax,
+        },
         tratado_acuerdo: item.tratado || '',
         pais_bloque: item.pais,
         fraccion_arancelaria: item.fraccionArancelaria,
@@ -275,37 +289,71 @@ return arr.map((item: any) => ({
         fecha_fin: item.fechaInicial,
         mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
       },
- 
+        solicitud: {
+        datosConfidencialesProductor: true,
+        productorMismoExportador: true,
+        productoresPorExportador: [
+          {
+            nombreCompleto: '',
+            rfc: '',
+            direccionCompleta: '',
+            correoElectronico: '',
+            telefono: '',
+            fax: '',
+          },
+        ],
+        ProductoresPorExportadorSeleccionados: [
+          {
+            nombreCompleto: '',
+            rfc: '',
+            direccionCompleta: '',
+            correoElectronico: '',
+            telefono: '',
+            fax: '',
+          },
+        ],
+        mercanciasProductor: [
+          {
+            fraccionArancelaria: '',
+            cantidadComercial: '',
+            descUnidadMedidaComercial: '',
+            valorTransaccional: '',
+            descFactura: '',
+            numeroFactura: '',
+            complementoDescripcion: '',
+            fechaFactura: '',
+            rfcProductor: '',
+          },
+        ],
+      },
       destinatario: {
         nombre: item.nombre,
-        primer_apellido: item.apellidoPrimer,
-        segundo_apellido: item.apellidoSegundo,
         numero_registro_fiscal: item.numeroFiscal,
-        razon_social: item.razonSocial,
         domicilio: {
-          ciudad_poblacion_estado_provincia: item.ciudad,
           calle: item.calle,
           numero_letra: item.numeroLetra,
-          lada: item.lada,
+          ciudad_poblacion_estado_provincia: item.ciudad,
+          pais_destino: item.nacion,
+          correo_electronico: item.correoElectronico,
           telefono: item.telefono,
           fax: item.fax,
-          correo_electronico: item.correoElectronico,
-          pais_destino: item.nacion
         },
-        medio_transporte: item.transporte
+        lugar: item.lugar,
+        legal_de_exportador: item.nombre,
+        empresa: item.empresa,
+        cargo: item.cargo,
+        registro_fiscal: item.registroFiscal,
+        correo_electronico: item.correo,
+        telefono: item.telefono,
+        fax: item.fax,
       },
  
       datos_del_certificado: {
         observaciones: item.observaciones,
-        precisa: item.presica,
-        presenta: item.presenta,
-        idioma: item.idioma,
-        representacion_federal: {
+               representacion_federal: {
           entidad_federativa: item.entidad,
           representacion_federal: item.representacion
-        },
-        desea_obtener_certificado: item.casillaVerificacion,
-        justificacion: item.justificacion
+        }
       }
     };
  

@@ -11,6 +11,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * 
  */
 export interface Tramite110222State {
+
+  tratado: string;
+  pais: string;
   /** ID de la solicitud */
   idSolicitud: number | null;
 
@@ -236,6 +239,8 @@ export interface Tramite110222State {
  */
 export function createInitialState(): Tramite110222State {
   return {
+    tratado: '',
+    pais: '',
     idSolicitud: 0,
     formCertificado: {
       si: false,

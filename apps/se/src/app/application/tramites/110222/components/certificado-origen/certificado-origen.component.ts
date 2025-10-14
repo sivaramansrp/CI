@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   Catalogo,
+  ConfiguracionColumna,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -19,12 +20,15 @@ import {
 } from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/peru-certificado.module';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 
 /**
  * @descripcion
@@ -36,9 +40,39 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
+ @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  /** Referencia al componente mercanciaComponent para marcar campos como tocados */
+  @ViewChild(MercanciaComponent) mercanciaComponent?: MercanciaComponent;
+ 
+  /**
+   * Configuración de las columnas de la tabla de carga de mercancías.
+   * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
+   *
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
+
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -155,6 +189,7 @@ export class CertificadoOrigenComponent
   esFormularioSoloLectura: boolean = false;
 
   idProcedimiento: number = 110222;
+  registroForm!: FormGroup;
 
   /**
    * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
@@ -385,7 +420,6 @@ export class CertificadoOrigenComponent
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ certificado: valida });
   }
-
   /**
    * @descripcion
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
@@ -403,6 +437,29 @@ export class CertificadoOrigenComponent
    */
   emitmercaniasDatos(evento: Mercancia): void {
     this.store.setmercanciaTabla([evento]);
+  }
+  buscarMercancias(): void {
+    const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
+    // const NEW_ROW = {
+    //   fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+    //   nombreTecnico: FORM_VALUES.nombreTecnico,
+    //   nombreComercial: FORM_VALUES.nombreComercial,
+    //   numeroRegistroProducto: FORM_VALUES.numeroRegistro,
+    //   fechaExpedicion: FORM_VALUES.fechaInicial,
+    //   fechaVencimiento: FORM_VALUES.fechaFinal,
+    // };
+
+    const PAYLOAD = {
+      rfcExportador: "AAL0409235E6",
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.tratado || '' },
+      pais: { cvePais: this.certificadoState.pais || '' }
+    };
+
+    // this.ValidarInicialmenteCertificadoService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
+    //   this.mercanciaDisponsiblesTablaDatos = response.datos || [];
+    //   this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
+    // });
+    // this.hayMercanciasDisponibles = true;
   }
 
   /**

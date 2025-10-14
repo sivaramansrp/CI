@@ -728,18 +728,14 @@ export class CertificadoDeOrigenComponent
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  // /**
-  // * method loadComboUnidadMedida
-  // * description Carga la lista de derechos desde el servicio.
-  // */
-  // loadComboUnidadMedida(): void {
-  //   this.service.getDatos('110222') // Llama al servicio para obtener los datos.
-  //     .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
-  //     .subscribe((data): void => { // Maneja los datos recibidos.
-  //       this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
-  //     });
-  // }
 
+ /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.formCertificado && this.formularioArchivo) {
+      this.formCertificado.markAllAsTouched();
+      this.formularioArchivo.markAllAsTouched();
+    }
+  }
   /**
    * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
    *
