@@ -138,8 +138,10 @@ ngOnDestroy(): void {
  */
 setValoresStoreDatosDestinatario(event: { formGroupName: string; campo: string; valor: unknown; storeStateName: string }): void {
   const { valor: VALOR } = event;
-  // @ts-expect-error - Type conversion needed for store methods  
-  this.store[event.storeStateName as keyof Tramite110217Store](VALOR);
+  const METODO_STORE = this.store[event.storeStateName as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+  }
 }
 
 /**
@@ -148,8 +150,10 @@ setValoresStoreDatosDestinatario(event: { formGroupName: string; campo: string; 
  */
 setValoresStoreDestinatario(event: { formGroupName: string; campo: string; valor: unknown; storeStateName: string }): void {
   const { valor: VALOR } = event;
-  // @ts-expect-error - Type conversion needed for store methods
-  this.store[event.storeStateName as keyof Tramite110217Store](VALOR);
+  const METODO_STORE = this.store[event.storeStateName as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+  }
 }
 
 /**
@@ -158,8 +162,10 @@ setValoresStoreDestinatario(event: { formGroupName: string; campo: string; valor
  */
 setValoresStoreRepresentante(event: { formGroupName: string; campo: string; VALOR: unknown; METODO_NOMBRE: string }): void {
   const { VALOR } = event;
-  // @ts-expect-error - Type conversion needed for store methods
-  this.store[event.METODO_NOMBRE as keyof Tramite110217Store](VALOR);
+  const METODO_STORE = this.store[event.METODO_NOMBRE as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+  }
 }
 
 /**
@@ -168,8 +174,10 @@ setValoresStoreRepresentante(event: { formGroupName: string; campo: string; VALO
  */
 setValoresStoreTransporte(event: { formGroupName: string; campo: string; valor: unknown; storeStateName: string }): void {
   const { valor: VALOR } = event;
-  // @ts-expect-error - Type conversion needed for store methods
-  this.store[event.storeStateName as keyof Tramite110217Store](VALOR);
+  const METODO_STORE = this.store[event.storeStateName as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+  }
 }
 
 /**
@@ -177,37 +185,37 @@ setValoresStoreTransporte(event: { formGroupName: string; campo: string; valor: 
  * @returns true si todos los formularios son válidos, false en caso contrario
  */
 validateAllForms(): boolean {
-  let isValid = true;
+  let esValido = true;
   
   // Validar datos del destinatario si existe
   if (this.datosDelDestinatarioRef?.formDatosDelDestinatario) {
     if (this.datosDelDestinatarioRef.formDatosDelDestinatario.invalid) {
-      isValid = false;
+      esValido = false;
     }
   }
   
   // Validar destinatario si existe
   if (this.destinatarioRef?.formDestinatario) {
     if (this.destinatarioRef.formDestinatario.invalid) {
-      isValid = false;
+      esValido = false;
     }
   }
   
   // Validar representante legal si existe
   if (this.representanteRef?.form) {
     if (this.representanteRef.form.invalid) {
-      isValid = false;
+      esValido = false;
     }
   }
   
   // Validar detalles del transporte si existe
   if (this.transporteRef?.formTransporte) {
     if (this.transporteRef.formTransporte.invalid) {
-      isValid = false;
+      esValido = false;
     }
   }
   
-  return isValid;
+  return esValido;
 }
 
 /**
