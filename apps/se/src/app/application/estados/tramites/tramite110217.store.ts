@@ -476,6 +476,20 @@ export class Tramite110217Store extends Store<Tramite110217State> {
   }
 
   /**
+   * Actualiza los datos del formulario de certificado.
+   *
+   * Este método permite establecer múltiples campos del certificado de una vez.
+   *
+   * @param {object} datosCertificado - Objeto con los datos del certificado a actualizar.
+   */
+  public setFormDatosCertificado(datosCertificado: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      ...state,
+      ...datosCertificado,
+    }));
+  }
+
+  /**
    * Actualiza si los datos del productor son confidenciales.
    *
    * Este método permite establecer si los datos del productor son confidenciales.
