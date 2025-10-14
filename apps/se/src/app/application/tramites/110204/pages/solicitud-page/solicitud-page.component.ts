@@ -1,6 +1,9 @@
 import {
   AVISO_CONTRNIDO,
   DatosPasos,
+  doDeepCopy,
+  esValidObject,
+  getValidDatos,
   ListaPasosWizard,
   SeccionLibStore,
   WizardComponent,
@@ -13,6 +16,7 @@ import {
   TramiteState,
 } from '../../estados/tramite110204.store';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 
@@ -188,62 +192,7 @@ export class SolicitudPageComponent implements OnDestroy {
 
       });
   }
-  /**
-* Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
-* @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
-* @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
-* */
-  buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
-  const RESULT: unknown[] = [];
 
-  array.forEach((arr) => {
-    const ITEM = arr as {
-      id?: number;
-      fraccionArancelaria?: string;
-      fraccionNaladi?: string;
-      fraccionNaladiSa93?: string;
-      fraccionNaladiSa96?: string;
-      fraccionNaladiSa02?: string;
-      nombreTecnico?: string;
-      nombreComercial?: string;
-      numeroDeRegistrodeProductos?: string;
-      fechaExpedicion?: string;
-      fechaVencimiento?: string;
-      tipoFactura?: string;
-      numFactura?: string;
-      complementoDescripcion?: string;
-      fechaFactura?: string;
-      cantidad?: string;
-      umc?: string;
-      unidadMedidaMasaBruta?: string;
-      valorMercancia?: string;
-    };
-
-    RESULT.push({
-      id: ITEM.id || null,
-      fraccion_arancelaria: ITEM.fraccionArancelaria || '',
-      fraccion_naladi: ITEM.fraccionNaladi || '',
-      fraccion_naladi_sa93: ITEM.fraccionNaladiSa93 || '',
-      fraccion_naladi_sa96: ITEM.fraccionNaladiSa96 || '',
-      fraccion_naladi_sa02: ITEM.fraccionNaladiSa02 || '',
-      nombre_tecnico: ITEM.nombreTecnico || '',
-      nombre_comercial: ITEM.nombreComercial || '',
-      registro_producto: ITEM.numeroDeRegistrodeProductos || '',
-      fecha_expedicion: ITEM.fechaExpedicion || '',
-      fecha_vencimiento: ITEM.fechaVencimiento || '',
-      tipo_factura: ITEM.tipoFactura || '',
-      num_factura: ITEM.numFactura || '',
-      complemento_descripcion: ITEM.complementoDescripcion || '',
-      fecha_factura: ITEM.fechaFactura || '',
-      cantidad: ITEM.cantidad || '',
-      umc: ITEM.umc || '',
-      unidad_medida: ITEM.unidadMedidaMasaBruta || '',
-      valor_mercancia: ITEM.valorMercancia || ''
-    });
-  });
-
-  return RESULT;
-}
 
 
   /**
@@ -256,80 +205,91 @@ export class SolicitudPageComponent implements OnDestroy {
 * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
 * La llamada al servicio actualmente está comentada.
 */
-  guardar(item: any): void {
-    console.log('item',item)
-    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaTabla);
-    const PAYLOAD = {
-      rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState.idSolicitud || 0,
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "ACEROS ALVARADO S.A. DE C.V.",
-        actividad_economica: "Fabricación de productos de hierro y acero",
-        correo_electronico: "contacto@acerosalvarado.com",
-        domicilio: {
-          pais: "México",
-          codigo_postal: "06700",
-          estado: "Ciudad de México",
-          municipio_alcaldia: "Cuauhtémoc",
-          localidad: "Centro",
-          colonia: "Roma Norte",
-          calle: "Av. Insurgentes Sur",
-          numero_exterior: "123",
-          numero_interior: "Piso 5, Oficina A",
-          lada: "",
-          telefono: "123456"
-        }
-      },
-      certificado: {
-        tratado_acuerdo: item.formCertificado.entidadFederativa,
-        pais_bloque: item.formCertificado.paisBloque,
-        fraccion_arancelaria: item.formCertificado.fraccionArancelaria,
-        nombre_comercial: item.formCertificado.nombreComercial,
-        fecha_inicio: item.formCertificado.fechaInicio,
-        fecha_fin: item.formCertificado.fechaFin,
-        realizo_tercer_operador: {
-          tercer_operador: item.formCertificado.si,
-          nombre: item.formCertificado.nombres,
-          primer_apellido: item.formCertificado.primerApellido,
-          segundo_apellido: item.formCertificado.segundoApellido,
-          numero_registro_fiscal: item.formCertificado.numeroDeRegistroFiscal,
-          razon_social: item.formCertificado.razonSocial
-        },
-        domicilio_tercer_operador: {
-          pais: item.formCertificado.pais,
-          ciudad: item.formCertificado.ciudad,
-          calle: item.formCertificado.calle,
-          numero_letra: item.formCertificado.numeroLetra,
-          lada: item.formCertificado.lada,
-          telefono: item.formCertificado.telefono,
-          fax: item.formCertificado.fax,
-          correo_electronico: item.formCertificado.correo
-        },
-        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
-      },
-      datos_del_certificado: {
-        observaciones: item.formDatosCertificado.observacionesDates,
-        idioma: item.formDatosCertificado.idiomaDates,
-        representacion_federal: {
-          entidad_federativa: item.formDatosCertificado.EntidadFederativaDates,
-          representacion_federal: item.formDatosCertificado.representacionFederalDates
-        }
+ guardar(item: TramiteState): Promise<JSONResponse> {
+  console.log('item', item);
+
+  const MERCANCIA_SELECCIONADAS = this.certificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+
+  const PAYLOAD = {
+    rfc_solicitante: 'AAL0409235E6',
+    idSolicitud: this.solicitudState.idSolicitud || 0,
+    solicitante: {
+      rfc: "AAL0409235E6",
+      nombre: "ACEROS ALVARADO S.A. DE C.V.",
+      actividad_economica: "Fabricación de productos de hierro y acero",
+      correo_electronico: "contacto@acerosalvarado.com",
+      domicilio: {
+        pais: "México",
+        codigo_postal: "06700",
+        estado: "Ciudad de México",
+        municipio_alcaldia: "Cuauhtémoc",
+        localidad: "Centro",
+        colonia: "Roma Norte",
+        calle: "Av. Insurgentes Sur",
+        numero_exterior: "123",
+        numero_interior: "Piso 5, Oficina A",
+        lada: "",
+        telefono: "123456"
       }
-    };
+    },
+    certificado: {
+      tratado_acuerdo: item.formCertificado['entidadFederativa'],
+      pais_bloque: item.formCertificado['bloque'],
+      fraccion_arancelaria: item.formCertificado['fraccionArancelaria'],
+      nombre_comercial: item.formCertificado['nombreComercial'],
+      fecha_inicio: item.formCertificado['fechaInicio'],
+      fecha_fin: item.formCertificado['fechaFin'],
+      registro_producto:item.formCertificado['registroProducto'],
+      realizo_tercer_operador: {
+        tercer_operador: item.formCertificado['si'],
+        nombre: item.formCertificado['nombres'],
+        primer_apellido: item.formCertificado['primerApellido'],
+        segundo_apellido: item.formCertificado['segundoApellido'],
+        numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'],
+        razon_social: item.formCertificado['razonSocial']
+      },
+      domicilio_tercer_operador: {
+        pais: item.formCertificado['pais'],
+        ciudad: item.formCertificado['ciudad'],
+        calle: item.formCertificado['calle'],
+        numero_letra: item.formCertificado['numeroLetra'],
+        lada: item.formCertificado['lada'],
+        telefono: item.formCertificado['telefono'],
+        fax: item.formCertificado['fax'],
+        correo_electronico: item.formCertificado['correo']
+      },
+      mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
+    },
+    datos_del_certificado: {
+      observaciones: item.formDatosCertificado['observacionesDates'],
+      idioma: item.formDatosCertificado['idiomaDates'],
+      representacion_federal: {
+        entidad_federativa: item.formDatosCertificado['EntidadFederativaDates'],
+        representacion_federal: item.formDatosCertificado['representacionFederalDates']
+      }
+    }
+  };
 
-    console.log(PAYLOAD,'PAYLOAD');
-    
+  console.log(PAYLOAD, 'PAYLOAD');
 
-    // this.certificadoService.guardarDatosPost(PAYLOAD).subscribe({
-    //   next: (response) => {
-    //     if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-    //       this.tramiteStore.setIdSolicitud(response.datos.id_solicitud || 0);
-    //       this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-    //     }
-    //   },
-    // });
-  }
+
+     return new Promise((resolve, reject) => {
+        this.certificadoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+          const API_RESPONSE = doDeepCopy(response);
+          if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+            if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+              this.tramiteStore.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+            } else {
+              this.tramiteStore.setIdSolicitud(0);
+            }
+          }
+          resolve(response);
+        }, error => {
+          reject(error);
+        });
+        });
+}
+
   /**
    * Navega a través de los pasos del asistente según la acción del botón.
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.

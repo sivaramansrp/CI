@@ -1,4 +1,4 @@
-import { Catalogo, HttpCoreService } from '@libs/shared/data-access-user/src';
+import { Catalogo, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { Tramite110204Store, TramiteState } from '../estados/tramite110204.store';
 import { HttpClient } from '@angular/common/http';
@@ -132,22 +132,89 @@ export class CertificadosOrigenGridService {
 getAllState(): Observable<TramiteState> {
   return this.query.selectState$;
 }
-buscarMercanciasCert(body: any): Observable<any> {
+buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
   // return this.httpService.post<any>(
   //   'http://localhost:8080/api/sat-t110204/solicitud/buscar-mercancias',
   //   { body: body }
   // );
-   return this.httpService.post<any>(PROC_110204.BUSCAR, { body: body });
+   return this.httpService.post<JSONResponse>(PROC_110204.BUSCAR, { body: body });
 }
 
-/**
- * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
- * 
- * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
- * @returns Observable con la respuesta de la solicitud POST.
- */
-guardarDatosPost(body: any): Observable<any> {
-  return this.httpService.post<any>(PROC_110204.GUARDAR, { body: body });
-  // return this.httpService.post<any>('http://localhost:8080/api/sat-t110204/solicitud/guardar', { body: body });
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110204.GUARDAR, { body: body });
+  }
+  /**
+* Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+* @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+* @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+* */
+  buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
+  const RESULT: unknown[] = [];
+
+  array.forEach((arr) => {
+    const ITEM = arr as {
+  id?: number | string; 
+  idMercancia?: string; 
+  fraccionArancelaria?: string;
+  descripcionMercancia?: string | null;
+  unidadMedida?: string | null;
+  paisOrigen?: string | null;
+  cumpleReglasOrigen?: boolean;
+  criterioOrigen?: string | null;
+  porcentajeContenidoRegional?: number | null;
+  numeroRegistro?: boolean | string | null;
+  requiereDocumentosAdicionales?: boolean;
+  fraccionNaladi?: string;
+  fraccionNaladiSa93?: string;
+  fraccionNaladiSa96?: string;
+  fraccionNALADISA02Clave?: string;
+  fraccionNALADIClave?: string;
+  fraccionNALADSA93Clave?: string;
+  fraccionNALADISA96Clave?: string;
+  nombreTecnico?: string | null;
+  nombreComercial?: string | null;
+  numeroDeRegistrodeProductos?: string;
+  tipoFactura?: string;
+  numFactura?: string;
+  complementoDescripcion?: string;
+  fechaExpedicion?: string | null;
+  fechaVencimiento?: string | null;
+  fechaFactura?: string;
+  cantidad?: string;
+  umc?: string;
+  unidadMedidaMasaBruta?: string;
+  valorMercancia?: string;
+    };
+
+    RESULT.push({
+      id: ITEM.id || null,
+      fraccion_arancelaria: ITEM.fraccionArancelaria || '',
+      fraccion_naladi: ITEM.fraccionNALADIClave || '',
+      fraccion_naladi_sa93: ITEM.fraccionNALADSA93Clave || '',
+      fraccion_naladi_sa96: ITEM.fraccionNALADISA96Clave || '',
+      fraccion_naladi_sa02: ITEM.fraccionNALADISA02Clave || '',
+      nombre_tecnico: ITEM.nombreTecnico || '',
+      nombre_comercial: ITEM.nombreComercial || '',
+      registro_producto: ITEM.numeroDeRegistrodeProductos || '',
+      fecha_expedicion: ITEM.fechaExpedicion || '',
+      fecha_vencimiento: ITEM.fechaVencimiento || '',
+      tipo_factura: ITEM.tipoFactura || '',
+      num_factura: ITEM.numFactura || '',
+      complemento_descripcion: ITEM.complementoDescripcion || '',
+      fecha_factura: ITEM.fechaFactura || '',
+      cantidad: ITEM.cantidad || '',
+      umc: ITEM.umc || '',
+      unidad_medida: ITEM.unidadMedidaMasaBruta || '',
+      valor_mercancia: ITEM.valorMercancia || ''
+    });
+  });
+
+  return RESULT;
 }
 }
