@@ -1,10 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo, ConfiguracionColumna,TablaSeleccion, doDeepCopy,esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION, SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
