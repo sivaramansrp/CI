@@ -245,4 +245,12 @@ export class Tramite110207Query extends Query<Solicitud110207State> {
   selectPaisDestino$ = this.select((state) => {
     return state.paisDestin;
   });
+
+    /**
+   * Observable que emite los valores del formulario de destinatario
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectDestinatarioForm$ = this.select((state) => {
+    return state.destinatarioForm;
+  });
 }

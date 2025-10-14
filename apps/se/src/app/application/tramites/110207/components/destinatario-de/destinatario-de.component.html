@@ -1,0 +1,23 @@
+<app-datos-del-destinatario
+  [datosForm]="formDatosDelDestinatarioValues"
+  [idProcedimiento]="110207"
+  (formDatosDelDestinatarioEvent)="setValoresStore($event)"
+  (formaValida)="setFormValida($event)"
+></app-datos-del-destinatario>
+
+<app-destinatario
+  [paisDestino]="paisDestino"
+  (paisDestionSeleccionEvent)="paisDestinSeleccion($event)"
+  [idProcedimiento]="110207"
+  [paisDestin]="(paisDestin$ | async) || []"
+  (formDestinatarioEvent)="setValoresStoreDe($event)"
+  [datosForm]="formDestinatarioValues"
+  (formaValida)="setFormValidaDestinatario($event)"
+></app-destinatario>
+
+<app-detalles-del-transporte
+[idProcedimiento]="110207"
+[medioTransporte]="(medioDeTransporte$ | async) || []"
+(formaValida)="setFormValidaDestinatario($event)"
+[datosForm]="formDestinatarioValues"
+></app-detalles-del-transporte>

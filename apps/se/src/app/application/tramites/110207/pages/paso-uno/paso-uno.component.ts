@@ -3,8 +3,9 @@ import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/dat
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
-import { DestinatarioReportComponent } from '../../components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from '../../components/destinatario-de/destinatario-de.component';
 import { RegistroService } from '../../services/registro.service';
+
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -62,9 +63,9 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * hijo DestinatarioComponent desde el componente padre, facilitando la interacción
    * y manipulación directa del mismo.
    * 
-   * @see DestinatarioComponent
+   * @see DestinatarioDeComponent
    */
-  @ViewChild(DestinatarioReportComponent) destinatarioComponent!: DestinatarioReportComponent;
+  @ViewChild(DestinatarioDeComponent) destinatarioComponent!: DestinatarioDeComponent;
 
   // Decorador ViewChild para acceder a la instancia del componente CertificadoDeOrigenComponent
   @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;

@@ -159,6 +159,9 @@ export interface Solicitud110207State {
 
   grupoRepresentativo: GrupoRepresentativo;
 
+  /** Datos generales del destinatario en formulario dinámico */
+  destinatarioForm: { [key: string]: unknown };
+
   /** Lista de medios de transporte disponibles */
   medioDeTransporte: Catalogo[];
 
@@ -167,6 +170,9 @@ export interface Solicitud110207State {
 
   /** Lista de países destino como catálogo */
   paisDestin: Catalogo[];
+
+  /** Medio de transporte seleccionado */
+  medioDeTransporteSeleccion: Catalogo,
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110207.
@@ -245,6 +251,8 @@ export function createInitialState(): Solicitud110207State {
     rutaCompleta: '',
     puertoEmbarque: '',
     puertoDesembarque: '',
+    /** Medio de transporte seleccionado */
+  medioDeTransporteSeleccion: { id: -1, descripcion: '' },
     /** Formulario de datos adicionales del certificado */
     formDatosCertificado: {
       observacionesDates: '',
@@ -297,6 +305,10 @@ export function createInitialState(): Solicitud110207State {
     mercanciaTabla: [],
     /** Lista de medios de transporte */
     medioDeTransporte: [],
+    /** Formulario adicional para el destinatario */
+    destinatarioForm: {
+      medioDeTransporte: '',
+    },
     formDestinatario: {
       paisDestin: '',
       ciudad: '',
@@ -1102,6 +1114,33 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
       paisDestin,
     }));
   }
+
+  /**
+   * Actualiza el estado del formulario de destinatario con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
+   */
+  setDestinatarioForm(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      destinatarioForm: {
+        ...state.destinatarioForm,
+        ...values,
+      },
+    }));
+  }
+
+   /**
+    * Establece los medioDeTransporteSeleccion de países en el almacén.
+    * 
+    * @param {Catalogo} medioDeTransporteSeleccion - Un array de objetos `Catalogo` que representa los medioDeTransporteSeleccion de países.
+    * 
+    * @returns {void} - No devuelve ningún valor.
+    */
+    setMedioDeTransporteSeleccion(medioDeTransporteSeleccion: Catalogo): void {
+      this.update((state) => ({
+        ...state,
+        medioDeTransporteSeleccion,
+      }));
+    }
 
   /**
    * Limpia los datos de la solicitud
