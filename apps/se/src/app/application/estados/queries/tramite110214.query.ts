@@ -58,6 +58,35 @@ export class Tramite110214Query extends Query<Tramite110214State> {
   });
 
   /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+  formDatosCertificado$ = this.select((state) => {
+    return state.formDatosCertificado;
+  });
+
+  /**
+   * Selecciona el catálogo de idiomas.s
+   */
+  selectIdioma$ = this.select((state) => state.idiomaDatos);
+
+  /**
+   * Selecciona los datos de la entidad federativa.
+   * @returns {Observable<any>} - Observable con los datos de la entidad federativa.
+   */
+  selectEntidadFederativa$ = this.select((state) => {
+    return state.entidadFederativaDatos;
+  });
+
+  /**
+   * Selecciona los datos de la representación federal.
+   * @returns {Observable<any>} - Observable con los datos de la representación federal.
+   */
+  selectrepresentacionFederal$ = this.select((state) => {
+    return state.representacionFederalDatos;
+  });
+
+  /**
    * Constructor de la clase Tramite110214Query.
    * 
    * @param {Tramite110214Store} store - El store que contiene el estado del trámite 110214.
