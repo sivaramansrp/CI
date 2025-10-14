@@ -1,13 +1,13 @@
-import { ENVIRONMENT } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import { Tramite80101State, Tramite80101Store } from '../estados/tramite80101.store';
+import { ENVIRONMENT } from '../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',

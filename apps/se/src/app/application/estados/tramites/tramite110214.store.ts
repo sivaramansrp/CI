@@ -5,6 +5,7 @@ import {
   GrupoOperador,
   GrupoTratado,
   HistoricoColumnas,
+  MercanciaTabla,
   SeleccionadasTabla,
 } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -197,6 +198,17 @@ export interface Tramite110214State {
    * Identificador o nombre del bloque actual del formulario o proceso.
    */
   bloque: string;
+
+  agregarProductoresExportador: HistoricoColumnas[];
+
+  mercanciaProductores: MercanciaTabla[];
+
+  formValidity?: {
+    datosCertificado?: boolean;
+    destinatario?: boolean;
+    histProductores?: boolean;
+    certificadoOrigen?: boolean;
+  };
 }
 
 /**
@@ -260,9 +272,9 @@ export function createInitialState(): Tramite110214State {
       numeroSerie: '',
       fecha: '',
       numeroFactura: '',
-      tipoFactura: '',
+      tipoFactura: ''
     },
-    grupoTratado: {
+    grupoTratado: { 
       tratado: '',
       pais: '',
       fraccionArancelaria: '',
@@ -291,6 +303,9 @@ export function createInitialState(): Tramite110214State {
       fax: '',
     },
     optionsTipoFactura: [],
+    agregarProductoresExportador: [],
+    mercanciaProductores: [],
+    formValidity: {},
     formaValida: {
       certificado: true,
       datos: true,
@@ -319,6 +334,12 @@ export function createInitialState(): Tramite110214State {
       correoElectronico: '',
       numeroLetra: '',
       calle: '',
+      pais1: '',
+      ciudad1: '',
+      telefono1: '',
+      correoElectronico1: '',
+      numeroLetra1: '',
+      calle1: '',
     },
     estado: {
       id: -1,
@@ -938,7 +959,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   public setGrupoTratadoTratado(tratado: string): void {
     this.update((state) => ({
       ...state,
-      grupoTratado: { ...state.grupoTratado, tratado },
+      grupoTratado: { ...state.grupoTratado, tratado: String(tratado) },
     }));
   }
 
@@ -1265,6 +1286,21 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     }));
   }
 
+  
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+  setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador: [
+        ...state.agregarProductoresExportador,
+        {...productor},
+      ],
+     }));
+  } 
+
   /**
    * @method setDatosConfidencialesProductor
    * @description
@@ -1275,6 +1311,32 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     this.update((state) => ({
       ...state,
       disponiblesDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
     }));
   }
 

@@ -1,5 +1,5 @@
 /**
- * Conjunto de rutas de la API para el procedimiento 80101.
+ * Conjunto de rutas de la API para el procedimiento 110205.
  */
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
 /**
@@ -17,14 +17,13 @@ const CATALOGO = ENVIRONMENT.CATALOGO_URL;
 /**
  * Procedimiento de la API
  */
-const PROCEDURE = '/sat-t110214';
+const PROCEDURE = '/sat-t110205';
 
 /**
- * Rutas de la API para el procedimiento 110223.
+ * Rutas de la API para el procedimiento 110205.
  * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
  */
-export const PROC_110214 = {
+export const PROC_110205 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
-    BUSCAR_MERCANCIAS: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
 }
