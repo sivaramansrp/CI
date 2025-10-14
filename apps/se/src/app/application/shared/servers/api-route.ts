@@ -51,7 +51,7 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarControldasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-controladas/buscar-datos-grid-plantas-controladoras`,
     buscarTerciarizadasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-terciarizadas/buscar-datos-grid-plantas`,
     buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
-    tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
+    tratadosAcuerdos: (countryCode: string) => `${BASE_URL}${API}/${procedure}${CATALOGO}/${countryCode}/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
     buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
     buscarfraccionarancelariaImportacion: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/importacion`,

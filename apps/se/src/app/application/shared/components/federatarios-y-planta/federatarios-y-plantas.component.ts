@@ -855,7 +855,9 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
       };
     }
   }
-
+  /** Abre un cuadro de diálogo para confirmar la eliminación de plantas.
+   *  Si no hay plantas seleccionadas, muestra una notificación de error.
+   */
   abrirDialogoEliminarPlantas(): void {
     if (this.selectedPlantaImmex) {
       this.eliminarPlantaNotificacion = {
