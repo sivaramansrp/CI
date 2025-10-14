@@ -868,3 +868,9 @@ export const CATALOGO_SELECCIONAR_REGLA = (TRAMITE: string) : string => `sat-t${
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/sectores
  */
 export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/sectores`;
+
+/*
+ * API para obtener la unidad de medida de la masa bruta
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/se/unidades-medidas
+ */
+export const CATALOGO_UNIDAD_DE_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/se/unidades-medidas`;

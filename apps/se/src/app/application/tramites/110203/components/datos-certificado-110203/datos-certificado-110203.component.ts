@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
@@ -91,17 +91,17 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   /**
    * Lista de tipos de datos obtenidos del catálogo.
    */
-  tipoDatos: Catalogo[] = mediocatalogo?.tipo;
+  tipoDatos: Catalogo[] = [];
 
   /**
    * Lista de opciones de comercialización obtenidas del catálogo.
    */
-  comercializacion: Catalogo[] = mediocatalogo?.comercializacion;
+  comercializacion: Catalogo[] = [];
 
   /**
    * Lista de medidas obtenidas del catálogo.
    */
-  medida: Catalogo[] = mediocatalogo?.comercializacion;
+  medida: Catalogo[] = [];
 
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancias.
@@ -150,6 +150,12 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110203'
+   */
+  tramites: string = '110203';
+
+  /**
    * Inicializa el componente inyectando los servicios requeridos y configurando las suscripciones de estado.
    *
    * @param fb - Servicio FormBuilder de Angular para crear y gestionar formularios.
@@ -166,7 +172,8 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
     private tramite110203Query: Tramite110203Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
   ) { 
 /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -292,6 +299,24 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    * Este método configura los controles del formulario y sus validadores iniciales.
    */
     this.inicializarFormulario();
+
+    /*
+     * Carga el catálogo de unidades de medida de comercialización
+     * y almacena los datos en la propiedad `comercializacion`.
+     */
+    this.obtenerUnidadComercializacion();
+
+    /*
+     * Carga el catálogo de unidades de masa bruta
+     * y almacena los datos en la propiedad `medida`.
+     */
+    this.obtenerUnidadMasaBruta();
+
+    /*
+     * Carga el catálogo de tipos de factura
+     * y almacena los datos en la propiedad `tipoDatos`.
+     */
+    this.obtenerTipoFactura();
    }
    /**
  * Formatea el valor de un campo numérico del formulario a 4 decimales.
@@ -394,6 +419,51 @@ onModificar(): void {
     this.closeModal.nativeElement.click();
   
 }
+
+  /*
+   * Consulta el catálogo de unidades de medida de comercialización basado en los trámites actuales.
+   * El resultado se almacena en la propiedad `comercializacion`.
+   * Se cancela automáticamente la suscripción al destruir el componente.
+   */
+  obtenerUnidadComercializacion(): void {
+    this.catalogoService.unidadesMedidaComercialCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.comercializacion = response?.datos ?? [];
+        }
+      });
+  }
+
+  /*
+   * Consulta el catálogo de unidades de masa bruta correspondiente a los trámites actuales.
+   * El resultado se almacena en la propiedad `medida`.
+   * La suscripción se cancela automáticamente cuando el componente se destruye.
+   */
+  obtenerUnidadMasaBruta(): void {
+    this.catalogoService.unidadDeMasaBrutaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.medida = response?.datos ?? [];
+        }
+      });
+  }
+
+  /*
+   * Consulta el catálogo de tipos de factura según los trámites actuales.
+   * El resultado se almacena en la propiedad `tipoDatos`.
+   * La suscripción se gestiona automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  obtenerTipoFactura(): void {
+    this.catalogoService.tipoFacturaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tipoDatos = response?.datos ?? [];
+        }
+      });
+  }
 
   /**
    * Método que se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
