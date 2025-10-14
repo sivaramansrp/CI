@@ -8,9 +8,6 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
-
-
-
 /**
  * Componente para la gestión del solicitante de asignación.
  * @selector app-solicitante-asigncion

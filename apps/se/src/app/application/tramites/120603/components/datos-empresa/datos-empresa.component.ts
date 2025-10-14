@@ -1,22 +1,15 @@
 import { Catalogo, CatalogoSelectComponent, CatalogosSelect, DATOS_EMPRESA, InputRadioComponent, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ESTADO_DATA, PAIS_DATA, REPRESENTACION_FEDERAL_DATA, SELECCION_DE_SUCURSAL_DATA, SOCIOS_Y_ACCIONISTAS_DATA, SOCIOS_Y_ACCIONISTAS_EXTRANJEROS_DATA, TIPO_EMPRESA_DATA } from '../../constants/column-config.enum';
-
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { ReplaySubject, map, takeUntil } from 'rxjs';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ESTADO_DATA, PAIS_DATA, REPRESENTACION_FEDERAL_DATA, SELECCION_DE_SUCURSAL_DATA, SOCIOS_Y_ACCIONISTAS_DATA, SOCIOS_Y_ACCIONISTAS_EXTRANJEROS_DATA, TIPO_EMPRESA_DATA } from '../../constants/column-config.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NacionalidadMexicana, TipoPersona } from '../../constants/tipoPersona.enum';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { SeleccionDeSucursalData, SociosYAccionistasData, SociosYAccionistasExtranjerosData } from '../../models/filaData.modal';
 import { Solicitud120603State, Solicitud120603Store } from '../../estados/tramite120603.store';
 import { CommonModule } from '@angular/common';
 import { RegistroComoEmpresaService } from '../../services/registro-como-empresa.service';
 import { Solicitud120603Query } from '../../estados/tramite120603.query';
-
-import { NacionalidadMexicana, TipoPersona } from '../../constants/tipoPersona.enum';
-
-
-
 
 /** Componente que gestiona los datos de la empresa en el formulario */
 @Component({
