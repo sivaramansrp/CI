@@ -86,7 +86,27 @@ export interface Tramite110216State {
     apellidoSegundo: string;
     numeroFiscal: string;
     razonSocial: string;
-  
+
+  /**
+   * @property {Object} formulario - Otros datos de formularios auxiliares.
+   * @description
+   * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
+   */
+  formulario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} datosProductorFormulario - Datos adicionales del productor.
+   * @description
+   * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
+   */
+  datosProductorFormulario: { [key: string]: unknown };
+
+  formValidity?: {
+    datosCertificado?: boolean;
+    destinatario?: boolean;
+    histProductores?: boolean;
+    certificadoOrigen?: boolean;
+  };
 }
 
 /**
@@ -163,6 +183,16 @@ export const INITIAL_STATE: Tramite110216State = {
   apellidoSegundo: '',
   numeroFiscal: '',
   razonSocial: '',
+
+  formulario:{
+    datosConfidencialesProductor: '',
+    productorMismoExportador: '',
+  },
+  datosProductorFormulario: {
+    numeroRegistroFiscal: '',
+    fax: '',      
+  },
+  formValidity: {},
 
 };
 
@@ -311,6 +341,21 @@ export class Tramite110216Store extends Store<Tramite110216State> {
       formCertificado: {
         ...state.formCertificado,
         ...values,
+      },
+    }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
       },
     }));
   }
