@@ -14,9 +14,9 @@ export interface AvisoTabla {
   id: number;
   rfc: string;
   nombreComercial: string;
-  entidadFederativa: string;
-  alcaldioOMuncipio: string;
-  colonia: string;
+  claveEntidadFederativa: string;
+  claveDelegacionMunicipio: string;
+  claveColonia: string;
 }
 /**
  * Representa una lista de elementos de un catálogo.

@@ -328,6 +328,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
   idMercanciaEnEdicion: number | null = null;
 
 
+
+  /**
+   * @property {number | null} idDomicilioEnEdicion
+   * @description ID del domicilio que se está editando actualmente.
+   * @default null
+   */
+  idDomicilioEnEdicion: number | null = null;
+
+
   /**
    * @method cerrarModalDomicilio
    * @description Método para cerrar el modal de domicilio.
@@ -433,9 +442,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.tablaDeDatos.datos = [];
-    this.tablaDeMercancia.datos = [];
 
     this.cargarFederativa();
     this.cargarMunicipio();
@@ -938,44 +944,56 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   abiertoDomicilio(esModificacion: boolean = false): void {
     this.mostrarAlertaValidacionDomicilio = false;
-    
+    // Establecer el ID de edición
+    this.idDomicilioEnEdicion = null;
+
     if (esModificacion && this.filaSeleccionadaLista && this.filaSeleccionadaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaLista[0];
-      const DATOS_COMPLETOS = this.datosCompletosAvisos[REGISTRO_SELECCIONADO.id];
-
-      if (DATOS_COMPLETOS) {
-        this.domicilioFormulario.patchValue({
-          rfc: DATOS_COMPLETOS.rfc || '',
-          nombreComercial: DATOS_COMPLETOS.nombreComercial || '',
-          claveEntidadFederativa: DATOS_COMPLETOS.claveEntidadFederativa || '',
-          claveDelegacionMunicipio: DATOS_COMPLETOS.claveDelegacionMunicipio || '',
-          claveColonia: DATOS_COMPLETOS.claveColonia || '',
-          calle: DATOS_COMPLETOS.calle || '',
-          numeroExterior: DATOS_COMPLETOS.numeroExterior || '',
-          numeroInterior: DATOS_COMPLETOS.numeroInterior || '',
-          codigoPostal: DATOS_COMPLETOS.codigoPostal || ''
-        });
-      } else {
-        this.domicilioFormulario.patchValue({
-          rfc: REGISTRO_SELECCIONADO.rfc || '',
-          nombreComercial: REGISTRO_SELECCIONADO.nombreComercial || '',
-          claveEntidadFederativa: REGISTRO_SELECCIONADO.entidadFederativa || '',
-          claveDelegacionMunicipio: REGISTRO_SELECCIONADO.alcaldioOMuncipio || '',
-          claveColonia: REGISTRO_SELECCIONADO.colonia || '',
-          calle: '',
-          numeroExterior: '',
-          numeroInterior: '',
-          codigoPostal: ''
+      this.idDomicilioEnEdicion = REGISTRO_SELECCIONADO.id;
+      this.precargarDatosDelAviso(REGISTRO_SELECCIONADO);
+    } else {
+      // Modo agregar: resetear completamente el formulario
+      if (this.domicilioFormulario) {
+        this.domicilioFormulario.reset();
+        // Limpiar también las validaciones
+        Object.keys(this.domicilioFormulario.controls).forEach(key => {
+          this.domicilioFormulario.get(key)?.markAsUntouched();
+          this.domicilioFormulario.get(key)?.markAsPristine();
         });
       }
-    } else {
-      this.domicilioFormulario.reset();
     }
 
     if (this.modalDomicilio) {
       AvisoComponent.showModal(this.modalDomicilio);
     }
   }
+
+  private precargarDatosDelAviso(registroSeleccionado: AvisoTabla): void {
+    const DATOS_COMPLETOS = this.datosCompletosAvisos[registroSeleccionado.id];
+
+    if (DATOS_COMPLETOS) {
+      this.domicilioFormulario.patchValue({
+        rfc: DATOS_COMPLETOS.rfc || '',
+        nombreComercial: DATOS_COMPLETOS.nombreComercial || '',
+        claveEntidadFederativa: DATOS_COMPLETOS.claveEntidadFederativa || '',
+        claveDelegacionMunicipio: DATOS_COMPLETOS.claveDelegacionMunicipio || '',
+        claveColonia: DATOS_COMPLETOS.claveColonia || '',
+        calle: DATOS_COMPLETOS.calle || '',
+        numeroExterior: DATOS_COMPLETOS.numeroExterior || '',
+        numeroInterior: DATOS_COMPLETOS.numeroInterior || '',
+        codigoPostal: DATOS_COMPLETOS.codigoPostal || ''
+      });
+    } else {
+      this.domicilioFormulario.patchValue({
+        rfc: registroSeleccionado.rfc || '',
+        nombreComercial: registroSeleccionado.nombreComercial || '',
+        claveEntidadFederativa: registroSeleccionado.claveEntidadFederativa || '',
+        claveDelegacionMunicipio: registroSeleccionado.claveDelegacionMunicipio || '',
+        claveColonia: registroSeleccionado.claveColonia || ''
+      });
+    }
+  }
+
   /**
    * @method precargarDatosMercancia
    * @description Método auxiliar para pre-cargar los datos de mercancía en el formulario.
@@ -1186,46 +1204,113 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarDomicilio(): void {
+    if (this.domicilioFormulario.valid) {
+      const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
 
-    if (this.domicilioFormulario.invalid) {
-     Object.keys(this.domicilioFormulario.controls).forEach(key => {
+      if (this.idDomicilioEnEdicion !== null) {
+        // Modo edición: actualizar registro existente
+        const INDICE_A_ACTUALIZAR = this.tablaDeDatos.datos.findIndex(item => item.id === this.idDomicilioEnEdicion);
+        
+        if (INDICE_A_ACTUALIZAR !== -1) {
+          // Actualizar datos en la tabla
+          const DOMICILIO_ACTUALIZADO: AvisoTabla = {
+            id: this.idDomicilioEnEdicion,
+            rfc: VALORES_DE_FORMULARIO.rfc,
+            nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+            claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+            claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+            claveColonia: VALORES_DE_FORMULARIO.claveColonia
+          };
+
+          // Actualizar datos completos
+          this.datosCompletosAvisos[this.idDomicilioEnEdicion] = {
+            rfc: VALORES_DE_FORMULARIO.rfc,
+            nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+            claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+            claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+            claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+            calle: VALORES_DE_FORMULARIO.calle,
+            numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
+            numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
+            codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
+          };
+
+          // Crear nueva copia del array con el elemento actualizado
+          this.tablaDeDatos.datos = [
+            ...this.tablaDeDatos.datos.slice(0, INDICE_A_ACTUALIZAR),
+            DOMICILIO_ACTUALIZADO,
+            ...this.tablaDeDatos.datos.slice(INDICE_A_ACTUALIZAR + 1)
+          ];
+          
+          // Update store to persist the updated data
+          this.store.setTablaDeDatos(this.tablaDeDatos.datos);
+          
+          // Limpiar selección
+          this.filaSeleccionadaLista = [];
+        }
+      } else {
+        // Modo agregar: crear nuevo registro con ID único
+        const SIGUIENTE_ID = this.generarIdUnico();
+
+        const NUEVO_DOMICILIO: AvisoTabla = {
+          id: SIGUIENTE_ID,
+          rfc: VALORES_DE_FORMULARIO.rfc,
+          nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+          claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+          claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+          claveColonia: VALORES_DE_FORMULARIO.claveColonia
+        };
+
+        this.datosCompletosAvisos[SIGUIENTE_ID] = {
+          rfc: VALORES_DE_FORMULARIO.rfc,
+          nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+          claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+          claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+          claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+          calle: VALORES_DE_FORMULARIO.calle,
+          numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
+          numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
+          codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
+        };
+
+        this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
+        
+        // Update store to persist the data
+        this.store.setTablaDeDatos(this.tablaDeDatos.datos);
+      }
+
+      // Resetear formulario, limpiar estado y cerrar modal
+      this.domicilioFormulario.reset();
+      this.idDomicilioEnEdicion = null;
+      this.filaSeleccionadaLista = [];
+      this.closeDomicilio.nativeElement.click();
+    } else {
+      Object.keys(this.domicilioFormulario.controls).forEach(key => {
         this.domicilioFormulario.get(key)?.markAsTouched();
       });
     }
-
-    if (this.domicilioFormulario.valid) {
-
-      
-      const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
-      const NUEVO_ID = Date.now();
-
-      const NUEVO_DOMICILIO = {
-        id: NUEVO_ID,
-        rfc: VALORES_DE_FORMULARIO.rfc,
-        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
-        entidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
-        alcaldioOMuncipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
-        colonia: VALORES_DE_FORMULARIO.claveColonia
-      };
-
-      this.datosCompletosAvisos[NUEVO_ID] = {
-        rfc: VALORES_DE_FORMULARIO.rfc,
-        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
-        claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
-        claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
-        claveColonia: VALORES_DE_FORMULARIO.claveColonia,
-        calle: VALORES_DE_FORMULARIO.calle,
-        numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
-        numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
-        codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
-      };
-
-      this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
-
-      this.domicilioFormulario.reset();
-      this.closeDomicilio.nativeElement.click();
-    }
   }
+
+  /**
+   * @method generarIdUnico
+   * @description Genera un ID único que no existe en la tabla actual ni en los datos completos.
+   * @returns {number} ID único generado.
+   */
+  private generarIdUnico(): number {
+    let NUEVO_ID = Date.now() + Math.floor(Math.random() * 1000);
+    
+    // Verificar si existe conflicto de ID
+    const EXISTE_EN_TABLA = this.tablaDeDatos.datos.find(item => item.id === NUEVO_ID);
+    const EXISTE_EN_DATOS = this.datosCompletosAvisos[NUEVO_ID];
+    
+    if (EXISTE_EN_TABLA || EXISTE_EN_DATOS) {
+      // Si hay conflicto, generar un ID diferente agregando más aleatoriedad
+      NUEVO_ID = Date.now() + Math.floor(Math.random() * 10000) + 1;
+    }
+    
+    return NUEVO_ID;
+  }
+
   /**
    * @method desinfectarAlfanumerico
    * @description Método para limpiar un campo de formulario, eliminando caracteres no alfanuméricos.

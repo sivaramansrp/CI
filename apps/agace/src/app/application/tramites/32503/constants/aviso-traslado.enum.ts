@@ -108,17 +108,17 @@ export const ENCABEZADAS_TABLA = [
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: AvisoTabla): string => ele.entidadFederativa,
+    clave: (ele: AvisoTabla): string => ele.claveEntidadFederativa,
     orden: 3,
   },
   {
     encabezado: 'Alcaldía o Municipio',
-    clave: (ele: AvisoTabla): string => ele.alcaldioOMuncipio,
+    clave: (ele: AvisoTabla): string => ele.claveDelegacionMunicipio,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: AvisoTabla): string => ele.colonia,
+    clave: (ele: AvisoTabla): string => ele.claveColonia,
     orden: 5,
   },
 ];
