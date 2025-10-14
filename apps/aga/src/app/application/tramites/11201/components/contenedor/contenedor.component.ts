@@ -16,7 +16,7 @@ import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HEADER_MAP_DATOS } from '../../enum/solicitante.enum';
 import { Input } from '@angular/core';
-import { InputFecha, } from '@libs/shared/data-access-user/src';
+import { InputFecha,formatFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent, } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -24,7 +24,7 @@ import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud11201State } from '../../../../core/estados/tramites/tramite11201.store';
-import { Subject } from 'rxjs';
+import { Subject ,tap } from 'rxjs';
 import { TEXTOS } from '../../../../core/enums/11201/tramite11201.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -38,7 +38,7 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
-
+import { SolicitanteService } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
 /**
  * Componente para gestionar la solicitud de contenedores.
  */
@@ -204,6 +204,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   datosTabla: any[] = [];
 
+
+  datosTablaManifest: any[] = [];
+
   /**
    * Obtener el valor de la instrucción e inicializar la variable.
    */
@@ -274,6 +277,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   abiertoModeloDatos: string = '';
 
+  @Input() RFC: string = 'LEQI8101314S7';
+  
+
   /**
    * Referencia al modal.
    */
@@ -297,6 +303,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  rfc_original: string = "";
+
+  solicitudID:string =  '202739040';
+
   /**
    * Constructor del componente ContenedorComponent.
    * 
@@ -319,6 +329,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private tramite11201Query: Tramite11201Query,
     public modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitanteServicio: SolicitanteService
+
   ) {
     this.transporteList = {
       catalogos: [],
@@ -379,6 +391,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.tabSeleccionado();
     this.fetchgetTransporteList();
     this.fetchAduanaList();
+    this.getDatosGenerales(this.RFC);
+
   }
 
   /**
@@ -739,23 +753,40 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+
   /**
-   * Cargar archivo CSV y parsear su contenido.
+   * Handles the file upload process for the application form.
+   * 
+   * - Retrieves the selected file from the input element with ID 'cargarArchivo'.
+   * - Constructs a FormData object with the file and additional form fields: RFC, aduana, and fecha de ingreso.
+   * - Calls the `fileUpload` method of `datosTramiteService` to upload the file, passing the form data and solicitud ID.
+   * - Subscribes to the upload response and updates `datosTabla` with the returned container data if the response code is '00'.
+   * 
+   * @remarks
+   * This method is intended to be triggered by a user action, such as clicking an upload button.
    */
   archivo(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
-    if (FILE) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.analizarGramaticalmenteCSV(TEXT);
-        this.mostrarCargarArchivoTable = true;
-      };
-      READER.readAsText(FILE);
-    }
+     if (FILE) {
+      
+      const formData = new FormData();
+      formData.append('archivo', FILE);
+      formData.append('rfc', this.rfc_original);
+      formData.append('aduana', this.solicitudForm.get('aduanaMenuDesplegable')?.value);
+      formData.append('fingreso', formatFecha(this.solicitudForm.get('fechaDeIngreso')?.value));
+
+     this.datosTramiteService
+        .fileUpload(formData,this.solicitudID)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((respuesta) => {
+          if (respuesta?.codigo === '00') {
+            this.datosTabla = respuesta?.datos.contenedores
+          }
+        });
+      }
   }
 
   /**
@@ -823,7 +854,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('menuDesplegable')?.valid
     ) {
       this.mostrarMensaje = true;
-      this.loadDatosTablaData();
+      const typeOfTransportValue = this.solicitudForm.get('menuDesplegable')?.value;
+      const manifestNumber = this.solicitudForm.get('numeroManifiesta')?.value;
+      const urlEndPoint = typeOfTransportValue === '1' ? 'ferroviario' : 'maritimo';
+      this.datosTramiteService
+        .getByManifestNumber(this.rfc_original,urlEndPoint,this.solicitudID,manifestNumber)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((respuesta) => {
+          if (respuesta?.codigo === '00') {
+              this.datosTablaManifest = respuesta?.datos.contenedores
+          }
+        });
     }
   }
 
@@ -870,6 +911,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.limpiarCampos();
   }
 
+  getDatosGenerales(RFC: string): void {
+       this.solicitanteServicio
+        .getDatosGeneralesAPI(RFC)
+        .pipe(
+          tap((response:any) => {
+            if (response) {
+              this.rfc_original = response.datos.rfc_original
+            }
+          })
+        )
+        .subscribe();
+    }
+
 /**
    * Agrega una nueva solicitud utilizando el servicio `datosTramiteService`.
    * La solicitud se agrega a la lista `datosDelContenedor` y se actualiza el estado en `tramite11201Store`.
@@ -881,14 +935,24 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarSolicitud(): void {
+    const API_PAYLOAD = {
+          "rfc": this.rfc_original,
+          "aduana": this.solicitudForm.get('aduana')?.value,
+          "fecha_ingreso": formatFecha(this.solicitudForm.get('fechaIngreso')?.value),
+          "iniciales_contenedor": this.solicitudForm.get('inicialesContenedor')?.value, 
+          "numero_contenedor": this.solicitudForm.get('numeroContenedor')?.value,
+          "digito_verificador":this.solicitudForm.get('digitoDeControl')?.value,
+          "tipo_contenedor": this.solicitudForm.get('contenedores')?.value 
+        }
     this.datosTramiteService
-      .agregarSolicitud()
+      .agregarSolicitud(API_PAYLOAD,this.solicitudID)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
-        if (respuesta?.success) {
+        if (respuesta?.codigo === '00') {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
+          console.log(this.datosDelContenedor);
           (
             this.tramite11201Store.setDelContenedor as (
               valor: DatosDelContenedor[]

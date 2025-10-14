@@ -41,15 +41,15 @@ export interface Contenedores {
  */
 export interface DatosDelContenedor {
   id: number;
-  inicialesEquipo: string;
-  numeroEquipo: number;
-  digitoVerificador: number;
-  tipoEquipo: string;
+  iniciales_contenedor: string;
+  numero_contenedor: number;
+  digito_verificador: number;
+  tipo_contenedor: string;
   aduana: number;
-  fechaIngreso: string;
+  fecha_inicio: string;
   vigencia: string;
-  estadoConstancia: string;
-  existeEnVUCEM: string;
+  puede_registrar: string;
+  existe_en_vucem: string;
   idConstancia: string;
   numeroManifiesto: string;
   idSolicitud: string;

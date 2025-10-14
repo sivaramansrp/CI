@@ -13,6 +13,8 @@ import { Tramite11201Store } from '../../../../core/estados/tramites/tramite1120
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Componente para el paso dos del trámite de contenedores temporales.
@@ -29,6 +31,8 @@ import { takeUntil } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
+  providers: [ToastrService],
+
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
@@ -59,7 +63,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite11201Store: Tramite11201Store,
-    private tramite301Query: Tramite11201Query
+    private tramite301Query: Tramite11201Query,
+    private datosTramiteService: DatosTramiteService,
+    private toastrService: ToastrService,
     // eslint-disable-next-line no-empty-function
   ) { }
 
@@ -125,6 +131,38 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite11201Store[metodoNombre] as (value: Tramite11201Store) => void)(VALOR);
+  }
+
+
+  /**
+   * Validates the payment information entered in the form.
+   *
+   * This method checks if the 'linea' and 'monto' fields in the form are valid.
+   * If both fields are valid, it calls the `validarPago` method of `datosTramiteService`
+   * with the provided values. The response is observed until the component is destroyed.
+   * If the response code is '00', a success alert is shown to the user.
+   */
+  validarPago(): void {
+    if (
+      this.formSolicitud.get('pagoDeDerechos.linea')?.valid &&
+      this.formSolicitud.get('pagoDeDerechos.monto')?.valid
+    ) {
+      const linea_captura = this.formSolicitud.get('pagoDeDerechos.linea')?.value;
+      const monto = this.formSolicitud.get('pagoDeDerechos.monto')?.value;
+      const idSolicitud = '202739040'
+      const PAYLOAD = { linea_captura, monto };
+      console.log(PAYLOAD);
+      console.log(idSolicitud);
+      this.datosTramiteService
+        .validarPago(PAYLOAD, idSolicitud)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((respuesta: any) => {
+          if (respuesta?.codigo !== '00') {
+            this.toastrService.error(respuesta.error);
+
+          }
+        });
+    }
   }
 
   /**

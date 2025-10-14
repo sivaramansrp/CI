@@ -8,6 +8,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
 import { TemporalContenedoresRoutingModule } from './temporal-contenedores-routing.module';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { NotificacionesComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
-    WizardComponent
+    WizardComponent,
+    NotificacionesComponent
   ],
   exports: [],
   providers: [

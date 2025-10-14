@@ -5,6 +5,8 @@ import { Observable } from "rxjs";
 import { RespuestaApi } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
+import { API_POST_VALIDAR } from '../server/api-router';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para gestionar los datos del trámite 11201.
@@ -28,6 +30,9 @@ export class DatosTramiteService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar peticiones a APIs o archivos JSON.
    */
+  
+  urlServer = ENVIRONMENT.API_HOST_TEST;
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -56,16 +61,6 @@ export class DatosTramiteService {
   submitSolicitud(): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(`assets/json/11201/aduanaList.json`);
   }
-
-  /**
-   * Agregar una solicitud
-   * 
-   * @returns {Observable<RespuestaContenedor>} Un observable con la respuesta de agregar una solicitud.
-   */
-  agregarSolicitud(): Observable<RespuestaContenedor> {
-    return this.http.get<RespuestaContenedor>(`assets/json/11201/contenedorLista.json`);
-  }
-
   /**
    * Obtener una lista de Transporte
    * 
@@ -114,4 +109,54 @@ export class DatosTramiteService {
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/11201/consulta_11201.json`);
   }
+
+
+  /**
+   * Sends a POST request to add a new solicitud (request) with the provided payload and solicitud ID.
+   *
+   * @param PAYLOAD - The data to be sent in the body of the POST request.
+   * @param idSolicitud - The identifier of the solicitud to be validated and added.
+   * @returns An Observable emitting the response from the server.
+   */
+  agregarSolicitud(PAYLOAD:any,idSolicitud:String): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/` + API_POST_VALIDAR(String(idSolicitud));
+    return this.http.post(ENDPOINT, PAYLOAD);
+  }
+  /**
+   * Retrieves data by manifest number for a specific request and transport type.
+   *
+   * @param RFC - The RFC (Registro Federal de Contribuyentes) identifier.
+   * @param typeOfTransPort - The type of transport (e.g., 'maritime', 'land', etc.).
+   * @param idSolicitud - The unique identifier of the request (solicitud).
+   * @param maniFestNumber - The manifest number to validate.
+   * @returns An Observable emitting the response data from the API.
+   */
+  getByManifestNumber(RFC:String,typeOfTransPort:String,idSolicitud:String,maniFestNumber:String): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/validar-${typeOfTransPort}?rfc=${RFC}&numeroManifiesto=${maniFestNumber}` ;
+      return this.http.get(ENDPOINT);
+  }
+  /**
+   * Uploads a file and validates its CSV content for a specific solicitud (request).
+   *
+   * @param PAYLOAD - The payload containing the file data to be uploaded.
+   * @param idSolicitud - The identifier of the solicitud for which the file is being uploaded.
+   * @returns An Observable emitting the server response after file upload and validation.
+   */
+  fileUpload(PAYLOAD:any,idSolicitud:String): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/validar-csv` ;
+      return this.http.post(ENDPOINT,PAYLOAD);
+  }
+  /**
+   * Validates the payment for a specific solicitud (request) by sending a POST request to the backend API.
+   *
+   * @param PAYLOAD - The payload containing payment information to be validated.
+   * @param idSolicitud - The unique identifier of the solicitud for which the payment is being validated.
+   * @returns An Observable emitting the response from the API after validating the payment.
+   */
+  validarPago(PAYLOAD:any,idSolicitud:String): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/validar-pago` ;
+      return this.http.post(ENDPOINT,PAYLOAD);
+  }
+
+
 }
