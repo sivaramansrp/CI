@@ -21,6 +21,7 @@ import { StoreConfig } from '@datorama/akita';
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite110212State {
+  [x: string]: any;
   /** ID de la solicitud */
   idSolicitud: number | null;
 
@@ -156,6 +157,11 @@ export interface Tramite110212State {
    * Cada clave representa una sección del formulario.
    */
   formaValida: { [key: string]: boolean };
+    /**
+   * @description
+   * Objeto que contiene los valores actuales del formulario de certificado.
+   */
+  formCertificado: { [key: string]: unknown };
 }
 
 /**
@@ -274,6 +280,27 @@ export function createInitialState(): Tramite110212State {
       telefono: '',
       fax: '',
       correoElectronico: ''
+    },
+      formCertificado: {
+      si: false,
+      entidadFederativa: '',
+      bloque: '',
+      nombreComercialForm: '',
+      registroProductoForm: '',
+      fraccionArancelariaForm: '',
+      fechaInicioInput: '',
+      fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+      pais: '',
+      ciudad: '',
+      telefono: '',
+      correoElectronico: '',
+      numeroLetra: '',
+      calle: '',
     },
 
     /** Formulario de datos adicionales del certificado */
@@ -1498,6 +1525,24 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       },
     }));
   }
+
+    /**
+   * @method setFormCertificadoGenric
+   * @description
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormCertificadoGenric(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
+  }
+
   /**
    * @method setFormDestinatario
    * @description

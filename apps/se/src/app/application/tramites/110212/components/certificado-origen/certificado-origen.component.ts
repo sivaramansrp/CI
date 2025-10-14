@@ -22,12 +22,11 @@ import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificaci
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
-import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
+import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
 
 /**
  * @descripcion
@@ -191,7 +190,7 @@ export class CertificadoOrigenComponent
    */
   constructor(
     private readonly fb: FormBuilder,
-    private peruCertificadoService: PeruCertificadoService,
+    private peruCertificadoService: ValidacionPosterioriService,
     private store: Tramite110212Store,
     private query: Tramite110212Query,
     private seccionQuery: SeccionLibQuery,
@@ -238,9 +237,6 @@ export class CertificadoOrigenComponent
         })
       )
       .subscribe();
-
-    this.estadoOpcion();
-    this.paisOpcion();
   }
 
   /**
@@ -255,68 +251,63 @@ export class CertificadoOrigenComponent
     storeStateName: string;
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
-    // this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
   }
 
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
 
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
-  }
 
-  /**
-   * @descripcion
-   * Obtiene los datos disponibles relacionados con mercancías.
-   */
-  conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService
-      .obtenerTablaDatos('disponibles-datos.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-            this.store.setDisponsiblesDatos(this.disponiblesDatos);
-          } else {
-            this.disponiblesDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
-      });
+    /**
+     * Busca la mercancia y actualiza los datos en el store.
+     */
+  conseguirDisponiblesDatos(): void {    
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] },
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] },
+    };
+  
+   this.peruCertificadoService
+    .buscarMercanciasCert(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response: any) => {
+        const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map((item: any) => ({
+          id: item.idMercancia,
+          fraccionArancelaria: item.fraccionArancelaria || '',
+          numeroDeRegistrodeProductos: item.numeroRegistro || '',
+          fechaExpedicion: item.fraccionArancelaria || '',
+          fechaVencimiento: item.fraccionArancelaria || '',
+          nombreTecnico: item.fraccionArancelaria || '',
+          nombreComercial: item.fraccionArancelaria || '',
+          fraccionNaladi: item.fraccionArancelaria || '',
+          fraccionNaladiSa93: item.fraccionArancelaria || '',
+          fraccionNaladiSa96: item.fraccionArancelaria || '',
+          fraccionNaladiSa02: item.fraccionArancelaria || '',
+          criterioParaConferirOrigen: item.fraccionArancelaria || '',
+          valorDeContenidoRegional: item.fraccionArancelaria || '',
+          normaOrigen: item.fraccionArancelaria || '',
+          cantidad: '',
+          umc: '',
+          tipoFactura: '',
+          valorMercancia: '',
+          fechaFinalInput: '',
+          numeroFactura: '',
+          unidadMedidaMasaBruta: '',
+          complementoClasificacion: '',
+          complementoDescripcion: '',
+          nalad: '',
+          fechaFactura: '',
+          marca: '',
+          nombreIngles: '',
+          otrasInstancias: '',
+          criterioParaTratoPreferencial: '',
+          numeroDeSerie: '',
+        }));
+        this.disponiblesDatos = MAPPED_DATA;
+
+        this.store.setDisponsiblesDatos(MAPPED_DATA);
+      },
+    });
   }
 
   /**
