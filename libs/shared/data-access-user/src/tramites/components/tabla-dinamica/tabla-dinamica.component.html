@@ -60,7 +60,25 @@
         </td>
       </tr>
       <!-- Crear las filas de manera dinámica -->
-      <tr [ngStyle]="styleCenter ? {'text-align': 'center'} : {}" *ngFor="let fila of paginatedDatos; let i = index" (click)="onFilaClic(fila)">
+      <ng-container *ngFor="let fila of paginatedDatos; let i = index">
+        <tr *ngIf="expandedIndex === i && expandible">
+                    <td [attr.colspan]="columns.length + 1">
+                        <div class="nested-table p-3" [@expandCollapse]>
+                            <ng-container *ngTemplateOutlet="nestedContent; context: { $implicit: fila }">
+                            </ng-container>
+                        </div>
+                    </td>
+                </tr> 
+        <tr [ngStyle]="styleCenter ? {'text-align': 'center'} : {}"  (click)="onFilaClic(fila)">
+          <td>
+            <button class="btn btn-link p-0" (click)="toggleRow(i)" *ngIf="expandible"
+                            [attr.aria-expanded]="expandedIndex === i">
+                            <i class="bi" [ngClass]="{
+                            'bi-dash': expandedIndex === i,
+                            'bi-plus': expandedIndex !== i
+                        }"></i>
+                        </button>
+          </td>
         <!-- Botón de radio para seleccionar una fila -->
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
         <td>
@@ -71,7 +89,7 @@
 
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <td>
-          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i"
+          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i" 
             (change)="cambiarEstadoCheckbox($event, i)" [checked]="filasSeleccionadas.includes(i)"
             aria-label="Seleccionar" [disabled]="disableSeleccionTablaCheckBox" />
         </td>
@@ -83,6 +101,7 @@
             {{ obtenerTextoBoton(fila) }}
           </button>
         </td>
+        
         }
 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
@@ -110,6 +129,8 @@
         </td>
         }
       </tr>
+           
+      </ng-container>      
     </tbody>
   </table>
 </div>

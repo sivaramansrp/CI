@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaExpandibleComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import {CatalogosService} from '../../services/220201/catalogos/catalogos.service'
 import { HttpClient } from '@angular/common/http';
 
@@ -55,6 +55,7 @@ import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/compone
     NotificacionesComponent,
     TablaDinamicaComponent,
     TablaDinamicaExpandidaComponent,
+    TablaExpandibleComponent,
     ModalComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -757,8 +758,27 @@ columns: ColumnConfig[] = [
   ];
 
   nestedColumns: ColumnConfig[] = [
-    { encabezado: 'ColorPelaje', clave: 'ColorPelaje', width: '50%' },
-    { encabezado: 'SexoClave', clave: 'SexoClave', width: '50%' }
+    { encabezado: 'NumeroLote', clave: 'NumeroLote', width: '25%' },
+    { encabezado: 'ColorPelaje', clave: 'ColorPelaje', width: '30%' },
+    { encabezado: 'FaseDesarrollo', clave: 'FaseDesarrollo', width: '30%' },
+    { encabezado: 'FuncionZootecnica', clave: 'FuncionZootecnica', width: '30%' },
+    { encabezado: 'NombreMercancia', clave: 'NombreMercancia', width: '30%' },
+    { encabezado: 'NumeroIdentificacion', clave: 'NumeroIdentificacion', width: '30%' },                
+    { encabezado: 'Raza', clave: 'Raza', width: '30%' },
+    { encabezado: 'NombreCientifico', clave: 'NombreCientifico', width: '30%' },
+    { encabezado: 'Sexo', clave: 'Sexo', width: '30%' },                      
+  ];
+
+  configuraColumna: ConfiguracionColumna<Sensible>[] = [
+    { encabezado: 'No. partida', clave: (fila: Sensible): string => fila.noPartida, orden: 1 },
+    { encabezado: 'ColorPelaje', clave: (fila: Sensible): string => fila.ColorPelaje, orden: 2 },
+    { encabezado: 'FaseDesarrollo', clave: (fila: Sensible): string => fila.FaseDesarrollo, orden: 3 },
+    { encabezado: 'FuncionZootecnica', clave: (fila: Sensible): string => fila.FuncionZootecnica, orden: 4 },
+    { encabezado: 'NumeroIdentificacion', clave: (fila: Sensible): string => fila.NumeroIdentificacion, orden: 5 },    
+    { encabezado: 'Raza', clave: (fila: Sensible): string => fila.Raza, orden: 7 },
+    { encabezado: 'NombreCientifico', clave: (fila: Sensible): string => fila.NombreCientifico, orden: 8 },
+    { encabezado: 'Sexo', clave: (fila: Sensible): string => fila.Sexo, orden: 9 },
+    
   ];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
