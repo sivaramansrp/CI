@@ -620,11 +620,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   cargarCatalogos(): void {
     // Cargar catálogo de contenedores
     this.datosTramiteService
-      .getContenedores()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .pipe(takeUntil(this.destroyNotifier$))
+      .getContenedoresList()
       .subscribe((data) => {
-        this.contenedores.catalogos = data.data;
+        this.contenedores.catalogos = data.datos;
       });
   }
 
@@ -1032,10 +1030,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public fetchAduanaList(): void {
     this.datosTramiteService
-      .getAduanaList('aduanaList')
+      .getAduanaCatalogList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
-        this.aduanaList.catalogos = respuesta.data;
+        this.aduanaList.catalogos = respuesta.datos;
       });
   }
 

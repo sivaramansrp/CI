@@ -158,5 +158,30 @@ export class DatosTramiteService {
       return this.http.post(ENDPOINT,PAYLOAD);
   }
 
+  /**
+   * Retrieves the list of customs offices (aduanas) from the server.
+   *
+   * Sends a GET request to the `/api/sat-t11201/catalogo/aduanas` endpoint.
+   *
+   * @returns An `Observable` emitting the response containing the customs catalog data.
+   */
+  getAduanaCatalogList(): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11201/catalogo/aduanas` ;
+    return this.http.get(ENDPOINT);
+  }
+
+  /**
+   * Retrieves the list of container types from the server.
+   *
+   * Sends a GET request to the `/api/sat-t11201/catalogo/tipo-contenedor` endpoint
+   * and returns an observable containing the response data.
+   *
+   * @returns An `Observable<any>` that emits the list of container types.
+   */
+  getContenedoresList(): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11201/catalogo/tipo-contenedor` ;
+    return this.http.get(ENDPOINT);
+  }
+
 
 }
