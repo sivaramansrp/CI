@@ -27,6 +27,8 @@ import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
+import { RegistroService } from '../../services/registro.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 
 @Component({
@@ -38,6 +40,7 @@ import { Tramite110207Query } from '../../state/Tramite110207.query';
     CertificadoDeOrigenComponent,
     MercanciaComponent,
   ],
+  providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.css',
 })
@@ -152,7 +155,8 @@ export class CertificadoOrigenComponent
    *
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] =
+    CARGA_MERCANCIA_EXPORT;
 
   /**
    * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
@@ -166,10 +170,31 @@ export class CertificadoOrigenComponent
   fromMercanciasDisponibles: boolean = false;
 
   /**
+   * Constructor del componente.
+   * Inicializa el formulario y las dependencias necesarias para la carga de datos.
+   * @param fb FormBuilder para la creación del formulario reactivo.
+   * @param store Store para gestionar los datos de estado.
+   * @param tramiteQuery Consulta de estado para obtener los valores del formulario.
+   * @param certificadoService Servicio para la gestión de los certificados.
+   * @param toastr Servicio de notificaciones para mostrar mensajes.
+   * @param seccionQuery Consulta para obtener el estado de la sección.
+   * @param seccionStore Store para actualizar el estado de la sección.
+   */
+  private actualizandoFormulario = false;
+
+  /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * Formulario reactivo utilizado para la gestión de los datos del certificado.
+   * @type {FormGroup}
+   */
+  formCertificado!: {
+    [key: string]: undefined | boolean | string | number | object;
+  };
 
   /**
    * @descripcion
@@ -183,13 +208,13 @@ export class CertificadoOrigenComponent
    */
   constructor(
     private fb: FormBuilder,
-    private peruCertificadoService: PeruCertificadoService,
+    private registroService: RegistroService,
     private store: Tramite110207Store,
     private query: Tramite110207Query,
+    private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery
-  ) {
-  }
+  ) {}
 
   /**
    * @descripcion
@@ -220,11 +245,21 @@ export class CertificadoOrigenComponent
         takeUntil(this.destroyNotifier$),
         map((state: Solicitud110207State) => {
           this.certificadoState = state;
-           this.datosTabla$ = state.mercanciaTabla;
-           this.datosTablaUno = state.disponiblesDatos;
+          this.datosTabla$ = state.mercanciaTabla;
+          this.datosTablaUno = state.disponiblesDatos;
         })
       )
       .subscribe();
+
+    this.query.formCertificado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        if (!this.actualizandoFormulario && estado) {
+          this.actualizandoFormulario = true;
+          this.formCertificado = estado as {[key: string]: string | number | boolean | object | undefined;};
+          this.actualizandoFormulario = false;
+        }
+      });
 
     this.estadoOpcion();
     this.paisOpcion();
@@ -242,7 +277,7 @@ export class CertificadoOrigenComponent
     storeStateName: string;
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
-     this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
   }
 
   /**
@@ -250,18 +285,17 @@ export class CertificadoOrigenComponent
    * Obtiene la lista de estados disponibles.
    */
   estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
+    // this.registroService.obtenerMenuDesplegable('estados.json')
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.estado = data as Catalogo[];
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //       console.error('Error al obtener los datos:', error);
+    //       this.estado = [];
+    //     },
+    //   });
   }
 
   /**
@@ -269,18 +303,18 @@ export class CertificadoOrigenComponent
    * Obtiene la lista de países disponibles.
    */
   paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
+    // this.registroService
+    //   .obtenerMenuDesplegable('pais.json')
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.pais = data as Catalogo[];
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //       console.error('Error al obtener los datos:', error);
+    //       this.pais = [];
+    //     },
+    //   });
   }
 
   /**
@@ -288,22 +322,104 @@ export class CertificadoOrigenComponent
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService
-      .obtenerTablaDatos('disponibles-datos.json')
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {
+        idTratadoAcuerdo: this.formCertificado['entidadFederativa'],
+      },
+      pais: { cvePais: this.formCertificado['bloque'] || '' },
+    };
+
+    this.registroService
+      .buscarMercanciasCert(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-             this.store.setDisponsiblesDatos(this.disponiblesDatos);
-          } else {
-            this.disponiblesDatos = [];
+        next: (response) => {
+          interface TratadoAplicable {
+            nombreTratado?: string;
           }
+
+          interface ResponseItem {
+            idMercancia?: number | null;
+            fraccionArancelaria?: string;
+            numeroRegistro?: string;
+            fechaExpedicion?: string;
+            fechaVencimiento?: string;
+            nombreTecnico?: string;
+            nombreComercial?: string;
+            fraccionNALADIClave?: string;
+            fraccionNALADSA93Clave?: string;
+            fraccionNALADISA96Clave?: string;
+            fraccionNALADISA02Clave?: string;
+            criterioOrigen?: string;
+            porcentajeContenidoRegional?: string;
+            tratadoAplicable?: TratadoAplicable;
+            unidadMedida?: string;
+          }
+
+          interface ResponseType {
+            datos?: ResponseItem[];
+          }
+
+          const MAPPED_DATA: Mercancia[] = (
+            (response as ResponseType)?.datos ?? []
+          ).map(
+            (item: ResponseItem): Mercancia => ({
+              id: item.idMercancia ?? undefined,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistro || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              fraccionNaladi: item.fraccionNALADIClave || '',
+              fraccionNaladiSa93: item.fraccionNALADSA93Clave || '',
+              fraccionNaladiSa96: item.fraccionNALADISA96Clave || '',
+              fraccionNaladiSa02: item.fraccionNALADISA02Clave || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.porcentajeContenidoRegional || '',
+              normaOrigen: item.tratadoAplicable?.nombreTratado || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: item.unidadMedida || '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              nombreIngles: '',
+              otrasInstancias: '',
+              criterioParaTratoPreferencial: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.store.setDisponsiblesDatos(MAPPED_DATA);
         },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
+        error: () => {
+          this.toastr.error('Error al buscar Mercancia');
         },
       });
+
+    // this.peruCertificadoService
+    //   .obtenerTablaDatos('disponibles-datos.json')
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe({
+    //     next: (response: Mercancia[]) => {
+    //       if (response && Array.isArray(response)) {
+    //         this.disponiblesDatos = response as Mercancia[];
+    //          this.store.setDisponsiblesDatos(this.disponiblesDatos);
+    //       } else {
+    //         this.disponiblesDatos = [];
+    //       }
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //       console.error('Error al obtener los datos:', error);
+    //     },
+    //   });
   }
 
   /**
@@ -312,7 +428,7 @@ export class CertificadoOrigenComponent
    * @param estado - El estado seleccionado.
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
-     this.store.setEstado(estado);
+    this.store.setEstado(estado);
   }
 
   /**
@@ -321,7 +437,7 @@ export class CertificadoOrigenComponent
    * @param estado - El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-     this.store.setBloque([estado]);
+    this.store.setBloque([estado]);
   }
 
   /**
@@ -362,7 +478,7 @@ export class CertificadoOrigenComponent
    * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o editada.
    */
   emitmercaniasDatos(evento: Mercancia): void {
-     this.store.setmercanciaTabla([evento]);
+    this.store.setmercanciaTabla([evento]);
   }
 
   /**
@@ -382,7 +498,7 @@ export class CertificadoOrigenComponent
    * @param valida - El estado de validación del formulario.
    */
   setFormValida(valida: boolean): void {
-     this.store.setFormValida({ certificado: valida });
+    this.store.setFormValida({ certificado: valida });
   }
 
   /**

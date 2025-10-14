@@ -1,13 +1,14 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { DatosPasos, ERROR_FORMA_ALERT } from '@ng-mf/data-access-user';
+import { DatosPasos, ERROR_FORMA_ALERT, JSONResponse, doDeepCopy, esValidObject, getValidDatos} from '@ng-mf/data-access-user';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -84,20 +85,20 @@ export class SolicitudPageComponent implements OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
-    /**
-  * @property {boolean} esFormaValido
-  * @description
-  * Indica si el formulario del paso actual es válido.
-  * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
-  */
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Indica si el formulario del paso actual es válido.
+   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+   */
   esFormaValido: boolean = false;
 
   /**
-  * @property {PasoUnoComponent} pasoUnoComponent
-  * @description
-  * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
-  * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
-  */
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
   @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -123,7 +124,8 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   constructor(
     public solicitudStore: Tramite110207Store,
-    public tramiteQuery: Tramite110207Query
+    public tramiteQuery: Tramite110207Query,
+    public registroService: RegistroService
   ) {
     this.tramiteQuery.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -143,28 +145,146 @@ export class SolicitudPageComponent implements OnDestroy {
   /**
    * Obtiene el valor del índice de la acción del botón.
    * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   * 
+   *
    * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   * 
+   *
    * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     if (this.indice === 1 && e.accion === 'cont') {
+      // const ISVALID = this.validarTodosFormulariosPasoUno();
+      // if (!ISVALID) {
+      //   this.esFormaValido = true;
+      //   this.indice = 1;
+      //   this.datosPasos.indice = 1;
+      // } else {
+      //   this.indice = 2;
+      //   this.datosPasos.indice = 2;
+      // }
+
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.indice = 1;
-        this.datosPasos.indice = 1;
-      } else {
-        this.indice = 2;
-        this.datosPasos.indice = 2;
+        return;
       }
-
+      this.obtenerDatosDelStore();
     } else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.registroService
+      .getAllState()
+      .pipe(take(1))
+      .subscribe((data) => {
+        this.guardar(data);
+      });
+  }
+
+  /**
+   * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+   * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+   *
+   * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+   *
+   * @remarks
+   * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
+   * La llamada al servicio actualmente está comentada.
+   */
+  guardar(item: Solicitud110207State): Promise<JSONResponse> {
+    const MERCANCIA_SELECCIONADAS = this.registroService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+    const PAYLOAD = {
+      rfc_solicitante: 'AAL0409235E6',
+      idSolicitud: this.solicitudState.idSolicitud || 0,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'ACEROS ALVARADO S.A. DE C.V.',
+        actividad_economica: 'Fabricación de productos de hierro y acero',
+        correo_electronico: 'contacto@acerosalvarado.com',
+        domicilio: {
+          pais: 'México',
+          codigo_postal: '06700',
+          estado: 'Ciudad de México',
+          municipio_alcaldia: 'Cuauhtémoc',
+          localidad: 'Centro',
+          colonia: 'Roma Norte',
+          calle: 'Av. Insurgentes Sur',
+          numero_exterior: '123',
+          numero_interior: 'Piso 5, Oficina A',
+          lada: '',
+          telefono: '123456',
+        },
+      },
+      certificado: {
+        tratado_acuerdo: item.formCertificado['entidadFederativa'],
+        pais_bloque: item.formCertificado['bloque'],
+        fraccion_arancelaria: item.formCertificado['fraccionArancelaria'],
+        nombre_comercial: item.formCertificado['nombreComercial'],
+        fecha_inicio: item.formCertificado['fechaInicio'],
+        fecha_fin: item.formCertificado['fechaFin'],
+        registro_producto: item.formCertificado['registroProducto'],
+        realizo_tercer_operador: {
+          tercer_operador: item.formCertificado['si'],
+          nombre: item.formCertificado['nombres'],
+          primer_apellido: item.formCertificado['primerApellido'],
+          segundo_apellido: item.formCertificado['segundoApellido'],
+          numero_registro_fiscal:
+            item.formCertificado['numeroDeRegistroFiscal'],
+          razon_social: item.formCertificado['razonSocial'],
+        },
+        domicilio_tercer_operador: {
+          pais: item.formCertificado['pais'],
+          ciudad: item.formCertificado['ciudad'],
+          calle: item.formCertificado['calle'],
+          numero_letra: item.formCertificado['numeroLetra'],
+          lada: item.formCertificado['lada'],
+          telefono: item.formCertificado['telefono'],
+          fax: item.formCertificado['fax'],
+          correo_electronico: item.formCertificado['correo'],
+        },
+        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS,
+      },
+      datos_del_certificado: {
+        observaciones: item.formDatosCertificado['observacionesDates'],
+        idioma: item.formDatosCertificado['idiomaDates'],
+        representacion_federal: {
+          entidad_federativa:
+            item.formDatosCertificado['EntidadFederativaDates'],
+          representacion_federal:
+            item.formDatosCertificado['representacionFederalDates'],
+        },
+      },
+    };
+
+    // console.log(PAYLOAD, 'PAYLOAD');
+
+    return new Promise((resolve, reject) => {
+      this.registroService.guardarDatosPost(PAYLOAD).subscribe(
+        (response) => {
+          const API_RESPONSE = doDeepCopy(response);
+          if (
+            esValidObject(API_RESPONSE) &&
+            esValidObject(API_RESPONSE.datos)
+          ) {
+            if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+              this.solicitudStore.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+            } else {
+              this.solicitudStore.setIdSolicitud(0);
+            }
+          }
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 
   /**
@@ -182,16 +302,16 @@ export class SolicitudPageComponent implements OnDestroy {
     }
   }
 
-    /**
- * @method validarTodosFormulariosPasoUno
- * @description
- * Valida todos los formularios del componente `PasoUnoComponent`.
- * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
- * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
- * Retorna `true` si todos los formularios son válidos.
- *
- * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
- */
+  /**
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;

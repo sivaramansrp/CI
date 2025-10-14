@@ -181,8 +181,8 @@ export interface Solicitud110207State {
 export function createInitialState(): Solicitud110207State {
   return {
     formCertificado: {
-      si: false,
       entidadFederativa: '',
+      tercerOperador: false,
       bloque: '',
       nombreComercialForm: '',
       registroProductoForm: '',
@@ -197,9 +197,10 @@ export function createInitialState(): Solicitud110207State {
       pais: '',
       ciudad: '',
       telefono: '',
-      correoElectronico: '',
+      correo: '',
       numeroLetra: '',
       calle: '',
+      si: false,
     },
     idSolicitud: 0,
     tratado: [],

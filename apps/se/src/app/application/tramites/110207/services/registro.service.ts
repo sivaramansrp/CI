@@ -1,11 +1,19 @@
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
-import { ENVIRONMENT, JSONResponse } from '@ng-mf/data-access-user';
+import {
+  ENVIRONMENT,
+  HttpCoreService,
+  JSONResponse,
+} from '@ng-mf/data-access-user';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Solicitud110207State, Tramite110207Store } from '../state/Tramite110207.store';
+import {
+  Solicitud110207State,
+  Tramite110207Store,
+} from '../state/Tramite110207.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PROC_110207 } from '../servers/api-route';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-
+import { Tramite110207Query } from '../state/Tramite110207.query';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110207.
@@ -14,7 +22,6 @@ import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
   providedIn: 'root',
 })
 export class RegistroService {
-  
   /**
    * URL base del servidor principal.
    */
@@ -29,13 +36,18 @@ export class RegistroService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes al servidor.
    */
-  constructor(private http: HttpClient, private tramite110207Store: Tramite110207Store) {
+  constructor(
+    private http: HttpClient,
+    public tramiteQuery: Tramite110207Query,
+    private httpService: HttpCoreService,
+    private tramite110207Store: Tramite110207Store
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
- /**
-     * Actualiza el estado global del formulario con los datos proporcionados.
-     * @param DATOS Objeto con los datos del formulario de tipo Solicitud110207State.
-     */
+  /**
+   * Actualiza el estado global del formulario con los datos proporcionados.
+   * @param DATOS Objeto con los datos del formulario de tipo Solicitud110207State.
+   */
   actualizarEstadoFormulario(DATOS: Solicitud110207State): void {
     this.tramite110207Store.setTratado(DATOS.tratado);
     this.tramite110207Store.setPais(DATOS.pais);
@@ -65,7 +77,9 @@ export class RegistroService {
     this.tramite110207Store.setCorreoElectronico(DATOS.correoElectronico);
     this.tramite110207Store.setNacion(DATOS.nacion);
     this.tramite110207Store.setTransporte(DATOS.transporte);
-    this.tramite110207Store.setfraccionMercanArancelaria(DATOS.fraccionMercanciaArancelaria);
+    this.tramite110207Store.setfraccionMercanArancelaria(
+      DATOS.fraccionMercanciaArancelaria
+    );
     this.tramite110207Store.setnombretecnico(DATOS.nombreTecnico);
     this.tramite110207Store.setnomreeningles(DATOS.nombreEnIngles);
     this.tramite110207Store.setcriterioparaconferir(DATOS.criterioParaConferir);
@@ -73,9 +87,13 @@ export class RegistroService {
     this.tramite110207Store.setcantidad(DATOS.cantidad);
     this.tramite110207Store.setUMC(DATOS.umc);
     this.tramite110207Store.setvalordelamercancia(DATOS.valorDelaMercancia);
-    this.tramite110207Store.setcomplementodeladescripcion(DATOS.complementoDelaDescripcion);
+    this.tramite110207Store.setcomplementodeladescripcion(
+      DATOS.complementoDelaDescripcion
+    );
     this.tramite110207Store.setmasabruta(DATOS.masaBruta);
-    this.tramite110207Store.setnombrecomercialdelamercancia(DATOS.nombreComercialDelaMercancia);
+    this.tramite110207Store.setnombrecomercialdelamercancia(
+      DATOS.nombreComercialDelaMercancia
+    );
     this.tramite110207Store.setUnidadMedida(DATOS.unidadMedida);
     this.tramite110207Store.setTipoFactura(DATOS.tipoFactura);
     this.tramite110207Store.setFecha(DATOS.fecha);
@@ -88,11 +106,13 @@ export class RegistroService {
     this.tramite110207Store.setPuertoDesembarque(DATOS.puertoDesembarque);
   }
   /**
-     * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
-     * @returns Observable con los datos del formulario.
-     */
+   * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+   * @returns Observable con los datos del formulario.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud110207State> {
-    return this.http.get<Solicitud110207State>('assets/json/110207/registro_toma_muestras_mercancias.json');
+    return this.http.get<Solicitud110207State>(
+      'assets/json/110207/registro_toma_muestras_mercancias.json'
+    );
   }
   /**
    * Obtiene el catálogo de tratados.
@@ -185,32 +205,133 @@ export class RegistroService {
     return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`);
   }
 
- /**
+  /**
    * Recupera la lista de "Registro de Solicitudes" desde un archivo JSON.
    *
    * @returns {Observable<ColumnasTabla[]>} Un observable que contiene un array de objetos RegistroDeSolicitudesTabla.
    *
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
- public getSolicitudesTabla():Observable<ColumnasTabla[]> {
-  return this.http.get<ColumnasTabla[]>('assets/json/110207/mercancia-disponsible.json').pipe(
-    catchError((error) => {
-      return throwError(() => error);
-    })
-  );
-}
-/**
+  public getSolicitudesTabla(): Observable<ColumnasTabla[]> {
+    return this.http
+      .get<ColumnasTabla[]>('assets/json/110207/mercancia-disponsible.json')
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+  /**
    * Recupera la lista de "Datos de Solicitudes Seleccionadas" desde un archivo JSON.
    * @returns Observable con un array de objetos que representan las columnas de la tabla seleccionada.
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
-public getSolicitudesDataTabla():Observable<SeleccionadasTabla[]> {
-  return this.http.get<SeleccionadasTabla[]>('assets/json/110207/mercancia-seleccionadas.json').pipe(
-    catchError((error) => {
-      return throwError(() => error);
-    })
-  );
-}
+  public getSolicitudesDataTabla(): Observable<SeleccionadasTabla[]> {
+    return this.http
+      .get<SeleccionadasTabla[]>(
+        'assets/json/110207/mercancia-seleccionadas.json'
+      )
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
 
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Solicitud110207State> {
+    return this.tramiteQuery.selectState$;
+  }
 
+  buscarMercanciasCert(
+    body: Record<string, unknown>
+  ): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110207.BUSCAR, {
+      body: body,
+    });
+  }
+
+  /**
+   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+   * */
+  buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
+    const RESULT: unknown[] = [];
+
+    array.forEach((arr) => {
+      const ITEM = arr as {
+        id?: number | string;
+        idMercancia?: string;
+        fraccionArancelaria?: string;
+        descripcionMercancia?: string | null;
+        unidadMedida?: string | null;
+        paisOrigen?: string | null;
+        cumpleReglasOrigen?: boolean;
+        criterioOrigen?: string | null;
+        porcentajeContenidoRegional?: number | null;
+        numeroRegistro?: boolean | string | null;
+        requiereDocumentosAdicionales?: boolean;
+        fraccionNaladi?: string;
+        fraccionNaladiSa93?: string;
+        fraccionNaladiSa96?: string;
+        fraccionNALADISA02Clave?: string;
+        fraccionNALADIClave?: string;
+        fraccionNALADSA93Clave?: string;
+        fraccionNALADISA96Clave?: string;
+        nombreTecnico?: string | null;
+        nombreComercial?: string | null;
+        numeroDeRegistrodeProductos?: string;
+        tipoFactura?: string;
+        numFactura?: string;
+        complementoDescripcion?: string;
+        fechaExpedicion?: string | null;
+        fechaVencimiento?: string | null;
+        fechaFactura?: string;
+        cantidad?: string;
+        umc?: string;
+        unidadMedidaMasaBruta?: string;
+        valorMercancia?: string;
+      };
+
+      RESULT.push({
+        id: ITEM.id || null,
+        fraccion_arancelaria: ITEM.fraccionArancelaria || '',
+        fraccion_naladi: ITEM.fraccionNALADIClave || '',
+        fraccion_naladi_sa93: ITEM.fraccionNALADSA93Clave || '',
+        fraccion_naladi_sa96: ITEM.fraccionNALADISA96Clave || '',
+        fraccion_naladi_sa02: ITEM.fraccionNALADISA02Clave || '',
+        nombre_tecnico: ITEM.nombreTecnico || '',
+        nombre_comercial: ITEM.nombreComercial || '',
+        registro_producto: ITEM.numeroDeRegistrodeProductos || '',
+        fecha_expedicion: ITEM.fechaExpedicion || '',
+        fecha_vencimiento: ITEM.fechaVencimiento || '',
+        tipo_factura: ITEM.tipoFactura || '',
+        num_factura: ITEM.numFactura || '',
+        complemento_descripcion: ITEM.complementoDescripcion || '',
+        fecha_factura: ITEM.fechaFactura || '',
+        cantidad: ITEM.cantidad || '',
+        umc: ITEM.umc || '',
+        unidad_medida: ITEM.unidadMedidaMasaBruta || '',
+        valor_mercancia: ITEM.valorMercancia || '',
+      });
+    });
+
+    return RESULT;
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110207.GUARDAR, {
+      body: body,
+    });
+  }
 }

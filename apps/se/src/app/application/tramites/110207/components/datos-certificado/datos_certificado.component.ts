@@ -1,14 +1,12 @@
-import {Catalogo,CatalogosSelect,ConsultaioQuery,SeccionLibQuery,SeccionLibState,SeccionLibStore,TituloComponent,ValidacionesFormularioService} from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {FormBuilder,FormControl,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
-import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import {Solicitud110207State,Tramite110207Store} from '../../state/Tramite110207.store';
+import { Catalogo,ConsultaioQuery,SeccionLibQuery,SeccionLibState,SeccionLibStore,TituloComponent} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder,FormControl,FormGroup,ReactiveFormsModule } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
+import { Tramite110207Store } from '../../state/Tramite110207.store';
 
 /**
  * Componente que representa el formulario de datos del certificado en el trámite.

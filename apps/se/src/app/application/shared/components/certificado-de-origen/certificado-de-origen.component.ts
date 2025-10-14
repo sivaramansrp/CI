@@ -1421,7 +1421,7 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getTratado(): void {
-    this.service.getTratadoCertificado(this.idProcedimiento.toString()).subscribe((data) => {
+    this.service.getTratadoCertificado('110204').subscribe((data) => {
       this.tratadoAcuerdoCertificado = data as Catalogo[];
     });
 
@@ -1433,7 +1433,7 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getPaisBloque(clave:string):void{
-    this.service.getPaises(this.idProcedimiento.toString(),clave).subscribe((data) => {
+    this.service.getPaises('110204',clave).subscribe((data) => {
       this.paisBloqueCertificado = data as Catalogo[];
     });
   }

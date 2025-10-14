@@ -11,6 +11,10 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110207Query extends Query<Solicitud110207State> {
+  
+  selectState$ = this.select((state) => {
+    return state;
+  });
   /**
    * Selecciona las fechas del certificado.
    * @returns {Observable<any>} - Observable con las fechas del certificado.
@@ -252,5 +256,13 @@ export class Tramite110207Query extends Query<Solicitud110207State> {
    */
   selectDestinatarioForm$ = this.select((state) => {
     return state.destinatarioForm;
+  });
+
+    /**
+   * Selecciona el formulario del certificado.
+   * @returns {Observable<any>} - Observable con el formulario del certificado.
+   */
+  formCertificado$ = this.select((state) => {    
+    return state.formCertificado;
   });
 }

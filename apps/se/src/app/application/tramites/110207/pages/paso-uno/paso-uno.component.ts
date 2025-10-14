@@ -154,6 +154,13 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     } else {
       isValid = false;
     }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
     return isValid;
   }
 
