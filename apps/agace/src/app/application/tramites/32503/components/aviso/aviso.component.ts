@@ -314,6 +314,21 @@ export class AvisoComponent implements OnInit, OnDestroy {
   public elementoParaEliminar!: number;
 
   /**
+   * @property {boolean} esModoEdicionMercancia
+   * @description Indica si el modal de mercancía está en modo edición (true) o modo agregar (false).
+   * @default false
+   */
+  esModoEdicionMercancia: boolean = false;
+
+  /**
+   * @property {number | null} idMercanciaEnEdicion
+   * @description ID de la mercancía que se está editando actualmente.
+   * @default null
+   */
+  idMercanciaEnEdicion: number | null = null;
+
+
+  /**
    * @method cerrarModalDomicilio
    * @description Método para cerrar el modal de domicilio.
    * @returns {void}
@@ -1022,8 +1037,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
     this.mostrarAlertaValidacionDomicilio = false;
 
+    // Establecer el modo de operación
+    this.esModoEdicionMercancia = esModificacion;
+    this.idMercanciaEnEdicion = null;
+
     if (esModificacion && this.filaSeleccionadaMercanciaLista && this.filaSeleccionadaMercanciaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaMercanciaLista[0];
+      this.idMercanciaEnEdicion = REGISTRO_SELECCIONADO.id;
       this.precargarDatosMercancia(REGISTRO_SELECCIONADO);
     } else {
       if (this.mercanciaFormulario) {
@@ -1056,11 +1076,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method agregarMercancia
-   * @description Método para agregar mercancías a la tabla de mercancías.
+   * @description Método para agregar o modificar mercancías en la tabla de mercancías.
    * 
-   * - Toma los valores del formulario de mercancía y los agrega a la tabla existente.
-   * - Valida que el formulario sea válido antes de agregar.
-   * - Cierra el modal después de agregar exitosamente.
+   * - Si está en modo edición, actualiza el registro existente.
+   * - Si está en modo agregar, crea un nuevo registro.
+   * - Valida que el formulario sea válido antes de procesar.
+   * - Cierra el modal después de procesar exitosamente.
    *
    * @returns {void}
    */
@@ -1069,34 +1090,81 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
       
       const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
-      const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
 
-      const NUEVA_MERCANCIA: MercanciaTabla = {
-        id: SIGUIENTE_ID,
-        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
-        nico: VALORES_DE_FORMULARIO.nico,
-        cantidad: VALORES_DE_FORMULARIO.cantidad,
-        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
-        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
-        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
-        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
-      };
+      if (this.esModoEdicionMercancia && this.idMercanciaEnEdicion !== null) {
+        // Modo edición: actualizar registro existente
+        const INDICE_A_ACTUALIZAR = this.tablaDeMercancia.datos.findIndex(item => item.id === this.idMercanciaEnEdicion);
+        
+        if (INDICE_A_ACTUALIZAR !== -1) {
+          // Actualizar datos en la tabla
+          const MERCANCIA_ACTUALIZADA: MercanciaTabla = {
+            id: this.idMercanciaEnEdicion,
+            claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+            nico: VALORES_DE_FORMULARIO.nico,
+            cantidad: VALORES_DE_FORMULARIO.cantidad,
+            claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+            valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+            numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+            numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+          };
 
-      this.datosCompletosMercancias[SIGUIENTE_ID] = {
-        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
-        nico: VALORES_DE_FORMULARIO.nico,
-        cantidad: VALORES_DE_FORMULARIO.cantidad,
-        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
-        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
-        descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
-        descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
-        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
-        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
-      };
+          // Actualizar datos completos
+          this.datosCompletosMercancias[this.idMercanciaEnEdicion] = {
+            claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+            nico: VALORES_DE_FORMULARIO.nico,
+            cantidad: VALORES_DE_FORMULARIO.cantidad,
+            claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+            valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+            descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
+            descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
+            numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+            numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+          };
 
-      this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, NUEVA_MERCANCIA];
+          // Crear nueva copia del array con el elemento actualizado
+          this.tablaDeMercancia.datos = [
+            ...this.tablaDeMercancia.datos.slice(0, INDICE_A_ACTUALIZAR),
+            MERCANCIA_ACTUALIZADA,
+            ...this.tablaDeMercancia.datos.slice(INDICE_A_ACTUALIZAR + 1)
+          ];
 
+          // Limpiar selección
+          this.filaSeleccionadaMercanciaLista = [];
+        }
+      } else {
+        // Modo agregar: crear nuevo registro
+        const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
+
+        const NUEVA_MERCANCIA: MercanciaTabla = {
+          id: SIGUIENTE_ID,
+          claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+          nico: VALORES_DE_FORMULARIO.nico,
+          cantidad: VALORES_DE_FORMULARIO.cantidad,
+          claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+          valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+          numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+          numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+        };
+
+        this.datosCompletosMercancias[SIGUIENTE_ID] = {
+          claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+          nico: VALORES_DE_FORMULARIO.nico,
+          cantidad: VALORES_DE_FORMULARIO.cantidad,
+          claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+          valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+          descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
+          descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
+          numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+          numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+        };
+
+        this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, NUEVA_MERCANCIA];
+      }
+
+      // Resetear formulario y cerrar modal
       this.mercanciaFormulario.reset();
+      this.esModoEdicionMercancia = false;
+      this.idMercanciaEnEdicion = null;
       this.closeMercancia?.nativeElement?.click();
     } else {
 
@@ -1108,9 +1176,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method agregarDomicilio
-   * @description Método para agregar domicilios a la tabla de avisos.
+   * @description Método para agregar o modificar domicilios en la tabla de avisos.
    * 
-   * - Carga los datos de la tabla de avisos y cierra el modal de domicilio.
+   * - Si está en modo edición, actualiza el registro existente.
+   * - Si está en modo agregar, crea un nuevo registro.
+   * - Valida que el formulario sea válido antes de procesar.
+   * - Cierra el modal después de procesar exitosamente.
    *
    * @returns {void}
    */
