@@ -184,7 +184,7 @@ export const REQUIRED_VALOR_MERCANCIA: number[] = [
  * IDs de procedimientos en los que el campo “Complemento de descripción” es obligatorio.
  */
 export const REQUIRED_COMPLEMENTO_DESCRIPCION: number[] = [
-  110204, 110205, 110212, 110222
+  110204, 110205, 110212, 110222, 110223
 ];
 
 /**
