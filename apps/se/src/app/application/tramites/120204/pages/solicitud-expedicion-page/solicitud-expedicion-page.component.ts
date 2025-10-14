@@ -4,9 +4,8 @@ import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/14010
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/303/pasos.enums';
 
-import { ALERTA_COM, REQUISITOS, ERROR_FORMA_ALERT } from '../../constantes/expedicion-certificado.enum';
+import { ALERTA_COM, ERROR_FORMA_ALERT, REQUISITOS } from '../../constantes/expedicion-certificado.enum';
 
-// Update the import path below to the correct location of servicio-de-formulario.service.ts
 import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 
 /**
@@ -92,13 +91,9 @@ export class SolicitudExpedicionPageComponent {
    * @returns {boolean} - Indica si todos los formularios son válidos.
    */
   verificarLaValidezDelFormulario(): boolean {
-    // Replace these form names with your actual 120204 form names
-    // You need to identify the actual form names used in your components
+   
     return (
       (this.servicioDeFormularioService.isFormValid('datosForm') ?? false)
-      // Add more forms as needed for each step
-      // && (this.servicioDeFormularioService.isFormValid('anexarDocumentosForm') ?? false)
-      // && (this.servicioDeFormularioService.isFormValid('firmarSolicitudForm') ?? false)
     );
   }
 
@@ -109,7 +104,7 @@ export class SolicitudExpedicionPageComponent {
    * @param e - Objeto de tipo `AccionBoton` que contiene el valor del índice y la acción a realizar.
    */
   getValorIndice(e: AccionBoton): void {
-    // Add form validation check
+  
     this.esFormaValido = this.verificarLaValidezDelFormulario();
     
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
@@ -138,6 +133,6 @@ export class SolicitudExpedicionPageComponent {
       this.wizardService.cambio_indice(this.datosPasos.indice);
       this.wizardComponent.siguiente();
     }
-    // If form is not valid, the error message will be shown in the template
+    
   }
 }
