@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md 6">
-      <h1 class="titulo titulo-gold">{{titulo}}</h1>
+      <h1 class="titulo titulo-gold">{{ titulo }}</h1>
     </div>
   </div>
 
@@ -12,6 +12,9 @@
   </div>
 
   <div class="row">
+    <div class="col-md 6">
+      <h3 class="titulo titulo-gold">Acuse(s)</h3>
+    </div>
     <div class="col-md-12">
       <table class="table table-striped">
         <thead>
@@ -30,17 +33,30 @@
             }
             <td class="center">
               @if (this.datosTabla.length === 0) {
-                <button type="button" class="btn btn-link me-2" id="verPdf" data-bs-toggle="button"
-                  data-bs-placement="top" title="Ver pdf" (click)="verPdf(row.urlPdf)">
-                  <i class="bi bi-arrow-bar-down bi-c"></i>
-                </button>
+              <button
+                type="button"
+                class="btn btn-link me-2"
+                id="verPdf"
+                data-bs-toggle="button"
+                data-bs-placement="top"
+                title="Ver pdf"
+                (click)="verPdf(row.urlPdf)"
+              >
+                <i class="bi bi-arrow-bar-down bi-c"></i>
+              </button>
               } @else {
-                 <button type="button" class="btn btn-link me-2" id="verPdf" data-bs-toggle="button"
-                  data-bs-placement="top" title="Ver pdf" (click)="descargarPdf(row.urlPdf)">
-                  <i class="bi bi-arrow-bar-down bi-c"></i>
-                </button>
+              <button
+                type="button"
+                class="btn btn-link me-2"
+                id="verPdf"
+                data-bs-toggle="button"
+                data-bs-placement="top"
+                title="Ver pdf"
+                (click)="descargarPdf(row.urlPdf)"
+              >
+                <i class="bi bi-arrow-bar-down bi-c"></i>
+              </button>
               }
-             
             </td>
           </tr>
           }

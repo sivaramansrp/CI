@@ -3,7 +3,8 @@ import { DatosPasos,WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/303/pasos.enums';
-import { REQUISITOS } from '../../constantes/expedicion-certificado.enum';
+
+import { ALERTA_COM, REQUISITOS } from '../../constantes/expedicion-certificado.enum';
 
 /**
  * Componente para la página de solicitud de expedición.
@@ -15,6 +16,11 @@ import { REQUISITOS } from '../../constantes/expedicion-certificado.enum';
   templateUrl: './solicitud-expedicion-page.component.html',
 })
 export class SolicitudExpedicionPageComponent {
+
+  /**
+ * Constante que asigna el texto de alerta definido en `ALERTA_COM`.
+ */
+  TEXTOSR= ALERTA_COM;
 
   /**
    * Lista de pantallas o pasos del asistente.

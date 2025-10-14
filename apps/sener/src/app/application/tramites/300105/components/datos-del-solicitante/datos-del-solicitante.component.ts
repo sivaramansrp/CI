@@ -1,22 +1,73 @@
+/**
+ * @fileoverview Archivo principal del componente DatosDelSolicitanteComponent
+ * @description Componente Angular que maneja la captura y validación de datos del solicitante
+ * para el trámite 300105 de autorización de rayos X
+ * @author VUCEM Development Team
+ * @version 1.0.0
+ * @since 2024
+ */
+
+// Importaciones de Angular Core para funcionalidad básica del componente
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+
+// Importaciones de servicios y utilidades compartidas del módulo de acceso a datos
 import { ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
+
+// Importaciones de Angular Forms para manejo de formularios reactivos
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+// Importaciones de RxJS para programación reactiva y manejo de observables
 import { Subject, map, takeUntil } from 'rxjs';
+
+// Importaciones del estado y store específicos del trámite 300105
 import {
   Tramite300105State,
   Tramite300105Store,
 } from '../../estados/tramite300105.store';
+
+// Importación del servicio específico para autorización de rayos X
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
+
+// Importaciones de modelos de datos para catálogos
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+
+// Importación de enumeraciones para opciones de botones de radio
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enum/botons.enum';
+
+// Importación de la query específica del trámite 300105
 import { Tramite300105Query } from '../../estados/tramite300105.query';
 
 /**
- * Componente para la sección de pago de derechos.
+ * @class DatosDelSolicitanteComponent
+ * @description Componente Angular responsable de gestionar la captura y validación de datos del solicitante
+ * para el trámite 300105 de autorización de equipos de rayos X. Este componente maneja formularios reactivos,
+ * validaciones, catálogos desplegables y comunicación con el store de estado.
+ * 
+ * @implements {OnInit} - Interfaz para inicialización del componente
+ * @implements {OnDestroy} - Interfaz para limpieza de recursos al destruir el componente
+ * 
+ * @example
+ * ```html
+ * <app-datos-del-solicitante 
+ *   (pasarTipoOperacion)="manejarTipoOperacion($event)">
+ * </app-datos-del-solicitante>
+ * ```
+ * 
+ * @since 1.0.0
+ * @author VUCEM Development Team
  */
 @Component({
+  /**
+   * @property {string} selector - Selector CSS para usar el componente en plantillas HTML
+   * @description Define cómo se invoca este componente en las plantillas padre
+   */
   selector: 'app-datos-del-solicitante',
+  
+  /**
+   * @property {string} templateUrl - Ruta relativa al archivo de plantilla HTML del componente
+   * @description Especifica la ubicación del archivo HTML que define la vista del componente
+   */
   templateUrl: './datos-del-solicitante.component.html',
 })
 export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {

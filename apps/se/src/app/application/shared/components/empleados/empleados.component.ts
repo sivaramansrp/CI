@@ -49,6 +49,11 @@ export class EmpleadosComponent implements OnInit {
    * @property {Notificacion} nuevaNotificacion
    */
   public nuevaNotificacion!: Notificacion;
+/**
+ * Nueva notificación para mostrar mensajes al usuario en el editor.
+ * @property {Notificacion} nuevaNotificacionEditor
+ */
+  public nuevaNotificacionEditor!: Notificacion;
   /**
  * Estado actual de la solicitud, utilizado para inicializar y gestionar los datos del formulario de empleados.
  * @property {ComplementarState} solicitudState
@@ -119,6 +124,11 @@ export class EmpleadosComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
   
+  /**
+   * Índice de la capacidad instalada que se está editando actualmente.
+   */
+  editingIndex: number | null = null;
+
 /**  
  * Evento de salida que emite una lista de empleados directos al componente padre.
  */
@@ -309,7 +319,7 @@ export class EmpleadosComponent implements OnInit {
     if (this.empleadosForm.valid) {
       const DIRECTOS = this.empleadosForm.get('directos')?.value;
       const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
-      const TABLA_VALOR: Directos = {
+    const TABLA_VALOR: Directos = {
         PLANTA: this.empleadosForm.get('directo')?.value,
         TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
         DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
@@ -324,9 +334,17 @@ export class EmpleadosComponent implements OnInit {
         RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
       };
 
-      this.directosDatos = [...this.directosDatos, TABLA_VALOR];
+      if (this.editingIndex !== null && this.editingIndex > -1 && TABLA_VALOR !== null) {
+      this.directosDatos[this.editingIndex] = TABLA_VALOR;
+      this.directosDatos = [...this.directosDatos];
+      this.editingIndex = null;
      
+    } else if (TABLA_VALOR !== null) {  
+      this.directosDatos = [...this.directosDatos, TABLA_VALOR];
     }
+    }
+  
+    this.selectedDirectosDatos=[];
     this.agregarValidacion();
   }
   /**
@@ -366,7 +384,6 @@ export class EmpleadosComponent implements OnInit {
     else if (this.empleadosForm.invalid) {
       this.mostrarValidacion();
     }
- this.limpiar();
   }
   /**
    * Muestra una notificación de validación al usuario.
@@ -375,16 +392,20 @@ export class EmpleadosComponent implements OnInit {
    * el usuario debe capturar todos los datos marcados como obligatorios.
    */
   mostrarValidacion(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+    const DIRECTOS_CHECKED = this.empleadosForm.get('directos')?.value;
+    const INDIRECTOS_CHECKED = this.empleadosForm.get('indirectos')?.value;
+    if (DIRECTOS_CHECKED || INDIRECTOS_CHECKED) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Al menos una de las opciones está seleccionada (checked).',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
   /**
@@ -405,8 +426,8 @@ export class EmpleadosComponent implements OnInit {
     this.empleadosForm.reset();
     this.empleadosForm.get('razonSocial')?.disable();
     this.disableRazonSocial = true;
-    this.empleadosForm.get('directos')?.setValue(false);
-    this.empleadosForm.get('indirectos')?.setValue(false);
+   this.empleadosForm.get('directos')?.setValue(false);
+   this.empleadosForm.get('indirectos')?.setValue(false);
     this.setDirectosValidation();
     this.setIndirectosValidation();
   }
@@ -445,5 +466,53 @@ export class EmpleadosComponent implements OnInit {
       this.directosDatos = [...this.directosDatos];
     }
   }
+/**
+ * Maneja la edición de empleados directos.
+ * 
+ * Si hay exactamente un empleado seleccionado en `selectedDirectosDatos`, llena el formulario
+ * con los datos de ese empleado y establece `editingIndex` al índice correspondiente en `directosDatos`.
+ * Si no hay empleados seleccionados, muestra una notificación de advertencia.
+ */
+   editarDirectos(): void {
+    if (this.selectedDirectosDatos?.length === 1) {
+      const SELECTED = this.selectedDirectosDatos[0];
+      this.empleadosForm.patchValue({
+        directo: SELECTED.PLANTA,
+        totalDeEmpleados: SELECTED.TOTAL,
+        directos: SELECTED.DIRECTOS,
+        cedula: SELECTED.CEDULA_DE_CUOTAS,
+        fechaCedula: SELECTED.FECHA_DE_CEDULA,
+        indirectos: SELECTED.INDIRECTOS,
+        contrato: SELECTED.CONTRATO,
+        objeto: SELECTED.OBJETO_DEL_CONTRATO_DEL_SERVICIO,
+        fechaFirma: SELECTED.FECHA_FIRMA,
+        fechaFinVigencia: SELECTED.FECHA_FIN_VIGENCIA,
+        rfcEmpresa: SELECTED.RFC,
+        razonSocial: SELECTED.RAZON_SOCIAL
+      });
+
+      setTimeout(() => {
+        const NATIVE_EL = document.querySelector(
+          'input[formControlName="totalDeEmpleados"]'
+        ) as HTMLElement | null;
+        if (NATIVE_EL) {
+          NATIVE_EL.focus();
+        }
+      }, 0);
+      this.editingIndex = this.directosDatos.findIndex(row => row === SELECTED);
+    }
+    else if (!this.selectedDirectosDatos || this.selectedDirectosDatos.length === 0) {
+      this.nuevaNotificacionEditor = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe elegir un registro de complemento para actualizar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+}
 
 }

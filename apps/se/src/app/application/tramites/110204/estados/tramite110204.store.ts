@@ -15,6 +15,20 @@ export interface TramiteState {
   /** Lista de catálogos que representan los idiomas disponibles. */
   idiomaDatos: Catalogo[];
 
+  /**
+   * @property {Catalogo} idiomaDatosSeleccion - Idioma seleccionado.
+   * @description
+   * Representa el idioma en el que se generará el certificado, utilizado para la presentación del documento.
+   */
+  idiomaDatosSeleccion: Catalogo;
+
+  /**
+   * @property {Catalogo} representacionFederalSeleccion - Representación federal seleccionada.
+   * @description
+   * Representa la representación federal asociada al trámite, utilizada para la validación y presentación del certificado.
+   */
+  representacionFederalSeleccion: Catalogo;
+
   /** Lista de catálogos que representan las entidades federativas disponibles. */
   entidadFederativaDatos: Catalogo[];
 
@@ -54,12 +68,11 @@ export interface TramiteState {
   };
 
   /**
-   * Objeto que contiene datos del formulario de datos del certificado.
-   * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
+   * @property {Object} formDatosCertificado - Datos adicionales del certificado.
+   * @description
+   * Contiene campos como observaciones, idioma, entidad federativa y representación federal.
    */
-  formDatosCertificado: {
-    [key: string]: undefined | boolean | string | number | object;
-  };
+  formDatosCertificado: { [key: string]: unknown };
 
   /**
    * Objeto que contiene datos del formulario de mercancía.
@@ -70,7 +83,7 @@ export interface TramiteState {
   };
 
   /** Lista de mercancías encontradas o buscadas. */
-  buscarMercancia: Mercancias[];
+  buscarMercancia: Mercancia[];
 
   /**
    * Objeto que representa la validez de los formularios,
@@ -188,10 +201,23 @@ export const INITIAL_STATE: TramiteState = {
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: '',
+    pais: '',
+    ciudad: '',
+    telefono: '',
+    correo: '',
+    numeroLetra: '',
+    calle: '',
+    si: false,
   },
   formDatosCertificado: {
     observacionesDates: '',
     idiomaDates: '',
+    precisaDates: '',
     EntidadFederativaDates: '',
     representacionFederalDates: '',
   },
@@ -220,6 +246,8 @@ export const INITIAL_STATE: TramiteState = {
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
   mercanciaTabla: [],
+  idiomaDatosSeleccion: { id: -1, descripcion: '' },
+  representacionFederalSeleccion: { id: -1, descripcion: '' },
 };
 
 /**
@@ -300,12 +328,11 @@ export class Tramite110204Store extends Store<TramiteState> {
   }
 
   /**
-   * Actualiza los valores del formulario de datos del certificado.
-   * @param values Clave/valor con campos del formulario a actualizar.
+   * @descripcion
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormDatosCertificado(values: {
-    [key: string]: undefined | boolean | string | number | object;
-  }): void {
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -348,7 +375,7 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Establece los resultados de mercancía obtenidos por búsqueda.
    * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
    */
-  setbuscarMercancia(buscarMercancia: Mercancias[]): void {
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
     this.update((state) => ({ ...state, buscarMercancia }));
   }
 
@@ -404,7 +431,56 @@ export class Tramite110204Store extends Store<TramiteState> {
     this.update((state) => ({ ...state, idiomaDatos }));
   }
 
+  /**
+   * @descripcion
+   * Actualiza el idioma seleccionado en el almacén.
+   * @param idiomaDatosSeleccion - Objeto de tipo `Catalogo` que contiene la información del idioma seleccionado.
+   */
+  setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatosSeleccion,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza la representación federal seleccionada en el almacén.
+   * @param representacionFederalSeleccion - Objeto de tipo `Catalogo` que contiene la información de la representación federal seleccionada.
+   */
+  setRepresentacionFederalDatosSeleccion(representacionFederalSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
+  }
+
   public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
-    this.update((state) => ({ ...state, mercanciaTabla }));
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+      // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
+  }
+
+  /**
+   * Actualiza el estado con una nueva lista de fechas de idioma.
+   *
+   * @param idiomaDates - Un arreglo de objetos de tipo `Catalogo` que representa las fechas de idioma a establecer en el estado.
+   */
+  public setIdiomaDates(idiomaDates: Catalogo[]): void {
+    this.update((state) => ({ ...state, idiomaDates }));
   }
 }

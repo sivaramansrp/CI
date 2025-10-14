@@ -3,7 +3,7 @@
   <form [formGroup]="frmCriterioDictamen">
     <div class="row">
       <div class="col-md-7 form-group">
-        <app-catalogo-select
+       <app-catalogo-select-clave
           [catalogo]="solicitudMercanciaLista"
           [label]="'Solicitud mercancia esquema regla octava clave'"
           [required]="true"
@@ -11,7 +11,7 @@
           [placeholder]="'Seleccione un valor'"
           formControlName="solicitudMercancia"
           [isDisabled]="esFormularioSoloLectura ? true : false"
-        ></app-catalogo-select>
+        ></app-catalogo-select-clave>
         @if (frmCriterioDictamen.controls['solicitudMercancia'].invalid && frmCriterioDictamen.controls['solicitudMercancia'].touched) {
           <div class="text-danger">
             @if (frmCriterioDictamen.controls['solicitudMercancia'].errors?.['required']) {

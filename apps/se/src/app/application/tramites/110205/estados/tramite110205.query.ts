@@ -72,18 +72,6 @@ export class Tramite110205Query extends Query<Tramite110205State> {
   selectFormDatosDelDestinatario$ = this.select((state) => {
     return state.formDatosDelDestinatario;
   });
-
-  /**
-   * Observable que selecciona la propiedad `formExportor` del estado.
-   * Esto se puede usar para recuperar el estado actual de `formExportor`
-   * en la aplicación.
-   *
-   * @observable
-   */
-  selectFormExportador$ = this.select((state) => {
-    return state.formExportor;
-  });
-
   /**
    * @descripcion
    * Observable que selecciona el formulario de destinatario.
@@ -108,6 +96,14 @@ export class Tramite110205Query extends Query<Tramite110205State> {
    */
   FormaValida$ = this.select((state) => {
     return Object.values(state.formaValida).every(value => value === true);
+  });
+
+  selectAgregarProductoresExportador$ = this.select((state) => {
+    return state.agregarProductoresExportador;
+  });
+
+  selectMercanciaProductores$ = this.select((state) => {
+    return state.mercanciaProductores;
   });
 
   /**

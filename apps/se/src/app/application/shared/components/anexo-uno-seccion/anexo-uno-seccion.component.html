@@ -433,7 +433,7 @@
           <app-tabla-dinamica
             [configuracionTabla]="tableProveedorCliente"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-            [datos]="proveedorTablaLista"
+            [datos]="proveedorClienteModalContext === 'cliente' ? clienteTablaLista : proveedorTablaLista"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           ></app-tabla-dinamica>
         </div>

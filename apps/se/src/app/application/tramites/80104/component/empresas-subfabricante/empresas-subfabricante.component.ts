@@ -21,26 +21,22 @@
  * @templateUrl ./empresas-subfabricante.component.html
  * @styleUrl ./empresas-subfabricante.component.scss
  */
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo, ConfiguracionColumna,TablaSeleccion, doDeepCopy, esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
+import { EmpresasSubfabricantesComponent } from '../../../../shared/components/empresas-subfabricante/empresas-subfabricante.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { Subject } from 'rxjs';
-
-import { takeUntil } from 'rxjs';
-
-import { EmpresasSubfabricantesComponent } from '../../../../shared/components/empresas-subfabricante/empresas-subfabricante.component';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
-import { ComplimentosService } from '../../../../shared/services/complimentos.service';
+import { takeUntil } from 'rxjs';
+
 
 /*
   * Componente para gestionar la sección de empresas subfabricantes en el trámite 80103.
@@ -136,7 +132,14 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @property {PlantasSubfabricante[]} configuracionTablaSeleccionadas
    */
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
-/*
+
+  /**
+   * Indica si existe un error relacionado con el RFC.
+   * Se establece en `true` cuando el RFC ingresado no cumple con los criterios requeridos.
+   */
+  rfcError: boolean = false;
+
+  /*
   * Constructor del componente.
 */
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
@@ -263,6 +266,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
  * @method obtenerSubfabricantesDisponibles
  */
   obtenerSubfabricantesDisponibles(): void {
+    this.rfcError=false;
       const PAYLOAD = {
         "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
         "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
@@ -279,6 +283,12 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
               this.store.setPlantasBuscadas(RESPONSE);
             } 
           }
+      },
+    (err) => { 
+        if(err.error.codigo==="01"){
+         this.rfcError=true;
+        }
+         
       });
   }
 
