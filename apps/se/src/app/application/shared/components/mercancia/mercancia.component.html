@@ -119,6 +119,17 @@
             formControlName="nombreIngles"
           />
         </div>
+        } @if(CRITERIO_PARA_CLASIFICATION.includes(idProcedimiento)) {
+        <div class="col-md-6 mt-2">
+          <label for="criterioParaClasificacion"
+            >Criterio para clasificación:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            formControlName="criterioParaClasificacion"
+          />
+        </div>
         } @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) {
         <div class="col-md-6 mt-2">
           <label for="valorDeContenidoRegional"
@@ -284,7 +295,24 @@
             </div>
             }
           </div>
-          } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
+          } @if(FECHA_DE_PAGO.includes(idProcedimiento)) {
+            <div class="col-md-4">
+              <input-fecha
+              [datos]="fechaDePago"
+              [deshabilitarFuturas]="true"
+              [setFecha]="mercanciaForm.get('fechaDePago')?.value"
+              (valorCambiado)="cambioFechaDePago($event)"
+            ></input-fecha>
+              @if (esInvalido('fechaDePago')) {
+              <div class="d-grid">
+                @if (mercanciaForm.controls['fechaDePago'].errors?.['required'])
+                {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+              }
+            </div>
+            } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <input-fecha
               [datos]="fechaFacturaReferencia"

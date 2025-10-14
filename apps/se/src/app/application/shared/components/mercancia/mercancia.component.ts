@@ -3,12 +3,15 @@ import {
   CLASIFICACION_NALADISA_1996_IDS,
   CLASIFICACION_NALADISA_2002_IDS,
   CLASIFICACION_NALADI_IDS,
+  CRITERIO_PARA_CLASIFICATION,
   CRITERIO_PARA_CONFERIR_ORIGEN_IDS,
   CRITERIO_PARA_TRATO_PREFERENCIAL_IDS,
   FECHA,
+  FECHA_DE_PAGO,
   FECHA_FACTURA_IDS,
   FECHA_FACTURA_REFERENCIA,
   FECHA_FACTURA_REFERENCIA_IDS,
+  FECHA_PAGO,
   FRACCION_ARANCELARIA_IDS,
   MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
@@ -162,6 +165,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Fecha final para el formulario.
    */
   fechaFactura: InputFecha = FECHA;
+
+  /**
+   * @descripcion
+   * Fecha final para el formulario.
+   */
+  fechaDePago: InputFecha = FECHA_PAGO;
 
   /**
    * @descripcion
@@ -323,6 +332,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   MARCA: number[] = MARCA_IDS;
 
   /**
+   * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
+   */
+  CRITERIO_PARA_CLASIFICATION: number[]= CRITERIO_PARA_CLASIFICATION;
+
+  /**
+   * Contiene los identificadores en los que el campo "Fecha de pago" es obligatorio.
+   */
+  FECHA_DE_PAGO: number[]= FECHA_DE_PAGO;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -400,12 +419,14 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [{ value: this.datosSeleccionados.normaOrigen, disabled: true }],
-      nombreIngles: [{ value: this.datosSeleccionados.nombreIngles, disabled: true }],
-      otrasInstancias: [{ value: this.datosSeleccionados.otrasInstancias, disabled: true }],
-      criterioParaConferirOrigen: [{ value: this.datosSeleccionados.criterioParaConferirOrigen, disabled: true }],
-      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados.criterioParaTratoPreferencial, disabled: true }],
-      valorDeContenidoRegional: [{ value: this.datosSeleccionados.valorDeContenidoRegional, disabled: true }],
+      normaOrigen: [{ value: this.datosSeleccionados?.normaOrigen, disabled: true }],
+      nombreIngles: [{ value: this.datosSeleccionados?.nombreIngles, disabled: true }],
+      otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
+      criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
+      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
+      criterioParaClasificacion: [this.datosSeleccionados?.criterioParaClasificacion ?? null],
+      fechaDePago: [ this.datosSeleccionados?.fechaDePago ?? null],
+      valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
@@ -606,6 +627,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
       complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
       complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
+      criterioParaClasificacion: FALLBACK(MERCANIADATO.criterioParaClasificacion),
+      fechaDePago: FALLBACK(MERCANIADATO.fechaDePago),
       fraccionNaladi: MERCANIADATO.fraccionNaladi,
       fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
       fraccionNaladiSa96: MERCANIADATO.fraccionNaladiSa96,
@@ -654,6 +677,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   public cambioFechaFactura(nuevo_valor: string): void {
     this.mercanciaForm.patchValue({
       fechaFactura: nuevo_valor,
+    });
+  }
+
+  /**
+   * @summary Actualiza `fechaDePago` y sincroniza con el store.
+   * @description Setea el valor, marca el control como tocado/modificado y persiste vía `setFechaDePago`.
+   * @param {string} nuevo_valor Fecha seleccionada (p. ej., '2025-09-04').
+   * @returns {void}
+   */
+  public cambioFechaDePago(nuevo_valor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDePago: nuevo_valor,
     });
   }
 
