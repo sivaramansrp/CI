@@ -425,7 +425,7 @@
             >:</label
           >
           <input
-            maxlength="16"
+            maxlength="20"
             class="form-control"
             id="cantidadUmtValor"
             type="text"
@@ -446,6 +446,14 @@
           >
             Por favor, escribe un número entero válido.
           </div>
+          <div *ngIf="mercanciaForm.get('cantidadUmtValor')?.errors?.['formatoInvalido'] && 
+           !mercanciaForm.get('cantidadUmtValor')?.errors?.['required'] && 
+           !mercanciaForm.get('cantidadUmtValor')?.errors?.['pattern'] && 
+           mercanciaForm.get('cantidadUmtValor')?.touched" 
+     class="mensaje-error">
+ 
+     Este campo permite doce números enteros y hasta cinco decimales
+</div>
         </div>
       </div>
       <div class="col-md-5">
@@ -492,7 +500,7 @@
             >:</label
           >
           <input
-            maxlength="16"
+            maxlength="20"
             class="form-control"
             id="cantidadUmcValor"
             type="text"
@@ -514,6 +522,14 @@
           >
             Por favor, escribe un número entero válido.
           </div>
+          <div *ngIf="mercanciaForm.get('cantidadUmcValor')?.errors?.['formatoInvalido'] && 
+          !mercanciaForm.get('cantidadUmcValor')?.errors?.['required'] && 
+          !mercanciaForm.get('cantidadUmcValor')?.errors?.['pattern'] && 
+          mercanciaForm.get('cantidadUmcValor')?.touched" 
+    class="mensaje-error">
+
+    Este campo permite doce números enteros y hasta diez decimales
+  </div>
         </div>
       </div>
       <div class="col-md-5 ml-2">

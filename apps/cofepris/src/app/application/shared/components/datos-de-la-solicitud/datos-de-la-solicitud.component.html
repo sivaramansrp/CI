@@ -58,10 +58,11 @@
             class="mensaje-error">
             El RFC no tiene un formato válido.
           </div>
+          @if(idProcedimiento!==260209){
           <div class="mensaje-error"
             *ngIf="datosSolicitudForm.get('rfcSanitario')?.errors?.['required'] && datosSolicitudForm.get('rfcSanitario')?.touched">
             Este campo es obligatorio.
-          </div>
+          </div>}
         </div>
       </div>
       }
@@ -334,7 +335,7 @@
             tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente">
             <i class="bi bi-question-circle-fill"></i>
           </span>
-          <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria"
+          <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" maxlength="20"
             (change)="cambioLicenciaSanitaria($event)" />
         </div>
       </div>

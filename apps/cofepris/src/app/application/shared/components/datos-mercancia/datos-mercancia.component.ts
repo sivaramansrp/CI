@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
+  ValidatorFn,
 } from '@angular/forms';
 import {
   AfterViewInit,
@@ -42,6 +43,7 @@ import {
   NotificacionesComponent,
   Pedimento,
   REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
+  REGEX_DECIMAL,
   SOLO_REGEX_NUMEROS,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -940,7 +942,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         this.obtenerValor('cantidadUmtValor'),
         [
           Validators.required,
-          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+          Validators.pattern(REGEX_DECIMAL),
+          this.numeroConDecimalesValidator() 
+ 
         ],
       ],
       cantidadUmt: [
@@ -954,7 +958,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         this.obtenerValor('cantidadUmcValor'),
         [
           Validators.required,
-          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+          Validators.pattern(REGEX_DECIMAL),
+          this.numeroUMCDecimalesValidator()
         ],
       ],
       cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
@@ -1003,6 +1008,41 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     }
   }
 
+  numeroConDecimalesValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      
+      // Skip validation if empty
+      if (!value) return null;
+      
+      // Regex pattern: up to 12 digits before decimal, up to 10 after
+      const pattern = /^\d{1,12}(\.\d{1,5})?$/;
+      
+      if (!pattern.test(value)) {
+        return { formatoInvalido: true };
+      }
+      
+      return null;
+    };
+  }
+
+  numeroUMCDecimalesValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      
+      // Skip validation if empty
+      if (!value) return null;
+      
+      // Regex pattern: up to 12 digits before decimal, up to 10 after
+      const pattern = /^\d{1,12}(\.\d{1,10})?$/;
+      
+      if (!pattern.test(value)) {
+        return { formatoInvalido: true };
+      }
+      
+      return null;
+    };
+  }
   /**
    * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
    * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
