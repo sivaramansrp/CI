@@ -225,4 +225,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Valida el formulario de datos del certificado.
+   * 
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+  public validarFormulario(): void {
+    this.formDatosCertificado.markAllAsTouched();
+  }
 }
