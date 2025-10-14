@@ -5,6 +5,17 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs/operators';
+import { Chofer40101Query } from '../../estado/chofer40101.query';
+import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+
+
+export interface Certificado {
+  certSerialNumber: string;
+  fechaFin: string; // ISO date string (e.g., "2013-03-26T18:29:59.000Z")
+  firma: string;
+  rfc: string;
+}
+
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -15,6 +26,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Constante que contiene los textos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
+
+  isSuccessCert: boolean = false
 
   /**
    * Lista de tipos de documentos disponibles para el trámite.
@@ -36,18 +49,48 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   documentosSeleccionados: Catalogo[] = [];
 
+  cadenaOriginal = '';
+  idSolicitud: number | undefined;
   /**
    * Notificador para gestionar la destrucción de suscripciones activas y evitar fugas de memoria.
    */
   private destroyNotifier$ = new Subject<void>();
 
-  constructor(private catalogosServices: CatalogosService) {}
+  constructor(
+    private catalogosServices: CatalogosService,
+    private chofer40101Query: Chofer40101Query,
+    private modificarTerrestreService: modificarTerrestreService,
+  ) { }
   /**
    * 
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
+    this.chofer40101Query
+      .select()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+        if (state.cadena_original) {
+          this.cadenaOriginal = state.cadena_original;
+        }
+        if (state.id_solicitud) {
+          this.idSolicitud = state.id_solicitud;
+        }
+      });
+  }
+
+
+
+  /**
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   */
+  getDatosOfFirma(event: Certificado): void {
+    this.modificarTerrestreService.guardarDatos({ cadena_original: this.cadenaOriginal, sello: 'shah', certificate_serial_number: event ? event.certSerialNumber : '' }).subscribe((res) => {
+      if (Number(res.codigo) === 0) {
+        this.isSuccessCert = true
+      }
+    });
   }
 
   /**
@@ -65,6 +108,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         },
       });
   }
+
   /**
    * Gancho del ciclo de vida angular que se llama antes de que se destruya el componente.
    * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.

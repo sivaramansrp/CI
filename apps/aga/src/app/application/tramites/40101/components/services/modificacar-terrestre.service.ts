@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiResponse, Catalogo } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, of } from 'rxjs';
+import { IniciarResponse } from '../../pages/solicitante-page/solicitante-page.component';
 
 /**
  * @service modificarTerrestreService
@@ -92,7 +93,7 @@ export class modificarTerrestreService {
    * @returns Observable con la solicitud del país.
    */
   obtenerPaisEmisor(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/40101/pais-emisor-2da-placa.json`);
+    return this.http.get<CatalogoLista>('/api/sat-t140101/catalogo/paises', { headers: modificarTerrestreService.getApiHeaders() });
   }
 
   /**
@@ -103,9 +104,15 @@ export class modificarTerrestreService {
     return this.http.get<VehiculoTabla>(`assets/json/40101/vahiculo-dummy.json`);
   }
 
-  guardarDatosTramite(datos: unknown): Observable<unknown> {
+  guardarDatosTramite(datos: unknown): Observable<IniciarResponse> {
     const FULL_URL = '/api/sat-t140101/solicitud/registro/guardar';
-    return this.http.post(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
+    return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
+
+  guardarDatos(datos: unknown): Observable<IniciarResponse> {
+    const FULL_URL = '/api/sat-t140101/solicitud/registro/202819905/firmar';
+    return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
+  }
+
 
 }

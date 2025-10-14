@@ -565,6 +565,8 @@ export interface DatosUnidad {
  * @property datos - Lista de catálogos.
  */
 export interface CatalogoLista {
+  codigo: string;
+  mensaje: string;
   datos: Catalogo[];
 }
 

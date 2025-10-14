@@ -1,12 +1,15 @@
 <div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
+  <!-- <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert> -->
 
-  <ng-alert
-    [CONTENIDO]="TEXTOS.INSTRUCCIONES"
-    [CUSTOMECLASS]="infoAlert"
-  ></ng-alert>
-
-  <anexar-documentos
-    [catalogoDocumentos]="catalogoDocumentos"
-  ></anexar-documentos>
+  <!-- based on the client requirement we are using the firma-electronica component for using the signature -->
+  <!-- <anexar-documentos
+  [catalogoDocumentos]="catalogoDocumentos"
+  ></anexar-documentos> -->
+  @if(isSuccessCert){
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  }@else {
+  <firma-electronica [tipo]="'persona_firma'" [cadenaOriginal]="cadenaOriginal"
+    (datosFirma)="getDatosOfFirma($event)"></firma-electronica>
+  }
 </div>

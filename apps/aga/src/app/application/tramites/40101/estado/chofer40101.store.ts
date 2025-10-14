@@ -50,6 +50,8 @@ export interface Chofer40101State {
   // Single arrays with metadata
   driversNacional: ChoferWithMetadata[];
   driversExtranjero: ChoferWithMetadata[];
+  id_solicitud?: number;
+  cadena_original?: string;
 }
 
 export function createInitialState(): Chofer40101State {

@@ -1,5 +1,6 @@
 import { ApiResponseSolicitante, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
+import { Chofer40101Service } from '../../estado/chofer40101.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_40101, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, combineLatest } from 'rxjs';
@@ -14,6 +15,14 @@ interface AccionBoton {
   valor: number;
 }
 
+export interface IniciarResponse {
+  codigo: string;
+  mensaje: string;
+  datos: {
+    id_solicitud: number;
+    cadena_original: string;
+  };
+}
 export interface DriverNacional {
   rfc: string;
   curp: string;
@@ -103,6 +112,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @type {WizardComponent}
    */
 
+  isShowDirector: boolean = false
+
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
@@ -131,7 +142,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     private tramite40101Store: Tramite40101Store,
     private modificarTerrestreService: modificarTerrestreService,
     private chofer40101Query: Chofer40101Query,
-    private directorQuery: DirectorGeneralQuery
+    private directorQuery: DirectorGeneralQuery,
+    private chofer40101Service: Chofer40101Service
   ) { }
 
   ngOnInit(): void {
@@ -157,6 +169,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       this.isCaat = data.caat_existe;
       this.catErrorMessage = data.mensaje
     });
+    this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroySolicitante$)).subscribe((data: ApiResponseSolicitante['datos']) => {
+      this.isShowDirector = data.mostrar_director_general;
+    })
   }
 
   /**
@@ -257,10 +272,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         const PAYLOAD = {
           choferes_nacionales: (choferesState.driversNacional || []).filter(d => d.status !== 'deleted').map(d => MAPCHOFERNACIONAL(d.data as DriverNacional)),
           choferes_extranjeros: (choferesState.driversExtranjero || []).filter(d => d.status !== 'deleted').map(d => MAPCHOFEREXTRANJERO(d.data as DriverExtranjero)),
-          // director_general: {
-          //   nombre: directorateState.nombre, primer_apellido: directorateState.primerApellido, segundo_apellido: directorateState.segundoApellido
-          // },
-          director_general: null,
+          director_general: this.isShowDirector
+            ? {
+              nombre: directorateState?.nombre,
+              primer_apellido: directorateState?.primerApellido,
+              segundo_apellido: directorateState?.segundoApellido,
+            }
+            : null,
           vehiculos: {
             parque_vehicular: tramiteState.parqueVehicular.map((data) => {
               return {
@@ -305,7 +323,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
           }
         };
 
-        this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe(() => {
+        this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
+          this.chofer40101Service.guardarDatosFirma(res.datos);
           if (e.valor > 0 && e.valor < 6) {
             this.indice = e.valor;
             this.wizardComponent.siguiente();

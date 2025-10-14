@@ -337,4 +337,11 @@ export class Chofer40101Service {
   loadInitialDrivers(type: 'nacional' | 'extranjero', drivers: (DatosDelChoferNacional | ChoferesExtranjeros)[]): void {
     this.chofer40101Store.loadInitialDrivers(type, drivers);
   }
+
+  guardarDatosFirma(datos: { id_solicitud: number; cadena_original: string }): void {
+    this.chofer40101Store.update({
+      id_solicitud: datos.id_solicitud,
+      cadena_original: datos.cadena_original,
+    });
+  }
 }
