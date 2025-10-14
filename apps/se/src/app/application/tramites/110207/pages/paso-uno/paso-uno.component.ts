@@ -3,7 +3,7 @@ import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/dat
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { DestinatarioReportComponent } from '../../components/destinatario/destinatario.component';
 import { RegistroService } from '../../services/registro.service';
 
 /**
@@ -64,7 +64,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * 
    * @see DestinatarioComponent
    */
-  @ViewChild(DestinatarioComponent) destinatarioComponent!: DestinatarioComponent;
+  @ViewChild(DestinatarioReportComponent) destinatarioComponent!: DestinatarioReportComponent;
 
   // Decorador ViewChild para acceder a la instancia del componente CertificadoDeOrigenComponent
   @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;

@@ -4,7 +4,7 @@ import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { DestinatarioReportComponent } from './components/destinatario/destinatario.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -26,7 +26,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     ReactiveFormsModule,
     SolicitanteComponent,
     DatosCertificadoComponent,
-    DestinatarioComponent,
+    DestinatarioReportComponent,
     FirmaElectronicaComponent,
     TituloComponent,
     AlertComponent,

@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { GrupoRepresentativo } from '../models/registro.model';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 /**
@@ -120,22 +121,22 @@ export interface Solicitud110207State {
   puertoEmbarque: string;
   /** Puerto de desembarque. */
   puertoDesembarque: string;
-    /**
+  /**
    * Datos del formulario relacionados con los detalles del certificado.
    * Estructura dinámica y flexible.
    */
   formDatosCertificado: { [key: string]: unknown };
-      /** Lista de entidades federativas disponibles */
+  /** Lista de entidades federativas disponibles */
   entidadFederativaDatos: Catalogo[];
 
   /** Lista de representaciones federales disponibles */
   representacionFederalDatos: Catalogo[];
 
-    /** Lista de idiomas disponibles como catálogo */
+  /** Lista de idiomas disponibles como catálogo */
   idiomaDatos: Catalogo[];
-    /** Representación federal seleccionada */
+  /** Representación federal seleccionada */
   representacionFederalSeleccion: Catalogo;
-    /**
+  /**
    * Objeto que contiene banderas booleanas para validar formularios.
    * Cada clave representa una sección del formulario.
    */
@@ -151,6 +152,21 @@ export interface Solicitud110207State {
    * Lista de mercancías añadidas a la tabla.
    */
   mercanciaTabla: Mercancia[];
+
+  formDatosDelDestinatario: { [key: string]: unknown };
+
+  formDestinatario: { [key: string]: unknown };
+
+  grupoRepresentativo: GrupoRepresentativo;
+
+  /** Lista de medios de transporte disponibles */
+  medioDeTransporte: Catalogo[];
+
+  /** País destino seleccionado */
+  paisDestinSeleccion: Catalogo;
+
+  /** Lista de países destino como catálogo */
+  paisDestin: Catalogo[];
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110207.
@@ -229,30 +245,45 @@ export function createInitialState(): Solicitud110207State {
     rutaCompleta: '',
     puertoEmbarque: '',
     puertoDesembarque: '',
-      /** Formulario de datos adicionales del certificado */
-  formDatosCertificado: {
-    observacionesDates: '',
-    idiomaDates: '',
-    precisaDates: '',
-    EntidadFederativaDates: '',
-    representacionFederalDates: '',
-  },
-      /** Lista de entidades federativas disponibles */
-  entidadFederativaDatos: [],
+    /** Formulario de datos adicionales del certificado */
+    formDatosCertificado: {
+      observacionesDates: '',
+      idiomaDates: '',
+      precisaDates: '',
+      EntidadFederativaDates: '',
+      representacionFederalDates: '',
+    },
+    grupoRepresentativo: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      telefono: '',
+      correoElectronico: '',
+    },
+    formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
+    /** Lista de entidades federativas disponibles */
+    entidadFederativaDatos: [],
 
-  /** Lista de representaciones federales disponibles */
-  representacionFederalDatos: [],
+    /** Lista de representaciones federales disponibles */
+    representacionFederalDatos: [],
     /** Lista de idiomas disponibles */
-  idiomaDatos: [],
+    idiomaDatos: [],
     /** Representación federal seleccionada */
-  representacionFederalSeleccion: { id: -1, descripcion: '' },
+    representacionFederalSeleccion: { id: -1, descripcion: '' },
     /** Estado de validación de los diferentes formularios */
-  formaValida: {
-    certificado: true,
-    datos: true,
-    destinatrio: true,
-    datosDestinatario: true,
-  },
+    formaValida: {
+      certificado: true,
+      datos: true,
+      destinatrio: true,
+      datosDestinatario: true,
+    },
     formulario: {
       datosConfidencialesProductor: '',
       productorMismoExportador: '',
@@ -264,6 +295,22 @@ export function createInitialState(): Solicitud110207State {
     paisBloques: [],
     disponiblesDatos: [],
     mercanciaTabla: [],
+    /** Lista de medios de transporte */
+    medioDeTransporte: [],
+    formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      celle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+    /** País destino seleccionado */
+    paisDestinSeleccion: { id: -1, descripcion: '' },
+    /** Lista de países destino */
+    paisDestin: [],
   };
 }
 
@@ -871,7 +918,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     }));
   }
 
-   /**
+  /**
    * @method setFormValida
    * @description
    * Actualiza el estado de validación de los formularios en el almacén.
@@ -887,27 +934,27 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     });
   }
 
-   /**
-     * @method setBloque
-     * @description
-     * Actualiza los bloques de países en el almacén.
-     * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
-     */
-    setBloque(paisBloques: Catalogo[]): void {
-      this.update((state) => ({
-        ...state,
-        paisBloques,
-      }));
-    }
+  /**
+   * @method setBloque
+   * @description
+   * Actualiza los bloques de países en el almacén.
+   * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
+   */
+  setBloque(paisBloques: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      paisBloques,
+    }));
+  }
 
-    /**
+  /**
    * Establece los valores del formulario de fechas del certificado en el almacén.
-   * 
+   *
    * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
-   * 
+   *
    * @returns {void} - No devuelve ningún valor.
    */
-  setFormDatosCertificado(values: { [key: string]: unknown}): void {
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -918,9 +965,9 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
 
   /**
    * Establece los datos de la representación federal en el almacén.
-   * 
+   *
    * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
-   * 
+   *
    * @returns {void} - No devuelve ningún valor.
    */
   setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
@@ -932,9 +979,9 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
 
   /**
    * Establece los datos de la entidad federativa en el almacén.
-   * 
+   *
    * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
-   * 
+   *
    * @returns {void} - No devuelve ningún valor.
    */
   setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
@@ -944,11 +991,11 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     }));
   }
 
-    /**
-* Establece el catálogo de idiomaDatosSeleccion en el estado de la tienda.
-*
-* @param idiomaDatosSeleccion - Una lista de objetos de tipo `Catalogo` que representan las idiomaDatosSeleccion a establecer.
-*/
+  /**
+   * Establece el catálogo de idiomaDatosSeleccion en el estado de la tienda.
+   *
+   * @param idiomaDatosSeleccion - Una lista de objetos de tipo `Catalogo` que representan las idiomaDatosSeleccion a establecer.
+   */
   setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
     this.update((state) => ({
       ...state,
@@ -956,17 +1003,103 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     }));
   }
 
-    /**
-* Establece los representacionFederalSeleccion de países en el almacén.
-* 
-* @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
-* 
-* @returns {void} - No devuelve ningún valor.
-*/
-  setRepresentacionFederalDatosSeleccion(representacionFederalSeleccion: Catalogo): void {
+  /**
+   * Establece los representacionFederalSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
     this.update((state) => ({
       ...state,
       representacionFederalSeleccion,
+    }));
+  }
+
+  /**
+   * @method setFormDatosDelDestinatario
+   * @description
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDatosDelDestinatario(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @method setFormDestinatario
+   * @description
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDestinatario(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el lugar en el grupo representativo.
+   *
+   * Este método permite establecer el lugar en el grupo representativo del trámite.
+   *
+   * @param {string} lugar - El lugar a establecer.
+   */
+  public setGrupoRepresentativoLugar(lugar: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lugar },
+    }));
+  }
+
+  /**
+   * Actualiza el estado con la lista de medios de transporte
+   * @param medioDeTransporte Arreglo de catálogos con los medios de transporte
+   */
+  setMedioDeTransporte(medioDeTransporte: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      medioDeTransporte,
+    }));
+  }
+
+  /**
+   * Establece los paisDestinSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} paisDestinSeleccion - Un array de objetos `Catalogo` que representa los paisDestinSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setPaisDestinSeleccion(paisDestinSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      paisDestinSeleccion,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con la lista de países de destino
+   * @param paisDestin Arreglo de catálogos con los países de destino
+   */
+  public setPaisDestinatario(paisDestin: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDestin,
     }));
   }
 

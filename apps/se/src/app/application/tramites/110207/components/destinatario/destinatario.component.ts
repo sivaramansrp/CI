@@ -1,233 +1,329 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
-  ConsultaioQuery,
-  REGEX_SOLO_DIGITOS,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+  SeccionLibQuery,
+  SeccionLibState,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
-import {ConsultaioState} from '@ng-mf/data-access-user';
-import { RegistroService } from '../../services/registro.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
+import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 
 /**
- * Componente que representa el formulario de destinatario en el trámite.
+ * @interface FormValues
+ * @description
+ * Interfaz que representa los valores del formulario de forma dinámica.
  */
+interface FormValues {
+  [key: string]: unknown;
+}
+
 @Component({
   selector: 'app-destinatario',
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
-    CatalogoSelectComponent,
     ReactiveFormsModule,
+    DatosDelDestinatarioComponent,
+    DetallesDelTransporteComponent,
+    DestinatarioComponent,
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioReportComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para gestionar los datos del destinatario. */
+  destinatarioForm!: FormGroup;
+   /**
+    * @property formDestinatarioValues
+    * @description Almacena los valores actuales del formulario de destinatario.
+    */
+   formDestinatarioValues!: FormValues;
+
   /**
-     * Subject para destruir notificador.
-     */
-    consultaDatos!: ConsultaioState;
-     /**
-     * Indica si el formulario está en modo solo lectura.
-     * Cuando es `true`, los campos del formulario no se pueden editar.
-     */
-    soloLectura: boolean = false;
-  /**
-   * Formulario reactivo para el destinatario.
+   * @property formDatosDelDestinatarioValues
+   * @description Almacena los valores del subformulario de datos del destinatario.
    */
-  registroForm!: FormGroup;
+  formDatosDelDestinatarioValues!: FormValues;
 
   /**
-   * Catálogo de países de destino.
+   * @property formExportadorValues
+   * @description Almacena los valores del formulario de exportador.
    */
-  nacion!: CatalogosSelect;
+  formExportadorValues!: FormValues;
+
+  /** Indica si el país de destino está habilitado. */
+  paisDestino = true;
+
+  //  /**
+  //   * @property ocultarLada
+  //   * @description Determina si el campo LADA debe ser visible.
+  //   * @default true
+  //   */
+  //  ocultarLada: boolean = true;
+
+  //  /**
+  //   * @property ocultarFax
+  //   * @description Determina si el campo Fax debe ser visible.
+  //   * @default true
+  //   */
+  //  ocultarFax: boolean = true;
+
+  /** Observable que contiene los países de destino disponibles. */
+  paisDestin$!: Observable<Catalogo[]>;
 
   /**
-   * Catálogo de medios de transporte.
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario está en modo solo lectura.
    */
-  transporte!: CatalogosSelect;
+  esFormularioSoloLectura: boolean = false;
 
   /**
-   * Estado actual de la solicitud.
+   * @property destroyNotifier$
+   * @description Notificador utilizado para limpiar suscripciones al destruir el componente.
+   * @private
    */
-  public solicitudState!: Solicitud110207State;
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Indica si el formulario está deshabilitado.
+   * @property exportadoState
+   * @description Estado actual del formulario exportador.
+   * @private
    */
-  isDisabled: boolean = false;
+  public exportadoState!: Solicitud110207State;
 
   /**
-   * Indica si el formulario está vacío.
+   * @property seccionState
+   * @description Estado actual de la sección visual.
+   * @private
    */
-  estaVacio: boolean = false;
-/**
- * Opciones del catálogo.
- * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
- * Estas opciones se utilizan para poblar los selectores en el formulario.
- */
-options!: Catalogo[];
-
-/**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private seccionState!: SeccionLibState;
 
   /**
-   * Constructor del componente.
-   * @param registroService Servicio para obtener datos de catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Tienda para gestionar el estado del trámite.
-   * @param query Consultas para obtener datos del estado del trámite.
-   * @param validacionesService Servicio para validar formularios.
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+  public idProcedimiento = 110207;
+
+  /** Observable que contiene los medios de transporte disponibles. */
+  medioDeTransporte$!: Observable<Catalogo[]>;
+
+  /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+  @ViewChild(DatosDelDestinatarioComponent)
+  datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+  /** Referencia al componente destinatario para marcar campos como tocados */
+  @ViewChild(DestinatarioComponent)
+  destinatarioComponent?: DestinatarioComponent;
+  /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+  @ViewChild(RepresentanteLegalExportadorComponent)
+  representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
+
+  /**
+   * @constructor
+   * @description
+   * Constructor que inicializa servicios y suscripciones necesarias para sincronizar el estado del formulario.
+   *
+   * @param fb FormBuilder para creación de formularios reactivos.
+   * @param store Store de la sección de trámite 110205.
+   * @param query Query de la sección de trámite 110205.
+   * @param seccionQuery Consulta del estado de la sección visual.
+   * @param consultaQuery Consulta del estado de solo lectura general.
    */
   constructor(
-    private registroService: RegistroService,
-    public fb: FormBuilder,
-    public store: Tramite110207Store,
+    private readonly fb: FormBuilder,
+    private store: Tramite110207Store,
     private query: Tramite110207Query,
-    private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe()
+    this.query.selectFormDatosDelDestinatario$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.formDatosDelDestinatarioValues = estado;
+      });
+
+     this.query.selectFormDestinatario$
+       .pipe(takeUntil(this.destroyNotifier$))
+       .subscribe((estado) => {
+         this.formDestinatarioValues = estado;
+       });
   }
 
   /**
-   * Valida el formulario del destinatario.
-   * Marca todos los campos como tocados si el formulario es inválido.
-   */
-  validarDestinatarioFormulario(): void {
-    if (this.registroForm.invalid) {
-      this.registroForm.markAllAsTouched();
-    }
-  }
-
-  /**
-   * Maneja el evento de clic para deshabilitar el formulario.
-   */
-  onClick(): void {
-    this.isDisabled = true;
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene los catálogos de países de destino y medios de transporte.
+   * @method ngOnInit
+   * @description
+   * Hook de inicialización del componente. Establece suscripciones al estado del formulario y sección.
    */
   ngOnInit(): void {
-    this.getPaisDestino();
-    this.getTransporte();
-    this.inicializarEstadoFormulario();
-
-    this.query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$),
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
+          this.seccionState = seccionState;
         })
       )
       .subscribe();
-    this.donanteDomicilio();
-    
- 
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
+    this.query.selectPeru$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.exportadoState = state as Solicitud110207State;
+        })
+      )
+      .subscribe();
+    this.paisDestin$ = this.query.selectPaisDestino$;
+    this.medioDeTransporte$ = this.query.selectMedioDeTransporte$;
   }
-/**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.soloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.donanteDomicilio();
+  /** Inicializa el formulario reactivo del destinatario */
+  iniciarFormulario(): void {
+    this.destinatarioForm = this.fb.group({
+      medioDeTransporte: [''],
+      // Agrega otros controles aquí si es necesario
+    });
+  }
+
+  public validateAllForms(): boolean {
+    let valid = true;
+    this.destinatarioComponent?.markAllFieldsTouched();
+    this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+    this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+    if (
+      this.destinatarioComponent &&
+      this.destinatarioComponent.formDestinatario &&
+      !this.destinatarioComponent.formDestinatario.valid
+    ) {
+      valid = false;
     }
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.donanteDomicilio();
-    if (this.soloLectura) {
-      this.registroForm.disable();
-    } else {
-      this.registroForm.enable();
+    if (
+      this.datosDelDestinatarioComponent &&
+      this.datosDelDestinatarioComponent.formDatosDelDestinatario &&
+      !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid
+    ) {
+      valid = false;
     }
-  }
-  /**
-   * Obtiene el catálogo de países de destino desde el servicio.
-   */
-  getPaisDestino(): void {
-    this.registroService.getPaisDestino().pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de medios de transporte desde el servicio.
-   */
-  getTransporte(): void {
-    this.registroService.getTransporte().pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
-        }
-      });
-  }
-
-  /**
-   * Maneja el envío del formulario.
-   */
-  onSubmit(): void {
-    if (this.registroForm.valid) {
-      // Aquí se implementará la lógica para manejar el envío del formulario.
+    if (
+      this.representanteLegalExportadorComponent &&
+      this.representanteLegalExportadorComponent.form &&
+      !this.representanteLegalExportadorComponent.form.valid
+    ) {
+      valid = false;
     }
+    return valid;
   }
 
   /**
-   * Verifica si un campo del formulario es válido.
-   * @param form Formulario reactivo.
-   * @param field Nombre del campo a validar.
-   * @returns `true` si el campo es válido, de lo contrario `false`.
+   * @method setValoresStoreDatos
+   * @description
+   * Actualiza el estado del store con los datos del formulario de datos del destinatario.
+   * @param event Evento con el campo y valor a actualizar.
    */
-  isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field) || false;
+  setValoresStoreDatos(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
+  }
+  /**
+   * @description
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+   * @param event Evento con el campo y valor a actualizar.
+   * @returns {void}
+   */
+  setValoresStore1(event: {
+    formGroupName: string;
+    campo: string;
+    VALOR: undefined;
+    METODO_NOMBRE: string;
+  }): void {
+    const { VALOR, METODO_NOMBRE } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[
+      METODO_NOMBRE
+    ]?.(VALOR);
   }
 
   /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
+   * Selecciona un país de destino y lo actualiza en el estado.
+   * @param estado País de destino seleccionado.
+   */
+  paisDestinSeleccion(estado: Catalogo): void {
+    this.store.setPaisDestinSeleccion(estado);
+  }
+
+  /**
+   * @method setValoresStoreDe
+   * @description
+   * Actualiza el estado del store con los datos del formulario de destinatario.
+   * @param event Evento con el campo y valor a actualizar.
+   */
+  setValoresStoreDe(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDestinatario({ [CAMPO]: VALOR });
+  }
+
+  /**
+   * @method setFormValida
+   * @description
+   * Marca como válido o inválido el formulario de destinatario en el store.
+   * @param valida Valor booleano indicando validez.
+   */
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ destinatrio: valida });
+  }
+
+  /**
+   * @method setFormValidaExportador
+   * @description
+   * Marca como válido o inválido el formulario de exportador en el store.
+   * @param valida Valor booleano indicando validez.
+   */
+  setFormValidaExportador(valida: boolean): void {
+    this.store.setFormValida({ exportador: valida });
+  }
+
+   /**
+    * @method setFormValidaDestinatario
+    * @description
+    * Marca como válido o inválido el subformulario de datos del destinatario en el store.
+    * @param valida Valor booleano indicando validez.
+    */
+   setFormValidaDestinatario(valida: boolean): void {
+     this.store.setFormValida({ datosDestinatario: valida });
+   }
+
+  /**
+   * @method setValoresStore
+   * @description
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+   * @param form Formulario del cual se extraerá el valor.
+   * @param campo Nombre del campo a leer del formulario.
+   * @param metodoNombre Método del store que se invocará.
    */
   setValoresStore(
     form: FormGroup,
@@ -235,50 +331,16 @@ options!: Catalogo[];
     metodoNombre: keyof Tramite110207Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.store[metodoNombre] as (value: Solicitud110207State) => void)(VALOR);
   }
 
   /**
-   * Obtiene el formulario de validación.
-   */
-  get validacionForm(): FormGroup {
-    return this.registroForm.get('validacionForm') as FormGroup;
-  }
-
-  /**
-   * Configura el formulario reactivo con los valores iniciales del estado.
-   */
-donanteDomicilio(): void {
-  this.registroForm = this.fb.group({
-    validacionForm: this.fb.group({
-      nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }, [Validators.required]],
-      transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
-      nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
-      apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
-      apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
-      numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
-      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
-      ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
-      calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
-      numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
-      lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
-      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
-      rutaCompleta: [{ value: this.solicitudState?.rutaCompleta, disabled: this.soloLectura }, Validators.required],
-      puertoEmbarque: [{ value: this.solicitudState?.puertoEmbarque, disabled: this.soloLectura }, Validators.required],
-      puertoDesembarque: [{ value: this.solicitudState?.puertoDesembarque, disabled: this.soloLectura }, Validators.required],
-    }),
-  });
-}
-
-  /**
-   * Método que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
+   * @method ngOnDestroy
+   * @description
+   * Hook de destrucción del componente. Finaliza las suscripciones activas.
    */
   ngOnDestroy(): void {
-   
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

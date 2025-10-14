@@ -215,3 +215,17 @@ export const HEADERS_DATA: ConfiguracionColumna<SeleccionadasTabla>[] = [
     orden: 8,
   },
 ];
+
+/**
+ * @interface GrupoRepresentativo
+ * @description
+ * Interfaz que representa los datos de un grupo representativo.
+ */
+export interface GrupoRepresentativo {
+  lugar: string;
+  nombreExportador: string;
+  empresa: string;
+  cargo: string;
+  telefono: string;
+  correoElectronico: string;
+}
