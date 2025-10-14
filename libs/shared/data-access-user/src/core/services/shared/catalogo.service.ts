@@ -11,7 +11,7 @@
  * @author Sistema VUCEM
  */
 
-import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
+import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_UNIDAD_MASA_BRUTA, CLASIFICACION_REGIMEN, COMUN_URL, PAIS_DESTINO, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -320,7 +320,30 @@ tratadosAcuerdosCatalogo(tramite: string, ideTipoTratadoAcuerdo: string): Observ
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de países destino según el trámite y los datos proporcionados.
+ *
+ * @param tramite - Identificador del trámite para el cual se solicita el catálogo.
+ * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
+ * @returns Un observable que emite la respuesta base con el arreglo de catálogos de países destino.
+ */
+paisDestinoCatalogo(tramite: string, payloadDatos: { cveTratado: string , cvePais: string,}): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${PAIS_DESTINO(tramite, payloadDatos)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 
+  /**
+   * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicita el catálogo.
+   * @param payloadDatos - Objeto que contiene información adicional, incluyendo el trámite y el id requerido.
+   * @returns Un observable que emite la respuesta base con el arreglo de elementos del catálogo.
+   */
+  clasificacionRegimenCatalogo(tramite: string,payloadDatos: { tramite: string , id: string}): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CLASIFICACION_REGIMEN(tramite,payloadDatos)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
 
 /*
  * Obtiene el catálogo de países (bloques).
@@ -512,5 +535,7 @@ unidadesMedidaComercialCatalogo(tramite: string): Observable<BaseResponse<Catalo
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
    
   }
+
+
 
   }

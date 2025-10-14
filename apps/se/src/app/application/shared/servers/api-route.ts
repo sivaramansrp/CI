@@ -54,3 +54,11 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
 });
+
+/*
+ * API para obtener unidades de medida comercial
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/consultar-cupo/buscar-datos-grid-plantas
+ */
+export const BUSCAR_CONSULTAR = (TRAMITE: string): string => `sat-t${TRAMITE}/${SOLICITUD}/consultar-cupo/buscar-datos-grid`;
+
+export const GUARDAR = (TRAMITE: string): string => `${BASE_URL}${API}${TRAMITE}/solicitud/guardar`;

@@ -1,10 +1,12 @@
+import { Catalogo, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
+import { InsumosTabla, SolicitudTPLCANR } from '../models/insumos.model';
+import { Observable, map } from 'rxjs';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { BUSCAR_CONSULTAR, GUARDAR } from '../../../shared/servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { InsumosTabla } from '../models/insumos.model';
-import { Observable } from 'rxjs';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
+import { Tramite120101Query } from '../../../estados/queries/tramite120101.query';
 
 /**
  * @Injectable
@@ -32,7 +34,9 @@ export class SolicitudDeRegistroTplService {
    */
   constructor(
     private http: HttpClient,
-    private tramite120101Store: Tramite120101Store
+    private tramite120101Store: Tramite120101Store,
+    private tramite120101Query: Tramite120101Query,
+    public httpService: HttpCoreService,
   ) {
     //
   }
@@ -254,4 +258,38 @@ export class SolicitudDeRegistroTplService {
   actualizarEstadoFormulario(campo: string, valor: unknown): void {
     this.tramite120101Store.setDynamicFieldValue(campo, valor);
   }
+
+
+
+      /**
+       * Consulta el monto disponible para un trámite específico.
+       *
+       * @param tramite - Identificador del trámite a consultar.
+       * @param body - Objeto de tipo `SolicitudTPLCANR` que contiene los datos necesarios para la consulta.
+       * @returns Un observable que emite la respuesta en formato `JSONResponse`.
+       */
+      getElMontoDisponible(tramite:string, body: SolicitudTPLCANR): Observable<JSONResponse> {
+        return this.http.post<JSONResponse>(BUSCAR_CONSULTAR(tramite), body).pipe(
+          map((response) => response)
+        );
+      }
+ /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<SolicitudDeRegistroTpl120101State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<SolicitudDeRegistroTpl120101State> {
+    return this.tramite120101Query.allStoreData$;
+  }
+
+
+/**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(GUARDAR('sat-t120101'), { body: body });
+  }
+
 }

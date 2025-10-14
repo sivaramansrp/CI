@@ -3,14 +3,21 @@ import {
   AVISO,
   AccionBoton,
   DatosPasos,
+  JSONResponse,
   ListaPasosWizard,
   WizardComponent,
   WizardService,
+  doDeepCopy,
+  esValidObject,
+  getValidDatos,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
+import { SolicitudDeRegistroTpl120101State } from '../../../../estados/tramites/tramite120101.store';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
 /**
  * @component PantallasComponent
  * @description
@@ -160,7 +167,9 @@ export class PantallasComponent implements OnInit, OnDestroy {
  */
   constructor(
     public servicioDeFormularioService: ServicioDeFormularioService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
+    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter
   ) {
     //
   }
@@ -182,15 +191,16 @@ export class PantallasComponent implements OnInit, OnDestroy {
  */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.consultaState = seccionState;
-            if (this.consultaState.readonly) {
-              this.pestanaDosFormularioValido = true
-            }
-          })
-        ).subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.readonly) {
+            this.pestanaDosFormularioValido = true
+          }
+        })
+      ).subscribe();
+
   }
 
   /**
@@ -208,9 +218,9 @@ export class PantallasComponent implements OnInit, OnDestroy {
       (this.servicioDeFormularioService.isFormValid('representacionFederalForm') ??
         false) &&
       (this.servicioDeFormularioService.isFormValid('insumosForm') ??
-      false) &&
+        false) &&
       (this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ??
-      false)
+        false)
     );
   }
 
@@ -264,19 +274,19 @@ export class PantallasComponent implements OnInit, OnDestroy {
     return this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ?? false;
   }
 
-/**
- * @method pestanaCambiado
- * @description
- * Maneja el evento de cambio de pestaña en el wizard.
- * 
- * Funcionalidad:
- * - Actualiza el índice de la subpestaña seleccionada con el valor proporcionado por el evento.
- * 
- * @param {number} event - El índice de la nueva subpestaña seleccionada.
- * 
- * @example
- * this.pestanaCambiado(2); // Cambia a la subpestaña con índice 2.
- */
+  /**
+   * @method pestanaCambiado
+   * @description
+   * Maneja el evento de cambio de pestaña en el wizard.
+   * 
+   * Funcionalidad:
+   * - Actualiza el índice de la subpestaña seleccionada con el valor proporcionado por el evento.
+   * 
+   * @param {number} event - El índice de la nueva subpestaña seleccionada.
+   * 
+   * @example
+   * this.pestanaCambiado(2); // Cambia a la subpestaña con índice 2.
+   */
   public pestanaCambiado(event: number): void {
     if (event) {
       this.subpestanaSeleccionada = event;
@@ -290,31 +300,55 @@ export class PantallasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore();
     if (!this.consultaState.readonly) {
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-          if (e.accion === 'cont') {
-              this.continuar(e);
-          } else if (e.accion === 'ant' && this.esFormaValido) {
-              this.indice = e.valor - 1;
-              this.datosPasos.indice = e.valor - 1;
-              this.wizardComponent.atras();
-          } else if (!this.esFormaValido) {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-          }
+        if (e.accion === 'cont') {
+          this.continuar(e);
+        } else if (e.accion === 'ant' && this.esFormaValido) {
+          this.indice = e.valor - 1;
+          this.datosPasos.indice = e.valor - 1;
+          this.wizardComponent.atras();
+        } else if (!this.esFormaValido) {
+          this.indice = e.valor;
+          this.datosPasos.indice = e.valor;
+        }
       }
     } else {
       if (e.valor > 0 && this.pantallasPasos.length) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
-    }
-}
+  }
+
+  guardar(data: SolicitudDeRegistroTpl120101State): void | Promise<JSONResponse> {
+    const PAYLOAD = this.ampliacionServiciosAdapter.toFormGuardarPayload(data);
+    return new Promise((resolve, reject) => {
+      this.solicitudDeRegistroTplService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        const API_RESPONSE = doDeepCopy(response);
+        resolve(API_RESPONSE);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.solicitudDeRegistroTplService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
+  }
 
   /**
  * @method continuar

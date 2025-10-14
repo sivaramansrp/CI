@@ -238,6 +238,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
       this.tablaInsumos = [...this.tablaInsumos];
 
       this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
+      this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
     }
   }
 

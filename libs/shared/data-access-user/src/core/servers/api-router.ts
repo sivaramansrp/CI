@@ -806,8 +806,18 @@ export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
  */
 export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
- 
 
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises-destino
+ */
+export const PAIS_DESTINO = (TRAMITE: string, PAYLOAD_DATOS: { cveTratado: string , cvePais: string}): string => `sat-t${TRAMITE}/catalogo/paises-destino/${PAYLOAD_DATOS.cveTratado}/${PAYLOAD_DATOS.cvePais}`;
+ 
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises-destino
+ */
+export const CLASIFICACION_REGIMEN = (TRAMITE: string, PAYLOAD_DATOS: { tramite: string , id: string}): string => `sat-t${TRAMITE}/tramite/${PAYLOAD_DATOS.tramite}/regimenes/${PAYLOAD_DATOS.id}/clasificacion`;
 
 /**
  * Genera dinámicamente la ruta para el catálogo de tratados/acuerdos de la UE por bloque.
