@@ -1131,7 +1131,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
              this.obtenerCriterios();
           }
           if(this.vistasModificacion110101.actualizarVista){
-            this.sentidoInputTramite110101 = resp.datos?.nombre_sentido_dictamen === "Rechazado" ? false: true;
+            this.sentidoInputTramite110101 = resp.datos?.sentido_dictamen === "Rechazado" ? false: true;
           }
         }
 
