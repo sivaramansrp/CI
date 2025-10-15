@@ -19,7 +19,7 @@ import {
 } from '../../estados/tramite260201Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery }  from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -148,7 +148,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @description
    * Indica si el formulario está deshabilitado. Por defecto es `false`.
    */
-  @Input()
   formularioDeshabilitado: boolean = false;
 
   /**

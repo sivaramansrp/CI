@@ -35,6 +35,20 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {
   AlertComponent,
   CatalogoSelectComponent,
   InputRadioComponent,
@@ -62,19 +76,6 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
 import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -105,7 +106,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent
-  implements OnInit, OnDestroy, OnChanges
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -929,9 +930,7 @@ export class DatosDeLaSolicitudComponent
         [Validators.required],
       ],
     });
-    if (this.formularioDeshabilitado) {
-      this.datosSolicitudForm.disable();
-    }
+    
 
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
@@ -940,6 +939,28 @@ export class DatosDeLaSolicitudComponent
       if (EMPTY) {
         this.alternarControlesDeFormulario(false);
       }
+    }
+  }
+
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Hook del ciclo de vida de Angular que se ejecuta después de que se inicializa la vista del componente.
+   * Verifica el estado del formulario y realiza las siguientes acciones:
+   * - Si `formularioDeshabilitado` es `true` y existe `datosSolicitudForm`, deshabilita todo el formulario.
+   * - En caso contrario, crea un nuevo formulario de datos de solicitud llamando a `crearDatosSolicitudForm()`.
+   * 
+   * Este método es especialmente útil para manejar el estado de habilitación/deshabilitación del formulario
+   * después de que todos los elementos de la vista han sido inicializados.
+   * 
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if (this.formularioDeshabilitado && this.datosSolicitudForm) {
+      this.datosSolicitudForm.disable();
+    }
+    else {
+      this.crearDatosSolicitudForm()
     }
   }
 
@@ -955,7 +976,7 @@ export class DatosDeLaSolicitudComponent
         this.datosSolicitudForm.disable();
       } else {
         this.datosSolicitudForm.enable();
-      }
+      } 
     }
     if (
       changes['datosSolicitudFormState'].currentValue &&
