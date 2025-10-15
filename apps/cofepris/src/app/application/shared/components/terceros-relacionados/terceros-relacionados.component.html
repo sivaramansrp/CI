@@ -63,7 +63,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="esVisible ? onAgregarFabricante() : irAAcciones('../agregar-fabricante', false)"
+          (click)="onAgregarFabricante()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -261,3 +261,26 @@
 </section>
 }
 
+<!-- Fabricante Modal -->
+<div class="modal fade" id="fabricanteModal" tabindex="-1" aria-labelledby="fabricanteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="fabricanteModalLabel">
+          {{ fabricanteSeleccionadoParaModificar.length > 0 ? 'Modificar Fabricante' : 'Agregar Fabricante' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-agregar-fabricante
+          *ngIf="fabricanteModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [fabricanteTablaDatos]="fabricanteTablaDatos"
+          [datoSeleccionado]="fabricanteSeleccionadoParaModificar"
+          (updateFabricanteTablaDatos)="onFabricanteUpdated($event)"
+          (cancelarmodal)="cerrarFabricanteModal()">
+        </app-agregar-fabricante>
+      </div>
+    </div>
+  </div>
+</div>

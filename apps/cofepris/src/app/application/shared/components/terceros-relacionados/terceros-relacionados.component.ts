@@ -22,11 +22,13 @@ import {
 } from '../../constantes/datos-solicitud.enum';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   DESTINATARIO_ENCABEZADO_DE_TABLA,
@@ -40,6 +42,7 @@ import {
   Proveedor,
 } from '../../models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 import { ToastrService } from 'ngx-toastr';
@@ -59,6 +62,7 @@ import { ToastrService } from 'ngx-toastr';
     TablaDinamicaComponent,
     AlertComponent,
     NotificacionesComponent,
+    AgregarFabricanteComponent
   ],
   providers: [TercerosRelacionadosFebService, ToastrService],
   templateUrl: './terceros-relacionados.component.html',
@@ -293,6 +297,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   @Output() facturadorEliminar: EventEmitter<Facturador[]> = new EventEmitter<
     Facturador[]
   >();
+  /**
+   * Fabricante data selected for modification
+   */
+    public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
   /**
    * Constructor del componente.
@@ -436,6 +444,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * description Textos de alerta utilizados en el componente.
    */
   public TEXTOS = MENSAJEDEALERTA;   
+    /**
+   * Indicates if the Fabricante modal is currently open
+   */
+  public fabricanteModalAbierto: boolean = false;
+  
+    /**
+     * Reference to the Fabricante modal element
+     */
+    @ViewChild('fabricanteModal') fabricanteModal!: ElementRef;
 
   /**
    * @method irAAcciones
@@ -485,9 +502,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * @fires agregarFabricante
      */
     onAgregarFabricante(): void {
-      this.agregarFabricante.emit();
+      this.fabricanteSeleccionadoParaModificar = [];
+      this.abrirFabricanteModal();
     }
 
+        /**
+   * Opens the Fabricante selection modal
+   */
+  abrirFabricanteModal(): void {
+    this.fabricanteModalAbierto = true;
+    const MODALELEMENT = document.getElementById('fabricanteModal');
+    if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
+  }
+  /**
+   * Closes the Fabricante selection modal
+   */
+  cerrarFabricanteModal(): void {
+   this.fabricanteModalAbierto = false;
+   this.fabricanteSeleccionadoParaModificar = [];
+    const MODAL_ELEMENT = document.getElementById('fabricanteModal');
+    if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL_INSTANCE) {
+          MODAL_INSTANCE.hide();
+        }
+    }
+  
+}
+/**
+ * Handles the fabricante table data update
+  */
+onFabricanteUpdated(fabricantes: Fabricante[]): void {
+  
+  this.fabricanteTablaDatos = [...fabricantes];
+  
+  this.fabricanteEliminar.emit([...this.fabricanteTablaDatos]);
+  
+  this.fabricanteSeleccionadoDatos = [];
+  this.fabricanteSeleccionadoParaModificar = [];
+  
+}
     /**
    * @method onAgregarDestinatarioFinal
    * @description
@@ -518,16 +575,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public modificarFabricante(): void {
-    if (!this.fabricanteSeleccionadoDatos.length) {
-      this.mostrarAlerta = true;
-      return;
-    }
-    if (this.esVisible) {
-      this.fabricanteEventoModificarModal.emit(this.fabricanteSeleccionadoDatos);
-    } else {
-      this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
-      this.irAAcciones('../agregar-fabricante', true);
-    }
+  
+  if (!this.fabricanteSeleccionadoDatos.length) {
+    this.mostrarAlerta = true;
+    return;
+  }
+  
+  this.fabricanteSeleccionadoParaModificar = this.fabricanteSeleccionadoDatos.map(f => ({ ...f }));
+  
+  this.fabricanteModalAbierto = true;
+  
+  const MODALELEMENT = document.getElementById('fabricanteModal');
+  if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
   }
 
   /**
