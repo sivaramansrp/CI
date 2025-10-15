@@ -9,7 +9,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, combineLatest, distinctUntilChanged, filter, lastValueFrom, map, of, take, takeUntil } from 'rxjs';
 import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
@@ -32,7 +32,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent],
   templateUrl: './datos-mercancia.component.html',
-  styleUrl: './datos-mercancia.component.css',
+  styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
@@ -83,6 +83,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     */
   nuevaNotificacion: Notificacion | null = null;
 
+  VALOR_MONEDA: number = 1;
+
   /**
    * @constructor
    * @param {FormBuilder} fb Constructor de formularios reactivos.
@@ -117,11 +119,26 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     await this.initActionFormBuild();
-    this.ObtenerFraccionOpcion();
+
+    combineLatest([
+      this.query.select(state => state.datosRealizer.regimen),
+      this.query.select(state => state.datosRealizer.classificion_regimen)
+    ])
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        // eslint-disable-next-line no-implicit-coercion
+        filter(([regimen, clasificacion]) => !!regimen && !!clasificacion), // solo cuando existan ambos
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)) // evita llamadas repetidas
+      )
+      .subscribe(([regimen, clasificacion]) => {
+        this.ObtenerFraccionOpcion(regimen, clasificacion);
+      });
+
     this.ObtenerTipoEntradaOpcion();
     this.obtenerMonedaComercializacionOpcion();
     this.obternerPaisExportadorOpcion();
     this.obtenerPaisOrigenOpcion();
+    this.obtenerUmcOpcion();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -153,7 +170,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       umt: [this.DatosState.datosMercanica.umt, Validators.required],
       factura_numero: [this.DatosState.datosMercanica.factura_numero, Validators.required],
       factura_fecha: [this.DatosState.datosMercanica.factura_fecha, Validators.required],
-      umc: [this.DatosState.datosMercanica.umc , Validators.required],
+      umc: [this.DatosState.datosMercanica.umc, Validators.required],
       otro_umc: [{ value: this.DatosState.datosMercanica.otro_umc, disabled: true }, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc, Validators.required],
       factor_conversion: [{ value: this.DatosState.datosMercanica.factor_conversion, disabled: true }, Validators.required],
@@ -199,8 +216,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /** @method ObtenerFraccionOpcion Carga las opciones del catálogo de fracción arancelaria. */
-  ObtenerFraccionOpcion(): void {
-    this.catalogosService.getCatFraccionesArrancelarias().subscribe({
+  ObtenerFraccionOpcion(CVEREGIMEN: string, CVECLASIFICACIONREGIMEN: string): void {
+    if (!CVEREGIMEN || !CVECLASIFICACIONREGIMEN) {
+      return;
+    }
+
+    this.catalogosService.getCatFraccionesArrancelarias(CVEREGIMEN, CVECLASIFICACIONREGIMEN).subscribe({
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
           this.fraccionOpcion = resp.datos ?? [];
@@ -236,7 +257,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     if (CVEFRACCION) {
       this.obtenerUmtOpcion(CVEFRACCION);
       this.obtenerNicoOpcion(CVEFRACCION);
-      this.obtenerUmcOpcion(CVEFRACCION);
     } else {
       this.umtOpcion = [];
       this.datosMercanica.get('umt')?.reset();
@@ -288,8 +308,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /** @method obtenerUmcOpcion Carga las opciones del catálogo de unidad de medida comercial. */
-  obtenerUmcOpcion(cveFraccion: string): void {
-    this.catalogosService.getCatUnidadesMedida(cveFraccion)
+  obtenerUmcOpcion(): void {
+    this.catalogosService.getCatUnidadesMedida()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (resp) => {
@@ -453,6 +473,271 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method setValoresStore Actualiza el estado del store con los valores del formulario.
+   */
+  configurarComboUMT() {
+    this.habilitarCampoFactorConversion();
+    this.calcularUMT();
+  }
+
+  /**
+   * @method setValoresStore Actualiza el estado del store con los valores del formulario.
+   */
+  configurarComboUMC() {
+    this.habilitarCampoFactorConversion();
+    this.habilitarCampoOtroUmc();
+    this.calcularUMT();
+  }
+
+  /**
+   * @method setValoresStore Actualiza el estado del store con los valores del formulario.
+   */
+  habilitarCampoOtroUmc(): void {
+    const TIPO_UMC = this.datosMercanica.get('umc')?.value;
+    const CAMPO_OTRO_UMC = this.datosMercanica.get('otro_umc');
+    if (TIPO_UMC === 'Otros') {
+      CAMPO_OTRO_UMC?.enable(); // permite editar el campo
+    } else {
+      CAMPO_OTRO_UMC?.setValue(''); // limpia el campo
+      CAMPO_OTRO_UMC?.disable(); // lo pone como readonly/deshabilitado
+    }
+  }
+
+  /**
+   * @method habilitarCampoFactorConversion Habilita o deshabilita el campo de factor de conversión basado en las unidades seleccionadas.
+   */
+  habilitarCampoFactorConversion(): void {
+    const TIPO_UMC = this.datosMercanica.get('umc')?.value;
+    const TIPO_UMT = this.datosMercanica.get('umt')?.value;
+    const ID_SOL: string = ''; //this.store?.getIdSolicitud?.() || '';
+    const CAMPO_CAPACIDAD = this.datosMercanica.get('factor_conversion');
+    const VALOR_CAPACIDAD = CAMPO_CAPACIDAD?.value;
+    if (TIPO_UMC === TIPO_UMT) {
+      CAMPO_CAPACIDAD?.patchValue(1);
+      CAMPO_CAPACIDAD?.disable();
+    } else {
+      if (!ID_SOL || ID_SOL.toString().length < 2) {
+        if (VALOR_CAPACIDAD === 1 || VALOR_CAPACIDAD === '1') {
+          CAMPO_CAPACIDAD?.patchValue('');
+        }
+      }
+      CAMPO_CAPACIDAD?.enable();
+    }
+
+    this.calcularUmtPrecioUnitario();
+  }
+
+  /**
+   * @method calcularUMT Calcula y actualiza el valor de cantidad en UMT basado en la cantidad en UMC y el factor de conversión.
+   */
+  calcularUMT(): void {
+    const FACTOR_CONVERSION = (this.datosMercanica.get('factor_conversion')?.value ?? 0);
+    const VALOR_UMC = (this.datosMercanica.get('cantidad_umc')?.value ?? 0);
+    const VALOR_UMT_AUX = Number((FACTOR_CONVERSION * VALOR_UMC).toFixed(3));
+    this.datosMercanica.get('cantidad_umt')?.setValue(VALOR_UMT_AUX);
+  }
+
+  /**
+   * @method calcularUmtPrecioUnitario Calcula y actualiza los valores de cantidad en UMT y precio unitario en USD.
+   */
+  async calcularUmtPrecioUnitario(): Promise<void> {
+    this.calcularUMT();
+    await this.calcularPrecioUnitarioUSD();
+  }
+
+  /**
+   * @method calcularValorMoneda Calcula y actualiza los valores relacionados con la moneda de comercialización.
+   */
+  async calcularValorMoneda(): Promise<void> {
+    await this.calcularValorTotalFacturaUSD();
+    await this.calcularValorFacturaDolaresMercancia();
+    await this.calcularPrecioUnitarioUSD();
+  }
+
+  /**
+   * @method calcularValoresDolares Calcula y actualiza los valores de factura y precio unitario en dólares.
+   */
+  async calcularValoresDolares(): Promise<void> {
+    await this.calcularValorFacturaDolaresMercancia();
+    await this.calcularPrecioUnitarioUSD();
+  }
+
+  /**
+   * @method calcularValorTotalFacturaUSD Calcula y actualiza el valor total de la factura en USD basado en la moneda de comercialización.
+   */
+  async calcularValorTotalFacturaUSD(): Promise<void> {
+    const VALOR_TOTAL_FACTURA_STR = this.datosMercanica.get('valor_total_factura')?.value;
+    if (!VALOR_TOTAL_FACTURA_STR || VALOR_TOTAL_FACTURA_STR.toString().trim().length < 1) {
+      return;
+    }
+    const VALOR_TOTAL_FACTURA = parseFloat(VALOR_TOTAL_FACTURA_STR);
+    if (isNaN(VALOR_TOTAL_FACTURA) || VALOR_TOTAL_FACTURA <= 0) {
+      console.warn('Valor total de factura inválido:', VALOR_TOTAL_FACTURA_STR);
+      return;
+    }
+    try {
+      const TIPO_MONEDA = this.datosMercanica.get('moneda_comercializacion')?.value;
+      const VALOR_MONEDA = await lastValueFrom(this.obtenerMonedaConversion(TIPO_MONEDA));
+      const FACTOR = 10000000;
+      const RESULT_FACT_AUX = (VALOR_MONEDA * FACTOR * VALOR_TOTAL_FACTURA) / FACTOR;
+      const RESULT_FACT = DatosMercanciaComponent.truncar(RESULT_FACT_AUX);
+      this.datosMercanica.get('valor_total_factura_usd')?.setValue(RESULT_FACT);
+    } catch (ERROR) {
+      console.error('Error calculando el valor total de la factura en USD:', ERROR);
+    }
+  }
+
+  /**
+   * @method calcularValorFacturaDolaresMercancia Calcula y actualiza el valor de la factura en dólares basado en la moneda de comercialización.
+   */
+  async calcularValorFacturaDolaresMercancia(): Promise<void> {
+    const VALOR_FACTURA_STR = this.datosMercanica.get('valor_factura')?.value;
+    const VALOR_FACTURA = parseFloat(VALOR_FACTURA_STR);
+    if (isNaN(VALOR_FACTURA) || VALOR_FACTURA <= 0) {
+      return;
+    }
+    try {
+      const TIPO_MONEDA = this.datosMercanica.get('moneda_comercializacion')?.value;
+      const VALOR_MONEDA = await lastValueFrom(this.obtenerMonedaConversion(TIPO_MONEDA));
+      const VALOR_FACTURA_USD = DatosMercanciaComponent.truncar(VALOR_FACTURA * VALOR_MONEDA);
+      this.datosMercanica.get('valor_factura_usd')?.setValue(VALOR_FACTURA_USD);
+    } catch (ERROR) {
+      console.error('Error calculando el valor de la factura en USD:', ERROR);
+    }
+  }
+/**
+ * Obtiene el monto de conversión para una moneda específica.
+ * @param TIPO Tipo de moneda para la conversión.
+ * @returns Observable con el monto de conversión.
+ */
+  obtenerMonedaConversion(TIPO: string): Observable<number> {
+    if (!TIPO?.trim()) {
+      return of(1);
+    }
+
+    return this.catalogosService.getMontoConversion(TIPO).pipe(
+      take(1),
+      map(RESPONSE => {
+        const RAW = RESPONSE?.datos;
+        const PARSED = parseFloat(String(RAW));
+        return Number.isFinite(PARSED) ? PARSED : 1;
+      }),
+      catchError(ERROR => {
+        console.error('Error al obtener el monto de conversión:', ERROR);
+        return of(1);
+      })
+    );
+  }
+
+
+  /**
+   * Redondea un número a la cantidad de decimales especificada.
+   * @param n Número a redondear.
+   * @param decimals Cantidad de decimales a conservar.
+   * @returns Número redondeado.
+   */
+  static roundWDecimals(n: number, decimals: number = 0): string | number {
+    if (isNaN(n) || !isFinite(n)) {
+      return NaN;
+    }
+
+    // Redondeo numérico según los decimales deseados
+    const DECIMAL_POWER = Math.pow(10, decimals);
+    const PUNTO_DEC = (Math.round(n * DECIMAL_POWER) / DECIMAL_POWER).toString();
+
+    // Asegura que siempre haya parte decimal (".00" si no existe)
+    const RETORNO = (PUNTO_DEC.includes('.') ? PUNTO_DEC : `${PUNTO_DEC}.00`).split('.');
+    const DECIMALES = RETORNO[1].length;
+
+    // Devuelve con máximo 2 decimales visibles
+    return `${RETORNO[0]}.${DECIMALES > 2 ? RETORNO[1].substring(0, 2) : RETORNO[1]}`;
+  }
+
+  /**
+   * @method calcularPrecioUnitarioUSD Calcula y actualiza el precio unitario en USD basado en la cantidad en UMT y el valor de la factura en USD.
+   */
+  calcularPrecioUnitarioUSD(): void {
+    const CANTIDAD_UMT = this.datosMercanica.get('cantidad_umt')?.value;
+    const MERCANCIA_AVISO = this.datosMercanica.get('valor_factura_usd')?.value;
+
+    if ((CANTIDAD_UMT !== null && CANTIDAD_UMT.toString().trim().length >= 1) &&
+      (MERCANCIA_AVISO !== null && MERCANCIA_AVISO.toString().trim().length >= 1)) {
+      if (CANTIDAD_UMT === 0 || CANTIDAD_UMT.toString().trim().length === 0) {
+        this.datosMercanica.get('precio_unitario_usd')?.setValue(0);
+        return;
+      }
+      const FACTOR = 10000000;
+      let RESULTADO_PRECIO_UNITARIO = 0;
+      if ((MERCANCIA_AVISO * 1000) < CANTIDAD_UMT) {
+        RESULTADO_PRECIO_UNITARIO = 0;
+      } else {
+        // Simulación del cálculo decimal con precisión
+        let RESULTADO_AUX = (MERCANCIA_AVISO * FACTOR) / CANTIDAD_UMT / FACTOR;
+        const AJUSTE_AUX = parseFloat(RESULTADO_AUX.toString());
+        const ES_NOTACION_CIENTIFICA = String(AJUSTE_AUX).match(/^[-+]?[1-9]\.[0-9]+e[-]?[1-9][0-9]*$/);
+        if (ES_NOTACION_CIENTIFICA) {
+          const PRECISION = DatosMercanciaComponent.getPrecision(AJUSTE_AUX);
+          RESULTADO_AUX = parseFloat(AJUSTE_AUX.toFixed(PRECISION));
+        }
+        RESULTADO_PRECIO_UNITARIO = DatosMercanciaComponent.truncar(RESULTADO_AUX);
+      }
+      this.datosMercanica.get('precio_unitario_usd')?.setValue(RESULTADO_PRECIO_UNITARIO);
+    }
+  }
+
+  /**
+   * Trunca un número a 2 decimales.
+   * @param num Número a truncar.
+   * @returns Número truncado.
+   */
+  static truncar(num: number): number {
+    const NUM_STR = num.toString();
+
+    if (NUM_STR.includes('.')) {
+      const NUM_ARR = NUM_STR.split('.');
+      if (NUM_ARR.length === 1) {
+        return Number(NUM_STR);
+      }
+      const PARTE_ENTERA = NUM_ARR[0];
+      const PARTE_DECIMAL = NUM_ARR[1].substring(0, 2); // solo 2 dígitos
+      return Number(`${PARTE_ENTERA}.${PARTE_DECIMAL}`);
+    }
+
+    return Number(NUM_STR);
+  }
+
+  /**
+   * @method truncateDecimals
+   * @param {number} num Número a truncar.
+   * @param {number} digits Número de dígitos decimales a conservar.
+   * @returns {number} Número truncado con la cantidad especificada de dígitos decimales.
+   * @description Trunca un número a una cantidad específica de dígitos decimales sin redondear.
+   */
+  static truncateDecimals(num: number, digits: number): number {
+    const NUM_STR = num.toString();
+    const DEC_POS = NUM_STR.indexOf('.');
+    const SUBSTR_LENGTH = DEC_POS === -1 ? NUM_STR.length : 1 + DEC_POS + digits;
+    const TRIMMED_RESULT = NUM_STR.substring(0, SUBSTR_LENGTH);
+    const FINAL_RESULT = isNaN(Number(TRIMMED_RESULT)) ? 0 : Number(TRIMMED_RESULT);
+
+    return parseFloat(FINAL_RESULT.toString());
+  }
+
+  /**
+   * @method getPrecision
+   * @param {number} valor Número del cual se desea obtener la precisión decimal.
+   * @returns {number} Precisión decimal del número proporcionado.
+   * @description Obtiene la precisión decimal de un número, especialmente útil para números en notación científica.
+   */
+  static getPrecision(valor: number): number {
+    const PARTES = valor.toString().split('e-');
+    if (PARTES.length === 2) {
+      return parseInt(PARTES[1], 10);
+    }
+    return 6;
+  }
+
+  /**
    * @method onUmcChange
    * @param {FormGroup} subformName Subformulario actual.
    * @param {string} campo Campo del formulario que ha cambiado.
@@ -514,6 +799,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
+  /**
+   * @method validarFormulario
+   * @returns {boolean} Indica si el formulario es válido.
+   * @description Valida el formulario y marca los campos como tocados para mostrar errores.
+   */
   validarFormulario(): boolean {
     this.formValidation.marcarFormularioComoTocado(this.datosMercanica);
     this.cdr.detectChanges();
