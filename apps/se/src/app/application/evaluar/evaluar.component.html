@@ -83,8 +83,10 @@
                         </app-capturar-requerimiento>
                         }
                         @case (2) {
-                        <app-solicitar-documentos 
-                        [isSegundaTabla]="requerimientoConfig.isSegundaTabla">
+                        <app-solicitar-documentos [isSegundaTabla]="requerimientoConfig.isSegundaTabla"
+                            [documentosEspecificos]="documentosEscpecificos"
+                            [documentosIniciales]="listadoDocumentosGuardados"
+                            (documentosActualizados)="onDocumentosActualizados($event)">
                         </app-solicitar-documentos>
                         }
                         }
