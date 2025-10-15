@@ -1,23 +1,12 @@
-import { CommonModule } from '@angular/common';
-
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { Subscription, tap } from 'rxjs';
-
 import { CATALOGOS_ID, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL} from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';import { Subscription, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-
 import { FormulariosService } from '@ng-mf/data-access-user';
 import { SolicitanteService } from '@ng-mf/data-access-user';
-
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL
-} from '@ng-mf/data-access-user';
-
+import { TituloComponent } from '@ng-mf/data-access-user';
 /**
  * `DomicilioComponent` maneja los datos del formulario relacionados con el domicilio
  * y gestiona la entrada del usuario para diferentes tipos de personas 

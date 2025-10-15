@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
-
 /**
  * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
  */
