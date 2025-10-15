@@ -31,4 +31,6 @@ export const ID_PROCEDIMIENTO = 260207;
  */
 export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
+  'scian',
+  'fabricante'
 ];
