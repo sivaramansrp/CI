@@ -326,14 +326,14 @@
 
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
-            @if(idProcedimiento === 260911 && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+            @if((idProcedimiento === 260911 || idProcedimiento === 260201) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
           </span>:</label>
         <input
           type="text"
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
-          [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
+          [ngClass]="esInvalido('codigoPostal')&& agregarFabricanteForm.get('codigoPostal')?.touched ? 'required' : ''"
         />
          <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
       <small
@@ -558,7 +558,7 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [placeholder]="''"
-          [required]="!elementosNoRequeridos.includes('localidad')"
+          [required]="!elementosNoRequeridos.includes('localidad') && requestedFocus"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
         ></app-catalogo-select>
@@ -580,7 +580,7 @@
           formControlName="colonia"
           [label]="'Colonia'"
           [placeholder]="''"
-          [required]="!elementosNoRequeridos.includes('colonia')"
+          [required]="!elementosNoRequeridos.includes('colonia') && requestedFocus"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"
         ></app-catalogo-select>

@@ -38,6 +38,7 @@ import {
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
@@ -278,6 +279,9 @@ export class AgregarFabricanteComponent
    */
   public nuevaNotificacion!: Notificacion;
 
+
+  public requestedFocus: boolean = true;
+
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
@@ -300,6 +304,7 @@ export class AgregarFabricanteComponent
    * Llama a la función para cargar los datos de los catálogos.
    */
   ngOnInit(): void {
+    this.requestedFocus = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento) ? false : true;
     this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
     this.chequeoValidacionAlGuardar =
