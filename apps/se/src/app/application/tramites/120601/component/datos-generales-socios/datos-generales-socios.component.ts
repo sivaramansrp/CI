@@ -1,28 +1,22 @@
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TableComponent, TituloComponent} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
+import { DatosSociosTable, DatosSociosTableExtranjeros } from '../../modelos/datos-empresa.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
-
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TableComponent, TituloComponent} from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-
-import { DatosSociosTable, DatosSociosTableExtranjeros } from '../../modelos/datos-empresa.model';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { DatosPasos } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
-
-
 /**
  * Componente para gestionar los datos generales de socios.
  */

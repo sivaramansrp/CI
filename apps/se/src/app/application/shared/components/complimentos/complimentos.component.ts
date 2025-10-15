@@ -392,7 +392,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   private inicializarFormulario(): void {
     this.formaComplimentos = this.fb.group({
-      modalidad: [{ value: 'servicios', disabled: true }],
+      modalidad: [{ value: 'Industrial', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
         paginaWWeb: ['', [Validators.required, Validators.maxLength(120), Validators.pattern(WEBPAGE)]],
@@ -554,7 +554,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
-    this.formaComplimentos.get('modalidad')?.setValue('Servicios', { emitEvent: false });
+    this.formaComplimentos.get('modalidad')?.setValue('Industrial', { emitEvent: false });
 
  }
 
