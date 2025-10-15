@@ -224,6 +224,8 @@ export interface Tramite110222State {
 
   /** Lista de representaciones federales disponibles */
   representacionFederalDatos: Catalogo[];
+  
+  agregarProductoresExportador: HistoricoColumnas[];
 }
 
 /**
@@ -368,6 +370,8 @@ export function createInitialState(): Tramite110222State {
     idiomaDatos: [],
     /** Lista de entidades federativas disponibles */
     entidadFederativaDatos: [],
+
+    agregarProductoresExportador: [],
   
     /** Lista de representaciones federales disponibles */
     representacionFederalDatos: [],
@@ -1005,4 +1009,18 @@ export class Tramite110222Store extends Store<Tramite110222State> {
   setProductores(productores: HistoricoColumnas[]): void {
     this.update((state) => ({ ...state, productores }));
   }
+
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+    setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+      this.update((state) => ({
+        ...state,
+        agregarProductoresExportador: [
+          ...state.agregarProductoresExportador,
+          {...productor},
+        ],
+      }));
+    }
 }

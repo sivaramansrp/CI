@@ -1,6 +1,6 @@
 import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
@@ -43,6 +43,8 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    */
   esTipoDeSeleccionado: boolean = true;
 
+  /** Indica si el formulario es válido. */
+    public isFormValid: boolean = false;
   /**
    * @property {Catalogo[]} optionsTipoFactura
    * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
@@ -53,6 +55,11 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Lista de productores disponibles para el exportador.
    */
   productoresExportador: HistoricoColumnas[] = [];
+  /**
+   * @property {mercanciaProductores} mercancia - Arreglo que contiene información de las mercancías.
+   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
+   */
+  public mercanciaProductores$!: Observable<MercanciaTabla[]>;
   /**
    * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
    * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
@@ -86,6 +93,8 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Solicitud actual del trámite.
    */
   public solicitudState!: Tramite110222State;
+   /** Observable que expone la lista de productores exportador agregados al store. */
+    public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
 
   /**
    * Constructor del componente.
@@ -109,6 +118,7 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+     this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
     this.tramiteQuery.selectTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -254,6 +264,42 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
       });
 
     // this.mercanciasDisponibles = true;
+  }
+
+   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+    let DATOS: HistoricoColumnas | null = null;
+    if (event && typeof event === 'object' && 'nombreProductor' in event) {
+      DATOS = {
+          id: (event as HistoricoColumnas).id ?? 0,
+          nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+          numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+          direccion: String((event as HistoricoColumnas).direccion ?? ''),
+          correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+          telefono: String((event as HistoricoColumnas).telefono ?? ''),
+          fax: String((event as HistoricoColumnas).fax ?? '')
+      };
+    } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+      DATOS = {
+          id: 0,
+          nombreProductor: "LAURA CONTRERAS",
+          numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
+          direccion: "SAN GABRIEL 144 DURANGO", 
+          correoElectronico: "laura2992@hotmail.com",
+          telefono: "044-6182999535",
+          fax: String(event['fax'] ?? '') || '6182999535'
+      };
+    }
+    if (DATOS) { 
+      this.store.setAgregarProductoresExportador(DATOS);
+    }
+    if (this.solicitudState.agregarProductoresExportador.length) {
+      this.cargarMercancia();
+    }
+  }
+
+      /** Actualiza el estado de validez del formulario según el valor recibido. */
+  public formaValida(event: boolean): void {
+    this.isFormValid = event;
   }
   /**
    * Método que se ejecuta al destruir el componente.

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
-import { Tramite110222State} from "./tramite110222.store";
+import { Tramite110222State } from "./tramite110222.store";
 import { Tramite110222Store } from "./tramite110222.store";
 
 /**
@@ -16,7 +16,10 @@ export class Tramite110222Query extends Query<Tramite110222State> {
   selectTramite$ = this.select((state) => {
     return state;
   });
- 
+
+  selectAgregarProductoresExportador$ = this.select((state) => {
+    return state.agregarProductoresExportador;
+  });
 
   /**
    * Selecciona si todos los valores de la forma son válidos.
@@ -43,21 +46,21 @@ export class Tramite110222Query extends Query<Tramite110222State> {
     return state.formCertificado;
   });
 
-    /**
-   * @descripcion
-   * Observable que selecciona los datos del formulario de certificado.
-   */
-    formulario$ = this.select((state) => {
-      return state.formulario;
-    });
+  /**
+ * @descripcion
+ * Observable que selecciona los datos del formulario de certificado.
+ */
+  formulario$ = this.select((state) => {
+    return state.formulario;
+  });
 
-    /**
-   * @descripcion
-   *  Observable que selecciona los datos del formulario de certificado.
-   */ 
-    agregarDatosProductorFormulario$ = this.select((state) => {
-      return state.agregarDatosProductorFormulario;
-    });
+  /**
+ * @descripcion
+ *  Observable que selecciona los datos del formulario de certificado.
+ */
+  agregarDatosProductorFormulario$ = this.select((state) => {
+    return state.agregarDatosProductorFormulario;
+  });
 
   /**
    * @descripcion

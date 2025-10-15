@@ -328,22 +328,22 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    // this.ValidarInicialmenteCertificadoService.obtenerTablaDatos(
-    //   'disponibles-datos.json'
-    // )
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe({
-    //     next: (response: Mercancia[]) => {
-    //       if (response && Array.isArray(response)) {
-    //         this.disponiblesDatos = response as Mercancia[];
-    //       } else {
-    //         this.disponiblesDatos = [];
-    //       }
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error('Error al obtener los datos:', error);
-    //     },
-    //   });
+    this.ValidarInicialmenteCertificadoService.obtenerTablaDatos(
+      'disponibles-datos.json'
+    )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: Mercancia[]) => {
+          if (response && Array.isArray(response)) {
+            this.disponiblesDatos = response as Mercancia[];
+          } else {
+            this.disponiblesDatos = [];
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
      setTimeout(() => {
       this.processBuscarMercancias();
     }, 100);
