@@ -115,7 +115,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="estadoDatos" formControlName="estado" [label]="'Estado'" [required]="true"
-            name="estado" [placeholder]="'Seleccione una opción'" (selectionChange)="cambioDeEstado($event)"
+            name="estado" [placeholder]="'Selecciona un valor'" (selectionChange)="cambioDeEstado($event)"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -345,7 +345,7 @@
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
-            [placeholder]="'Seleccione una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
+            [placeholder]="'Selecciona un valor'" [isBold]="true" [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircleText]="
               'Régimen al que se destinará la mercancía'
             " [required]="true" name="regimen" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>

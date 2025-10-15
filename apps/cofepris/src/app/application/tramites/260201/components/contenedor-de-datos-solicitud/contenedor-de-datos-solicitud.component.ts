@@ -19,12 +19,10 @@ import {
 } from '../../estados/tramite260201Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery }  from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
-import { DatosSolicitudConsultaService } from '../../../../shared/services/datos-solicitud-consulta.service';
 
 /**
  * @component
@@ -163,8 +161,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260201Query: Tramite260201Query,
     private tramite260201Store: Tramite260201Store,
-    private consultaQuery: ConsultaioQuery,
-    private datosSolicitudConsultaService: DatosSolicitudConsultaService
+    private consultaQuery: ConsultaioQuery
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
