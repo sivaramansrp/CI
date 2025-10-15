@@ -1,7 +1,7 @@
 /*
 /AnexoUnoSeccionComponent
 */
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -53,6 +53,7 @@ import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * compodoc
  * @class AnexoUnoSeccionComponent
@@ -84,7 +85,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   * @implements {OnInit, OnDestroy}
   */
 
-export class AnexoUnoSeccionComponent implements OnInit, OnDestroy {
+export class AnexoUnoSeccionComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
@@ -238,6 +239,11 @@ public mostrarProveedorClientesPopup: boolean = false;
    */
   public complementarState!: ComplementarState;
 
+  /**
+ * Lista de datos de clientes que se muestran en la tabla dinámica del Anexo Uno.
+ */
+clienteTablaLista: ProveedorCliente[] = [];
+
 /**
  * 
  * @constructor
@@ -250,7 +256,8 @@ constructor(private fb: FormBuilder,
   private consultaioQuery: ConsultaioQuery,
   private complimentosService: ComplimentosService,
   private complementarStore: ComplementarStore,
-  private complementarQuery: ComplementarQuery
+  private complementarQuery: ComplementarQuery,
+  private servicioDeFormularioService: ServicioDeFormularioService,
 ){ 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -973,6 +980,7 @@ agregarProyectoImmex(): void {
 
     // Agregar los datos transformados a la lista de proyectos IMMEX
     this.proyectoImmexTablaLista.push(TRANSFORMED_DATA);
+    this.proyectoImmexTablaLista = [...this.proyectoImmexTablaLista];
     this.setProyectoImmex();
 
     // Reiniciar el formulario
@@ -988,17 +996,43 @@ agregarProyectoImmex(): void {
  * @description Método que agrega un nuevo proveedor o cliente. Valida el formulario y, si es válido, agrega los datos a la lista de proveedores y clientes.
  */
 agregarProveedorCliente(): void {
-  if (this.formularioProveedorCliente.valid) {
+    if (this.formularioProveedorCliente.valid) {
+    const FORM_DATA = this.formularioProveedorCliente.value;
+
+    const TRANSFORMED_DATA = {
+      ...FORM_DATA,
+      rfcTaxClient: this.proveedorClienteModalContext === 'cliente' ? FORM_DATA.rfc : '',
+      rfcTaxIdProveedor: this.proveedorClienteModalContext === 'proveedor' ? FORM_DATA.rfc : '',
+      razonsocialCliente: this.proveedorClienteModalContext === 'cliente' ? FORM_DATA.razonSocialCliente : '',
+      razonSocialProveedor: this.proveedorClienteModalContext === 'proveedor' ? FORM_DATA.razonSocialCliente : '',
+      fraccion: this.proveedorClienteModalContext === 'cliente' 
+        ? this.selectedFraccionRowUno?.fraccionArancelaria || ''
+        : this.selectedFraccionRowDos?.anexoFraccionExportacion || '',
+      paisDestino: this.proveedorClienteModalContext === 'cliente' ? FORM_DATA.paisDestino : '',
+      paisDeOrigen: this.proveedorClienteModalContext === 'proveedor' ? FORM_DATA.paisDestino : '',
+      descripcionComercial: FORM_DATA.descripcionComercial
+    };
+
+    if (this.proveedorClienteModalContext === 'cliente') {
+      this.clienteTablaLista.push(TRANSFORMED_DATA);
+      this.clienteTablaLista = [...this.clienteTablaLista];
+    } else {
+      this.proveedorTablaLista.push(TRANSFORMED_DATA);
+      this.proveedorTablaLista = [...this.proveedorTablaLista];
+    }
+
     if (this.proveedorClienteDatos) {
-      this.proveedorClienteDatos.data = this.proveedorTablaLista;
+      this.proveedorClienteDatos.data = this.proveedorClienteModalContext === 'cliente' 
+        ? this.clienteTablaLista 
+        : this.proveedorTablaLista;
+      this.proveedorClienteDatos.id = this.proveedorClienteModalContext;
+      
       this.obtenerProveedorCliente.emit({
         data: this.proveedorClienteDatos.data ?? [],
         id: this.proveedorClienteDatos.id
       });
     }
-    const FORM_DATA = this.formularioProveedorCliente.value;
 
-    this.proveedorTablaLista.push(FORM_DATA);
     this.formularioProveedorCliente.reset();
   }
 }
@@ -1116,6 +1150,20 @@ public tipoDeDocumenteCatalog: Catalogo[] = [];
     });
   }
 
+    /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.anexoUnoTablaLista.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoUnoTabla1', this.anexoUnoTablaLista);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoUnoTabla1', this.anexoUnoTablaLista);
+      }
+
+      if (this.anexoFraccionAnarelaria.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoUnoTabla2', this.anexoFraccionAnarelaria);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoUnoTabla2', this.anexoFraccionAnarelaria);
+      }
+  }
 
   /**
    * Emite el evento `obtenerProyectoImmexTablaLista` con la lista de proyectos IMMEX proporcionada.

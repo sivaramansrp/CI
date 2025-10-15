@@ -4,8 +4,10 @@
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [label]="'Propietario'" [isDisabled]="esFormularioSoloLectura" [required]="true" [tooltipQuestionCircle]="true"
+                [tooltipQuestionCircleText]="'Indicar si la persona es propietario'"
                     [catalogo]="propietarioOpciones" formControlName="propietario"
-                    (selectionChange)="establecerCambioDeValor({campo:'propietario',valor:$event});cambiarPropietario()"></app-catalogo-select>
+                    (selectionChange)="establecerCambioDeValor({campo:'propietario',valor:$event});cambiarPropietario()"
+                    [markTouched]="tipoPropietarioFormulario.get('propietario')?.touched ?? false"></app-catalogo-select>
             </div>
         </div>
         @if (mostrarTipoPropietario) {

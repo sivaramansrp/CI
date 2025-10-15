@@ -104,13 +104,10 @@ export class CertificadoValidacionService {
       * Método para obtener datos desde un archivo JSON.
       * @returns {Observable<unknown>} Un Observable que emite los datos obtenidos o un error.
       */
-  getDatos(): Observable<unknown> {
-    return this.http.get('assets/json/110222/pagoderechos.json') // Realiza una solicitud GET al archivo JSON.
-      .pipe(
-        catchError((error: unknown) => { // Maneja errores en la solicitud.
-          return throwError(() => error); // Lanza el error para que pueda ser manejado por el suscriptor.
-        })
-      );
+  getDatos(tramitesID: string): Observable<any[]> {
+    return this.catalogoServices.paisesCatalogo(tramitesID).pipe(
+      map(res => res?.datos ?? [])
+    );
   }
   
   /**
@@ -118,8 +115,8 @@ export class CertificadoValidacionService {
    * @param tramitesID - Identificador del trámite
    * @returns Observable con un arreglo de países bloqueados (o vacío si no hay datos)
    */
-  getPaises(tramitesID: string): Observable<any[]> {
-    return this.catalogoServices.paisesBloqueCatalogo(tramitesID).pipe(
+  getPaises(tramitesID: string, clave: string): Observable<any[]> {
+    return this.catalogoServices.paisCatalogo(tramitesID, clave).pipe(
       map(res => res?.datos ?? [])
     );
   }
@@ -130,9 +127,9 @@ export class CertificadoValidacionService {
    * @param tratadoAsociado - Clave del tratado asociado
    * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
    */
-  getTratadoCertificado(tramitesID: string, tratadoAsociado: string): Observable<any[]> {
+  getTratadoCertificado(tramitesID: string): Observable<any[]> {
     return this.catalogoServices
-      .tratadosAcuerdosCatalogo(tramitesID, tratadoAsociado)
+      .tratadoCatalogoPais(tramitesID)
       .pipe(
         map(res => res?.datos ?? [])
       );

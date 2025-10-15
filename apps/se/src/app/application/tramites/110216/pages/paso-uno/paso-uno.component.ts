@@ -59,8 +59,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
+
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
+    /** Indica si el formulario del componente DatosCertificadoComponent es válido. */
+  private isDatosCertificadoComponentValid: boolean = false;
+
+  /** Indica si el formulario del componente DestinatarioComponent es válido. */
+  private isDestinarioComponentValid: boolean = false;
+
+  /** Indica si el formulario del componente HistProductoresComponent es válido. */
+  private isHistProductoresComponentValid: boolean = false;
+
+  /** Indica si el formulario del componente CertificadoOrigenComponent es válido. */
+  private isCertificadoOrigenComponentValid: boolean = false;
+  
+  /** Referencia al componente 'DatosCertificadoComponent' en la plantilla.
+   * Permite interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('DatosCertificadoComponent', { static: false }) datosCertificadoComponent!: DatosCertificadoComponent;
+  
+  /** Referencia al componente 'DestinatarioComponent' en la plantilla.
+   * Facilita el acceso a sus funcionalidades desde este componente.
+   */
+  @ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: DestinatarioComponent;
+  
+  /** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
+   * Permite gestionar sus métodos y propiedades.
+   */
+  @ViewChild('HistProductoresComponent', { static: false }) histProductoresComponent!: HistProductoresComponent;
+  
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoOrigenComponent;
+
   /**
    * Constructor del componente.
    * 
@@ -89,7 +123,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.indice = this.tramiteState.pestanaActiva;
+  this.indice = this.tramiteState?.pestanaActiva || 1;
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -115,7 +149,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.store.setPestanaActiva(this.indice);
+
   }
   /**
    * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
@@ -134,7 +168,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setIdioma(respuesta.datos.idioma);
           this.store.setEntidadFederativa(respuesta.datos.entidadFederativa);
           this.store.setRepresentacionFederal(respuesta.datos.representacionFederal);
-          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor);
+          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor.toString());
           this.store.setGrupoDeDirecciones(respuesta.datos.grupoDeDirecciones);
           this.store.setGrupoRepresentativo(respuesta.datos.grupoRepresentativo);
           this.store.setGrupoDeTransporte(respuesta.datos.grupoDeTransporte);
@@ -150,6 +184,38 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean { 
+    this.isCertificadoOrigenComponentValid = this.tramiteQuery.getValue().formValidity?.certificadoOrigen ?? false; 
+    this.isDatosCertificadoComponentValid = this.tramiteQuery.getValue().formValidity?.datosCertificado ?? false;
+    this.isDestinarioComponentValid = this.tramiteQuery.getValue().formValidity?.destinatario ?? false;
+    this.isHistProductoresComponentValid = this.tramiteQuery.getValue().formValidity?.histProductores ?? false;
+
+    if (!this.isCertificadoOrigenComponentValid) {
+      this.certificadoOrigenComponent?.validarFormulario();
+    }
+
+    if (!this.isDatosCertificadoComponentValid) {
+      this.datosCertificadoComponent?.validarFormulario();
+    }
+
+    if (!this.isDestinarioComponentValid) {
+      this.destinatarioComponent?.validarFormulario();
+    }
+
+    if (!this.isHistProductoresComponentValid) {
+      this.histProductoresComponent?.validarFormulario();
+    }
+
+    return this.isDatosCertificadoComponentValid && this.isDestinarioComponentValid &&
+      this.isHistProductoresComponentValid && this.isCertificadoOrigenComponentValid;
+
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * 
