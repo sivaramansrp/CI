@@ -264,59 +264,37 @@ export class RegistroService {
 
     array.forEach((arr) => {
       const ITEM = arr as {
-        id?: number | string;
-        idMercancia?: string;
-        fraccionArancelaria?: string;
-        descripcionMercancia?: string | null;
-        unidadMedida?: string | null;
-        paisOrigen?: string | null;
-        cumpleReglasOrigen?: boolean;
-        criterioOrigen?: string | null;
-        porcentajeContenidoRegional?: number | null;
-        numeroRegistro?: boolean | string | null;
-        requiereDocumentosAdicionales?: boolean;
-        fraccionNaladi?: string;
-        fraccionNaladiSa93?: string;
-        fraccionNaladiSa96?: string;
-        fraccionNALADISA02Clave?: string;
-        fraccionNALADIClave?: string;
-        fraccionNALADSA93Clave?: string;
-        fraccionNALADISA96Clave?: string;
-        nombreTecnico?: string | null;
-        nombreComercial?: string | null;
-        numeroDeRegistrodeProductos?: string;
-        tipoFactura?: string;
-        numFactura?: string;
-        complementoDescripcion?: string;
-        fechaExpedicion?: string | null;
-        fechaVencimiento?: string | null;
-        fechaFactura?: string;
+        id?: number;
+        fraccionArancelaria: string;
         cantidad?: string;
-        umc?: string;
-        unidadMedidaMasaBruta?: string;
         valorMercancia?: string;
+        nombreTecnico: string;
+        nombreComercial: string;
+        numeroDeRegistrodeProductos: string;
+        umc?: string;
+        fechaExpedicion: string;
+        fechaVencimiento: string;
+        tipoFactura?: string;
+        numeroFactura?: string;
+        complementoDescripcion?: string;
+        fechaFactura?: string;
       };
 
       RESULT.push({
-        id: ITEM.id || null,
-        fraccion_arancelaria: ITEM.fraccionArancelaria || '',
-        fraccion_naladi: ITEM.fraccionNALADIClave || '',
-        fraccion_naladi_sa93: ITEM.fraccionNALADSA93Clave || '',
-        fraccion_naladi_sa96: ITEM.fraccionNALADISA96Clave || '',
-        fraccion_naladi_sa02: ITEM.fraccionNALADISA02Clave || '',
-        nombre_tecnico: ITEM.nombreTecnico || '',
-        nombre_comercial: ITEM.nombreComercial || '',
-        registro_producto: ITEM.numeroDeRegistrodeProductos || '',
-        fecha_expedicion: ITEM.fechaExpedicion || '',
-        fecha_vencimiento: ITEM.fechaVencimiento || '',
-        tipo_factura: ITEM.tipoFactura || '',
-        num_factura: ITEM.numFactura || '',
-        complemento_descripcion: ITEM.complementoDescripcion || '',
-        fecha_factura: ITEM.fechaFactura || '',
-        cantidad: ITEM.cantidad || '',
-        umc: ITEM.umc || '',
-        unidad_medida: ITEM.unidadMedidaMasaBruta || '',
-        valor_mercancia: ITEM.valorMercancia || '',
+        id: ITEM.id,
+        fraccion_arancelaria: ITEM.fraccionArancelaria,
+        cantidad:ITEM.cantidad,
+        unidad_medida:ITEM.umc,
+        valor_mercancia:ITEM.valorMercancia,
+        nombreTecnico:ITEM.nombreTecnico,
+        nombre_comercial:ITEM.nombreComercial,
+        registro_producto:ITEM.numeroDeRegistrodeProductos,
+        fechaExpedicion:ITEM.fechaExpedicion,
+        fechaVencimiento:ITEM.fechaVencimiento,
+        tipo_factura:ITEM.tipoFactura,
+        num_factura:ITEM.numeroFactura,
+        complemento_descripcion:ITEM.complementoDescripcion,
+        fecha_factura:ITEM.fechaFactura,
       });
     });
 

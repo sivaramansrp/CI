@@ -18,6 +18,7 @@
 <app-detalles-del-transporte
 [idProcedimiento]="110207"
 [medioTransporte]="(medioDeTransporte$ | async) || []"
+(medioDeTransporteSeleccionEvent)="medioDeTransporteSeleccion($event)"
 (formaValida)="setFormValidaDestinatario($event)"
 [datosForm]="formDestinatarioValues"
 ></app-detalles-del-transporte>

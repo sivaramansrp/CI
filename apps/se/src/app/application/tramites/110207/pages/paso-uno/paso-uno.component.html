@@ -20,20 +20,10 @@
     </ul>
 
     <ng-container>
-      @switch (indice) {
-      @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
-      }
-      @case (2) {
-      <app-certificado-origen [tabIndex]="2"></app-certificado-origen>
-      }
-      @case (3) {
-      <app-destinatario-de [tabIndex]="3"></app-destinatario-de>
-      }
-      @case (4) {
-      <app-datos-certificado [tabIndex]="4" [entidadFederativaData]="entidadFederativa"></app-datos-certificado>
-      }
-      }
+      <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
+      <app-certificado-origen #certificadoOrigen [tabIndex]="2" [hidden]="indice !== 2"></app-certificado-origen>
+      <app-destinatario-de #destinatario [tabIndex]="3" [hidden]="indice !== 3"></app-destinatario-de>
+      <app-datos-certificado #datosCertificado [tabIndex]="4" [hidden]="indice !== 4"></app-datos-certificado>
     </ng-container>
   </div>
 </div>

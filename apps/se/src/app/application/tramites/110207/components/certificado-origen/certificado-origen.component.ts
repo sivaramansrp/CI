@@ -6,27 +6,17 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  Catalogo,
-  ConfiguracionColumna,
-  SeccionLibQuery,
-  SeccionLibState,
-} from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
-import {
-  Solicitud110207State,
-  Tramite110207Store,
-} from '../../state/Tramite110207.store';
+import { Solicitud110207State, Tramite110207Store } from '../../state/Tramite110207.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
-import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
 import { RegistroService } from '../../services/registro.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
@@ -159,6 +149,12 @@ export class CertificadoOrigenComponent
     CARGA_MERCANCIA_EXPORT;
 
   /**
+   * Referencia al componente hijo CertificadoDeOrigenComponent
+   * Permite acceder al formulario y métodos del componente hijo
+   */
+  @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+
+  /**
    * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
    *
    * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
@@ -256,7 +252,9 @@ export class CertificadoOrigenComponent
       .subscribe((estado) => {
         if (!this.actualizandoFormulario && estado) {
           this.actualizandoFormulario = true;
-          this.formCertificado = estado as {[key: string]: string | number | boolean | object | undefined;};
+          this.formCertificado = estado as {
+            [key: string]: string | number | boolean | object | undefined;
+          };
           this.actualizandoFormulario = false;
         }
       });
@@ -508,6 +506,28 @@ export class CertificadoOrigenComponent
    */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
+  }
+
+  /**
+   * Método público para validar todos los formularios del componente datos-certificado.
+   * Valida el formulario del componente hijo DatosCertificadoDeComponent y actualiza el estado.
+   * @returns boolean indicando si todos los formularios son válidos
+   */
+  public validateAll(): boolean {
+    let valid = true;
+
+    // Validar el componente hijo datos-certificado-de
+    if (this.certificadoDeOrigenComponent) {
+      // Usar el método validarFormularios del componente hijo que marca los campos como touched
+      const IS_CHILD_FORM_VALID = this.certificadoDeOrigenComponent.validarFormularios();
+      if (!IS_CHILD_FORM_VALID) {
+        valid = false;
+      }
+      // Actualizar el estado de validez en el store
+      this.setFormValida(IS_CHILD_FORM_VALID);
+    }
+
+    return valid;
   }
 
   /**
