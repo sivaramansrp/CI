@@ -3,8 +3,8 @@ import {
   inject,
   runInInjectionContext
 } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { catchError, tap, throwError } from 'rxjs';
 import { NotificacionesService } from '../services/shared/notificaciones.service';
 
 /**
@@ -44,25 +44,50 @@ export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
         Authorization: 'Bearer dummy-token' // El token se obtiene desde localStorage o sessionStorage.
       }
     });
-  
+
     return next(REQ).pipe(
+      // Soft business-code handling for HTTP 200 responses
+      tap((event) => {
+        if (event instanceof HttpResponse) {
+          const RESPONSE_BODY: unknown = event.body;
+          // Narrow check that RESPONSE_BODY is an object with potential codigo field
+          if (RESPONSE_BODY && typeof RESPONSE_BODY === 'object' && 'codigo' in (RESPONSE_BODY as Record<string, unknown>)) {
+            const CODIGO = String((RESPONSE_BODY as { codigo?: unknown }).codigo ?? '');
+            const IS_OK = (CODIGO === '00' || Number(CODIGO) === 0);
+            if (!IS_OK) {
+              const MENSAJE = (RESPONSE_BODY as { mensaje?: unknown }).mensaje as string || '"Ocurrió un error."';
+              NOTIF.showNotification({
+                tipoNotificacion: 'toastr',
+                categoria: 'danger',
+                mensaje: MENSAJE,
+                titulo: 'Error',
+                modo: '',
+                cerrar: true,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: 'Cancelar',
+              });
+              // Soft mode: do not throw; allow existing success flows to continue
+            }
+          }
+        }
+      }),
+      // HTTP error handling (non-2xx)
       catchError((error) => {
-       // Note : reemplazar con el objeto necesario para modificar el cuadro de diálogo de mensaje de error
+        const BACKEND_MSG = error?.error?.mensaje;
+        const MENSAJE = BACKEND_MSG || '"Ocurrió un error."';
         NOTIF.showNotification({
           tipoNotificacion: 'toastr',
           categoria: 'danger',
-          mensaje: '"Ocurrió un error."',
+          mensaje: MENSAJE,
           titulo: 'Error',
           modo: '',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: 'Cancelar',
         });
-  
-        // Re-lanza el error para que otras partes de la aplicación también puedan manejarlo
         return throwError(() => error);
       })
     );
   });
- 
+
 };
