@@ -14,13 +14,6 @@ export class DirectorGeneralService {
     private http: HttpClient
   ) { }
 
-  getDirectorGeneralData(): Observable<DirectorGeneralData> {
-    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`).pipe(
-      tap(data => {
-        this.directorGeneralStore.update(data);
-      })
-    );
-  }
 
   updateStateDirectorGeneralData(data: Partial<DirectorGeneralData>): void {
     this.directorGeneralStore.update(data);

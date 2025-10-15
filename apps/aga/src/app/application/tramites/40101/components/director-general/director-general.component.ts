@@ -42,7 +42,8 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    * Inicializa el formulario del director general y establece los valores del formulario.
    */
   ngOnInit(): void {
-    this.directorGeneralService.getDirectorGeneralData().subscribe();
+    this.crearFormularioDirectorGeneral();
+
     this.directorGeneralQuery.selectDirectorGeneral$
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
@@ -50,8 +51,6 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
           this.directorGeneralForm?.patchValue(state, { emitEvent: false });
         }
       });
-
-    this.crearFormularioDirectorGeneral();
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroy$))
