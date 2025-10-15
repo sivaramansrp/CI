@@ -47,7 +47,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent],
   templateUrl: './tramite_realizer.component.html',
-  styleUrl: './tramite_realizer.component.css',
+  styleUrl: './tramite_realizer.component.scss',
 })
 export class TramiteRealizerComponent implements OnInit, OnDestroy {
 
