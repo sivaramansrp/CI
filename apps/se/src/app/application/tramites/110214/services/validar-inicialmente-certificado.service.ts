@@ -1,9 +1,9 @@
-import { CatalogoLista, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
+import { CatalogoLista, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { map, Observable } from 'rxjs';
 import { PROC_110214 } from '../servers/api-route';
 import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
 import { Tramite110214Query } from '../../../estados/queries/tramite110214.query';
@@ -189,7 +189,7 @@ export class ValidarInicialmenteCertificadoService {
   /** Construye el objeto destinatario a partir del estado del trámite 110214. */
   buildCertificado(data: Tramite110214State): unknown {
     return {
-      "tratado_acuerdo": data.formCertificado['entidadFederativa'],
+      "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
       "pais_bloque": data.formCertificado['bloque'],
       "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'],
       "nombre_comercial": data.formCertificado['nombreComercialForm'],
@@ -212,7 +212,7 @@ export class ValidarInicialmenteCertificadoService {
         "telefono": data.formCertificado['telefono'] as string,
         "correo_electronico": data.formCertificado['correo'] as string
       },
-      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla),
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla)
     }
   }
 
