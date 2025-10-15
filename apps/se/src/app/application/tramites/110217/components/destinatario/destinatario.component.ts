@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
-import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
+import { DestinatarioComponent as DestinatarioSharedComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 
 import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
@@ -20,20 +20,20 @@ import { DetallesDelTransporteComponent } from '../../../../shared/components/de
  * como datos personales, direcciones, información representativa y detalles de transporte.
  */
 @Component({
-  selector: 'app-destinatario-110217',
+  selector: 'app-destinatario',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     DatosDelDestinatarioComponent,
-    DestinatarioComponent,
+    DestinatarioSharedComponent,
     RepresentanteLegalExportadorComponent,
     DetallesDelTransporteComponent
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
-export class Destinatario110217Component implements OnInit, OnDestroy {
+export class DestinatarioComponent implements OnInit, OnDestroy {
 
 /**
  * Valores actuales del formulario de datos del destinatario.
@@ -63,7 +63,7 @@ soloLectura: boolean = false;
 /**
  * Referencia al componente hijo DestinatarioComponent
  */
-@ViewChild(DestinatarioComponent) destinatarioRef!: DestinatarioComponent;
+@ViewChild(DestinatarioSharedComponent) destinatarioRef!: DestinatarioSharedComponent;
 
 /**
  * Referencia al componente hijo RepresentanteLegalExportadorComponent

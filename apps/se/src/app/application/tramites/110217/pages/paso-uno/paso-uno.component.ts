@@ -7,7 +7,7 @@ import { CertificadoOrigenComponent } from '../../components/certificado-origen/
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { Destinatario110217Component } from '../../components/destinatario/destinatario.component';
+import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
@@ -27,7 +27,7 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
     CommonModule,
     SolicitanteComponent,
     DatosCertificadoComponent,
-    Destinatario110217Component,
+    DestinatarioComponent,
     CertificadoOrigenComponent,
     HistProductoresComponent
   ],
@@ -59,9 +59,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @ViewChild('certificadoOrigenRef') certificadoOrigenComp!: CertificadoDeOrigenComponent;
 
   /**
-   * Referencia al componente `Destinatario110217Component`.
+   * Referencia al componente `DestinatarioComponent`.
    */
-  @ViewChild('destinatarioRef') destinatarioComp!: Destinatario110217Component;
+  @ViewChild('destinatarioRef') destinatarioComp!: DestinatarioComponent;
 
   /**
    * Referencia al componente `DatosCertificadoComponent`.
