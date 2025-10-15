@@ -1015,32 +1015,14 @@
       </div>
 
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="paisBloqueCertificadoGet"
-          [label]="'País / Bloque'"
-          [required]="true"
-          name="estado"
-          formControlName="bloque"
-          (selectionChange)="tipoSeleccion($event)"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-            setValoresStore(
-              'formCertificado',
-              'bloque',
-              'setFormCertificadoGenric'
-            )
-          "
-          [isDisabled]="esFormularioSoloLectura"
-        ></app-catalogo-select>
-        @if(formCertificado.get('bloque')?.invalid &&
-        (formCertificado.get('bloque')?.touched ||
-        formCertificado.get('bloque')?.dirty)) {
-        <div class="d-grid">
-          @if(formCertificado.get('bloque')?.errors?.['required']) {
-          <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-        }
+        <app-catalogo-select [catalogo]="paisBloqueCertificadoGet" [label]="'País / Bloque'" [required]="true" name="estado"
+          formControlName="bloque" (selectionChange)="tipoSeleccion($event)" [isDisabled]="esFormularioSoloLectura"
+          [markTouched]="formCertificado.get('bloque')?.touched??false"
+          (change)="setValoresStore(
+                    'formCertificado',
+                  'bloque',
+                  'setFormCertificadoGenric')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+     
       </div>
     </div>
     <div class="row mb-3">
@@ -1237,6 +1219,7 @@
         <ng-titulo titulo="Mercancías disponibles" />
       </div>
     </div>
+    
     } @if(mercanciasDisponiblesTabla){
     <div class="row">
       <app-tabla-dinamica
@@ -1247,12 +1230,17 @@
       ></app-tabla-dinamica>
     </div>
     } @else{
-    <app-tabla-dinamica
-      [configuracionTabla]="configuracionTabla"
-      [datos]="tableData || []"
-      [tipoSeleccionTabla]="seleccionTabla"
-      (filaClic)="abrirModificarModal($event)"
-    ></app-tabla-dinamica>
+      <div class="row">
+        <div class="table-scroll">
+            <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="tableData || []"
+            [tipoSeleccionTabla]="seleccionTabla"
+            (filaClic)="abrirModificarModal($event)"
+          ></app-tabla-dinamica>
+        </div>
+      </div>
+    
     } @if (cargoDeMercancias) {
     <div class="row">
       <div class="col-md-12">

@@ -1,3 +1,4 @@
+import { ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
 import { Router } from '@angular/router';
 import { RutaNombre } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';

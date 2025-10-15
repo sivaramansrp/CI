@@ -1,17 +1,22 @@
 import {
   AVISO_CONTRNIDO,
   DatosPasos,
+  doDeepCopy,
+  esValidObject,
+  getValidDatos,
   ListaPasosWizard,
   SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/modificacion.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import {
   Tramite110204Store,
   TramiteState,
 } from '../../estados/tramite110204.store';
+import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 
@@ -78,9 +83,10 @@ export class SolicitudPageComponent implements OnDestroy {
   constructor(
     private seccionStore: SeccionLibStore,
     private tramiteQuery: Tramite110204Query,
-    private tramiteStore: Tramite110204Store
+    private tramiteStore: Tramite110204Store,
+    private certificadoService: CertificadosOrigenGridService
   ) {
-    this.tramiteQuery.selectPexim$
+    this.tramiteQuery.selectState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
@@ -161,35 +167,145 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
         return;
       }
+      this.obtenerDatosDelStore()
     }
-
-    let indiceActualizado = e.valor;
-    if (e.accion === 'cont') {
-      indiceActualizado = e.valor + 1;
-    } else if (e.accion === 'ant') {
-      indiceActualizado = e.valor - 1;
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.pasoNavegarPor(e);
     }
+  }
 
-    // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-      // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
+  /**
+  * Obtiene los datos del store y los guarda utilizando el servicio.
+  */
+  obtenerDatosDelStore(): void {
+    this.certificadoService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
 
+      });
+  }
+
+
+
+  /**
+* Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+* El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+*
+* @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+*
+* @remarks
+* Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
+* La llamada al servicio actualmente está comentada.
+*/
+ guardar(item: TramiteState): Promise<JSONResponse> {
+  console.log('item', item);
+
+  const MERCANCIA_SELECCIONADAS = this.certificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+
+  const PAYLOAD = {
+    rfc_solicitante: 'AAL0409235E6',
+    idSolicitud: this.solicitudState.idSolicitud || 0,
+    solicitante: {
+      rfc: "AAL0409235E6",
+      nombre: "ACEROS ALVARADO S.A. DE C.V.",
+      actividad_economica: "Fabricación de productos de hierro y acero",
+      correo_electronico: "contacto@acerosalvarado.com",
+      domicilio: {
+        pais: "México",
+        codigo_postal: "06700",
+        estado: "Ciudad de México",
+        municipio_alcaldia: "Cuauhtémoc",
+        localidad: "Centro",
+        colonia: "Roma Norte",
+        calle: "Av. Insurgentes Sur",
+        numero_exterior: "123",
+        numero_interior: "Piso 5, Oficina A",
+        lada: "",
+        telefono: "123456"
+      }
+    },
+    certificado: {
+      tratado_acuerdo: item.formCertificado['entidadFederativa'],
+      pais_bloque: item.formCertificado['bloque'],
+      fraccion_arancelaria: item.formCertificado['fraccionArancelaria'],
+      nombre_comercial: item.formCertificado['nombreComercial'],
+      fecha_inicio: item.formCertificado['fechaInicio'],
+      fecha_fin: item.formCertificado['fechaFin'],
+      registro_producto:item.formCertificado['registroProducto'],
+      realizo_tercer_operador: {
+        tercer_operador: item.formCertificado['si'],
+        nombre: item.formCertificado['nombres'],
+        primer_apellido: item.formCertificado['primerApellido'],
+        segundo_apellido: item.formCertificado['segundoApellido'],
+        numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'],
+        razon_social: item.formCertificado['razonSocial']
+      },
+      domicilio_tercer_operador: {
+        pais: item.formCertificado['pais'],
+        ciudad: item.formCertificado['ciudad'],
+        calle: item.formCertificado['calle'],
+        numero_letra: item.formCertificado['numeroLetra'],
+        lada: item.formCertificado['lada'],
+        telefono: item.formCertificado['telefono'],
+        fax: item.formCertificado['fax'],
+        correo_electronico: item.formCertificado['correo']
+      },
+      mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
+    },
+    datos_del_certificado: {
+      observaciones: item.formDatosCertificado['observacionesDates'],
+      idioma: item.formDatosCertificado['idiomaDates'],
+      representacion_federal: {
+        entidad_federativa: item.formDatosCertificado['EntidadFederativaDates'],
+        representacion_federal: item.formDatosCertificado['representacionFederalDates']
+      }
+    }
+  };
+
+  console.log(PAYLOAD, 'PAYLOAD');
+
+
+     return new Promise((resolve, reject) => {
+        this.certificadoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+          const API_RESPONSE = doDeepCopy(response);
+          if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+            if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+              this.tramiteStore.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+            } else {
+              this.tramiteStore.setIdSolicitud(0);
+            }
+          }
+          resolve(response);
+        }, error => {
+          reject(error);
+        });
+        });
+}
+
+  /**
+   * Navega a través de los pasos del asistente según la acción del botón.
+   * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
+   */
+  pasoNavegarPor(e: AccionBoton): void {
+    this.indice = e.valor;
+    this.datosPasos.indice = e.valor;
+    if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else if (e.accion === 'ant') {
+      } else {
         this.wizardComponent.atras();
       }
     }
   }
+
   /**
    * @method validarTodosFormulariosPasoUno
    * @description

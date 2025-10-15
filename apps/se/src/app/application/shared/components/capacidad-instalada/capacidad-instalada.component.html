@@ -156,7 +156,7 @@
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-danger me-2" (click)="eliminarCapacidadInstalada()">Eliminar</button>
-          <button class="btn btn-primary">Editar</button>
+          <button class="btn btn-primary" (click)="editarCapacidadInstalada()">Editar</button>
         </div>
       </div>
       <div class="row my-5 mt-5">
@@ -169,3 +169,10 @@
     </div>
   </form>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

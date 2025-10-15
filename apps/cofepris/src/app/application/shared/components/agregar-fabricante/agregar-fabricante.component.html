@@ -352,10 +352,10 @@
     <div class="row mt-3">
        @if(
             chequeoValidacionAlGuardar &&
-            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+            (agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
             agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
             agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)
           ) {
   
           <div class="col-md-4">
