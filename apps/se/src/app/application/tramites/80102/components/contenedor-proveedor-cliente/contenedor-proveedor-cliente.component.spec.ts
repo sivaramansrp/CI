@@ -1,89 +1,52 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ContenedorProveedorClienteComponent } from "./contenedor-proveedor-cliente.component";
 
-import { Component } from '@angular/core';
-import { ContenedorProveedorClienteComponent } from './contenedor-proveedor-cliente.component';
-import { Tramite80102Query } from '../../estados/tramite80102.query';
-
-@Injectable()
-class MockTramite80102Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('ContenedorProveedorClienteComponent', () => {
-  let fixture;
-  let component;
+  let component: ContenedorProveedorClienteComponent;
+  let queryMock: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [  ContenedorProveedorClienteComponent,FormsModule, ReactiveFormsModule ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: Tramite80102Query, useClass: MockTramite80102Query }
-      ]
-    }).overrideComponent(ContenedorProveedorClienteComponent, {
-
-    }).compileComponents();
-    fixture = TestBed.createComponent(ContenedorProveedorClienteComponent);
-    component = fixture.debugElement.componentInstance;
+    queryMock = {
+      selectDatosParaNavegar$: {
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: jest.fn(),
+      },
+    };
+    component = new ContenedorProveedorClienteComponent(queryMock);
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.query = component.query || {};
-    component.query.selectDatosParaNavegar$ = observableOf({});
+  it('should initialize fraccionTablaDatos on ngOnInit', () => {
+    const datosParaNavegar = { test: 'value' };
+    queryMock.selectDatosParaNavegar$.pipe = jest.fn(() => ({
+      subscribe: (cb: any) => cb(datosParaNavegar),
+    }));
     component.ngOnInit();
-
+    expect(component.fraccionTablaDatos).toEqual(datosParaNavegar);
   });
 
-  it('should run #datosActualizadosProveedorCliente()', async () => {
-
-    component.datosActualizadosProveedorCliente({});
-
+  it('should update datosDelProveedor and emit datosActualizadosProveedorClient', () => {
+    const emitSpy = jest.spyOn(component.datosActualizadosProveedorClient, 'emit');
+    const proveedorData = [{ id: 1, nombre: 'Proveedor' }];
+    component.datosActualizadosProveedorCliente(proveedorData as any);
+    expect(component.datosDelProveedor).toEqual(proveedorData);
+    expect(emitSpy).toHaveBeenCalledWith(proveedorData);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should emit cerrarPopup event', () => {
+    const emitSpy = jest.spyOn(component.cerrarPopup, 'emit');
+    component.cerrarPopup.emit();
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-     expect(component.destroyNotifier$.next).toHaveBeenCalled();
-     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
 });
