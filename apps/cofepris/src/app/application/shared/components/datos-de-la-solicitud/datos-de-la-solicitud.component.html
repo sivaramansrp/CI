@@ -644,3 +644,21 @@
   </lib-notificaciones>
 </section>
 }
+<!-- SCIAN Selection Modal -->
+<div class="modal fade" id="scianModal" tabindex="-1" aria-labelledby="scianModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="scianModalLabel">Seleccionar S.C.I.A.N.</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-scian-tabla
+         *ngIf="scianModalAbierto"
+         (cerrarModal)="cerrarScianModal()"
+         (scianSeleccionado)="onScianSeleccionado($event)">        
+        </app-scian-tabla>
+      </div>
+    </div>
+  </div>
+</div>

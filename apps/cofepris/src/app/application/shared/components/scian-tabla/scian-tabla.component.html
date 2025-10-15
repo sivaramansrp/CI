@@ -1,4 +1,3 @@
-<div class="container">
     <ng-titulo titulo="Clave S.C.I.A.N."></ng-titulo>
     <form [formGroup]="scianForm">
         <div class="row">
@@ -13,12 +12,21 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="scianLista" formControlName="scianNino"
-                        [label]="'Descripción del S.C.I.A.N.'" [required]="scianNinoRequerido" name="scianNino"
-                        [isDisabled]="disableDescripcion"></app-catalogo-select>
+                    <label class="form-label" for="scianDescripcion">
+                        Descripción del S.C.I.A.N.
+                        <span *ngIf="scianNinoRequerido" class="text-danger">*</span>
+                    </label>
+                    <input 
+                        id="scianDescripcion"
+                        type="text" 
+                        class="form-control"
+                        formControlName="scianNino"
+                        [disabled]="true"
+                        placeholder="Seleccione una clave S.C.I.A.N. para ver la descripción"
+                        readonly>
                 </div>
             </div>
         </div>
@@ -41,7 +49,6 @@
                 </button>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Modal de datos duplicados -->
