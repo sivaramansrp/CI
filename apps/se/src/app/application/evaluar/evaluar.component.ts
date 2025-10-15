@@ -12,11 +12,12 @@ import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/c
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
+import { ReviewersTabs110101Component } from '../tramites/110101/components/reviewers-tabs-110101/reviewers-tabs-110101.component';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, TabEvaluarTratadosResponse, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
@@ -56,7 +57,8 @@ import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDi
 import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firmar-requerimiento-request.model';
 import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firmarRequermiento.service';
 import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
-import { ServiceConfig } from '../shared/models/service-config.model';
+
+import { ModeloConfig, ServiceConfig } from '../shared/models/service-config.model';
 import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
@@ -88,6 +90,7 @@ import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
   selector: 'app-evaluar',
   standalone: true,
   imports: [CommonModule, ReviewersTabsComponent,
+    ReviewersTabs110101Component,
     EncabezadoRequerimientoComponent,
     FormsModule, ReactiveFormsModule,
     GenerarDictamenComponent,
@@ -99,6 +102,18 @@ import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
   styleUrl: './evaluar.component.scss',
 })
 export class EvaluarComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {boolean} sentidoInputTramite110101
+   * @description Indica si el input de sentido para el trámite 110101 está habilitado.
+   */
+  sentidoInputTramite110101: boolean = false;
+
+  /**
+   * @property {TabEvaluarTratadosResponse[]} tratadosParaEvaluar
+   * @description Lista de tratados a evaluar, recibidos desde el componente Datos.
+   */
+  tratadosParaEvaluar: TabEvaluarTratadosResponse[] = [];
   /**
   * @property {AccuseComponentes[] } listaTrimites
   * @description Lista de trámites disponibles para evaluación, obtenida de la constante LISTA_TRIMITES.
@@ -325,6 +340,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   serviceConfig!: ServiceConfig;
 
+   /**
+   * @property {ModeloConfig} vistasModificacion110101
+   * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
+  */
+  vistasModificacion110101!: ModeloConfig;
+
   /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
@@ -373,6 +394,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.config = this.tramiteConfigService.getConfig(this.tramite);
     this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
+    this.vistasModificacion110101 = this.tramiteConfigService.getModeloConfig(this.tramite);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
@@ -1018,6 +1040,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     }
     this.viewChild = await li.componentPath() as Type<unknown>;
   }
+
+  /**
+   * @method recibirTratadosDesdeReviewers
+   * @description Recibe los tratados evaluados por los revisores y los asigna a la propiedad `tratadosParaEvaluar`.
+   * @param tratados - Arreglo de tratados evaluados por los revisores.
+   */
+  recibirTratadosDesdeReviewers(tratados: TabEvaluarTratadosResponse[]): void {
+    this.tratadosParaEvaluar = tratados;
+    this.sentidoInputTramite110101 = tratados.some(tratado => tratado.cal_aprobada_dictaminador === true);
+  }
+
   /**
    * @method viewChildcambioDePestana
    * @description Cambia el componente hijo mostrado según la pestaña seleccionada.
@@ -1089,6 +1122,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
           if(this.serviceConfig.serviceCriterios){
              this.obtenerCriterios();
+          }
+          if(this.vistasModificacion110101.actualizarVista){
+            this.sentidoInputTramite110101 = resp.datos?.nombre_sentido_dictamen === "Rechazado" ? false: true;
           }
         }
 
@@ -1194,7 +1230,16 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
       fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null
+      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
+      ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
+        id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud): undefined,
+          criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
+          id_criterio_tratado: tratado.id_criterio_tratado,
+          calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
+          id_tratado_acuerdo: tratado.id_tratado_acuerdo,
+          cve_tratado_acuerdo: tratado.cve_tratado_acuerdo
+        })) ?? [] 
+      })
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1279,6 +1324,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         apellido_paterno: 'PRUEBA',
         apellido_materno: 'PRUEBA'
       },
+      ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
+          criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
+          id_criterio_tratado: tratado.id_criterio_tratado,
+          calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
+        })) ?? [] 
+      })
     };
 
     this.guardarService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1762,6 +1813,76 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+  
+  /**
+   * Descarga un archivo Excel con los datos de la solicitud.
+   *
+   * Llama al servicio `evaluarSolicitudService.getDescargarExcel` pasando el ID del trámite
+   * y la solicitud. Convierte la respuesta en Base64 a un archivo Blob y fuerza la descarga
+   * en el navegador con el nombre `datosRPE.xlsx`.
+   *
+   * Muestra notificaciones de error si la descarga falla o si la respuesta del servicio no es exitosa.
+   *
+   * @returns {void}
+   */
+  descargarSolicitud(): void {
+    this.evaluarSolicitudService.getDescargarExcel(this.tramite, this.guardarDatos.id_solicitud)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+          // Convertir Base64 a un Blob
+          const BASE64_DATA = resp.datos ?? '';
+          const BYTE_CHARACTERS = atob(BASE64_DATA);
+          const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+          for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+            BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+          }
+          const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+          const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+          // Crear enlace de descarga
+          const LINK = document.createElement('a');
+          LINK.href = window.URL.createObjectURL(BLOB);
+          LINK.download = 'datosRPE.xlsx';
+          LINK.click();
+
+          // Liberar memoria
+          window.URL.revokeObjectURL(LINK.href);
+
+  
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al descargar excel',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Error al descargar excel',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al descargar excel';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
   }
 
   /**

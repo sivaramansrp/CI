@@ -7,12 +7,14 @@ import {
   HistoricoColumnas,
   SeleccionadasTabla,
 } from '../../tramites/110217/models/certificado-origen.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoOperador } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoReceptor } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoRepresentativo } from '../../tramites/110217/models/certificado-origen.model';
 import { Injectable } from '@angular/core';
+import { Mercancia } from '../../shared/models/modificacion.enum';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 /**
@@ -129,19 +131,55 @@ export interface Tramite110217State {
    */
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
 
-   /**
+  /**
    * @property {Object} formulario - Otros datos de formularios auxiliares.
    * @description
    * Contiene otros datos relevantes para el trámite, como datos confidenciales del productor y si el productor es el mismo exportador.
    */
-  formulario: { [key: string]: unknown};
+  formulario: { [key: string]: unknown };
 
   /**
    * @property {Object} datosProductorFormulario - Datos adicionales del productor.
    * @description
    * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
    */
-  datosProductorFormulario: { [key: string]: unknown};
+  datosProductorFormulario: { [key: string]: unknown };
+  /**
+   * @description
+   * Indica si los diferentes campos o secciones del formulario son válidos.
+   * Las claves representan el nombre del campo y el valor un booleano indicando su validez.
+   */
+  formaValida: { [key: string]: boolean };
+  /**
+   * @description
+   * Lista de mercancías disponibles para seleccionar o procesar.
+   */
+  disponiblesDatos: Mercancia[];
+  /**
+   * @description
+   * Tabla que contiene las mercancías agregadas o registradas en el formulario.
+   */
+  mercanciaTabla: Mercancia[];
+  /**
+   * @description
+   * Contiene los valores del formulario de certificado.
+   */
+  formCertificado: { [key: string]: unknown };
+  /**
+   * @description
+   * Estado o catálogo seleccionado actualmente.
+   */
+  estado: Catalogo;
+  /**
+   * @description
+   * Objeto que almacena los valores del formulario de mercancía.
+   */
+  mercanciaForm: { [key: string]: unknown };
+  /**
+   * @description
+   * Identifica el bloque o sección actual del proceso.
+   */
+  bloque: string;
 }
 
 /**
@@ -241,14 +279,70 @@ export function createInitialState(): Tramite110217State {
     },
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
-    formulario:{
+    formulario: {
       datosConfidencialesProductor: '',
       productorMismoExportador: '',
     },
     datosProductorFormulario: {
       numeroRegistroFiscal: '',
-      fax: '',      
-    }
+      fax: '',
+    },
+    formaValida: {
+      certificado: true,
+      datos: true,
+      destinatrio: true,
+      datosDestinatario: true,
+    },
+    disponiblesDatos: [],
+    mercanciaTabla: [],
+    formCertificado: {
+      si: false,
+      entidadFederativa: '',
+      bloque: '',
+      nombreComercialForm: '',
+      registroProductoForm: '',
+      fraccionArancelariaForm: '',
+      fechaInicioInput: '',
+      fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+      pais: '',
+      ciudad: '',
+      telefono: '',
+      correoElectronico: '',
+      numeroLetra: '',
+      calle: '',
+    },
+    estado: {
+      id: -1,
+      descripcion: '',
+    },
+    mercanciaForm: {
+      fraccionArancelaria: '',
+      nombreComercialMercancia: '',
+      nombreTecnico: '',
+      nombreIngles: '',
+      otrasInstancias: '',
+      criterioParaConferirOrigen: '',
+      marca: '',
+      cantidad: '',
+      umc: '',
+      valorMercancia: '',
+      complementoDescripcion: '',
+      masaBruta: '',
+      unidadMedidaMasaBruta: '',
+      numeroFactura: '',
+      tipoFactura: '',
+      fechaFinal: '',
+      normaOrigen: '',
+      id: '',
+      fechaFinalInput: '',
+      nalad: '',
+    },
+    bloque: '',
   };
 }
 /**
@@ -302,7 +396,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * Actualiza los datos del formulario histórico.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormHistorico(values: { [key: string]: unknown}): void {
+  setFormHistorico(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formulario: {
         ...state.formulario,
@@ -378,6 +472,20 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     this.update((state) => ({
       ...state,
       representacionFederal,
+    }));
+  }
+
+  /**
+   * Actualiza los datos del formulario de certificado.
+   *
+   * Este método permite establecer múltiples campos del certificado de una vez.
+   *
+   * @param {object} datosCertificado - Objeto con los datos del certificado a actualizar.
+   */
+  public setFormDatosCertificado(datosCertificado: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      ...state,
+      ...datosCertificado,
     }));
   }
 
@@ -1446,12 +1554,126 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * Actualiza los datos del formulario de productor.
    * @param values - Valores a actualizar en el formulario.
    */
-  setAgregarFormDatosProductor(values: { [key: string]: unknown}): void {
+  setAgregarFormDatosProductor(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       datosProductorFormulario: {
         ...state.datosProductorFormulario,
         ...values,
       },
     }));
+  }
+
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+
+  /**
+   * @method setmercanciaTabla
+   * @description
+   * Actualiza la tabla de mercancías en el almacén.
+   * @param mercanciaTabla Array de objetos `Mercancia` que representa la tabla de mercancías.
+   */
+  public setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+      // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
+  }
+
+  /**
+   * @method setFormCertificadoGenric
+   * @description
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormCertificadoGenric(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @method setEstado
+   * @description
+   * Actualiza el estado seleccionado en el almacén.
+   * @param estado Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
+   */
+  setEstado(estado: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      estado,
+    }));
+  }
+
+  /**
+   * @method setFormMercancia
+   * @description
+   * Actualiza los datos del formulario de mercancía en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de mercancía.
+   */
+  setFormMercancia(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      mercanciaForm: {
+        ...state.mercanciaForm,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Establece el estado de bloque.
+   * @param bloque - El valor de bloque.
+   */
+  public setBloque(bloque: string): void {
+    this.update((state) => ({
+      ...state,
+      bloque,
+    }));
+  }
+
+  /**
+   * Establece el estado de validación del formulario en el almacén.
+   *
+   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormValida(formaValida: { [key: string]: boolean }): void {
+    this.update((state) => {
+      const IS_VALID = { ...state.formaValida, ...formaValida };
+      return {
+        ...state,
+        formaValida: IS_VALID,
+      };
+    });
   }
 }

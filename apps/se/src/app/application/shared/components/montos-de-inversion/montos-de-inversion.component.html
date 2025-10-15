@@ -53,7 +53,7 @@
   <div class="row mt-5">
     <div class="col-12 container text-end mt-5">
       <button class="btn btn-danger me-2" (click)="eliminarMonto()">Eliminar</button>
-      <button class="btn btn-primary" >Editar</button>
+      <button class="btn btn-primary" (click)="editarMonto()">Editar</button>
     </div>
   </div>
   <div class="row mt-5">
@@ -71,3 +71,11 @@
   </lib-notificaciones>
 </section>
 }
+
+@if (nuevaNotificacionEditor) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionEditor">
+  </lib-notificaciones>
+</section>
+}
+

@@ -1,11 +1,11 @@
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
-import { Subject, map, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { FormBuilder } from '@angular/forms';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
-import { Tramite110205Store } from '../../estados/tramite110205.store';
 
 @Component({
   selector: 'app-peru-historico-productores',
@@ -50,6 +50,40 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
    */
    esFormularioSoloLectura: boolean = false;
 
+   /** Indica si el formulario es válido. */
+    public isFormValid: boolean = false;
+  
+    /** Observable que expone la lista de productores exportador agregados al store. */
+    public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
+
+    /** Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite. */
+    public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+
+    /**
+    * @property {boolean} ocultarFax
+    * Indica si el campo de fax debe estar oculto o visible en la interfaz de usuario.
+    */
+    public ocultarFax: boolean = false;
+
+  /**
+   * @property esTipoDeSeleccionado
+   * @type {boolean}
+   * @description Indica si el tipo seleccionado es válido o está activo.
+   */
+  public esTipoDeSeleccionado: boolean = true;
+
+  /**
+   * @property {Catalogo[]} optionsTipoFactura
+   * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
+   * @command Este arreglo se utiliza para poblar un componente de selección en la interfaz de usuario.
+   */
+  public optionsTipoFactura: Catalogo[] = [];
+
+  /**
+   * Solicitud actual del trámite.
+   */
+  public solicitudState!: Tramite110205State;
+
   /**
    * Constructor del componente.
    * 
@@ -72,8 +106,16 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
-    this.cargarProductorPorExportador();
-    this.cargarMercancia();
+    this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
+    this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
+    this.tramiteQuery.selectPeru$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -96,6 +138,29 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
+    this.cargarProductorPorExportador();
+
+    if (this.solicitudState.optionsTipoFactura.length === 0) {
+      this.facturaOpcion();
+    } else {
+      this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
+    }
+  }
+
+  /**
+   * @descripcion
+   * Obtiene la lista de países disponibles.
+   */
+  facturaOpcion(): void {
+    this.peruCertificadoService.getTipoFactura()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe((data) => {
+        this.optionsTipoFactura = data.datos as Catalogo[];
+        this.store.setTipoFacturaOpciones(this.optionsTipoFactura);
+      });
   }
 
   /**
@@ -156,8 +221,49 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Agrega un productor exportador al estado del store a partir del evento recibido.
+   * Si el evento contiene los datos completos del productor, los utiliza; de lo contrario, asigna valores por defecto.
+   * Si ya existen productores agregados, carga la mercancía relacionada.
+   * @param event Objeto con los datos del productor exportador o con el número de registro fiscal.
+   */
+  public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+    let DATOS: HistoricoColumnas | null = null;
+    if (event && typeof event === 'object' && 'nombreProductor' in event) {
+      DATOS = {
+          id: (event as HistoricoColumnas).id ?? 0,
+          nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+          numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+          direccion: String((event as HistoricoColumnas).direccion ?? ''),
+          correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+          telefono: String((event as HistoricoColumnas).telefono ?? ''),
+          fax: String((event as HistoricoColumnas).fax ?? '')
+      };
+    } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+      DATOS = {
+          id: 0,
+          nombreProductor: "LAURA CONTRERAS",
+          numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
+          direccion: "SAN GABRIEL 144 DURANGO", 
+          correoElectronico: "laura2992@hotmail.com",
+          telefono: "044-6182999535",
+          fax: String(event['fax'] ?? '') || '6182999535'
+      };
+    }
+    if (DATOS) { 
+      this.store.setAgregarProductoresExportador(DATOS);
+    }
+    if (this.solicitudState.agregarProductoresExportador.length) {
+      this.cargarMercancia();
+    }
+  }
+
+    /** Actualiza el estado de validez del formulario según el valor recibido. */
+  public formaValida(event: boolean): void {
+    this.isFormValid = event;
+  }
+
+  /**
    * Método que se ejecuta al destruir el componente.
-   * 
    * Libera los recursos y cancela las suscripciones activas.
    */
   ngOnDestroy(): void {

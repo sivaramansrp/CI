@@ -4,10 +4,16 @@ import {
   CLASIFICACION_NALADISA_2002_IDS,
   CLASIFICACION_NALADI_IDS,
   CRITERIO_PARA_CONFERIR_ORIGEN_IDS,
+  CRITERIO_PARA_TRATO_PREFERENCIAL_IDS,
   FECHA,
+  FECHA_FACTURA_IDS,
+  FECHA_FACTURA_REFERENCIA,
+  FECHA_FACTURA_REFERENCIA_IDS,
   FRACCION_ARANCELARIA_IDS,
+  MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
   NORMA_ORIGEN_IDS,
+  NUMERO_DE_SERIE_IDS,
   N_FACTURA_IDS,
   N_FACTURA_REFERENCIA_IDS,
   OTRAS_INSTANCIAS_IDS,
@@ -18,6 +24,12 @@ import {
   REQUIRED_TIPO_FACTURA,
   REQUIRED_UMC,
   REQUIRED_VALOR_MERCANCIA,
+  TIPO_DE_FACTURA_IDS,
+  TIPO_DE_FACTURA_REFERENCIA_IDS,
+  UMC_IDS,
+  UNIDAD_MEDIDA_COMERCIALIZACION_IDS,
+  VALOR_CONTENIDO_REGIONAL_IDS,
+  VALOR_MERCANCIA_IDS,
 } from '../../constantes/mercancia.enum';
 import {
   Catalogo,
@@ -29,6 +41,11 @@ import {
   SeccionLibQuery,
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
+import {
+  CatalogoServices,
+  REGEX_PATRON_DECIMAL_15_4,
+  REGEX_PATRON_DECIMAL_16_4,
+} from '@ng-mf/data-access-user';
 import {
   Component,
   EventEmitter,
@@ -48,11 +65,8 @@ import {
 import { Subject, delay, of, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../models/modificacion.enum';
 import { MercanciaService } from '../../services/mercancia.service';
-import { REGEX_PATRON_DECIMAL_15_4 } from '@ng-mf/data-access-user';
-import { REGEX_PATRON_DECIMAL_16_4 } from '@ng-mf/data-access-user';
 import { ValidationErrors } from '@angular/forms';
 
 export function validarCantidad(
@@ -113,6 +127,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Output() tablaSeleccionEvent = new EventEmitter();
 
+  /**
+   * @description
+   * Evento que emite los datos relacionados con las mercancías al componente padre.
+   * Se utiliza para notificar cambios o actualizaciones en la lista de mercancías.
+   */
   @Output() EMITMERCANIAS = new EventEmitter();
 
   /**
@@ -127,6 +146,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() datosSeleccionados!: Mercancia;
 
+  /**
+   * @description
+   * Indica si el componente se está utilizando desde la sección de mercancías disponibles.
+   * Este valor se recibe como entrada desde el componente padre y controla el comportamiento o la vista del componente.
+   */
   @Input() fromMercanciasDisponibles: boolean = false;
 
   /**
@@ -142,6 +166,19 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   umc: Catalogo[] = [];
 
   /**
+   * @description
+   * Lista de opciones disponibles para las Unidades de Medida Comercial (UMC).
+   * Se utiliza para poblar menús desplegables o listas de selección en el formulario.
+   */
+  optionsUMC: Catalogo[] = [];
+
+  /**
+   * @descripcion
+   * Lista de unidades de medida y clasificación (UMC) disponibles.
+   */
+  umcMedida: Catalogo[] = [];
+
+  /**
    * @descripcion
    * Lista de facturas disponibles.
    */
@@ -152,6 +189,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Fecha final para el formulario.
    */
   fechaFactura: InputFecha = FECHA;
+
+  /**
+   * @descripcion
+   * Fecha final para el formulario.
+   */
+  fechaFacturaReferencia: InputFecha = FECHA_FACTURA_REFERENCIA;
 
   /**
    * @descripcion
@@ -185,28 +228,141 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() idProcedimiento!: number;
 
+  /**
+   * Contiene los identificadores de fracción arancelaria.
+   * @type {number[]}
+   */
   FRACCION_ARANCELARIA: number[] = FRACCION_ARANCELARIA_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADI.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADI: number[] = CLASIFICACION_NALADI_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADISA 1993.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADISA_1993: number[] = CLASIFICACION_NALADISA_1993_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADISA 1996.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADISA_1996: number[] = CLASIFICACION_NALADISA_1996_IDS;
 
+  /**
+   * Contiene los identificadores de clasificación NALADISA 2002.
+   * @type {number[]}
+   */
   CLASIFICACION_NALADISA_2002: number[] = CLASIFICACION_NALADISA_2002_IDS;
 
+  /**
+   * Contiene los identificadores del número de factura de referencia.
+   * @type {number[]}
+   */
   N_FACTURA_REFERENCIA: number[] = N_FACTURA_REFERENCIA_IDS;
 
+  /**
+   * Contiene los identificadores del número de factura.
+   * @type {number[]}
+   */
   N_FACTURA: number[] = N_FACTURA_IDS;
 
+  /**
+   * Contiene los identificadores de la norma de origen.
+   * @type {number[]}
+   */
   NORMA_ORIGEN: number[] = NORMA_ORIGEN_IDS;
 
+  /**
+   * Contiene los identificadores del nombre en inglés.
+   * @type {number[]}
+   */
   NOMBRE_EN_INGLES: number[] = NOMBRE_EN_INGLES_IDS;
 
+  /**
+   * Contiene los identificadores de otras instancias relacionadas.
+   * @type {number[]}
+   */
   OTRAS_INSTANCIAS: number[] = OTRAS_INSTANCIAS_IDS;
 
+  /**
+   * Contiene los identificadores del criterio para conferir origen.
+   * @type {number[]}
+   */
   CRITERIO_PARA_CONFERIR_ORIGEN: number[] = CRITERIO_PARA_CONFERIR_ORIGEN_IDS;
 
+  /**
+   * Contiene los identificadores del criterio para trato preferencial.
+   * @type {number[]}
+   */
+  CRITERIO_PARA_TRATO_PREFERENCIAL: number[] =
+    CRITERIO_PARA_TRATO_PREFERENCIAL_IDS;
+
+  /**
+   * Contiene los identificadores del valor de la mercancía.
+   * @type {number[]}
+   */
+  VALOR_MERCANCIA: number[] = VALOR_MERCANCIA_IDS;
+
+  /**
+   * Contiene los identificadores del valor de contenido regional.
+   * @type {number[]}
+   */
+  VALOR_CONTENIDO_REGIONAL: number[] = VALOR_CONTENIDO_REGIONAL_IDS;
+
+  /**
+   * Contiene los identificadores de la fecha de la factura.
+   * @type {number[]}
+   */
+  FECHA_FACTURA: number[] = FECHA_FACTURA_IDS;
+
+  /**
+   * Contiene los identificadores de la fecha de la factura de referencia.
+   * @type {number[]}
+   */
+  FECHA_FACTURA_REFERENCIA: number[] = FECHA_FACTURA_REFERENCIA_IDS;
+
+  /**
+   * Contiene los identificadores del tipo de factura.
+   * @type {number[]}
+   */
+  TIPO_DE_FACTURA: number[] = TIPO_DE_FACTURA_IDS;
+
+  /**
+   * Contiene los identificadores del tipo de factura de referencia.
+   * @type {number[]}
+   */
+  TIPO_DE_FACTURA_REFERENCIA: number[] = TIPO_DE_FACTURA_REFERENCIA_IDS;
+
+  /**
+   * Contiene los identificadores del número de serie.
+   * @type {number[]}
+   */
+  NUMERO_DE_SERIE: number[] = NUMERO_DE_SERIE_IDS;
+
+  /**
+   * Contiene los identificadores asociados a la marca.
+   * @type {number[]}
+   */
+  MARCA: number[] = MARCA_IDS;
+
+  /**
+   * @description
+   * Contiene los identificadores de las unidades de medida utilizadas para la comercialización.
+   * Estos valores se obtienen de la constante `UNIDAD_MEDIDA_COMERCIALIZACION_IDS`
+   * y se utilizan para filtrar o validar las unidades disponibles en el sistema.
+   */
+  UNIDAD_MEDIDA_COMERCIALIZACION: number[] = UNIDAD_MEDIDA_COMERCIALIZACION_IDS;
+
+  /**
+   * @description
+   * Contiene los identificadores de las unidades de medida de comercialización.
+   * Se utiliza para referenciar las unidades válidas dentro del flujo de captura o validación.
+   */
+  UMC: number[] = UMC_IDS;
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -220,8 +376,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private readonly fb: FormBuilder,
     private mercanciaService: MercanciaService,
-    private seccionQuery: SeccionLibQuery
-  ) {}
+    private seccionQuery: SeccionLibQuery,
+    public catalogoServices: CatalogoServices
+  ) { }
 
   /**
    * @descripcion
@@ -232,20 +389,33 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.seccionQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((s) => (this.seccionState = s));
-
-    this.umcOpcion();
-    this.facturasOpcion();
+    if (this.UNIDAD_MEDIDA_COMERCIALIZACION.includes(this.idProcedimiento)) {
+      this.getUmc();
+    }
+    this.getUnidadesMedidaComercial();
+    this.getTipoFactura();
     this.initActionFormBuild();
   }
 
+  /**
+   * Detecta los cambios en las propiedades de entrada del componente y actualiza el estado en consecuencia.
+   *
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios detectados en las propiedades @Input().
+   * @returns {void}
+   *
+   * @description
+   * Este método se ejecuta automáticamente cuando cambian las propiedades de entrada del componente:
+   * - Si cambia `datosSeleccionados`, se actualiza su valor y se reconstruye el formulario llamando a `initActionFormBuild()`.
+   * - Si cambia `fromMercanciasDisponibles`, se actualiza su valor en la propiedad correspondiente.
+   */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['datosSeleccionados'].currentValue) {
-      this.datosSeleccionados = changes['datosSeleccionados'].currentValue;
+    if (changes['datosSeleccionados']?.currentValue) {
+      this.datosSeleccionados = changes['datosSeleccionados']?.currentValue;
       this.initActionFormBuild();
     }
-    if (changes['fromMercanciasDisponibles'].currentValue) {
+    if (changes['fromMercanciasDisponibles']?.currentValue) {
       this.fromMercanciasDisponibles =
-        changes['fromMercanciasDisponibles'].currentValue;
+        changes['fromMercanciasDisponibles']?.currentValue;
     }
   }
 
@@ -255,7 +425,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   initActionFormBuild(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionArancelaria: [this.datosSeleccionados?.fraccionArancelaria],
+      fraccionArancelaria: [
+        { value: this.datosSeleccionados?.fraccionArancelaria, disabled: true },
+      ],
       fraccionNaladi: [
         { value: this.datosSeleccionados?.fraccionNaladi, disabled: true },
       ],
@@ -274,18 +446,40 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [{ value: '', disabled: true }],
-      nombreIngles: [{ value: '', disabled: true }],
-      otrasInstancias: [{ value: '', disabled: true }],
-      criterioParaConferirOrigen: [{ value: '', disabled: true }],
-
+      normaOrigen: [
+        { value: this.datosSeleccionados?.normaOrigen, disabled: true },
+      ],
+      nombreIngles: [
+        { value: this.datosSeleccionados?.nombreIngles, disabled: true },
+      ],
+      otrasInstancias: [
+        { value: this.datosSeleccionados?.otrasInstancias, disabled: true },
+      ],
+      criterioParaConferirOrigen: [
+        {
+          value: this.datosSeleccionados?.criterioParaConferirOrigen,
+          disabled: true,
+        },
+      ],
+      criterioParaTratoPreferencial: [
+        {
+          value: this.datosSeleccionados?.criterioParaTratoPreferencial,
+          disabled: true,
+        },
+      ],
+      valorDeContenidoRegional: [
+        {
+          value: this.datosSeleccionados?.valorDeContenidoRegional,
+          disabled: true,
+        },
+      ],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
-
+      marca: [this.datosSeleccionados?.marca ?? null],
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [
@@ -295,14 +489,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.pattern(REGEX_PATRON_DECIMAL_16_4),
         ],
       ],
-
       umc: [
-        this.datosSeleccionados?.umc,
+        this.datosSeleccionados?.umc ? this.datosSeleccionados?.umc : '',
         REQUIRED_UMC.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
-
       valorMercancia: [
         this.datosSeleccionados?.valorMercancia,
         [
@@ -312,7 +504,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.pattern(REGEX_PATRON_DECIMAL_15_4),
         ],
       ],
-
       complementoDescripcion: [
         this.datosSeleccionados?.complementoDescripcion,
         [
@@ -322,7 +513,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.maxLength(200),
         ],
       ],
-
       numeroFactura: [
         this.datosSeleccionados?.numeroFactura,
         [
@@ -332,9 +522,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           Validators.maxLength(36),
         ],
       ],
-
+      numeroDeSerie: [''],
       tipoFactura: [
-        this.datosSeleccionados?.tipoFactura,
+        this.datosSeleccionados?.tipoFactura
+          ? this.datosSeleccionados?.tipoFactura
+          : '',
         REQUIRED_TIPO_FACTURA.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
@@ -377,44 +569,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @descripcion
-   * Obtiene la lista de unidades de medida y clasificación (UMC) disponibles.
-   */
-  umcOpcion(): void {
-    this.mercanciaService
-      .obtenerMenuDesplegable('umc.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.umc = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.umc = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de facturas disponibles.
-   */
-  facturasOpcion(): void {
-    this.mercanciaService
-      .obtenerMenuDesplegable('factura.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.factura = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.factura = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
    * Acepta los datos del formulario, los guarda en el almacén y emite los eventos correspondientes.
    */
   acceptar(agregar: boolean): void {
@@ -443,6 +597,24 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  /**
+   * Construye un objeto de tipo `Mercancia` a partir de los datos proporcionados,
+   * aplicando valores predeterminados cuando sea necesario.
+   *
+   * @private
+   * @param {Mercancia} MERCANIADATO - Objeto que contiene los datos originales de la mercancía.
+   * @returns {Mercancia} Objeto `Mercancia` completamente estructurado y con valores de respaldo.
+   *
+   * @description
+   * Este método genera un nuevo objeto `Mercancia` tomando como base los valores recibidos en `MERCANIADATO`.
+   * Si alguna propiedad del objeto es `undefined` o `null`, se asigna el valor por defecto `'--'`.
+   *
+   * Además:
+   * - Si la propiedad `fromMercanciasDisponibles` está activa, el campo `id` se inicializa en `0`.
+   * - En caso contrario, el `id` se obtiene desde `datosSeleccionados`.
+   *
+   * El resto de las propiedades se completan con los valores del objeto recibido o con el valor de respaldo.
+   */
   private buildMercancia(MERCANIADATO: Mercancia): Mercancia {
     const FALLBACK = (value?: string): string => value ?? '--';
     return {
@@ -526,5 +698,83 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  /**
+   * @descripcion
+   * Actualiza el valor del control 'tipoFactura' en el formulario reactivo
+   * 'mercanciaForm' cuando el usuario selecciona un tipo de factura del catálogo.
+   *
+   * @param evento Objeto del tipo Catalogo que contiene la opción seleccionada.
+   */
+  selectionTipoFactura(evento: Catalogo): void {
+    this.mercanciaForm.patchValue({
+      tipoFactura: evento.clave,
+    });
+  }
+
+  /**
+   * @descripcion
+   * Actualiza el valor del control 'umc' en el formulario reactivo
+   * 'mercanciaForm' cuando el usuario selecciona una unidad de medida del catálogo.
+   *
+   * @param evento Objeto del tipo Catalogo que contiene la opción seleccionada.
+   */
+  selectionUMC(evento: Catalogo): void {
+    this.mercanciaForm.patchValue({
+      umc: evento.clave,
+    });
+  }
+
+  /**
+   * Obtiene la lista de Unidades de Medida de la Cantidad (UMC) desde el servicio `catalogoServices`
+   * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.
+   *  Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'umc' en `optionsUMC` con las opciones obtenidas.
+   */
+  getUmc(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices
+      .unidadMasaBrutaCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.umcMedida = res.datos ?? [];
+      });
+  }
+
+  /**
+   * @description
+   * Obtiene el catálogo de unidades de medida comercial a partir del identificador del trámite actual.
+   * Llama al servicio de catálogos y actualiza la lista `umcMedida` con los datos recibidos.
+   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
+  getUnidadesMedidaComercial(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices
+      .unidadesMedidaComercialCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.optionsUMC = res.datos ?? [];
+      });
+  }
+
+  /**
+   * @description
+   * Obtiene el catálogo de tipos de factura a partir del identificador del trámite actual.
+   * Llama al servicio de catálogos y actualiza la lista `factura` con los datos recibidos.
+   * La suscripción se controla mediante `takeUntil` para liberar recursos correctamente.
+   *
+   * @returns {void}
+   */
+  getTipoFactura(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices
+      .tipoFacturaCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.factura = res.datos ?? [];
+      });
   }
 }

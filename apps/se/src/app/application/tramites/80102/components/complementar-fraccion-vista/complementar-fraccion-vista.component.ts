@@ -4,7 +4,7 @@ import {
   ComplimentarFraccion,
   ComplimentarFraccionResoponse,
 } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
@@ -69,6 +69,20 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
  */
   @Output() cerrarPopup = new EventEmitter<void>();
 
+/**
+ * Evento que se emite al guardar la información de complementación de fracción.
+ * 
+ * @event guardarComplementarFraccion
+ */
+  @Output() guardarComplementarFraccion = new EventEmitter<ComplimentarFraccionResoponse>();
+
+/**
+ * Descripción que se muestra en el componente.
+ * 
+ * @input descripcion
+ */
+  @Input() descripcion!: string;
+
   /**
    * Constructor de la clase ComplementarFraccionVistaComponent.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
@@ -105,7 +119,10 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDatos(event: ComplimentarFraccionResoponse): void {
-    this.complimentarDatos = event;
+    this.guardarComplementarFraccion.emit({
+    ...event,
+    descripcion: this.descripcion
+  });
   }
 
   /**

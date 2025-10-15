@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="banderaCargaVentana === false">
     <form [formGroup]="mercanciaForm">
         <ng-titulo titulo="Datos Generales de la Mercancía Animal" />
 
@@ -174,8 +174,12 @@
 
             <div class="row">
                 <div class="col-md-4 form-group">
-                    <label>Número de lote:</label>
+                    <label>Número de lote<span [ngClass]="{'mensaje-error':detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched}">*</span>:</label>
                     <input type="text" class="form-control" formControlName="numeroLote" [maxlength]="16" />
+                    <div
+                        *ngIf="detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched">
+                        <small class="mensaje-error">Este campo es obligatorio.</small>
+                    </div>
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Color/Pelaje:</label>
@@ -228,16 +232,16 @@
             <div class="col-md-12 d-flex justify-content-end">
                 <button type="button" class="btn btn-default ms-3" (click)="eliminarDetalle()">Elimiar Detalle</button>
                 <button type="button" class="btn btn-primary ms-3" (click)="agregarDetalle()">Agregar Detalle</button>
-                <button type="button" class="btn btn-default ms-3">Carga Por Archivo </button>
+                <button type="button" class="btn btn-default ms-3" (click)="abrirModalCargaMasivaAnimales()">Carga Por Archivo</button>
             </div>
         </div>
-    </form>
-
-    <div class="row my-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSensiblesTabla"
+        <div class="row my-5">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSensiblesTabla" 
             [datos]="sensiblesTablaDatos" [showPagination]="true" [mode]="'client'" [totalItems]="sensiblesTablaDatos.length" [itemsPerPage]="5"
             (listaDeFilaSeleccionada)="sensiblesTablaSeleccionada = $event"></app-tabla-dinamica>
     </div>
+    </form>
+    
     <div class="row mt-2">
         <div class="col-md-12 d-flex justify-content-end">
             <button type="button" class="btn btn-default ms-3" (click)="limpiarAnimalesVivo()">Limpiar</button>
@@ -245,4 +249,24 @@
             <button type="button" class="btn btn-primary ms-3" (click)="agregarAnimales()">Agregar</button>
         </div>
     </div>
+    
 </div>
+
+<app-carga-detalle-mercancia  
+(listaEmitida)="recibirLista($event)" *ngIf="banderaCargaVentana"
+(accionDelHijo)="cerrarModalCargaMasivaAnimales()"
+(accionDelHijoLimpiaLista)="limpiarTablaCargasMasivasAnimales()"
+></app-carga-detalle-mercancia>
+
+
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        [forma]="datosServicio"
+        [invertirBotones]="true"
+        (confirmacionModal)="confirmacionModal($event)"
+    >
+    </lib-notificaciones>
+</section>
+}

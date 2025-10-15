@@ -12,7 +12,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, EventEmitter, Input,OnInit,Output,ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input,OnChanges,OnInit,Output,ViewChild} from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
@@ -33,6 +33,7 @@ import { Router } from '@angular/router';
 import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
 import { ComplimentosService } from '../../services/complimentos.service';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
 /**
  * Componente para mostrar y gestionar subfabricantes y sus plantas.
@@ -58,7 +59,7 @@ import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class EmpresasSubfabricantesComponent implements OnInit {
+export class EmpresasSubfabricantesComponent implements OnInit, OnChanges {
 
   /**
    * Referencia al elemento modal para complementar plantas.
@@ -332,7 +333,7 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
   constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery, public query: Tramite80101Query,
-      private store: Tramite80101Store,private complimentosService: ComplimentosService
+      private store: Tramite80101Store,private complimentosService: ComplimentosService,private servicioDeFormularioService: ServicioDeFormularioService
   ) { 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -554,5 +555,14 @@ obtenerEstados():void {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+  }
+
+    /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.datosTablaSubfabricantesSeleccionadas.length === 0) {
+      this.servicioDeFormularioService.registerArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    } else {
+      this.servicioDeFormularioService.setArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    }
   }
 }
