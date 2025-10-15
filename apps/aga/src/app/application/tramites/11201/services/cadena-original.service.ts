@@ -15,7 +15,8 @@ export class CadenaOriginal11201Service {
 /**
    * URL del servidor donde se encuentra la API.
    */
-  urlServer = ENVIRONMENT.API_HOST;
+  // urlServer = ENVIRONMENT.API_HOST_TEST;
+  urlServer = ENVIRONMENT.API_HOST_TEST;
 
   constructor(private http: HttpClient) { }
 

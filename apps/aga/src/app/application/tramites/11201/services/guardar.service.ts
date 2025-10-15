@@ -17,7 +17,7 @@ export class GuardarService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST_TEST}/api/`;
   }
 
   /**

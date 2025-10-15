@@ -936,7 +936,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const API_PAYLOAD = {
           "rfc": this.rfc_original,
           "aduana": this.solicitudForm.get('aduana')?.value,
-          "fecha_ingreso": formatFecha(this.solicitudForm.get('fechaIngreso')?.value),
+          "fecha_ingreso": this.convertDate(this.solicitudForm.get('fechaIngreso')?.value),
           "iniciales_contenedor": this.solicitudForm.get('inicialesContenedor')?.value, 
           "numero_contenedor": this.solicitudForm.get('numeroContenedor')?.value,
           "digito_verificador":this.solicitudForm.get('digitoDeControl')?.value,
@@ -983,6 +983,23 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           }
         }
       });
+  }
+
+  /**
+   * Converts a date string from the format 'DD/MM/YYYY' to 'YYYY-MM-DD 00:00:00'.
+   *
+   * @param dateString - The date string in 'DD/MM/YYYY' format to be converted.
+   * @returns The formatted date string in 'YYYY-MM-DD 00:00:00' format.
+   */
+  convertDate(dateString: string): string {
+    if (!dateString || typeof dateString !== 'string') {
+      return '';
+    }
+    const parsedDate = moment(dateString, 'DD/MM/YYYY', true);
+    if (!parsedDate.isValid()) {
+      return '';
+    }
+    return parsedDate.format('YYYY-MM-DD 00:00:00');
   }
 
   /**

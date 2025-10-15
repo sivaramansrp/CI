@@ -24,7 +24,7 @@ export class IniciarService {
    * @param http - Cliente HTTP para realizar solicitudes al servidor.
    */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST_TEST}/api/`;
   }
 
   /**

@@ -9,16 +9,16 @@ export const API_POST_VALIDAR = (IDSOLICITUD: string) : string => `sat-t11201/so
 export const TRAMITE = '{tramite}';
 
 /**
- * API para guardar la solicitud del tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar
+ * API para guardar la solicitud del tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Registro-Solicitud/guardar
  */
-export const API_POST_SOLICITUD = 'sat-t130118/solicitud/guardar';
+export const API_POST_SOLICITUD = 'sat-t11201/solicitud/guardar';
 
 /**
- * API para iniciar el tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/iniciar
+ * API para iniciar el tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Registro-Solicitud/iniciar
  */
-export const API_GET_INICIO = 'sat-t130118/solicitud/iniciar';
+export const API_GET_INICIO = 'sat-t11201/solicitud/iniciar';
 
 /**
  * ID de la solicitud que se utilizará en las consultas.
@@ -27,22 +27,22 @@ export const API_GET_INICIO = 'sat-t130118/solicitud/iniciar';
 export const IDSOLICITUD = '{idSolicitud}';
 
 /**
- * API para obtener el estado de la solicitud del tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ * API para obtener el estado de la solicitud del tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
  */
-export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t130118/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t11201/solicitud/${IDSOLICITUD}/genera-cadena-original`;
 
 /**
- * API para firmar la solicitud del tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
+ * API para firmar la solicitud del tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
-export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t130118/solicitud/${IDSOLICITUD}/firmar`;
+export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t11201/solicitud/${IDSOLICITUD}/firmar`;
 
 /**
- * API para obtener el certificado de antigüedad máxima del tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/certificado-antiguedad-maxima
+ * API para obtener el certificado de antigüedad máxima del tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Registro-Solicitud/certificado-antiguedad-maxima
  */
-export const API_GET_CERTIFICADO_ANTIGUEDAD = `sat-t130118/certificado/antiguedad-maxima`;
+export const API_GET_CERTIFICADO_ANTIGUEDAD = `sat-t11201/certificado/antiguedad-maxima`;
 
 
 /**
@@ -53,15 +53,15 @@ export const CVEFRACCION = '{cveFraccion}';
 
 /**
  * API para obtener los molinos de acero habilitados.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/habilitar-molino-acero
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Registro-Solicitud/habilitar-molino-acero
  */
-export const API_GET_MOLINOS_ACERO_HABILITAR = (CVEFRACCION: string) : string => `sat-t130118/fraccion-arancelaria/${CVEFRACCION}/molinos-acero/habilitar`;
+export const API_GET_MOLINOS_ACERO_HABILITAR = (CVEFRACCION: string) : string => `sat-t11201/fraccion-arancelaria/${CVEFRACCION}/molinos-acero/habilitar`;
 
 /**
  * API para obtener los molinos de acero activos.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-molinos-acero
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Catalogos/consulta-molinos-acero
  */
-export const API_GET_MOLINO_ACTIVOS = `sat-t130118/catalogo/molinos-acero`;
+export const API_GET_MOLINO_ACTIVOS = `sat-t11201/catalogo/molinos-acero`;
 
 /**
  * Constante para el número de folio del tramite.
@@ -70,15 +70,15 @@ export const API_GET_MOLINO_ACTIVOS = `sat-t130118/catalogo/molinos-acero`;
 export const NUMFOLIOTRAMITE = '{numFolioTramite}';
 
 /**
- * API para obtener evaluar iniciar tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
+ * API para obtener evaluar iniciar tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
  */
 export const API_GET_EVALUAR_INICIAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/iniciar`;
 
 
 /**
- * API para prepar evaluacion tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
+ * API para prepar evaluacion tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
  */
 export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/mostrar`;
 
@@ -89,14 +89,14 @@ export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string
 export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
 
 /**
- * API para Consultar que tabs mostrar 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
+ * API para Consultar que tabs mostrar 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
 export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/solicitud/${IDSOLICITUD}/estado`;
 
 /**
- * API para Consultar solicitud del tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes
+ * API para Consultar solicitud del tramite 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Consulta-Solicitudes
  */
 export const API_GET_CONSULTA_SOLICITUD = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/solicitud/detalle`;
 
@@ -113,8 +113,8 @@ export const IDRESOLUCION= '{idResolucion}';
 export const IDREQUERIMIENTO= '{idRequerimiento}';
 
 /** 
- * API para consulta de envio digital 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/get-detalle-estado
+ * API para consulta de envio digital 11201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t11201/swagger-ui/index.html#/Consulta-Solicitud/get-detalle-estado
  */
 export const API_GET_ENVIO_DIGITAL = (NUMFOLIOTRAMITE: string) : string => `tramite/${NUMFOLIOTRAMITE}/envio-digital/detalle`;
 

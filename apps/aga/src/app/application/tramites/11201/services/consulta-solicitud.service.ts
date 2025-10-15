@@ -24,7 +24,7 @@ export class ConsultaSolicitudService {
     * @param http Instancia de HttpClient para realizar solicitudes HTTP.
     */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST_TEST}/api/`;
   }
 
   /**
