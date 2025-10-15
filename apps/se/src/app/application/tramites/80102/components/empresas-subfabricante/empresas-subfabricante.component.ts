@@ -200,14 +200,14 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
      * Constructor del componente. Inicializa servicios, dependencias y suscripciones a estados.
      */
   constructor(
-    private AutorizacionProgrmaNuevoServiceServicios: AutorizacionProgrmaNuevoService,
-    private fb: FormBuilder,
+    public AutorizacionProgrmaNuevoServiceServicios: AutorizacionProgrmaNuevoService,
+    public fb: FormBuilder,
     public query: Tramite80102Query,
-    private store: Tramite80102Store,
-    private router: Router,
-    private activatedRoute: ActivatedRoute, 
-    private consultaQuery: ConsultaioQuery,
-    private _compartidaSvc: ComplimentosService
+    public store: Tramite80102Store,
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+    public consultaQuery: ConsultaioQuery,
+    public _compartidaSvc: ComplimentosService
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(

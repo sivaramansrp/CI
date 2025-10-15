@@ -3,12 +3,15 @@ import {
   CLASIFICACION_NALADISA_1996_IDS,
   CLASIFICACION_NALADISA_2002_IDS,
   CLASIFICACION_NALADI_IDS,
+  CRITERIO_PARA_CLASIFICATION,
   CRITERIO_PARA_CONFERIR_ORIGEN_IDS,
   CRITERIO_PARA_TRATO_PREFERENCIAL_IDS,
   FECHA,
+  FECHA_DE_PAGO,
   FECHA_FACTURA_IDS,
   FECHA_FACTURA_REFERENCIA,
   FECHA_FACTURA_REFERENCIA_IDS,
+  FECHA_PAGO,
   FRACCION_ARANCELARIA_IDS,
   MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
@@ -194,6 +197,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * @descripcion
    * Fecha final para el formulario.
    */
+  fechaDePago: InputFecha = FECHA_PAGO;
+
+  /**
+   * @descripcion
+   * Fecha final para el formulario.
+   */
   fechaFacturaReferencia: InputFecha = FECHA_FACTURA_REFERENCIA;
 
   /**
@@ -350,6 +359,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   MARCA: number[] = MARCA_IDS;
 
   /**
+   * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
+   */
+  CRITERIO_PARA_CLASIFICATION: number[]= CRITERIO_PARA_CLASIFICATION;
+
+  /**
+   * Contiene los identificadores en los que el campo "Fecha de pago" es obligatorio.
+   */
+  FECHA_DE_PAGO: number[]= FECHA_DE_PAGO;
+
+  /**
    * @description
    * Contiene los identificadores de las unidades de medida utilizadas para la comercialización.
    * Estos valores se obtienen de la constante `UNIDAD_MEDIDA_COMERCIALIZACION_IDS`
@@ -378,7 +397,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     private mercanciaService: MercanciaService,
     private seccionQuery: SeccionLibQuery,
     public catalogoServices: CatalogoServices
-  ) {}
+  ) { }
 
   /**
    * @descripcion
@@ -389,7 +408,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.seccionQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((s) => (this.seccionState = s));
-    this.getUmc();
+    if (this.UNIDAD_MEDIDA_COMERCIALIZACION.includes(this.idProcedimiento)) {
+      this.getUmc();
+    }
     this.getUnidadesMedidaComercial();
     this.getTipoFactura();
     this.initActionFormBuild();
@@ -407,13 +428,13 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * - Si cambia `fromMercanciasDisponibles`, se actualiza su valor en la propiedad correspondiente.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['datosSeleccionados'].currentValue) {
-      this.datosSeleccionados = changes['datosSeleccionados'].currentValue;
+    if (changes['datosSeleccionados']?.currentValue) {
+      this.datosSeleccionados = changes['datosSeleccionados']?.currentValue;
       this.initActionFormBuild();
     }
-    if (changes['fromMercanciasDisponibles'].currentValue) {
+    if (changes['fromMercanciasDisponibles']?.currentValue) {
       this.fromMercanciasDisponibles =
-        changes['fromMercanciasDisponibles'].currentValue;
+        changes['fromMercanciasDisponibles']?.currentValue;
     }
   }
 
@@ -444,33 +465,14 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [
-        { value: this.datosSeleccionados?.normaOrigen, disabled: true },
-      ],
-      nombreIngles: [
-        { value: this.datosSeleccionados?.nombreIngles, disabled: true },
-      ],
-      otrasInstancias: [
-        { value: this.datosSeleccionados?.otrasInstancias, disabled: true },
-      ],
-      criterioParaConferirOrigen: [
-        {
-          value: this.datosSeleccionados?.criterioParaConferirOrigen,
-          disabled: true,
-        },
-      ],
-      criterioParaTratoPreferencial: [
-        {
-          value: this.datosSeleccionados?.criterioParaTratoPreferencial,
-          disabled: true,
-        },
-      ],
-      valorDeContenidoRegional: [
-        {
-          value: this.datosSeleccionados?.valorDeContenidoRegional,
-          disabled: true,
-        },
-      ],
+      normaOrigen: [{ value: this.datosSeleccionados?.normaOrigen, disabled: true }],
+      nombreIngles: [{ value: this.datosSeleccionados?.nombreIngles, disabled: true }],
+      otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
+      criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
+      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
+      criterioParaClasificacion: [this.datosSeleccionados?.criterioParaClasificacion ?? null],
+      fechaDePago: [ this.datosSeleccionados?.fechaDePago ?? null],
+      valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
@@ -635,6 +637,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
       complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
       complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
+      criterioParaClasificacion: FALLBACK(MERCANIADATO.criterioParaClasificacion),
+      fechaDePago: FALLBACK(MERCANIADATO.fechaDePago),
       fraccionNaladi: MERCANIADATO.fraccionNaladi,
       fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
       fraccionNaladiSa96: MERCANIADATO.fraccionNaladiSa96,
@@ -687,6 +691,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * @summary Actualiza `fechaDePago` y sincroniza con el store.
+   * @description Setea el valor, marca el control como tocado/modificado y persiste vía `setFechaDePago`.
+   * @param {string} nuevo_valor Fecha seleccionada (p. ej., '2025-09-04').
+   * @returns {void}
+   */
+  public cambioFechaDePago(nuevo_valor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDePago: nuevo_valor,
+    });
+  }
+
+  /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
    * @param nombreControl - Nombre del control a verificar.
    * @returns True si el control es inválido, de lo contrario false.
@@ -707,7 +723,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionTipoFactura(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      tipoFactura: evento.id,
+      tipoFactura: evento.clave,
     });
   }
 
@@ -720,7 +736,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionUMC(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      umc: evento.id,
+      umc: evento.clave,
     });
   }
 
@@ -736,7 +752,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .unidadMasaBrutaCatalogo(TRAMITES_ID)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
-        this.optionsUMC = res.datos ?? [];
+        this.umcMedida = res.datos ?? [];
       });
   }
 
@@ -754,7 +770,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .unidadesMedidaComercialCatalogo(TRAMITES_ID)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
-        this.umcMedida = res.datos ?? [];
+        this.optionsUMC = res.datos ?? [];
       });
   }
 

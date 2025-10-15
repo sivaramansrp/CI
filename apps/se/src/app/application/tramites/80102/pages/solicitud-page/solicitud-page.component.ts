@@ -358,7 +358,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * 
    * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
    */
-    private shouldNavigate$(): Observable<boolean> {
+    public shouldNavigate$(): Observable<boolean> {
       return this.autorizacionProgrmaNuevoService.getAllState().pipe(
         take(1),
         switchMap(data => this.guardar(data)),

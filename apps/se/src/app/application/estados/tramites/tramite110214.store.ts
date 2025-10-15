@@ -163,6 +163,22 @@ export interface Tramite110214State {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
+
+  /**
+   * Datos del formulario relacionados con los detalles del certificado.
+   * Estructura dinámica y flexible.
+   */
+  formDatosCertificado: { [key: string]: unknown };
+
   /**
    * @description
    * Representa la estructura principal del estado o modelo de datos relacionado con el formulario de certificado.
@@ -368,6 +384,15 @@ export function createInitialState(): Tramite110214State {
       nalad: '',
     },
     bloque: '',
+    idiomaDatos: [],
+    entidadFederativaDatos: [],
+    representacionFederalDatos: [],
+    formDatosCertificado: {
+      observaciones: '',
+      idioma: '',
+      entidadFederativa: '',
+      representacionFederal: '',
+    },
   };
 }
 /**
@@ -1439,5 +1464,87 @@ export class Tramite110214Store extends Store<Tramite110214State> {
         formaValida: IS_VALID,
       };
     });
+  }
+
+  /**
+   * Actualiza el idioma seleccionado para el trámite.
+   *
+   * Este método permite establecer el idioma seleccionado en el trámite.
+   *
+   * @param {Catalogo[]} idioma - El idioma a establecer.
+   */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de entidades federativas disponibles.
+   * @param {Catalogo[]} entidadFederativaDatos - Lista de entidades federativas a establecer.
+   */
+  public setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de representaciones federales disponibles.
+   * @param {Catalogo[]} representacionFederalDatos - Lista de representaciones federales a establecer.
+   */
+  public setRepresentacionFederalDatos(
+    representacionFederalDatos: Catalogo[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
+    }));
+  }
+
+  /**
+   * Establece los valores del formulario de fechas del certificado en el almacén.
+   *
+   * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el idioma seleccionado del catálogo.
+   * @param idiomaDatosSeleccion - El idioma seleccionado del catálogo.
+   * @returns void
+   */
+  setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatosSeleccion,
+    }));
+  }
+
+  /**
+   * Establece los representacionFederalSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
   }
 }
