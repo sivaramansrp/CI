@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { GrupoRepresentativo } from '../models/peru-certificado.module';
+import { GrupoRepresentativo, HistoricoColumnas } from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -997,5 +997,12 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       ...state,
       representacionFederalDatos,
     }));
+  }
+    /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setProductores(productores: HistoricoColumnas[]): void {
+    this.update((state) => ({ ...state, productores }));
   }
 }

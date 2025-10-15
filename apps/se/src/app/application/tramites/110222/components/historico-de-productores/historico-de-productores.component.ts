@@ -132,6 +132,9 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+          if (seccionState?.['productorMismoExportador']) {
+            this.cargarProductorPorExportador();
+          }
         })
       )
       .subscribe();
@@ -219,6 +222,39 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }
 
+  conseguirDisponiblesDatos(): void {
+    const SELECTED_RFC = this.agregarDatosProductor['numeroRegistroFiscal'];
+    console.log('Selected RFC:', SELECTED_RFC);
+    const PAYLOAD = {
+      rfc_solicitante: SELECTED_RFC,
+    };
+    this.certificadoDeService
+      .obtenerProductoruNevo(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          console.log('Response from agregar productor nuevo:', response);
+          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.id,
+              nombreProductor: item.nombreCompleto,
+              numeroRegistroFiscal: item.rfc,
+              direccion: item.direccionCompleta,
+              correoElectronico: item.correoElectronico,
+              telefono: item.telefono,
+              fax: item.fax,
+            })
+          );
+         
+          this.store.setProductores(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+
+    // this.mercanciasDisponibles = true;
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * 

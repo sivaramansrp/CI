@@ -27,4 +27,6 @@ export const PROC_110222 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
+    BUSCAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=OME940310L37`,
+    AGREGAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/agregar-productor`,
 }

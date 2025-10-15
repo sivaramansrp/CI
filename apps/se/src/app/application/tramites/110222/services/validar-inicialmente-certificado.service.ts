@@ -221,4 +221,16 @@ export class ValidarInicialmenteCertificadoService {
 
   return RESULT;
 }
+
+  /**
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
+   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+   */
+  obtenerProductoruNevo(body: any): Observable<any> {
+    return this.httpService.post<any>(PROC_110222.AGREGAR_PRODUCTOR, {
+      body: body,
+    });
+  }
 }
