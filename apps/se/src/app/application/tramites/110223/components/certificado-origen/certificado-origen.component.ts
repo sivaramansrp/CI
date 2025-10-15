@@ -15,7 +15,7 @@ import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
-import { MercanciaComponent } from "../mercancia/mercancia.component";
+import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
