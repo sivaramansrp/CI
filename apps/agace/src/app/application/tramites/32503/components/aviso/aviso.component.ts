@@ -417,6 +417,107 @@ export class AvisoComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  /**
+   * @method obtenerDescripcionEntidadFederativa
+   * @description Obtiene la descripción de la entidad federativa basada en la clave
+   * @param {string} clave - La clave de la entidad federativa
+   * @returns {string} La descripción de la entidad federativa o la clave si no se encuentra
+   */
+  private obtenerDescripcionEntidadFederativa(clave: string): string {
+    const ENTIDAD_ENCONTRADA = this.entidadFederativa.find(e => 
+      e.id?.toString() === clave || e.clave?.toString() === clave
+    );
+    return ENTIDAD_ENCONTRADA ? ENTIDAD_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionDelegacionMunicipio
+   * @description Obtiene la descripción del municipio/delegación basada en la clave
+   * @param {string} clave - La clave del municipio/delegación
+   * @returns {string} La descripción del municipio/delegación o la clave si no se encuentra
+   */
+  private obtenerDescripcionDelegacionMunicipio(clave: string): string {
+    const MUNICIPIO_ENCONTRADO = this.delegacionMunicipio.find(m => 
+      m.id?.toString() === clave || m.clave?.toString() === clave
+    );
+    return MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionColonia
+   * @description Obtiene la descripción de la colonia basada en la clave
+   * @param {string} clave - La clave de la colonia
+   * @returns {string} La descripción de la colonia o la clave si no se encuentra
+   */
+  private obtenerDescripcionColonia(clave: string): string {
+    const COLONIA_ENCONTRADA = this.colonia.find(c => 
+      c.id?.toString() === clave || c.clave?.toString() === clave
+    );
+    return COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionFraccionArancelaria
+   * @description Obtiene la descripción de la fracción arancelaria basada en la clave
+   * @param {string} clave - La clave de la fracción arancelaria
+   * @returns {string} La descripción de la fracción arancelaria o la clave si no se encuentra
+   */
+  private obtenerDescripcionFraccionArancelaria(clave: string): string {
+    const FRACCION_ENCONTRADA = this.fraccionArancelaria.find(f => 
+      f.id?.toString() === clave || f.clave?.toString() === clave
+    );
+    return FRACCION_ENCONTRADA ? FRACCION_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionUnidadMedida
+   * @description Obtiene la descripción de la unidad de medida basada en la clave
+   * @param {string} clave - La clave de la unidad de medida
+   * @returns {string} La descripción de la unidad de medida o la clave si no se encuentra
+   */
+  private obtenerDescripcionUnidadMedida(clave: string): string {
+    const UNIDAD_ENCONTRADA = this.unidadMedida.find(u => 
+      u.id?.toString() === clave || u.clave?.toString() === clave
+    );
+    return UNIDAD_ENCONTRADA ? UNIDAD_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method enriquecerDatosExistentesConDescripciones
+   * @description Agrega las descripciones a los datos existentes en las tablas que no las tengan.
+   * Este método debe ser llamado después de cargar los catálogos para asegurar que 
+   * los datos existentes también muestren descripciones en lugar de claves.
+   * @returns {void}
+   */
+  private enriquecerDatosExistentesConDescripciones(): void {
+    // Enrich domicilio table data
+    if (this.tablaDeDatos.datos && this.tablaDeDatos.datos.length > 0) {
+      this.tablaDeDatos.datos = this.tablaDeDatos.datos.map(item => ({
+        ...item,
+        descripcionEntidadFederativa: item.descripcionEntidadFederativa || 
+          this.obtenerDescripcionEntidadFederativa(item.claveEntidadFederativa),
+        descripcionDelegacionMunicipio: item.descripcionDelegacionMunicipio || 
+          this.obtenerDescripcionDelegacionMunicipio(item.claveDelegacionMunicipio),
+        descripcionColonia: item.descripcionColonia || 
+          this.obtenerDescripcionColonia(item.claveColonia)
+      }));
+      
+      // Update store with enriched data
+      this.store.setTablaDeDatos(this.tablaDeDatos.datos);
+    }
+
+    // Enrich mercancia table data
+    if (this.tablaDeMercancia.datos && this.tablaDeMercancia.datos.length > 0) {
+      this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.map(item => ({
+        ...item,
+        descripcionFraccionArancelaria: item.descripcionFraccionArancelaria || 
+          this.obtenerDescripcionFraccionArancelaria(item.claveFraccionArancelaria),
+        descripcionUnidadMedida: item.descripcionUnidadMedida || 
+          this.obtenerDescripcionUnidadMedida(item.claveUnidadMedida)
+      }));
+    }
+  }
   /**
    * Método que se ejecuta al inicializar el componente.
    * 
@@ -497,6 +598,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe(
         (datos: CatalogoLista) => {
           this.unidadMedida = datos.datos;
+          // Enrich existing data after all catalogs are loaded
+          this.enriquecerDatosExistentesConDescripciones();
         }
       );
   }
@@ -548,6 +651,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe(
         (datos: CatalogoLista) => {
           this.colonia = datos.datos;
+          // Enrich existing data after all catalogs are loaded
+          this.enriquecerDatosExistentesConDescripciones();
         }
       );
   }
@@ -1123,7 +1228,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
             claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
             valorUSD: VALORES_DE_FORMULARIO.valorUSD,
             numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
-            numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+            numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion,
+            // Add descriptions for better display in table
+            descripcionFraccionArancelaria: this.obtenerDescripcionFraccionArancelaria(VALORES_DE_FORMULARIO.claveFraccionArancelaria),
+            descripcionUnidadMedida: this.obtenerDescripcionUnidadMedida(VALORES_DE_FORMULARIO.claveUnidadMedida)
           };
 
           // Actualizar datos completos
@@ -1161,7 +1269,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
           claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
           valorUSD: VALORES_DE_FORMULARIO.valorUSD,
           numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
-          numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+          numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion,
+          // Add descriptions for better display in table
+          descripcionFraccionArancelaria: this.obtenerDescripcionFraccionArancelaria(VALORES_DE_FORMULARIO.claveFraccionArancelaria),
+          descripcionUnidadMedida: this.obtenerDescripcionUnidadMedida(VALORES_DE_FORMULARIO.claveUnidadMedida)
         };
 
         this.datosCompletosMercancias[SIGUIENTE_ID] = {
@@ -1219,7 +1330,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
             nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
             claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
             claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
-            claveColonia: VALORES_DE_FORMULARIO.claveColonia
+            claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+            // Add descriptions for better display in table
+            descripcionEntidadFederativa: this.obtenerDescripcionEntidadFederativa(VALORES_DE_FORMULARIO.claveEntidadFederativa),
+            descripcionDelegacionMunicipio: this.obtenerDescripcionDelegacionMunicipio(VALORES_DE_FORMULARIO.claveDelegacionMunicipio),
+            descripcionColonia: this.obtenerDescripcionColonia(VALORES_DE_FORMULARIO.claveColonia)
           };
 
           // Actualizar datos completos
@@ -1258,7 +1373,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
           nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
           claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
           claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
-          claveColonia: VALORES_DE_FORMULARIO.claveColonia
+          claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+          // Add descriptions for better display in table
+          descripcionEntidadFederativa: this.obtenerDescripcionEntidadFederativa(VALORES_DE_FORMULARIO.claveEntidadFederativa),
+          descripcionDelegacionMunicipio: this.obtenerDescripcionDelegacionMunicipio(VALORES_DE_FORMULARIO.claveDelegacionMunicipio),
+          descripcionColonia: this.obtenerDescripcionColonia(VALORES_DE_FORMULARIO.claveColonia)
         };
 
         this.datosCompletosAvisos[SIGUIENTE_ID] = {
