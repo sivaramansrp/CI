@@ -473,33 +473,6 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       criterioParaClasificacion: [this.datosSeleccionados?.criterioParaClasificacion ?? null],
       fechaDePago: [ this.datosSeleccionados?.fechaDePago ?? null],
       valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
-      normaOrigen: [
-        { value: this.datosSeleccionados?.normaOrigen, disabled: true },
-      ],
-      nombreIngles: [
-        { value: this.datosSeleccionados?.nombreIngles, disabled: true },
-      ],
-      otrasInstancias: [
-        { value: this.datosSeleccionados?.otrasInstancias, disabled: true },
-      ],
-      criterioParaConferirOrigen: [
-        {
-          value: this.datosSeleccionados?.criterioParaConferirOrigen,
-          disabled: true,
-        },
-      ],
-      criterioParaTratoPreferencial: [
-        {
-          value: this.datosSeleccionados?.criterioParaTratoPreferencial,
-          disabled: true,
-        },
-      ],
-      valorDeContenidoRegional: [
-        {
-          value: this.datosSeleccionados?.valorDeContenidoRegional,
-          disabled: true,
-        },
-      ],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)

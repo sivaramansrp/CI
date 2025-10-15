@@ -327,14 +327,6 @@
               }
             </div>
             } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
-              {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-              }
-            </div>
-            }
-          </div>
-          }
-           @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
           <div class="col-md-4">
             <input-fecha
               [datos]="fechaFacturaReferencia"
