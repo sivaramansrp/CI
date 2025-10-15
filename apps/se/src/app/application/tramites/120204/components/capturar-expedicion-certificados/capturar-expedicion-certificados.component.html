@@ -145,7 +145,7 @@
                 (change)="onCambiarMontoAExpedir()">
             </div>
             <div class="col-md-4 text-end">
-            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()" [disabled]="distribucionSaldoForm.valid || esFormularioSoloLectura">
+            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()" [disabled]=" esFormularioSoloLectura">
             Agregar
             </button>
             </div>
@@ -159,7 +159,7 @@
                   </div>
                 </div>
                 <div class="text-end">
-                  <button type="submit" name="" class="mid btn btn-primary custom-agregar-monto" [disabled]="distribucionSaldoForm.valid || esFormularioSoloLectura">
+                  <button type="submit" name="" class="mid btn btn-primary custom-agregar-monto" [disabled]=" esFormularioSoloLectura">
                     Eliminar seleccionado
                   </button>
               </div>
