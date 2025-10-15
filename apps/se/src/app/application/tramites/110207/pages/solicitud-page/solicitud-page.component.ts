@@ -13,7 +13,7 @@ import {
 } from '../../state/Tramite110207.store';
 import { Subject, take, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PASOS2 } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
@@ -54,7 +54,7 @@ export class SolicitudPageComponent implements OnDestroy {
   /**
    * Lista de pasos del asistente.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
 
   /**
    * Índice del paso actual.
@@ -160,7 +160,6 @@ export class SolicitudPageComponent implements OnDestroy {
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
-
       this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
@@ -197,7 +196,7 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   guardar(item: Solicitud110207State): Promise<JSONResponse> {
     const MERCANCIA_SELECCIONADAS =
-    this.registroService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+      this.registroService.buildMercanciaSeleccionadas(item.mercanciaTabla);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       solicitante: {
@@ -237,7 +236,7 @@ export class SolicitudPageComponent implements OnDestroy {
         razon_social: item.formDatosDelDestinatario['razonSocial'],
         domicilio: {
           ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
-          calle: item.formDestinatario['celle'],
+          calle: item.formDestinatario['calle'],
           numero_letra: item.formDestinatario['numeroLetra'],
           lada: item.formDestinatario['lada'],
           telefono: item.formDestinatario['telefono'],
@@ -245,15 +244,16 @@ export class SolicitudPageComponent implements OnDestroy {
           correo_electronico: item.formDestinatario['correoElectronico'],
           pais_destino: item.formDestinatario['paisDestin'],
         },
-        medio_transporte: item.medioDeTransporteSeleccion['id'],
+        medio_transporte: 'MEDTR.01',
       },
       datos_del_certificado: {
         observaciones: item.formDatosCertificado['observacionesDates'],
         precisa: item.formDatosCertificado['precisaDates'],
-        presenta: item.formDatosCertificado['observacionesDates'],
+        presenta: item.formDatosCertificado['precisaDates'],
         idioma: item.formDatosCertificado['idiomaDates'],
         representacion_federal: {
-          entidad_federativa: 'BCN',
+          entidad_federativa:
+            item.formDatosCertificado['EntidadFederativaDates'],
           representacion_federal:
             item.formDatosCertificado['representacionFederalDates'],
         },
@@ -273,6 +273,7 @@ export class SolicitudPageComponent implements OnDestroy {
               this.solicitudStore.setIdSolicitud(
                 API_RESPONSE.datos.id_solicitud
               );
+              this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             } else {
               this.solicitudStore.setIdSolicitud(0);
             }
