@@ -264,6 +264,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   idProcedimiento: number = IDPROCEDIMIENTO
   
+  /**
+   * @property {boolean} fromMercanciasDisponibles
+   * @description
+   * Indica si la información proviene de mercancías disponibles.
+   */
     fromMercanciasDisponibles: boolean = false;
 
   /**
@@ -566,6 +571,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.store.setFormCertificado({ [CAMPO]: VALOR });
   }
 
+  /**
+   * Emite los datos de la mercancía al store.
+   * @param evento Objeto de tipo Mercancia que contiene los datos a emitir.
+   */
 emitmercaniasDatos(evento: Mercancia): void {
     this.store.setMercanciaTabla([evento]);
   }
