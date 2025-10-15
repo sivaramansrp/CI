@@ -12,9 +12,9 @@
  */
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ERROR_FORMA_ALERT, WizardComponent } from '@libs/shared/data-access-user/src'
+import { DatosPasos, doDeepCopy, ERROR_FORMA_ALERT, esValidObject, getValidDatos, JSONResponse, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, take, takeUntil} from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
@@ -38,7 +38,7 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   styleUrl: './certificado.component.scss',
 })
 export class CertificadoComponent {
- 
+
   /**
    * Array de pasos del wizard.
    * @type {Array<ListaPasoWizard>}
@@ -124,7 +124,7 @@ export class CertificadoComponent {
    * @param tramiteQuery Query para consultar el estado del trámite.
    */
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query,
-     private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
+    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     private tramite110222Store: Tramite110222Store) {
     this.tramiteQuery.selectTramite$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -134,14 +134,14 @@ export class CertificadoComponent {
 
   }
 
-   obtenerDatosDelStore(): void {
-      this.ValidarInicialmenteCertificadoService.getAllState()
-        .pipe(take(1))
-        .subscribe(data => {
-          this.guardar(data);
-          
-        });
-    }
+  obtenerDatosDelStore(): void {
+    this.ValidarInicialmenteCertificadoService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+
+      });
+  }
 
   /**
    * Obtiene el valor del índice de la acción del botón.
@@ -151,26 +151,42 @@ export class CertificadoComponent {
    *
    * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
+  // getValorIndice(e: AccionBoton): void {
+  //   this.esFormaValido = false;
+  //   if (e.accion === 'cont') {
+  //     if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
+  //       return;
+  //     }
+  //   }
+
+  //   if (this.indice === 1 && e.accion === 'cont') {
+  //     const ISVALID = this.validarTodosFormulariosPasoUno();
+  //     if (!ISVALID) {
+  //       this.esFormaValido = true;
+  //       this.indice = 1;
+  //       this.datosPasos.indice = 1;
+  //     } else {
+  //       this.indice = 2;
+  //       this.datosPasos.indice = 2;
+  //     }
+  //     this.obtenerDatosDelStore();
+  //   } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+  //     this.pasoNavegarPor(e);
+  //   }
+  // }
+
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-    if (e.accion === 'cont') {
-      if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
-        return;
-      }
-    }
-
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.indice = 1;
-        this.datosPasos.indice = 1;
-      } else {
-        this.indice = 2;
-        this.datosPasos.indice = 2;
+        return;
       }
-      this.obtenerDatosDelStore();
-    } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.obtenerDatosDelStore()
+    }
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
   }
@@ -222,32 +238,33 @@ export class CertificadoComponent {
    * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
    * */
   buildMercanciaSeleccionadas(arr: any[]): any[] {
-return arr.map((item: any) => ({
-  id: item.id,
-  fraccion_arancelaria: item.fraccionArancelaria,
-  cantidad: item.cantidad,
-  unidad_medida: item.unidadMedida,
-  valor_mercancia: item.valorMercancia,
-  nombreTecnico: item.nombreTecnico,
-  nombre_comercial: item.nombreComercial,
-  registro_producto: item.numeroRegistroProducto,
-  fechaExpedicion: item.fechaExpedicion,
-  fechaVencimiento: item.fechaVencimiento,
-  tipo_factura: item.tipoFactura,
-  num_factura: item.numFactura,
-  complemento_descripcion: item.complementoDescripcion,
-  fecha_factura: item.fechaFactura,
-  umc:item.umc,
-}));
+    return arr.map((item: any) => ({
+      id: item.id,
+      fraccion_arancelaria: item.fraccionArancelaria,
+      cantidad: item.cantidad,
+      unidad_medida: item.unidadMedida,
+      valor_mercancia: item.valorMercancia,
+      nombreTecnico: item.nombreTecnico,
+      nombre_comercial: item.nombreComercial,
+      registro_producto: item.numeroRegistroProducto,
+      fechaExpedicion: item.fechaExpedicion,
+      fechaVencimiento: item.fechaVencimiento,
+      tipo_factura: item.tipoFactura,
+      num_factura: item.numFactura,
+      complemento_descripcion: item.complementoDescripcion,
+      fecha_factura: item.fechaFactura,
+      umc: item.umc,
+    }));
 
   }
-  guardar(item: any): void {
-    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
+  guardar(item: Tramite110222State): Promise<JSONResponse> {
+    const MERCANCIA_SELECCIONADAS = this.ValidarInicialmenteCertificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+
     const PAYLOAD = {
-      rfc_solicitante: 'AAL0409235E6',
+      rfc_solicitante: 'OME940310L37',
       idSolicitud: this.solicitudState.idSolicitud || 0,
       solicitante: {
-        rfc: "AAL0409235E6",
+        rfc: "OME940310L37",
         nombre: "ACEROS ALVARADO S.A. DE C.V.",
         actividad_economica: "Fabricación de productos de hierro y acero",
         correo_electronico: "contacto@acerosalvarado.com",
@@ -266,30 +283,30 @@ return arr.map((item: any) => ({
         }
       },
       certificado: {
-        nombre: item.nombre,
-        primerApellido: item.primerApellido,
-        segundoApellido: item.segundoApellido,
-        registro_fiscal: item.numeroDeRegistroFiscal,
-        razon_social: item.razonSocial,
+        nombre: item.formCertificado['nombre'],
+        primerApellido: item.formCertificado['primerApellido'],
+        segundoApellido: item.formCertificado['segundoApellido'],
+        registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'],
+        razon_social: item.formCertificado['razonSocial'],
         domicilio: {
-          calle: item.calle,
-          numero_letra: item.numeroLetra,
-          ciudad_poblacion_estado_provincia: item.ciudad,
-          pais_destino: item.nacion,
-          correo_electronico: item.correoElectronico,
-          telefono: item.telefono,
-          fax: item.fax,
+          calle: item.formDestinatario['calle'],
+          numero_letra: item.formDestinatario['numeroLetra'],
+          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
+          pais_destino: item.formDestinatario['nacion'],
+          correo_electronico: item.formDestinatario['correoElectronico'],
+          telefono: item.formDestinatario['telefono'],
+          fax: item.formDestinatario['fax'],
         },
         tratado_acuerdo: item.tratado || '',
         pais_bloque: item.pais,
         fraccion_arancelaria: item.fraccionArancelaria,
-        registro_producto: item.registroProducto,
-        nombre_comercial: item.nombreComercial,
-        fecha_inicio: item.fechaFinal,
-        fecha_fin: item.fechaInicial,
+        registro_producto: item.formCertificado['registroProducto'],
+        nombre_comercial: item.formCertificado['nombreComercial'],
+        fecha_inicio: item.formCertificado['fechaInicio'],
+        fecha_fin: item.formCertificado['fechaFin'],
         mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
       },
-        solicitud: {
+      historica: {
         datosConfidencialesProductor: true,
         productorMismoExportador: true,
         productoresPorExportador: [
@@ -327,43 +344,59 @@ return arr.map((item: any) => ({
         ],
       },
       destinatario: {
-        nombre: item.nombre,
-        numero_registro_fiscal: item.numeroFiscal,
+        nombre: item.formDestinatario['nombre'],
+        numero_registro_fiscal: item.formDestinatario['numeroFiscal'],
         domicilio: {
-          calle: item.calle,
-          numero_letra: item.numeroLetra,
-          ciudad_poblacion_estado_provincia: item.ciudad,
-          pais_destino: item.nacion,
-          correo_electronico: item.correoElectronico,
-          telefono: item.telefono,
-          fax: item.fax,
+          calle: item.formDestinatario['calle'],
+          numero_letra: item.formDestinatario['numeroLetra'],
+          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
+          pais_destino: item.formDestinatario['nacion'],
+          correo_electronico: item.formDestinatario['correoElectronico'],
+          telefono: item.formDestinatario['telefono'],
+          fax: item.formDestinatario['fax'],
         },
-        lugar: item.lugar,
-        legal_de_exportador: item.nombre,
-        empresa: item.empresa,
-        cargo: item.cargo,
-        registro_fiscal: item.registroFiscal,
-        correo_electronico: item.correo,
-        telefono: item.telefono,
-        fax: item.fax,
+        lugar: item.grupoRepresentativo['lugar'],
+        legal_de_exportador: item.grupoRepresentativo['nombre'],
+        empresa: item.grupoRepresentativo['empresa'],
+        cargo: item.grupoRepresentativo['cargo'],
+        registro_fiscal: item.grupoRepresentativo['registroFiscal'],
+        correo_electronico: item.grupoRepresentativo['correo'],
+        telefono: item.grupoRepresentativo['telefono'],
+        fax: item.grupoRepresentativo['fax'],
       },
- 
+
       datos_del_certificado: {
-        observaciones: item.observaciones,
-               representacion_federal: {
-          entidad_federativa: item.entidad,
-          representacion_federal: item.representacion
+        observaciones: item.formDatosCertificado['observaciones'],
+        representacion_federal: {
+          entidad_federativa: item.formDatosCertificado['entidad'],
+          representacion_federal: item.formDatosCertificado['representacion']
         }
       }
     };
- 
-    this.ValidarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-          this.tramite110222Store.setIdSolicitud(response.datos.id_solicitud || 0);
-          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+
+    return new Promise((resolve, reject) => {
+      this.ValidarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        const API_RESPONSE = doDeepCopy(response);
+        if (esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+          if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+            this.tramite110222Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+          } else {
+            this.tramite110222Store.setIdSolicitud(0);
+          }
         }
-      },
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
+
+    //   this.ValidarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
+    //     next: (response) => {
+    //       if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+    //         this.tramite110222Store.setIdSolicitud(response.datos.id_solicitud || 0);
+    //         this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+    //       }
+    //     },
+    //   });
   }
 }

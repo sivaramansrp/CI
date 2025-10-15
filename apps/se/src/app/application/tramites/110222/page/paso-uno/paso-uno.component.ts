@@ -12,6 +12,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioDeCertificadoComponent } from '../../components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -30,8 +31,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-  @ViewChild(DestinatarioDeCertificadoComponent) destinatarioDeCertificadoComponent?: DestinatarioDeCertificadoComponent;
+  @ViewChild('DestinatarioDeCertificadoComponent') destinatarioDeCertificadoComponent!: DestinatarioDeCertificadoComponent;
 
+  @ViewChild('CertificadoOrigen') certificadoOrigen?: CertificadoOrigenComponent;
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -44,7 +46,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    *
    * @see DatosCertificadoComponent
    */
-  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+  @ViewChild('DatosCertificadoComponent') datosCertificadoComponent!: DatosCertificadoComponent;
 
   constructor(
     private consultaQuery: ConsultaioQuery,
@@ -129,6 +131,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Método público para validar todos los formularios del paso uno */
   public validarTodo(): boolean {
     let ES_VALIDA = true;
+
+      if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormulario()) {
+        ES_VALIDA = false;
+      }
+    } else {
+      ES_VALIDA = false;
+    }
+    
+     if (this.destinatarioDeCertificadoComponent) {
+      if (!this.destinatarioDeCertificadoComponent.validateAllForms()) {
+        ES_VALIDA = false;
+      }
+    } else {
+      ES_VALIDA = false;
+    }
+
     if (this.datosCertificadoComponent) {
       if (!this.datosCertificadoComponent.validateAll()) {
         ES_VALIDA = false;

@@ -29,6 +29,7 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * @descripcion
@@ -41,10 +42,10 @@ import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificaci
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
- @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
+/** Referencia al componente CertificadoDeOrigenComponent para marcar campos como tocados */
+  @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
   /** Referencia al componente mercanciaComponent para marcar campos como tocados */
-  @ViewChild(MercanciaComponent) mercanciaComponent?: MercanciaComponent;
- 
+  @ViewChild('MercanciaComponent') mercanciaComponent?: MercanciaComponent;
   /**
    * Configuración de las columnas de la tabla de carga de mercancías.
    * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
@@ -52,27 +53,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
-  /**
-   * @method validarFormulario
-   * @description
-   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
-   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
-   * Si el componente hijo no está disponible, retorna `false`.
-   *
-   * @returns {boolean} Indica si el formulario es válido.
-   */
-  validarFormulario(): boolean {
-    let isValid = true;
-    if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validarFormularios()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
-    return isValid;
-  }
-
+ 
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -187,7 +168,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
-
   idProcedimiento: number = 110222;
   registroForm!: FormGroup;
 
@@ -219,7 +199,9 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     public query: Tramite110222Query,
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private toastr: ToastrService,
+
   ) {
     this.query.formCertificado$
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
@@ -266,6 +248,26 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.datosTabla$ = this.query.selectmercanciaTabla$;
   }
 
+   /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
   /**
    * @descripcion
    * Actualiza el almacén con los datos del formulario de certificado.
@@ -326,22 +328,25 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerTablaDatos(
-      'disponibles-datos.json'
-    )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-          } else {
-            this.disponiblesDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
-      });
+    // this.ValidarInicialmenteCertificadoService.obtenerTablaDatos(
+    //   'disponibles-datos.json'
+    // )
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe({
+    //     next: (response: Mercancia[]) => {
+    //       if (response && Array.isArray(response)) {
+    //         this.disponiblesDatos = response as Mercancia[];
+    //       } else {
+    //         this.disponiblesDatos = [];
+    //       }
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //       console.error('Error al obtener los datos:', error);
+    //     },
+    //   });
+     setTimeout(() => {
+      this.processBuscarMercancias();
+    }, 100);
   }
 
   /**
@@ -370,7 +375,79 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @param estado - El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloque(estado);
+  }
+
+ private processBuscarMercancias(): void {
+    // Get selected catalog values from the store state
+    const SELECTED_ESTADO = this.certificadoState?.estado;
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques; // bloque is stored as an array
+
+    const PAYLOAD = {
+      rfcExportador: 'OME940310L37',
+      tratadoAcuerdo: {
+        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
+      },
+      pais: {
+        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
+      },
+    };
+
+    this.ValidarInicialmenteCertificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          console.log(response);
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              
+              id: item.idMercancia,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              nombreIngles: item.nombreIngles || '',
+              fraccionNaladi: item.fraccionNaladi || '',
+              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
+              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
+              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.valorDeContenidoRegional || '',
+              normaOrigen: item.normaOrigen || '',
+              otrasInstancias: item.otrasInstancias || '',
+              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.datosTabla$ = of(MAPPED_DATA || []);
+          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+
+          this.store.setbuscarMercancia(
+            MAPPED_DATA
+          );
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+
+    this.mercanciasDisponibles = true;
   }
 
   /**

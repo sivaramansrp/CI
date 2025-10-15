@@ -34,7 +34,7 @@ export interface Tramite110222State {
    * @description
    * Lista de bloques de países que se pueden seleccionar en el formulario, representados como objetos `Catalogo`.
    */
-  paisBloques: Catalogo[];
+  paisBloques: Catalogo;
   /**
    * @property {Object} mercanciaForm - Datos del formulario de mercancía.
    * @description
@@ -261,7 +261,7 @@ export function createInitialState(): Tramite110222State {
       id: -1,
       descripcion: '',
     },
-    paisBloques: [],
+    paisBloques: { id: -1, descripcion: '' },
     mercanciaForm: {
       fraccionArancelaria: '',
       nombreComercialMercancia: '',
@@ -464,7 +464,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los bloques de países en el almacén.
    * @param paisBloques - Array de objetos `Catalogo` que representa los bloques de países.
    */
-  setBloque(paisBloques: Catalogo[]): void {
+  setBloque(paisBloques: Catalogo): void {
     this.update((state) => ({
       ...state,
       paisBloques,
@@ -509,6 +509,14 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
     });
   }
+
+   /**
+     * Establece los resultados de mercancía obtenidos por búsqueda.
+     * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+     */
+    setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+      this.update((state) => ({ ...state, buscarMercancia }));
+    }
 
   /**
    * @descripcion
