@@ -32,12 +32,22 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 const PROCEDURE = '/sat-t110205';
 
 /**
+ * API para guardar la solicitud del tramite 80208.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80208/swagger-ui/index.html#/Solicitud/guardar
+ */
+export const API_POST_SOLICITUD = 'sat-t110205/solicitud/guardar';
+
+/**
  * Rutas de la API para el procedimiento 110201
  */
 export const PROC_110205 = {
-    GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
-    BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
-    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
-    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
-    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
+  GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
+  BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
+  GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+  CONSULTA_SOLICITUDE: (id: string | number): string =>
+    `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+  OPINIONES: (numFolioTramite: string | number): string =>
+    `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
+  BUSCAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=AAL0409235E6`,
+  AGREGAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/agregar-productor`,
 };

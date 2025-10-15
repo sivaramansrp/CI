@@ -1,14 +1,18 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFechaComponent, SeccionLibQuery, SeccionLibState, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
+import { CargaPorArchivoComponent } from '../../../110204/components/carga-por-archivo/carga-por-archivo.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 /**
@@ -155,6 +159,14 @@ export class CertificadoOrigenComponent
   mercanciasDisponiblesTabla: boolean = false;
 
   /**
+   * Configuración de las columnas de la tabla de carga de mercancías.
+   * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
+   *
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -213,8 +225,8 @@ export class CertificadoOrigenComponent
       )
       .subscribe();
 
-    this.estadoOpcion();
-    this.paisOpcion();
+    // this.estadoOpcion();
+    // this.paisOpcion();
     this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
 
@@ -318,17 +330,68 @@ export class CertificadoOrigenComponent
       },
     };
 
-    console.log('Payload for buscarMercanciasCert:', PAYLOAD);
-
+    // this.peruCertificadoService
+    //   .buscarMercanciasCert(PAYLOAD)
+    //   .subscribe((response) => {
+    //     console.log('Response from buscarMercanciasCert:', response);
+    //     this.datosTablaUno$ = of(response.datos || []);
+    //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+    //     console.log(this.datosTablaUno$);
+    //   });
     this.peruCertificadoService
       .buscarMercanciasCert(PAYLOAD)
-      .subscribe((response) => {
-        this.datosTablaUno$ = of(response.datos || []);
-        this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.idMercancia,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              nombreIngles: item.nombreIngles || '',
+              fraccionNaladi: item.fraccionNaladi || '',
+              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
+              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
+              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.valorDeContenidoRegional || '',
+              normaOrigen: item.normaOrigen || '',
+              otrasInstancias: item.otrasInstancias || '',
+              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              // Fields that typically remain empty for available merchandise
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.datosTablaUno$ = of(MAPPED_DATA || []);
+          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+
+          this.store.setbuscarMercancia(
+            MAPPED_DATA
+          );
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
       });
 
-      console.log(this.datosTablaUno$);
-    this.mercanciasDisponiblesTabla = true;
+    this.mercanciasDisponibles = true;
   }
 
   /**
@@ -346,7 +409,7 @@ export class CertificadoOrigenComponent
    * @param estado - El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloque(estado);
   }
 
   /**

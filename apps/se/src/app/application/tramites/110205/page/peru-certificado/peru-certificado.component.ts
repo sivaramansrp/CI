@@ -11,15 +11,16 @@
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos, ERROR_FORMA_ALERT, esValidObject, getValidDatos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, take, takeUntil } from 'rxjs';
 import {AVISO} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
-import { Tramite110205State } from '../../estados/tramite110205.store';
+import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { Payload } from '../../constantes/texto.enum';
 
 @Component({
   selector: 'app-peru-certificado',
@@ -27,11 +28,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './peru-certificado.component.scss',
 })
 
-export class PeruCertificadoComponent implements OnDestroy {
-  @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
+  export class PeruCertificadoComponent implements OnInit, OnDestroy {
 
-export class PeruCertificadoComponent implements OnInit, OnDestroy {
-  /**
+    @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
+
+    /**
    * @property {ListaPasoWizard[]} pasos
    * @description
    * Lista de pasos que componen el flujo del trámite en el wizard.
@@ -92,16 +93,11 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
    */
   solicitudState!: Tramite110205State;
 
-   /**
+  /**
    * Identificador numérico de la solicitud actual.
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
   idSolicitud: number = 0;
-
-  /**
-   * URL de la página actual.
-   */
-  public solicitudState!: Tramite110205State;
 
   /**
    * Indica si existe un error en el campo de cambio de modalidad.
@@ -126,13 +122,13 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
 
   esFormaValido: boolean = true;
 
-  /**
-   * @property {PasoUnoComponent} pasoUnoComponent
-   * @description
-   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
-   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
-   */
-  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+  // /**
+  //  * @property {PasoUnoComponent} pasoUnoComponent
+  //  * @description
+  //  * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+  //  * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+  //  */
+  // @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * @constructor
@@ -146,6 +142,7 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
   constructor(
     private seccionStore: SeccionLibStore,
     private tramiteQuery: Tramite110205Query,
+    private tramite110205Store: Tramite110205Store,
     private peruCertificadoService: PeruCertificadoService
   ) {
     this.tramiteQuery.FormaValida$.pipe(
@@ -154,7 +151,6 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     });
-
   }
 
   /**
@@ -273,80 +269,165 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */
-  guardar(item: any): void {
-    console.log('Payload a enviar:', item);
+  // guardar(item: any): void {
+  guardar(item: Tramite110205State): Promise<Payload> {
     const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(
       item.mercanciaTabla
     );
     const PAYLOAD = {
-      rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState.idSolicitud || 0,
-      solicitante: {
-        rfc: 'AAL0409235E6',
-        nombre: 'ACEROS ALVARADO S.A. DE C.V.',
-        actividad_economica: 'Fabricación de productos de hierro y acero',
-        correo_electronico: 'contacto@acerosalvarado.com',
-        domicilio: {
-          pais: 'México',
-          codigo_postal: '06700',
-          estado: 'Ciudad de México',
-          municipio_alcaldia: 'Cuauhtémoc',
-          localidad: 'Centro',
-          colonia: 'Roma Norte',
-          calle: 'Av. Insurgentes Sur',
-          numero_exterior: '123',
-          numero_interior: 'Piso 5, Oficina A',
-          lada: '',
-          telefono: '123456',
-        },
-      },
-      certificado: {
-        tratado_acuerdo: item.formCertificado.entidadFederativa,
-        pais_bloque: item.formCertificado.paisBloque,
-        fraccion_arancelaria: item.formCertificado.fraccionArancelariaForm,
-        nombre_comercial: item.formCertificado.nombreComercialForm,
-        registro_producto: item.formCertificado.numeroDeRegistroProductoForm,
-        fecha_inicio: item.formCertificado.fechaInicioInput,
-        fecha_fin: item.formCertificado.fechaFinalInput,
-        realizo_tercer_operador: {
-          tercer_operador: item.formCertificado.si,
-          nombre: item.formCertificado.nombres,
-          primer_apellido: item.formCertificado.primerApellido,
-          segundo_apellido: item.formCertificado.segundoApellido,
-          numero_registro_fiscal: item.formCertificado.numeroDeRegistroFiscal,
-          razon_social: item.formCertificado.razonSocial,
-        },
-        domicilio_tercer_operador: {
-          pais: item.formCertificado.pais,
-          ciudad: item.formCertificado.ciudad,
-          calle: item.formCertificado.calle,
-          numero_letra: item.formCertificado.numeroLetra,
-          telefono: item.formCertificado.telefono,
-          correo_electronico: item.formCertificado.correo,
-        },
-        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS,
-      },
-      datos_del_certificado: {
-        observaciones: item.formDatosCertificado.observacionesDates,
-        idioma: item.formDatosCertificado.idiomaDates,
-        representacion_federal: {
-          entidad_federativa: item.formDatosCertificado.EntidadFederativaDates,
-          representacion_federal:
-            item.formDatosCertificado.representacionFederalDates,
-        },
-      },
-    };
-
-    this.peruCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-          // this.tramite110201Store.setIdSolicitud(
-          //   response.datos.id_solicitud || 0
-          // );
-          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+      "rfc_solicitante": "AAL0409235E6",
+      "idSolicitud": this.solicitudState.idSolicitud,
+      "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividad_economica": "Fabricación de productos de hierro y acero",
+        "correo_electronico": "contacto@acerosalvarado.com",
+        "domicilio": {
+          "pais": "México",
+          "codigo_postal": "06700",
+          "estado": "Ciudad de México",
+          "municipio_alcaldia": "Cuauhtémoc",
+          "localidad": "Centro",
+          "colonia": "Roma Norte",
+          "calle": "Av. Insurgentes Sur",
+          "numero_exterior": "123",
+          "numero_interior": "Piso 5, Oficina A",
+          "lada": "",
+          "telefono": "123456"
         }
       },
+      "certificado": {
+        "tratado_acuerdo": item.formCertificado["entidadFederativa"],
+        "pais_bloque": item.formCertificado["bloque"],
+        "fraccion_arancelaria": item.formCertificado["fraccionArancelariaForm"],
+        "nombre_comercial": item.formCertificado["nombreComercialForm"],
+        "registro_producto": item.formCertificado["numeroDeRegistroProductoForm"],
+        "fecha_inicio": item.formCertificado["fechaInicioInput"],
+        "fecha_fin": item.formCertificado["fechaFinalInput"],
+        "realizo_tercer_operador": {
+          "tercer_operador": item.formCertificado["si"],
+          "nombre": item.formCertificado["nombres"],
+          "primer_apellido": item.formCertificado["primerApellido"],
+          "segundo_apellido": item.formCertificado["segundoApellido"],
+          "numero_registro_fiscal": item.formCertificado["numeroDeRegistroFiscal"],
+          "razon_social": item.formCertificado["razonSocial"]
+        },
+        "domicilio_tercer_operador": {
+          "pais": item.formCertificado["pais"],
+          "ciudad": item.formCertificado["ciudad"],
+          "calle": item.formCertificado["calle"],
+          "numero_letra": item.formCertificado["numeroLetra"],
+          "telefono": item.formCertificado["telefono"],
+          "correo_electronico": item.formCertificado["correo"]
+        },
+        "mercancias_seleccionadas": MERCANCIA_SELECCIONADAS
+      },
+      "destinatario": {
+        "nombre": item.formDatosDelDestinatario["nombres"],
+        "primer_apellido": item.formDatosDelDestinatario["primerApellido"],
+        "segundo_apellido": item.formDatosDelDestinatario["segundoApellido"],
+        "numero_registro_fiscal": item.formDatosDelDestinatario["numeroDeRegistroFiscal"],
+        "razon_social": item.formDatosDelDestinatario["razonSocial"],
+        "domicilio": {
+          "ciudad_poblacion_estado_provincia": item.formDestinatario["ciudad"],
+          "calle": item.formDestinatario["calle"],
+          "numero_letra": item.formDestinatario["numeroLetra"],
+          "lada": item.formDestinatario["lada"],
+          "telefono": item.formDestinatario["telefono"],
+          "fax": item.formDestinatario["fax"],
+          "correo_electronico": item.formDestinatario["correoElectronico"],
+          "pais_destino": item.formDestinatario["paisDestino"]
+        },
+        "generalesRepresentanteLegal": {
+          "lugarRegistro": item.formExportor["lugar"],
+          "nombre": item.formExportor["exportador"],
+          "razonSocial": item.formExportor["nombres"],
+          "puesto": item.formExportor["puesto"],
+          "telefono": item.formExportor["telefono"],
+          "correoElectronico": item.formExportor["correoElectronico"]
+        },
+        "medio_transporte": item.formDatosDelDestinatario["medioTransporte"]
+      },
+      "datos_del_certificado": {
+        "observaciones": item.formDatosCertificado["observacionesDates"],
+        "idioma": item.formDatosCertificado["idiomaDates"],
+        "representacion_federal": {
+          "entidad_federativa": item.formDatosCertificado["EntidadFederativaDates"],
+          "representacion_federal": item.formDatosCertificado["representacionFederalDates"]
+        }
+      },
+      "historico": {
+        "datosConfidencialesProductor": true,
+        "productorMismoExportador": true,
+        "productoresPorExportador": [
+          {
+            "nombreCompleto": "",
+            "rfc": "",
+            "direccionCompleta": "",
+            "correoElectronico": "",
+            "telefono": "",
+            "fax": ""
+          }
+        ],
+        "ProductoresPorExportadorSeleccionados": [
+          {
+            "nombreCompleto": "",
+            "rfc": "",
+            "direccionCompleta": "",
+            "correoElectronico": "",
+            "telefono": "",
+            "fax": ""
+          }
+        ],
+        "mercanciasProductor": [
+          {
+            "fraccionArancelaria": "",
+            "cantidadComercial": "",
+            "descUnidadMedidaComercial": "",
+            "valorTransaccional": "",
+            "descFactura": "",
+            "numeroFactura": "",
+            "complementoDescripcion": "",
+            "fechaFactura": "",
+            "rfcProductor": ""
+          }
+        ]
+      }
+    };
+
+    return new Promise((resolve, reject) => {
+      this.peruCertificadoService.postSolicitud(PAYLOAD).subscribe(
+        (response) => {
+          if (esValidObject(response) && esValidObject(response.datos)) {
+            if (getValidDatos(response.datos?.id_solicitud)) {
+              this.tramite110205Store.setIdSolicitud(
+                response.datos?.id_solicitud || 0
+              );
+            } else {
+              this.tramite110205Store.setIdSolicitud(0);
+            }
+          }
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
     });
+
+    // this.peruCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
+    //   next: (response) => {
+    //     console.log('Response', response.datos);
+    //     if (response?.codigo === '00' && response?.datos?.id_solicitud) {
+    //       this.tramite110205Store.setIdSolicitud(
+    //         response.datos.id_solicitud || 0
+    //       );
+    //       this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+    //     }
+    //   },
+    // });
+
+    // console.log('Payload a enviar:', PAYLOAD);
   }
 
   /**

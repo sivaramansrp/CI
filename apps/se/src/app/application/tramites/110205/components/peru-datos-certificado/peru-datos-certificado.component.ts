@@ -1,12 +1,12 @@
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 import { Tramite110205Store } from '../../estados/tramite110205.store';
-import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 
 
 /**
@@ -105,9 +105,9 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
-    this.idiomOpcion();
-    this.entidadFederativasOpcion();
-    this.representacionFederalOpcion();
+    // this.idiomOpcion();
+    // this.entidadFederativasOpcion();
+    // this.representacionFederalOpcion();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

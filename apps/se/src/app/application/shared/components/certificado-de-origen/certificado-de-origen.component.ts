@@ -1400,7 +1400,7 @@ export class CertificadoDeOrigenComponent
    */
   getTratado(): void {
     this.service
-      .getTratadoCertificado(this.idProcedimiento.toString(), 'TITRAC.TA')
+      .getTratadoCertificado(this.idProcedimiento.toString(), 'ARG')
       .subscribe((data) => {
         this.tratadoAcuerdoCertificado = data as Catalogo[];
       });

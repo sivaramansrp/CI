@@ -777,6 +777,12 @@ export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${T
  */
 export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
 
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
+ */
+export const AGREGAR_PRODUCTOR = (): string => `sat-t${TRAMITE}/solicitud/agregar-productor`;
+
 
 /*
  * API para obtener el catálogo de idiomas

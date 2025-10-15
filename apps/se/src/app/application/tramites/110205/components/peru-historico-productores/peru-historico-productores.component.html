@@ -6,4 +6,6 @@
   [productoresExportador]="productoresExportador || []"
   [mercanciaDatos]="mercancia || []"
   [esFormularioSoloLectura]="esFormularioSoloLectura"
-></app-historico-productores>
+  [idProcedimiento] = "110205"
+  (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
+  [tableColumns]="tableColumns"></app-historico-productores>

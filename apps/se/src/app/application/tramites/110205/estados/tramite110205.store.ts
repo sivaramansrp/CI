@@ -1,4 +1,7 @@
-import { GrupoRepresentativo, HistoricoColumnas } from '../models/peru-certificado.module';
+import {
+  GrupoRepresentativo,
+  HistoricoColumnas,
+} from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
@@ -13,7 +16,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @description Representa el estado de la aplicación para el trámite 110205.
  * Contiene las propiedades necesarias para gestionar los datos del formulario,
  * tablas, catálogos y otros elementos relacionados con el trámite.
- * 
+ *
  * @property { {[key: string]: unknown} } formCertificado - Datos del formulario de certificado.
  * @property { Catalogo } estado - Estado actual del trámite.
  * @property { Catalogo[] } paisBloques - Lista de países o bloques relacionados.
@@ -48,7 +51,7 @@ export interface Tramite110205State {
   idSolicitud: number | null;
   formCertificado: { [key: string]: unknown };
   estado: Catalogo;
-  paisBloques: Catalogo[];
+  paisBloques: Catalogo;
   mercanciaForm: { [key: string]: unknown };
   mercanciaTabla: Mercancia[];
   formDatosCertificado: { [key: string]: unknown };
@@ -73,7 +76,6 @@ export interface Tramite110205State {
   tipoFactura: Catalogo[];
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: unknown };
-  formDestinatario: { [key: string]: unknown };
   datosConfidencialesProductor?: boolean;
   productorMismoExportador?: boolean;
   agregarDatosProductorFormulario: { [key: string]: unknown };
@@ -82,8 +84,10 @@ export interface Tramite110205State {
   procductoUno: HistoricoColumnas[];
   cambioError?: boolean;
   serviciosImmxError?: boolean;
+  /** Lista de mercancías encontradas o buscadas. */
+  buscarMercancia: Mercancia[];
+  productores: HistoricoColumnas[];
 }
-
 
 /**
  * @method createInitialState
@@ -91,12 +95,11 @@ export interface Tramite110205State {
  * Inicializa todas las propiedades requeridas en el estado del store.
  * @function createInitialState
  * @description
- * 
+ *
  * @returns {Tramite110205State} Estado inicial del trámite 110205.
  */
 export function createInitialState(): Tramite110205State {
   return {
-    idSolicitud: 0,
     idSolicitud: 0,
     formCertificado: {
       si: false,
@@ -185,6 +188,16 @@ export function createInitialState(): Tramite110205State {
       telefono: '',
       correoElectronico: '',
     },
+    formExportor: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
     formaValida: {
       certificado: false,
       datos: false,
@@ -209,7 +222,6 @@ export function createInitialState(): Tramite110205State {
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',
-      fax: '',
     },
     disponiblesDatos: [],
     procductoUno: [],
@@ -218,6 +230,8 @@ export function createInitialState(): Tramite110205State {
 
     /** Flag que indica errores en servicios IMMX, false por defecto */
     serviciosImmxError: false,
+    buscarMercancia: [],
+    productores: [],
   };
 }
 
@@ -394,6 +408,22 @@ export class Tramite110205Store extends Store<Tramite110205State> {
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
     });
+  }
+
+  /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+    this.update((state) => ({ ...state, buscarMercancia }));
+  }
+
+  /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setProductores(productores: HistoricoColumnas[]): void {
+    this.update((state) => ({ ...state, productores }));
   }
 
   /**
@@ -731,12 +761,12 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     }));
   }
   /**
-     * Actualiza el lugar en el grupo representativo.
-     *
-     * Este método permite establecer el lugar en el grupo representativo del trámite.
-     *
-     * @param {string} lugar - El lugar a establecer.
-     */
+   * Actualiza el lugar en el grupo representativo.
+   *
+   * Este método permite establecer el lugar en el grupo representativo del trámite.
+   *
+   * @param {string} lugar - El lugar a establecer.
+   */
   public setGrupoRepresentativoLugar(lugar: string): void {
     this.update((state) => ({
       ...state,
@@ -786,7 +816,6 @@ export class Tramite110205Store extends Store<Tramite110205State> {
       grupoRepresentativo: { ...state.grupoRepresentativo, cargo },
     }));
   }
-
 
   /**
    * Actualiza el teléfono en el grupo representativo.

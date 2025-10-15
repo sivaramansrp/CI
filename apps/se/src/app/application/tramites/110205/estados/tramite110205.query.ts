@@ -107,6 +107,14 @@ export class Tramite110205Query extends Query<Tramite110205State> {
   });
 
   /**
+   * Selecciona la mercancía que se está buscando.
+   * @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.
+   */
+  selectBuscarMercancia$ = this.select((state) => {    
+    return state.buscarMercancia;
+  });
+
+  /**
    * @descripcion
    * Constructor que inyecta el almacén `camCertificadoStore`.
    * @param store - Instancia de `camCertificadoStore`.
