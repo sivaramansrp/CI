@@ -12,7 +12,7 @@ import { Expedicion120204Query } from '../../estados/queries/expedicion120204.qu
 import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
 import { REGEX_ALTO } from '@ng-mf/data-access-user'
-import { daLocale } from 'ngx-bootstrap/chronos';
+
 
 /**
  * Componente para mostrar las licitaciones vigentes.
