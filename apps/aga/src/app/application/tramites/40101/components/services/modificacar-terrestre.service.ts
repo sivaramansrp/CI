@@ -34,7 +34,7 @@ export class modificarTerrestreService {
    * @returns Observable con la lista de catálogos de colores de vehículos.
    */
   obtenerColorVehiculo(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>('assets/json/40101/vehiculo-color.json');
+    return this.http.get<CatalogoLista>('/api/sat-t140101/vehiculos/colores', { headers: modificarTerrestreService.getApiHeaders() });
   }
   /**
   * Constructor del servicio.
@@ -49,7 +49,7 @@ export class modificarTerrestreService {
    * @returns Observable con la lista de catálogos de tipos de vehículo.
    */
   obtenerTipoDeVehiculo(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/40101/tipo-de-vehiculo.json`);
+    return this.http.get<CatalogoLista>('/api/sat-t140101/vehiculos/tipos-vehiculo/pariveh', { headers: modificarTerrestreService.getApiHeaders() });
   }
 
   /**
@@ -78,7 +78,7 @@ export class modificarTerrestreService {
       * @returns Observable con la lista de catálogos de vehículo de arrastre.
       */
   obtenerTipoArrastre(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/40101/tipo-vehiculo-arrastre.json`);
+    return this.http.get<CatalogoLista>('/api/sat-t140101/vehiculos/tipos-vehiculo/arrastre', { headers: modificarTerrestreService.getApiHeaders() });
   }
   /**
   * Obtiene el catálogo de años.

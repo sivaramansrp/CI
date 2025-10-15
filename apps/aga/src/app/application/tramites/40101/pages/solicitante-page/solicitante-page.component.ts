@@ -1,4 +1,4 @@
-import { ApiResponseSolicitante, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
+import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../estado/chofer40101.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -21,6 +21,7 @@ export interface IniciarResponse {
   datos: {
     id_solicitud: number;
     cadena_original: string;
+    is_extranjero: boolean
   };
 }
 export interface DriverNacional {
@@ -84,7 +85,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
  * @type {Array<ListaPasosWizard>}
  */
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
-
+  isExtrajero: boolean = false
+  isBtnShow: string = "yes"
   /** Indica si el trámite es CAAT (Certificado de Autotransporte Aduanal Terrestre).
    * 
    * @type {boolean}
@@ -325,10 +327,18 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
         this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
           this.chofer40101Service.guardarDatosFirma(res.datos);
-          if (e.valor > 0 && e.valor < 6) {
-            this.indice = e.valor;
-            this.wizardComponent.siguiente();
+          this.isExtrajero = res?.datos?.is_extranjero
+          if (this.isExtrajero) {
+            this.isBtnShow = 'no'
+            this.pasos = PASOS.slice(0, 1)
           }
+          if (!this.isExtrajero) {
+            if (e.valor > 0 && e.valor < 6) {
+              this.indice = e.valor;
+              this.wizardComponent.siguiente();
+            }
+          }
+
         });
       });
     } else {

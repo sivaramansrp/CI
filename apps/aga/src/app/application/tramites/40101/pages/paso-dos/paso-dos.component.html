@@ -7,7 +7,7 @@
   [catalogoDocumentos]="catalogoDocumentos"
   ></anexar-documentos> -->
   @if(isSuccessCert){
-  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
   }@else {
   <firma-electronica [tipo]="'persona_firma'" [cadenaOriginal]="cadenaOriginal"
     (datosFirma)="getDatosOfFirma($event)"></firma-electronica>

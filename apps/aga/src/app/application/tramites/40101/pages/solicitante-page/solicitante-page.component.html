@@ -17,7 +17,6 @@
       @switch (indice) {
       @case (1) {
       <paso-uno></paso-uno>
-      <!-- <app-paso-dos></app-paso-dos> -->
       }
       @case (2) {
       <app-paso-dos></app-paso-dos>
@@ -29,7 +28,10 @@
         @input [datos]: Datos que se pasan al componente `btn-continuar`.
         @output (continuarEvento): Evento que se emite cuando se hace clic en el botón continuar.
       -->
+      @if(isBtnShow==='yes'){
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      }
+
     </div>
     }@else {
     <ng-alert [CONTENIDO]="catErrorMessage" [CUSTOMECLASS]="info"></ng-alert>

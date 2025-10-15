@@ -52,6 +52,7 @@ export interface Chofer40101State {
   driversExtranjero: ChoferWithMetadata[];
   id_solicitud?: number;
   cadena_original?: string;
+  is_extranjero?: boolean
 }
 
 export function createInitialState(): Chofer40101State {

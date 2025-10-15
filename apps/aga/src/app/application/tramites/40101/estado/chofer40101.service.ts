@@ -338,10 +338,11 @@ export class Chofer40101Service {
     this.chofer40101Store.loadInitialDrivers(type, drivers);
   }
 
-  guardarDatosFirma(datos: { id_solicitud: number; cadena_original: string }): void {
+  guardarDatosFirma(datos: { id_solicitud: number; cadena_original: string, is_extranjero: boolean }): void {
     this.chofer40101Store.update({
       id_solicitud: datos.id_solicitud,
       cadena_original: datos.cadena_original,
+
     });
   }
 }

@@ -25,7 +25,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Constante que contiene los textos utilizados en el componente.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS: string = '';
 
   isSuccessCert: boolean = false
 
@@ -66,7 +66,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
-    this.getTiposDocumentos();
+    // this.getTiposDocumentos();
     this.chofer40101Query
       .select()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -89,6 +89,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.modificarTerrestreService.guardarDatos({ cadena_original: this.cadenaOriginal, sello: 'shah', certificate_serial_number: event ? event.certSerialNumber : '' }).subscribe((res) => {
       if (Number(res.codigo) === 0) {
         this.isSuccessCert = true
+        this.TEXTOS = res.mensaje
       }
     });
   }
