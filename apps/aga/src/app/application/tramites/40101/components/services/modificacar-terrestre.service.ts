@@ -109,7 +109,7 @@ export class modificarTerrestreService {
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
 
-  guardarDatos(datos: unknown): Observable<IniciarResponse> {
+  firmaDatos(datos: unknown): Observable<IniciarResponse> {
     const FULL_URL = '/api/sat-t140101/solicitud/registro/202819905/firmar';
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }

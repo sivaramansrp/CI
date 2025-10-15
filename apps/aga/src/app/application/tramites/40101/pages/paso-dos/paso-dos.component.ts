@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { base64ToHex, CATALOGOS_ID, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
@@ -86,7 +86,13 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
   getDatosOfFirma(event: Certificado): void {
-    this.modificarTerrestreService.guardarDatos({ cadena_original: this.cadenaOriginal, sello: 'shah', certificate_serial_number: event ? event.certSerialNumber : '' }).subscribe((res) => {
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(event ? event.firma : '');
+    this.modificarTerrestreService.firmaDatos({
+      cadena_original: CADENAHEX,
+      sello: FIRMAHEX,
+      certificate_serial_number: event ? event.certSerialNumber : ''
+    }).subscribe((res) => {
       if (Number(res.codigo) === 0) {
         this.isSuccessCert = true
         this.TEXTOS = res.mensaje
