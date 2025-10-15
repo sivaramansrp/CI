@@ -12,7 +12,7 @@ import { TableData } from '@libs/shared/data-access-user/src';
 export interface SolicitudDatos {
   /** Fecha en la que se creó la solicitud. */
   fechaCreacion: string;
-  
+
   /** Nombre de la mercancía incluida en la solicitud. */
   mercancia: string;
 
@@ -165,98 +165,132 @@ export interface RespuestaConsulta {
  * Contiene los datos obtenidos de una consulta.
  */
 export interface ConsultaDatos {
-    tipoOperacion: string | number;
-    observaciones: string;
-    rfcSanitario: string;
-    razonSocial: string;
-    correoElectronico: string;
-    codigoPostal: string;
-    estado: number;
-    municipio: string;
-    localidad: string;
-    colonia: string;
-    calle: string;
-    lada: number;
-    telefono: number;
-    claveSCIAN: number;
-    claveSCIANDesc: number;
-    avisoDeFuncionamiento: boolean;
-    licenciaSanitaria: string;
-    liveFreshFrozen: boolean;
-    regimen: number;
-    aduana: number;
-    hacerlos: string | number;
-    rfc: string;
-    legalRazonSocial: string;
-    apellidoPaterno: string;
-    apellidoMaterno: string;
-    mercanciasDatos: Mercancia[];
-    SCIANDatos: SCIAN[];
-    manifesto: boolean;
-    clasificaionProductos: string;
-    especificarProducto: number;
-    nombreProductoEspecifico: string;
-    distintiva: string;
-    cientifico: string;
-    tipoProducto: number;
-    farmaceutica: number;
-    fisico: number;
-    fraccionArancelaria: string;
-    descripcionFraccionArancelaria: string;
-    cantidadUMT: string;
-    umt: string;
-    cantidadUMC: string;
-    umc: number;
-    presentacionFarmaceutica: string;
-    registroSanitario: number;
-    fechaCaducidad: string;
-    tipoPersona: string | number;
-    modificarRFC: string;
-    denominacion: string;
-    domicilioPais: number;
-    domicilioEstado: number;
-    domicilioMunicipio: number;
-    domicilioLocalidad: number;
-    domicilioCodigo: number;
-    domicilioColonia: number;
-    domiciliCalle: string;
-    domiciliNumeroExterior: string;
-    domiciliNumeroInterior: string;
-    domiciliLada: string;
-    domiciliTelefono: string;
-    domiciliCorreoElectronioco: string;
-    destinatarioDatos: Destinatario[];
-    fabricanteDatos: Fabricante[];
-    proveedorDatos: Proveedor[];
-    facturadorDatos: Facturador[];
-    claveDeReferencia: string;
-    cadenaDeDependencia: string;
-    banco: number;
-    liaveDePago: string;
-    fechaDePago: string;
-    importeDePago: string;
-    folioDeDesistimiento: string;
-    folioOriginal: string;
-  }
-  
+  tipoOperacion: string | number;
+  observaciones: string;
+  rfcSanitario: string;
+  razonSocial: string;
+  correoElectronico: string;
+  codigoPostal: string;
+  estado: number;
+  municipio: string;
+  localidad: string;
+  colonia: string;
+  calle: string;
+  lada: number;
+  telefono: number;
+  claveSCIAN: number;
+  claveSCIANDesc: number;
+  avisoDeFuncionamiento: boolean;
+  licenciaSanitaria: string;
+  liveFreshFrozen: boolean;
+  regimen: number;
+  aduana: number;
+  hacerlos: string | number;
+  rfc: string;
+  legalRazonSocial: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  mercanciasDatos: Mercancia[];
+  SCIANDatos: SCIAN[];
+  manifesto: boolean;
+  clasificaionProductos: string;
+  especificarProducto: number;
+  nombreProductoEspecifico: string;
+  distintiva: string;
+  cientifico: string;
+  tipoProducto: number;
+  farmaceutica: number;
+  fisico: number;
+  fraccionArancelaria: string;
+  descripcionFraccionArancelaria: string;
+  cantidadUMT: string;
+  umt: string;
+  cantidadUMC: string;
+  umc: number;
+  presentacionFarmaceutica: string;
+  registroSanitario: number;
+  fechaCaducidad: string;
+  tipoPersona: string | number;
+  modificarRFC: string;
+  denominacion: string;
+  domicilioPais: number;
+  domicilioEstado: number;
+  domicilioMunicipio: number;
+  domicilioLocalidad: number;
+  domicilioCodigo: number;
+  domicilioColonia: number;
+  domiciliCalle: string;
+  domiciliNumeroExterior: string;
+  domiciliNumeroInterior: string;
+  domiciliLada: string;
+  domiciliTelefono: string;
+  domiciliCorreoElectronioco: string;
+  destinatarioDatos: Destinatario[];
+  fabricanteDatos: Fabricante[];
+  proveedorDatos: Proveedor[];
+  facturadorDatos: Facturador[];
+  claveDeReferencia: string;
+  cadenaDeDependencia: string;
+  banco: number;
+  liaveDePago: string;
+  fechaDePago: string;
+  importeDePago: string;
+  folioDeDesistimiento: string;
+  folioOriginal: string;
+}
+
+/**
+ *
+ * Agrupa los datos de terceros relacionados.
+ * */
+export interface TercerosRelacionados {
+  facturador: Facturador; // Datos del facturador
+  fabricante: Fabricante; // Datos del fabricante
+  destinatario: Destinatario; // Datos del destinatario
+  proveedor: Proveedor; // Datos del proveedor
+}
+
+/**
+ * Interfaz que representa la estructura de datos para el formulario.
+ */
+export interface FormData {
   /**
-   *  
-   * Agrupa los datos de terceros relacionados.
-   * */
-  export interface TercerosRelacionados {
-    facturador: Facturador; // Datos del facturador
-    fabricante: Fabricante; // Datos del fabricante
-    destinatario: Destinatario; // Datos del destinatario
-    proveedor: Proveedor; // Datos del proveedor
-  }
+   * Terceros relacionados en el formulario.
+   */
+  tercerosRelacionados: TercerosRelacionados[] | null;
+}
+
+/**
+ * Respuesta de la API al buscar datos del representante legal.
+ */
+export interface RepresentanteLegalRespuesta {
+  /**
+   * Datos del representante legal obtenidos de la API.
+   */
+  data: RepresentanteLegal;
+}
+
+/**
+ * Interfaz que representa los datos de un representante legal.
+ */
+export interface RepresentanteLegal {
+  /**
+   * RFC del representante legal.
+   */
+  rfc: string;
 
   /**
-   * Interfaz que representa la estructura de datos para el formulario.
+   * Nombre o razón social del representante legal.
    */
-  export interface FormData {
-    /**
-     * Terceros relacionados en el formulario.
-     */
-    tercerosRelacionados: TercerosRelacionados[] | null;
-  }
-  
+  nombreRazonSocial: string;
+
+  /**
+   * Apellido paterno del representante legal.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * Apellido materno del representante legal.
+   */
+  apellidoMaterno: string;
+}
