@@ -6,7 +6,10 @@
       <div class="row mb-3">
         <div class="col-md-4 form-group">
           <label for="numeroRegistroAmbiental"
-            >Número del registro ambiental*:</label
+            >Número del registro ambiental<span
+              [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'has-error' : ''"
+              >*</span
+            ><span>:</span></label
           >
           <input
             type="text"
@@ -35,7 +38,10 @@
         </div>
         <div class="col-md-8 form-group">
           <label for="descripcionGenerica1"
-            >Giro industrial del importador*:
+            >Giro industrial del importador<span
+              [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'has-error' : ''"
+              >*</span
+            >:
           </label>
           <input
             type="text"
@@ -67,6 +73,7 @@
         <div class="col-md-4 form-group">
           <app-catalogo-select
             [catalogo]="immexCatalogo"
+            [markTouched]="isInvalid('numeroProgramaImmex') ?? false"
             formControlName="numeroProgramaImmex"
             [label]="'Número de autorización IMMEX'"
             [required]="true"

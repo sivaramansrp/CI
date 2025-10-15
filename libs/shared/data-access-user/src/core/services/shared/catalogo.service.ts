@@ -11,25 +11,7 @@
  * @author Sistema VUCEM
  */
 
-import {
-  AGREGAR_PRODUCTOR, CATALOGO_ENTIDADES_FEDERATIVAS,
-  CATALOGO_ESTADOS,
-  CATALOGO_IDIOMA,
-  CATALOGO_IMMEX,
-  CATALOGO_MEDIO_TRANSPORTE,
-  CATALOGO_NICO,
-  CATALOGO_PAISES,
-  CATALOGO_PAISES_BLOQUE,
-  CATALOGO_REPRESENTACION_FEDERAL,
-  CATALOGO_SECTORES,
-  CATALOGO_SELECCIONAR_REGLA,
-  CATALOGO_TIPO_FACTURA,
-  CATALOGO_TRATADOS_ACUERDOS,
-  CATALOGO_TRATADO_ACUERDO,
-  CATALOGO_UNIDAD_MASA_BRUTA,
-  COMUN_URL,
-  UNIDADES_MEDIDA_COMERCIAL,
-} from '../../servers/api-router';
+import { AGREGAR_PRODUCTOR, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -324,33 +306,23 @@ export class CatalogoServices {
    * @param ideTipoTratadoAcuerdo - Identificador del tipo de tratado o acuerdo.
    * @returns Un observable que emite la respuesta base con el arreglo de elementos del catálogo.
    */
-  tratadosAcuerdosCatalogoDatos(
-    tramite: string,
-    ideTipoTratadoAcuerdo: string
-  ): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO(
-      tramite,
-      ideTipoTratadoAcuerdo
-    )}`;
+  tratadosAcuerdosCatalogoDatos(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO(tramite, ideTipoTratadoAcuerdo)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /*
-   * Obtiene el catálogo de tratados y acuerdos.
-   * @param {string} tramite - El ID del trámite.
-   * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
-   * @returns {Observable<BaseResponse<Catalogo[]>>}
-   */
-  tratadosAcuerdosCatalogo(
-    tramite: string,
-    ideTipoTratadoAcuerdo: string
-  ): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_TRATADOS_ACUERDOS(
-      tramite,
-      ideTipoTratadoAcuerdo
-    )}`;
+ * Obtiene el catálogo de tratados y acuerdos.
+ * @param {string} tramite - El ID del trámite.
+ * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
+ * @returns {Observable<BaseResponse<Catalogo[]>>}
+ */
+  tratadosAcuerdosCatalogo(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADOS_ACUERDOS(tramite, ideTipoTratadoAcuerdo)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+
 
   /*
    * Obtiene el catálogo de países (bloques).
@@ -377,9 +349,7 @@ export class CatalogoServices {
    * @param {string} tramite - El ID del trámite.
    * @returns {Observable<BaseResponse<Catalogo[]>>}
    */
-  entidadesFederativasCatalogo(
-    tramite: string
-  ): Observable<BaseResponse<Catalogo[]>> {
+  entidadesFederativasCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_ENTIDADES_FEDERATIVAS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
@@ -390,14 +360,8 @@ export class CatalogoServices {
    * @param {string} cveEntidad - La clave de la entidad.
    * @returns {Observable<BaseResponse<Catalogo[]>>}
    */
-  representacionFederalCatalogo(
-    tramite: string,
-    cveEntidad: string
-  ): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL(
-      tramite,
-      cveEntidad
-    )}`;
+  representacionFederalCatalogo(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL(tramite, cveEntidad)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
@@ -416,12 +380,11 @@ export class CatalogoServices {
    * @param {string} tramite - El ID del trámite.
    * @returns {Observable<BaseResponse<Catalogo[]>>}
    */
-  unidadMasaBrutaCatalogo(
-    tramite: string
-  ): Observable<BaseResponse<Catalogo[]>> {
+  unidadMasaBrutaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_UNIDAD_MASA_BRUTA(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
 
   /*
    * Obtiene el catálogo de idiomas.
@@ -438,9 +401,7 @@ export class CatalogoServices {
    * @param {string} tramite - El ID del trámite.
    * @returns {Observable<BaseResponse<Catalogo[]>>}
    */
-  catalogoMedioTransporte(
-    tramite: string
-  ): Observable<BaseResponse<Catalogo[]>> {
+  catalogoMedioTransporte(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_MEDIO_TRANSPORTE(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
@@ -566,15 +527,14 @@ export class CatalogoServices {
   ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_MEDIO_TRANSPORTE(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+
   }
   /*
-   * Obtiene el catálogo de seleccionarReglal ID del trámite.
-   * @param {string} tramite - El ID del trámite.
-   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
-   */
-  seleccionarReglaCatalogo(
-    tramite: string
-  ): Observable<BaseResponse<Catalogo[]>> {
+* Obtiene el catálogo de seleccionarReglal ID del trámite.
+* @param {string} tramite - El ID del trámite.
+* @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+*/
+  seleccionarReglaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_SELECCIONAR_REGLA(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
@@ -586,6 +546,27 @@ export class CatalogoServices {
    */
   sectoresCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_SECTORES(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de tratados y acuerdos internacionales aplicables a un país específico.
+   * @param tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+   */
+  tratadoCatalogoPais(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de países aplicables a un trámite específico.
+   * @param tramite - El ID del trámite.
+   * @param clave - La clave del país.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+   */
+  paisCatalogo(tramite: string, clave: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_PAIS_BLOQUE_CLAVE(tramite, clave)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }

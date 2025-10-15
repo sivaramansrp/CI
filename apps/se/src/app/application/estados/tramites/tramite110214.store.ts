@@ -5,6 +5,7 @@ import {
   GrupoOperador,
   GrupoTratado,
   HistoricoColumnas,
+  MercanciaTabla,
   SeleccionadasTabla,
 } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -162,6 +163,22 @@ export interface Tramite110214State {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+
+  /** Lista de idiomas disponibles como catálogo */
+  idiomaDatos: Catalogo[];
+
+  /** Lista de entidades federativas disponibles */
+  entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
+  representacionFederalDatos: Catalogo[];
+
+  /**
+   * Datos del formulario relacionados con los detalles del certificado.
+   * Estructura dinámica y flexible.
+   */
+  formDatosCertificado: { [key: string]: unknown };
+
   /**
    * @description
    * Representa la estructura principal del estado o modelo de datos relacionado con el formulario de certificado.
@@ -197,6 +214,17 @@ export interface Tramite110214State {
    * Identificador o nombre del bloque actual del formulario o proceso.
    */
   bloque: string;
+
+  agregarProductoresExportador: HistoricoColumnas[];
+
+  mercanciaProductores: MercanciaTabla[];
+
+  formValidity?: {
+    datosCertificado?: boolean;
+    destinatario?: boolean;
+    histProductores?: boolean;
+    certificadoOrigen?: boolean;
+  };
 }
 
 /**
@@ -260,9 +288,9 @@ export function createInitialState(): Tramite110214State {
       numeroSerie: '',
       fecha: '',
       numeroFactura: '',
-      tipoFactura: '',
+      tipoFactura: ''
     },
-    grupoTratado: {
+    grupoTratado: { 
       tratado: '',
       pais: '',
       fraccionArancelaria: '',
@@ -291,6 +319,9 @@ export function createInitialState(): Tramite110214State {
       fax: '',
     },
     optionsTipoFactura: [],
+    agregarProductoresExportador: [],
+    mercanciaProductores: [],
+    formValidity: {},
     formaValida: {
       certificado: true,
       datos: true,
@@ -319,6 +350,12 @@ export function createInitialState(): Tramite110214State {
       correoElectronico: '',
       numeroLetra: '',
       calle: '',
+      pais1: '',
+      ciudad1: '',
+      telefono1: '',
+      correoElectronico1: '',
+      numeroLetra1: '',
+      calle1: '',
     },
     estado: {
       id: -1,
@@ -347,6 +384,15 @@ export function createInitialState(): Tramite110214State {
       nalad: '',
     },
     bloque: '',
+    idiomaDatos: [],
+    entidadFederativaDatos: [],
+    representacionFederalDatos: [],
+    formDatosCertificado: {
+      observaciones: '',
+      idioma: '',
+      entidadFederativa: '',
+      representacionFederal: '',
+    },
   };
 }
 /**
@@ -938,7 +984,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   public setGrupoTratadoTratado(tratado: string): void {
     this.update((state) => ({
       ...state,
-      grupoTratado: { ...state.grupoTratado, tratado },
+      grupoTratado: { ...state.grupoTratado, tratado: String(tratado) },
     }));
   }
 
@@ -1265,6 +1311,21 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     }));
   }
 
+  
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+  setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador: [
+        ...state.agregarProductoresExportador,
+        {...productor},
+      ],
+     }));
+  } 
+
   /**
    * @method setDatosConfidencialesProductor
    * @description
@@ -1275,6 +1336,32 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     this.update((state) => ({
       ...state,
       disponiblesDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
     }));
   }
 
@@ -1377,5 +1464,87 @@ export class Tramite110214Store extends Store<Tramite110214State> {
         formaValida: IS_VALID,
       };
     });
+  }
+
+  /**
+   * Actualiza el idioma seleccionado para el trámite.
+   *
+   * Este método permite establecer el idioma seleccionado en el trámite.
+   *
+   * @param {Catalogo[]} idioma - El idioma a establecer.
+   */
+  public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de entidades federativas disponibles.
+   * @param {Catalogo[]} entidadFederativaDatos - Lista de entidades federativas a establecer.
+   */
+  public setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de representaciones federales disponibles.
+   * @param {Catalogo[]} representacionFederalDatos - Lista de representaciones federales a establecer.
+   */
+  public setRepresentacionFederalDatos(
+    representacionFederalDatos: Catalogo[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
+    }));
+  }
+
+  /**
+   * Establece los valores del formulario de fechas del certificado en el almacén.
+   *
+   * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el idioma seleccionado del catálogo.
+   * @param idiomaDatosSeleccion - El idioma seleccionado del catálogo.
+   * @returns void
+   */
+  setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatosSeleccion,
+    }));
+  }
+
+  /**
+   * Establece los representacionFederalSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
   }
 }

@@ -1,4 +1,4 @@
-<app-certificado-de-origen 
+<app-certificado-de-origen #CertificadoDeOrigenComponent
     [operador]="operador"
     [tratadoAcuerdo]="estado || []"
     [paisBloqu]="pais || []"
@@ -19,7 +19,7 @@
     (formCertificadoEvent)="setValoresStore($event)"
     [tramiteState]="formCertificadoValues"
     [domicilio]="false"
-    [domTercerOperador]="true"
+    [domicilioTercer]="true"
     [domTercerOperadorRadio]="true"
     [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
     [idProcedimiento]="idProcedimiento">

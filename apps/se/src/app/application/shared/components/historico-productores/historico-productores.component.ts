@@ -256,7 +256,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Lista de productores ya agregados.
    */
-  agregarProductoresExportador: HistoricoColumnas[] = [];
+  @Input() agregarProductoresExportador: HistoricoColumnas[] = [];
 
   /**
    * Lista de productores seleccionados para eliminar.
@@ -327,6 +327,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   @Input() idProcedimiento!: number;
+
+  @Output() emitAgregarExportador: EventEmitter<HistoricoColumnas> = new EventEmitter<HistoricoColumnas>();
 
   /**
    * @description
@@ -468,19 +470,14 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   productoresSeleccionados(): void {
     if (this.seleccionadoProductoresExportador.length !== 0) {
-      this.agregarProductoresExportador = [
-        ...this.agregarProductoresExportador,
-        ...this.seleccionadoProductoresExportador,
-      ];
-      this.productoresExportador = this.productoresExportador.filter(
-        (elementos) =>
-          !this.seleccionadoProductoresExportador.some(
-            (elementosSecundarios) => elementosSecundarios.id === elementos.id
-          )
-      );
+      const DATOS = [...this.seleccionadoProductoresExportador];
+      DATOS.forEach((ele: HistoricoColumnas) => {
+        this.emitAgregarExportador.emit(ele);
+      })
+      this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
       this.seleccionadoProductoresExportador = [];
     } else {
-      this.abrirModal('Existen más productores que mercancías');
+      this.abrirModal("Existen más productores que mercancías");
     }
   }
 
@@ -514,6 +511,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+    
+ 
   }
 
   /**
@@ -530,19 +529,13 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Utiliza el idProcedimiento del componente para obtener el producto nuevo.
    */
   agregarExportador(): void {
-    if (this.formularioMercancia.get('numeroRegistroFiscal')?.value !== '' && this.formularioMercancia.get('numeroRegistroFiscal')?.value !== null) {
-      this.setbuscarMercanciaEvent.emit(true);
-    }
-      this.agregarDatosProductorFormulario.markAllAsTouched();
-    // this.catalogoServices
-    //   .obtenerProductoNuevo(this.idProcedimiento.toString())
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe((data) => {
-    //     console.log("data from agregar productive nuevo",data);
-    //     // this.idiomaDatos = data.datos as Catalogo[];
-    //   });
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
+      const DATOS = this.agregarDatosProductorFormulario.value;
+      this.emitAgregarExportador.emit(DATOS);
+      this.agregarDatosProductorFormulario.reset();
+    } else {
+      this.agregarDatosProductorFormulario.markAllAsTouched();
     }
   }
 
@@ -711,13 +704,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    *
    * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
    */
-  public validarFormulario(): boolean {
-    let isValid = true;
-    if (this.formulario.invalid) {
-      this.formulario.markAllAsTouched();
-      isValid = false;
-    }
-    return isValid;
+  public validarFormulario(): void {
+    this.formulario.markAllAsTouched();
   }
 
   /**

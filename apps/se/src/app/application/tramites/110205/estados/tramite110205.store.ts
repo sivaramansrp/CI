@@ -1,9 +1,10 @@
 import {
-  GrupoRepresentativo,
-  HistoricoColumnas,
+ 
+  HistoricoColumnas, MercanciaTabla,
 } from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { GrupoRepresentativo } from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -78,10 +79,14 @@ export interface Tramite110205State {
   formDestinatario: { [key: string]: unknown };
   datosConfidencialesProductor?: boolean;
   productorMismoExportador?: boolean;
-  agregarDatosProductorFormulario: { [key: string]: unknown };
-  formulario: { [key: string]: unknown };
-  disponiblesDatos: Mercancia[];
-  procductoUno: HistoricoColumnas[];
+  agregarDatosProductorFormulario: {[key: string]: unknown};
+  formulario: {[key: string]: unknown};
+  disponiblesDatos:Mercancia[];
+  procductoUno:HistoricoColumnas[];
+  agregarProductoresExportador: HistoricoColumnas[];
+  mercanciaProductores: MercanciaTabla[];
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
   cambioError?: boolean;
   serviciosImmxError?: boolean;
   /** Lista de mercancías encontradas o buscadas. */
@@ -224,7 +229,10 @@ export function createInitialState(): Tramite110205State {
       fax: '',
     },
     disponiblesDatos: [],
-    procductoUno: [],
+    procductoUno:[],
+    agregarProductoresExportador: [],
+    mercanciaProductores: [],
+    optionsTipoFactura: [],
     /** Flag que indica errores en el cambio de modalidad, false por defecto */
     cambioError: false,
 
@@ -855,4 +863,41 @@ export class Tramite110205Store extends Store<Tramite110205State> {
       grupoRepresentativo,
     }));
   }
-}
+
+   /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+    setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+      this.update((state) => ({
+        ...state,
+        agregarProductoresExportador: [
+          ...state.agregarProductoresExportador,
+          {...productor},
+        ],
+      }));
+    }
+
+    /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+    setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+      this.update((state) => ({
+        ...state,
+        mercanciaProductores: mercancia,
+      }));
+    }
+  }

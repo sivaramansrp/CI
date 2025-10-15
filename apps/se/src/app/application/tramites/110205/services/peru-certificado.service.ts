@@ -3,6 +3,11 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701
 import { Catalogo, ENVIRONMENT, HttpCoreService, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
+import { Observable, map } from 'rxjs';
+import { Tramite110205State, Tramite110205Store } from '../estados/tramite110205.store';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 import {
@@ -164,6 +169,22 @@ export class PeruCertificadoService {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite110205State> {
     return this.http.get<Tramite110205State>(
       'assets/json/110205/datos-prefill.json'
+    );
+  }
+
+  /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getTipoFactura(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_110205.TIPO_FACTURA,
+      {},
+      false
     );
   }
 

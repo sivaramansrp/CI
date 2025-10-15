@@ -232,6 +232,11 @@ export class CertificadoDeOrigenComponent
    */
   tratadoAcuerdoCertificado?: Catalogo[];
 
+  /** 
+   * Propiedad de entrada que recibe los datos de los países.
+  */
+  pais?:Catalogo[];
+
   /*
    * Propiedad de entrada que recibe los datos de los países bloqueados.
    * @type {Catalogo[]}
@@ -662,7 +667,7 @@ export class CertificadoDeOrigenComponent
         razonSocial: ['', Validators.required],
         calle: ['', [Validators.required, Validators.maxLength(90)]],
         numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
-        numeroLetras: ['', [Validators.required, Validators.maxLength(30)]],
+        // numeroLetras: ['', [Validators.required, Validators.maxLength(30)]],
         pais: [''],
         ciudad: ['', Validators.required],
         lada: ['', Validators.required],
@@ -672,16 +677,30 @@ export class CertificadoDeOrigenComponent
         correoElectronico: [''],
         domTercerOperador: [''],
         // Nuevos controles de formulario para el procedimiento 110222
-        calle1: ['', Validators.required],
-        numeroLetra1: ['', Validators.required],
-        ciudad1: ['', Validators.required],
-        pais1: [''],
-        correo1: ['', Validators.required],
-        telefono1: [''],
-        fax1: [''],
+        // calle1: ['', Validators.required],
+        // numeroLetra1: ['', Validators.required],
+        // ciudad1: ['', Validators.required],
+        // pais1: [''],
+        // correo1: ['', Validators.required],
+        // telefono1: [''],
+        // fax1: [''],
       },
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
+
+    if (this.idProcedimiento === 110222) {
+      this.formCertificado.addControl('calle1', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra1', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('ciudad1', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('pais1', new FormControl(''));
+      this.formCertificado.addControl('correo1', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono1', new FormControl(''));
+      this.formCertificado.addControl('fax1', new FormControl(''));
+    }
+
+    if (this.domicilio) {
+      this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
+    }
   }
   /* * Aplica las validaciones al campo 'primerApellido', 'calle' y 'numeroLetra' del formulario.
    *
@@ -852,6 +871,10 @@ export class CertificadoDeOrigenComponent
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.tipoEstadoSeleccionEvent.emit(estado);
+    this.formCertificado.get('bloque')?.setValue('')
+    if (estado.clave !== undefined) {
+      this.getPaisBloque(estado.clave);
+    }
   }
 
   /**
@@ -937,7 +960,6 @@ export class CertificadoDeOrigenComponent
     this.nuevaNotificacion = {} as Notificacion;
     this.inicializarFormularioArchivo();
     this.loadComboUnidadMedida();
-    this.getPaisBloque();
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
@@ -1399,11 +1421,10 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getTratado(): void {
-    this.service
-      .getTratadoCertificado(this.idProcedimiento.toString(), 'ARG')
-      .subscribe((data) => {
-        this.tratadoAcuerdoCertificado = data as Catalogo[];
-      });
+    this.service.getTratadoCertificado(this.idProcedimiento.toString()).subscribe((data) => {
+      this.tratadoAcuerdoCertificado = data as Catalogo[];
+    });
+
   }
 
   /**
@@ -1411,12 +1432,10 @@ export class CertificadoDeOrigenComponent
    *
    * @returns {void}
    */
-  getPaisBloque(): void {
-    this.service
-      .getPaises(this.idProcedimiento.toString())
-      .subscribe((data) => {
-        this.paisBloqueCertificado = data as Catalogo[];
-      });
+  getPaisBloque(clave:string):void{
+    this.service.getPaises(this.idProcedimiento.toString(),clave).subscribe((data) => {
+      this.paisBloqueCertificado = data as Catalogo[];
+    });
   }
 
    /**

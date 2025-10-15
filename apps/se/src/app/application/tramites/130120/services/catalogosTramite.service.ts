@@ -1,4 +1,4 @@
-import { API_GET_CAT_ENTIDADES, API_GET_CAT_FRACCIONES_ARRANCELARIAS, API_GET_CAT_FRACCIONES_ARRANCELARIAS_SUBDIVISIONES, API_GET_CAT_FRACCIONES_CALZADOS, API_GET_CAT_PAISES, API_GET_CAT_REGIMENES, API_GET_CAT_REGIMENES_CLASIFICACION, API_GET_CAT_SUBDIVISIONES_FRACCIONES_ARANCELARIAS, API_GET_CAT_TIPOS_ADUANAS, API_GET_CAT_TIPOS_MONEDAS, API_GET_CAT_UNIDADES_ADMINISTRATIVAS, API_GET_CAT_UNIDADES_MEDIDA, API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS } from '../server/api-router';
+import { API_GET_CAT_ENTIDADES, API_GET_CAT_FRACCIONES_ARRANCELARIAS_SUBDIVISIONES, API_GET_CAT_FRACCIONES_CALZADOS, API_GET_CAT_PAISES, API_GET_CAT_REGIMENES, API_GET_CAT_REGIMENES_CLASIFICACION, API_GET_CAT_SUBDIVISIONES_FRACCIONES_ARANCELARIAS, API_GET_CAT_TIPOS_ADUANAS, API_GET_CAT_TIPOS_MONEDAS, API_GET_CAT_UNIDADES_ADMINISTRATIVAS, API_GET_CAT_UNIDADES_MEDIDAS_COMERCIALES, API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS, API_GET_MONTO_CONVERSION } from '../server/api-router';
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
@@ -112,9 +112,9 @@ export class CatalogosTramiteService {
    * @param cveFraccion - Clave de la fracción arancelaria para la cual se desean obtener las unidades de medida.
    * @returns Observable con la respuesta que contiene la lista de unidades de medida.
    */
-  getCatUnidadesMedida(cveFraccion: string):
+  getCatUnidadesMedida():
     Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${API_GET_CAT_UNIDADES_MEDIDA(cveFraccion)}`;
+    const ENDPOINT = `${this.host}${API_GET_CAT_UNIDADES_MEDIDAS_COMERCIALES}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
@@ -145,8 +145,8 @@ export class CatalogosTramiteService {
    * Obtiene el catálogo de fracciones arancelarias.
    * @returns Observable con la respuesta que contiene la lista de fracciones arancelarias.
    */
-  getCatFraccionesArrancelarias(): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${API_GET_CAT_FRACCIONES_ARRANCELARIAS}`;
+  getCatFraccionesArrancelarias(cveRegimen: string, cveClasificacionRegimen: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_FRACCIONES_CALZADOS(cveRegimen, cveClasificacionRegimen)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
@@ -159,5 +159,11 @@ export class CatalogosTramiteService {
     Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_FRACCIONES_ARRANCELARIAS_SUBDIVISIONES(cveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  //API_GET_MONTO_CONVERSION
+  getMontoConversion(claveMoneda: string): Observable<BaseResponse<number>> {
+    const ENDPOINT = `${this.host}${API_GET_MONTO_CONVERSION(claveMoneda)}`;
+    return this.http.get<BaseResponse<number>>(ENDPOINT);
   }
 }

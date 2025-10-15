@@ -114,6 +114,14 @@ export class Tramite110205Query extends Query<Tramite110205State> {
     return state.buscarMercancia;
   });
 
+  selectAgregarProductoresExportador$ = this.select((state) => {
+    return state.agregarProductoresExportador;
+  });
+
+  selectMercanciaProductores$ = this.select((state) => {
+    return state.mercanciaProductores;
+  });
+
   /**
    * @descripcion
    * Constructor que inyecta el almacén `camCertificadoStore`.
