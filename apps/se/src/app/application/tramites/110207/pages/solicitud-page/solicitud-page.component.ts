@@ -231,8 +231,7 @@ export class SolicitudPageComponent implements OnDestroy {
         nombre: item.formDatosDelDestinatario['nombres'],
         primer_apellido: item.formDatosDelDestinatario['primerApellido'],
         segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
-        numero_registro_fiscal:
-          item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+        numero_registro_fiscal:item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
         razon_social: item.formDatosDelDestinatario['razonSocial'],
         domicilio: {
           ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
@@ -244,7 +243,7 @@ export class SolicitudPageComponent implements OnDestroy {
           correo_electronico: item.formDestinatario['correoElectronico'],
           pais_destino: item.formDestinatario['paisDestin'],
         },
-        medio_transporte: 'MEDTR.01',
+        medio_transporte: item.medioDeTransporteSeleccion['clave'],
       },
       datos_del_certificado: {
         observaciones: item.formDatosCertificado['observacionesDates'],
