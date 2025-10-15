@@ -45,7 +45,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputRadioComponent],
   templateUrl: './datos-productor.component.html',
-  styleUrl: './datos-productor.component.css',
+  styleUrl: './datos-productor.component.scss',
 })
 export class DatosProductorComponent implements OnInit, OnDestroy{
 

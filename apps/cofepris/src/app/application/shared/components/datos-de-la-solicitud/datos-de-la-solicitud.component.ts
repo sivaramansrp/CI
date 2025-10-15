@@ -63,7 +63,9 @@ import {
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
 import {
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -71,12 +73,14 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ScianDataService } from '../../services/scian-data.service';
+import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 
@@ -95,6 +99,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     TooltipModule,
     InputRadioComponent,
     TablePaginationComponent,
+    ScianTablaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -531,6 +536,18 @@ export class DatosDeLaSolicitudComponent
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Reference to the SCIAN modal element
+   */
+  @ViewChild('scianModal') scianModal!: ElementRef;
+
+
+  /**
+   * Indicates if the SCIAN modal is currently open
+   */
+  public scianModalAbierto: boolean = false;
+
+
+  /**
    * Constructor del componente.
    *
    * Inyecta los servicios y dependencias necesarias para la construcción del formulario,
@@ -549,7 +566,8 @@ export class DatosDeLaSolicitudComponent
     public activatedRoute: ActivatedRoute,
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
-    private scianDataService: ScianDataService
+    private scianDataService: ScianDataService,
+     private cdr: ChangeDetectorRef
   ) {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
@@ -1136,6 +1154,7 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
+    if (this.scianLista && this.scianLista.length > 0) {
     if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
       this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
     }
@@ -1143,8 +1162,81 @@ export class DatosDeLaSolicitudComponent
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
-    this.irAAcciones('../scian-selecion');
   }
+  this.abrirScianModal();
+  }
+
+    /**
+   * Opens the SCIAN selection modal
+   */
+  abrirScianModal(): void {
+    this.scianModalAbierto = true;
+    // If using Bootstrap 5
+    const MODALELEMENT = document.getElementById('scianModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+   /**
+   * Closes the SCIAN selection modal
+   */
+  cerrarScianModal(): void {
+    this.scianModalAbierto = false;
+    const MODALELEMENT = document.getElementById('scianModal');
+    if (MODALELEMENT) {
+      const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
+      if (MODAL) {
+        MODAL.hide();
+      }
+    }
+  }
+
+  
+
+  /**
+   * Handles SCIAN selection from the modal
+   */
+ onScianSeleccionado(scianData: TablaScianConfig): void {
+  if (this.scianConfig && this.scianConfig.datos) {
+    const EXISTE = this.scianConfig.datos.find(item => item.clave === scianData.clave);
+    if (!EXISTE) {
+      this.scianConfig.datos = [...this.scianConfig.datos, scianData];
+      
+      this.scianDataService.updateScianData(this.scianConfig.datos);
+      
+      if (this.scianSeleccionado) {
+        this.scianSeleccionado.emit(this.scianConfig.datos);
+      }      
+      this.cdr.markForCheck();
+    } else {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El elemento SCIAN seleccionado ya existe en la tabla.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarAlerta = true;
+    }
+  } else {
+    this.scianConfig = {
+      ...this.scianConfig,
+      datos: [scianData]
+    };
+    this.scianDataService.updateScianData(this.scianConfig.datos);
+    if (this.scianSeleccionado) {
+      this.scianSeleccionado.emit(this.scianConfig.datos);
+    }
+  }
+}
+
+  
 
   /**
    * Agrega las mercancías seleccionadas a la configuración de la tabla y emite el evento correspondiente.
@@ -1537,6 +1629,8 @@ export class DatosDeLaSolicitudComponent
   }): void {
     this.accioneSolitudValor.emit(event);
   }
+
+  
 
   /**
    * Emite un evento con los datos seleccionados de la tabla.

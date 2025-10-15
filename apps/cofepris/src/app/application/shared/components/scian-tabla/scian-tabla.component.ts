@@ -97,6 +97,12 @@ export class ScianTablaComponent implements OnInit {
    */
   modalRef?: BsModalRef;
 
+  
+  /**
+   * Event emitter to notify parent component to close the modal
+   */
+  @Output() cerrarModal = new EventEmitter<void>();
+
   /**
    * Constructor del componente. Inicializa servicios e invoca la carga inicial de la lista SCiAN.
    * 
@@ -149,13 +155,26 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
    *
    * @param event - Objeto del tipo `Catalogo` que contiene los datos del elemento seleccionado.
    */
-  claveSelecionada(event: Catalogo): void {
-    this.mensajeFormularioInvalido = '';
-    this.scianNinoLista = this.scianLista.filter((ele) => ele.id === event.id);
+  claveSelecionada(selectedValue: Catalogo): void {
+  this.restablecerMensaje();
+  this.scianNinoLista = this.scianLista.filter((ele) => ele.id === selectedValue.id);
+
+  if (selectedValue && selectedValue.id) {
+    const SELECTEDSCIAN = this.scianLista.find(item => 
+      item.id === selectedValue.id || item.descripcion === selectedValue.descripcion
+    );
+    
+    if (SELECTEDSCIAN) {
+      this.scianForm.patchValue({
+        scianNino: SELECTEDSCIAN.descripcion
+      });
+    }
+  } else {
     this.scianForm.patchValue({
-      scianNino: this.scianNinoLista[0].id
-    })
+      scianNino: ''
+    });
   }
+}
 
   /**
    * Agrega un nuevo elemento SCIAN a la lista seleccionada y emite el evento correspondiente.
@@ -173,7 +192,6 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
       return;
     }
     if (this.scianConfigDatos && this.scianConfigDatos.find(item => item.clave === this.scianNinoLista[0].descripcion)) {
-      // Mostrar un modal de advertencia por duplicado
       const MODAL_CONFIG = {
         animated: true,
         keyboard: false,
@@ -181,7 +199,9 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
         class: 'modal-sm'
       };
       this.modalRef = this.modalService.show(this.templateDatosDuplicados, MODAL_CONFIG);
-    }else{
+      return;
+    }
+    
       const SCIAN_IDX: TablaScianConfig = {
         clave: this.scianNinoLista[0].descripcion,
         descripcion: this.scianForm.get('scianNino')?.value
@@ -196,9 +216,9 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
       }else{
         this.scianSeleccionado.emit(SCIAN_IDX);
       }
-
-      this.ubicaccion.back();
-    }
+      setTimeout(() => {
+    this.cerrarModal.emit();
+  }, 100);
   }
 
    /**
@@ -229,6 +249,8 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
    */
   limpiarScian(): void {
     this.scianForm.reset();
+    this.restablecerMensaje();
+
   }
 
   /**
@@ -236,7 +258,8 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.limpiarScian();
+    this.cerrarModal.emit();  
   }
 
 }
