@@ -924,7 +924,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   buscarRepresentanteLegal(rfc: string): void {
-    if (rfc.length > 0) {
+    if ((rfc.length > 0 && rfc.length === 13) || (rfc.length > 0 && rfc.length === 12)) {
       this.solicitudDatosService
         .buscarRepresentanteLegal()
         .pipe(takeUntil(this.destroyNotifier$))
