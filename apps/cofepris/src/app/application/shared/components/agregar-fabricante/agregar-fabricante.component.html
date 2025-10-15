@@ -95,7 +95,7 @@
           [maxlength]="15"
           formControlName="rfc"
           (input)="onChangeRfc($event)"
-          [ngClass]="esInvalido('rfc') ? 'required' : ''"
+          [ngClass]="esInvalido('rfc')  && agregarFabricanteForm.controls['rfc'].touched ? 'required' : ''"
         />
         <div *ngIf="esInvalido('rfc')" class="text-danger">
           <small
@@ -248,7 +248,7 @@
         <label class="form-label"
           >Denominación/razón
           social@if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
-          <span class="text-danger">*</span>
+          <span  [ngClass]="esInvalido('razonSocial')  && agregarFabricanteForm.controls['razonSocial'].touched ? 'required' : ''">*</span>
           }
           @else{
             <span>*</span>
