@@ -334,9 +334,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    this.cargarEstados();
-    this.cargarBloque();
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -349,39 +346,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
   }
 
-  /**
-   * Carga la lista de estados desde el servicio y actualiza el store con los datos.
-   */
-  cargarEstados(): void {
-    this.certificadoService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setaltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
-
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.certificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
 
   /**
    * Establece el estado seleccionado en el store.
