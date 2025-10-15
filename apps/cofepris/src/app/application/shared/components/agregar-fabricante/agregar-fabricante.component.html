@@ -333,7 +333,7 @@
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
-          [ngClass]="esInvalido('codigoPostal')&& agregarFabricanteForm.get('codigoPostal')?.touched ? 'required' : ''"
+          [ngClass]="esInvalido('codigoPostal') && agregarFabricanteForm.get('codigoPostal')?.touched ? 'required' : ''"
         />
          <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
       <small
@@ -558,7 +558,7 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [placeholder]="''"
-          [required]="!elementosNoRequeridos.includes('localidad') && requestedFocus"
+          [required]="!elementosNoRequeridos.includes('localidad') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
         ></app-catalogo-select>
@@ -580,7 +580,7 @@
           formControlName="colonia"
           [label]="'Colonia'"
           [placeholder]="''"
-          [required]="!elementosNoRequeridos.includes('colonia') && requestedFocus"
+          [required]="!elementosNoRequeridos.includes('colonia') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"
         ></app-catalogo-select>
