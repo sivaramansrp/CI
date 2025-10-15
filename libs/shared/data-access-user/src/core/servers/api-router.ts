@@ -874,3 +874,17 @@ export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/se/unidades-medidas
  */
 export const CATALOGO_UNIDAD_DE_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/se/unidades-medidas`;
+
+/*
+  * API para obtener el catálogo de tratados y acuerdos por país
+  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
+  */
+export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdo`;
+
+/**
+ * 
+ * @param TRAMITE 
+ * @param CLAVEBLOQUE 
+ * @returns 
+ */
+export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;

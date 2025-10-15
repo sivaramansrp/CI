@@ -22,6 +22,8 @@ export interface JSONResponse {
   codigo: string;
   /** Datos adicionales en formato string. */
   data: string;
+  /** Mensaje en formato string. */
+  mensaje?: string;
 }
 
 /**

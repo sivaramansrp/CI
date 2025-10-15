@@ -1,37 +1,65 @@
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
 import { Catalogo } from '../../models/validar-inicialmente-certificado.model';
-import { CatalogoLista } from '../../models/validar-inicialmente-certificado.model';
-import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
-import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
  * Componente para gestionar los datos del certificado.
- * 
+ *
  * Este componente permite al usuario ingresar y gestionar información relacionada con el certificado,
  * como observaciones, idioma, entidad federativa y representación federal.
  */
 @Component({
   selector: 'app-datos-certificado',
-  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, CommonModule],
+  imports: [
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    CommonModule,
+    DatosCertificadoDeComponent,
+  ],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
-  standalone: true
+  standalone: true,
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
+  /**
+   * Idioma: Indica si el idioma está habilitado o no.
+   */
+  idioma: boolean = true;
+
+  /**
+   * Observable que contiene la lista de idiomas disponibles.
+   */
+  idiomaDatos$!: Observable<Catalogo[]>;
+
+  /**
+   * Observable que contiene la lista de entidades federativas disponibles.
+   */
+  entidadFederativas$!: Observable<Catalogo[]>;
+
+  /**
+   * Observable que contiene la lista de representaciones federales disponibles.
+   */
+  representacionFederal$!: Observable<Catalogo[]>;
+
+  /**
+   * Valores actuales del formulario de datos del certificado.
+   */
+  formDatosCertificadoValues!: { [key: string]: unknown };
 
   /**
    * Formulario reactivo para los datos del certificado.
@@ -59,11 +87,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Estado actual del trámite.
-   */
-  public tramiteState!: Tramite110214State;
-
-  /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
@@ -76,8 +99,21 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+    * Estado de la sección, gestionado mediante el store.
+    * @type {SeccionLibState}
+    */
+  private seccion!: SeccionLibState;
+
+  /**
+   * Referencia al componente hijo DatosCertificadoDeComponent
+   * Permite acceder al formulario y métodos del componente hijo
+   */
+  @ViewChild(DatosCertificadoDeComponent)
+  datosCertificadoDeRef!: DatosCertificadoDeComponent;
+
+  /**
    * Constructor del componente.
-   * 
+   *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {ValidarInicialmenteCertificadoService} ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param {Tramite110214Store} store - Store para gestionar el estado del trámite.
@@ -88,174 +124,191 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query,
-    private consultaioQuery: ConsultaioQuery,
-  ) { }
+    private seccionQuery: SeccionLibQuery,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.tramiteQuery.formDatosCertificado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.formDatosCertificadoValues = estado;
+      });
 
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * 
-   * Carga los datos iniciales, configura el formulario y suscribe al estado del trámite.
-   */
-  ngOnInit(): void {
-    this.cargarIdioma();
-    this.cargarEntidadFederativa();
-    this.cargarRepresentacionFederal();
-    this.tramiteQuery.selectSolicitud$
+    /**
+     * Suscripción al estado de la sección para obtener y actualizar el estado.
+     */
+    this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.tramiteState = seccionState;
+          this.seccion = seccionState;
         })
       )
       .subscribe();
+
+    /**
+     * Asignación de los observables que contienen los catálogos de datos a los que se puede suscribir el componente.
+     */
+    this.idiomaDatos$ = this.tramiteQuery.selectIdioma$;
+    this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
+    this.representacionFederal$ =
+      this.tramiteQuery.selectrepresentacionFederal$;
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   *
+   * Carga los datos iniciales, configura el formulario y suscribe al estado del trámite.
+   */
+  ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+  }
+
+  /**
+   * Getter para acceder al control del formulario, utilizado para la validación.
+   * @returns FormControl del formulario.
+   */
+  get formularioControl(): FormControl {
+    return this.formDatosCertificado.get('') as FormControl;
+  }
+
+  /**
+   * Getter para acceder al formulario del componente hijo DatosCertificadoDeComponent
+   * @returns FormGroup del componente hijo o null si no está disponible
+   */
+  get childForm(): FormGroup | null {
+    return this.datosCertificadoDeRef?.formDatosCertificado || null;
+  }
+
+  /**
+   * Método para validar el formulario del componente hijo
+   * @returns boolean indicando si el formulario es válido
+   */
+  isChildFormValid(): boolean {
+    return this.datosCertificadoDeRef?.validarFormularios() || false;
+  }
+
+  /**
+   * Método para obtener un control específico del formulario hijo
+   * @param controlName Nombre del control a obtener
+   * @returns FormControl o null si no se encuentra
+   */
+  getChildFormControl(controlName: string): FormControl | null {
+    return (this.childForm?.get(controlName) as FormControl) || null;
+  }
+
+  /**
+   * Método para establecer valores en el formulario hijo
+   * @param values Objeto con los valores a establecer
+   */
+  setChildFormValues(values: { [key: string]: unknown }): void {
+    if (this.childForm) {
+      this.childForm.patchValue(values);
+    }
+  }
+
+  /**
+   * Establece el estado de validez del formulario en el store.
+   * @param valida Indica si el formulario es válido o no.
+   */
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ datos: valida });
+  }
+
+  /**
+   * Método público para validar todos los formularios del componente datos-certificado.
+   * Valida el formulario del componente hijo DatosCertificadoDeComponent y actualiza el estado.
+   * @returns boolean indicando si todos los formularios son válidos
+   */
+  public validateAll(): boolean {
+    let valid = true;
+
+    if (this.datosCertificadoDeRef) {
+      const ES_FORMULARIO_HIJO_VALIDO =
+        this.datosCertificadoDeRef.validarFormularios();
+      if (!ES_FORMULARIO_HIJO_VALIDO) {
+        valid = false;
+      }
+
+      this.setFormValida(ES_FORMULARIO_HIJO_VALIDO);
+    }
+
+    return valid;
+  }
+
+  /**
+   * Método que selecciona un idioma y actualiza el estado en el store.
+   * @param estado El estado del idioma seleccionado.
+   */
+  idiomaSeleccion(estado: Catalogo): void {
+    this.store.setIdiomaSeleccion(estado);
+  }
+
+  /**
+   * Método que selecciona una representación federal y actualiza el estado en el store.
+   * @param estado El estado de la representación federal seleccionada.
+   */
+  representacionFederalSeleccion(estado: Catalogo): void {
+    this.store.setRepresentacionFederalDatosSeleccion(estado);
+  }
+
+  /**
+   * Valida el formulario de datos del certificado.
+   *
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+  public validarFormulario(): boolean {
+    let isValid = true;
+
+    if (!this.formDatosCertificado) {
+      return false;
+    }
+
+    if (this.formDatosCertificado.invalid) {
+      this.formDatosCertificado.markAllAsTouched();
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  /**
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   *
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   *
+   * @returns void
+   *
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
   }
 
   /**
    * Método que se ejecuta al destruir el componente.
-   * 
+   *
    * Libera los recursos y cancela las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  }
-
-  /**
-   * Inicializa el formulario con los datos del estado del trámite.
-   */
-  inicializarFormulario(): void {
-    this.formDatosCertificado = this.fb.group({
-      observaciones: [this.tramiteState?.observaciones],
-      idioma: [this.tramiteState?.idioma, [Validators.required, Validators.min(0)]],
-      entidadFederativa: [this.tramiteState?.entidadFederativa, [Validators.required, Validators.min(0)]],
-      representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
-    });
-    // this.formDatosCertificado.markAllAsTouched();
-    this.inicializarEstadoFormulario();
-  }
-  /**
-   * @method inicializarEstadoFormulario
-   * @description Inicializa el estado del formulario según el modo de solo lectura.
-   * 
-   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-   * En caso contrario, habilita los controles del formulario.
-   * 
-   * @returns {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.soloLectura) {
-      this.formDatosCertificado?.disable();
-    } else {
-      this.formDatosCertificado?.enable();
-    }
-  }
-
-  /**
-   * Carga la lista de idiomas disponibles desde el servicio.
-   */
-  cargarIdioma(): void {
-    this.validarInicialmenteCertificadoService
-      .obtenerIdioma()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.idiomas = datos.datos;
-        }
-      );
-  }
-
-  /**
-   * Maneja la selección de un idioma y actualiza el estado del store.
-   */
-  idiomaSeleccion(): void {
-    this.setValoresStore(this.formDatosCertificado, 'idioma', 'setIdioma');
-  }
-
-  /**
-   * Carga la lista de entidades federativas disponibles desde el servicio.
-   */
-  cargarEntidadFederativa(): void {
-    this.validarInicialmenteCertificadoService
-      .obtenerEntidadFederativa()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.entidadFederativas = datos.datos;
-        }
-      );
-  }
-
-  /**
-   * Maneja la selección de una entidad federativa y actualiza el estado del store.
-   */
-  entidadFederativaSeleccion(): void {
-    this.setValoresStore(this.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
-  }
-
-  /**
-   * Carga la lista de representaciones federales disponibles desde el servicio.
-   */
-  cargarRepresentacionFederal(): void {
-    this.validarInicialmenteCertificadoService
-      .obtenerRepresentacionFederal()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.representacionFederal = datos.datos;
-        }
-      );
-  }
-
-  /**
-   * Maneja la selección de una representación federal y actualiza el estado del store.
-   */
-  representacionFederalSeleccion(): void {
-    this.setValoresStore(this.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
-  }
-  /**
-   * Valida el formulario de datos del certificado.
-   * 
-   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
-   */
-public validarFormulario(): boolean {
-  let isValid = true;
-
-
-// Verifica si el formulario 'formDatosCertificado' está inicializado.
-// Si no está inicializado, muestra un error en la consola y retorna false.
-if (!this.formDatosCertificado) {
-    return false;
-}
-
-// Verifica si el formulario 'formDatosCertificado' es inválido.
-// Si es inválido, marca todos los campos como tocados y establece 'isValid' en false.
-if (this.formDatosCertificado.invalid) {
-    this.formDatosCertificado.markAllAsTouched();
-    isValid = false;
-}
-
-  return isValid;
-}
-  /**
-   * Actualiza el estado del store con el valor seleccionado en el formulario.
-   * 
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} campo - El nombre del campo en el formulario.
-   * @param {keyof Tramite110214Store} metodoNombre - El nombre del método en el store para actualizar el estado.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110214Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 }

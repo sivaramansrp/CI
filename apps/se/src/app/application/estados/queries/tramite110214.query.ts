@@ -28,6 +28,11 @@ export class Tramite110214Query extends Query<Tramite110214State> {
       return state.formulario;
     });
 
+    /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
 
   /**
    * Observable que selecciona el estado completo del trámite.
@@ -36,6 +41,49 @@ export class Tramite110214Query extends Query<Tramite110214State> {
    */
   selectSolicitud$ = this.select((state) => {
     return state;
+  });
+
+  /**
+ * Observable que expone la lista de productores exportador agregados al estado del trámite.
+ */
+  selectAgregarProductoresExportador$ = this.select((state) => {
+    return state.agregarProductoresExportador;
+  });
+
+  /**
+ * Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite.
+ */
+  selectMercanciaProductores$ = this.select((state) => {
+    return state.mercanciaProductores;
+  });
+
+  /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+  formDatosCertificado$ = this.select((state) => {
+    return state.formDatosCertificado;
+  });
+
+  /**
+   * Selecciona el catálogo de idiomas.s
+   */
+  selectIdioma$ = this.select((state) => state.idiomaDatos);
+
+  /**
+   * Selecciona los datos de la entidad federativa.
+   * @returns {Observable<any>} - Observable con los datos de la entidad federativa.
+   */
+  selectEntidadFederativa$ = this.select((state) => {
+    return state.entidadFederativaDatos;
+  });
+
+  /**
+   * Selecciona los datos de la representación federal.
+   * @returns {Observable<any>} - Observable con los datos de la representación federal.
+   */
+  selectrepresentacionFederal$ = this.select((state) => {
+    return state.representacionFederalDatos;
   });
 
   /**

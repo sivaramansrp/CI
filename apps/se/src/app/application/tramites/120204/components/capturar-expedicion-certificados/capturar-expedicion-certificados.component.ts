@@ -1,19 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
 import { AlertComponent, Catalogo, TablaDinamicaComponent, TableComponent, TableData, TituloComponent } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS_TABLA, DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../../shared/models/expedicion-certificado.model';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Expedicion120204State, Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
 import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
-import { REGEX_ALTO } from '@ng-mf/data-access-user'
-import { daLocale } from 'ngx-bootstrap/chronos';
-
+import { REGEX_ALTO } from '@ng-mf/data-access-user';
 /**
  * Componente para mostrar las licitaciones vigentes.
  *

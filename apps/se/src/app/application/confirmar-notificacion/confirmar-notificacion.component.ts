@@ -224,7 +224,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmaService.postFirma(NUMFOLIO, PAYLOAD)
+    this.firmaService.postFirma(this.guardarDatos.procedureId,NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<FirmaConfirmarResponse>) => {
@@ -507,7 +507,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         apellido_paterno: 'Hernández'
       }
     };
-    this.cadenaOriginalService.postCadenaOriginal(NUMFOLIO, PAYLOAD).subscribe({
+    this.cadenaOriginalService.postCadenaOriginal(this.guardarDatos.procedureId, NUMFOLIO, PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo !== '00') {
           this.nuevaNotificacion = {
