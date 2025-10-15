@@ -290,9 +290,12 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
         map((estado) => {
           this.cuerpoTabla = estado?.tablaDatos;
           const VALOR = estado?.selectedDatos[0];
-          if (VALOR) {
-            this.formularioSolicitud = AnimalesVivoContenedoraComponent.createFormularioFromValor(VALOR);
-          }
+          const DATA = estado?.selectedDatos.find(v => v.id === VALOR?.id);
+          
+          if (DATA) {
+            DATA.modificado = true; // Establece modificado a true si hay datos seleccionados
+            this.formularioSolicitud = AnimalesVivoContenedoraComponent.createFormularioFromValor(DATA);
+          }         
         })
       )
       .subscribe();
@@ -369,7 +372,9 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       descripcionFraccion: VALOR.descripcionFraccion || '',
       nico: VALOR.nico || '',
       descripcionNico: VALOR.descripcionNico || '',
-      descripcion: VALOR.descripcion || ''
+      descripcion: VALOR.descripcion || '',
+      sensibles: Array.isArray(VALOR.sensibles) ? VALOR.sensibles : undefined,
+      modificado: VALOR.modificado || false
     };
   }
 
@@ -403,6 +408,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    * Proporciona cadenas vacías como valores por defecto para evitar errores de formulario
    */
   private static getAdditionalFields(VALOR: FilaSolicitud): Partial<FilaSolicitud> {
+    console.warn('valor', VALOR);
     return {
       cantidadUMT: String(VALOR.cantidadUMT || ''),
       umt: VALOR.umt || '',
@@ -415,7 +421,9 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       noPartida: VALOR.noPartida || '',
       tipoDeProducto: VALOR.tipoDeProducto || '',
       numeroDeLote: VALOR.numeroDeLote || '',
-      certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || ''
+      certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || '',
+      
+      
     };
   }
 
@@ -448,6 +456,18 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
     const DATOS = AnimalesVivoContenedoraComponent.createDatosFromFormulario(valor.formulario);
+    // Elimina el valor anterior si existe
+    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+    const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+
     this.updateStoreWithDatos(DATOS);
   }
 
@@ -516,7 +536,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
   private static getBasicDataFields(formulario: Partial<FilaSolicitud>): Partial<FilaSolicitud> {
     return {
       id: formulario.id || Math.floor(Math.random() * 1000000),
-      noPartida: '',
+      noPartida: formulario.noPartida || '',
       tipoRequisito: formulario.tipoRequisito || '',
       requisito: formulario.requisito || '',
       numeroCertificadoInternacional: formulario.numeroCertificadoInternacional || '',
@@ -524,7 +544,9 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       descripcionFraccion: formulario.descripcionFraccion || '',
       nico: formulario.nico || '',
       descripcionNico: formulario.descripcionNico || '',
-      descripcion: formulario.descripcion || ''
+      descripcion: formulario.descripcion || '',
+      sensibles: Array.isArray(formulario.sensibles) ? formulario.sensibles : undefined,
+      modificado: formulario.modificado || false
     };
   }
 

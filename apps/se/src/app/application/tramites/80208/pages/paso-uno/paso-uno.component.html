@@ -11,17 +11,9 @@
 
 
         <ng-container>
-            @switch (indice) {
-            @case (1) {
             @if(esDatosRespuesta) {
-            <solicitante></solicitante>
-            }
-            }
-
-            @case (2) {
-            @if(esDatosRespuesta) {
-            <app-cambio-de-modalidad></app-cambio-de-modalidad>
-            }}
+            <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
+            <app-cambio-de-modalidad #cambioDeModalidadRef [hidden]="indice !== 2"></app-cambio-de-modalidad>
             }
         </ng-container>
     </div>

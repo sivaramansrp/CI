@@ -27,15 +27,17 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { AlertComponent, NotificacionesComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
 
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+//import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
-import { PasoTresComponent } from './component/paso-tres/paso-tres.component' 
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component'; 
 
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     OctavaTemporalComponent,
     Solicitante130102Component,
     DatosComponent,
+    PasoTresComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +55,6 @@ import { PasoTresComponent } from './component/paso-tres/paso-tres.component'
     WizardComponent,
     FirmaElectronicaComponent, 
     SolicitanteComponent,
-    PasoTresComponent,
     AlertComponent,
     NotificacionesComponent
   ],

@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from "@ng-mf/data-access-user";
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CertificadoComponent } from './page/certificado/certificado.component';
@@ -12,12 +12,13 @@ import { DestinatarioComponent } from '../../shared/components/destinatario/dest
 import { DestinatarioDeCertificadoComponent } from './components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { HistoricoDeProductoresComponent } from './components/historico-de-productores/historico-de-productores.component';
 import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
-import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { MercanciaComponent } from '../../shared/components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalExportadorComponent } from "../../shared/components/representante-legal-exportador/representante-legal-exportador.component";
 import { RouterModule } from '@angular/router';
 import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialmente-certificado-routing.module';
 
@@ -31,7 +32,6 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     DestinatarioDeCertificadoComponent,
     CertificadoOrigenComponent,
     HistoricoDeProductoresComponent,
-    MercanciaComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +53,9 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     TituloComponent,
     AlertComponent,
     RepresentanteLegalComponent,
+    RepresentanteLegalExportadorComponent,
+    MercanciaComponent,
+    PasoFirmaComponent
   ]
 })
 export class ValidarInicialmenteCertificadoModule { }

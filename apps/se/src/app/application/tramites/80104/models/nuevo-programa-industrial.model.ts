@@ -1,4 +1,5 @@
 import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { AnexoFraccionAnarelaria, AnexoUnoProducto } from "../../../shared/models/complimentos-seccion.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
@@ -132,8 +133,8 @@ export interface AnnexoDosTres {
  * - `seccionActiva`: Cadena que indica la sección activa actual.
  */
 export interface AnnexoUno {
-  exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla: AnexoUnoEncabezado[];
+  exportarDatosTabla: AnexoFraccionAnarelaria[];
+  importarDatosTabla: AnexoUnoProducto[];
   datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
   proveedorClienteDatosTabla: ProveedorCliente[];
@@ -249,3 +250,139 @@ export interface DisponsibleFiscal {
   /** Razón social. */
   razonSocial: string;
 }
+
+
+/** Representa los datos necesarios para la navegación en el contexto de un programa industrial.
+ *
+ * @property {string} [encabezadoAnexoII] - Información relacionada con el Anexo II.
+ */
+export interface DatosParaNavegar {
+   encabezadoAnexoII?: string;
+   encabezadoTipo?: string;
+   encabezadoCategoria?: string;
+   encabezadoDescripcionComercial?: string;
+   encabezadoVolumenMensual?: string;
+   encabezadoVolumenAnual?: string;
+   encabezadoValorEnMonedaMensual?: string;
+   encabezadoValorEnMonedaAnual?: string;
+}
+
+/** Representa un ítem del Anexo Dos, que incluye detalles sobre fracciones de exportación e importación, descripciones comerciales, valores y volúmenes.
+ *
+ * @property {string} [encabezadoFraccionExportacion] - Fracción de exportación.
+ */
+  export interface AnexoDosItem {
+      encabezadoFraccionExportacion?: string;
+      encabezadoFraccionImportacion?: string;
+      encabezadoDescripcionComercial?: string;
+      encabezadoAnexoII?: string;
+      encabezadoIdProducto?: string;
+      encabezadoFraccionDescripcionAnexo?: string;
+      encabezadoValorEnMonedaAnual?: string;
+      encabezadoValorEnMonedaMensual?: string;
+      encabezadoVolumenMensual?: string;
+      encabezadoVolumenAnual?: string;
+      encabezadoCategoria?: string;
+      encabezadoTipo?: string;
+      encabezadoUmt?: string;
+    }
+/** Representa la estructura del encabezado de un proyecto IMMEX, que incluye detalles sobre el tipo de documento, descripción, fechas y datos del firmante.
+ *
+ * @property {string} encabezadoFraccion - Fracción asociada al proyecto IMMEX.
+ */
+export interface ProyectoImmexEncabezado {
+  encabezadoFraccion: string;
+  encabezadoTipoDocument: string;
+  encabezadoDescripcionOtro: string;
+  encabezadoFechaFirma: string;
+  encabezadoFechaVigencia: string;
+  encabezadoRfc: string;
+  encabezadoRazonFirmante: string;
+  estatus: boolean;
+}
+
+/** Representa un ítem de la capacidad instalada en el contexto de un programa industrial.
+ *
+ * @property {string} [FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO] - Fracción arancelaria del producto terminado.
+ */
+export interface CapacidadInstaladaItem {
+    FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO?: string;
+    UMT?: string;
+    DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO?: string;
+    CAPACIDAD_EFECTIVAMENTE_UTILIZADA?: string;
+    CALCULO_CAPACIDAD_INSTALADA?: string;
+    TURNOS?: number | string;
+    HORAS_POR_TURNO?: number | string;
+    CANTIDAD_EMPLEADOS?: number | string;
+    CANTIDAD_MAQUINARIA?: number | string;
+    DESCRIPCION_MAQUINARIA?: string;
+    CAPACIDAD_INSTALADA_MENSUAL?: number | string;
+    CAPACIDAD_INSTALADA_ANUAL?: string;
+  }
+
+/** Representa un ítem del monto de inversión en el contexto de un programa industrial.
+ *
+ * @property {string} [PLANTA] - Nombre o identificador de la planta.
+ */
+export interface MontoInversionItem {
+    PLANTA?: string;
+    MONTO?: number | string;
+    TIPO?: string;
+    DESC_TIPO?: string;
+    CANTIDAD?: number | string;
+    DESCRIPCION?: string;
+    TESTADO?: string;
+    DESC_TESTADO?: string;
+}
+
+/** Representa un ítem de empleados en el contexto de un programa industrial.
+ *
+ * @property {string} [PLANTA] - Nombre o identificador de la planta.
+ */
+export interface EmpleadoItem {
+    PLANTA?: string;
+    ID_EMPLEADOS?: string | number;
+    TOTAL?: string | number;
+    DIRECTOS?: string | number;
+    CEDULA_DE_CUOTAS?: string;
+    FECHA_DE_CEDULA?: string;
+    INDIRECTOS_TEST?: string | number;
+    CONTRATO?: string;
+    OBJETO_DEL_CONTRATO_DEL_SERVICIO?: string;
+    FECHA_FIRMA?: string;
+    FECHA_FIN_VIGENCIA?: string;
+    RFC?: string;
+    RAZON_SOCIAL?: string;
+    TESTADO?: string;
+    DESC_TESTADO?: string;
+  }
+
+  /** Representa un ítem de complementos en el contexto de un programa industrial.
+ *
+ * @property {string} [PLANTA] - Nombre o identificador de la planta.
+ */
+export interface ComplementarItem {
+    PLANTA?: string;
+    DATO?: string;
+    PERMANECERA_MERCANCIA_PROGRAMA?: string;
+    TIPO_DOCUMENTO?: string;
+    DESCRIPCION_DOCUMENTO?: string;
+    DESCRIPCION_OTRO?: string;
+    DOCUMENTO_RESPALDO?: string;
+    DESC_DOCUMENTO_RESPALDO?: string;
+    RESPALDO_OTRO?: string;
+    FECHA_DE_FIRMA?: string;
+    FECHA_DE_FIN_DE_VIGENCIA?: string;
+    FECHA_DE_FIRMA_DOCUMENTO?: string;
+    FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO?: string;
+  }
+
+  /** Representa un ítem de firmantes en el contexto de un programa industrial.
+ *
+ * @property {string} [planta] - Nombre o identificador de la planta.
+ */
+  export interface FirmanteItem {
+    planta?: string;
+    tipoFirmante?: string;
+    descTipoFirmante?: string;
+  }

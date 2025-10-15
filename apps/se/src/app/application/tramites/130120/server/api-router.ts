@@ -57,19 +57,17 @@ export const API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS = (CVEFRACCION: string): st
 export const API_GET_CAT_UNIDADES_MEDIDA = (CVEFRACCION: string): string => `sat-t130120/catalogo/fraccion-arancelaria/${CVEFRACCION}/unidades-medida`;
 
 /**
+ * API para el catálogo de unidades de medidas comerciales.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-umc-activas
+ */
+export const API_GET_CAT_UNIDADES_MEDIDAS_COMERCIALES = `sat-t130120/catalogo/unidades-medidas-comerciales`;
+
+/**
  * API para el catálogo de subdivisiones de fracciones arancelarias.
  * @param CVEFRACCION - Clave de la fracción arancelaria para la cual se desean obtener las subdivisiones.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-subdivisiones-fracciones-arancelarias
  */
 export const API_GET_CAT_SUBDIVISIONES_FRACCIONES_ARANCELARIAS = (CVEFRACCION: string): string => `sat-t130120/catalogo/fraccion-arancelaria/${CVEFRACCION}/subdivisiones`;
-
-/**
- * API para el catálogo de fracciones arancelarias de calzados.
- * @param CVEREGIMEN - Clave del régimen para el cual se desean obtener las fracciones.
- * @param CVECLASIFICACIONREGIMEN - Clave de la clasificación del régimen.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/fracciones-calzados
- */
-export const API_GET_CAT_FRACCIONES_CALZADOS = (CVEREGIMEN: string, CVECLASIFICACIONREGIMEN: string): string => `sat-t130120/catalogo/regimenes/${CVEREGIMEN}/clasificacion/${CVECLASIFICACIONREGIMEN}/fracciones-calzado`;
 
 /**
  * API para el catálogo de fracciones arancelarias.
@@ -83,3 +81,18 @@ export const API_GET_CAT_FRACCIONES_ARRANCELARIAS = `sat-t130120/catalogo/fracci
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-subdivisiones-fracciones-arancelarias
  */
 export const API_GET_CAT_FRACCIONES_ARRANCELARIAS_SUBDIVISIONES = (CVEFRACCION: string): string => `sat-t130120/catalogo/fraccion-arancelaria/${CVEFRACCION}/subdiviciones`;
+
+/**
+ * API para el catálogo de fracciones arancelarias de calzados.
+ * @param CVEREGIMEN - Clave del régimen para el cual se desean obtener las fracciones.
+ * @param CVECLASIFICACIONREGIMEN - Clave de la clasificación del régimen.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/fracciones-calzados
+ */
+export const API_GET_CAT_FRACCIONES_CALZADOS = (CVEREGIMEN: string, CVECLASIFICACIONREGIMEN: string): string => `sat-t130120/catalogo/regimenes/${CVEREGIMEN}/clasificacion/${CVECLASIFICACIONREGIMEN}/fracciones-calzados`;
+
+/**
+ * API para obtener el monto de conversión de una moneda.
+ * @param claveMoneda - Clave de la moneda para la cual se desea obtener el monto de conversión.
+ * @returns 
+ */
+export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t130120/registro/solicitud/monto-conversion/${claveMoneda}`;

@@ -1,11 +1,9 @@
 import { AlphaNumericOnlyDirective } from '@libs/shared/data-access-user/src/tramites/directives/alpha-numeric-only/alpha-numeric-only.directive';
-/* eslint-disable class-methods-use-this */
 /**
  * Importaciones necesarias para el componente de empresas.
  * Incluye servicios, modelos, componentes compartidos y decoradores de Angular.
  */
 import {
-  CATALOGOS_ID,
   Catalogo,
   CatalogosService,
   EMAIL,
@@ -394,7 +392,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   private inicializarFormulario(): void {
     this.formaComplimentos = this.fb.group({
-      modalidad: [{ value: 'servicios', disabled: true }],
+      modalidad: [{ value: 'Industrial', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
         paginaWWeb: ['', [Validators.required, Validators.maxLength(120), Validators.pattern(WEBPAGE)]],
@@ -556,7 +554,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
-    this.formaComplimentos.get('modalidad')?.setValue('Servicios', { emitEvent: false });
+    this.formaComplimentos.get('modalidad')?.setValue('Industrial', { emitEvent: false });
 
  }
 
@@ -1470,6 +1468,25 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
+/**
+ * Handles input change for RFC field and converts to uppercase
+ * @param event Input event
+ */
+    onRFCInputChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const RFC= INPUT.value;
+
+    // Update the form control value
+     this.formaComplimentos.get('formaModificaciones')?.get('rfc')?.setValue(RFC, { emitEvent: false });
+
+    this.servicioDeFormularioService.setFormValue('complimentosForm',
+      {
+        formaModificaciones: {
+          rfc: RFC
+        }
+      }
+    );
+  }
   /**
    * Handles keypress events to allow only letters and common characters
    * @param event Keyboard event

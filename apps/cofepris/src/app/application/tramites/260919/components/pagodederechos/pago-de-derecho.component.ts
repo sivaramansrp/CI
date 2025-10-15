@@ -127,11 +127,11 @@ esFormularioSoloLectura: boolean = false;
         clavedereferencia: [
           this.pagoDeDerechosState?.clavedereferencia,
           [Validators.required,Validators.maxLength(9),
-Validators.pattern(REGEX_REEMPLAZAR)],
+             Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         cadenadeladependencia: [
           this.pagoDeDerechosState?.cadenadeladependencia,
-          [Validators.maxLength(40),Validators.pattern(REGEX_REEMPLAZAR)],
+          [Validators.required,Validators.maxLength(40),Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         banco: [this.pagoDeDerechosState?.banco],
         llavedepago: [

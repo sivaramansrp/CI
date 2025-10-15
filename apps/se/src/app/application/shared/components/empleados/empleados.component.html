@@ -166,7 +166,7 @@
     <div class="row mt-5">
       <div class="col-12 container text-end mt-5">
         <button class="btn btn-danger me-2" (click)="eliminarDirectos()">Eliminar</button>
-        <button class="btn btn-primary">Editar</button>
+        <button class="btn btn-primary" (click)="editarDirectos()">Editar</button>
       </div>
     </div>
   </form>
@@ -182,6 +182,13 @@
 @if (nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}
+
+@if (nuevaNotificacionEditor) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionEditor">
   </lib-notificaciones>
 </section>
 }

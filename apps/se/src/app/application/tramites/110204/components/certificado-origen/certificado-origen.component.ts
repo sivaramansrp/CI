@@ -16,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
-
 /**
  * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
  * 
@@ -411,20 +410,87 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   /**
    * Busca la mercancia y actualiza los datos en el store.
    */
-  buscarrMercancia(): void {
+buscarrMercancia(): void {  
+  const PAYLOAD = {
+    rfcExportador: 'AAL0409235E6',
+    tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
+    pais: { cvePais: this.formCertificado['bloque'] || '' },
+  };
 
-      this.certificadoService
-        .obtenerMercancia()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
-          (data: Mercancia[]) => {
-            this.store.setbuscarMercancia(data);
-          },
-          () => {
-            this.toastr.error('Error al buscar Mercancia');
-          }
-        );
+ this.certificadoService
+  .buscarMercanciasCert(PAYLOAD)
+  .pipe(takeUntil(this.destroyNotifier$))
+  .subscribe({
+    next: (response) => {
+  interface TratadoAplicable {
+    nombreTratado?: string;
   }
+
+  interface ResponseItem {
+    idMercancia?: number | null;
+    fraccionArancelaria?: string;
+    numeroRegistro?: string;
+    fechaExpedicion?: string;
+    fechaVencimiento?: string;
+    nombreTecnico?: string;
+    nombreComercial?: string;
+    fraccionNALADIClave?: string;
+    fraccionNALADSA93Clave?: string;
+    fraccionNALADISA96Clave?: string;
+    fraccionNALADISA02Clave?: string;
+    criterioOrigen?: string;
+    porcentajeContenidoRegional?: string;
+    tratadoAplicable?: TratadoAplicable;
+    unidadMedida?: string;
+  }
+
+  interface ResponseType {
+    datos?: ResponseItem[];
+  }
+
+  const MAPPED_DATA: Mercancia[] = ((response as ResponseType)?.datos ?? []).map((item: ResponseItem): Mercancia => ({
+    id: item.idMercancia ?? undefined,
+    fraccionArancelaria: item.fraccionArancelaria || '',
+    numeroDeRegistrodeProductos: item.numeroRegistro || '',
+    fechaExpedicion: item.fechaExpedicion || '',
+    fechaVencimiento: item.fechaVencimiento || '',
+    nombreTecnico: item.nombreTecnico || '',
+    nombreComercial: item.nombreComercial || '',
+    fraccionNaladi: item.fraccionNALADIClave || '',
+    fraccionNaladiSa93: item.fraccionNALADSA93Clave || '',
+    fraccionNaladiSa96: item.fraccionNALADISA96Clave || '',
+    fraccionNaladiSa02: item.fraccionNALADISA02Clave || '',
+    criterioParaConferirOrigen: item.criterioOrigen || '',
+    valorDeContenidoRegional: item.porcentajeContenidoRegional || '',
+    normaOrigen: item.tratadoAplicable?.nombreTratado || '',
+    cantidad: '',
+    umc: '',
+    tipoFactura: '',
+    valorMercancia: '',
+    fechaFinalInput: '',
+    numeroFactura: '',
+    unidadMedidaMasaBruta: item.unidadMedida || '',
+    complementoClasificacion: '',
+    complementoDescripcion: '',
+    nalad: '',
+    fechaFactura: '',
+    marca: '',
+    nombreIngles: '',
+    otrasInstancias: '',
+    criterioParaTratoPreferencial: '',
+    numeroDeSerie: '',
+  }));
+
+
+      this.store.setbuscarMercancia(MAPPED_DATA);
+    },
+    error: () => {
+      this.toastr.error('Error al buscar Mercancia');
+    },
+  });
+}
+
+
 
   /**
    * @method abrirModalCargaPorArchivo
