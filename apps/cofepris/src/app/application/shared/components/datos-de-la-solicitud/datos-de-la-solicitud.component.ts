@@ -1154,6 +1154,7 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
+    if (this.scianLista && this.scianLista.length > 0) {
     if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
       this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
     }
@@ -1161,8 +1162,8 @@ export class DatosDeLaSolicitudComponent
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
-     this.abrirScianModal();
-    // this.irAAcciones('../scian-selecion');
+  }
+  this.abrirScianModal();
   }
 
     /**
@@ -1197,10 +1198,10 @@ export class DatosDeLaSolicitudComponent
   /**
    * Handles SCIAN selection from the modal
    */
-  onScianSeleccionado(scianData: TablaScianConfig): void {
-    if (this.scianConfig && this.scianConfig.datos) {
-      const EXISTE = this.scianConfig.datos.find(item => item.clave === scianData.clave);
-      if (!EXISTE) {
+ onScianSeleccionado(scianData: TablaScianConfig): void {
+  if (this.scianConfig && this.scianConfig.datos) {
+    const EXISTE = this.scianConfig.datos.find(item => item.clave === scianData.clave);
+    if (!EXISTE) {
       this.scianConfig.datos = [...this.scianConfig.datos, scianData];
       
       this.scianDataService.updateScianData(this.scianConfig.datos);
@@ -1209,8 +1210,22 @@ export class DatosDeLaSolicitudComponent
         this.scianSeleccionado.emit(this.scianConfig.datos);
       }      
       this.cdr.markForCheck();
-    } else{
-       this.scianConfig = {
+    } else {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El elemento SCIAN seleccionado ya existe en la tabla.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarAlerta = true;
+    }
+  } else {
+    this.scianConfig = {
       ...this.scianConfig,
       datos: [scianData]
     };
@@ -1218,11 +1233,8 @@ export class DatosDeLaSolicitudComponent
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
-    }    
-    }
-    
-   
   }
+}
 
   
 
