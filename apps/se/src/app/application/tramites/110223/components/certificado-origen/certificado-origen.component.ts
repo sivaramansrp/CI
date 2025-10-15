@@ -15,6 +15,8 @@ import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
+import { MercanciaComponent } from "../mercancia/mercancia.component";
+
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
  * 
@@ -68,7 +70,8 @@ export const FECHA_FINAL = {
     CommonModule,
     MercanciasModalComponent,
     CertificadoDeOrigenComponent,
-    CargaPorArchivoComponent
+    CargaPorArchivoComponent,
+    MercanciaComponent,
 ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -260,6 +263,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
    */
   idProcedimiento: number = IDPROCEDIMIENTO
+  
+  /**
+   * @property {boolean} fromMercanciasDisponibles
+   * @description
+   * Indica si la información proviene de mercancías disponibles.
+   */
+    fromMercanciasDisponibles: boolean = false;
 
   /**
    * Constructor del componente CertificadoOrigenComponent.
@@ -456,12 +466,18 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     /**
    * Método para abrir el modal de modificación.
    */
-    abrirModificarModal(datos1: Mercancia): void {
-      this.store.setFormMercancia({ ...datos1 });    
-      if (this.modalInstance) {
-        this.modalInstance.show();
-      }      
+     abrirModificarModal(
+    disponiblesDatos: Mercancia,
+    fromMercanciasDisponibles: boolean
+  ): void {
+    this.datosSeleccionados = disponiblesDatos;
+    this.fromMercanciasDisponibles = fromMercanciasDisponibles;
+    this.store.setFormMercancia({ ...disponiblesDatos });
+    if (this.modalInstance) {
+      this.modalInstance.show();
     }
+  }
+
        /**
  * @descripcion
  * Actualiza la tabla de mercancías en el store con la lista recibida en el evento
@@ -555,7 +571,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.store.setFormCertificado({ [CAMPO]: VALOR });
   }
 
-
+  /**
+   * Emite los datos de la mercancía al store.
+   * @param evento Objeto de tipo Mercancia que contiene los datos a emitir.
+   */
+emitmercaniasDatos(evento: Mercancia): void {
+    this.store.setMercanciaTabla([evento]);
+  }
   /**
    * @metodo ngAfterViewInit
    * @descripcion
