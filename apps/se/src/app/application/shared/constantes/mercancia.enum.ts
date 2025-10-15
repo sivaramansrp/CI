@@ -50,28 +50,28 @@ export const FECHA_FACTURA_REFERENCIA = {
  * IDs de procedimientos para los campos de fracción arancelaria.
  */
 export const FRACCION_ARANCELARIA_IDS = [
-  110205, 110212, 110222, 110207, 110208, 110214, 110217,110216, 110221,
+  110205, 110212, 110222, 110207, 110208, 110214, 110217,110216, 110221, 110223
 ];
 
 /**
  * IDs de procedimientos para la clasificación NALADI.
  */
-export const CLASIFICACION_NALADI_IDS = [110204];
+export const CLASIFICACION_NALADI_IDS = [110204, 110223];
 
 /**
  * IDs de procedimientos para la clasificación NALADISA 1993.
  */
-export const CLASIFICACION_NALADISA_1993_IDS = [110204];
+export const CLASIFICACION_NALADISA_1993_IDS = [110204, 110223];
 
 /**
  * IDs de procedimientos para la clasificación NALADISA 1996.
  */
-export const CLASIFICACION_NALADISA_1996_IDS = [110204];
+export const CLASIFICACION_NALADISA_1996_IDS = [110204, 110223];
 
 /**
  * IDs de procedimientos para la clasificación NALADISA 2002.
  */
-export const CLASIFICACION_NALADISA_2002_IDS = [110204];
+export const CLASIFICACION_NALADISA_2002_IDS = [110204, 110223];
 
 /**
  * IDs de procedimientos para el campo “Número de factura de referencia”.
@@ -81,18 +81,18 @@ export const N_FACTURA_REFERENCIA_IDS = [110204, 110221, 110222, 110216];
 /**
  * IDs de procedimientos para el campo “Número de factura”.
  */
-export const N_FACTURA_IDS = [110205, 110212, 110207, 110208, 110217];
+export const N_FACTURA_IDS = [110205, 110212, 110207, 110208, 110217,110223];
 
 /**
  * IDs de procedimientos para el campo “Norma de origen”.
  */
-export const NORMA_ORIGEN_IDS = [110204];
+export const NORMA_ORIGEN_IDS = [110204,110223];
 
 /**
  * IDs de procedimientos para el campo “Nombre en inglés”.
  */
 export const NOMBRE_EN_INGLES_IDS = [
-  110205, 110212, 110207, 110208, 110214, 110217, 110216,
+  110205, 110212, 110207, 110208, 110214, 110217, 110216, 110223
 ];
 
 /**
@@ -104,7 +104,7 @@ export const OTRAS_INSTANCIAS_IDS = [110205, 110222, 110214, 110217, 110216, 110
  * IDs de procedimientos para el campo “Criterio para conferir origen”.
  */
 export const CRITERIO_PARA_CONFERIR_ORIGEN_IDS = [
-  110205, 110212, 110207, 110208, 110217, 110216,
+  110205, 110212, 110207, 110208, 110217, 110216, 110223
 ];
 
 /**
@@ -117,33 +117,33 @@ export const CRITERIO_PARA_TRATO_PREFERENCIAL_IDS = [110222, 110214, 110221];
  * @type {number[]}
  */
 export const VALOR_MERCANCIA_IDS = [
-  110204, 110205, 110212, 110222, 110207, 110208, 110214, 110217, 110216, 110221,
+  110204, 110205, 110212, 110222, 110207, 110208, 110214, 110217, 110216, 110221, 110223
 ];
 
 /**
  * Identificadores asociados al valor del contenido regional.
  * @type {number[]}
  */
-export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214, 110221];
+export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214, 110221,110223];
 
 /**
  * Identificadores asociados a la fecha de la factura.
  * @type {number[]}
  */
-export const FECHA_FACTURA_IDS = [110204, 110205, 110212, 110207, 110217, 110216];
+export const FECHA_FACTURA_IDS = [110204, 110205, 110212, 110207, 110217, 110216, 110223];
 
 /**
  * Identificadores asociados a la fecha de la factura de referencia.
  * @type {number[]}
  */
-export const FECHA_FACTURA_REFERENCIA_IDS = [110221, 110222];
+export const FECHA_FACTURA_REFERENCIA_IDS = [110221, 110222, 110223];
 
 /**
  * Identificadores asociados al tipo de factura.
  * @type {number[]}
  */
 export const TIPO_DE_FACTURA_IDS = [
-  110204, 110205, 110212, 110207, 110208, 110217, 110216, 110221,
+  110204, 110205, 110212, 110207, 110208, 110217, 110216, 110221, 110223
 ];
 
 /**
@@ -188,7 +188,7 @@ export const UMC_IDS = [
 /**
  * IDs de procedimientos en los que el campo “Fecha de factura” es obligatorio.
  */
-export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212];
+export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212, 110223];
 
 /**
  * IDs de procedimientos en los que el campo “Cantidad” es obligatorio.
