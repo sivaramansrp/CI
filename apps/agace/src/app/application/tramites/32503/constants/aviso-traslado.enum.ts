@@ -20,7 +20,7 @@ export const PASOS = [
     completado: false,
   },
   {
-    indice: 4,
+    indice: 3,
     titulo: 'Firmar solicitud',
     activo: false,
     completado: false,

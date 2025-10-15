@@ -547,7 +547,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.cargarFederativa();
     this.cargarMunicipio();
     this.cargarColonias();
-    this.cargarAvisoTabla();
     this.cargarFraccionArancelaria();
     this.cargarUnidadMedida();
     this.inicializarFormulario();
