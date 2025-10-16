@@ -660,6 +660,12 @@ guardarFabricante(): void {
     nombreRazonSocial = '';
   }
 
+  // Helper method to get description from catalog
+  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
+    const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
+    return ITEM ? ITEM.descripcion : id.toString();
+  };
+
   const NUEVO_FABRICANTE: Fabricante = {
     id: this.datoSeleccionado?.[0]?.id || Date.now(),
     nacionalidad: VALOR_FORMULARIO.nacionalidad,
@@ -672,13 +678,13 @@ guardarFabricante(): void {
     calle: VALOR_FORMULARIO.calle,
     numeroExterior: VALOR_FORMULARIO.numeroExterior,
     numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-    pais: VALOR_FORMULARIO.pais,
-    colonia: VALOR_FORMULARIO.colonia,
-    municipioAlcaldia: VALOR_FORMULARIO.municipio,
-    localidad: VALOR_FORMULARIO.localidad,
-    entidadFederativa: VALOR_FORMULARIO.estado,
-    estadoLocalidad: VALOR_FORMULARIO.estado,
-    codigoPostal: VALOR_FORMULARIO.codigoPostal,
+    pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO.pais),
+    colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO.colonia),
+    municipioAlcaldia: GET_DESCRIPTION_FROM_CATALOG(this.municipiosDatos, VALOR_FORMULARIO.municipio),
+    localidad: GET_DESCRIPTION_FROM_CATALOG(this.localidadesDatos, VALOR_FORMULARIO.localidad),
+    entidadFederativa: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO.estado),
+    estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO.estado),
+    codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO.codigoPostal),
     coloniaEquivalente: VALOR_FORMULARIO.coloniaOEquivalente,
     nombres: VALOR_FORMULARIO.nombres,
     primerApellido: VALOR_FORMULARIO.primerApellido,
@@ -686,7 +692,6 @@ guardarFabricante(): void {
     razonSocial: VALOR_FORMULARIO.razonSocial,
     lada: VALOR_FORMULARIO.lada,
   };
-
 
   let updatedFabricantes: Fabricante[];
 
@@ -699,7 +704,6 @@ guardarFabricante(): void {
   } else {
     updatedFabricantes = [...this.fabricanteTablaDatos, NUEVO_FABRICANTE];
   }
-
 
   this.updateFabricanteTablaDatos.emit(updatedFabricantes);
   
