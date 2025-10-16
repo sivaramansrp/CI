@@ -22,11 +22,13 @@ import {
 } from '../../constantes/datos-solicitud.enum';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   DESTINATARIO_ENCABEZADO_DE_TABLA,
@@ -40,6 +42,9 @@ import {
   Proveedor,
 } from '../../models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalComponent } from '../agregar-destinatario-final/agregar-destinatario-final.component';
+import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
+import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 import { ToastrService } from 'ngx-toastr';
@@ -59,6 +64,9 @@ import { ToastrService } from 'ngx-toastr';
     TablaDinamicaComponent,
     AlertComponent,
     NotificacionesComponent,
+    AgregarFabricanteComponent,
+    AgregarDestinatarioFinalComponent,
+    AgregarProveedorComponent
   ],
   providers: [TercerosRelacionadosFebService, ToastrService],
   templateUrl: './terceros-relacionados.component.html',
@@ -211,6 +219,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   @Input() public elementosRequeridos!: string[];
 
+
   /**
    * @property {EventEmitter<Fabricante[]>} fabricanteSeleccionado
    * Evento que emite la lista de fabricantes seleccionados en la tabla.
@@ -293,6 +302,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   @Output() facturadorEliminar: EventEmitter<Facturador[]> = new EventEmitter<
     Facturador[]
   >();
+  /**
+   * Fabricante data selected for modification
+   */
+    public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
   /**
    * Constructor del componente.
@@ -431,11 +444,32 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+  public isContinuarButtonClicked: boolean = false;
+
   /**
    * property TEXTOS
    * description Textos de alerta utilizados en el componente.
    */
   public TEXTOS = MENSAJEDEALERTA;   
+    /**
+   * Indicates if the Fabricante modal is currently open
+   */
+  public fabricanteModalAbierto: boolean = false;
+
+  public destinatarioModalAbierto: boolean = false;
+  /**
+   * Destinatario data selected for modification
+   */
+  public destinatarioSeleccionadoParaModificar: Destinatario[] = [];
+  /**
+   * Reference to the Fabricante modal element
+   */
+  @ViewChild('fabricanteModal') fabricanteModal!: ElementRef;
+
+  /**
+   * Reference to the Destinatario modal element
+   */
+  @ViewChild('destinatarioModal') destinatarioModal!: ElementRef;
 
   /**
    * @method irAAcciones
@@ -485,9 +519,82 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * @fires agregarFabricante
      */
     onAgregarFabricante(): void {
-      this.agregarFabricante.emit();
+      this.fabricanteSeleccionadoParaModificar = [];
+      this.abrirFabricanteModal();
     }
 
+  /**
+   * Opens the Fabricante selection modal
+   */
+  abrirFabricanteModal(): void {
+    this.fabricanteModalAbierto = true;
+    const MODALELEMENT = document.getElementById('fabricanteModal');
+    if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
+}
+  abrirDestinatarioModal(): void {
+    this.destinatarioModalAbierto = true;
+    const MODALELEMENT = document.getElementById('destinatarioModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+  /**
+   * Closes the Fabricante selection modal
+   */
+  cerrarFabricanteModal(): void {
+   this.fabricanteModalAbierto = false;
+   this.fabricanteSeleccionadoParaModificar = [];
+    const MODAL_ELEMENT = document.getElementById('fabricanteModal');
+    if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL_INSTANCE) {
+          MODAL_INSTANCE.hide();
+        }
+    }
+  
+}
+/**
+ * Handles the fabricante table data update
+  */
+onFabricanteUpdated(fabricantes: Fabricante[]): void {
+  
+  this.fabricanteTablaDatos = [...fabricantes];
+  
+  this.fabricanteEliminar.emit([...this.fabricanteTablaDatos]);
+  
+  this.fabricanteSeleccionadoDatos = [];
+  this.fabricanteSeleccionadoParaModificar = [];
+  
+}
+/**
+ * Handles the destinatario table data update
+ */
+onDestinatarioUpdated(destinatarios: Destinatario[]): void {
+  this.destinatarioFinalTablaDatos = [...destinatarios];
+  this.destinatarioEliminar.emit([...this.destinatarioFinalTablaDatos]);
+  this.destinatarioSeleccionadoDatos = [];
+  this.destinatarioSeleccionadoParaModificar = [];
+}
+/**
+ * Closes the Destinatario selection modal
+ */
+cerrarDestinatarioModal(): void {
+  this.destinatarioModalAbierto = false;
+  this.destinatarioSeleccionadoParaModificar = []; 
+  
+  const MODAL_ELEMENT = document.getElementById('destinatarioModal');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide();
+    }
+  }
+}
     /**
    * @method onAgregarDestinatarioFinal
    * @description
@@ -497,7 +604,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @fires agregarDestinatarioFinal
    */
   onAgregarDestinatarioFinal(): void {
-    this.agregarDestinatarioFinal.emit();
+    this.destinatarioSeleccionadoParaModificar = [];
+    this.abrirDestinatarioModal();
   }
 
   /**
@@ -518,16 +626,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public modificarFabricante(): void {
-    if (!this.fabricanteSeleccionadoDatos.length) {
-      this.mostrarAlerta = true;
-      return;
-    }
-    if (this.esVisible) {
-      this.fabricanteEventoModificarModal.emit(this.fabricanteSeleccionadoDatos);
-    } else {
-      this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
-      this.irAAcciones('../agregar-fabricante', true);
-    }
+  
+  if (!this.fabricanteSeleccionadoDatos.length) {
+    this.mostrarAlerta = true;
+    return;
+  }
+  
+  this.fabricanteSeleccionadoParaModificar = this.fabricanteSeleccionadoDatos.map(f => ({ ...f }));
+  
+  this.fabricanteModalAbierto = true;
+  
+  const MODALELEMENT = document.getElementById('fabricanteModal');
+  if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
   }
 
   /**
@@ -538,17 +651,20 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   modificarDestinatario(): void {
-    if (!this.destinatarioSeleccionadoDatos.length) {
-      this.mostrarAlerta = true;
-      return;
-    }
-    if (this.esVisible) {
-      this.destinatarioEventoModificarModal.emit(this.destinatarioSeleccionadoDatos);
-    } else {
-      this.destinatarioEventoModificar.emit(this.destinatarioSeleccionadoDatos);
-      this.irAAcciones('../agregar-destinatario-final',true);
-    }
+  if (!this.destinatarioSeleccionadoDatos.length) {
+    this.mostrarAlerta = true;
+    return;
   }
+  
+  this.destinatarioSeleccionadoParaModificar = this.destinatarioSeleccionadoDatos.map(d => ({ ...d }));
+  this.destinatarioModalAbierto = true;
+  
+  const MODALELEMENT = document.getElementById('destinatarioModal');
+  if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
+}
 
   /**
    * @method modificarProveedor

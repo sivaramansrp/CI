@@ -146,7 +146,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @description
    * Indica si el formulario está deshabilitado. Por defecto es `false`.
    */
-  @Input()
   formularioDeshabilitado: boolean = false;
 
   /**

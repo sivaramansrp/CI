@@ -278,6 +278,10 @@ export class AgregarFabricanteComponent
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+  /**
+   * Event emitted when fabricante is successfully saved
+   */
+  @Output() fabricanteSaved = new EventEmitter<void>();
 
 
   public requestedFocus: boolean = true;
@@ -645,86 +649,79 @@ private forzarDeshabilitarPais(): void {
    * Guarda un fabricante nuevo en el arreglo `fabricantes`, lo actualiza en el store y
    * regresa a la página anterior en el historial del navegador.
    */
-  guardarFabricante(): void {
-   if (this.chequeoValidacionAlGuardar && this.agregarFabricanteForm.invalid) {
-      Object.values(this.agregarFabricanteForm.controls).forEach(control => {
-        control.markAsTouched();
-        control.updateValueAndValidity();
-      });
-      return;
-    }
-    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
-
-    let nombreRazonSocial: string;
-
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.razonSocial;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
-    } else {
-      nombreRazonSocial = '';
-    }
-    const NUEVO_FABRICANTE: Fabricante = {
-      nacionalidad: VALOR_FORMULARIO.nacionalidad,
-      tipoPersona: VALOR_FORMULARIO.tipoPersona,
-      nombreRazonSocial: nombreRazonSocial,
-      rfc: VALOR_FORMULARIO.rfc,
-      curp: VALOR_FORMULARIO.curp,
-      telefono: VALOR_FORMULARIO.telefono,
-      correoElectronico: VALOR_FORMULARIO.correoElectronico,
-      calle: VALOR_FORMULARIO.calle,
-      numeroExterior: VALOR_FORMULARIO.numeroExterior,
-      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-      pais: VALOR_FORMULARIO.pais,
-      colonia: VALOR_FORMULARIO.colonia,
-      municipioAlcaldia: VALOR_FORMULARIO.municipio,
-      localidad: VALOR_FORMULARIO.localidad,
-      entidadFederativa: VALOR_FORMULARIO.estado,
-      estadoLocalidad: VALOR_FORMULARIO.estado,
-      codigoPostal: VALOR_FORMULARIO.codigoPostal,
-      coloniaEquivalente: VALOR_FORMULARIO.coloniaOEquivalente,
-      nombres: VALOR_FORMULARIO.nombres,
-      primerApellido: VALOR_FORMULARIO.primerApellido,
-      segundoApellido: VALOR_FORMULARIO.segundoApellido,
-      razonSocial: VALOR_FORMULARIO.razonSocial,
-      lada: VALOR_FORMULARIO.lada,
-    };
-    if (this.datoSeleccionado?.[0]?.id) {
-      NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
-    }
-     if (this.chequeoValidacionAlGuardar) {
-      const IS_EDIT = Boolean(this.datoSeleccionado?.[0]?.id);
-      const CURRENT_ID = this.datoSeleccionado?.[0]?.id;
-      const IS_DUPLICATE = this.fabricantes.some(f => f.rfc === NUEVO_FABRICANTE.rfc && (!IS_EDIT || f.id !== CURRENT_ID));
-      if (IS_DUPLICATE) {
-        this.abrirModal('La información proporcionada de la persona ya existe, favor de verificar.');
-        return;
-      }
-       let updatedFabricantes: Fabricante[];
-    if (this.datoSeleccionado?.[0]?.id) {
-      NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
-      updatedFabricantes = this.fabricantes.map(f => f.id === NUEVO_FABRICANTE.id ? NUEVO_FABRICANTE : f);
-    } else {
-      const NEXT_ID = this.fabricantes.length > 0 ? Math.max(...this.fabricantes.map(f => f.id || 0)) + 1 : 1;
-      NUEVO_FABRICANTE.id = NEXT_ID;
-      updatedFabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
-    }
-    this.fabricantes = updatedFabricantes;
-    this.updateFabricanteTablaDatos.emit(this.fabricantes);
-    if (this.chequeoValidacionAlGuardar){
-      this.limpiarFormulario();
-      this.datoSeleccionado = [];
-      this.cancelarmodal.emit();
-    }
-    }
-  else {
-    this.fabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
-    this.updateFabricanteTablaDatos.emit(this.fabricantes);
-    this.ubicaccion.back();
-    }
+guardarFabricante(): void {
+  
+  if (this.chequeoValidacionAlGuardar && this.agregarFabricanteForm.invalid) {
+    Object.values(this.agregarFabricanteForm.controls).forEach(control => {
+      control.markAsTouched();
+      control.updateValueAndValidity();
+    });
+    return;
   }
+
+  const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+
+  let nombreRazonSocial: string;
+
+  if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+    nombreRazonSocial = VALOR_FORMULARIO.razonSocial;
+  } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+  } else {
+    nombreRazonSocial = '';
+  }
+
+  // Helper method to get description from catalog
+  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
+    const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
+    return ITEM ? ITEM.descripcion : id.toString();
+  };
+
+  const NUEVO_FABRICANTE: Fabricante = {
+    id: this.datoSeleccionado?.[0]?.id || Date.now(),
+    nacionalidad: VALOR_FORMULARIO.nacionalidad,
+    tipoPersona: VALOR_FORMULARIO.tipoPersona,
+    nombreRazonSocial: nombreRazonSocial,
+    rfc: VALOR_FORMULARIO.rfc,
+    curp: VALOR_FORMULARIO.curp,
+    telefono: VALOR_FORMULARIO.telefono,
+    correoElectronico: VALOR_FORMULARIO.correoElectronico,
+    calle: VALOR_FORMULARIO.calle,
+    numeroExterior: VALOR_FORMULARIO.numeroExterior,
+    numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+    pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO.pais),
+    colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO.colonia),
+    municipioAlcaldia: GET_DESCRIPTION_FROM_CATALOG(this.municipiosDatos, VALOR_FORMULARIO.municipio),
+    localidad: GET_DESCRIPTION_FROM_CATALOG(this.localidadesDatos, VALOR_FORMULARIO.localidad),
+    entidadFederativa: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO.estado),
+    estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO.estado),
+    codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO.codigoPostal),
+    coloniaEquivalente: VALOR_FORMULARIO.coloniaOEquivalente,
+    nombres: VALOR_FORMULARIO.nombres,
+    primerApellido: VALOR_FORMULARIO.primerApellido,
+    segundoApellido: VALOR_FORMULARIO.segundoApellido,
+    razonSocial: VALOR_FORMULARIO.razonSocial,
+    lada: VALOR_FORMULARIO.lada,
+  };
+
+  let updatedFabricantes: Fabricante[];
+
+  const SELECTED_ID = this.datoSeleccionado?.[0]?.id;
+
+  if (this.datoSeleccionado && this.datoSeleccionado.length > 0 && SELECTED_ID !== undefined) {
+    updatedFabricantes = this.fabricanteTablaDatos.map(f => 
+      f.id === SELECTED_ID ? NUEVO_FABRICANTE : f
+    );
+  } else {
+    updatedFabricantes = [...this.fabricanteTablaDatos, NUEVO_FABRICANTE];
+  }
+
+  this.updateFabricanteTablaDatos.emit(updatedFabricantes);
+  
+  this.limpiarFormulario();
+  this.datoSeleccionado = []; 
+  this.cancelarmodal.emit(); 
+}
 
   /**
    * Carga datos de catálogos (códigos postales, países, estados, municipios, etc.)
@@ -800,13 +797,9 @@ private forzarDeshabilitarPais(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    if (this.chequeoValidacionAlGuardar) {
       this.limpiarFormulario();
       this.datoSeleccionado = [];
       this.cancelarmodal.emit();
-    } else {
-      this.ubicaccion.back();
-    }
   }
 
   /**

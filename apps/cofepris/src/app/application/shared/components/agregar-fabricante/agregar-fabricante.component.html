@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="mt-4">
   <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.id; else agregarFabricante"
     titulo="Modificar fabricante"
@@ -293,6 +293,7 @@
           [required]="true"
           [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [placeholder]="''"
         ></app-catalogo-select>
       </div>
 

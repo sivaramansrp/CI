@@ -116,5 +116,6 @@ export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'correoElectronico',
   'scian',
-  'manifesto'
+  'manifesto',
+  'fabricante'
 ];

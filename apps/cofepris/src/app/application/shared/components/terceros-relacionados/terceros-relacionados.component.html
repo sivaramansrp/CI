@@ -9,7 +9,7 @@
   <div class="row mt-5">
     <div class="col-md-3">
       <h6>
-        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
+        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')" [ngClass]="{'mensaje-error':isContinuarButtonClicked && (fabricanteTablaDatos.length === 0)}">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -20,7 +20,9 @@
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      [isInvalida]="!esCampoRequerido('fabricante') && isContinuarButtonClicked && (fabricanteTablaDatos.length === 0)"
     ></app-tabla-dinamica>
+    
   </div>
 
   <div class="row mt-5">
@@ -64,7 +66,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="esVisible ? onAgregarFabricante() : irAAcciones('../agregar-fabricante', false)"
+          (click)="onAgregarFabricante()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -76,7 +78,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-3">
-      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
+      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')" [ngClass]="{'mensaje-error':isContinuarButtonClicked && (destinatarioFinalTablaDatos.length === 0)}">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -87,7 +89,9 @@
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      [isInvalida]="!esCampoRequerido('destinoFinal') && isContinuarButtonClicked && (destinatarioFinalTablaDatos.length === 0)"
     ></app-tabla-dinamica>
+   
   </div>
 
   <div class="row mt-5">
@@ -122,7 +126,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="esVisible ? onAgregarDestinatarioFinal() : irAAcciones('../agregar-destinatario-final', false)"
+          (click)="onAgregarDestinatarioFinal()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -174,7 +178,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-proveedor', false)"
+          (click)="onAgregarProveedorFinal()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -265,3 +269,74 @@
 </section>
 }
 
+<!-- Fabricante Modal -->
+<div class="modal fade" id="fabricanteModal" tabindex="-1" aria-labelledby="fabricanteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="fabricanteModalLabel">
+          {{ fabricanteSeleccionadoParaModificar.length > 0 ? 'Modificar Fabricante' : 'Agregar Fabricante' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-agregar-fabricante
+          *ngIf="fabricanteModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [fabricanteTablaDatos]="fabricanteTablaDatos"
+          [datoSeleccionado]="fabricanteSeleccionadoParaModificar"
+          (updateFabricanteTablaDatos)="onFabricanteUpdated($event)"
+          (cancelarmodal)="cerrarFabricanteModal()">
+        </app-agregar-fabricante>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Destinatario Modal -->
+<div class="modal fade" id="destinatarioModal" tabindex="-1" aria-labelledby="destinatarioModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="destinatarioModalLabel">
+          {{ destinatarioSeleccionadoParaModificar.length > 0 ? 'Modificar Destinatario' : 'Agregar Destinatario' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-agregar-destinatario-final
+          *ngIf="destinatarioModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
+          [datoSeleccionado]="destinatarioSeleccionadoParaModificar"
+          (updateDestinatarioFinalTablaDatos)="onDestinatarioUpdated($event)"
+          (cancelarDestinario)="cerrarDestinatarioModal()"
+          (guardarYSalir)="cerrarDestinatarioModal()">
+        </app-agregar-destinatario-final>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Proveedor Modal -->
+<div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="proveedorModalLabel">
+          {{ proveedorSeleccionadoParaModificar.length > 0 ? 'Modificar Proveedor' : 'Agregar Proveedor' }}
+        </h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-agregar-proveedor
+          *ngIf="proveedorModalAbierto"
+          >
+        </app-agregar-proveedor>
+      </div>
+    </div>
+  </div>
+</div>
+
+         

@@ -427,91 +427,89 @@ export class AgregarDestinatarioFinalComponent
    * This preserves the exact original behavior from the old code
    */
   private guardarDestinatarioNormal(): void {
-    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-    let nombreRazonSocial: string;
-    if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
-    } else if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO['nombres']} ${VALOR_FORMULARIO['primerApellido']} ${VALOR_FORMULARIO['segundoApellido'] || ''}`.trim();
-    } else {
-      nombreRazonSocial = '';
+     const VALIDATION_ERRORS = this.validateModalForm();
+  if (VALIDATION_ERRORS.length > 0) {
+    Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
+      control.markAsTouched();
+      control.updateValueAndValidity();
+    });
+    return;
+  }
+  
+  const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+  const NUEVO_DESTINATARIO = this.buildDestinatarioObject(VALOR_FORMULARIO);
+  let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
+    ? [...this.destinatarioFinalTablaDatos] 
+    : [];
+  
+  if (this.isEditMode) {
+    const CURRENT_ID = this.datoSeleccionado && this.datoSeleccionado[0] ? this.datoSeleccionado[0].id : undefined;
+    NUEVO_DESTINATARIO.id = CURRENT_ID;
+    UPDATED_DESTINATARIOS = UPDATED_DESTINATARIOS.map(d => 
+      d.id === NUEVO_DESTINATARIO.id ? NUEVO_DESTINATARIO : d
+    );
+  } else {
+    const IS_DUPLICATE = UPDATED_DESTINATARIOS.some(d => d.rfc === NUEVO_DESTINATARIO.rfc);
+    
+    if (IS_DUPLICATE) {
+      this.abrirModal('La información proporcionada de la persona ya existe, favor de verificar.');
+      return;
     }
-    
-    const NUEVO_DESTINATARIO: Destinatario = {
-      nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
-      tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
-      nombreRazonSocial: nombreRazonSocial,
-      rfc: VALOR_FORMULARIO['rfc'] as string,
-      curp: '',
-      telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
-      correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
-      calle: VALOR_FORMULARIO['calle'] as string,
-      numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
-      numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
-      pais: VALOR_FORMULARIO['pais'] as string,
-      colonia: VALOR_FORMULARIO['colonia'] as string,
-      municipioAlcaldia: VALOR_FORMULARIO['municipio'] as string,
-      localidad: VALOR_FORMULARIO['localidad'] as string,
-      entidadFederativa: '',
-      estadoLocalidad: VALOR_FORMULARIO['estado'] as string,
-      codigoPostal: VALOR_FORMULARIO['codigoPostal'] as string,
-      coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
-      nombres: VALOR_FORMULARIO['nombres'] as string,
-      primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
-      segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
-      razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
-      lada: VALOR_FORMULARIO['lada'] as string,
-    };
-    
-    if (this.datoSeleccionado?.[0]?.id) {
-      NUEVO_DESTINATARIO.id = this.datoSeleccionado[0].id;
-    }
-    
-    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
-    this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
-    this.agregarDestinatarioFinal.reset();
-    this.ubicaccion.back();
+    const NEXT_ID = UPDATED_DESTINATARIOS.length > 0 ? Math.max(...UPDATED_DESTINATARIOS.map(d => d.id || 0)) + 1 : 1;
+    NUEVO_DESTINATARIO.id = NEXT_ID;
+    UPDATED_DESTINATARIOS.push(NUEVO_DESTINATARIO);
+  }
+  this.updateDestinatarioFinalTablaDatos.emit(UPDATED_DESTINATARIOS);
+  this.agregarDestinatarioFinal.reset();
+  this.datoSeleccionado = [];
+  this.isEditMode = false;
+  this.guardarYSalir.emit();
   }
 
-  /**
-   * Builds destinatario object from form values
-   */
-  private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
-    let nombreRazonSocial: string;
-    if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
-    } else if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO['nombres']} ${VALOR_FORMULARIO['primerApellido']} ${VALOR_FORMULARIO['segundoApellido'] || ''}`.trim();
-    } else {
-      nombreRazonSocial = '';
-    }
-    
-    return {
-      nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
-      tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
-      nombreRazonSocial: nombreRazonSocial,
-      rfc: VALOR_FORMULARIO['rfc'] as string,
-      curp: '',
-      telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
-      correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
-      calle: VALOR_FORMULARIO['calle'] as string,
-      numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
-      numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
-      pais: VALOR_FORMULARIO['pais'] as string,
-      colonia: VALOR_FORMULARIO['colonia'] as string,
-      municipioAlcaldia: VALOR_FORMULARIO['municipio'] as string,
-      localidad: VALOR_FORMULARIO['localidad'] as string,
-      entidadFederativa: '',
-      estadoLocalidad: VALOR_FORMULARIO['estado'] as string,
-      codigoPostal: VALOR_FORMULARIO['codigoPostal'] as string,
-      coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
-      nombres: VALOR_FORMULARIO['nombres'] as string,
-      primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
-      segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
-      razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
-      lada: VALOR_FORMULARIO['lada'] as string,
-    };
+/**
+ * Builds destinatario object from form values
+ */
+private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
+  let nombreRazonSocial: string;
+  if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
+    nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
+  } else if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.FISICA) {
+    nombreRazonSocial = `${VALOR_FORMULARIO['nombres']} ${VALOR_FORMULARIO['primerApellido']} ${VALOR_FORMULARIO['segundoApellido'] || ''}`.trim();
+  } else {
+    nombreRazonSocial = '';
   }
+
+  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
+    const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
+    return ITEM ? ITEM.descripcion : id.toString();
+  };
+  
+  return {
+    nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
+    tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
+    nombreRazonSocial: nombreRazonSocial,
+    rfc: VALOR_FORMULARIO['rfc'] as string,
+    curp: '',
+    telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
+    correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
+    calle: VALOR_FORMULARIO['calle'] as string,
+    numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
+    numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
+    pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
+    colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
+    municipioAlcaldia: GET_DESCRIPTION_FROM_CATALOG(this.municipiosDatos, VALOR_FORMULARIO['municipio'] as string),
+    localidad: GET_DESCRIPTION_FROM_CATALOG(this.localidadesDatos, VALOR_FORMULARIO['localidad'] as string),
+    entidadFederativa: '',
+    estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
+    codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
+    coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
+    nombres: VALOR_FORMULARIO['nombres'] as string,
+    primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
+    segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
+    razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
+    lada: VALOR_FORMULARIO['lada'] as string,
+  };
+}
 
   /**
    * Custom validation for modal form scenario
@@ -916,11 +914,10 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    if (this.chequeoValidacionAlGuardar) {
+      this.limpiarFormulario();
+      this.datoSeleccionado = [];
       this.cancelarDestinario.emit();
-    } else {
-      this.ubicaccion.back();
-    }
+   
   }
 
   /**

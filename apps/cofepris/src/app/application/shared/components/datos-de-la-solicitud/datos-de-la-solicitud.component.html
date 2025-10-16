@@ -290,14 +290,16 @@
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono">S.C.I.A.N.
           </label>
-          <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')"[ngClass]="{'mensaje-error':isContinuarButtonClicked && (scianConfig.datos.length === 0)}">*</span>
           <span class="form-label">:</span>
         </div>
       </div>
       <app-tabla-dinamica [tipoSeleccionTabla]="scianConfig.tipoSeleccionTabla"
         [configuracionTabla]="scianConfig.configuracionTabla" [datos]="scianConfig.datos"
         (listaDeFilaSeleccionada)="scianLista = $event"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        [isInvalida]="esCampoRequerido('scian') && isContinuarButtonClicked && (scianConfig.datos.length === 0)"
+        ></app-tabla-dinamica>
     </div>
     @if (!esSinAccionAlIniciar) {
     <div class="row">
@@ -404,11 +406,13 @@
     </div>
     } @if (tablaMercanciasConfig) {
     <div class="row mt-5">
-      <h5 class="mt-3">Mercancías*:</h5>
+      <h5 class="mt-3">Mercancías<span class="form-label" *ngIf="!esCampoRequerido('mercancias')" [ngClass]="{'mensaje-error':isContinuarButtonClicked && (tablaMercanciasConfig.datos.length === 0)}">*</span><span class="form-label">:</span>
+      </h5>
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaMercanciasConfig.tipoSeleccionTabla"
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla" [datos]="tablaMercanciasConfig.datos"
-        [isInvalida]="isMercanciasInvalid" (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [isInvalida]="(!esCampoRequerido('mercancias') && isContinuarButtonClicked && (tablaMercanciasConfig.datos.length === 0))||isMercanciasInvalid" (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        ></app-tabla-dinamica>
       <div class="d-flex justify-content-center mt-3" [class.disabled]="formularioDeshabilitado"
         [style.pointerEvents]="formularioDeshabilitado ? 'none' : 'auto'"
         [style.opacity]="formularioDeshabilitado ? '0.5' : '1'">

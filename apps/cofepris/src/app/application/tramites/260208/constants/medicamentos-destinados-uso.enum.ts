@@ -58,5 +58,5 @@ export const ELEMENTOS_REQUERIDOS = [
  * @description Lista de elementos requeridos para el trámite.
  */
 export const ELEMENTOS_REQUERIDOS_TR = [
-  'destinoFinal'
+  'fabricante'
 ];
