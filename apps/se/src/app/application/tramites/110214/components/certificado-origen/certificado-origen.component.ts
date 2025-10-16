@@ -9,7 +9,6 @@ import {
 import {
   Catalogo,
   ConfiguracionColumna,
-  JsonResponseCatalogo,
   SeccionLibQuery,
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
@@ -20,7 +19,6 @@ import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificaci
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
@@ -181,12 +179,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   /**
-   * Observable que emite la lista de países y bloques disponibles.
-   * @type {Observable<Catalogo[]>}
-   */
-  public pais$!: Observable<Catalogo[]>;
-
-  /**
    * @type {Observable<Catalogo[]>}
    */
   public paisBloqu$!: Observable<Catalogo[]>;
@@ -217,8 +209,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
-    this.pais$ = this.query.selectPaisBloque$;
-    this.paisBloqu$ = this.query.selectPaisBloqu$; 
+    this.paisBloqu$ = this.query.selectPaisBloque$; 
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -260,28 +251,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         this.actualizandoFormulario = false;
       }
     });
-
-    this.estadoOpcion();
-    this.paisOpcion();
     this.cargarBloque();
-    this.paisBloqu();
-  }
-
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  paisBloqu(): void {
-    this.validarInicialmenteCertificadoService
-      .getPaisBloqu()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: JsonResponseCatalogo) => {
-          this.store.setPaisBloqu(data.datos);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
   }
 
   /**
@@ -314,44 +284,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
   }
 
   /**
