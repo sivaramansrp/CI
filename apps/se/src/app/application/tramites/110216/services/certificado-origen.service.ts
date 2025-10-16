@@ -1,4 +1,4 @@
-import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { CatalogoLista, DisponiblesTabla, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -153,5 +153,14 @@ export class CertificadosOrigenService {
    */
   guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
     return this.httpService.post<Record<string, unknown>>(PROC_110216.GUARDAR, { body: body });
+  }
+
+  /**
+   * Obtiene la lista de mercancías seleccionadas.
+   * 
+   * @returns {Observable<SeleccionadasTabla[]>} Un observable con la lista de mercancías seleccionadas.
+   */
+  getMercanciasSeleccionadas(): Observable<MercanciaTabla[]> {
+    return this.http.get<MercanciaTabla[]>('assets/json/110214/mercancias-seleccionadas.json');
   }
 }

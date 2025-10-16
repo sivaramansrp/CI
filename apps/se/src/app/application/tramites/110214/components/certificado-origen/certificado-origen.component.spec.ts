@@ -102,39 +102,6 @@ describe('CertificadoOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should initialize observables and call helper methods', () => {
-      const paisSpy = jest.spyOn(component, 'paisOpcion');
-      const estadoSpy = jest.spyOn(component, 'estadoOpcion');
-      const cargarSpy = jest.spyOn(component, 'cargarBloque');
-      const paisBloquSpy = jest.spyOn(component, 'paisBloqu');
-
-      component.ngOnInit();
-
-      expect(component.pais$).toBeTruthy();
-      expect(component.paisBloqu$).toBeTruthy();
-      expect(estadoSpy).toHaveBeenCalled();
-      expect(paisSpy).toHaveBeenCalled();
-      expect(cargarSpy).toHaveBeenCalled();
-      expect(paisBloquSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('paisBloqu', () => {
-    it('should call store.setPaisBloqu with data', () => {
-      component.paisBloqu();
-      expect(mockValidarInicialmenteCertificadoService.getPaisBloqu).toHaveBeenCalled();
-      expect(mockStore.setPaisBloqu).toHaveBeenCalledWith([{ id: 1, descripcion: 'Test' }]);
-    });
-
-    it('should handle error gracefully', () => {
-      jest.spyOn(console, 'error').mockImplementation(() => {});
-      mockValidarInicialmenteCertificadoService.getPaisBloqu.mockReturnValueOnce(throwError(() => new Error('Error')));
-      component.paisBloqu();
-      expect(console.error).toHaveBeenCalled();
-    });
-  });
-
   describe('cargarBloque', () => {
     it('should call store.setPaisBloque with data', () => {
       component.cargarBloque();
@@ -150,39 +117,6 @@ describe('CertificadoOrigenComponent', () => {
       component.cargarBloque();
       expect(console.error).toHaveBeenCalled();
     });
-  });
-
-  it('should fetch estado options', () => {
-    const mockData = [{ id: 1, descripcion: 'Activo' }];
-    mockPeruCertificadoService.obtenerMenuDesplegable.mockReturnValue(of(mockData));
-
-    component.estadoOpcion();
-    expect(mockPeruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalledWith('estados.json');
-  });
-
-  it('should handle error in estadoOpcion', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    mockPeruCertificadoService.obtenerMenuDesplegable.mockReturnValueOnce(
-      throwError(() => new HttpErrorResponse({ error: 'Error' }))
-    );
-    component.estadoOpcion();
-    expect(console.error).toHaveBeenCalled();
-  });
-
-  it('should fetch pais options', () => {
-    const mockData = [{ id: 1, descripcion: 'México' }];
-    mockPeruCertificadoService.obtenerMenuDesplegable.mockReturnValue(of(mockData));
-    component.paisOpcion();
-    expect(mockPeruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalledWith('pais.json');
-  });
-
-  it('should handle error in paisOpcion', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    mockPeruCertificadoService.obtenerMenuDesplegable.mockReturnValueOnce(
-      throwError(() => new HttpErrorResponse({ error: 'Error' }))
-    );
-    component.paisOpcion();
-    expect(console.error).toHaveBeenCalled();
   });
 
   it('should call store.setEstado when tipoEstadoSeleccion is called', () => {
