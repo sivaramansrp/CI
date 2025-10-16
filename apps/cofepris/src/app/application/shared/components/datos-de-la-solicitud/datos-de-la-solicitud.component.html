@@ -71,7 +71,7 @@
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila">
         <div class="form-group">
           <label class="form-label municipio-label" for="denominacionRazon">Denominación o razón social</label>
-          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')">*</span>
+          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"  [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched ? 'text-danger' : ''" >*</span>
           <span class="form-label municipio-labe">:</span>
           <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
             maxlength="100" [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''" />
@@ -98,7 +98,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal*:</label>
+          <label class="form-label" for="codigoPostal">Código postal <span [ngClass]="{'text-danger':datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
           <input class="form-control" id="codigoPostal" type="text" maxlength="12" formControlName="codigoPostal"
             [ngClass]="
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
@@ -121,7 +121,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}*:</label>
+          <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}<span [ngClass]="{'text-danger':datosSolicitudForm.get('municipioAlcaldia')?.touched }">*</span>:</label>
           <input class="form-control" id="municipioAlcaldia" type="text" maxlength="120"
             formControlName="municipioAlcaldia" [ngClass]="
               isValid(datosSolicitudForm, 'municipioAlcaldia') ? 'required' : ''
@@ -191,7 +191,7 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle*:</label>
+          <label class="form-label" for="calle">Calle <span [ngClass]="{'text-danger':datosSolicitudForm.get('calle')?.touched }">*</span>:</label>
           <span tooltip="Domicilio, calle, número interior, número exterior, lote">
             <i class="bi bi-question-circle-fill"></i>
           </span>
@@ -269,7 +269,7 @@
 
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono*:</label>
+          <label class="form-label" for="telefono">Teléfono <span [ngClass]="{'text-danger':datosSolicitudForm.get('telefono')?.touched }">*</span>:</label>
           <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" [ngClass]="
               isValid(datosSolicitudForm, 'telefono') ? 'required' : ''
             " />
@@ -354,7 +354,7 @@
       <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
           <app-catalogo-select [catalogo]="adunasDeEntradasDatos" [isBold]="true" formControlName="adunasDeEntradas"
-            [label]="'Aduanas de entradas'" [placeholder]="'Seleccione una opción'" [required]="true"
+            [label]="'Aduanas de entradas'" [placeholder]="'selecciona un valor'" [required]="true"
             name="adunasDeEntradas" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -589,7 +589,7 @@
         <label class="form-label" for="correoElectronico">Correo electrónico
         </label>
         <span class="form-label municipio-label"
-          [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''"
+          [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') && datosSolicitudForm.get('correoElectronico')?.touched? 'text-danger' : ''"
           *ngIf="esCampoRequerido('correoElectronico')">*</span>
         <span class="form-label mx-1">:</span>
         <span tooltip="ejemplo@dominio.com">

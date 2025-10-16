@@ -26,17 +26,6 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (fabricanteSeleccionadoDatos.length > 0) {       
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger"
-          (click)="eliminarFabricante()"
-          [disabled]="esFormularioSoloLectura ? true : false"
-        >
-          Eliminar
-        </button>
-      }
            @if (fabricanteSeleccionadoDatos.length === 1) {
             <button
               type="button"
@@ -58,7 +47,19 @@
             >
               Modificar
             </button>
-        }         
+        }   
+        @if (fabricanteSeleccionadoDatos.length > 0) {       
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger"
+          (click)="eliminarFabricante()"
+          [disabled]="esFormularioSoloLectura ? true : false"
+        >
+          Eliminar
+        </button>
+      }
+              
         <button
           type="button"
           name="agregarMercancias"
@@ -92,6 +93,17 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
+             @if (destinatarioSeleccionadoDatos.length === 1) {
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default ms-2"
+            (click)="modificarDestinatario()"
+            [disabled]="esFormularioSoloLectura ? true : false"
+          >
+            Modificar
+          </button>
+        }
         @if (destinatarioSeleccionadoDatos.length > 0) {
           <button
           type="button"
@@ -103,17 +115,7 @@
           Eliminar
         </button>
       }
-           @if (destinatarioSeleccionadoDatos.length === 1) {
-          <button
-            type="button"
-            name="modificarMercancias"
-            class="btn btn-default ms-2"
-            (click)="modificarDestinatario()"
-            [disabled]="esFormularioSoloLectura ? true : false"
-          >
-            Modificar
-          </button>
-        }
+      
         
         
         <button
@@ -145,6 +147,17 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
+         @if (proveedorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default ms-2"
+              (click)="modificarProveedor()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+          }
         @if (proveedorSeleccionadoDatos.length > 0) {
         <button
           type="button"
@@ -156,17 +169,7 @@
           Eliminar
         </button>        
         }
-          @if (proveedorSeleccionadoDatos.length === 1) {
-            <button
-              type="button"
-              name="modificarMercancias"
-              class="btn btn-default ms-2"
-              (click)="modificarProveedor()"
-              [disabled]="esFormularioSoloLectura ? true : false"
-            >
-              Modificar
-            </button>
-          }
+         
         <button
           type="button"
           name="agregarMercancias"
@@ -195,6 +198,17 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
+           @if (facturadorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default ms-2"
+              (click)="modificarFacturador()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+          }
         @if (facturadorSeleccionadoDatos.length > 0) {        
         <button
           type="button"
@@ -206,17 +220,7 @@
           Eliminar
         </button>
         }
-          @if (facturadorSeleccionadoDatos.length === 1) {
-            <button
-              type="button"
-              name="modificarMercancias"
-              class="btn btn-default ms-2"
-              (click)="modificarFacturador()"
-              [disabled]="esFormularioSoloLectura ? true : false"
-            >
-              Modificar
-            </button>
-          }
+       
          
         <button
           type="button"
