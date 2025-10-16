@@ -120,7 +120,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="esVisible ? onAgregarDestinatarioFinal() : irAAcciones('../agregar-destinatario-final', false)"
+          (click)="onAgregarDestinatarioFinal()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -284,3 +284,30 @@
     </div>
   </div>
 </div>
+
+<!-- Destinatario Modal -->
+<div class="modal fade" id="destinatarioModal" tabindex="-1" aria-labelledby="destinatarioModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="destinatarioModalLabel">
+          {{ destinatarioSeleccionadoParaModificar.length > 0 ? 'Modificar Destinatario' : 'Agregar Destinatario' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-agregar-destinatario-final
+          *ngIf="destinatarioModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
+          [datoSeleccionado]="destinatarioSeleccionadoParaModificar"
+          (updateDestinatarioFinalTablaDatos)="onDestinatarioUpdated($event)"
+          (cancelarDestinario)="cerrarDestinatarioModal()"
+          (guardarYSalir)="cerrarDestinatarioModal()">
+        </app-agregar-destinatario-final>
+      </div>
+    </div>
+  </div>
+</div>
+
+          
