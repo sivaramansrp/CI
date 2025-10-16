@@ -4,15 +4,6 @@ import { GrupoRepresentativo } from '../models/registro.model';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 /**
- * Representa un catálogo con un identificador y una descripción.
- */
-// export interface Catalogo {
-//   /** Identificador único del catálogo. */
-//   id: number;
-//   /** Descripción del catálogo. */
-//   descripcion: string;
-// }
-/**
  * Estado inicial para la interfaz del trámite 110207.
  */
 export interface Solicitud110207State {
