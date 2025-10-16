@@ -49,11 +49,17 @@ export class EmpleadosComponent implements OnInit {
    * @property {Notificacion} nuevaNotificacion
    */
   public nuevaNotificacion!: Notificacion;
-/**
- * Nueva notificación para mostrar mensajes al usuario en el editor.
- * @property {Notificacion} nuevaNotificacionEditor
- */
+  /**
+   * Nueva notificación para mostrar mensajes al usuario en el editor.
+   * @property {Notificacion} nuevaNotificacionEditor
+   */
   public nuevaNotificacionEditor!: Notificacion;
+
+  /**
+   * Nueva notificación para mostrar mensajes al usuario al eliminar registros.
+   * @property {Notificacion} nuevaNotificacionEliminar
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
   /**
  * Estado actual de la solicitud, utilizado para inicializar y gestionar los datos del formulario de empleados.
  * @property {ComplementarState} solicitudState
@@ -123,16 +129,16 @@ export class EmpleadosComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
   @Output() cerrarPopup = new EventEmitter<void>();
-  
+
   /**
    * Índice de la capacidad instalada que se está editando actualmente.
    */
   editingIndex: number | null = null;
 
-/**  
- * Evento de salida que emite una lista de empleados directos al componente padre.
- */
- @Output() obtenerEmpleadosList: EventEmitter<Directos[]> = new EventEmitter<Directos[]>();
+  /**  
+   * Evento de salida que emite una lista de empleados directos al componente padre.
+   */
+  @Output() obtenerEmpleadosList: EventEmitter<Directos[]> = new EventEmitter<Directos[]>();
   /**
    * Constructor del componente.
    * @constructor
@@ -175,27 +181,27 @@ export class EmpleadosComponent implements OnInit {
       cedula: [this.solicitudState.cedula],
       fechaCedula: [this.solicitudState.fechaCedula],
       indirectosDatos: [this.solicitudState.indirectosDatos],
-      contrato: [this.solicitudState.contrato,[Validators.maxLength(20)]],
-      objeto: [this.solicitudState.objeto,[Validators.maxLength(100)]],
+      contrato: [this.solicitudState.contrato, [Validators.maxLength(20)]],
+      objeto: [this.solicitudState.objeto, [Validators.maxLength(100)]],
       fechaFirma: [this.solicitudState.fechaFirma],
       fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
-      rfcEmpresa: [this.solicitudState.rfcEmpresa,[Validators.maxLength(13)]],
+      rfcEmpresa: [this.solicitudState.rfcEmpresa, [Validators.maxLength(13)]],
       razonSocial: [{ value: this.solicitudState.razonSocial, disabled: true }],
     });
   }
-  
-    /**
-   * Maneja el evento de entrada y limita la longitud del texto.
-   * @param event Evento del input
-   * @param maxLength Longitud máxima permitida
-   */
+
+  /**
+ * Maneja el evento de entrada y limita la longitud del texto.
+ * @param event Evento del input
+ * @param maxLength Longitud máxima permitida
+ */
   onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
-  const TARGET = event.target as HTMLInputElement;
-  let value = TARGET.value;
-  value = value.replace(/\D/g, '').slice(0, maxLength);
-  TARGET.value = value;
-  this.empleadosForm.get(controlPath)?.setValue(value, { emitEvent: false });
-}
+    const TARGET = event.target as HTMLInputElement;
+    let value = TARGET.value;
+    value = value.replace(/\D/g, '').slice(0, maxLength);
+    TARGET.value = value;
+    this.empleadosForm.get(controlPath)?.setValue(value, { emitEvent: false });
+  }
 
   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
@@ -319,7 +325,7 @@ export class EmpleadosComponent implements OnInit {
     if (this.empleadosForm.valid) {
       const DIRECTOS = this.empleadosForm.get('directos')?.value;
       const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
-    const TABLA_VALOR: Directos = {
+      const TABLA_VALOR: Directos = {
         PLANTA: this.empleadosForm.get('directo')?.value,
         TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
         DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
@@ -335,16 +341,16 @@ export class EmpleadosComponent implements OnInit {
       };
 
       if (this.editingIndex !== null && this.editingIndex > -1 && TABLA_VALOR !== null) {
-      this.directosDatos[this.editingIndex] = TABLA_VALOR;
-      this.directosDatos = [...this.directosDatos];
-      this.editingIndex = null;
-     
-    } else if (TABLA_VALOR !== null) {  
-      this.directosDatos = [...this.directosDatos, TABLA_VALOR];
+        this.directosDatos[this.editingIndex] = TABLA_VALOR;
+        this.directosDatos = [...this.directosDatos];
+        this.editingIndex = null;
+
+      } else if (TABLA_VALOR !== null) {
+        this.directosDatos = [...this.directosDatos, TABLA_VALOR];
+      }
     }
-    }
-  
-    this.selectedDirectosDatos=[];
+
+    this.selectedDirectosDatos = [];
     this.agregarValidacion();
   }
   /**
@@ -426,8 +432,8 @@ export class EmpleadosComponent implements OnInit {
     this.empleadosForm.reset();
     this.empleadosForm.get('razonSocial')?.disable();
     this.disableRazonSocial = true;
-   this.empleadosForm.get('directos')?.setValue(false);
-   this.empleadosForm.get('indirectos')?.setValue(false);
+    this.empleadosForm.get('directos')?.setValue(false);
+    this.empleadosForm.get('indirectos')?.setValue(false);
     this.setDirectosValidation();
     this.setIndirectosValidation();
   }
@@ -457,6 +463,7 @@ export class EmpleadosComponent implements OnInit {
    */
   eliminarDirectos(): void {
     if (this.selectedDirectosDatos?.length > 0) {
+      this.mostrarNotificacionEliminarDirectos();
       this.selectedDirectosDatos.forEach(planta => {
         const INDEX = this.selectedDirectosDatos.findIndex(row => row === planta);
         if (INDEX !== -1) {
@@ -465,15 +472,34 @@ export class EmpleadosComponent implements OnInit {
       });
       this.directosDatos = [...this.directosDatos];
     }
+    else {
+      this.mostrarNotificacionEliminarDirectos();
+    }
   }
-/**
- * Maneja la edición de empleados directos.
- * 
- * Si hay exactamente un empleado seleccionado en `selectedDirectosDatos`, llena el formulario
- * con los datos de ese empleado y establece `editingIndex` al índice correspondiente en `directosDatos`.
- * Si no hay empleados seleccionados, muestra una notificación de advertencia.
- */
-   editarDirectos(): void {
+
+  /**
+   * Nueva notificación para mostrar mensajes al usuario al eliminar registros.
+   */
+  mostrarNotificacionEliminarDirectos(): void {
+    this.nuevaNotificacionEliminar = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.selectedDirectosDatos?.length > 0 ? 'El registro fue eliminado correctamente.' : 'Debe elegir al menos un registro de empleados para eliminar.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  /**
+   * Maneja la edición de empleados directos.
+   * 
+   * Si hay exactamente un empleado seleccionado en `selectedDirectosDatos`, llena el formulario
+   * con los datos de ese empleado y establece `editingIndex` al índice correspondiente en `directosDatos`.
+   * Si no hay empleados seleccionados, muestra una notificación de advertencia.
+   */
+  editarDirectos(): void {
     if (this.selectedDirectosDatos?.length === 1) {
       const SELECTED = this.selectedDirectosDatos[0];
       this.empleadosForm.patchValue({
@@ -513,6 +539,6 @@ export class EmpleadosComponent implements OnInit {
         txtBtnCancelar: '',
       };
     }
-}
+  }
 
 }
