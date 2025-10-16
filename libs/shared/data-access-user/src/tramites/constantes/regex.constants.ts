@@ -1255,3 +1255,9 @@ export const REGEX_NUMERO_PROGRAMA_IMMEX = /^\d{1,6}[/]\d{4}$/;
  * const soloNumeros = input.replace(REGEX_NICO, ''); // Resultado: "123456"
  */
 export const REGEX_NICO = /[^0-9]/g;
+
+/**
+ * Expresión regular para validar un solo carácter numérico o punto decimal.
+ * Utilizada para validación de entrada de teclas en campos numéricos.
+ */
+export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;

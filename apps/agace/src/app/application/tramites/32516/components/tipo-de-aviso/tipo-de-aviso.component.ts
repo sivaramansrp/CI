@@ -12,7 +12,7 @@
  * @since 2025
  */
 
-import { ALFANUMERICO_ESPACIO, REGEX_DECIMAL_13_2_OPTIONAL, REGEX_MERCANCIAS_CHARACTERS, REGEX_NICO } from '@libs/shared/data-access-user/src';
+import { ALFANUMERICO_ESPACIO, REGEX_DECIMAL_13_2_OPTIONAL, REGEX_MERCANCIAS_CHARACTERS, REGEX_NICO, REGEX_NUMERO_PUNTO_CARACTER } from '@libs/shared/data-access-user/src';
 import { HECHOS_TABLA_COLUMNAS, HechosDatosTabla } from '../../modelos/acta-de-hechos.model';
 import { TramiteState, TramiteStore } from '../../estados/tramite32516Store.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -833,7 +833,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   private static validarEntradaNumerica(input: HTMLInputElement, key: string, event: KeyboardEvent): boolean {
     // Permitir solo números (0-9) y punto decimal (.)
-    if (!/^[0-9.]$/.test(key)) {
+    if (!REGEX_NUMERO_PUNTO_CARACTER.test(key)) {
       event.preventDefault();
       return false;
     }

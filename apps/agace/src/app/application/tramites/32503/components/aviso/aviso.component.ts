@@ -503,11 +503,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
           this.obtenerDescripcionColonia(item.claveColonia)
       }));
       
-      // Update store with enriched data
+      // Actualizar la tienda con datos enriquecidos
       this.store.setTablaDeDatos(this.tablaDeDatos.datos);
     }
 
-    // Enrich mercancia table data
+    // Enriquecer datos de la tabla de mercancia
     if (this.tablaDeMercancia.datos && this.tablaDeMercancia.datos.length > 0) {
       this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.map(item => ({
         ...item,
@@ -597,7 +597,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe(
         (datos: CatalogoLista) => {
           this.unidadMedida = datos.datos;
-          // Enrich existing data after all catalogs are loaded
+          // Enriquecer los datos existentes después de cargar todos los catálogos
           this.enriquecerDatosExistentesConDescripciones();
         }
       );
@@ -650,7 +650,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe(
         (datos: CatalogoLista) => {
           this.colonia = datos.datos;
-          // Enrich existing data after all catalogs are loaded
+          // Enriquecer los datos existentes después de cargar todos los catálogos
           this.enriquecerDatosExistentesConDescripciones();
         }
       );
@@ -1072,6 +1072,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+/**
+ * Carga los datos del aviso seleccionado en el formulario de domicilio.
+ * Usa datos completos si existen; de lo contrario, usa los datos básicos del registro.
+ * @param {AvisoTabla} registroSeleccionado - Aviso seleccionado de la tabla.
+ */
   private precargarDatosDelAviso(registroSeleccionado: AvisoTabla): void {
     const DATOS_COMPLETOS = this.datosCompletosAvisos[registroSeleccionado.id];
 
@@ -1228,7 +1233,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
             valorUSD: VALORES_DE_FORMULARIO.valorUSD,
             numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
             numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion,
-            // Add descriptions for better display in table
+            // Añadir descripciones para una mejor visualización en la tabla
             descripcionFraccionArancelaria: this.obtenerDescripcionFraccionArancelaria(VALORES_DE_FORMULARIO.claveFraccionArancelaria),
             descripcionUnidadMedida: this.obtenerDescripcionUnidadMedida(VALORES_DE_FORMULARIO.claveUnidadMedida)
           };
@@ -1356,7 +1361,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
             ...this.tablaDeDatos.datos.slice(INDICE_A_ACTUALIZAR + 1)
           ];
           
-          // Update store to persist the updated data
+          // Actualizar la tienda para conservar los datos actualizados
           this.store.setTablaDeDatos(this.tablaDeDatos.datos);
           
           // Limpiar selección
@@ -1393,7 +1398,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
         this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
         
-        // Update store to persist the data
+        // Actualizar la tienda para conservar los datos
         this.store.setTablaDeDatos(this.tablaDeDatos.datos);
       }
 

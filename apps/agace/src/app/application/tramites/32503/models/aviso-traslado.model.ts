@@ -96,7 +96,7 @@ export interface MercanciaTabla {
   valorUSD: string;
   numPedimentoExportacion: string;
   numPedimentoImportacion: string;
-  // Descriptions for display in table
+  // Descripciones para mostrar en la tabla
   descripcionFraccionArancelaria?: string;
   descripcionUnidadMedida?: string;
 }
