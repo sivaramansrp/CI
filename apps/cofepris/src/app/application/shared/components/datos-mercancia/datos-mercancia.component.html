@@ -574,7 +574,7 @@
     }
 
     <div class="row">
-      @if(!elementosNoValidos.includes('numeroRegistroSanitario')){
+      @if(!elementosNoValidos.includes('numeroRegistroSanitario') && !requiedField) {
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="numeroRegistroSanitario"
@@ -586,32 +586,20 @@
             id="numeroRegistroSanitario"
             type="text"
             formControlName="numeroRegistroSanitario"
-            [ngClass]="
-              isValid(mercanciaForm, 'numeroRegistroSanitario')
-                ? 'required'
-                : ''
-            "
+           
           />
-          <div
-            class="mensaje-error"
-            *ngIf="mercanciaForm.get('numeroRegistroSanitario')?.errors?.['required'] && mercanciaForm.get('numeroRegistroSanitario')?.touched"
-          >
-            Este campo es obligatorio.
-          </div>
+          
         </div>
       </div>
-      } @if(!elementosNoValidos.includes('fechaCaducidad')){
+      } @if(!elementosNoValidos.includes('fechaCaducidad') && !requiedField){
       <div class="col-md-5">
         <div class="form-group">
-          <ng-container
-            *ngTemplateOutlet="
-              fecha;
-              context: {
-                controlName: 'fechaCaducidad',
-                lableName: 'Fecha de caducidad:'
-              }
-            "
-          ></ng-container>
+          <input-fecha
+          [datos]="fechaDeCaducidadInputMercanica"
+          name="fechaCaducidad"
+          (valorCambiado)="fechaDeCaducidadValor($event)"
+          [setFecha]="mercanciaForm.get('fechaDeCaducidad')?.value"
+        ></input-fecha>
         </div>
       </div>
       }

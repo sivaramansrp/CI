@@ -5,8 +5,8 @@ import {
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import {
   AfterViewInit,
@@ -42,7 +42,6 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
   REGEX_DECIMAL,
   SOLO_REGEX_NUMEROS,
   TablaDinamicaComponent,
@@ -51,12 +50,14 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import {
+  FECHA_DE_CADUCIDAD_MERCANICA,
   FECHA_DE_CADUCIDAD_PAGO,
   FECHA_DE_FABRICACIO_PAGO,
 } from '../../models/terceros-relacionados.model';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
+import { NUMERO_REGISTRO_SANITARIO } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { Observable } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
@@ -84,6 +85,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaComponent implements OnInit, AfterViewInit {
+  requiedField:boolean = false;
 
    /**
    * Event emitter to notify parent component to close the modal
@@ -548,6 +550,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Llama al método `crearMercanciaForm` para construir el formulario.
    */
   ngOnInit(): void {
+    this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
@@ -607,6 +610,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Objeto con la configuración de la fecha inicial del componente.
    */
   fechaDeFabricacioInput: InputFecha = FECHA_DE_FABRICACIO_PAGO;
+
+  fechaDeCaducidadInputMercanica: InputFecha = FECHA_DE_CADUCIDAD_MERCANICA;
 
   /**
    * @property {InputFecha} fechaDeCaducidadInput
@@ -1003,17 +1008,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   }
 }
 
-  numeroConDecimalesValidator(): ValidatorFn {
+  static numeroConDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
+      const VALUE = control.value;
       
       // Skip validation if empty
-      if (!value) return null;
+      if (!VALUE) {
+        return null;
+      }
       
       // Regex pattern: up to 12 digits before decimal, up to 10 after
-      const pattern = /^\d{1,12}(\.\d{1,5})?$/;
+      const PATTERN = /^\d{1,12}(\.\d{1,5})?$/;
       
-      if (!pattern.test(value)) {
+      if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
       }
       
@@ -1021,17 +1028,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     };
   }
 
-  numeroUMCDecimalesValidator(): ValidatorFn {
+  static numeroUMCDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
+      const VALUE = control.value;
       
       // Skip validation if empty
-      if (!value) return null;    
+     if (!VALUE) {
+        return null;
+      }
       
       // Regex pattern: up to 12 digits before decimal, up to 10 after
-      const pattern = /^\d{1,12}(\.\d{1,10})?$/;
+      const PATTERN = /^\d{1,12}(\.\d{1,10})?$/;
       
-      if (!pattern.test(value)) {
+      if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
       }
       

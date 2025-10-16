@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="mt-4">
   <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.id; else agregarDestinatario"
     titulo="Modificar destinatario (destino final)"
@@ -86,7 +86,7 @@
     </div>
   }
 
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
+    @if(agregarDestinatarioFinal?.get('tipoPersona')?.value ===
     tipoPersona.MORAL) {
     <div class="row">
       <div class="col-md-8">
@@ -201,7 +201,7 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="localidadesDatos" formControlName="localidad" [label]="'Localidad'"
-          [required]="true" [placeholder]="'Selecciona un valor'"
+          [required]="!requiedField" [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('localidad')?.touched ?? false"
           ></app-catalogo-select>
@@ -244,7 +244,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior</label>
-        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior')">
+        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior') && !requiedField ">
           <!-- <span
             [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''">*</span> -->
           <span *ngIf="esInvalido('numeroExterior')" class="text-danger">*</span>

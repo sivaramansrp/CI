@@ -61,3 +61,8 @@ export const OTROS_TABLA = [
   { encabezado: 'Estado/Localidad', clave: 'estado' },
   { encabezado: 'Código postal', clave: 'cp' },
 ];
+
+
+export const DEFAULT_TABLA_ORDENS = [260201]
+
+export const NUMERO_REGISTRO_SANITARIO = [260202]

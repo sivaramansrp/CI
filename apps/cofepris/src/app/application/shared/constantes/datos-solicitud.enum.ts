@@ -255,12 +255,7 @@ export const PRODUCTO_TABLA = [
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
     orden: 19,
-  },
-  {
-    encabezado: 'Fecha de caducidad',
-    clave: (ele: TablaMercanciasDatos): string => ele.fechaCaducidad ?? '', // Reemplaza 'ele.fechaCaducidad' con la clave correcta
-    orden: 20,
-  },
+  }
 ];
 
 /**
@@ -800,7 +795,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260201]
 
 /**
  * Constante que representa el código AIFA.

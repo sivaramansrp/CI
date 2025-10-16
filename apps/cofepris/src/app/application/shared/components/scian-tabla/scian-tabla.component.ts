@@ -166,7 +166,7 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
     
     if (SELECTEDSCIAN) {
       this.scianForm.patchValue({
-        scianNino: SELECTEDSCIAN.descripcion
+        scianNino: 'Default description value'
       });
     }
   } else {
