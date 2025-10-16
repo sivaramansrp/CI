@@ -241,6 +241,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   optionCilindros!: Catalogo[];
 
+  anoModelo!: Catalogo[];
+
   /**
    * @property {Catalogo[]} optionCombustible
    * @description Opciones disponibles para los tipos de combustible.
@@ -338,6 +340,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     this.mostrarCamposAviso();
     this.cargarCilindros();
+    this.cargarAnoModelo();
     this.cargarCombustible();
     this.cargarPaisIssued();
     this.cargarAduana();
@@ -597,6 +600,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method cargarCilindros
+   * @description Carga las opciones disponibles para los cilindros.
+   */
+  cargarAnoModelo(): void {
+    this.avisoService
+      .obtenerAnoModelo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.anoModelo = datos.datos;
+      });
+  }
+
+  /**
    * @method cargarCombustible
    * @description Carga las opciones disponibles para los tipos de combustible.
    */
@@ -721,34 +737,34 @@ export class AvisoComponent implements OnInit, OnDestroy {
         tipoBusquedaAviso: [this.solicitudState?.tipoBusquedaAviso, Validators.required],
         folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
         numeroSerie: [{ value: this.solicitudState?.numeroSerie, disable: this.soloLectura }, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        numeroNIV: [this.solicitudState?.numeroNIV, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        numeroNIV: [this.solicitudState?.numeroNIV, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(17)]],
         anoModelo: [this.solicitudState?.anoModelo, [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
-        modelo: [this.solicitudState?.modelo, [Validators.required]],
-        tipoVariante: [this.solicitudState?.tipoVariante, [Validators.required]],
+        marca: [this.solicitudState?.marca, [Validators.required, Validators.maxLength(250)]],
+        modelo: [this.solicitudState?.modelo, [Validators.required, Validators.maxLength(250)]],
+        tipoVariante: [this.solicitudState?.tipoVariante, [Validators.required, Validators.maxLength(250)]],
         cilindros: [this.solicitudState?.cilindros, [Validators.required]],
         puertas: [this.solicitudState?.puertas, [Validators.required]],
         combustible: [this.solicitudState?.combustible, [Validators.required]],
-        propiedad: [this.solicitudState?.propiedad, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        nombreTitulo: [this.solicitudState?.nombreTitulo, [Validators.required]],
+        propiedad: [this.solicitudState?.propiedad, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(250)]],
+        nombreTitulo: [this.solicitudState?.nombreTitulo, [Validators.required, Validators.maxLength(250)]],
         paisEmitio: [this.solicitudState?.paisEmitio, [Validators.required]],
-        provinciaEmision: [this.solicitudState?.provinciaEmision, [Validators.required]],
-        procedencia: [this.solicitudState?.procedencia, [Validators.required]],
+        provinciaEmision: [this.solicitudState?.provinciaEmision, [Validators.required, Validators.maxLength(250)]],
+        procedencia: [this.solicitudState?.procedencia, [Validators.maxLength(250)]],
         vehiculoImportado: [this.solicitudState?.vehiculoImportado, [Validators.required]],
-        exportacion: [this.solicitudState?.exportacion, [Validators.required]],
+        exportacion: [this.solicitudState?.exportacion, [Validators.required, Validators.maxLength(250)]],
         aduanaImportacion: [this.solicitudState?.aduanaImportacion, [Validators.required]],
-        patenteImportacion: [this.solicitudState?.patenteImportacion, [Validators.required]],
-        pedimentoImportacion: [this.solicitudState?.pedimentoImportacion, [Validators.required]],
-        valorAduana: [this.solicitudState?.valorAduana, [Validators.required]],
-        kilometraje: [this.solicitudState?.kilometraje, [Validators.required]],
-        montoIGI: [this.solicitudState?.montoIGI, [Validators.required]],
+        patenteImportacion: [this.solicitudState?.patenteImportacion, [Validators.required, Validators.maxLength(4)]],
+        pedimentoImportacion: [this.solicitudState?.pedimentoImportacion, [Validators.required, Validators.maxLength(7)]],
+        valorAduana: [this.solicitudState?.valorAduana, [Validators.required, Validators.maxLength(11)]],
+        kilometraje: [this.solicitudState?.kilometraje, [Validators.required, Validators.maxLength(9)]],
+        montoIGI: [this.solicitudState?.montoIGI, [Validators.required, Validators.maxLength(9)]],
         formaPagoIGI: [this.solicitudState?.formaPagoIGI, [Validators.required]],
-        montoDTA: [this.solicitudState?.montoDTA, [Validators.required]],
-        montoIVA: [this.solicitudState?.montoIVA, [Validators.required]],
-        valorDolares: [this.solicitudState?.valorDolares, [Validators.required]],
-        folioCFDI: [this.solicitudState?.folioCFDI, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        folioVenta: [this.solicitudState?.folioVenta, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
+        montoDTA: [this.solicitudState?.montoDTA, [Validators.required, Validators.maxLength(9)]],
+        montoIVA: [this.solicitudState?.montoIVA, [Validators.required, Validators.maxLength(9)]],
+        valorDolares: [this.solicitudState?.valorDolares, [Validators.required, Validators.maxLength(9)]],
+        folioCFDI: [this.solicitudState?.folioCFDI, [Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(32)]],
+        folioVenta: [this.solicitudState?.folioVenta, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(32)]],
+        valorVenta: [this.solicitudState?.valorVenta, [Validators.required, Validators.maxLength(13)]],
       }),
     });
     this.mostrarCampos();
