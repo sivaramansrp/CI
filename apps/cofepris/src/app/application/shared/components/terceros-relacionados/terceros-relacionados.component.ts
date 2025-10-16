@@ -42,11 +42,12 @@ import {
   Proveedor,
 } from '../../models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalComponent } from '../agregar-destinatario-final/agregar-destinatario-final.component';
 import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
+import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 import { ToastrService } from 'ngx-toastr';
-import { AgregarDestinatarioFinalComponent } from '../agregar-destinatario-final/agregar-destinatario-final.component';
 
 /**
  * @component TercerosRelacionadosComponent
@@ -64,7 +65,8 @@ import { AgregarDestinatarioFinalComponent } from '../agregar-destinatario-final
     AlertComponent,
     NotificacionesComponent,
     AgregarFabricanteComponent,
-    AgregarDestinatarioFinalComponent
+    AgregarDestinatarioFinalComponent,
+    AgregarProveedorComponent
   ],
   providers: [TercerosRelacionadosFebService, ToastrService],
   templateUrl: './terceros-relacionados.component.html',
@@ -573,15 +575,8 @@ onFabricanteUpdated(fabricantes: Fabricante[]): void {
  * Handles the destinatario table data update
  */
 onDestinatarioUpdated(destinatarios: Destinatario[]): void {
-  console.log('onDestinatarioUpdated called with:', destinatarios); // Debug log
-  
-  // Update the local table data
   this.destinatarioFinalTablaDatos = [...destinatarios];
-  
-  // Emit the updated data to parent component
   this.destinatarioEliminar.emit([...this.destinatarioFinalTablaDatos]);
-  
-  // Clear the selection after successful update
   this.destinatarioSeleccionadoDatos = [];
   this.destinatarioSeleccionadoParaModificar = [];
 }
@@ -589,12 +584,9 @@ onDestinatarioUpdated(destinatarios: Destinatario[]): void {
  * Closes the Destinatario selection modal
  */
 cerrarDestinatarioModal(): void {
-  console.log('cerrarDestinatarioModal called'); // Debug log
-  
   this.destinatarioModalAbierto = false;
-  this.destinatarioSeleccionadoParaModificar = []; // Clear selected data
+  this.destinatarioSeleccionadoParaModificar = []; 
   
-  // Get the modal element and close it properly
   const MODAL_ELEMENT = document.getElementById('destinatarioModal');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
@@ -612,7 +604,6 @@ cerrarDestinatarioModal(): void {
    * @fires agregarDestinatarioFinal
    */
   onAgregarDestinatarioFinal(): void {
-    //this.agregarDestinatarioFinal.emit();
     this.destinatarioSeleccionadoParaModificar = [];
     this.abrirDestinatarioModal();
   }
@@ -665,7 +656,6 @@ cerrarDestinatarioModal(): void {
     return;
   }
   
-  // Always use modal approach, remove navigation
   this.destinatarioSeleccionadoParaModificar = this.destinatarioSeleccionadoDatos.map(d => ({ ...d }));
   this.destinatarioModalAbierto = true;
   

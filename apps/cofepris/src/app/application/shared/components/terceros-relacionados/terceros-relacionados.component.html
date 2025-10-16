@@ -175,7 +175,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-proveedor', false)"
+          (click)="onAgregarProveedorFinal()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -314,4 +314,25 @@
   </div>
 </div>
 
-          
+
+<!-- Proveedor Modal -->
+<div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="proveedorModalLabel">
+          {{ proveedorSeleccionadoParaModificar.length > 0 ? 'Modificar Proveedor' : 'Agregar Proveedor' }}
+        </h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-agregar-proveedor
+          *ngIf="proveedorModalAbierto"
+          >
+        </app-agregar-proveedor>
+      </div>
+    </div>
+  </div>
+</div>
+
+         
