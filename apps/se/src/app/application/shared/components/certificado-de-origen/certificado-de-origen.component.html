@@ -994,6 +994,7 @@
           formControlName="entidadFederativa"
           (selectionChange)="tipoEstadoSeleccion($event)"
           [isDisabled]="esFormularioSoloLectura"
+          [markTouched]="formCertificado.get('entidadFederativa')?.touched??false"
           (change)="
             setValoresStore(
               'formCertificado',
@@ -1003,15 +1004,7 @@
           "
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
-        @if(formCertificado.get('entidadFederativa')?.invalid &&
-        (formCertificado.get('entidadFederativa')?.touched ||
-        formCertificado.get('entidadFederativa')?.dirty)) {
-        <div class="d-grid">
-          @if(formCertificado.get('entidadFederativa')?.errors?.['required']) {
-          <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-        }
+     
       </div>
 
       <div class="col-md-4">

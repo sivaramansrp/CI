@@ -30,6 +30,8 @@ export interface Mercancia {
   otrasInstancias?: string;
   criterioParaConferirOrigen?: string;
   criterioParaTratoPreferencial?: string;
+  criterioParaClasificacion?: string;
+  fechaDePago?: string;
   valorDeContenidoRegional?: string;
   numeroDeSerie?: string;
 }

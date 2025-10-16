@@ -2,7 +2,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { Mercancias } from '../models/plantas-consulta.model';
 
 /**
  * Interfaz que representa la estructura del estado de un trámite 110204.

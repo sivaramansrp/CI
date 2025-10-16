@@ -1,9 +1,9 @@
+import { Catalogo, HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { CatalogoLista, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
-import { HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { Observable } from 'rxjs';
 import { PROC_110214 } from '../servers/api-route';
 import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
 import { Tramite110214Query } from '../../../estados/queries/tramite110214.query';
@@ -189,7 +189,7 @@ export class ValidarInicialmenteCertificadoService {
   /** Construye el objeto destinatario a partir del estado del trámite 110214. */
   buildCertificado(data: Tramite110214State): unknown {
     return {
-      "tratado_acuerdo": data.formCertificado['entidadFederativa'],
+      "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
       "pais_bloque": data.formCertificado['bloque'],
       "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'],
       "nombre_comercial": data.formCertificado['nombreComercialForm'],
@@ -212,7 +212,7 @@ export class ValidarInicialmenteCertificadoService {
         "telefono": data.formCertificado['telefono'] as string,
         "correo_electronico": data.formCertificado['correo'] as string
       },
-      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla),
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla)
     }
   }
 
@@ -269,12 +269,39 @@ export class ValidarInicialmenteCertificadoService {
   /** Construye el objeto de datos para el certificado a partir del estado del trámite 110214. */
   buildDatosCertificado(data: Tramite110214State): unknown {
     return {
-      "observaciones": data.observaciones ?? '',
-      "idioma": data.idioma ?? 0,
+      "observaciones": data.formDatosCertificado['observacionesDates'],
+      "idioma": data.formDatosCertificado['idiomaDates'],
       "representacion_federal": {
-          "entidad_federativa": data.entidadFederativa ?? 0,
-          "representacion_federal": data.representacionFederal ?? 0
+          "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'],
+          "representacion_federal": data.formDatosCertificado['representacionFederalDates']
       }
     }
+  }
+
+  /**
+   * Obtiene la lista de países bloque desde un archivo JSON local.
+   * @method obtenerPaisBloque
+   * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
+   */
+  obtenerPaisBloque(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110204/país-bloque.json')
+      .pipe(map((res) => res.data));
+  }
+  
+  /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/PAIS_BLOQU` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getPaisBloqu(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_110214.PAIS_BLOQU,
+      {},
+      false
+    );
   }
 }
