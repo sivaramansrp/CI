@@ -6,9 +6,17 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Catalogo, ConfiguracionColumna, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  ConfiguracionColumna,
+  SeccionLibQuery,
+  SeccionLibState,
+} from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud110207State, Tramite110207Store } from '../../state/Tramite110207.store';
+import {
+  Solicitud110207State,
+  Tramite110207Store,
+} from '../../state/Tramite110207.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
@@ -152,7 +160,8 @@ export class CertificadoOrigenComponent
    * Referencia al componente hijo CertificadoDeOrigenComponent
    * Permite acceder al formulario y métodos del componente hijo
    */
-  @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+  @ViewChild(CertificadoDeOrigenComponent)
+  certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
 
   /**
    * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
@@ -258,9 +267,6 @@ export class CertificadoOrigenComponent
           this.actualizandoFormulario = false;
         }
       });
-
-    this.estadoOpcion();
-    this.paisOpcion();
   }
 
   /**
@@ -276,43 +282,6 @@ export class CertificadoOrigenComponent
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    // this.registroService.obtenerMenuDesplegable('estados.json')
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.estado = data as Catalogo[];
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error('Error al obtener los datos:', error);
-    //       this.estado = [];
-    //     },
-    //   });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    // this.registroService
-    //   .obtenerMenuDesplegable('pais.json')
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.pais = data as Catalogo[];
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error('Error al obtener los datos:', error);
-    //       this.pais = [];
-    //     },
-    //   });
   }
 
   /**
@@ -401,23 +370,6 @@ export class CertificadoOrigenComponent
           this.toastr.error('Error al buscar Mercancia');
         },
       });
-
-    // this.peruCertificadoService
-    //   .obtenerTablaDatos('disponibles-datos.json')
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe({
-    //     next: (response: Mercancia[]) => {
-    //       if (response && Array.isArray(response)) {
-    //         this.disponiblesDatos = response as Mercancia[];
-    //          this.store.setDisponsiblesDatos(this.disponiblesDatos);
-    //       } else {
-    //         this.disponiblesDatos = [];
-    //       }
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error('Error al obtener los datos:', error);
-    //     },
-    //   });
   }
 
   /**
@@ -449,8 +401,7 @@ export class CertificadoOrigenComponent
   ): void {
     this.datosSeleccionados = disponiblesDatos;
     this.fromMercanciasDisponibles = fromMercanciasDisponibles;
-    //  this.store.setFormMercancia({ ...disponiblesDatos });
-    if (this.modalInstance) {
+     if (this.modalInstance) {
       this.modalInstance.show();
     }
   }
@@ -519,7 +470,8 @@ export class CertificadoOrigenComponent
     // Validar el componente hijo datos-certificado-de
     if (this.certificadoDeOrigenComponent) {
       // Usar el método validarFormularios del componente hijo que marca los campos como touched
-      const IS_CHILD_FORM_VALID = this.certificadoDeOrigenComponent.validarFormularios();
+      const IS_CHILD_FORM_VALID =
+        this.certificadoDeOrigenComponent.validarFormularios();
       if (!IS_CHILD_FORM_VALID) {
         valid = false;
       }

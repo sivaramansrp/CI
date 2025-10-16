@@ -133,6 +133,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       })
     );
   }
+
   /** Método público para validar todos los formularios y emitir validez al store */
   public validateAll(): boolean {
     let valid = true;
@@ -184,7 +185,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       this.destinatarioForm.markAllAsTouched();
       valid = false;
     }
-    // Marcar todos los campos obligatorios de ambos hijos como tocados
     if (this.destinatarioComponent) {
       this.destinatarioComponent.markAllFieldsTouched();
       if (!this.destinatarioComponent.formDestinatario.valid) {
@@ -198,10 +198,8 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       }
     }
     if (!valid) {
-      // No avanzar si hay errores
-      return;
+        return;
     }
-    // Lógica para continuar a la siguiente página si todos los formularios son válidos
   }
 
   /**
