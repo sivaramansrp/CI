@@ -22,16 +22,10 @@
         <div class="col-md-6">
           <app-catalogo-select [label]="'Idioma'" [catalogo]="idiomaDatos || []" [required]="true" name="estado"
             formControlName="idiomaDates"
+             [markTouched]="formDatosCertificado.get('idiomaDates')?.touched??false"
             (change)="setValoresStore('formDatosCertificado','idiomaDates','setFormDatosCertificado')"
             (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
-          @if(formDatosCertificado.get('idiomaDates')?.invalid && (formDatosCertificado.get('idiomaDates')?.touched ||
-          formDatosCertificado.get('idiomaDates')?.dirty)) {
-          <div class="d-grid">
-            @if(formDatosCertificado.get('idiomaDates')?.errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-          }
+        
         </div>
       </div>
       }
@@ -56,32 +50,17 @@
         <div class="col-md-6">
           <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Entidad federativa'"
             [catalogo]="entidadFederativaDatos || []" [required]="true" name="estado"
+              [markTouched]="formDatosCertificado.get('EntidadFederativaDates')?.touched??false"
             formControlName="EntidadFederativaDates" (selectionChange)="onChangeEntidad($event)"
             (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
-          @if(formDatosCertificado.get('EntidadFederativaDates')?.invalid &&
-          (formDatosCertificado.get('EntidadFederativaDates')?.touched ||
-          formDatosCertificado.get('EntidadFederativaDates')?.dirty)) {
-          <div class="d-grid">
-            @if(formDatosCertificado.get('EntidadFederativaDates')?.errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-          }
+     
         </div>
         <div class="col-md-6">
           <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"
             [catalogo]="representacionFederal$ || []" [required]="true" name="estado"
+              [markTouched]="formDatosCertificado.get('representacionFederalDates')?.touched??false"
             formControlName="representacionFederalDates" (selectionChange)="representacionFederalSeleccion($event)"
             (change)="setValoresStore('formDatosCertificado','representacionFederalDates','setFormDatosCertificado')"></app-catalogo-select>
-          @if(formDatosCertificado.get('representacionFederalDates')?.invalid &&
-          (formDatosCertificado.get('representacionFederalDates')?.touched ||
-          formDatosCertificado.get('representacionFederalDates')?.dirty)) {
-          <div class="d-grid">
-            @if(formDatosCertificado.get('representacionFederalDates')?.errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-          }
         </div>
       </div>
     </div>
