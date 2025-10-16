@@ -42,8 +42,13 @@
         <button class="btn btn-primary" (click)="eliminarDocumento()">Eliminar</button>
       </div>
       <div class="col-md-6">
-        <app-catalogo-select [catalogo]="catTipoDocumento" formControlName="tipoDocumento" [label]="'Tipo documento'"
-          [required]="true" name="tipoDocumento"></app-catalogo-select>
+        <label for="tipoDocumento">Tipo documento</label>
+        <select id="tipoDocumento" formControlName="tipoDocumento" class="form-select form-control" >
+          <option value=""  >Seleccione un documento</option>
+          <option *ngFor="let doc of documentosEspecificos" [value]="doc.id_tipo_documento">
+            {{ doc.documento }}
+          </option>
+        </select>
         <br>
         <button class="btn btn-primary" (click)="agregarDocumento()">Agregar nuevo</button>
         <br>

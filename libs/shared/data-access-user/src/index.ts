@@ -217,6 +217,7 @@ export * from './core/servers/api-router';
 export * from './core/resolvers/iniciar-tramite.resolver';
 export * from './core/services/shared/cargar-documento/cargar-documento.service';
 export * from './core/models/shared/cargar-documentos.model';
+export * from './core/models/shared/documentos-especificos.model';
 export * from './tramites/components/paso-firma/paso-firma.component';
 export * from './core/services/shared/catalogo.service';
 export * from './tramites/components/paso-carga-documento/paso-carga-documento.component';
