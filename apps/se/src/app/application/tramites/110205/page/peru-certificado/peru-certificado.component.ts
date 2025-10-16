@@ -11,28 +11,27 @@
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ERROR_FORMA_ALERT, esValidObject, getValidDatos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos, ERROR_FORMA_ALERT, SeccionLibStore, esValidObject, getValidDatos} from '@ng-mf/data-access-user';
 import { Subject, take, takeUntil } from 'rxjs';
-import {AVISO} from '@ng-mf/data-access-user'
+import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { AVISO } from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Payload } from '../../constantes/texto.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
-import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { Payload } from '../../constantes/texto.enum';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 
 @Component({
   selector: 'app-peru-certificado',
   templateUrl: './peru-certificado.component.html',
   styleUrl: './peru-certificado.component.scss',
 })
+export class PeruCertificadoComponent implements OnInit, OnDestroy {
+  @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
 
-  export class PeruCertificadoComponent implements OnInit, OnDestroy {
-
-    @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
-
-    /**
+  /**
    * @property {ListaPasoWizard[]} pasos
    * @description
    * Lista de pasos que componen el flujo del trámite en el wizard.
@@ -120,7 +119,7 @@ import { Payload } from '../../constantes/texto.enum';
    */
   serviciosImmxError: boolean = false;
 
-  esFormaValido: boolean = true;
+  esFormaValido: boolean = false;
 
   // /**
   //  * @property {PasoUnoComponent} pasoUnoComponent
@@ -218,22 +217,12 @@ import { Payload } from '../../constantes/texto.enum';
     return arr.map((item: any) => ({
       id: item.id,
       fraccion_arancelaria: item.fraccionArancelaria,
-      fraccion_naladi: item.fraccionNaladi,
-      fraccion_naladi_sa93: item.fraccionNaladiSa93,
-      fraccion_naladi_sa96: item.fraccionNaladiSa96,
-      fraccion_naladi_sa02: item.fraccionNaladiSa02,
-      nombre_tecnico: item.nombreTecnico,
-      nombre_comercial: item.nombreComercial,
-      registro_producto: item.numeroDeRegistrodeProductos,
-      fecha_expedicion: item.fechaExpedicion,
-      fecha_vencimiento: item.fechaVencimiento,
       tipo_factura: item.tipoFactura,
-      num_factura: item.numFactura,
+      num_factura: item.numeroFactura,
       complemento_descripcion: item.complementoDescripcion,
       fecha_factura: item.fechaFactura,
       cantidad: item.cantidad,
       umc: item.umc,
-      unidad_medida: item.unidadMedidaMasaBruta,
       valor_mercancia: item.valorMercancia,
     }));
   }
@@ -275,124 +264,138 @@ import { Payload } from '../../constantes/texto.enum';
       item.mercanciaTabla
     );
     const PAYLOAD = {
-      "rfc_solicitante": "AAL0409235E6",
-      "idSolicitud": this.solicitudState.idSolicitud,
-      "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
-        "actividad_economica": "Fabricación de productos de hierro y acero",
-        "correo_electronico": "contacto@acerosalvarado.com",
-        "domicilio": {
-          "pais": "México",
-          "codigo_postal": "06700",
-          "estado": "Ciudad de México",
-          "municipio_alcaldia": "Cuauhtémoc",
-          "localidad": "Centro",
-          "colonia": "Roma Norte",
-          "calle": "Av. Insurgentes Sur",
-          "numero_exterior": "123",
-          "numero_interior": "Piso 5, Oficina A",
-          "lada": "",
-          "telefono": "123456"
-        }
-      },
-      "certificado": {
-        "tratado_acuerdo": item.formCertificado["entidadFederativa"],
-        "pais_bloque": item.formCertificado["bloque"],
-        "fraccion_arancelaria": item.formCertificado["fraccionArancelariaForm"],
-        "nombre_comercial": item.formCertificado["nombreComercialForm"],
-        "registro_producto": item.formCertificado["numeroDeRegistroProductoForm"],
-        "fecha_inicio": item.formCertificado["fechaInicioInput"],
-        "fecha_fin": item.formCertificado["fechaFinalInput"],
-        "realizo_tercer_operador": {
-          "tercer_operador": item.formCertificado["si"],
-          "nombre": item.formCertificado["nombres"],
-          "primer_apellido": item.formCertificado["primerApellido"],
-          "segundo_apellido": item.formCertificado["segundoApellido"],
-          "numero_registro_fiscal": item.formCertificado["numeroDeRegistroFiscal"],
-          "razon_social": item.formCertificado["razonSocial"]
+      rfc_solicitante: 'AAL0409235E6',
+      idSolicitud: this.solicitudState.idSolicitud,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'ACEROS ALVARADO S.A. DE C.V.',
+        actividad_economica: 'Fabricación de productos de hierro y acero',
+        correo_electronico: 'contacto@acerosalvarado.com',
+        domicilio: {
+          pais: 'México',
+          codigo_postal: '06700',
+          estado: 'Ciudad de México',
+          municipio_alcaldia: 'Cuauhtémoc',
+          localidad: 'Centro',
+          colonia: 'Roma Norte',
+          calle: 'Av. Insurgentes Sur',
+          numero_exterior: '123',
+          numero_interior: 'Piso 5, Oficina A',
+          lada: '',
+          telefono: '123456',
         },
-        "domicilio_tercer_operador": {
-          "pais": item.formCertificado["pais"],
-          "ciudad": item.formCertificado["ciudad"],
-          "calle": item.formCertificado["calle"],
-          "numero_letra": item.formCertificado["numeroLetra"],
-          "telefono": item.formCertificado["telefono"],
-          "correo_electronico": item.formCertificado["correo"]
-        },
-        "mercancias_seleccionadas": MERCANCIA_SELECCIONADAS
       },
-      "destinatario": {
-        "nombre": item.formDatosDelDestinatario["nombres"],
-        "primer_apellido": item.formDatosDelDestinatario["primerApellido"],
-        "segundo_apellido": item.formDatosDelDestinatario["segundoApellido"],
-        "numero_registro_fiscal": item.formDatosDelDestinatario["numeroDeRegistroFiscal"],
-        "razon_social": item.formDatosDelDestinatario["razonSocial"],
-        "domicilio": {
-          "ciudad_poblacion_estado_provincia": item.formDestinatario["ciudad"],
-          "calle": item.formDestinatario["calle"],
-          "numero_letra": item.formDestinatario["numeroLetra"],
-          "lada": item.formDestinatario["lada"],
-          "telefono": item.formDestinatario["telefono"],
-          "fax": item.formDestinatario["fax"],
-          "correo_electronico": item.formDestinatario["correoElectronico"],
-          "pais_destino": item.formDestinatario["paisDestino"]
+      certificado: {
+        tratado_acuerdo: item.formCertificado['entidadFederativa'],
+        pais_bloque: item.formCertificado['bloque'],
+        fraccion_arancelaria: item.formCertificado['fraccionArancelariaForm'],
+        nombre_comercial: item.formCertificado['nombreComercialForm'],
+        registro_producto: item.formCertificado['numeroDeRegistroProductoForm'],
+        fecha_inicio: item.formCertificado['fechaInicioInput'],
+        fecha_fin: item.formCertificado['fechaFinalInput'],
+        realizo_tercer_operador: {
+          tercer_operador: item.formCertificado['si'],
+          nombre: item.formCertificado['nombres'],
+          primer_apellido: item.formCertificado['primerApellido'],
+          segundo_apellido: item.formCertificado['segundoApellido'],
+          numero_registro_fiscal:
+            item.formCertificado['numeroDeRegistroFiscal'],
+          razon_social: item.formCertificado['razonSocial'],
         },
-        "generalesRepresentanteLegal": {
-          "lugarRegistro": item.formExportor["lugar"],
-          "nombre": item.formExportor["exportador"],
-          "razonSocial": item.formExportor["nombres"],
-          "puesto": item.formExportor["puesto"],
-          "telefono": item.formExportor["telefono"],
-          "correoElectronico": item.formExportor["correoElectronico"]
+        domicilio_tercer_operador: {
+          pais: item.formCertificado['pais'],
+          ciudad: item.formCertificado['ciudad'],
+          calle: item.formCertificado['calle'],
+          numero_letra: item.formCertificado['numeroLetra'],
+          telefono: item.formCertificado['telefono'],
+          correo_electronico: item.formCertificado['correo'],
         },
-        "medio_transporte": item.formDatosDelDestinatario["medioTransporte"]
+        mercancias_seleccionadas: item.mercanciaTabla.map((m: Mercancia) => ({
+          id: m.id,
+          fraccion_arancelaria: m.fraccionArancelaria,
+          tipo_factura: m.tipoFactura,
+          num_factura: m.numeroFactura,
+          complemento_descripcion: m.complementoDescripcion,
+          fecha_factura: m.fechaFactura,
+          cantidad: m.cantidad,
+          umc: m.umc,
+          valor_mercancia: m.valorMercancia,
+        })),
       },
-      "datos_del_certificado": {
-        "observaciones": item.formDatosCertificado["observacionesDates"],
-        "idioma": item.formDatosCertificado["idiomaDates"],
-        "representacion_federal": {
-          "entidad_federativa": item.formDatosCertificado["EntidadFederativaDates"],
-          "representacion_federal": item.formDatosCertificado["representacionFederalDates"]
-        }
+      destinatario: {
+        nombre: item.formDatosDelDestinatario['nombres'],
+        primer_apellido: item.formDatosDelDestinatario['primerApellido'],
+        segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
+        numero_registro_fiscal:
+          item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+        razon_social: item.formDatosDelDestinatario['razonSocial'],
+        domicilio: {
+          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
+          calle: item.formDestinatario['calle'],
+          numero_letra: item.formDestinatario['numeroLetra'],
+          lada: item.formDestinatario['lada'],
+          telefono: item.formDestinatario['telefono'],
+          fax: item.formDestinatario['fax'],
+          correo_electronico: item.formDestinatario['correoElectronico'],
+          pais_destino: item.formDestinatario['paisDestino'],
+        },
+        generalesRepresentanteLegal: {
+          lugarRegistro: item.formExportor['lugar'],
+          nombre: item.formExportor['exportador'],
+          razonSocial: item.formExportor['nombres'],
+          puesto: item.formExportor['puesto'],
+          telefono: item.formExportor['telefono'],
+          correoElectronico: item.formExportor['correoElectronico'],
+        },
+        medio_transporte: item.formDatosDelDestinatario['medioTransporte'],
       },
-      "historico": {
-        "datosConfidencialesProductor": true,
-        "productorMismoExportador": true,
-        "productoresPorExportador": [
+      datos_del_certificado: {
+        observaciones: item.formDatosCertificado['observacionesDates'],
+        idioma: item.formDatosCertificado['idiomaDates'],
+        representacion_federal: {
+          entidad_federativa:
+            item.formDatosCertificado['EntidadFederativaDates'],
+          representacion_federal:
+            item.formDatosCertificado['representacionFederalDates'],
+        },
+      },
+      historico: {
+        datosConfidencialesProductor: true,
+        productorMismoExportador: true,
+        productoresPorExportador: [
           {
-            "nombreCompleto": "",
-            "rfc": "",
-            "direccionCompleta": "",
-            "correoElectronico": "",
-            "telefono": "",
-            "fax": ""
-          }
+            nombreCompleto: '',
+            rfc: '',
+            direccionCompleta: '',
+            correoElectronico: '',
+            telefono: '',
+            fax: '',
+          },
         ],
-        "ProductoresPorExportadorSeleccionados": [
+        ProductoresPorExportadorSeleccionados: [
           {
-            "nombreCompleto": "",
-            "rfc": "",
-            "direccionCompleta": "",
-            "correoElectronico": "",
-            "telefono": "",
-            "fax": ""
-          }
+            nombreCompleto: '',
+            rfc: '',
+            direccionCompleta: '',
+            correoElectronico: '',
+            telefono: '',
+            fax: '',
+          },
         ],
-        "mercanciasProductor": [
+        mercanciasProductor: [
           {
-            "fraccionArancelaria": "",
-            "cantidadComercial": "",
-            "descUnidadMedidaComercial": "",
-            "valorTransaccional": "",
-            "descFactura": "",
-            "numeroFactura": "",
-            "complementoDescripcion": "",
-            "fechaFactura": "",
-            "rfcProductor": ""
-          }
-        ]
-      }
+            fraccionArancelaria: '',
+            cantidadComercial: '',
+            descUnidadMedidaComercial: '',
+            valorTransaccional: '',
+            descFactura: '',
+            numeroFactura: '',
+            complementoDescripcion: '',
+            fechaFactura: '',
+            rfcProductor: '',
+          },
+        ],
+      },
     };
 
     return new Promise((resolve, reject) => {
@@ -403,6 +406,7 @@ import { Payload } from '../../constantes/texto.enum';
               this.tramite110205Store.setIdSolicitud(
                 response.datos?.id_solicitud || 0
               );
+              this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             } else {
               this.tramite110205Store.setIdSolicitud(0);
             }
@@ -428,6 +432,31 @@ import { Payload } from '../../constantes/texto.enum';
     // });
 
     // console.log('Payload a enviar:', PAYLOAD);
+
+        //  return new Promise((resolve, reject) => {
+        //     this.peruCertificadoService.guardarDatosPost(PAYLOAD).subscribe(
+        //       (response) => {
+        //         const API_RESPONSE = doDeepCopy(response);
+        //         if (
+        //           esValidObject(API_RESPONSE) &&
+        //           esValidObject(API_RESPONSE.datos)
+        //         ) {
+        //           if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+        //             this.tramite110205Store.setIdSolicitud(
+        //               API_RESPONSE.datos.id_solicitud
+        //             );
+        //             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+        //           } else {
+        //             this.tramite110205Store.setIdSolicitud(0);
+        //           }
+        //         }
+        //         resolve(response);
+        //       },
+        //       (error) => {
+        //         reject(error);
+        //       }
+        //     );
+        //     });
   }
 
   /**

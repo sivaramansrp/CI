@@ -747,19 +747,6 @@ export class CertificadoDeOrigenComponent
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  /**
-   * method loadComboUnidadMedida
-   * description Carga la lista de derechos desde el servicio.
-   */
-  loadComboUnidadMedida(): void {
-    this.service
-      .getDatos('110222') // Llama al servicio para obtener los datos.
-      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
-      .subscribe((data): void => {
-        // Maneja los datos recibidos.
-        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
-      });
-  }
 
   /**
    * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
@@ -959,7 +946,6 @@ export class CertificadoDeOrigenComponent
     this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion;
     this.inicializarFormularioArchivo();
-    this.loadComboUnidadMedida();
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
@@ -1421,7 +1407,7 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getTratado(): void {
-    this.service.getTratadoCertificado(this.idProcedimiento.toString()).subscribe((data) => {
+    this.service.getTratadoCertificado("110212").subscribe((data) => {
       this.tratadoAcuerdoCertificado = data as Catalogo[];
     });
 
@@ -1433,7 +1419,7 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getPaisBloque(clave:string):void{
-    this.service.getPaises(this.idProcedimiento.toString(),clave).subscribe((data) => {
+    this.service.getPaises("110212",clave).subscribe((data) => {
       this.paisBloqueCertificado = data as Catalogo[];
     });
   }

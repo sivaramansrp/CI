@@ -4,11 +4,10 @@
         <div class="col-md-12">
           <h1>Validar inicialmente el certificado de Perú</h1>
         </div>
-        @if(cambioError){
+        @if(esFormaValido){
         <div class="col-md-12">
           <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
-        </div>
-        }
+        </div> }
         <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">

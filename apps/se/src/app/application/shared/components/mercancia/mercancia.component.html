@@ -425,7 +425,7 @@
     @if(nuevaNotificacion){
     <lib-notificaciones
       [notificacionInput]="nuevaNotificacion"
-      (confirmacionModal)="acceptar($event)"
+      (confirmacionModal)="acceptar(true)"
     ></lib-notificaciones>
     }
   </div>

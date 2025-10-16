@@ -144,7 +144,7 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       
-    this.cargarProductorPorExportador();
+    // this.cargarProductorPorExportador();
 
     if (this.solicitudState.optionsTipoFactura.length === 0) {
       this.facturaOpcion();
@@ -243,34 +243,71 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
    * @param event Objeto con los datos del productor exportador o con el número de registro fiscal.
    */
   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+    const PAYLOAD = {
+      rfc_solicitante: event.numeroRegistroFiscal,
+    };
+    console.log('PAYLOAD', PAYLOAD);
+
     let DATOS: HistoricoColumnas | null = null;
-    if (event && typeof event === 'object' && 'nombreProductor' in event) {
-      DATOS = {
-          id: (event as HistoricoColumnas).id ?? 0,
-          nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
-          numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
-          direccion: String((event as HistoricoColumnas).direccion ?? ''),
-          correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
-          telefono: String((event as HistoricoColumnas).telefono ?? ''),
-          fax: String((event as HistoricoColumnas).fax ?? '')
-      };
-    } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
-      DATOS = {
-          id: 0,
-          nombreProductor: "LAURA CONTRERAS",
-          numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
-          direccion: "SAN GABRIEL 144 DURANGO", 
-          correoElectronico: "laura2992@hotmail.com",
-          telefono: "044-6182999535",
-          fax: String(event['fax'] ?? '') || '6182999535'
-      };
-    }
-    if (DATOS) { 
-      this.store.setAgregarProductoresExportador(DATOS);
-    }
-    if (this.solicitudState.agregarProductoresExportador.length) {
-      this.cargarMercancia();
-    }
+    console.log(
+      'Event received in emitAgregarExportador:',
+      this.solicitudState.agregarProductoresExportador
+    );
+    this.peruCertificadoService
+      .obtenerProductoruNevo(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          console.log('Response from agregar productor nuevo:', response);
+          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.id,
+              nombreProductor: item.nombreCompleto,
+              numeroRegistroFiscal: item.rfc,
+              direccion: item.direccionCompleta,
+              correoElectronico: item.correoElectronico,
+              telefono: item.telefono,
+              fax: item.fax,
+            })
+          );
+          // this.datosTablaUno$ = of(MAPPED_DATA || []);
+          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+          console.log('MAPPED_DATA', MAPPED_DATA);
+          this.store.setProductores(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+
+    // if (event && typeof event === 'object' && 'nombreProductor' in event) {
+    //   DATOS = {
+    //       id: (event as HistoricoColumnas).id ?? 0,
+    //       nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+    //       numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+    //       direccion: String((event as HistoricoColumnas).direccion ?? ''),
+    //       correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+    //       telefono: String((event as HistoricoColumnas).telefono ?? ''),
+    //       fax: String((event as HistoricoColumnas).fax ?? '')
+    //   };
+    // } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+    //   DATOS = {
+    //       id: 0,
+    //       nombreProductor: "LAURA CONTRERAS",
+    //       numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
+    //       direccion: "SAN GABRIEL 144 DURANGO", 
+    //       correoElectronico: "laura2992@hotmail.com",
+    //       telefono: "044-6182999535",
+    //       fax: String(event['fax'] ?? '') || '6182999535'
+    //   };
+    // }
+    // if (DATOS) { 
+    //   console.log('Event received in emitAgregarExportador:',DATOS);
+    //   this.store.setAgregarProductoresExportador(DATOS);
+    // }
+    // if (this.solicitudState.agregarProductoresExportador.length) {
+    //   this.cargarMercancia();
+    // }
   }
 
     /** Actualiza el estado de validez del formulario según el valor recibido. */

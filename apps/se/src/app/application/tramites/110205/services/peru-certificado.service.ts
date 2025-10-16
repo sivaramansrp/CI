@@ -1,24 +1,15 @@
 import { API_POST_SOLICITUD, PROC_110205 } from '../servers/api-route'; 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { Catalogo, ENVIRONMENT, HttpCoreService, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
 import { Observable, map } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../estados/tramite110205.store';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import {
-  MercanciasHistorico,
-  ProductorExportador,
-} from '../models/peru-certificado.module';
-import { Observable, catchError, map, throwError } from 'rxjs';
-import {
-  Tramite110205State,
-  Tramite110205Store,
-} from '../estados/tramite110205.store';
+import { catchError, throwError } from 'rxjs';
 import { Tramite110205Query } from '../estados/tramite110205.query';
 
 

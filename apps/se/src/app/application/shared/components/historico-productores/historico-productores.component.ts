@@ -532,6 +532,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
       const DATOS = this.agregarDatosProductorFormulario.value;
+      console.log(DATOS);
       this.emitAgregarExportador.emit(DATOS);
       this.agregarDatosProductorFormulario.reset();
     } else {

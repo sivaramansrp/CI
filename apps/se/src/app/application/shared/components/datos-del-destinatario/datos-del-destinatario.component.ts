@@ -16,8 +16,9 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './datos-del-destinatario.component.html',
   styleUrl: './datos-del-destinatario.component.scss',
 })
-export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChanges {
-
+export class DatosDelDestinatarioComponent
+  implements OnDestroy, OnInit, OnChanges
+{
   /**
    * Datos del formulario para inicializar los valores
    * @type { [key: string]: unknown }
@@ -39,13 +40,22 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
    * Evento que se emite cuando cambian los datos del formulario del destinatario
    * @type {EventEmitter<undefined>}
    */
-  @Output() formDatosDelDestinatarioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
+  @Output() formDatosDelDestinatarioEvent: EventEmitter<{
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }> = new EventEmitter<{
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }>();
   /**
- * Indica si el formulario debe mostrarse solo en modo de lectura.
- * @type {boolean}
- */
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
   @Input() esFormularioSoloLectura!: boolean;
-
 
   /**
    * FormGroup para el formulario de datos del destinatario
@@ -60,16 +70,16 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-  * Emisor de eventos para indicar si el formulario es válido.
-  * @type {EventEmitter<boolean>}
-  */
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );
 
   /**
    * Indica si el campo destinatario está habilitado o no.
-   * 
+   *
    * @type {boolean}
    */
   public campoDestinatario = false;
@@ -82,16 +92,17 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
     this.createForm();
   }
   /**
-* @inheritdoc
-* 
-* Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-* Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
-*/
+   * @inheritdoc
+   *
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+   */
   ngOnInit(): void {
     // Parcheo de valores iniciales con retraso para asegurar la renderización
-    this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
+    this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
+      this.idProcedimiento
+    );
     this.inicializarEstadoFormulario();
-
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
@@ -103,7 +114,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
 
   /**
    * Inicializa el formulario 'formDatosDelDestinatario' con los campos requeridos.
-   * 
+   *
    * @remarks
    * Este método crea un formulario reactivo utilizando FormBuilder y define los campos
    * necesarios para los datos del destinatario. Luego, llama a `inicializarEstadoFormulario`
@@ -119,7 +130,6 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
     });
-
   }
   /**
    * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
@@ -132,7 +142,9 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
    * * @returns {void} No retorna ningún valor.
    * */
   applyNumeroRegistroFiscalValidation(): void {
-    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
+    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get(
+      'numeroDeRegistroFiscal'
+    );
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
 
     if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) {
@@ -140,21 +152,26 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
     }
 
     if (this.idProcedimiento === 110205) {
-      NUMERO_REGISTRO_FISCAL.setValidators([Validators.required, Validators.maxLength(30)]);
+      NUMERO_REGISTRO_FISCAL.setValidators([
+        Validators.required,
+        Validators.maxLength(30),
+      ]);
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
     } else {
       NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
-      PRIMER_APELLIDO.setValidators([Validators.required, Validators.maxLength(20)]);
+      PRIMER_APELLIDO.setValidators([
+        Validators.required,
+        Validators.maxLength(20),
+      ]);
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
   }
 
-
   /**
-* Evalúa si se debe inicializar o cargar datos en el formulario.
-*/
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formDatosDelDestinatario.disable();
@@ -167,7 +184,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
    * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
    * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
    * no existe, lo crea.
-   * 
+   *
    * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
    */
   ngOnChanges(changes: SimpleChanges): void {
@@ -192,18 +209,53 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit, OnChang
    * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
    * y su estado asociado en el store.
    */
-  setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+  setValoresStore(
+    formGroupName: string,
+    campo: string,
+    storeStateName: string
+  ): void {
     const VALOR = this.formDatosDelDestinatario.get(campo)?.getRawValue();
     this.formaValida.emit(this.formDatosDelDestinatario.valid);
-    this.formDatosDelDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
+    this.formDatosDelDestinatarioEvent.emit({
+      formGroupName,
+      campo,
+      valor: VALOR,
+      storeStateName,
+    });
   }
 
   /**
-  * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
-  */
+   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * @description
+   * Valida el estado completo del formulario de datos del certificado.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+   *
+   * @method
+   * @public
+   * @memberof DatosCertificadoDeComponent
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario
+   *
+   * @example
+   * ```typescript
+   * if (this.validarFormularios()) {
+   *   // Proceder con el envío del formulario
+   * } else {
+   *   // Mostrar mensaje de error
+   * }
+   * ```
+   */
+  validarFormularios(): boolean {
+    if (this.formDatosDelDestinatario.valid) {
+      return true;
+    }
+    this.formDatosDelDestinatario.markAllAsTouched();
+    return false;
+  }
 }

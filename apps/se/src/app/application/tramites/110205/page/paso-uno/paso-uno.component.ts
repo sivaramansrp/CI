@@ -13,6 +13,7 @@ import { CertificadoOrigenComponent } from '../../components/certificado-origen/
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { PeruDestinatarioComponent } from '../../components/peru-destinatario/peru-destinatario.component';
 import { PeruDatosCertificadoComponent } from '../../components/peru-datos-certificado/peru-datos-certificado.component';
+import { PeruHistoricoProductoresComponent } from '../../components/peru-historico-productores/peru-historico-productores.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -39,12 +40,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Se utiliza junto con el operador takeUntil en las suscripciones de RxJS.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  /**
-   * @property {PeruDestinatarioComponent} peruDestinatarioComponent
-   * @description Referencia al componente hijo `PeruDestinatarioComponent` mediante ViewChild.
-   * Permite acceder a los métodos y propiedades del formulario del destinatario desde el componente padre.
-   */
-  @ViewChild(PeruDestinatarioComponent) peruDestinatarioComponent?: PeruDestinatarioComponent;
+
   /**
    * Referencia al componente SolicitanteComponent mediante ViewChild.
    * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
@@ -57,7 +53,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Referencia al componente hijo `CertificadoOrigenComponent` mediante ViewChild.
    * Permite acceder a los métodos y propiedades del formulario de certificado de origen desde el componente padre.
    */
-  @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoOrigenComponent;
+  @ViewChild('CertificadoOrigen')
+  certificadoOrigen!: CertificadoOrigenComponent;
+
+  /**
+   * @property {PeruDestinatarioComponent} peruDestinatarioComponent
+   * @description Referencia al componente hijo `PeruDestinatarioComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del destinatario desde el componente padre.
+   */
+  @ViewChild(PeruDestinatarioComponent)
+  peruDestinatarioComponent?: PeruDestinatarioComponent;
 
   /**
    * @property {DatosCertificadoComponent} datosCertificado
@@ -65,7 +70,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
    * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
    */
-  @ViewChild('DatosCertificado') datosCertificado!: PeruDatosCertificadoComponent;
+  @ViewChild('DatosCertificado')
+  datosCertificado!: PeruDatosCertificadoComponent;
+
+  @ViewChild('PeruHistoricoProductores')
+  peruHistoricoProductores!: PeruHistoricoProductoresComponent;
 
   /**
    * @constructor
@@ -165,6 +174,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
+    if (this.peruDestinatarioComponent) {
+      if (!this.peruDestinatarioComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
     if (this.datosCertificado) {
       if (!this.datosCertificado.validateAll()) {
         isValid = false;
@@ -173,7 +190,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    console.log('isValid', isValid, this.solicitante, this.certificadoOrigen, this.datosCertificado);
+    console.log(
+      'isValid',
+      isValid,
+      this.solicitante,
+      this.certificadoOrigen,
+      this.datosCertificado
+    );
 
     return isValid;
   }
