@@ -31,13 +31,19 @@
                 <button type="button" class="btn btn-danger" (click)="cancelar()">
                   Cancelar
                 </button>
-              </div>
-              }
-              <div class="col" id="botonGuardar">
-                <button type="submit" class="btn btn-primary" (click)="seleccionaTab(2)">
+                <button type="submit" class="btn btn-primary" (click)="continuar()">
                   Continuar
                 </button>
               </div>
+              }
+              @if (indice===1) {
+                <div class="col" id="botonGuardar">
+                  <button type="submit" class="btn btn-primary" (click)="seleccionaTab(2)">
+                    Continuar
+                  </button>
+                </div>
+              }
+              
             </div>
           </div>
         </div>
