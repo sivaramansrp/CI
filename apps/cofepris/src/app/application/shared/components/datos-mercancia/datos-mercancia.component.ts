@@ -661,7 +661,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         break;
       case 260208:
       case 260209:
-        this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
+       // this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
         this.elementosAnadidos = ['especifique'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;

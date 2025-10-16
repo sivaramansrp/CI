@@ -217,6 +217,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   @Input() public elementosRequeridos!: string[];
 
+
   /**
    * @property {EventEmitter<Fabricante[]>} fabricanteSeleccionado
    * Evento que emite la lista de fabricantes seleccionados en la tabla.
@@ -440,6 +441,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
   private destroy$ = new Subject<void>();
+
+  public isContinuarButtonClicked: boolean = false;
 
   /**
    * property TEXTOS

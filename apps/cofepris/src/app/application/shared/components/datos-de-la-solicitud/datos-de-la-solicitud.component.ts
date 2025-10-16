@@ -223,6 +223,9 @@ export class DatosDeLaSolicitudComponent
    */
   public datosSolicitudForm!: FormGroup;
 
+  public isContinuarButtonClicked: boolean = false;
+
+
   /**
    * @property {Catalogo[]} estadoDatos
    * Lista de estados para catálogos relacionados.

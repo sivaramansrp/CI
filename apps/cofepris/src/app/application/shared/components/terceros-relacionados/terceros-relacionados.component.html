@@ -9,7 +9,7 @@
   <div class="row mt-5">
     <div class="col-md-3">
       <h6>
-        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
+        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')" [ngClass]="{'mensaje-error':isContinuarButtonClicked && (fabricanteTablaDatos.length === 0)}">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -20,7 +20,9 @@
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      [isInvalida]="!esCampoRequerido('fabricante') && isContinuarButtonClicked && (fabricanteTablaDatos.length === 0)"
     ></app-tabla-dinamica>
+    
   </div>
 
   <div class="row mt-5">
@@ -75,7 +77,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-3">
-      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
+      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')" [ngClass]="{'mensaje-error':isContinuarButtonClicked && (destinatarioFinalTablaDatos.length === 0)}">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -86,7 +88,9 @@
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      [isInvalida]="!esCampoRequerido('destinoFinal') && isContinuarButtonClicked && (destinatarioFinalTablaDatos.length === 0)"
     ></app-tabla-dinamica>
+   
   </div>
 
   <div class="row mt-5">
