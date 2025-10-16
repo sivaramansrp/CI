@@ -42,7 +42,7 @@ export * from './core/services/shared/validaciones-formulario/validaciones-formu
 export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
 export { AccionBoton } from './core/models/260514/aviso-pantallas.model';
 export * from './core/ambientes';
-export { TablaDinamicaExpandidaComponent } from './tramites/components/tabla-dinamica-expandida/tabla-dinamica-expandida.component';
+export { TablaDinamicaExpandidaComponent } from './tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 // export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
 export * from './core/enums/constantes-alertas.enum';
