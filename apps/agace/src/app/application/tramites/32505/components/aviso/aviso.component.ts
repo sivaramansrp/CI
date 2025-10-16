@@ -765,6 +765,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
         folioCFDI: [this.solicitudState?.folioCFDI, [Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(32)]],
         folioVenta: [this.solicitudState?.folioVenta, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(32)]],
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required, Validators.maxLength(13)]],
+        identificadorTransaccionVucem: [this.solicitudState?.identificadorTransaccionVucem],
+        nivNumeroSerie: [this.solicitudState?.nivNumeroSerie, [Validators.required]],
       }),
     });
     this.mostrarCampos();

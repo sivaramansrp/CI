@@ -106,15 +106,21 @@
                       @if (adaceForm.get('folioTipo')?.value === 'Si'){
                         <div class="col-md-12 my-3">
                           <label>Identificador de transacción de VUCEM correspondiente al aviso de importación previa relacionado:</label>
-                          <input type="text" class="form-control" id="numeroSerie" formControlName="numeroSerie"
-                            [ngClass]="isValid(adaceForm,'numeroSerie') ? 'required' : ''"
-                            (change)="setValoresStore(adaceForm, 'numeroSerie', 'setNumeroSerie')" />
+                          <input type="text" class="form-control" id="identificadorTransaccionVucem" formControlName="identificadorTransaccionVucem" maxlength="25"
+                            (change)="setValoresStore(adaceForm, 'identificadorTransaccionVucem', 'setidentificadorTransaccionVucem')" />
                         </div>
                         <div class="col-md-4">
                           <label>NIV o número de serie*:</label>
-                          <input type="text" class="form-control" id="numeroSerie" formControlName="numeroSerie"
-                            [ngClass]="isValid(adaceForm,'numeroSerie') ? 'required' : ''"
-                            (change)="setValoresStore(adaceForm, 'numeroSerie', 'setNumeroSerie')" />
+                          <input type="text" class="form-control" id="nivNumeroSerie" formControlName="nivNumeroSerie" maxlength="17"
+                            [ngClass]="isValid(adaceForm,'nivNumeroSerie') ? 'required' : ''"
+                            (change)="setValoresStore(adaceForm, 'nivNumeroSerie', 'setnivNumeroSerie')" />
+                            @if (adaceForm.get('nivNumeroSerie')?.invalid && adaceForm.get('nivNumeroSerie')?.touched) {
+                            <div class="text-danger">
+                            @if (adaceForm.get('nivNumeroSerie')?.errors?.['required']) {
+                              <small>Este campo es obligatorio</small>
+                            }
+                        </div>
+                        }
                         </div>
                       }
                     </div>
@@ -124,7 +130,6 @@
               <ng-container *ngIf="datosDelVehiculo">
                 <ng-titulo titulo="Datos del vehículo" />
                 <div class="row">
-                  
                   <div class="col-md-4 mb-3">
                       <label>NIV o número de serie*:</label>
                       <input type="text" class="form-control" formControlName="numeroNIV" [disabled]="soloLectura" [ngClass]="isValid(adaceForm,'numeroNIV') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'numeroNIV', 'setNumeroNIV')" />
