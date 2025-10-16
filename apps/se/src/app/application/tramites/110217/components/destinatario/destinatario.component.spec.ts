@@ -1,164 +1,159 @@
-import { TestBed } from '@angular/core/testing';
-import { DestinatarioComponent } from './destinatario.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Destinatario110217Component } from './destinatario.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, Subject } from 'rxjs';
 
-describe('DestinatarioComponent', () => {
-  let component: DestinatarioComponent;
+describe('Destinatario110217Component', () => {
+  let component: Destinatario110217Component;
+  let fixture: ComponentFixture<Destinatario110217Component>;
   let store: Tramite110217Store;
   let query: Tramite110217Query;
-  let validacionesService: ValidacionesFormularioService;
   let consultaioQuery: ConsultaioQuery;
 
-  beforeEach(() => {
-    store = { actualizarEstado: jest.fn() } as any;
-    query = { selectSolicitud$: of({}) } as any;
-    validacionesService = { isValid: jest.fn().mockReturnValue(true) } as any;
-    consultaioQuery = { selectConsultaioState$: of({ readonly: false }) } as any;
+  beforeEach(async () => {
+    store = { 
+      actualizarEstado: jest.fn(),
+      setGrupoReceptor: jest.fn(),
+      setGrupoDeDirecciones: jest.fn(),
+      setGrupoRepresentativo: jest.fn(),
+      setGrupoDeTransporte: jest.fn()
+    } as any;
+    
+    query = { 
+      selectSolicitud$: of({
+        grupoReceptor: {},
+        grupoDeDirecciones: {},
+        grupoRepresentativo: {},
+        grupoDeTransporte: {}
+      })
+    } as any;
+    
+    consultaioQuery = { 
+      selectConsultaioState$: of({
+        procedureId: '',
+        parameter: '',
+        department: '',
+        folioTramite: '',
+        tipoDeTramite: '',
+        estadoDeTramite: '',
+        readonly: false,
+        create: false,
+        update: false,
+        consultaioSolicitante: null,
+        action_id: '',
+        current_user: '',
+        id_solicitud: '',
+        nombre_pagina: ''
+      })
+    } as any;
 
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+    await TestBed.configureTestingModule({
+      imports: [Destinatario110217Component, ReactiveFormsModule],
       providers: [
         provideHttpClient(),
         { provide: Tramite110217Store, useValue: store },
         { provide: Tramite110217Query, useValue: query },
-        { provide: ValidacionesFormularioService, useValue: validacionesService },
         { provide: ConsultaioQuery, useValue: consultaioQuery },
         FormBuilder,
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    });
+    }).compileComponents();
 
-    const fb = TestBed.inject(FormBuilder);
-    component = new DestinatarioComponent(
-      fb,
-      store,
-      query,
-      validacionesService,
-      consultaioQuery
-    );
+    fixture = TestBed.createComponent(Destinatario110217Component);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on donanteDomicilio', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    expect(component.registroFormulario).toBeTruthy();
-    expect(component.registroFormulario.get('grupoReceptor')).toBeTruthy();
+  it('should initialize component properties', () => {
+    expect(component.formDestinatarioValues).toBeDefined();
+    expect(component.destroyNotifier$).toBeInstanceOf(Subject);
+    expect(component.soloLectura).toBe(false);
   });
 
-  it('should disable form if soloLectura is true', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    component.soloLectura = true;
-    component.destinatarioFormulario();
-    expect(component.registroFormulario.disabled).toBe(true);
+  it('should set soloLectura based on consultaDatos', () => {
+    expect(component.soloLectura).toBe(false);
+    component.ngOnInit();
+    expect(component.soloLectura).toBe(false);
   });
 
-  it('should enable form if soloLectura is false', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    component.soloLectura = false;
-    component.destinatarioFormulario();
-    expect(component.registroFormulario.enabled).toBe(true);
+  it('should handle setValoresStoreDatosDestinatario', () => {
+    const event = {
+      formGroupName: 'test',
+      campo: 'test',
+      valor: 'testValue',
+      storeStateName: 'setGrupoReceptor'
+    };
+    component.setValoresStoreDatosDestinatario(event);
+    expect(store.setGrupoReceptor).toHaveBeenCalledWith('testValue');
   });
 
-  it('should mark all as touched on validarDestinatarioFormulario', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    const spy = jest.spyOn(component.registroFormulario, 'markAllAsTouched');
-    component.validarDestinatarioFormulario();
-    expect(spy).toHaveBeenCalled();
+  it('should handle setValoresStoreDestinatario', () => {
+    const event = {
+      formGroupName: 'test',
+      campo: 'test',
+      valor: 'testValue',
+      storeStateName: 'setGrupoDeDirecciones'
+    };
+    component.setValoresStoreDestinatario(event);
+    expect(store.setGrupoDeDirecciones).toHaveBeenCalledWith('testValue');
   });
 
-  it('should set estaDeshabilitado to true on onClick', () => {
-    component.estaDeshabilitado = false;
-    component.onClick();
-    expect(component.estaDeshabilitado).toBe(true);
+  it('should handle setValoresStoreRepresentante', () => {
+    const event = {
+      formGroupName: 'test',
+      campo: 'test',
+      VALOR: 'testValue',
+      METODO_NOMBRE: 'setGrupoRepresentativo'
+    };
+    component.setValoresStoreRepresentante(event);
+    expect(store.setGrupoRepresentativo).toHaveBeenCalledWith('testValue');
   });
 
-  it('should validate field using isValid', () => {
-    component.solicitudState = {
-      grupoReceptor: { nombre: 'Test' },
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    expect(component.isValid(component.grupoReceptor, 'nombre')).toBe(true);
+  it('should handle setValoresStoreTransporte', () => {
+    const event = {
+      formGroupName: 'test',
+      campo: 'test',
+      valor: 'testValue',
+      storeStateName: 'setGrupoDeTransporte'
+    };
+    component.setValoresStoreTransporte(event);
+    expect(store.setGrupoDeTransporte).toHaveBeenCalledWith('testValue');
   });
 
-  it('should get grupoDeTransporte', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    expect(component.grupoDeTransporte).toBeTruthy();
+  it('should return false for validateAllForms when child forms are invalid', () => {
+    const result = component.validateAllForms();
+    expect(result).toBe(false);
   });
 
-  it('should get grupoReceptor', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
+  it('should call markAllAsTouched on all child forms when they exist', () => {
+    component.datosDelDestinatarioRef = {
+      formDatosDelDestinatario: { markAllAsTouched: jest.fn() }
     } as any;
-    component.donanteDomicilio();
-    expect(component.grupoReceptor).toBeTruthy();
-  });
+    component.destinatarioRef = {
+      formDestinatario: { markAllAsTouched: jest.fn() }
+    } as any;
+    component.representanteRef = {
+      form: { markAllAsTouched: jest.fn() }
+    } as any;
+    component.transporteRef = {
+      formTransporte: { markAllAsTouched: jest.fn() }
+    } as any;
 
-  it('should get grupoDeDirecciones', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    expect(component.grupoDeDirecciones).toBeTruthy();
-  });
+    component.markAllFormsAsTouched();
 
-  it('should get grupoRepresentativo', () => {
-    component.solicitudState = {
-      grupoReceptor: {},
-      grupoDeDirecciones: {},
-      grupoRepresentativo: {},
-      grupoDeTransporte: {},
-    } as any;
-    component.donanteDomicilio();
-    expect(component.grupoRepresentativo).toBeTruthy();
+    expect(component.datosDelDestinatarioRef.formDatosDelDestinatario.markAllAsTouched).toHaveBeenCalled();
+    expect(component.destinatarioRef.formDestinatario.markAllAsTouched).toHaveBeenCalled();
+    expect(component.representanteRef.form.markAllAsTouched).toHaveBeenCalled();
+    expect(component.transporteRef.formTransporte.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

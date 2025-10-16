@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
@@ -20,6 +20,11 @@ import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.s
 })
 
 export class HistProductoresComponent implements OnInit, OnDestroy {
+
+  /** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
+   * Permite gestionar sus métodos y propiedades.
+   */
+  @ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
 
   /**
    * Estado actual del trámite.
@@ -167,14 +172,14 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
     this.isFormValid = event;
   }
 
-  /**
+ /**
    * Valida el formulario del componente.
    * 
    * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
    */
-public validarFormulario(): boolean {
-  return this.isFormValid;
-}
+  public validarFormulario(): void {
+    this.historicoProductoresComponent.validarFormulario();
+  }
 
 /**
    * Método que se ejecuta al destruir el componente.
