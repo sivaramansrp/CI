@@ -29,9 +29,9 @@ export class ProgramaACancelarService {
    * 
    * @returns Observable que emite los datos del programa a cancelar.
    */
-  obtenerDatos(): Observable<ProgramaACancelar> {
-    return this.http.get<ProgramaACancelar>(`assets/json/140101/Programa.json`);
-  }
+  // obtenerDatos(): Observable<ProgramaACancelar> {
+  //   return this.http.get<ProgramaACancelar>(`assets/json/140101/Programa.json`);
+  // }
 
  
   /**

@@ -11,9 +11,18 @@ export interface Programa {
   modalidad: string; 
   representacionFederal: string; 
   tipoPrograma: string; 
-  estatus: string; 
-  fechaInicioVigencia: string;
+  estatus: string;
   idProgramaAutorizado: string;
+  movimientoProgramaSE: string | null;
+  rfc: string | null;
+  resolucion: string | null;
+  unidadAdministrativa: string | null;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  actividadProductiva: string | null;
+  fechaSuspension: string | null;
+  contadorGrid: number | null;
+  idProgramaCompuesto: string | null;
 }
 
 /**
@@ -65,14 +74,23 @@ export function createInitialState(): Programa140101State {
     radio: -1, // Valor inicial para la selección de radio
     datos: [], // Array vacío para datos adicionales
     programaACancelar: {
-      folioPrograma: '', // Folio del programa
       idProgramaSeleccionado: '', // ID del programa seleccionado
-      modalidad: '', // Modalidad del programa
-      representacionFederal: '', // Representación federal
-      tipoPrograma: '', // Tipo de programa
-      estatus: '', // Estatus del programa
-      fechaInicioVigencia: '', // Fecha de inicio de vigencia
-      idProgramaAutorizado: '', // ID del programa autorizado
+      idProgramaAutorizado: "",
+      folioPrograma: "",
+      tipoPrograma: "",
+      movimientoProgramaSE: null,
+      rfc: null,
+      resolucion: null,
+      unidadAdministrativa: null,
+      fechaInicioVigencia: null,
+      fechaFinVigencia: null,
+      actividadProductiva: null,
+      fechaSuspension: null,
+      modalidad: "",
+      representacionFederal: "",
+      estatus: "",
+      contadorGrid: null,
+      idProgramaCompuesto: null
     }
   };
 }

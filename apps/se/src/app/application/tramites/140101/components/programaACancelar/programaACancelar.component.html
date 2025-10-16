@@ -2,20 +2,23 @@
   <!-- Fila principal que contiene todo el contenido -->
   <div class="col-md-12">
     <!-- Contenedor para la tabla de cancelaciones disponibles -->
-    <div class="table-responsive">
+    <div class="">
       <!-- Título para indicar al usuario que seleccione un programa -->
       <ng-titulo titulo="Elija el programa del que desea realizar el tramite" />
       <!-- Componente de tabla dinámica con opciones de selección y datos -->
-      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="encabezadoDeTabla" [tableId] = "Id" [inputSelection] = "radioId" [datos]="datosTabla" (filaSeleccionada)="valorDeAlternancia($event)" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
-    </div>
-    <div class="col-md-12">
-      <!-- Navegación para la paginación -->
-      <nav aria-label="Page navigation example">
-        <ul class="pagination d-flex justify-content-center">
-            <!-- Elementos de paginación (actualmente comentados) -->
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-        </ul>
-      </nav>
+      <app-tabla-dinamica
+      [tipoSeleccionTabla]="tablaSeleccion.RADIO"
+      [configuracionTabla]="encabezadoDeTabla"
+      [tableId] = "Id"
+      [inputSelection] = "radioId"
+      [datos]="datosTabla"
+      (filaSeleccionada)="valorDeAlternancia($event)"
+      [disableSeleccionTablaRadio]="soloLectura"
+      [showPagination]="true"
+      [mode]="'client'"
+      [totalItems]="datosTabla.length"
+      [itemsPerPage]="5"
+      ></app-tabla-dinamica>
     </div>
   </div>
 </div>
@@ -116,30 +119,39 @@
               'setSolicitudObservaciones'
             )"
         ></textarea>
-        <!-- Mensaje de error o advertencia para el motivo de cancelación -->
-        <div id="motivoCancelacionMensaje" class="red custom-motivo-cancelation"></div>
-        <br>
+        <div *ngIf="esInvalido('solicitudObservaciones')" class="text-danger">
+              <small
+                *ngIf="programaForm.controls['solicitudObservaciones'].hasError('required')">Este
+                campo es obligatorio</small>
+              <small
+                *ngIf="programaForm.controls['solicitudObservaciones'].hasError('maxlength')">No puede escribir más de 255 caracteres</small>
+            </div>
       </div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <div class="row">
+      <div class="row mt-3">
         <!-- Checkbox para confirmar la cancelación -->
-        <div class="form-check">
+        <div class="form-check checkbox-space">
           <lib-input-check
            [id]="'etiqueta'"
             [formControlName]="'confirmar'"
-            [label]="'Confirmo estar de acuerdo con la cancelación del Programa IMMEX/PROSEC'"
+            [label]="'Confirmo estar de acuerdo con la cancelación del Programa IMMEX/PROSEC *'"
             [required]="true"
             [isDisabled]="soloLectura"
-            [ngClass]="isValid('confirmar') ? 'required' : ''"
             (change)="setValoresStore(
               programaForm,
               'confirmar',
               'setConfirmar'
             )"></lib-input-check>
+
+            <div *ngIf="esInvalido('confirmar')" class="text-danger">
+              <small
+                *ngIf="programaForm.controls['confirmar'].hasError('required')">Este
+                campo es obligatorio</small>
+            </div>
         </div>
         </div>
       </div>

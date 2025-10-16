@@ -9,6 +9,7 @@ import { Programa140101State, Tramite140101Store } from '../../../../estados/tra
 import { ProgramaACancelar,TABLE_ID} from '../../../../shared/models/programa-cancelar.model';
 import { PROGRAMA_TABLA } from '../../../../shared/constantes/programa.enum';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
 import { Tramite140101Query } from '../../../../estados/queries/tramite140101.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
@@ -127,6 +128,8 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    */
   @Input() soloLectura: boolean = false;
 
+  @Input() idTipoTramite!: string;
+
   /**
    * Constructor del componente ProgramaACancelar.
    * 
@@ -143,7 +146,8 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     private programaACancelarService: ProgramaACancelarService,
     private formValidator: ValidacionesFormularioService,
     private tramite140101Store: Tramite140101Store,
-    private tramite140101Query: Tramite140101Query
+    private tramite140101Query: Tramite140101Query,
+    private serviciosService: ServiciosService,
   ) {
    // El constructor se utiliza para la inyección de dependencias.
   }
@@ -185,7 +189,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
       representacionFederal: [{ value: this.programaState?.programaACancelar?.representacionFederal, disabled: true }],
       tipoPrograma: [{ value: this.programaState?.programaACancelar?.tipoPrograma, disabled: true }],
       estatus: [{ value: this.programaState?.programaACancelar?.estatus, disabled: true }],
-      solicitudObservaciones: [this.programaState?.solicitudObservaciones, Validators.required],
+      solicitudObservaciones: [this.programaState?.solicitudObservaciones, [Validators.required, Validators.maxLength(255)]],
       confirmar: [this.programaState?.confirmar, Validators.requiredTrue],
     });
 
@@ -208,10 +212,14 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
      * @returns {void} No retorna ningún valor.
      */
     cargarDatos(): void {
-    this.programaACancelarService.obtenerDatos()
+      const PAYLOAD = {
+        rfc: "NOV0509053I7",
+        discriminatorValue: this.idTipoTramite
+      };
+      this.serviciosService.obtenerDatos('140101', PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
-        this.datosTabla = Array.isArray(data) ? data : [data];
+        this.datosTabla = data.datos ?? [];
         this.tramite140101Store.setDatosData(this.datosTabla);
       });
   }
@@ -261,6 +269,32 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
       tipoPrograma: row.tipoPrograma,
       estatus: row.estatus,
     });
+  }
+
+
+  /** Verifica si el formulario es válido.
+   * 
+   * @returns `true` si el formulario es válido, `false` en caso contrario.
+   */
+
+  public isFormValido(): boolean {
+    if(this.programaForm.valid) {
+      return true;
+    }
+    this.programaForm.markAllAsTouched();
+    return false;
+  }
+
+   /**
+   * Verifica si un control del formulario es inválido.
+   * Nombre del control en el formulario.
+   * boolean Verdadero si el control es inválido, falso en caso contrario.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.programaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**

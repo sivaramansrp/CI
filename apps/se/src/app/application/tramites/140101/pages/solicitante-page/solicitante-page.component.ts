@@ -183,7 +183,10 @@ export class SolicitantePageComponent implements OnDestroy {
           },
           error: () => {
             this.esFormaValido = false;
+            const ERROR_MESSAGE = 'Error desconocido en la solicitud';
+              this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_MESSAGE);
             this.indice = 1;
+            this.datosPasos.indice = this.indice;
             this.wizardComponent.indiceActual = 1;
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           }
@@ -213,7 +216,6 @@ export class SolicitantePageComponent implements OnDestroy {
           switchMap(FORM_PAYLOAD => {
             return (this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD) as Observable<BaseResponse<{ id_solicitud?: number }>>).pipe(
               map((response: BaseResponse<{ id_solicitud?: number }>) => {
-                // Adapt the response to the expected type
                 return {
                   ...response,
                   datos: {
