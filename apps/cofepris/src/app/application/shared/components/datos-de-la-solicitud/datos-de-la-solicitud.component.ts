@@ -957,7 +957,7 @@ export class DatosDeLaSolicitudComponent
         this.datosSolicitudForm.enable();
       }
     }
-    if (
+    if ( changes['datosSolicitudFormState'] &&
       changes['datosSolicitudFormState'].currentValue &&
       this.datosSolicitudForm
     ) {
