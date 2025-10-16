@@ -421,10 +421,8 @@ export class CertificadoOrigenComponent
     disponiblesDatos: Mercancia,
     fromMercanciasDisponibles: boolean
   ): void {
-    this.datosSeleccionados = { ...disponiblesDatos };
-    console.log(this.datosSeleccionados);
+    this.datosSeleccionados = disponiblesDatos;
     this.fromMercanciasDisponibles = fromMercanciasDisponibles;
-    console.log(this.fromMercanciasDisponibles);
     this.store.setFormMercancia({ ...disponiblesDatos });
     if (this.modalInstance) {
       this.modalInstance.show();

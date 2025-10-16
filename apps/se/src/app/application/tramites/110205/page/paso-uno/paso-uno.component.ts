@@ -53,7 +53,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Referencia al componente hijo `CertificadoOrigenComponent` mediante ViewChild.
    * Permite acceder a los métodos y propiedades del formulario de certificado de origen desde el componente padre.
    */
-  @ViewChild('CertificadoOrigen')
+  @ViewChild('certificadoOrigen')
   certificadoOrigen!: CertificadoOrigenComponent;
 
   /**
@@ -70,10 +70,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
    * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
    */
-  @ViewChild('DatosCertificado')
+  @ViewChild('datosCertificado')
   datosCertificado!: PeruDatosCertificadoComponent;
 
-  @ViewChild('PeruHistoricoProductores')
+  @ViewChild('peruHistoricoProductores')
   peruHistoricoProductores!: PeruHistoricoProductoresComponent;
 
   /**
@@ -175,7 +175,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     if (this.peruDestinatarioComponent) {
-      if (!this.peruDestinatarioComponent.validarFormulario()) {
+      if (!this.peruDestinatarioComponent.validateAllForms()) {
         isValid = false;
       }
     } else {
@@ -189,14 +189,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       isValid = false;
     }
-
-    console.log(
-      'isValid',
-      isValid,
-      this.solicitante,
-      this.certificadoOrigen,
-      this.datosCertificado
-    );
 
     return isValid;
   }
