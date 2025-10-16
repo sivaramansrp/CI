@@ -483,6 +483,30 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
   guardarFilaEditada(): void {
     this.enviada = true;
   }
+
+  /**
+   * @method activarAlertasValidacion
+   * @description Activa las alertas de validación del formulario cuando hay campos requeridos sin completar.
+   * Este método marca todos los campos como touched, actualiza la validez del formulario y muestra
+   * el mensaje de error si el formulario es inválido. Se utiliza principalmente cuando se necesita
+   * mostrar las alertas de validación desde componentes padre.
+   * @returns {void} No retorna ningún valor
+   * @public
+   */
+  public activarAlertasValidacion(): void {
+    this.importadorForm.markAllAsTouched();
+    this.importadorForm.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.importadorForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+    } else {
+      this.esFormaValido = false;
+      this.formularioAlertaError = '';
+    }
+  }
+
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.

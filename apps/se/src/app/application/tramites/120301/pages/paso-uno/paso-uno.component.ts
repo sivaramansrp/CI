@@ -114,10 +114,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
-   * @property {EventEmitter<void>} tabChanged
-   * @description Evento emitido cuando la pestaña activa cambia.
+   * @property {EventEmitter<number>} tabChanged
+   * @description Evento emitido cuando la pestaña activa cambia, enviando el índice de la nueva pestaña.
    */
-  @Output() tabChanged = new EventEmitter<void>();
+  @Output() tabChanged = new EventEmitter<number>();
 
   /**
    * @property {EventEmitter<boolean>} errorValidacion
@@ -358,7 +358,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
 
     this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
-    this.tabChanged.emit(); // Emite evento cuando cambia de tab
+    this.tabChanged.emit(this.indice); // Emite evento con el índice de la pestaña seleccionada
   }
 
   /**
