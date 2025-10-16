@@ -1,4 +1,4 @@
-import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
+import { ALERTA_COM, ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { Component } from '@angular/core';
 import { DatosComponent} from '../datos/datos.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
@@ -46,6 +46,11 @@ interface AccionBoton {
  * utilizando un asistente (wizard) para navegar entre los diferentes pasos.
  */
 export class SolicitudDeReporteComponent {
+
+   /**
+     * Constante que asigna el texto de alerta definido en `ALERTA_COM`.
+     */
+    TEXTOSR = ALERTA_COM;
   /**
    * Referencia al componente del asistente (wizard) utilizado en este componente.
    * 
