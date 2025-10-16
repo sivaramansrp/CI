@@ -9,20 +9,20 @@
       </div>
       <ng-titulo titulo="Datos del periodo del aviso" />
       <div class="row align-items-center">
-        <div class="col-md-6 ">
+        <div class="col-md-4">
           <label for="pais">Mes al que corresponde el aviso*:</label>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div>
             <app-catalogo-select class="optionsPais" [catalogo]="optionsPais" [required]="true" id="pais" formControlName="pais" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'pais', 'setPais')"></app-catalogo-select>
           </div>
         </div>
       </div>
       <div class="row align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="anio">Año al que corresponde el aviso*:</label>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div>
             <app-catalogo-select class="optionsAnio" [catalogo]="optionsAnio" [required]="true" id="anio" formControlName="anio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'anio', 'setAnio')"></app-catalogo-select>
           </div>
