@@ -587,6 +587,12 @@ export class AgregarFabricanteComponent
    */
 private forzarDeshabilitarPais(): void {
   if (this.chequeoValidacionAlGuardar) {
+    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value ){
+  this.agregarFabricanteForm.patchValue({pais: 1});
+    }
+    else{
+      this.agregarFabricanteForm.patchValue({pais: -1});
+    }
     this.agregarFabricanteForm.get('pais')?.disable();
   }
   if (
@@ -954,6 +960,9 @@ private forzarDeshabilitarPais(): void {
   changeNacionalidad(): void {
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
     const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
+  this.agregarFabricanteForm.patchValue({pais: 1});
+}
     if (RFC_CONTROL) {
       RFC_CONTROL.setValidators([
         Validators.required,
@@ -1049,6 +1058,7 @@ changeTipoPersona(): void {
   if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
+  
   this.forzarDeshabilitarPais();
 }
 

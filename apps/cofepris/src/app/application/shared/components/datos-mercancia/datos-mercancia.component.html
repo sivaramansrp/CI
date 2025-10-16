@@ -575,7 +575,7 @@
     }
 
     <div class="row">
-      @if(!elementosNoValidos.includes('numeroRegistroSanitario')){
+      @if(!elementosNoValidos.includes('numeroRegistroSanitario') && !requiedField) {
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="numeroRegistroSanitario"
@@ -601,7 +601,7 @@
           </div>
         </div>
       </div>
-      } @if(!elementosNoValidos.includes('fechaCaducidad')){
+      } @if(!elementosNoValidos.includes('fechaCaducidad') && !requiedField){
       <div class="col-md-5">
         <div class="form-group">
           <ng-container

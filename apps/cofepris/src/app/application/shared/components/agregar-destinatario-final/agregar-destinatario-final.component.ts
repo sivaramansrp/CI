@@ -32,6 +32,7 @@ import {
 } from '@angular/core';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
@@ -89,6 +90,9 @@ export class AgregarDestinatarioFinalComponent
    * @property {FormGroup} agregarDestinatarioFinal
    */
   agregarDestinatarioFinal!: FormGroup;
+
+
+  requiedField:boolean=false;
 
   /**
    * Datos de catálogo de países.
@@ -547,6 +551,7 @@ export class AgregarDestinatarioFinalComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
+    this.requiedField = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento);
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
@@ -726,12 +731,12 @@ export class AgregarDestinatarioFinalComponent
       ], 
       calle: [
         this.obtenerValor('calle'),
-        this.elementosRequeridos.includes('calle'), 
+        this.elementosRequeridos.includes('calle')||
         this.chequeoValidacionAlGuardar ? [Validators.required] : [],
       ],
       numeroExterior: [
         this.obtenerValor('numeroExterior'),
-        this.elementosRequeridos.includes('numeroExterior'),
+        this.elementosRequeridos.includes('numeroExterior') ||
         this.chequeoValidacionAlGuardar
           ? [Validators.required]
           : [],

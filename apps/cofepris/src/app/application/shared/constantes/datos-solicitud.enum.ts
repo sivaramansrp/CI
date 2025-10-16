@@ -255,12 +255,7 @@ export const PRODUCTO_TABLA = [
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
     orden: 19,
-  },
-  {
-    encabezado: 'Fecha de caducidad',
-    clave: (ele: TablaMercanciasDatos): string => ele.fechaCaducidad ?? '', // Reemplaza 'ele.fechaCaducidad' con la clave correcta
-    orden: 20,
-  },
+  }
 ];
 
 /**
