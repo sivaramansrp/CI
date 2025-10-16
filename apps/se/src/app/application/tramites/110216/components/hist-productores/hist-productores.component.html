@@ -8,4 +8,7 @@
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formaValida)="formaValida($event)"
     [mostrarMercanciasSeleccionadas]="false"
+    [mercanciaDatos]="(mercanciaProductores$ | async) || []"
+    [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
+    (emitAgregarExportador)="emitAgregarExportador($event)" 
     ></app-historico-productores>

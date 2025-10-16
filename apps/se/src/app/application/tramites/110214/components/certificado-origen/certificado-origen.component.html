@@ -1,7 +1,6 @@
 <app-certificado-de-origen #CertificadoDeOrigenComponent
     [operador]="operador"
-    [paises]="(pais$ | async) || []"
-    [paisBloqu]="(paisBloqu$ | async) || []" 
+    [paises]="(paisBloqu$ | async) || []" 
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
