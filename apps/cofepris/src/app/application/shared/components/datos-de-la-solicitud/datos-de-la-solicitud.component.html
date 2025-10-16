@@ -667,3 +667,29 @@
     </div>
   </div>
 </div>
+
+<!-- Merchandise Selection Modal -->
+<div class="modal fade" id="mercanciaModal" tabindex="-1" aria-labelledby="mercanciaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mercanciaModalLabel">
+          {{ mercanciaSeleccionada ? 'Modificar Datos de Mercancía' : 'Agregar Datos de Mercancía' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarMercanciaModal()"></button>
+      </div>
+      <div class="modal-body">
+        <app-datos-mercancia
+          *ngIf="mercanciaModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [mercanciaFormState]="mercanciaFormState || {}"
+          [datoSeleccionado]="mercanciaSeleccionada"
+          (cerrarModal)="cerrarMercanciaModal()"
+          (mercanciaSeleccionado)="onMercanciaSeleccionado($event)">        
+        </app-datos-mercancia>
+      </div>
+    </div>
+  </div>
+</div>
+         
+
