@@ -1190,12 +1190,18 @@ eliminarTratado(): void {
       this.abrirModal();
       return;
     }
-    if(this.tratadoSeleccionado[0].criterio_origen.trim() === 'OTROS' ||
-      this.tratadoSeleccionado[0].criterio_origen.trim() === 'B' ||
-      this.tratadoSeleccionado[0].criterio_origen.trim() === 'OTRASINST' ||
-      (this.tratadoSeleccionado[0].cve_pais.trim() === 'PAN' && this.tratadoSeleccionado[0].tratado_acuerdo.trim() === '505')
+    const TRATADO = this.tratadoSeleccionado[0];
+    const CRITERIO_ORIGEN = TRATADO.criterio_origen?.trim() ?? '';
+    const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
+    const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
+    if (
+      CRITERIO_ORIGEN === 'OTROS' ||
+      CRITERIO_ORIGEN === 'B' ||
+      CRITERIO_ORIGEN === 'OTRASINST' ||
+      (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
     ) {
       this.abrirModalGlobalAccion();
+      return;
     }
     this.tratadosSolicitudService.getInsumosEmpaques(this.consultaState.id_solicitud, this.tratadoSeleccionado[0].id_tratado_acuerdo.toString(),
       this.tratadoSeleccionado[0].id_bloque ?? null, this.tratadoSeleccionado[0].cve_pais)
@@ -1212,6 +1218,8 @@ eliminarTratado(): void {
 
               this.modalInstance = new Modal(this.modalElementInsumosEmpaques.nativeElement);
               this.modalInstance?.show();
+            }else{
+              this.abrirModalGlobalAccion();
             }
         }else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
