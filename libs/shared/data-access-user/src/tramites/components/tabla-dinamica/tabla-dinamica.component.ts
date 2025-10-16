@@ -15,7 +15,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 
-import { ColumnConfig } from '../tabla-dinamica-expandida/tabla-dinamica-expandida.component';
+import { ColumnConfig } from '../tabla-dinamica-expandida/tabla-dinamica-exp.component';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
 

@@ -18,8 +18,8 @@ export interface ColumnConfig {
     selector: 'app-tabla-expandida',
     standalone: true,
     imports: [CommonModule, TablePaginationComponent],
-    templateUrl: './tabla-dinamica-expandida.component.html',
-    styleUrls: ['./tabla-dinamica-expandida.component.css'],
+    templateUrl: './tabla-dinamica-exp.component.html',
+    styleUrls: ['./tabla-dinamica-exp.component.scss'],
     animations: [
         trigger('expandCollapse', [
             state('void', style({
