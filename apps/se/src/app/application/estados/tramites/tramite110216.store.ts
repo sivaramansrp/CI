@@ -102,6 +102,10 @@ export interface Tramite110216State {
    */
   datosProductorFormulario: { [key: string]: unknown };
 
+  /**
+ * Objeto que indica la validez de los diferentes formularios del trámite.
+ * Cada propiedad representa un formulario y su valor indica si es válido.
+ */
   formValidity?: {
     datosCertificado?: boolean;
     destinatario?: boolean;
@@ -109,6 +113,7 @@ export interface Tramite110216State {
     certificadoOrigen?: boolean;
   };
 
+  /** Lista de productores exportador agregados al estado del trámite. */
   agregarProductoresExportador: HistoricoColumnas[];
 
   /**
@@ -117,6 +122,7 @@ export interface Tramite110216State {
    */
   productoresExportador: HistoricoColumnas[];
 
+  /** Lista de mercancías asociadas a los productores en el estado del trámite. */
   mercanciaProductores: MercanciaTabla[];
 }
 
