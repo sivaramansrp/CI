@@ -333,13 +333,14 @@
                 <div class="row my-3">
                     <div class="col-md-6 ">
                       <label>Kilometraje a la fecha de la importación*:</label>
-                      <input type="text" class="form-control" formControlName="kilometraje" [disabled]="soloLectura" [ngClass]="isValid(adaceForm,'kilometraje') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'kilometraje', 'setKilometraje')" />
+                      <input type="text" class="form-control" formControlName="kilometraje" [disabled]="soloLectura" [ngClass]="isValid(adaceForm,'kilometraje') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'kilometraje', 'setKilometraje')" (input)="adaceForm.get('kilometraje')?.markAsTouched(); adaceForm.get('kilometraje')?.updateValueAndValidity()" />
                       @if (adaceForm.get('kilometraje')?.invalid && adaceForm.get('kilometraje')?.touched) {
                         <div class="text-danger">
                           @if (adaceForm.get('kilometraje')?.errors?.['required']) {
                             <small>Este campo es obligatorio</small>
-                          }
-                          @if (adaceForm.get('kilometraje')?.errors?.['maxlength']) {
+                          } @else if (adaceForm.get('kilometraje')?.errors?.['pattern']) {
+                            <small>Por favor, escribe un número entero válido</small>
+                          } @else if (adaceForm.get('kilometraje')?.errors?.['maxlength']) {
                             <small>Por favor, no escribas más de 9 caracteres</small>
                           }
                         </div>
@@ -352,10 +353,11 @@
                         <div class="text-danger">
                           @if (adaceForm.get('valorAduana')?.errors?.['required']) {
                             <small>Este campo es obligatorio</small>
-                          }
-                          @if (adaceForm.get('valorAduana')?.errors?.['maxlength']) {
+                          } @else if (adaceForm.get('valorAduana')?.errors?.['pattern']) {
+                            <small>Por favor, escribe un número válido</small>
+                          } @else if (adaceForm.get('valorAduana')?.errors?.['maxlength']) {
                             <small>Por favor, no escribas más de 11 caracteres</small>
-                          }
+                          } 
                         </div>
                       }
                     </div>
@@ -368,10 +370,11 @@
                         <div class="text-danger">
                           @if (adaceForm.get('montoIGI')?.errors?.['required']) {
                             <small>Este campo es obligatorio</small>
-                          }
-                          @if (adaceForm.get('montoIGI')?.errors?.['maxlength']) {
+                          } @else if (adaceForm.get('montoIGI')?.errors?.['pattern']) {
+                            <small>Por favor, escribe un número válido</small>
+                          } @else if (adaceForm.get('montoIGI')?.errors?.['maxlength']) {
                             <small>Por favor, no escribas más de 9 caracteres</small>
-                          }
+                          } 
                         </div>
                       }
                     </div>
@@ -385,8 +388,9 @@
                         <div class="text-danger">
                           @if (adaceForm.get('montoDTA')?.errors?.['required']) {
                             <small>Este campo es obligatorio</small>
-                          }
-                          @if (adaceForm.get('montoDTA')?.errors?.['maxlength']) {
+                          } @else if (adaceForm.get('montoDTA')?.errors?.['pattern']) {
+                            <small>Por favor, escribe un número válido</small>
+                          } @else if (adaceForm.get('montoDTA')?.errors?.['maxlength']) {
                             <small>Por favor, no escribas más de 9 caracteres</small>
                           }
                         </div>
@@ -401,12 +405,13 @@
                         <div class="text-danger">
                           @if (adaceForm.get('montoIVA')?.errors?.['required']) {
                             <small>Este campo es obligatorio</small>
-                          }
-                          @if (adaceForm.get('montoIVA')?.errors?.['maxlength']) {
+                          } @else if (adaceForm.get('montoIVA')?.errors?.['pattern']) {
+                            <small>Por favor, escribe un número válido</small>
+                          } @else if (adaceForm.get('montoIVA')?.errors?.['maxlength']) {
                             <small>Por favor, no escribas más de 9 caracteres</small>
-                          }
+                          } 
                         </div>
-                      }
+                        }
                     </div>
                     <div class="col-md-4 ">
                       <label>Valor en dólares*:</label>
@@ -415,12 +420,13 @@
                         <div class="text-danger">
                           @if (adaceForm.get('valorDolares')?.errors?.['required']) {
                             <small>Este campo es obligatorio</small>
-                          }
-                          @if (adaceForm.get('valorDolares')?.errors?.['maxlength']) {
+                          } @else if (adaceForm.get('valorDolares')?.errors?.['pattern']) {
+                            <small>Por favor, escribe un número válido</small>
+                          } @else if (adaceForm.get('valorDolares')?.errors?.['maxlength']) {
                             <small>Por favor, no escribas más de 9 caracteres</small>
-                          }
+                          } 
                         </div>
-                      }
+                        }
                     </div>
                 </div>
                 <div class="row my-3">
