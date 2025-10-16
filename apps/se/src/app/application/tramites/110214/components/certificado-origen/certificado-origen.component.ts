@@ -9,11 +9,12 @@ import {
 import {
   Catalogo,
   ConfiguracionColumna,
+  JsonResponseCatalogo,
   SeccionLibQuery,
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110214State, Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
@@ -146,7 +147,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
-  public idProcedimiento = 110214;
+  public idProcedimiento = 110214; 
 
   /**
    * Configuración de las columnas de la tabla de carga de mercancías.
@@ -167,11 +168,28 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   fromMercanciasDisponibles: boolean = false;
 
+   /**
+   * Constructor del componente.
+   * Inicializa el formulario y las dependencias necesarias para la carga de datos.
+   */
+  private actualizandoFormulario = false;
+
   /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * Observable que emite la lista de países y bloques disponibles.
+   * @type {Observable<Catalogo[]>}
+   */
+  public pais$!: Observable<Catalogo[]>;
+
+  /**
+   * @type {Observable<Catalogo[]>}
+   */
+  public paisBloqu$!: Observable<Catalogo[]>;
 
   /**
    * @descripcion
@@ -199,6 +217,8 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
+    this.pais$ = this.query.selectPaisBloque$;
+    this.paisBloqu$ = this.query.selectPaisBloqu$; 
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -228,8 +248,57 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
+    /**
+     * Suscripción para cargar los valores del formulario desde el store.
+     */
+    this.query.formCertificado$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(estado => {
+      if (!this.actualizandoFormulario && estado) {
+        this.actualizandoFormulario = true;        
+        this.formCertificadoValues=estado;
+        this.actualizandoFormulario = false;
+      }
+    });
+
     this.estadoOpcion();
     this.paisOpcion();
+    this.cargarBloque();
+    this.paisBloqu();
+  }
+
+  /**
+   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
+   */
+  paisBloqu(): void {
+    this.validarInicialmenteCertificadoService
+      .getPaisBloqu()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data: JsonResponseCatalogo) => {
+          this.store.setPaisBloqu(data.datos);
+        },
+        (error) => {
+          console.error('Error al cargar los estados:', error);
+        }
+      );
+  }
+
+  /**
+   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
+   */
+  cargarBloque(): void {
+    this.validarInicialmenteCertificadoService
+      .obtenerPaisBloque()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data: Catalogo[]) => {
+          this.store.setPaisBloque(data);
+        },
+        (error) => {
+          console.error('Error al cargar los estados:', error);
+        }
+      );
   }
 
   /**

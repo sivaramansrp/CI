@@ -7,13 +7,13 @@
         <label for="justificacionDictamen" class="form-label">Observaciones:</label>
         <textarea id="justificacionDictamen" formControlName="observacionesDates"
           (change)="setValoresStore('formDatosCertificado','observacionesDates','setFormDatosCertificado')"
-          class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
+          class="form-control mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
       </div>
       @if(presenta){
         <div class="col-md-8">
           <label for="presenta" class="form-label">Presenta:</label>
           <textarea id="presenta" formControlName="presenta"
-            (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')" class="mb-4 h-20 w-100"
+            (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')" class="form-control mb-4 h-20 w-100"
             placeholder="" rows="6"></textarea>
         </div>
       }
@@ -34,7 +34,7 @@
         <label for="Precisa" class="form-label">Precisa*:</label>
         <textarea id="Precisa" formControlName="precisaDates"
           (change)="setValoresStore('formDatosCertificado','precisaDates','setFormDatosCertificado')"
-          class="mb-4 h-20 w-100" placeholder="" rows="6" required="true"></textarea>
+          class="form-control mb-4 h-20 w-100" placeholder="" rows="6" required="true"></textarea>
         @if(formDatosCertificado.get('precisaDates')?.invalid && (formDatosCertificado.get('precisaDates')?.touched ||
         formDatosCertificado.get('precisaDates')?.dirty)) {
         <div class="d-grid">
