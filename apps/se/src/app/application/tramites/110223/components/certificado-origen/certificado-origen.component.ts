@@ -437,17 +437,39 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   buscarrMercancia(): void {
 
-      this.certificadoService
-        .obtenerMercancia()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
-          (data: MercanciasHistorico) => {
-            this.store.setbuscarMercancia(data.datos);
-          },
-          () => {
-            this.toastr.error('Error al buscar Mercancia');
-          }
-        );
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
+      pais: { cvePais: this.formCertificado['bloque'] || '' },
+    };
+
+    this.certificadoService
+    .buscarMercanciasCert(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+      interface TratadoAplicable {
+        nombreTratado?: string;
+      }
+
+        // this.store.setbuscarMercancia(MAPPED_DATA);
+      },
+      error: () => {
+        this.toastr.error('Error al buscar Mercancia');
+      },
+    });
+
+      // this.certificadoService
+      //   .obtenerMercancia()
+      //   .pipe(takeUntil(this.destroyNotifier$))
+      //   .subscribe(
+      //     (data: MercanciasHistorico) => {
+      //       this.store.setbuscarMercancia(data.datos);
+      //     },
+      //     () => {
+      //       this.toastr.error('Error al buscar Mercancia');
+      //     }
+      //   );
   }
 
   /**

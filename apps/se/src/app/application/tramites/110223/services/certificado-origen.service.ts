@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
-import { HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable,map } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { HttpClient } from '@angular/common/http';
@@ -238,4 +238,9 @@ export class CertificadosOrigenService {
       false
     );
   }
+
+  buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110223.BUSCAR, { body: body });
+  }
+  
 }
