@@ -28,6 +28,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-expandida.component';
 
 
+
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
  * Este componente maneja la lógica y la presentación del formulario de datos de la solicitud,
@@ -251,7 +252,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   seleccionado: string = SELECCIONADO;
 
-
+  /**
+   * Lista de filas seleccionadas para la vista.
+   * Almacena las filas (tipo FilaSolicitud) que el usuario ha seleccionado actualmente.
+   * Se utiliza para mostrar/gestionar la selección en la tabla y sincronizar con el store.
+   */
   listSelectedView: FilaSolicitud[] = [];
 
   /**
@@ -287,6 +292,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @type {ConfiguracionColumna<Sensible>[]}
    */
   configuracionSensiblesTabla: ConfiguracionColumna<Sensible>[] = CONFIGURACION_SENSIBLES;
+
+  /** Conjunto de filas seleccionadas en la tabla */
+  filasSeleccionadas: Set<number> = new Set();
+
+
+  /**
+   * Getter para obtener el FormGroup interno llamado 'datosDelaSolicitud'.
+   * Devuelve el control 'datosDelaSolicitud' del formulario principal como FormGroup.
+   * Se utiliza el operador de encadenamiento opcional para evitar errores si aún no está inicializado.
+   * @returns {FormGroup} Grupo de controles 'datosDelaSolicitud'
+   */
+  get datosServicio(): FormGroup {
+    return this.datosDelaSolicitud?.get('datosDelaSolicitud') as FormGroup;
+  }
+
+  /**
+   * Indica el proceso activo asociado al modal.
+   * Ejemplos de valores: 'eliminar_solicitud', '' (sin proceso) u otros identificadores de flujo.
+   * Se utiliza en métodos como `confirmacionModal` para determinar la acción a ejecutar
+   * cuando el usuario confirma o cancela en el modal.
+   */
+  public procesoModal!: string;
+
+  @ViewChild('tablaMercancias') tablaMercancias!: TablaDinamicaComponent<Sensible>;
+
+
 
   /**
    * Constructor del componente.
@@ -440,8 +471,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();    
     this.obtenerPuntoInspeccionList();
-    this.obtenerEstablecimientoList();
-    this.obtenerVeterinarioList();
     this.obtenerRegimenList();
     this.obtenerDatosTablaSolicitud();
   }
@@ -485,7 +514,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerPuntoInspeccionList
    */
   obtenerPuntoInspeccionList(): void {
-
     this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, '34013').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.puntoInspeccion = data.datos ?? [];
     });
@@ -639,6 +667,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   modificarMercancia(): void {
+    console.warn('Filas seleccionadas:', this.filasSeleccionadas);
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
     const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (VALOR === 'yes') {
@@ -692,6 +721,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {void}
   */
   agregarMercancia(): void {
+    if(this.filasSeleccionadas.size > 0) {
+      this.tablaMercancias.clearSelection();
+      this.filasSeleccionadas.clear();
+      this.fitosanitarioStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: []
+      })
+    );
+    }
     const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
       this.modalRef.abrir(SubProductosContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
@@ -757,43 +796,93 @@ columns: ColumnConfig[] = [
   ];
 
   nestedColumns: ColumnConfig[] = [
-    { encabezado: 'NumeroLote', clave: 'NumeroLote', width: '25%' },
-    { encabezado: 'ColorPelaje', clave: 'ColorPelaje', width: '30%' },
-    { encabezado: 'FaseDesarrollo', clave: 'FaseDesarrollo', width: '30%' },
-    { encabezado: 'FuncionZootecnica', clave: 'FuncionZootecnica', width: '30%' },
-    { encabezado: 'NombreMercancia', clave: 'NombreMercancia', width: '30%' },
-    { encabezado: 'NumeroIdentificacion', clave: 'NumeroIdentificacion', width: '30%' },                
-    { encabezado: 'Raza', clave: 'Raza', width: '30%' },
-    { encabezado: 'NombreCientifico', clave: 'NombreCientifico', width: '30%' },
-    { encabezado: 'Sexo', clave: 'Sexo', width: '30%' },                      
+    { encabezado: 'Número de lote', clave: 'NumeroLote', width: '10%' },
+    { encabezado: 'Color/Pelaje', clave: 'ColorPelaje', width: '10%' },
+    { encabezado: 'Edad del animal', clave: 'EdadAnimal', width: '10%' },
+    { encabezado: 'Fase de desarrollo', clave: 'FaseDesarrollo', width: '10%' },
+    { encabezado: 'Función zootécnica', clave: 'FuncionZootecnica', width: '10%' },
+    { encabezado: 'Nombre de la mercancía', clave: 'NombreMercancia', width: '10%' },
+    { encabezado: 'Numero de identificación', clave: 'NumeroIdentificacion', width: '10%' },                
+    { encabezado: 'Raza', clave: 'Raza', width: '10%' },
+    { encabezado: 'Sexo', clave: 'Sexo', width: '10%' },        
+    { encabezado: 'Nombre cientifico', clave: 'NombreCientifico', width: '25%' },              
   ];
 
     nestedColumnsDetalleProductos: ColumnConfig[] = [
-    { encabezado: 'numeroDeLote', clave: 'numeroDeLote', width: '25%' },
-    { encabezado: 'fechaElaboracionEmpaqueProceso', clave: 'fechaElaboracionEmpaqueProceso', width: '30%' },
-    { encabezado: 'fechaProduccionSacrificio', clave: 'fechaProduccionSacrificio', width: '30%' },
-    { encabezado: 'fechaCaducidadProducto', clave: 'fechaCaducidadProducto', width: '30%' },
-    { encabezado: 'fechaFinElaboracionEmpaqueProceso', clave: 'fechaFinElaboracionEmpaqueProceso', width: '30%' },
-    { encabezado: 'fechaFinProduccionSacrificio', clave: 'fechaFinProduccionSacrificio', width: '30%' },                
-    { encabezado: 'fechaFinCaducidadProducto', clave: 'fechaFinCaducidadProducto', width: '30%' },                    
+    { encabezado: 'Número de lote', clave: 'numeroDeLote', width: '8%' },
+    { encabezado: 'Fecha de elaboración o empaque o proceso', clave: 'fechaElaboracionEmpaqueProceso', width: '10%' },
+    { encabezado: 'Fecha de producción o sacrificio', clave: 'fechaProduccionSacrificio', width: '10%' },
+    { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave: 'fechaCaducidadProducto', width: '10%' },
+    { encabezado: 'Fecha de fin de elaboración o empaque o proceso', clave: 'fechaFinElaboracionEmpaqueProceso', width: '10%' },
+    { encabezado: 'Fecha de fin de producción o sacrificio', clave: 'fechaFinProduccionSacrificio', width: '10%' },                
+    { encabezado: 'Fecha de fin de caducidad del producto o consumo preferente', clave: 'fechaFinCaducidadProducto', width: '10%' },
   ];
 
+  /**
+   * Configuración de columnas para datos sensibles.
+   * Cada elemento define el encabezado de la columna, la función para obtener el valor desde la fila
+   * y el orden en la presentación.
+   */
   configuraColumna: ConfiguracionColumna<Sensible>[] = [
+    // Número de partida o identificador de la fila
     { encabezado: 'No. partida', clave: (fila: Sensible): string => fila.noPartida, orden: 1 },
+    // Color o pelaje del animal
     { encabezado: 'ColorPelaje', clave: (fila: Sensible): string => fila.ColorPelaje, orden: 2 },
+    // Fase de desarrollo del animal (ej. juvenil, adulto)
     { encabezado: 'FaseDesarrollo', clave: (fila: Sensible): string => fila.FaseDesarrollo, orden: 3 },
+    // Función zootécnica (uso productivo del animal)
     { encabezado: 'FuncionZootecnica', clave: (fila: Sensible): string => fila.FuncionZootecnica, orden: 4 },
-    { encabezado: 'NumeroIdentificacion', clave: (fila: Sensible): string => fila.NumeroIdentificacion, orden: 5 },    
+    // Número de identificación del animal (ej. arete, microchip)
+    { encabezado: 'NumeroIdentificacion', clave: (fila: Sensible): string => fila.NumeroIdentificacion, orden: 5 },
+    // Raza del animal
     { encabezado: 'Raza', clave: (fila: Sensible): string => fila.Raza, orden: 7 },
+    // Nombre científico de la especie
     { encabezado: 'NombreCientifico', clave: (fila: Sensible): string => fila.NombreCientifico, orden: 8 },
+    // Sexo del animal (M/F u otra representación)
     { encabezado: 'Sexo', clave: (fila: Sensible): string => fila.Sexo, orden: 9 },
-    
   ];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
   onRowExpanded(row: any): void {
     // Aquí puedes cargar los datos para la tabla anidada si es necesario
     console.warn('Fila expandida:', row);
+  }
+
+  /** Método para manejar el cambio de filas seleccionadas. */
+  onfilasSeleccionadasChange(filasSeleccionadas: FilaSolicitud[] ): void {
+    const FS = filasSeleccionadas
+      .map((row) => row.id)
+      .filter((id): id is number => id !== undefined && id !== null);
+    this.filasSeleccionadas = new Set(FS);
+    if( this.filasSeleccionadas.size > 1 ){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      
+  }
+  
+}
+
+confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'validar_formulario':
+        {
+          if (confirmar) {
+            this.procesoModal = '';
+          }
+          break;
+        }
+      default:
+        break;
+    }
   }
 
 

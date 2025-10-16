@@ -132,8 +132,8 @@
         <div class="col-md-12">
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [nestedContent]="tablauno"
             [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="true"
-            [tableId]="'tabla-mercancias'" (listaDeFilaSeleccionada)="seleccionTabla($event)"
-            (rowExpanded)="onRowExpanded($event)"
+            [tableId]="'tabla-mercancias'" (listaDeFilaSeleccionada)="seleccionTabla($event)" #tablaMercancias
+            (rowExpanded)="onRowExpanded($event)" (listaDeFilaSeleccionada)="onfilasSeleccionadasChange($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
           <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
             <small class="mensaje-error">Este campo es obligatorio.</small>
@@ -144,7 +144,7 @@
             <app-tabla-expandida 
               [columns]="forma.value.datosDelaSolicitud.tipoMercancia === 'yes'? nestedColumns  : nestedColumnsDetalleProductos"
               [data]="forma.value.datosDelaSolicitud.tipoMercancia === 'yes'? row.sensibles : row.detalleProductos"
-              [expandible]="false" [showPagination]="true" [mode]="'client'" 
+              [expandible]="false" [showPagination]="true" [mode]="'client'" #referenciaTabla
               [totalItems]="forma.value.datosDelaSolicitud.tipoMercancia === 'yes'? row.sensibles.length : row.detalleProductos.length"
               [itemsPerPage]="5">
             </app-tabla-expandida>
@@ -178,4 +178,14 @@
     }
   </div>
 </div>
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        [forma]="datosServicio"
+        (confirmacionModal)="confirmacionModal($event)"
+    >
+    </lib-notificaciones>
+</section>
+}
 <app-modal #modalRef></app-modal>

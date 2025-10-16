@@ -295,6 +295,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
         map((estado) => {
           this.cuerpoTabla = estado?.tablaDatos;
           const VALOR = estado?.selectedDatos[0];
+          console.warn('VALOR', VALOR);
           const DATA = estado?.selectedDatos.find(v => v.id === VALOR?.id);
           
           if (DATA) {
@@ -426,8 +427,6 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       tipoDeProducto: VALOR.tipoDeProducto || '',
       numeroDeLote: VALOR.numeroDeLote || '',
       certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || '',
-      
-      
     };
   }
 

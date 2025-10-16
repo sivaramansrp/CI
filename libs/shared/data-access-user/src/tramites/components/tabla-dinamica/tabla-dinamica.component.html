@@ -74,16 +74,20 @@
 
           } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
           <td>
-            <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i"
-              (change)="cambiarEstadoCheckbox($event, i)" [checked]="filasSeleccionadas.includes(i)"
-              aria-label="Seleccionar" [disabled]="disableSeleccionTablaCheckBox" />
-            <button class="btn btn-link p-0" (click)="toggleRow(i)" *ngIf="expandible"
-              [attr.aria-expanded]="expandedIndex === i">
-              <i class="bi" [ngClass]="{
-                            'bi-dash': expandedIndex === i,
-                            'bi-plus': expandedIndex !== i
-                        }"></i>
-            </button>
+            <div class="d-flex align-items-center gap-2 justify-content-center">
+              <ng-container>
+                <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i"
+                  (change)="cambiarEstadoCheckbox($event, i)" [checked]="filasSeleccionadas.includes(i)"
+                  aria-label="Seleccionar" [disabled]="disableSeleccionTablaCheckBox" />
+              </ng-container>
+
+              <button class="btn btn-link p-0" (click)="toggleRow(i)" [attr.aria-expanded]="expandedIndex === i" *ngIf="expandible">
+                <i class="bi" [ngClass]="{
+                              'bi-dash': expandedIndex === i,
+                              'bi-plus': expandedIndex !== i
+                          }"></i>
+              </button>
+            </div>
           </td>
 
           } @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
@@ -123,7 +127,7 @@
 
         </tr>
         <tr *ngIf="expandedIndex === i && expandible">
-          <td [attr.colspan]="columns.length + 1" colspan="12">
+          <td colspan="25">
             <div class="nested-table p-3" [@expandCollapse]>
               <ng-container *ngTemplateOutlet="nestedContent; context: { $implicit: fila }">
               </ng-container>

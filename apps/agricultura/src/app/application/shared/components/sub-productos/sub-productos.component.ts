@@ -350,23 +350,29 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line complexity
   agregarProductos(): void {
+    const FUEMODIFICADO = this.productosForm.get('modificado')?.value as boolean;
+    const DETALLE_PRODUCTOS_ARRAY = this.productosForm.get('detalleProductos') as FormArray;
+    
+    if(FUEMODIFICADO) {
+      this.productosForm.reset();
+      this.detalleForm.reset();
+      this.detalleTablaDatos = [];
+    }
+
     if (this.productosForm.invalid) {
       this.productosForm.markAllAsTouched();
     }
     else {
-    const FUEMODIFICADO = this.productosForm.get('modificado')?.value as boolean;
-    const DETALLE_PRODUCTOS_ARRAY = this.productosForm.get('detalleProductos') as FormArray;
+    
         // Formatea cantidadUMC a dos decimales si es un número válido
       let cantidadUMCValue = this.productosForm.get('cantidadUMC')?.value || '';
       if (cantidadUMCValue !== '' && !isNaN(Number(cantidadUMCValue))) {
         cantidadUMCValue = Number(cantidadUMCValue).toFixed(2);
       }
-
-  
-
-  this.detalleTablaDatos.forEach(detalle => {
-    DETALLE_PRODUCTOS_ARRAY.push(this.fb.group(detalle));
-  });
+      DETALLE_PRODUCTOS_ARRAY.clear();
+      this.detalleTablaDatos.forEach(detalle => {
+        DETALLE_PRODUCTOS_ARRAY.push(this.fb.group(detalle));
+      });
 
   // Build the FilaSolicitud object from the form values
   const NUEVOS_SENSIBLES: FilaSolicitud = {
