@@ -10,7 +10,7 @@
       <ng-titulo titulo="Datos del periodo del aviso" />
       <div class="row align-items-center">
         <div class="col-md-6 ">
-          <label for="pais"> Mes al que corrosponde el aviso*:</label>
+          <label for="pais">Mes al que corresponde el aviso*:</label>
         </div>
         <div class="col-md-6">
           <div>
@@ -20,7 +20,7 @@
       </div>
       <div class="row align-items-center">
         <div class="col-md-6">
-          <label for="anio"> Año al que corrosponde el aviso*:</label>
+          <label for="anio">Año al que corresponde el aviso*:</label>
         </div>
         <div class="col-md-6">
           <div>
@@ -99,10 +99,24 @@
                 <ng-container *ngIf="datosFolioVUCEM">
                   <div class="row">
                     <div class="col-md-12">
-                      <div class="col-md-6"> ¿Cuentas con el folio VUCEM de la importación? </div>
+                      <div class="col-md-8">¿ Cuenta con el I D de transacción de V U C E M del Aviso Inicial de importación? </div>
                       <div class="col-md-3">
                         <app-input-radio [radioOptions]="radioOpcions" formControlName="folioTipo" [layout]="'horizontal'" (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()"></app-input-radio>
                       </div>
+                      @if (adaceForm.get('folioTipo')?.value === 'Si'){
+                        <div class="col-md-12 my-3">
+                          <label>Identificador de transacción de VUCEM correspondiente al aviso de importación previa relacionado:</label>
+                          <input type="text" class="form-control" id="numeroSerie" formControlName="numeroSerie"
+                            [ngClass]="isValid(adaceForm,'numeroSerie') ? 'required' : ''"
+                            (change)="setValoresStore(adaceForm, 'numeroSerie', 'setNumeroSerie')" />
+                        </div>
+                        <div class="col-md-4">
+                          <label>NIV o número de serie*:</label>
+                          <input type="text" class="form-control" id="numeroSerie" formControlName="numeroSerie"
+                            [ngClass]="isValid(adaceForm,'numeroSerie') ? 'required' : ''"
+                            (change)="setValoresStore(adaceForm, 'numeroSerie', 'setNumeroSerie')" />
+                        </div>
+                      }
                     </div>
                   </div>
                 </ng-container>
