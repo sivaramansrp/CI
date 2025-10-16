@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoTipoDocumento, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { SolicitudDocumentosState, SolicitudDocumentosStore } from '../../../core/estados/solicitud-documentos.store';
@@ -13,6 +13,8 @@ import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
 import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
 
+import { DocumentosEspecificosResponse } from '../../../core/models/shared/documentos-especificos.model';
+
 @Component({
   selector: 'app-solicitar-documentos',
   standalone: true,
@@ -20,7 +22,7 @@ import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-docu
   templateUrl: './solicitar-documentos-evaluacion.component.html',
   styleUrl: './solicitar-documentos-evaluacion.component.scss',
 })
-export class SolicitarDocumentosEvaluacionComponent implements OnInit {
+export class SolicitarDocumentosEvaluacionComponent implements OnInit, OnChanges {
   /**
   * Declaración de variable para el formulario
   */
@@ -41,6 +43,16 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Lista de documentos agregados a la tabla
    */
   public documentosSeleccionados: CatalogoTipoDocumento[] = [];
+
+  /** Lista de documentos específicos generados para el requerimiento */
+   @Input() documentosEspecificos : DocumentosEspecificosResponse [] = [];
+
+  /** Lista de documentos guardados previamente en el requerimiento */
+   @Input () documentosIniciales : CatalogoTipoDocumento [] = [];
+
+  /** Evento que notifica cuando los documentos han sido actualizados */
+  @Output() documentosActualizados = new EventEmitter<{ id: number }[]>();
+
   /**
  * Variable para identificar el Id del tipo de documento
  */
@@ -104,6 +116,16 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
       .subscribe();
     this.crearFormDocumentos();
   }
+
+  /** Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * @param changes - Objeto que contiene los cambios en las propiedades de entrada.
+   */
+   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['documentosIniciales'] && this.documentosIniciales?.length > 0) {
+      this.listadoDocumentos = [...this.documentosIniciales];
+    }
+  }
+
   /**
    * Método para crear el formulario para la solicitud de documentos
    */
@@ -145,18 +167,21 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
       };
       return;
     }
-    const TIPO_DOCUMENTO_OBJ = this.catTipoDocumento.find(dep => dep.id === Number(this.tipoDocumentoId));
+    const TIPO_DOCUMENTO_OBJ = this.documentosEspecificos.find(dep => dep.id_tipo_documento === Number(this.tipoDocumentoId));
     const NUEVA_TABLA_LISTA_DOCUMENTOS = [...this.listadoDocumentos]
 
     NUEVA_TABLA_LISTA_DOCUMENTOS.push({
       id: this.tipoDocumentoId,
-      description: TIPO_DOCUMENTO_OBJ?.descripcion || '',
+      description: TIPO_DOCUMENTO_OBJ?.documento || '',
     })
     if (this.listadoDocumentos.length === 0) {
       this.listadoDocumentos = [];
     }
     this.listadoDocumentos = NUEVA_TABLA_LISTA_DOCUMENTOS;
     this.documentosStates.setSolicitudDocumentos(this.listadoDocumentos);
+
+    this.documentosActualizados.emit(this.listadoDocumentos);
+
     this.limpiarFormulario();
   }
 
@@ -186,6 +211,8 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
     this.listadoDocumentos = this.listadoDocumentos.filter(documento => !IDS_TO_DELETE.includes(documento.id));
     this.documentosStates.setSolicitudDocumentos(this.listadoDocumentos);
     this.documentosSeleccionados = [];
+
+    this.documentosActualizados.emit(this.listadoDocumentos);
   }
   /**
    * Establece los valores en el store de tramite5701.
