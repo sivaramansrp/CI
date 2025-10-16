@@ -29,7 +29,21 @@ export class Tramite110216Query extends Query<Tramite110216State> {
    * Observable que selecciona los datos del formulario de certificado.
    */
     formulario$ = this.select((state) => {
-      return state.formulario;
+      return state.formHistorico;
+    });
+    
+    /**
+   * Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite.
+   */
+    selectMercanciaProductores$ = this.select((state) => {
+      return state.mercanciaProductores;
+    });
+
+  /**
+   * Observable que expone la lista de productores exportador agregados al estado del trámite.
+   */
+    selectAgregarProductoresExportador$ = this.select((state) => {
+      return state.agregarProductoresExportador;
     });
 
   /**

@@ -871,7 +871,7 @@ export class CertificadoDeOrigenComponent
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.tipoEstadoSeleccionEvent.emit(estado);
-    this.formCertificado.get('bloque')?.setValue('')
+    this.formCertificado.get('bloque')?.setValue('');
     if (estado.clave !== undefined) {
       this.getPaisBloque(estado.clave);
     }
