@@ -7,9 +7,9 @@
  */
 
 import { Catalogo, PersonaTerceros } from "@ng-mf/data-access-user";
+import { DetallasDatos, Sensible } from "../../../../shared/models/datos-de-la-solicitue.model";
 import { DatosForma } from "./certificado-zoosanitario.model";
 import { DestinatarioForm } from "../../../220203/models/220203/importacion-de-acuicultura.module";
-import { Sensible } from "../../../../shared/models/datos-de-la-solicitue.model";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 
@@ -387,10 +387,26 @@ export interface FilaSolicitud {
    * Planta autorizada de origen.
    */
   plantaAutorizadaOrigen?: string;
+  /**
+   * Presentación del producto.
+   */
   presentacion?: string;
 
+  /**
+   * Descripción del tipo de presentación del producto.
+   */
+  tipoPresentacionDescripcion?: string;
+  /**
+   * Lista de datos sensibles asociados a la mercancía animal.
+   */
   sensibles?: Sensible[];
-
+  /**
+   * Lista de detalles adicionales del producto.
+   */
+  detalleProductos?: DetallasDatos[];
+  /**
+   * Indica si la fila ha sido modificada.
+   */
   modificado?: boolean;
 }
 

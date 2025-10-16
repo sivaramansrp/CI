@@ -131,8 +131,9 @@
         </div>
         <div class="col-md-12">
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [nestedContent]="tablauno"
-            [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="this.datosDelaSolicitud.value.tipoMercancia === 'yes'" [tableId]="'tabla-mercancias'"
-            (listaDeFilaSeleccionada)="seleccionTabla($event)" (rowExpanded)="onRowExpanded($event)"
+            [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="true"
+            [tableId]="'tabla-mercancias'" (listaDeFilaSeleccionada)="seleccionTabla($event)"
+            (rowExpanded)="onRowExpanded($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
           <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
             <small class="mensaje-error">Este campo es obligatorio.</small>
@@ -140,10 +141,14 @@
         </div>
         <div class="col-md-12">
           <ng-template #tablauno let-row>
-            <app-tabla-expandida [columns]="nestedColumns" [data]="row.sensibles" [expandible]="false" [showPagination]="true"
-              [mode]="'client'" [totalItems]="row.sensibles.length" [itemsPerPage]="5">
+            <app-tabla-expandida 
+              [columns]="forma.value.datosDelaSolicitud.tipoMercancia === 'yes'? nestedColumns  : nestedColumnsDetalleProductos"
+              [data]="forma.value.datosDelaSolicitud.tipoMercancia === 'yes'? row.sensibles : row.detalleProductos"
+              [expandible]="false" [showPagination]="true" [mode]="'client'" 
+              [totalItems]="forma.value.datosDelaSolicitud.tipoMercancia === 'yes'? row.sensibles.length : row.detalleProductos.length"
+              [itemsPerPage]="5">
             </app-tabla-expandida>
-          </ng-template> 
+          </ng-template>
         </div>
       </div>
       @if(!esFormularioSoloLectura){
@@ -174,4 +179,3 @@
   </div>
 </div>
 <app-modal #modalRef></app-modal>
-

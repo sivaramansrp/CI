@@ -409,7 +409,6 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
         const INDEX = this.sensiblesTablaDatos.findIndex(item => item === SELECCIONADO);
 
         if (INDEX !== -1) {
-          
           this.sensiblesTablaDatos[INDEX] = { ...NUEVOS_SENSIBLES, noPartida: SELECCIONADO.noPartida };
         }
         this.sensiblesTablaSeleccionada = [];
@@ -422,7 +421,6 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
           }
         );
       }
-      
       this.cerrar.emit();
     }
 

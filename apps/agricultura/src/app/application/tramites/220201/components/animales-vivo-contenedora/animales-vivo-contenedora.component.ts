@@ -304,7 +304,6 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
         })
       )
       .subscribe();
-      console.warn('cantidadRegistros', this.cantidadRegistros);
   }
 
   /**

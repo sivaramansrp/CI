@@ -1,4 +1,4 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
@@ -159,7 +159,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<DetallasDatos>[]}
    * @see CONFIGURACION_DETALLAS_DATOS
    */
-  public configuracionSensiblesTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;  
+  public configuracionSensiblesTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;
 
 
   /**
@@ -198,6 +198,8 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   get datosServicio(): FormGroup {
     return this.detalleForm?.get('detalleForm') as FormGroup;
   }
+
+  @Input() cantidadRegistros: number = 0;
 
   /**
    * Constructor del componente.
@@ -287,7 +289,9 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       tipoPlanta: [''],
       plantaAutorizadaOrigen: [''],
       presentacion: [''],
-      cantidadPresentacion: []
+      cantidadPresentacion: [],
+      detalleProductos: this.fb.array([]),
+      modificado: [false], 
     });
 
     this.detalleForm = this.fb.group({
@@ -312,6 +316,10 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         ...this.formularioSolicitud
       });
     }
+    if (this.formularioSolicitud) {
+      this.detalleTablaDatos = [...(this.formularioSolicitud.detalleProductos || [])];
+    }
+
   }
 
   /**
@@ -336,18 +344,62 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Método para agregar animales a la lista de datos sensibles.
- * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
- */
-  agregarAnimales(): void {
-
-    this.agregarDatosFormulario.emit(
-      {
-        formulario: this.productosForm.value,
-        detallasDatosTablaDatos: this.detallasDatosTablaDatos
+   * Agrega los productos al formulario y emite un evento con los datos.
+   * 
+   * Este método recopila los valores actuales del formulario `productosForm` y los detalles
+   */
+  // eslint-disable-next-line complexity
+  agregarProductos(): void {
+    if (this.productosForm.invalid) {
+      this.productosForm.markAllAsTouched();
+    }
+    else {
+    const FUEMODIFICADO = this.productosForm.get('modificado')?.value as boolean;
+    const DETALLE_PRODUCTOS_ARRAY = this.productosForm.get('detalleProductos') as FormArray;
+        // Formatea cantidadUMC a dos decimales si es un número válido
+      let cantidadUMCValue = this.productosForm.get('cantidadUMC')?.value || '';
+      if (cantidadUMCValue !== '' && !isNaN(Number(cantidadUMCValue))) {
+        cantidadUMCValue = Number(cantidadUMCValue).toFixed(2);
       }
-    );
+
+  
+
+  this.detalleTablaDatos.forEach(detalle => {
+    DETALLE_PRODUCTOS_ARRAY.push(this.fb.group(detalle));
+  });
+
+  // Build the FilaSolicitud object from the form values
+  const NUEVOS_SENSIBLES: FilaSolicitud = {
+    ...this.productosForm.getRawValue(),
+    noPartida: FUEMODIFICADO ? this.productosForm.get('noPartida')?.value : this.cantidadRegistros + 1,
+    descripcionTipoRequisito: this.catalogosDatos.tipoRequisitoList.find(item => item.clave === this.productosForm.get('tipoRequisito')?.value)?.descripcion || '',
+    descripcionEspecie: this.catalogosDatos.especieList.find(item => item.clave === this.productosForm.get('especie')?.value)?.descripcion || '',
+    descripcionUso: this.catalogosDatos.usoList.find(item => item.clave === this.productosForm.get('uso')?.value)?.descripcion || '',
+    descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.productosForm.get('paisDeOrigen')?.value)?.descripcion || '',
+    descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.productosForm.get('paisDeProcedencia')?.value)?.descripcion || '',
+    descripcionNico: this.productosForm.get('descripcionNico')?.value || '',
+    descripcionFraccion: this.productosForm.get('descripcionFraccion')?.value || '',
+    descripcionUMT: this.productosForm.get('umt')?.value || '',
+    descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.productosForm.get('umc')?.value)?.descripcion || '',
+    tipoPresentacion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+    tipoPlanta: this.catalogosDatos.tipoPlantaList.find(item => item.clave === this.productosForm.get('tipoPlanta')?.value)?.descripcion || '',
+    plantaAutorizadaOrigen: this.catalogosDatos.plantaAutorizadaOrigenList.find(item => item.clave === this.productosForm.get('plantaAutorizadaOrigen')?.value)?.descripcion || '',   
+    tipoPresentacionDescripcion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+    cantidadUMC: cantidadUMCValue,
+    modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
+    detalleProductos: this.detalleTablaDatos
+  };
+
+  // Si no hay selección, agrega normalmente
+  this.agregarDatosFormulario.emit(
+    {
+      formulario: NUEVOS_SENSIBLES,
+      detallasDatosTablaDatos: this.detalleTablaDatos
+    }
+  );
+
     this.cerrar.emit();
+    }
   }
 
   /**
@@ -402,6 +454,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       fechaFinCaducidadProducto: ''
     }
     this.detallasDatosTablaDatos.push(VALOR);
+    this.detalleTablaDatos = [...this.detalleTablaDatos, VALOR];
     this.detalleForm.reset();
   }
 
@@ -409,45 +462,45 @@ export class SubProductosComponent implements OnInit, OnDestroy {
      * Actualiza los datos almacenados en el store.
      * @method setValoresStore
      */
-    setValoresStoreFraccion(): void {
-      const VALOR = this.productosForm.value.fraccionArancelaria;
-      this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220201, VALOR).subscribe(
-        (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
-          if (response && response.codigo === '00' && response.datos) {          
-            this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
-          } else {
-            this.productosForm.get('descripcionFraccion')?.setValue('');
-          }
+  setValoresStoreFraccion(): void {
+    const VALOR = this.productosForm.value.fraccionArancelaria;
+    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220201, VALOR).subscribe(
+      (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+        } else {
+          this.productosForm.get('descripcionFraccion')?.setValue('');
         }
-      );
+      }
+    );
 
-      this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
-        (response: BaseResponse<Catalogo>) => {
-          if (response && response.codigo === '00' && response.datos) {
-            this.productosForm.get('umt')?.setValue(response.datos.descripcion);
-          } else {
-            this.productosForm.get('umt')?.setValue('');
-          }
+    this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
+      (response: BaseResponse<Catalogo>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('umt')?.setValue(response.datos.descripcion);
+        } else {
+          this.productosForm.get('umt')?.setValue('');
         }
-      );
+      }
+    );
 
-    }
+  }
 
-    setValoresStoreFraccionNico(): void {
-        const VALOR_FRACCION = this.productosForm.value.fraccionArancelaria;
-        const VALOR_NICO = this.productosForm.value.nico;
-        this.registroSolicitudService.obtieneNicoDescripcion(220201, VALOR_FRACCION, VALOR_NICO).subscribe(
-          (response: BaseResponse<Catalogo>) => {
-            if (response && response.codigo === '00' && response.datos) {
-              this.productosForm.get('descripcionNico')?.setValue(response.datos);
-            } else {
-              this.productosForm.get('descripcionNico')?.setValue('');
-            }
-          }
-        );
-    }
+  setValoresStoreFraccionNico(): void {
+    const VALOR_FRACCION = this.productosForm.value.fraccionArancelaria;
+    const VALOR_NICO = this.productosForm.value.nico;
+    this.registroSolicitudService.obtieneNicoDescripcion(220201, VALOR_FRACCION, VALOR_NICO).subscribe(
+      (response: BaseResponse<Catalogo>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('descripcionNico')?.setValue(response.datos);
+        } else {
+          this.productosForm.get('descripcionNico')?.setValue('');
+        }
+      }
+    );
+  }
 
-   
+
   /**
    * Agrega un nuevo detalle a la tabla de datos utilizando los valores actuales del formulario.
    * 
@@ -459,9 +512,9 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    * Este método se utiliza para registrar los detalles de subproductos en la tabla de datos,
    * asegurando que cada registro provenga de los valores ingresados en el formulario.
    */
-  agregarDetalleTablaDatos(): void {    
+  agregarDetalleTablaDatos(): void {
     if (
-      this.detalleForm.value.numeroLote === '' || 
+      this.detalleForm.value.numeroLote === '' ||
       this.detalleForm.value.numeroLote === null
     ) {
       this.nuevaNotificacion = {
@@ -478,19 +531,26 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.detalleForm.value.numeroLote !== '' ) {
-    const DETALLE: DetallasDatos = {
-      numeroDeLote: this.detalleForm.value.numeroLote,
-      fechaElaboracionEmpaqueProceso: this.detalleForm.value.fechaElaboracionEmpaqueProceso,
-      fechaProduccionSacrificio: this.detalleForm.value.fechaProduccionSacrificio,
-      fechaCaducidadProducto: this.detalleForm.value.fechaCaducidadProducto,
-      fechaFinElaboracionEmpaqueProceso: this.detalleForm.value.fechaFinElaboracionEmpaqueProceso,
-      fechaFinProduccionSacrificio: this.detalleForm.value.fechaFinProduccionSacrificio,
-      fechaFinCaducidadProducto: this.detalleForm.value.fechaFinCaducidadProducto,
-    };
-    this.detalleTablaDatos = [...this.detalleTablaDatos, DETALLE];
-    this.detalleForm.reset();
-  }
+
+
+    if (this.detalleForm.value.numeroDeLote !== '') {
+      const DETALLE: DetallasDatos = {
+        numeroDeLote: this.detalleForm.value.numeroLote,
+        fechaElaboracionEmpaqueProceso: this.detalleForm.value.fechaElaboracionEmpaqueProceso,
+        fechaProduccionSacrificio: this.detalleForm.value.fechaProduccionSacrificio,
+        fechaCaducidadProducto: this.detalleForm.value.fechaCaducidadProducto,
+        fechaFinElaboracionEmpaqueProceso: this.detalleForm.value.fechaFinElaboracionEmpaqueProceso,
+        fechaFinProduccionSacrificio: this.detalleForm.value.fechaFinProduccionSacrificio,
+        fechaFinCaducidadProducto: this.detalleForm.value.fechaFinCaducidadProducto,
+      };
+      this.detalleTablaDatos = [...this.detalleTablaDatos, DETALLE];
+
+
+
+
+
+      this.detalleForm.reset();
+    }
     this.detalleForm.get('rangoDeFecha')?.setValue('si');
   }
 
@@ -507,19 +567,19 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    */
   eliminarDetalleTablaDatos(items: DetallasDatos[]): void {
 
-  if (!items || items.length === 0) {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Selecciona al menos un registro para eliminar.',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
+    if (!items || items.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona al menos un registro para eliminar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     this.detalleTablaDatos = this.detalleTablaDatos.filter(detalle => !items.includes(detalle));
   }
 

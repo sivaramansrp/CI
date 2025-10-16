@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaExpandibleComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import {CatalogosService} from '../../services/220201/catalogos/catalogos.service'
 import { HttpClient } from '@angular/common/http';
 
@@ -55,7 +55,6 @@ import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/compone
     NotificacionesComponent,
     TablaDinamicaComponent,
     TablaDinamicaExpandidaComponent,
-    TablaExpandibleComponent,
     ModalComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -209,23 +208,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
-    { encabezado: 'Tipo de requisito', clave: (fila): string => fila.tipoRequisito, orden: 2 },
-    { encabezado: 'Requisito', clave: (fila): string => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
-    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
-    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
-    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
-    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
-    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
-    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
-    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
+    { encabezado: 'Tipo de requisito', clave: (fila): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
+    { encabezado: 'Requisito', clave: (fila): string => fila.requisito ?? '', orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional ?? '', orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria ?? '', orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion ?? '', orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico ?? '', orden: 7 },
+    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico ?? '', orden: 8 },
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion ?? '', orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt ?? '', orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT ?? '', orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc ?? '', orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC ?? '', orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie ?? '', orden: 14 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso ?? '', orden: 15 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen ?? '', orden: 16 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia ?? '', orden: 17 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico ?? '', orden: 18 }
   ];
 
   /**
@@ -571,23 +570,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     else { 
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
-        { encabezado: 'Tipo de requisito', clave: (fila: FilaSolicitud): string => fila.tipoRequisito, orden: 2 },
-        { encabezado: 'Requisito', clave: (fila: FilaSolicitud): string => fila.requisito, orden: 3 },
+        { encabezado: 'Tipo de requisitos', clave: (fila: FilaSolicitud): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
+        { encabezado: 'Requisito', clave: (fila: FilaSolicitud): string => fila.requisito ?? '', orden: 3 },
         { encabezado: 'Número de Certificado Internacional', clave: (fila: FilaSolicitud): string => fila.numeroCertificadoInternacional, orden: 4 },
         { encabezado: 'Fracción arancelaria', clave: (fila: FilaSolicitud): string => fila.fraccionArancelaria, orden: 5 },
         { encabezado: 'Descripción de la fracción', clave: (fila: FilaSolicitud): string => fila.descripcionFraccion, orden: 6 },
         { encabezado: 'Nico', clave: (fila: FilaSolicitud): string => fila.nico, orden: 7 },
         { encabezado: 'Descripción Nico', clave: (fila: FilaSolicitud): string => fila.descripcionNico, orden: 8 },
         { encabezado: 'Descripción', clave: (fila: FilaSolicitud): string => fila.descripcion, orden: 9 },
-        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.umt, orden: 10 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.descripcionUMT ?? '', orden: 10 },
         { encabezado: 'Cantidad UMT', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMT), orden: 11 },
-        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.umc, orden: 12 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.descripcionUMC ?? '', orden: 12 },
         { encabezado: 'Cantidad UMC', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMC), orden: 13 },
-        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.especie ?? '', orden: 14 },
-        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.uso, orden: 15 },
-        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.paisDeOrigen, orden: 16 },
-        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.paisDeProcedencia, orden: 17 },
-        { encabezado: 'Tipo de presentación', clave: (fila: FilaSolicitud): string => fila.tipoDeProducto ?? '', orden: 18 },
+        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.descripcionEspecie ?? '', orden: 14 },
+        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.descripcionUso ?? '', orden: 15 },
+        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeOrigen ?? '', orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeProcedencia ?? '', orden: 17 },
+        { encabezado: 'Tipo de presentación', clave: (fila: FilaSolicitud): string => fila.tipoPresentacionDescripcion ?? '', orden: 18 },
         { encabezado: 'Tipo planta', clave: (fila: FilaSolicitud): string => fila.tipoPlanta ?? '', orden: 19 },
         { encabezado: 'Planta autorizada de origen', clave: (fila: FilaSolicitud): string => fila.plantaAutorizadaOrigen ?? '', orden: 20 },
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 21 }
@@ -641,13 +640,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   modificarMercancia(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+    const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (VALOR === 'yes') {
-      const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
+      
       this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
-      console.warn('abrir modal animales vivo', CANTIDAD_REGISTROS);
     }
     else if (VALOR === 'no') {
-      this.modalRef.abrir(SubProductosContenedoraComponent);
+      this.modalRef.abrir(SubProductosContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
   }
   /**
@@ -693,11 +692,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {void}
   */
   agregarMercancia(): void {
+    const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
-      this.modalRef.abrir(SubProductosContenedoraComponent);
+      this.modalRef.abrir(SubProductosContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
     else if (this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
-      const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
       this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
 
@@ -767,6 +766,16 @@ columns: ColumnConfig[] = [
     { encabezado: 'Raza', clave: 'Raza', width: '30%' },
     { encabezado: 'NombreCientifico', clave: 'NombreCientifico', width: '30%' },
     { encabezado: 'Sexo', clave: 'Sexo', width: '30%' },                      
+  ];
+
+    nestedColumnsDetalleProductos: ColumnConfig[] = [
+    { encabezado: 'numeroDeLote', clave: 'numeroDeLote', width: '25%' },
+    { encabezado: 'fechaElaboracionEmpaqueProceso', clave: 'fechaElaboracionEmpaqueProceso', width: '30%' },
+    { encabezado: 'fechaProduccionSacrificio', clave: 'fechaProduccionSacrificio', width: '30%' },
+    { encabezado: 'fechaCaducidadProducto', clave: 'fechaCaducidadProducto', width: '30%' },
+    { encabezado: 'fechaFinElaboracionEmpaqueProceso', clave: 'fechaFinElaboracionEmpaqueProceso', width: '30%' },
+    { encabezado: 'fechaFinProduccionSacrificio', clave: 'fechaFinProduccionSacrificio', width: '30%' },                
+    { encabezado: 'fechaFinCaducidadProducto', clave: 'fechaFinCaducidadProducto', width: '30%' },                    
   ];
 
   configuraColumna: ConfiguracionColumna<Sensible>[] = [
