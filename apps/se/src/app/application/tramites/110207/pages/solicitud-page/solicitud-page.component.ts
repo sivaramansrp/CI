@@ -1,20 +1,25 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
 import {
+  AlertComponent,
+  BtnContinuarComponent,
   DatosPasos,
   ERROR_FORMA_ALERT,
   JSONResponse,
+  PasoFirmaComponent,
   doDeepCopy,
   esValidObject,
   getValidDatos,
 } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
 import { Subject, take, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS2 } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -44,7 +49,17 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone: false,
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    WizardComponent,
+    SolicitudPageComponent,
+    PasoFirmaComponent,
+    BtnContinuarComponent,
+    AlertComponent,
+    PasoUnoComponent,
+  ],
+  standalone: true,
 })
 /**
  * Componente que representa la página de solicitud.
@@ -231,7 +246,8 @@ export class SolicitudPageComponent implements OnDestroy {
         nombre: item.formDatosDelDestinatario['nombres'],
         primer_apellido: item.formDatosDelDestinatario['primerApellido'],
         segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
-        numero_registro_fiscal:item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+        numero_registro_fiscal:
+          item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
         razon_social: item.formDatosDelDestinatario['razonSocial'],
         domicilio: {
           ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],

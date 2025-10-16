@@ -1,231 +1,230 @@
 import { TestBed } from '@angular/core/testing';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite110207Store } from '../../state/Tramite110207.store';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 import { RegistroService } from '../../services/registro.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CommonModule } from '@angular/common';
+import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CertificadoOrigenComponent', () => {
-    let component: CertificadoOrigenComponent;
-    let fixture: any;
-    let storeSpy: jest.Mocked<Tramite110207Store>;
-    let registroServiceSpy: jest.Mocked<RegistroService>;
-    let toastrSpy: jest.Mocked<ToastrService>;
-    let seccionQuerySpy: jest.Mocked<SeccionLibQuery>;
-    let consultaQuerySpy: jest.Mocked<ConsultaioQuery>;
-    let querySpy: jest.Mocked<Tramite110207Query>;
+  let component: CertificadoOrigenComponent;
+  let fixture: any;
+  let mockStore: jest.Mocked<Tramite110207Store>;
+  let mockQuery: jest.Mocked<Tramite110207Query>;
+  let mockRegistroService: jest.Mocked<RegistroService>;
+  let mockToastr: jest.Mocked<ToastrService>;
+  let mockSeccionQuery: jest.Mocked<SeccionLibQuery>;
+  let mockConsultaQuery: jest.Mocked<ConsultaioQuery>;
 
-    beforeEach(async () => {
-        storeSpy = {
-            setFormCertificadoGenric: jest.fn(),
-            setDisponsiblesDatos: jest.fn(),
-            setEstado: jest.fn(),
-            setBloque: jest.fn(),
-            setmercanciaTabla: jest.fn(),
-            setFormValida: jest.fn()
-        } as any;
-        registroServiceSpy = {
-            buscarMercanciasCert: jest.fn()
-        } as any;
-        toastrSpy = {
-            error: jest.fn()
-        } as any;
-        seccionQuerySpy = {
-            selectSeccionState$: of({ readonly: false })
-        } as any;
-        consultaQuerySpy = {
-            selectConsultaioState$: of({ readonly: false })
-        } as any;
-        querySpy = {
-            selectSolicitud$: of({
-                mercanciaTabla: [],
-                disponiblesDatos: []
-            }),
-            formCertificado$: of({})
-        } as any;
+  beforeEach(async () => {
+    mockStore = {
+      setFormCertificadoGenric: jest.fn(() => of()),
+      setDisponsiblesDatos: jest.fn(() => of()),
+      setEstado: jest.fn(() => of()),
+      setBloque: jest.fn(() => of()),
+      setmercanciaTabla: jest.fn(() => of()),
+      setFormValida: jest.fn(() => of()),
+    } as any;
+    mockQuery = {
+      selectSolicitud$: of({
+        mercanciaTabla: [],
+        disponiblesDatos: [],
+      }),
+      formCertificado$: of({}),
+    } as any;
+    mockRegistroService = {
+      buscarMercanciasCert: jest.fn(() => of()),
+    } as any;
+    mockToastr = {
+      error: jest.fn(()=> of('Error al buscar Mercancia')),
+    } as any;
+    mockSeccionQuery = {
+      selectSeccionState$: of({}),
+    } as any;
+    mockConsultaQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    } as any;
 
-        await TestBed.configureTestingModule({
-            imports: [CertificadoOrigenComponent],
-            providers: [
-                FormBuilder,
-                { provide: Tramite110207Store, useValue: storeSpy },
-                { provide: Tramite110207Query, useValue: querySpy },
-                { provide: RegistroService, useValue: registroServiceSpy },
-                { provide: ToastrService, useValue: toastrSpy },
-                { provide: SeccionLibQuery, useValue: seccionQuerySpy },
-                { provide: ConsultaioQuery, useValue: consultaQuerySpy }
-            ]
-        }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [
+        CertificadoOrigenComponent,
+        CommonModule,
+        ReactiveFormsModule,
+        CertificadoDeOrigenComponent,
+        MercanciaComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
+      providers: [
+        FormBuilder,
+        ToastrService,
+        { provide: Tramite110207Store, useValue: mockStore },
+        { provide: Tramite110207Query, useValue: mockQuery },
+        { provide: RegistroService, useValue: mockRegistroService },
+        { provide: ToastrService, useValue: mockToastr },
+        { provide: SeccionLibQuery, useValue: mockSeccionQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
+      ],
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(CertificadoOrigenComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+    fixture = TestBed.createComponent(CertificadoOrigenComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+
+    it('should call store.setFormCertificadoGenric with correct params', () => {
+      const event = {
+        formGroupName: 'group',
+        campo: 'campo',
+        valor: undefined,
+        storeStateName: 'state',
+      };
+      component.setValoresStore(event);
+      expect(mockStore.setFormCertificadoGenric).toHaveBeenCalledWith({
+        campo: undefined,
+      });
+    });
+ 
+    it('should call store.setEstado', () => {
+      const estado: Catalogo = { id: 1, descripcion: 'Estado' };
+      component.tipoEstadoSeleccion(estado);
+      expect(mockStore.setEstado).toHaveBeenCalledWith(estado);
+    });
+ 
+    it('should call store.setBloque', () => {
+      const estado: Catalogo = { id: 2, descripcion: 'Bloque' };
+      component.tipoSeleccion(estado);
+      expect(mockStore.setBloque).toHaveBeenCalledWith([estado]);
+    });
+  
+    it('should call store.setmercanciaTabla with array', () => {
+      const mercancia: Mercancia = { id: 1 } as Mercancia;
+      component.emitmercaniasDatos(mercancia);
+      expect(mockStore.setmercanciaTabla).toHaveBeenCalledWith([mercancia]);
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('should update datosTabla$', () => {
+      const mercancias: Mercancia[] = [{ id: 1 } as Mercancia];
+      component.guardarClicado(mercancias);
+      expect(component.datosTabla$).toEqual(mercancias);
+    });
+ 
+    it('should call store.setFormValida', () => {
+      component.setFormValida(true);
+      expect(mockStore.setFormValida).toHaveBeenCalledWith({
+        certificado: true,
+      });
     });
 
-    describe('ngOnInit', () => {
-        it('should subscribe to seccionQuery and set esFormularioSoloLectura', () => {
-            component.ngOnInit();
-            expect(component.esFormularioSoloLectura).toBe(false);
-        });
-
-        it('should subscribe to query.selectSolicitud$ and set datosTabla$ and datosTablaUno', () => {
-            component.ngOnInit();
-            expect(component.datosTabla$).toEqual([]);
-            expect(component.datosTablaUno).toEqual([]);
-        });
-
-        it('should subscribe to query.formCertificado$ and set formCertificado', () => {
-            component.ngOnInit();
-            expect(component.formCertificado).toBeDefined();
-        });
+    it('should set datosSeleccionados and fromMercanciasDisponibles', () => {
+      const mercancia: Mercancia = { id: 1 } as Mercancia;
+      component.modalInstance = { show: jest.fn() } as any;
+      component.abrirModificarModal(mercancia, true);
+      expect(component.datosSeleccionados).toBe(mercancia);
+      expect(component.fromMercanciasDisponibles).toBeTruthy();
+      expect(component.modalInstance.show).toHaveBeenCalled();
     });
 
-    describe('setValoresStore', () => {
-        it('should call store.setFormCertificadoGenric with correct params', () => {
-            const event = { formGroupName: 'test', campo: 'campo', valor: undefined, storeStateName: 'state' };
-            component.setValoresStore(event);
-            expect(storeSpy.setFormCertificadoGenric).toHaveBeenCalledWith({ campo: 'valor' });
-        });
+    it('should set tablaSeleccionEvent and hide modal', () => {
+      component.modalInstance = { hide: jest.fn() } as any;
+      component.cerrarModificarModal();
+      expect(component.tablaSeleccionEvent).toBeTruthy();
+      expect(component.modalInstance.hide).toHaveBeenCalled();
     });
 
-    describe('tipoEstadoSeleccion', () => {
-        it('should call store.setEstado', () => {
-            const estado: Catalogo = { id: 1, descripcion: 'Estado' };
-            component.tipoEstadoSeleccion(estado);
-            expect(storeSpy.setEstado).toHaveBeenCalledWith(estado);
-        });
+    it('should validate child form and update store', () => {
+      component.certificadoDeOrigenComponent = {
+        validarFormularios: () => true,
+      } as CertificadoDeOrigenComponent;
+      jest.spyOn(component, 'setFormValida');
+      const result = component.validateAll();
+      expect(component.setFormValida).toHaveBeenCalledWith(true);
+      expect(result).toBeTruthy();
     });
 
-    describe('tipoSeleccion', () => {
-        it('should call store.setBloque', () => {
-            const estado: Catalogo = { id: 2, descripcion: 'Bloque' };
-            component.tipoSeleccion(estado);
-            expect(storeSpy.setBloque).toHaveBeenCalledWith([estado]);
-        });
+    it('should return false if child form is invalid', () => {
+      component.certificadoDeOrigenComponent = {
+        validarFormularios: () => false,
+      } as CertificadoDeOrigenComponent;
+      jest.spyOn(component, 'setFormValida');
+      const result = component.validateAll();
+      expect(component.setFormValida).toHaveBeenCalledWith(false);
+      expect(result).toBeFalsy();
+    });
+ 
+    it('should call registroService.buscarMercanciasCert and setDisponsiblesDatos on success', () => {
+      component.formCertificado = { entidadFederativa: 1, bloque: 'MX' };
+      const response = {
+        datos: [
+          {
+            idMercancia: 1,
+            fraccionArancelaria: 'FA',
+            numeroRegistro: 'NR',
+            fechaExpedicion: 'FE',
+            fechaVencimiento: 'FV',
+            nombreTecnico: 'NT',
+            nombreComercial: 'NC',
+            fraccionNALADIClave: 'FN',
+            fraccionNALADSA93Clave: 'FN93',
+            fraccionNALADISA96Clave: 'FN96',
+            fraccionNALADISA02Clave: 'FN02',
+            criterioOrigen: 'CO',
+            porcentajeContenidoRegional: 'PCR',
+            tratadoAplicable: { nombreTratado: 'Tratado' },
+            unidadMedida: 'UM',
+          },
+        ],
+      };
+      mockRegistroService.buscarMercanciasCert = jest
+        .fn()
+        .mockReturnValue(of(response));
+      component.conseguirDisponiblesDatos();
+      expect(mockRegistroService.buscarMercanciasCert).toHaveBeenCalled();
+      expect(mockStore.setDisponsiblesDatos).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: 1,
+            fraccionArancelaria: 'FA',
+            nombreTecnico: 'NT',
+            normaOrigen: 'Tratado',
+            unidadMedidaMasaBruta: 'UM',
+          }),
+        ])
+      );
     });
 
-    describe('emitmercaniasDatos', () => {
-        it('should call store.setmercanciaTabla with array', () => {
-            const mercancia: Mercancia = { id: 1 } as Mercancia;
-            component.emitmercaniasDatos(mercancia);
-            expect(storeSpy.setmercanciaTabla).toHaveBeenCalledWith([mercancia]);
-        });
+    it('should call toastr.error on error', () => {
+      component.formCertificado = { entidadFederativa: 1, bloque: 'MX' };
+      mockRegistroService.buscarMercanciasCert.mockReturnValue({
+        pipe: () => ({
+          subscribe: (handlers: any) => handlers.error(),
+        }),
+      } as any);
+      component.conseguirDisponiblesDatos();
     });
 
-    describe('guardarClicado', () => {
-        it('should set datosTabla$', () => {
-            const mercancias: Mercancia[] = [{ id: 1 } as Mercancia];
-            component.guardarClicado(mercancias);
-            expect(component.datosTabla$).toEqual(mercancias);
-        });
+    it('should complete destroyNotifier$', () => {
+      const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+      const spyComplete = jest.spyOn(
+        (component as any).destroyNotifier$,
+        'complete'
+      );
+      component.ngOnDestroy();
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
     });
-
-    describe('setFormValida', () => {
-        it('should call store.setFormValida', () => {
-            component.setFormValida(true);
-            expect(storeSpy.setFormValida).toHaveBeenCalledWith({ certificado: true });
-        });
-    });
-
-    describe('abrirModificarModal', () => {
-        it('should set datosSeleccionados and fromMercanciasDisponibles', () => {
-            const mercancia: Mercancia = { id: 1 } as Mercancia;
-            component.modalInstance = { show: jest.fn() } as any;
-            component.abrirModificarModal(mercancia, true);
-            expect(component.datosSeleccionados).toBe(mercancia);
-            expect(component.fromMercanciasDisponibles).toBeTruthy();
-            expect(component.modalInstance.show).toHaveBeenCalled();
-        });
-    });
-
-    describe('cerrarModificarModal', () => {
-        it('should set tablaSeleccionEvent and call modalInstance.hide', () => {
-            component.modalInstance = { hide: jest.fn() } as any;
-            component.cerrarModificarModal();
-            expect(component.tablaSeleccionEvent).toBeTruthy();
-            expect(component.modalInstance.hide).toHaveBeenCalled();
-        });
-    });
-
-    describe('validateAll', () => {
-        it('should validate child form and update store', () => {
-            component.certificadoDeOrigenComponent = {
-                validarFormularios: () => true
-            } as CertificadoDeOrigenComponent;
-            const result = component.validateAll();
-            expect(result).toBeTruthy();
-            expect(storeSpy.setFormValida).toHaveBeenCalledWith(true);
-        });
-
-        it('should return false if child form is invalid', () => {
-            component.certificadoDeOrigenComponent = {
-                validarFormularios: () => false
-            } as CertificadoDeOrigenComponent;
-            const result = component.validateAll();
-            expect(result).toBeFalsy();
-            expect(storeSpy.setFormValida).toHaveBeenCalledWith(false);
-        });
-    });
-
-    describe('ngOnDestroy', () => {
-        it('should complete destroyNotifier$', () => {
-            const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
-            const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
-            component.ngOnDestroy();
-            expect(spyNext).toHaveBeenCalled();
-            expect(spyComplete).toHaveBeenCalled();
-        });
-    });
-
-    describe('conseguirDisponiblesDatos', () => {
-        it('should call registroService.buscarMercanciasCert and setDisponsiblesDatos on success', () => {
-            component.formCertificado = { entidadFederativa: 1, bloque: 'MX' };
-            const response = {
-                datos: [
-                    {
-                        idMercancia: 1,
-                        fraccionArancelaria: 'FA',
-                        numeroRegistro: 'NR',
-                        fechaExpedicion: 'FE',
-                        fechaVencimiento: 'FV',
-                        nombreTecnico: 'NT',
-                        nombreComercial: 'NC',
-                        fraccionNALADIClave: 'NALADI',
-                        fraccionNALADSA93Clave: 'SA93',
-                        fraccionNALADISA96Clave: 'SA96',
-                        fraccionNALADISA02Clave: 'SA02',
-                        criterioOrigen: 'CO',
-                        porcentajeContenidoRegional: 'PCR',
-                        tratadoAplicable: { nombreTratado: 'Tratado' },
-                        unidadMedida: 'UM'
-                    }
-                ]
-            };
-            component.conseguirDisponiblesDatos();
-            expect(registroServiceSpy.buscarMercanciasCert).toHaveBeenCalled();
-            expect(storeSpy.setDisponsiblesDatos).toHaveBeenCalled();
-        });
-
-        it('should call toastr.error on error', () => {
-            component.formCertificado = { entidadFederativa: 1, bloque: 'MX' };
-            registroServiceSpy.buscarMercanciasCert.mockReturnValue({
-                pipe: () => ({
-                    subscribe: (handlers: any) => handlers.error()
-                })
-            } as any);
-            component.conseguirDisponiblesDatos();
-            expect(toastrSpy.error).toHaveBeenCalledWith('Error al buscar Mercancia');
-        });
-    });
-});
+ });

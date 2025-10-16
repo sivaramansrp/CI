@@ -1,18 +1,9 @@
-import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
-import {
-  ENVIRONMENT,
-  HttpCoreService,
-  JSONResponse,
-} from '@ng-mf/data-access-user';
-import { Observable, catchError, throwError } from 'rxjs';
-import {
-  Solicitud110207State,
-  Tramite110207Store,
-} from '../state/Tramite110207.store';
+import { ENVIRONMENT, HttpCoreService, JSONResponse } from '@ng-mf/data-access-user';
+import { Solicitud110207State,Tramite110207Store,} from '../state/Tramite110207.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { PROC_110207 } from '../servers/api-route';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite110207Query } from '../state/Tramite110207.query';
 
 /**
@@ -114,87 +105,6 @@ export class RegistroService {
       'assets/json/110207/registro_toma_muestras_mercancias.json'
     );
   }
-  /**
-   * Obtiene el catálogo de tratados.
-   * @returns Observable con la respuesta del catálogo de tratados.
-   */
-  getTratado(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/tratado.json');
-  }
-
-  /**
-   * Obtiene el catálogo de países.
-   * @returns Observable con la respuesta del catálogo de países.
-   */
-  getPais(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/pais.json');
-  }
-
-  /**
-   * Obtiene el catálogo de idiomas.
-   * @returns Observable con la respuesta del catálogo de idiomas.
-   */
-  getIdioma(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/idioma.json');
-  }
-
-  /**
-   * Obtiene el catálogo de países de destino.
-   * @returns Observable con la respuesta del catálogo de países de destino.
-   */
-  getPaisDestino(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/pais.json');
-  }
-
-  /**
-   * Obtiene el catálogo de transportes.
-   * @returns Observable con la respuesta del catálogo de transportes.
-   */
-  getTransporte(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/pais.json');
-  }
-
-  /**
-   * Obtiene el catálogo de entidades.
-   * @returns Observable con la respuesta del catálogo de entidades.
-   */
-  getEntidad(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/entidad.json');
-  }
-
-  /**
-   * Obtiene el catálogo de representaciones.
-   * @returns Observable con la respuesta del catálogo de representaciones.
-   */
-  getRepresentacion(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/entidad.json');
-  }
-
-  /**
-   * Obtiene el catálogo de tipos de factura.
-   * @returns Observable con la respuesta del catálogo de tipos de factura.
-   */
-  getTipoFactura(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/110207/tipofactura.json'
-    );
-  }
-
-  /**
-   * Obtiene el catálogo de unidades de medida comercial (UMC).
-   * @returns Observable con la respuesta del catálogo de UMC.
-   */
-  getUMC(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/umc.json');
-  }
-
-  /**
-   * Obtiene el catálogo de unidades de medida.
-   * @returns Observable con la respuesta del catálogo de unidades de medida.
-   */
-  getUnidadMedida(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110207/umc.json');
-  }
 
   /**
    * Obtiene un catálogo específico por su identificador.
@@ -206,39 +116,6 @@ export class RegistroService {
   }
 
   /**
-   * Recupera la lista de "Registro de Solicitudes" desde un archivo JSON.
-   *
-   * @returns {Observable<ColumnasTabla[]>} Un observable que contiene un array de objetos RegistroDeSolicitudesTabla.
-   *
-   * @throws Lanzará un error si la solicitud HTTP falla.
-   */
-  public getSolicitudesTabla(): Observable<ColumnasTabla[]> {
-    return this.http
-      .get<ColumnasTabla[]>('assets/json/110207/mercancia-disponsible.json')
-      .pipe(
-        catchError((error) => {
-          return throwError(() => error);
-        })
-      );
-  }
-  /**
-   * Recupera la lista de "Datos de Solicitudes Seleccionadas" desde un archivo JSON.
-   * @returns Observable con un array de objetos que representan las columnas de la tabla seleccionada.
-   * @throws Lanzará un error si la solicitud HTTP falla.
-   */
-  public getSolicitudesDataTabla(): Observable<SeleccionadasTabla[]> {
-    return this.http
-      .get<SeleccionadasTabla[]>(
-        'assets/json/110207/mercancia-seleccionadas.json'
-      )
-      .pipe(
-        catchError((error) => {
-          return throwError(() => error);
-        })
-      );
-  }
-
-  /**
    * Obtiene todos los datos del estado almacenado en el store.
    * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
    */
@@ -246,6 +123,11 @@ export class RegistroService {
     return this.tramiteQuery.selectState$;
   }
 
+  /**
+   * Realiza una búsqueda de mercancías utilizando los criterios proporcionados en el cuerpo de la solicitud.
+   * @param body Objeto que contiene los criterios de búsqueda.
+   * @returns Observable con la respuesta de la búsqueda de mercancías.
+   */
   buscarMercanciasCert(
     body: Record<string, unknown>
   ): Observable<JSONResponse> {

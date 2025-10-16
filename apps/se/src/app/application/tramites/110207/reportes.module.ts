@@ -15,8 +15,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
   declarations: [
     PasoDosComponent,
     PasoTresComponent,
-    PasoUnoComponent,
-    SolicitudPageComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +32,9 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     BtnContinuarComponent,
     SolicitanteComponent,
     PasoFirmaComponent,
-    CertificadoOrigenComponent
+    CertificadoOrigenComponent,
+    PasoUnoComponent,
+    SolicitudPageComponent
   ],
   schemas: [NO_ERRORS_SCHEMA], 
 })

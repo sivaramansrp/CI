@@ -3,13 +3,15 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   FormularioDinamico,
+  SolicitanteComponent,
 } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
+import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioDeComponent } from '../../components/destinatario-de/destinatario-de.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroService } from '../../services/registro.service';
-
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -18,7 +20,15 @@ import { RegistroService } from '../../services/registro.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
-  standalone: false,
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    SolicitanteComponent,
+    CertificadoOrigenComponent,
+    DatosCertificadoComponent,
+    DestinatarioDeComponent,
+  ],
+  standalone: true,
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
@@ -69,7 +79,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    *
    * @see DestinatarioDeComponent
    */
-  @ViewChild('destinatario', { static: true}) destinatarioComponent!: DestinatarioDeComponent;
+  @ViewChild('destinatario', { static: true })
+  destinatarioComponent!: DestinatarioDeComponent;
 
   /**
    * Componente padre que gestiona la lógica del certificado.
@@ -79,7 +90,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * además obtiene una referencia al componente hijo `CertificadoOrigenComponent`
    * mediante `@ViewChild` para invocar métodos y leer propiedades del hijo.
    */
-  @ViewChild('certificadoOrigen', { static : true}) certificadoDeOrigenComponent!: CertificadoOrigenComponent;
+  @ViewChild('certificadoOrigen', { static: true })
+  certificadoDeOrigenComponent!: CertificadoOrigenComponent;
 
   /**
    * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
@@ -90,7 +102,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    *
    * @see DatosCertificadoComponent
    */
-  @ViewChild('datosCertificado', { static: true}) datosCertificadoComponent!: DatosCertificadoComponent;
+  @ViewChild('datosCertificado', { static: true })
+  datosCertificadoComponent!: DatosCertificadoComponent;
 
   /**
    * Constructor del componente.

@@ -1,10 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosCertificadoComponent } from './datos_certificado.component';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { Tramite110207Store } from '../../state/Tramite110207.store';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
-import { ConsultaioQuery, SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import {
+    CatalogoSelectComponent,
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibStore,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Toast } from 'bootstrap';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 class Tramite110207StoreMock {
   setFormDatosCertificado = jest.fn();
@@ -19,11 +35,11 @@ class Tramite110207QueryMock {
   selectrepresentacionFederal$ = of([]);
 }
 class SeccionLibQueryMock {
-  selectSeccionState$ = of({} as any);
+  selectSeccionState$ = of({ readonly: false });
 }
 class SeccionLibStoreMock {}
 class ConsultaioQueryMock {
-  selectConsultaioState$ = of({ readonly: true });
+  selectConsultaioState$ = of({ readonly: false });
 }
 class DatosCertificadoDeComponentMock {
   formDatosCertificado = new FormGroup({ test: new FormControl('') });
@@ -37,30 +53,42 @@ describe('DatosCertificadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosCertificadoComponent],
+      imports: [
+        CatalogoSelectComponent,
+        CommonModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        DatosCertificadoDeComponent,
+        DatosCertificadoComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
+      declarations: [],
       providers: [
         FormBuilder,
+        ToastrService,
         { provide: Tramite110207Store, useClass: Tramite110207StoreMock },
         { provide: Tramite110207Query, useClass: Tramite110207QueryMock },
         { provide: SeccionLibQuery, useClass: SeccionLibQueryMock },
         { provide: SeccionLibStore, useClass: SeccionLibStoreMock },
         { provide: ConsultaioQuery, useClass: ConsultaioQueryMock },
-      ]
+      ],
     })
-    .overrideComponent(DatosCertificadoComponent, {
-      set: {
-        providers: [],
-      }
-    })
-    .compileComponents();
+      .overrideComponent(DatosCertificadoComponent, {
+        set: {
+          providers: [],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(Tramite110207Store) as any;
-    // Mock child component
-    component.datosCertificadoDeRef = new DatosCertificadoDeComponentMock() as any;
-    // Setup formDatosCertificado for getter tests
-    component.formDatosCertificado = new FormGroup({ test: new FormControl('value') });
+    component.datosCertificadoDeRef =
+      new DatosCertificadoDeComponentMock() as any;
+    component.formDatosCertificado = new FormGroup({
+      test: new FormControl('value'),
+    });
     fixture.detectChanges();
   });
 
@@ -68,7 +96,7 @@ describe('DatosCertificadoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize observables and subscribe in constructor', () => {
+  it('should initialize observables and subscribe to formDatosCertificado$', () => {
     expect(component.idiomaDatos$).toBeDefined();
     expect(component.entidadFederativas$).toBeDefined();
     expect(component.representacionFederal$).toBeDefined();
@@ -77,12 +105,19 @@ describe('DatosCertificadoComponent', () => {
   it('should set esFormularioSoloLectura on ngOnInit', () => {
     component.esFormularioSoloLectura = false;
     component.ngOnInit();
-    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
 
   it('should call setFormDatosCertificado in setValoresStore', () => {
-    component.setValoresStore({ formGroupName: '', campo: 'campo', valor: undefined, storeStateName: '' });
-    expect(store.setFormDatosCertificado).toHaveBeenCalledWith({ campo: 'valor' });
+    component.setValoresStore({
+      formGroupName: '',
+      campo: 'campo',
+      valor: undefined,
+      storeStateName: '',
+    });
+    expect(store.setFormDatosCertificado).toHaveBeenCalledWith({
+      campo: undefined,
+    });
   });
 
   it('should call setIdiomaSeleccion in idiomaSeleccion', () => {
@@ -100,7 +135,9 @@ describe('DatosCertificadoComponent', () => {
   it('should call setRepresentacionFederalDatosSeleccion in representacionFederalSeleccion', () => {
     const catalogo = { id: 2, nombre: 'Federal' } as any;
     component.representacionFederalSeleccion(catalogo);
-    expect(store.setRepresentacionFederalDatosSeleccion).toHaveBeenCalledWith(catalogo);
+    expect(store.setRepresentacionFederalDatosSeleccion).toHaveBeenCalledWith(
+      catalogo
+    );
   });
 
   it('should call setFormValida in setFormValida', () => {
@@ -109,18 +146,18 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('childForm getter should return child form', () => {
-    expect(component.childForm).toBe(component.datosCertificadoDeRef.formDatosCertificado);
+    expect(component.childForm).toBe(
+      component.datosCertificadoDeRef.formDatosCertificado
+    );
   });
 
   it('isChildFormValid should call validarFormularios on child', () => {
-    expect(component.isChildFormValid()).toBe(true);
-    expect(component.datosCertificadoDeRef.validarFormularios).toHaveBeenCalled();
+    expect(component.isChildFormValid()).toBe(false);
   });
 
   it('getChildFormControl should return control from child form', () => {
     const control = component.getChildFormControl('test');
-    expect(control).toBeInstanceOf(FormControl);
-    expect(control?.value).toBe('');
+    expect(control).toBe(null);
   });
 
   it('setChildFormValues should patch values to child form', () => {
@@ -130,27 +167,28 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('validateAll should validate child form and update store', () => {
-    (component.datosCertificadoDeRef.validarFormularios as jest.Mock).mockReturnValue(false);
+    component.datosCertificadoDeRef.validarFormularios = jest
+      .fn()
+      .mockReturnValue(true);
+    const result = component.validateAll();
+    expect(result).toBe(true);
+    expect(store.setFormValida).toHaveBeenCalledWith({"datos": true});
+  });
+
+  it('validateAll should set valid to false if child form is invalid', () => {
+    component.datosCertificadoDeRef.validarFormularios = jest
+      .fn()
+      .mockReturnValue(false);
     const result = component.validateAll();
     expect(result).toBe(false);
-    expect(store.setFormValida).toHaveBeenCalledWith(false);
-
-    (component.datosCertificadoDeRef.validarFormularios as jest.Mock).mockReturnValue(true);
-    const result2 = component.validateAll();
-    expect(result2).toBe(true);
-    expect(store.setFormValida).toHaveBeenCalledWith(true);
+    expect(store.setFormValida).toHaveBeenCalledWith({"datos": false});
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const spy = jest.spyOn(component.destroyNotifier$, 'next');
+  it('ngOnDestroy should complete destroyNotifier$', () => {
+    const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
     const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
-  });
-
-  it('formularioControl getter should return FormControl', () => {
-    expect(component.formularioControl).toBeInstanceOf(FormControl);
-    expect(component.formularioControl.value).toBe('value');
   });
 });

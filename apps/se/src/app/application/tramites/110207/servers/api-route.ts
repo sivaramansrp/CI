@@ -14,10 +14,7 @@ const API = ENVIRONMENT.API;
  * versión de la API
  */
 const API_VERSION = ENVIRONMENT.API_VERSION;
-/**
- * Catálogo de la API
- */
-const CATALOGO = ENVIRONMENT.CATALOGO_URL;
+
 /**
  * Solicitud de la API
  */

@@ -6,7 +6,12 @@ import {
   SeccionLibStore,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Observable, Subject, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -14,7 +19,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { DestinatarioService } from '../../../../shared/services/destinatario.service';
-import { DetallesDelTransporteComponent } from "../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component";
+import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 import { Tramite110207Store } from '../../state/Tramite110207.store';
 import { ViewChild } from '@angular/core';
@@ -36,8 +41,8 @@ interface FormValues {
     CommonModule,
     DestinatarioComponent,
     DatosDelDestinatarioComponent,
-    DetallesDelTransporteComponent
-],
+    DetallesDelTransporteComponent,
+  ],
   templateUrl: './destinatario-de.component.html',
   styleUrl: './destinatario-de.component.scss',
 })
@@ -49,11 +54,13 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       // Agrega otros controles aquí si es necesario
     });
   }
- 
+
   /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
-  @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+  @ViewChild(DatosDelDestinatarioComponent)
+  datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
   /** Referencia al componente destinatario para marcar campos como tocados */
-  @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
+  @ViewChild(DestinatarioComponent)
+  destinatarioComponent?: DestinatarioComponent;
   /**
    * Maneja el envío del formulario y muestra errores si hay campos obligatorios vacíos.
    */
@@ -89,9 +96,9 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   /** Indica si el formulario se está actualizando programáticamente. */
   private actualizandoFormulario = false;
   /**
-* Indica si el formulario está en modo solo lectura.
-* Cuando es `true`, los campos del formulario no se pueden editar.
-*/
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
@@ -111,7 +118,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     public consultaQuery: ConsultaioQuery,
     public destinatarioService: DestinatarioService
   ) {
-  this.iniciarFormulario();
+    this.iniciarFormulario();
     this.inicializarSuscripciones();
   }
 
@@ -119,15 +126,14 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
+    this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    );
   }
- /** Método público para validar todos los formularios y emitir validez al store */
+  /** Método público para validar todos los formularios y emitir validez al store */
   public validateAll(): boolean {
     let valid = true;
     if (this.destinatarioForm && this.destinatarioForm.invalid) {
@@ -139,18 +145,22 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       if (!this.destinatarioComponent.formDestinatario.valid) {
         valid = false;
       }
-      this.setFormValidaDestinatario(this.destinatarioComponent.formDestinatario.valid);
+      this.setFormValidaDestinatario(
+        this.destinatarioComponent.formDestinatario.valid
+      );
     }
     if (this.datosDelDestinatarioComponent) {
       this.datosDelDestinatarioComponent.markAllFieldsTouched();
       if (!this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
         valid = false;
       }
-      this.setFormValida(this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid);
+      this.setFormValida(
+        this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid
+      );
     }
     return valid;
   }
-  
+
   /**
    * Recibe validez del formulario de datos-del-destinatario
    */
@@ -193,7 +203,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     }
     // Lógica para continuar a la siguiente página si todos los formularios son válidos
   }
- 
+
   /**
    * Configura las suscripciones necesarias para el formulario y el estado.
    */
@@ -202,9 +212,9 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       .pipe(
         takeUntil(this.destroyNotifier$),
         distinctUntilChanged(),
-        filter(values => Boolean(values))
+        filter((values) => Boolean(values))
       )
-      .subscribe(estado => {
+      .subscribe((estado) => {
         this.actualizandoFormulario = true;
         this.destinatarioForm.patchValue(estado, { emitEvent: false });
         this.actualizandoFormulario = false;
@@ -216,25 +226,25 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
         debounceTime(300),
         filter(() => !this.actualizandoFormulario)
       )
-      .subscribe(value => {
+      .subscribe((value) => {
         this.store.setDestinatarioForm(value);
       });
 
     this.tramiteQuery.selectFormDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(estado => {
+      .subscribe((estado) => {
         this.formDestinatarioValues = estado as FormValues;
       });
 
     this.tramiteQuery.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(estado => {
+      .subscribe((estado) => {
         this.formDatosDelDestinatarioValues = estado as FormValues;
       });
 
     this.seccionQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(seccionState => {
+      .subscribe((seccionState) => {
         this.seccion = seccionState;
       });
 
@@ -243,36 +253,46 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   }
 
   /**
- * Establece valores en el estado de la tienda para un formulario genérico de certificado.
- * 
- * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
- * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
- * @param event.campo - Nombre del campo que se actualizará en el estado.
- * @param event.valor - Valor que se asignará al campo especificado.
- * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
- * 
- * @returns void
- * 
- * @command Este método actualiza el estado de la tienda con los valores proporcionados.
- */
-  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   *
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   *
+   * @returns void
+   *
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
   /**
-* Establece valores en el estado de la tienda para un formulario genérico de certificado.
-* 
-* @param event - Objeto que contiene los datos necesarios para actualizar el estado.
-* @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
-* @param event.campo - Nombre del campo que se actualizará en el estado.
-* @param event.valor - Valor que se asignará al campo especificado.
-* @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
-* 
-* @returns void
-* 
-* @command Este método actualiza el estado de la tienda con los valores proporcionados.
-*/
-  setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   *
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   *
+   * @returns void
+   *
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
+  setValoresStoreDe(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
@@ -318,8 +338,8 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   }
 
   /**
-  * Método llamado al destruir el componente. Limpia las suscripciones activas.
-  */
+   * Método llamado al destruir el componente. Limpia las suscripciones activas.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
