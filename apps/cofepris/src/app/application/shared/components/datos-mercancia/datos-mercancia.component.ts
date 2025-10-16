@@ -50,6 +50,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import {
+  FECHA_DE_CADUCIDAD_MERCANICA,
   FECHA_DE_CADUCIDAD_PAGO,
   FECHA_DE_FABRICACIO_PAGO,
 } from '../../models/terceros-relacionados.model';
@@ -603,6 +604,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Objeto con la configuración de la fecha inicial del componente.
    */
   fechaDeFabricacioInput: InputFecha = FECHA_DE_FABRICACIO_PAGO;
+
+  fechaDeCaducidadInputMercanica: InputFecha = FECHA_DE_CADUCIDAD_MERCANICA;
 
   /**
    * @property {InputFecha} fechaDeCaducidadInput
