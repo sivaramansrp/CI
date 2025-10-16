@@ -173,8 +173,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     });
 
     this.parchearValoresDelFormulario();
-    this.cargarFactura();
-    this.cargarUmc();
     this.mercanciaForm.valueChanges.subscribe(value => {
       if (!this.actualizandoFormulario) {
         this.store.setFormMercancia(value);
@@ -226,22 +224,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.store.setUmc([umc]);
   }
 
-  /**
-   * Carga las facturas desde el servicio y las establece en el store.
-   */
-  cargarFactura(): void {
-    this.certificadoService
-      .obtenerFacturas()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setFactura(data)
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
+
     /**
    * Cambia el valor de la fecha final en el formulario.
    * @param nuevo_valor Nuevo valor de la fecha final.
@@ -252,23 +235,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       
     }
   
-
-  /**
-   * Carga las UMC desde el servicio y las establece en el store.
-   */
-  cargarUmc(): void {
-    this.certificadoService
-      .obtenerUmc()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setUmc(data)
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
 
   activarModal(): void {
     if(this.mercanciaForm.valid){
