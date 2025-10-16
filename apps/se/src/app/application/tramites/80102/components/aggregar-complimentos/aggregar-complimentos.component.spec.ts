@@ -1,81 +1,91 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ConsultaioState } from "@libs/shared/data-access-user/src";
+import { DatosComplimentos, SociaoAccionistas } from "../../../../shared/models/complimentos.model";
+import { AggregarComplimentosComponent } from "./aggregar-complimentos.component";
+import { Observable } from "rxjs";
 
-import { Component } from '@angular/core';
-import { AggregarComplimentosComponent } from './aggregar-complimentos.component';
-import { Tramite80102Store } from '../../estados/tramite80102.store';
-import { Tramite80102Query } from '../../estados/tramite80102.query';
-import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-@Injectable()
-class MockTramite80102Store {}
-
-@Injectable()
-class MockTramite80102Query {
-  selectTablaDatosComplimentos$ = {};
-  selectTablaDatosComplimentosExtranjera$ = {};
-  selectDatosComplimento$ = observableOf({});
-}
 
 describe('AggregarComplimentosComponent', () => {
-  let fixture;
-  let component;
+  let component: AggregarComplimentosComponent;
+  let store: any;
+  let tramiteQuery: any;
+  let consultaQuery: any;
+
+  const mockSociaoAccionista = { rfc: 'RFC123', nombre: 'Test' } as SociaoAccionistas;
+  const mockSociaoAccionistaExtranjero = { nombre: 'Extranjero' } as SociaoAccionistas;
+  const mockDatosComplimentos = { accionistas: [] } as unknown as DatosComplimentos;
+  const mockConsultaState = { readonly: true } as ConsultaioState;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: Tramite80102Store, useClass: MockTramite80102Store },
-        { provide: Tramite80102Query, useClass: MockTramite80102Query },
-      ]
-    }).overrideComponent(AggregarComplimentosComponent, {
-
-    }).compileComponents();
-    fixture = TestBed.createComponent(AggregarComplimentosComponent);
-    component = fixture.debugElement.componentInstance;
+    store = {
+      setDatosComplimentos: jest.fn(),
+      aggregarTablaDatosComplimentos: jest.fn(),
+      aggregarTablaDatosComplimentosExtranjera: jest.fn(),
+      eliminarTablaDatosComplimentos: jest.fn(),
+      eliminarTablaDatosComplimentosExtranjera: jest.fn(),
+      setFormValida: jest.fn(),
+    };
+    tramiteQuery = {
+      selectTablaDatosComplimentos$: new Observable(),
+      selectTablaDatosComplimentosExtranjera$: new Observable(),
+      selectDatosComplimento$: new Observable(subscriber => {
+        subscriber.next(mockDatosComplimentos);
+      }),
+    };
+    consultaQuery = {
+      selectConsultaioState$: new Observable(subscriber => {
+        subscriber.next(mockConsultaState);
+      }),
+    };
+    component = new AggregarComplimentosComponent(store, tramiteQuery, consultaQuery);
+    component.consultaState = mockConsultaState;
   });
 
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #modifierComplimentos()', async () => {
-    component.store = component.store || {};
-    component.store.setDatosComplimentos = jest.fn();
-    component.modifierComplimentos({});
-    expect(component.store.setDatosComplimentos).toHaveBeenCalled();
+  it('should set esFormularioSoloLectura from consultaQuery', () => {
+    expect(component.esFormularioSoloLectura).toBe(true);
   });
 
-  it('should run #accionistasAgregados()', async () => {
-    component.store = component.store || {};
-    component.store.aggregarTablaDatosComplimentos = jest.fn();
-    component.store.aggregarTablaDatosComplimentosExtranjera = jest.fn();
-    component.accionistasAgregados({
-      rfc: {}
-    });
-    expect(component.store.aggregarTablaDatosComplimentos).toHaveBeenCalled();
-    // expect(component.store.aggregarTablaDatosComplimentosExtranjera).toHaveBeenCalled();
+  it('should subscribe to tramiteQuery.selectDatosComplimento$', () => {
+    expect(component.datosComplimentos).toEqual(mockDatosComplimentos);
   });
 
-  it('should run #accionistasEliminados()', async () => {
-    component.store = component.store || {};
-    component.store.eliminarTablaDatosComplimentos = jest.fn();
-    component.accionistasEliminados({});
-    expect(component.store.eliminarTablaDatosComplimentos).toHaveBeenCalled();
+  it('modifierComplimentos should call store.setDatosComplimentos', () => {
+    component.modifierComplimentos(mockDatosComplimentos);
+    expect(store.setDatosComplimentos).toHaveBeenCalledWith(mockDatosComplimentos);
   });
 
-  it('should run #accionistasExtranjerosEliminado()', async () => {
-    component.store = component.store || {};
-    component.store.eliminarTablaDatosComplimentosExtranjera = jest.fn();
-    component.accionistasExtranjerosEliminado({});
-    expect(component.store.eliminarTablaDatosComplimentosExtranjera).toHaveBeenCalled();
+  it('accionistasAgregados should call aggregarTablaDatosComplimentos for nacional', () => {
+    component.accionistasAgregados(mockSociaoAccionista);
+    expect(store.aggregarTablaDatosComplimentos).toHaveBeenCalledWith(mockSociaoAccionista);
   });
 
+  it('accionistasAgregados should call aggregarTablaDatosComplimentosExtranjera for extranjero', () => {
+    component.accionistasAgregados(mockSociaoAccionistaExtranjero);
+    expect(store.aggregarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith(mockSociaoAccionistaExtranjero);
+  });
+
+  it('accionistasEliminados should call eliminarTablaDatosComplimentos', () => {
+    component.accionistasEliminados([mockSociaoAccionista]);
+    expect(store.eliminarTablaDatosComplimentos).toHaveBeenCalledWith([mockSociaoAccionista]);
+  });
+
+  it('accionistasExtranjerosEliminado should call eliminarTablaDatosComplimentosExtranjera', () => {
+    component.accionistasExtranjerosEliminado([mockSociaoAccionistaExtranjero]);
+    expect(store.eliminarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith([mockSociaoAccionistaExtranjero]);
+  });
+
+  it('setFormValida should call store.setFormValida', () => {
+    component.setFormValida(true);
+    expect(store.setFormValida).toHaveBeenCalledWith({ complimentos: true });
+  });
+
+  it('ngOnDestroy should complete destroyNotifier$', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
 });

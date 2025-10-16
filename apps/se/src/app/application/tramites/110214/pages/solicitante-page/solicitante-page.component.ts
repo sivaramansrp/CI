@@ -176,11 +176,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;
-        this.TEXTO_DE_PELIGRO =
-          '<strong>¡Error de registro!</strong> Faltan campos por capturar';
+        this.TEXTO_DE_PELIGRO = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
         this.mostrarNotificacionError();
-
-        return; // Detener ejecución si los formularios son inválidos
+        return;
       }
       this.isPeligro = false;
     }
@@ -204,7 +202,6 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
           }
         });
       } else {
-        // this.wizardComponent.atras();
         this.indice = NEXT_INDEX;
         this.datosPasos.indice = NEXT_INDEX;
         this.wizardComponent.atras();
@@ -327,9 +324,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         this.validarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
           next: (response) => {
             if (esValidObject(response) && esValidObject(response['datos'])) {
-              const DATOS = response['datos'] as { id_solicitud?: number };
-              if (getValidDatos(DATOS.id_solicitud)) {
-                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              const DATOS = response['datos'] as { idSolicitud?: number };
+              if (getValidDatos(DATOS.idSolicitud)) {
+                this.store.setIdSolicitud(DATOS.idSolicitud ?? 0);
               } else {
                 this.store.setIdSolicitud(0);
               }

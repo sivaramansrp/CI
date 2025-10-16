@@ -1,11 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, JsonResponseCatalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, delay, map, of, takeUntil, tap } from 'rxjs';
-import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
@@ -182,14 +180,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   obtenerDatosFormulario(e: unknown): void {
     this.store.setFormDatosCertificado(e as { [key: string]: unknown});
-  }
-
-  /**
-   * Método que selecciona una representación federal y actualiza el estado en el store.
-   * @param estado El estado de la representación federal seleccionada.
-   */
-  representacionFederalSeleccion(estado: Catalogo): void {
-    this.store.setRepresentacionFederalDatosSeleccion(estado);
   }
 
   /**
