@@ -9,6 +9,7 @@ import { StoreConfig } from '@datorama/akita';
  */
 
 export interface Solicitud11201State {
+  idSolicitud?: number;
   menuDesplegable: string;
   datosSolicitante: DatosSolicitante
   datosDelContenedor: DatosDelContenedor[];
@@ -65,6 +66,7 @@ export function createInitialState(): Solicitud11201State {
     linea: '',
     lineaCheckbox: '',
     monto: '',
+    idSolicitud: 0
 
   };
 }
@@ -208,5 +210,12 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
    */
   public limpiarSolicitud(): void {
     this.reset();
+  }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 }

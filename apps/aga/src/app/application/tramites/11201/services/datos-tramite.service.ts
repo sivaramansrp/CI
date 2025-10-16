@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { RespuestaApi } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
-import { API_POST_VALIDAR } from '../server/api-router';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 /**
@@ -118,8 +117,8 @@ export class DatosTramiteService {
    * @param idSolicitud - The identifier of the solicitud to be validated and added.
    * @returns An Observable emitting the response from the server.
    */
-  agregarSolicitud(PAYLOAD:any,idSolicitud:String): Observable<any> {
-    const ENDPOINT = `${this.urlServer}/api/` + API_POST_VALIDAR(String(idSolicitud));
+  agregarSolicitud(PAYLOAD:any): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/constancia-itc/validar`
     return this.http.post(ENDPOINT, PAYLOAD);
   }
   /**
@@ -131,8 +130,8 @@ export class DatosTramiteService {
    * @param maniFestNumber - The manifest number to validate.
    * @returns An Observable emitting the response data from the API.
    */
-  getByManifestNumber(RFC:String,typeOfTransPort:String,idSolicitud:String,maniFestNumber:String): Observable<any> {
-      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/validar-${typeOfTransPort}?rfc=${RFC}&numeroManifiesto=${maniFestNumber}` ;
+  getByManifestNumber(RFC:String,typeOfTransPort:String,maniFestNumber:String): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/constancia-itc/validar-${typeOfTransPort}?rfc=${RFC}&numeroManifiesto=${maniFestNumber}` ;
       return this.http.get(ENDPOINT);
   }
   /**
@@ -142,8 +141,8 @@ export class DatosTramiteService {
    * @param idSolicitud - The identifier of the solicitud for which the file is being uploaded.
    * @returns An Observable emitting the server response after file upload and validation.
    */
-  fileUpload(PAYLOAD:any,idSolicitud:String): Observable<any> {
-      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/validar-csv` ;
+  fileUpload(PAYLOAD:any): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/constancia-itc/validar-csv` ;
       return this.http.post(ENDPOINT,PAYLOAD);
   }
   /**
@@ -153,8 +152,8 @@ export class DatosTramiteService {
    * @param idSolicitud - The unique identifier of the solicitud for which the payment is being validated.
    * @returns An Observable emitting the response from the API after validating the payment.
    */
-  validarPago(PAYLOAD:any,idSolicitud:String): Observable<any> {
-      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/validar-pago` ;
+  validarPago(PAYLOAD:any): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/constancia-itc/validar-pago` ;
       return this.http.post(ENDPOINT,PAYLOAD);
   }
 
@@ -181,6 +180,12 @@ export class DatosTramiteService {
   getContenedoresList(): Observable<any> {
     const ENDPOINT = `${this.urlServer}/api/sat-t11201/catalogo/tipo-contenedor` ;
     return this.http.get(ENDPOINT);
+  }
+  
+
+  solicitudGuardar(PAYLOAD:any): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/guardar`
+    return this.http.post(ENDPOINT, PAYLOAD);
   }
 
 

@@ -127,7 +127,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       .subscribe();
 
     // Suscribirse a los cambios en el estado del trámite 11201
-    this.tramite11201Query.selectSeccionState$
+    this.tramite11201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -163,7 +163,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       cve_usuario_capturista: "Gubernamental",
       fecha_firma: "2025-07-01 20:01:25"
     };
-    this.cadena.obtenerCadenaOriginal('202739040', PAYLOAD).subscribe({
+    this.cadena.obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo !== '00') {
           this.nuevaNotificacion = {

@@ -149,12 +149,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     ) {
       const linea_captura = this.formSolicitud.get('pagoDeDerechos.linea')?.value;
       const monto = this.formSolicitud.get('pagoDeDerechos.monto')?.value;
-      const idSolicitud = '202739040'
       const PAYLOAD = { linea_captura, monto };
-      console.log(PAYLOAD);
-      console.log(idSolicitud);
       this.datosTramiteService
-        .validarPago(PAYLOAD, idSolicitud)
+        .validarPago(PAYLOAD)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta: any) => {
           if (respuesta?.codigo !== '00') {

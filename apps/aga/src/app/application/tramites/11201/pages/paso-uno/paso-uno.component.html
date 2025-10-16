@@ -16,25 +16,25 @@
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
       } @case (2) {
-      <app-contenedor></app-contenedor>
+      <app-contenedor (cancelEvent)="cancelar()" (continuarEvento)="continuar()"></app-contenedor>
       } }
       @if (consultaDatos.update || consultaDatos.create) {
       <div class="" style="margin-top: 30px;margin-bottom: 30px;">
         <div class="form-group">
           <div class="col-md-12">
-            <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+            <!-- <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
               {{ mensajeCamposObligatorios }}
-            </div>
+            </div> -->
             <div class="pull-right row">
               @if (indice===2) {
-              <div class="col">
+              <!-- <div class="col">
                 <button type="button" class="btn btn-danger" (click)="cancelar()">
                   Cancelar
                 </button>
                 <button type="submit" class="btn btn-primary" (click)="continuar()">
                   Continuar
                 </button>
-              </div>
+              </div> -->
               }
               @if (indice===1) {
                 <div class="col" id="botonGuardar">

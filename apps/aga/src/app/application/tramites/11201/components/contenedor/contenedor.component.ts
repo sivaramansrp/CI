@@ -7,7 +7,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, } from '@angular/core';
+import { Component,EventEmitter,Output } from '@angular/core';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { FECHA_INGRESO } from '../../../../core/enums/11201/tramite11201.enum';
@@ -23,15 +23,15 @@ import { OnInit } from '@angular/core';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud11201State } from '../../../../core/estados/tramites/tramite11201.store';
+import { Solicitud11201State } from '../../estados/tramites/tramite11201.store';
 import { Subject ,tap } from 'rxjs';
 import { TEXTOS } from '../../../../core/enums/11201/tramite11201.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TemplateRef } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
-import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
+import { Tramite11201Query } from '../../estados/queries/tramite11201.query';
+import { Tramite11201Store } from '../../estados/tramites/tramite11201.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
@@ -39,6 +39,7 @@ import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
 import { SolicitanteService } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+
 /**
  * Componente para gestionar la solicitud de contenedores.
  */
@@ -152,6 +153,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   mostrarMensaje: boolean = false;
 
+  mensajeCamposObligatorios: string = '* Campos obligatorios';
+
+
+
   /**
    * Lista de aduanas.
    */
@@ -216,6 +221,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Estado de la solicitud.
    */
   public solicitud11201State!: Solicitud11201State;
+
+   @Output() cancelEvent = new EventEmitter<void>();
+
+    @Output() continuarEvento = new EventEmitter<void>();
 
   /**
    * Sujeto para notificar la destrucción del componente.
@@ -304,9 +313,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   rfc_original: string = "";
-
-  solicitudID:string =  '202739040';
-
   /**
    * Constructor del componente ContenedorComponent.
    * 
@@ -777,7 +783,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       formData.append('fingreso', formatFecha(this.solicitudForm.get('fechaDeIngreso')?.value));
 
      this.datosTramiteService
-        .fileUpload(formData,this.solicitudID)
+        .fileUpload(formData)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta) => {
           if (respuesta?.codigo === '00') {
@@ -856,7 +862,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       const manifestNumber = this.solicitudForm.get('numeroManifiesta')?.value;
       const urlEndPoint = typeOfTransportValue === '1' ? 'ferroviario' : 'maritimo';
       this.datosTramiteService
-        .getByManifestNumber(this.rfc_original,urlEndPoint,this.solicitudID,manifestNumber)
+        .getByManifestNumber(this.rfc_original,urlEndPoint,manifestNumber)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta) => {
           if (respuesta?.codigo === '00') {
@@ -943,7 +949,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           "tipo_contenedor": this.solicitudForm.get('contenedores')?.value 
         }
     this.datosTramiteService
-      .agregarSolicitud(API_PAYLOAD,this.solicitudID)
+      .agregarSolicitud(API_PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
@@ -1207,4 +1213,68 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
+
+  solicitudGuardar(): void {
+    console.log(this.solicitudForm.valid)
+    const PAYLOAD = {
+          "id_solcitud": null,
+          "solicitante": {
+            "rfc": this.rfc_original,
+            "nombre": "Juan Pérez",
+            "es_persona_moral": true,
+            "certificado_serial_number": "string"
+          },
+          "contenedores": this.datosDelContenedor
+        }
+    this.datosTramiteService
+      .solicitudGuardar(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$)
+    
+    )
+      .subscribe(
+        (respuesta) => {
+          // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
+          if (respuesta?.codigo === '00') {
+            this.tramite11201Store.setIdSolicitud(respuesta.datos.id_solicitud);
+            this.continuar();
+          }
+        }
+      );
+  } 
+
+
+  /**
+   * Emit a cancellation notification to parent components or other listeners.
+   *
+   * This method signals that the current operation should be cancelled by
+   * emitting the `cancelEvent`. The emitted event carries no payload.
+   *
+   * @remarks
+   * Use this to trigger UI cleanup (e.g., close dialogs) or to abort in-progress workflows.
+   *
+   * @returns void
+   */
+  cancelar(): void {
+    this.cancelEvent.emit();
+  }
+
+  /**
+   * Emit the continuarEvento to notify subscribers that the user intends to continue.
+   *
+   * This method triggers any handlers listening to the continuarEvento EventEmitter.
+   * It performs no additional logic and returns immediately.
+   *
+   * @remarks
+   * Typically used to delegate continuation behavior to a parent component or service
+   * that subscribes to the continuarEvento.
+   *
+   * @returns void
+   *
+   * @fires continuarEvento
+   */
+  continuar(): void {
+    this.continuarEvento.emit();
+  }
+
+  
 }
