@@ -7,6 +7,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import productorExportador from '@libs/shared/theme/assets/json/110214/productor-exportador.json';
 @Component({
   selector: 'app-hist-productores',
   standalone: true,
@@ -91,6 +92,8 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
 
   /** Observable que expone la lista de mercancia al store. */
   public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+
+  private loginRFC = 'AAL0409235E6';
 
   /**
    * Constructor del componente.
@@ -195,12 +198,39 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-    this.certificadoDeService.obtenerProductorPorExportador()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
-        this.store.setProductoresExportador(respuesta.datos);
-      });
-  }
+  this.certificadoDeService.obtenerProductorPorExportador(this.loginRFC)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        const DATOS = (response as { datos: unknown[] }).datos;
+        const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+          const PRODUCTOR = item as {
+            nombreCompleto?: string;
+            rfc?: string;
+            direccionCompleta?: string;
+            correoElectronico?: string;
+            telefono?: string;
+            fax?: string;
+          };
+          return {
+            id: index + 1,
+            nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+            numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+            direccion: PRODUCTOR.direccionCompleta ?? '',
+            correoElectronico: PRODUCTOR.correoElectronico ?? '',
+            telefono: PRODUCTOR.telefono ?? '',
+            fax: PRODUCTOR.fax ?? '',
+          };
+        });
+
+        this.store.setProductoresExportador(RESULT);
+      },
+      error: () => {
+        this.store.setProductoresExportador(productorExportador.datos);
+      },
+  });
+}
+
 
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
@@ -264,19 +294,53 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
           telefono: String((event as HistoricoColumnas).telefono ?? ''),
           fax: String((event as HistoricoColumnas).fax ?? '')
       };
+      this.store.setAgregarProductoresExportador([DATOS]);
     } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
-      DATOS = {
-          id: 0,
-          nombreProductor: "LAURA CONTRERAS",
-          numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
-          direccion: "SAN GABRIEL 144 DURANGO", 
-          correoElectronico: "laura2992@hotmail.com",
-          telefono: "044-6182999535",
-          fax: String(event['fax'] ?? '') || '6182999535'
+      const PAYLOAD = {
+          rfc_solicitante: String(event['numeroRegistroFiscal'] ?? ''),
       };
-    }
-    if (DATOS) { 
-      this.store.setAgregarProductoresExportador(DATOS);
+      this.certificadoDeService
+      .agregarProductores(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: unknown) => {
+          const DATOS = (response as { datos: unknown[] }).datos;
+          const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+            const PRODUCTOR = item as {
+              nombreCompleto?: string;
+              rfc?: string;
+              direccionCompleta?: string;
+              correoElectronico?: string;
+              telefono?: string;
+              fax?: string;
+            };
+            return {
+              id: index + 1,
+              nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+              numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+              direccion: PRODUCTOR.direccionCompleta ?? '',
+              correoElectronico: PRODUCTOR.correoElectronico ?? '',
+              telefono: PRODUCTOR.telefono ?? '',
+              fax: PRODUCTOR.fax ?? '',
+            };
+          });
+          this.store.setAgregarProductoresExportador(RESULT);
+        },
+        error: () => {
+          if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+            DATOS = {
+              id: 0,
+              nombreProductor: "LAURA CONTRERAS",
+              numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
+              direccion: "SAN GABRIEL 144 DURANGO", 
+              correoElectronico: "laura2992@hotmail.com",
+              telefono: "044-6182999535",
+              fax: String(event['fax'] ?? '') || '6182999535'
+            };
+            this.store.setAgregarProductoresExportador([DATOS]);
+          }
+        }
+      })
     }
     if (this.solicitudState.agregarProductoresExportador.length) {
       this.cargarMercancia();

@@ -179,11 +179,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   /**
-   * @type {Observable<Catalogo[]>}
-   */
-  public paisBloqu$!: Observable<Catalogo[]>;
-
-  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -209,7 +204,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
-    this.paisBloqu$ = this.query.selectPaisBloque$; 
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -251,24 +245,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         this.actualizandoFormulario = false;
       }
     });
-    this.cargarBloque();
-  }
-
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.validarInicialmenteCertificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setPaisBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
   }
 
   /**
