@@ -1,11 +1,13 @@
 import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Observable,map } from 'rxjs';
+import { Observable,catchError,map, throwError } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROC_110223 } from '../servers/api-route';
+import { API_POST_SOLICITUD, PROC_110223 } from '../servers/api-route';
 import { ProductorExportador } from '../models/certificado-origen.model';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -19,6 +21,13 @@ import { ProductorExportador } from '../models/certificado-origen.model';
 })
 export class CertificadosOrigenService {
     url: string = '../../../../../assets/json/110221/';
+
+    /**
+   * La URL base del servidor al que se realizarán las solicitudes.
+   * Esta propiedad es de solo lectura y se utiliza para construir las rutas de los servicios.
+   */
+  private readonly servidor!: string;
+
   /**
    * Constructor del servicio.
    * 
@@ -243,4 +252,34 @@ export class CertificadosOrigenService {
     return this.httpService.post<JSONResponse>(PROC_110223.BUSCAR, { body: body });
   }
   
+  /**
+   * Guarda la solicitud del trámite 80208.
+   * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postSolicitud(
+    solicitud: unknown
+  ): Observable<BaseResponse<GuadarSolicitudResponse>> {
+    const ENDPOINT = `${this.servidor}` + API_POST_SOLICITUD;
+    return this.http
+      .post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
+  }
+
 }

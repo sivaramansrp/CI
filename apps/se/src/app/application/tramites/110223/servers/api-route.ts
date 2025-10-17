@@ -54,3 +54,9 @@ export const PROC_110223 = {
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };
+
+/*
+ * API para guardar la solicitud del tramite 80208.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80208/swagger-ui/index.html#/Solicitud/guardar
+ */
+export const API_POST_SOLICITUD = 'sat-t110223/solicitud/guardar';
