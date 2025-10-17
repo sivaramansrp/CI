@@ -576,6 +576,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method mostrarTipoDeCargaCampos
+   * @description Controla la visibilidad de los campos del tipo de carga basándose en el valor de confirmidad.
+   * Evalúa el valor del campo 'confirmidad' del formulario y actualiza la propiedad `mostrarTipoDeCarga`
+   */
   mostrarTipoDeCargaCampos(): void {
     const CONFIRMIDAD = this.adaceForm.get('confirmidad')?.value;
     if (CONFIRMIDAD === 'si') {
