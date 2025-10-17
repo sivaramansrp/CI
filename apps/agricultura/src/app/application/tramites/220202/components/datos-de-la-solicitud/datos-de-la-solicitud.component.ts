@@ -641,21 +641,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getaduanaLista(): void {
-    // this.agriculturaApiService
-    //   .obtenerSelectorList('aduana_de_ingreso.json')
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe((data) => {
-    //     this.aduanaList = data as Catalogo[];
-    //   });
-
     this.catalogosService.obtieneCatalogoAduana(220202)
       .pipe(
         takeUntil(this.destroyNotifier$)
       ).subscribe(
       (data): void => {
         this.aduanaList = data.datos ?? [];
-        // eslint-disable-next-line
-        // console.log(this.aduanaList);
       }
     );
     
