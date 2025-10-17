@@ -1,13 +1,13 @@
-import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/validar-inicialmente-certificado.model';
+import { Catalogo, HistoricoColumnas } from '../../models/validar-inicialmente-certificado.model';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110214State, Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import productorExportador from '@libs/shared/theme/assets/json/110214/productor-exportador.json';
 @Component({
   selector: 'app-hist-productores',
   standalone: true,
@@ -54,11 +54,11 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    */
   public productoresExportador: HistoricoColumnas[] = [];
 
-  /**
-   * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
-   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
-   */
-  public mercancia: MercanciaTabla[] = [];
+  // /**
+  //  * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
+  //  * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
+  //  */
+  // public mercancia: MercanciaTabla[] = [];
 
   /**
    * @property {boolean} ocultarFax
@@ -91,7 +91,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
 
   /** Observable que expone la lista de mercancia al store. */
-  public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+  public mercanciaProductores!: Mercancia[]; 
 
   private loginRFC = 'AAL0409235E6';
 
@@ -117,13 +117,13 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
-    this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
           this.productoresExportador = seccionState.productoresExportador || [];
+          this.mercanciaProductores = seccionState.mercanciaTabla;
         })
       )
       .subscribe();
@@ -198,52 +198,36 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-  this.certificadoDeService.obtenerProductorPorExportador(this.loginRFC)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-        const DATOS = (response as { datos: unknown[] }).datos;
-        const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
-          const PRODUCTOR = item as {
-            nombreCompleto?: string;
-            rfc?: string;
-            direccionCompleta?: string;
-            correoElectronico?: string;
-            telefono?: string;
-            fax?: string;
-          };
-          return {
-            id: index + 1,
-            nombreProductor: PRODUCTOR.nombreCompleto ?? '',
-            numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
-            direccion: PRODUCTOR.direccionCompleta ?? '',
-            correoElectronico: PRODUCTOR.correoElectronico ?? '',
-            telefono: PRODUCTOR.telefono ?? '',
-            fax: PRODUCTOR.fax ?? '',
-          };
-        });
+    this.certificadoDeService.obtenerProductorPorExportador(this.loginRFC)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          const DATOS = (response as { datos: unknown[] }).datos;
+          const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+            const PRODUCTOR = item as {
+              nombreCompleto?: string;
+              rfc?: string;
+              direccionCompleta?: string;
+              correoElectronico?: string;
+              telefono?: string;
+              fax?: string;
+            };
+            return {
+              id: index + 1,
+              nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+              numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+              direccion: PRODUCTOR.direccionCompleta ?? '',
+              correoElectronico: PRODUCTOR.correoElectronico ?? '',
+              telefono: PRODUCTOR.telefono ?? '',
+              fax: PRODUCTOR.fax ?? '',
+            };
+          });
 
-        this.store.setProductoresExportador(RESULT);
-      },
-      error: () => {
-        this.store.setProductoresExportador(productorExportador.datos);
-      },
-  });
-}
-
-
-  /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
-  cargarMercancia(): void {
-    this.certificadoDeService
-    .getMercanciasSeleccionadas()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    )
-    .subscribe(respuesta => {
-      this.mercancia = respuesta;
-      this.store.setMercanciaProductores(respuesta);
+          this.store.setProductoresExportador(RESULT);
+        },
+        error: () => {
+          //
+        },
     });
   }
 
@@ -327,24 +311,18 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
           this.store.setAgregarProductoresExportador(RESULT);
         },
         error: () => {
-          if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
-            DATOS = {
-              id: 0,
-              nombreProductor: "LAURA CONTRERAS",
-              numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
-              direccion: "SAN GABRIEL 144 DURANGO", 
-              correoElectronico: "laura2992@hotmail.com",
-              telefono: "044-6182999535",
-              fax: String(event['fax'] ?? '') || '6182999535'
-            };
-            this.store.setAgregarProductoresExportador([DATOS]);
-          }
+          //
         }
       })
     }
-    if (this.solicitudState.agregarProductoresExportador.length) {
-      this.cargarMercancia();
-    }
+  }
+
+  /**
+ * Actualiza la lista de mercancías en el store con los datos recibidos del evento.
+ * @param event Arreglo de objetos de tipo Mercancia a asignar.
+ */
+  setMercanciaDatos(event: Mercancia[]): void {
+    this.store.setmercanciaTabla(event);
   }
 
 /**

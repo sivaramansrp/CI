@@ -1393,7 +1393,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       }
 
       // Actualizar el elemento existente cuando id > 0
-      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+      const UPDATEDLIST = mercanciaTabla.map((ITEM) => 
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
