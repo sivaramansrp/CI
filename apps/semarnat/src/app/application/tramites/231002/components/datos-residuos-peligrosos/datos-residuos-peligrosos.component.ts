@@ -304,6 +304,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private inicializarFormulario(): void {
     this.formularioDatos = this.fb.group({
+      origenResiduo: ['', Validators.required],
       idMercancia: [''],
       numero: ['', Validators.required],
       nombreMateriaPrima: ['', Validators.required],
@@ -840,7 +841,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
         }
       });
       this.alertaErrorFormulario = this.FALTAN_DATOS;
-      return false;
     }
     this.scrollModalToTop();
     return !FORMS_DATOS_VALID || !FORMULARIO_RESIDUO_VALID;

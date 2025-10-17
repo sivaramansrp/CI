@@ -18,7 +18,7 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
       domicilio: '',
     },
     empresaReciclaje: {
-      requiereEmpresa: 'Si',
+      requiereEmpresa: '',
       nombreEmpresa: '',
       representanteLegal: '',
       telefono: '',
