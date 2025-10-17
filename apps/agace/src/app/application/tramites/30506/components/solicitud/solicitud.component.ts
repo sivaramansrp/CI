@@ -17,7 +17,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud30506State, Tramite30506Store } from '../../state/tramite30506.store';
+import { Solicitud30506State, Tramite30506Store } from '../../state/tramite30506.store ';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistroService } from '../../services/registro.service';
