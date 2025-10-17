@@ -32,11 +32,18 @@
       <div class="col-md-12">
         <h1>Solicitud expedición de certificado de cupo obtenido por licitación pública</h1>
       </div>
-        }
+      }
         
-        @if(indice === 2){
-        <h1>Cargas archivos</h1> 
-        }
+      @if(indice === 2){
+      <h1>Cargas archivos</h1> 
+      }
+
+      @if (!esFormaValido && esFormaValido !== undefined) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+      }
+
       <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">
@@ -49,12 +56,11 @@
       }
       @case (3) {
       <app-firmar-solicitud></app-firmar-solicitud>
-
       }
-
       }
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
     <ng-alert [CONTENIDO]="TEXTOSR.inst"></ng-alert>
   </div>  
 </div>
+

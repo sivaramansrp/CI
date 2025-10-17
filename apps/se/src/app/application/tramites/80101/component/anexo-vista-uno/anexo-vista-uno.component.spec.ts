@@ -1,135 +1,148 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { AnexoVistaUnoComponent } from './anexo-vista-uno.component';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
-
-@Injectable()
-class MockTramite80101Store {}
-
-@Injectable()
-class MockTramite80101Query {}
-
+const { AnexoVistaUnoComponent } = require('./anexo-vista-uno.component');
 
 describe('AnexoVistaUnoComponent', () => {
-  let fixture;
-  let component;
+  let component: any;
+  let mockRouter: any;
+  let mockActivatedRoute: any;
+  let mockStore: any;
+  let mockQuery: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ AnexoVistaUnoComponent, FormsModule, ReactiveFormsModule ],
-      declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: Router, useClass: MockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        },
-        { provide: Tramite80101Store, useClass: MockTramite80101Store },
-        { provide: Tramite80101Query, useClass: MockTramite80101Query }
-      ]
-    }).overrideComponent(AnexoVistaUnoComponent, {
-
-    }).compileComponents();
-    fixture = TestBed.createComponent(AnexoVistaUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    mockRouter = { navigate: jest.fn() };
+    mockActivatedRoute = {};
+    mockStore = {
+      setImportarDatosTabla: jest.fn(),
+      setExportarDatosTabla: jest.fn(),
+      setAnnexoUnoSeccionActiva: jest.fn(),
+      setDatosParaNavegar: jest.fn(),
+      setProyectoImmexTablaLista: jest.fn(),
+      setProveedorClienteDatosTablaUno: jest.fn(),
+      setProveedorClienteDatosTablaDos: jest.fn(),
+    };
+    mockQuery = {
+      selectImportarTablsDatos$: {
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: jest.fn(),
+      },
+      selectExportarTablsDatos$: {
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: jest.fn(),
+      },
+    };
+    component = new AnexoVistaUnoComponent(mockRouter, mockActivatedRoute, mockStore, mockQuery);
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+  it('should initialize anexoUnoConfig and anexoImportacionConfig', () => {
+    expect(component.anexoUnoConfig).toBeDefined();
+    expect(component.anexoImportacionConfig).toBeDefined();
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('should initialize anexoUnoTablaLista and anexoDosTablaLista as empty arrays', () => {
+    expect(Array.isArray(component.anexoUnoTablaLista)).toBe(true);
+    expect(Array.isArray(component.anexoDosTablaLista)).toBe(true);
+    expect(component.anexoUnoTablaLista.length).toBe(0);
+    expect(component.anexoDosTablaLista.length).toBe(0);
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.query = component.query || {};
-    component.query.selectImportarTablsDatos$ = observableOf({
-      length: {}
-    });
-    component.query.selectExportarTablsDatos$ = observableOf({
-      length: {}
-    });
+  it('should subscribe to selectImportarTablsDatos$ and update anexoUnoTablaLista', () => {
+    const mockData = [{ id: 1 }];
+    mockQuery.selectImportarTablsDatos$.subscribe.mockImplementation((cb:any) => cb(mockData));
     component.ngOnInit();
-
+    expect(component.anexoUnoTablaLista).toEqual(mockData);
   });
 
-  it('should run #obtenerAnexoUnoDevolverLaLlamada()', async () => {
-    component.store = component.store || {};
-    component.store.setImportarDatosTabla = jest.fn();
-    component.obtenerAnexoUnoDevolverLaLlamada({});
-    expect(component.store.setImportarDatosTabla).toHaveBeenCalled();
+  it('should not update anexoUnoTablaLista if selectImportarTablsDatos$ returns empty', () => {
+    mockQuery.selectImportarTablsDatos$.subscribe.mockImplementation((cb:any) => cb([]));
+    component.ngOnInit();
+    expect(component.anexoUnoTablaLista).toEqual([]);
   });
 
-  it('should run #obtenerAnexoDosDevolverLaLlamada()', async () => {
-    component.store = component.store || {};
-    component.store.setExportarDatosTabla = jest.fn();
-    component.obtenerAnexoDosDevolverLaLlamada({});
-    expect(component.store.setExportarDatosTabla).toHaveBeenCalled();
+  it('should subscribe to selectExportarTablsDatos$ and update anexoDosTablaLista', () => {
+    const mockData = [{ id: 2 }];
+    mockQuery.selectExportarTablsDatos$.subscribe.mockImplementation((cb:any) => cb(mockData));
+    component.ngOnInit();
+    expect(component.anexoDosTablaLista).toEqual(mockData);
   });
 
-  it('should set mostrarProveedorClientePopup to true when categoria is "contenedor-proveedor-cliente"', () => {
-    component.store = { setAnnexoUnoSeccionActiva: jest.fn(), setDatosParaNavegar: jest.fn() };
-    const event = { catagoria: 'contenedor-proveedor-cliente', id: '2', datos: {} };
+  it('should not update anexoDosTablaLista if selectExportarTablsDatos$ returns empty', () => {
+    mockQuery.selectExportarTablsDatos$.subscribe.mockImplementation((cb:any) => cb([]));
+    component.ngOnInit();
+    expect(component.anexoDosTablaLista).toEqual([]);
+  });
+
+  it('obtenerAnexoUnoDevolverLaLlamada should update anexoUnoTablaLista and call setImportarDatosTabla', () => {
+    const event = [{ id: 3 }];
+    component.obtenerAnexoUnoDevolverLaLlamada(event);
+    expect(component.anexoUnoTablaLista).toEqual(event);
+    expect(mockStore.setImportarDatosTabla).toHaveBeenCalledWith(event);
+  });
+
+  it('obtenerAnexoUnoDevolverLaLlamada should set empty array if event is undefined', () => {
+    component.obtenerAnexoUnoDevolverLaLlamada(undefined);
+    expect(component.anexoUnoTablaLista).toEqual([]);
+    expect(mockStore.setImportarDatosTabla).toHaveBeenCalledWith([]);
+  });
+
+  it('obtenerAnexoDosDevolverLaLlamada should update anexoDosTablaLista and call setExportarDatosTabla', () => {
+    const event = [{ id: 4 }];
+    component.obtenerAnexoDosDevolverLaLlamada(event);
+    expect(component.anexoDosTablaLista).toEqual(event);
+    expect(mockStore.setExportarDatosTabla).toHaveBeenCalledWith(event);
+  });
+
+  it('obtenerAnexoDosDevolverLaLlamada should set empty array if event is undefined', () => {
+    component.obtenerAnexoDosDevolverLaLlamada(undefined);
+    expect(component.anexoDosTablaLista).toEqual([]);
+    expect(mockStore.setExportarDatosTabla).toHaveBeenCalledWith([]);
+  });
+
+  it('rutaLaFraccionDeComplemento should call store and router.navigate if event is valid', () => {
+    const event = { catagoria: 'cat', id: 'id', datos: { foo: 'bar' } };
     component.rutaLaFraccionDeComplemento(event);
-    expect(component.mostrarProveedorClientePopup).toBe(true);
+    expect(mockStore.setAnnexoUnoSeccionActiva).toHaveBeenCalledWith('id');
+    expect(mockStore.setDatosParaNavegar).toHaveBeenCalledWith({ foo: 'bar' });
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['../cat'], { relativeTo: mockActivatedRoute });
   });
 
-  it('should close popups with respective close methods', () => {
-    component.mostrarComplementarFraccionPopup = true;
-    component.cerrarComplementarFraccion();
-    expect(component.mostrarComplementarFraccionPopup).toBe(false);
-
-    component.mostrarProveedorClientePopup = true;
-    component.cerrarContenedorProveedorCliente();
-    expect(component.mostrarProveedorClientePopup).toBe(false);
-
-    component.mostrarProyectoImmexPopup = true;
-    component.cerrarProyectoImmex();
-    expect(component.mostrarProyectoImmexPopup).toBe(false);
-
-    component.mostrarProveedorPorArchivoPopup = true;
-    component.cerrarProveedorPorArchivo();
-    expect(component.mostrarProveedorPorArchivoPopup).toBe(false);
+  it('rutaLaFraccionDeComplemento should not call store or router if event is invalid', () => {
+    component.rutaLaFraccionDeComplemento({});
+    expect(mockStore.setAnnexoUnoSeccionActiva).not.toHaveBeenCalled();
+    expect(mockStore.setDatosParaNavegar).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('should set mostrarProyectoImmexPopup to true when categoria is "proyecto-immex"', () => {
-    component.store = { setAnnexoUnoSeccionActiva: jest.fn(), setDatosParaNavegar: jest.fn() };
-    const event = { catagoria: 'proyecto-immex', id: '3', datos: {} };
-    component.rutaLaFraccionDeComplemento(event);
-    expect(component.mostrarProyectoImmexPopup).toBe(true);
+  it('setProyectoImmex should call setProyectoImmexTablaLista', () => {
+    const event = [{ id: 5 }];
+    component.setProyectoImmex(event);
+    expect(mockStore.setProyectoImmexTablaLista).toHaveBeenCalledWith(event);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('obtenerProveedorCliente should call setProveedorClienteDatosTablaUno if id is cliente', () => {
+    const event = { data: [{ id: 6 }], id: 'cliente' };
+    component.obtenerProveedorCliente(event);
+    expect(mockStore.setProveedorClienteDatosTablaUno).toHaveBeenCalledWith(event.data);
+    expect(mockStore.setProveedorClienteDatosTablaDos).not.toHaveBeenCalled();
+  });
+
+  it('obtenerProveedorCliente should call setProveedorClienteDatosTablaDos if id is not cliente', () => {
+    const event = { data: [{ id: 7 }], id: 'proveedor' };
+    component.obtenerProveedorCliente(event);
+    expect(mockStore.setProveedorClienteDatosTablaDos).toHaveBeenCalledWith(event.data);
+    expect(mockStore.setProveedorClienteDatosTablaUno).not.toHaveBeenCalled();
+  });
+
+  it('obtenerProveedorCliente should call setProveedorClienteDatosTablaDos if id is undefined', () => {
+    const event = { data: [{ id: 8 }] };
+    component.obtenerProveedorCliente(event);
+    expect(mockStore.setProveedorClienteDatosTablaDos).toHaveBeenCalledWith(event.data);
+    expect(mockStore.setProveedorClienteDatosTablaUno).not.toHaveBeenCalled();
+  });
+
+  it('ngOnDestroy should complete destroyNotifier$', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
 });

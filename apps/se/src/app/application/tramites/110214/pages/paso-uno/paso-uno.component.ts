@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';

@@ -361,3 +361,28 @@ export interface Mercancia {
   /** Clasificación adicional. */
   complementoClasificacion?: string;
 }
+
+/**
+ * @interface MercanciaTabla
+ * @description
+ * Interfaz que representa la tabla de mercancías.
+ * Contiene información detallada sobre las mercancías, incluyendo fracción arancelaria,
+ * tipo de factura, cantidad, unidad de medida, nombres técnicos y comerciales, 
+ * valor de la mercancía y RFC del productor.
+ * 
+ */
+export interface MercanciaTabla {
+  fraccionArancelaria?: string;
+  tipoFactura?: string;
+  cantidad?: string;
+  unidadMedida?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
+  valorMercancia: string;
+  rfcProductor?: string;
+  numeroFactura?: string;
+  complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
+}

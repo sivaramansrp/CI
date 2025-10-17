@@ -1,52 +1,29 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { FormGroup } from '@angular/forms';
-
-import { Adquiriente, AlertComponent, Complementaria, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AccionBoton, Adquiriente, AlertComponent, Complementaria, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Solicitud120501State, Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-
-
 import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
-
+import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
+import { Validators } from '@angular/forms';
+import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
-import { Subject } from 'rxjs';
-
-
-import { TablaSeleccion } from '@ng-mf/data-access-user'
-
-import { Solicitud120501State, Tramite120501Store } from '../../estados/tramites/tramite120501.store';
-
-import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
-
-
-/**
- *  AccionBoton
- *  Interfaz que describe la estructura de un objeto de acción de botón.
- */
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
-
 /**
  * Componente para mostrar las licitaciones vigentes.
  *
@@ -359,7 +336,6 @@ ngOnDestroy(): void {
   this.destroyed$.next();
   this.destroyed$.complete();
 }
-
 /**
  * Maneja el valor del índice del asistente (wizard) basado en la acción del botón.
  *
@@ -378,14 +354,13 @@ getValorIndice(e: AccionBoton):void{
   }
 
 }
-
 /**
  * Obtiene y establece los detalles de la licitación en el formulario 'detalledelalicitacionForm'.
  *
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
 getDetallesDelalicitacion():void{
-  this.service.getDetallesDelalicitacion().subscribe(
+  this.service.getDetallesDelalicitacion().pipe(takeUntil(this.destroyed$)).subscribe(
     (data:DetallesLicitacion)=>{
       this.detalledelaLicitacionForm.patchValue({
         numeraDelicitacion:data.numeraDelicitacion,
@@ -412,7 +387,8 @@ getDetallesDelalicitacion():void{
      * 
      */ 
   obtenerDatosDeTabla(): void {
-    this.service.getTableData().subscribe(
+    this.service.getTableData()
+    .pipe(takeUntil(this.destroyed$)).subscribe(
         (data: Complementaria[]) => {
             this.datos = data;
         }
@@ -424,14 +400,14 @@ getDetallesDelalicitacion():void{
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
 getAdquiriente():void{
-  this.service.getAdquiriente().subscribe(
+  this.service.getAdquiriente()
+   .pipe(takeUntil(this.destroyed$)).subscribe(
     (data:Adquiriente)=>{
       this.adquiriente.patchValue({
         rfc:data.rfc,
         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
       })
-    })
-  
+    })  
 }
 /**
      * Establece los valores en el store del trámite 120501.
@@ -492,6 +468,4 @@ moverRFC1(selectedEntry: Complementaria1): void {
     this.datos1.splice(INDEX, 1);
   }
 }
-  
-
 }

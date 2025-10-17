@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
+import { FormGroup } from '@angular/forms';
+
 /**
  * Servicio para la gestión de datos relacionados con la expedición de certificados.
  * Proporciona métodos para obtener información desde archivos JSON locales.
@@ -13,6 +15,15 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class ExpedicionCertificadoService {
+
+   /**
+ * @property forms
+ * @description
+ * Mapa privado que almacena los formularios dinámicos registrados en el servicio. 
+ * La clave es un `string` que representa el nombre del formulario, y el valor es una instancia de `FormGroup`.
+ * @type {Map<string, FormGroup>}
+ */
+  private forms = new Map<string, FormGroup>();
 
   /**
    * Constructor del servicio.
@@ -101,4 +112,28 @@ export class ExpedicionCertificadoService {
     this.tramiteStore.setFechaDelEventoDelicitacion(datos.fechaDelEventoDelicitacion);
     this.tramiteStore.setDescripcionDelProducto(datos.descripcionDelProducto);
   }
+
+  /**
+ * @method isFormValid
+ * @description
+ * Verifica la validez de un formulario dinámico registrado en el servicio.
+ * @param {string} name - El nombre único del formulario.
+ * @returns {boolean | undefined} - `true` si el formulario es válido, `false` si no lo es, o `undefined` si no se encuentra.
+ */
+  isFormValid(name: string): boolean | undefined {
+    const FORMA = this.getForm(name);
+    return FORMA?.valid;
+  }
+
+  /**
+   * @method getForm
+   * @description
+   * Recupera un formulario dinámico registrado en el servicio utilizando su nombre único.
+   * @param {string} name - El nombre único del formulario.
+   * @returns {FormGroup | undefined} - La instancia del formulario o `undefined` si no se encuentra.
+   */
+    getForm(name: string): FormGroup | undefined {
+      return this.forms.get(name);
+    }
+  
 }

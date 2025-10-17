@@ -3,13 +3,13 @@ import { ConsultaioQuery, ConsultaioState, InputCheckComponent, InputRadioCompon
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QUERELLA_TABLA, RADIO_08 } from '../../constantes/adace32606.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { EconomicoService } from '../../services/economico.service';
 import { Modal } from 'bootstrap';
 import { Querella } from '../../models/adace.model';
 import { QuerellaLabelEnum } from '../../constantes/labels32606.enum';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 
 /** Componente para la sección de querella del trámite 32606. */
 @Component({
@@ -19,7 +19,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
     TablaDinamicaComponent, NotificacionesComponent
   ],
   templateUrl: './querella.component.html',
-  styleUrl: './querella.component.css',
+  styleUrl: './querella.component.scss',
 })
 export class QuerellaComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de querella. */
