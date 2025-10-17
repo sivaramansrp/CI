@@ -3,7 +3,7 @@ import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shar
 import { CriterioConfiguracionRequest } from "../models/request/tratado-configuracion-request.model";
 import { CriterioConfiguracionResponse } from "../models/response/tratado-configuracion-response.model";
 import { CriterioTratadoResponse } from "../models/response/tratado-criterio-response.model";
-import { DatosSolicitudCriterio } from "../models/response/tratado-criterio-resumen-response.model";
+import { DatosCriterioResumenResponse } from "../models/response/tratado-criterio-resumen-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 
 import { HttpClient, HttpParams } from "@angular/common/http";
@@ -93,8 +93,8 @@ export class TratadosSolicitudService {
    * @param idCriterioTratado 
    * @returns Observable con la respuesta de validación del servidor
    */
-  getCriterioTratadoResumen(idCriterioTratado: string): Observable<BaseResponse<DatosSolicitudCriterio>>{
+  getCriterioTratadoResumen(idCriterioTratado: string): Observable<BaseResponse<DatosCriterioResumenResponse>>{
     const ENDPOINT = `${this.host}` + API_GET_CRITERIO_TRATADO_RESUMEN(idCriterioTratado);
-    return this.http.get<BaseResponse<DatosSolicitudCriterio>>(ENDPOINT);
+    return this.http.get<BaseResponse<DatosCriterioResumenResponse>>(ENDPOINT);
   }
 }
