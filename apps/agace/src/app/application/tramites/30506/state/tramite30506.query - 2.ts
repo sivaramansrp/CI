@@ -1,6 +1,6 @@
+import { Solicitud30506State, Tramite30506Store } from './tramite30506.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud30506State, Tramite30506Store } from './tramite30506.store';
 /**
  * Clase que proporciona consultas reactivas para el estado del trámite 30506.
  * Permite seleccionar partes específicas del estado almacenado en la tienda.
