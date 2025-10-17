@@ -1,10 +1,8 @@
 <app-certificado-de-origen #certificadoDeOrigen
     [operador]="operador"
-    [tratadoAcuerdo]="(estados$ | async) || []"
     [paisBloqu]="(pais$ | async) || []"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
-    [paises]="(pais$ | async) || []"
     (setbuscarMercanciaEvent)="buscarrMercancia()"
     [tableData]="(datos1 | async) ||  []"
     (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"

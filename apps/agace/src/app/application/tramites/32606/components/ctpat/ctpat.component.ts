@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { CtpatLabelEnum } from '../../constantes/labels32606.enum';
 import { RADIO_01 } from '../../constantes/adace32606.enum';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 
 /** Componente para la sección CTPAT del trámite 32606. */
 @Component({
@@ -14,7 +14,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputRadioComponent],
   templateUrl: './ctpat.component.html',
-  styleUrl: './ctpat.component.css',
+  styleUrl: './ctpat.component.scss',
 })
 export class CtpatComponent implements OnDestroy, OnInit {
   /** Opciones para el radio tipo 01. */
