@@ -12,7 +12,7 @@
  * @since 2025
  */
 
-import { ALFANUMERICO_ESPACIO, REGEX_MERCANCIAS_CHARACTERS } from '@libs/shared/data-access-user/src';
+import { ALFANUMERICO_ESPACIO, REGEX_DECIMAL_13_2_OPTIONAL, REGEX_MERCANCIAS_CHARACTERS, REGEX_NICO, REGEX_NUMERO_PUNTO_CARACTER } from '@libs/shared/data-access-user/src';
 import { HECHOS_TABLA_COLUMNAS, HechosDatosTabla } from '../../modelos/acta-de-hechos.model';
 import { TramiteState, TramiteStore } from '../../estados/tramite32516Store.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -462,10 +462,43 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.mercanciaForm = this.fb.group({
       consecutivo: ['', [Validators.required]],
       descripcion: ['', [Validators.required]],
-      cantidad: ['', [Validators.required]],
+      cantidad: ['', [Validators.required, TipoDeAvisoComponent.validarLimiteEnteros]],
       unidadMedida: ['', [Validators.required]],
-      peso: ['', [Validators.required]],
+      peso: ['', [Validators.required, TipoDeAvisoComponent.validarLimiteEnteros]],
     });
+  }
+
+  /**
+   * Validador personalizado para campos Cantidad y Peso (Kg).
+   * Valida que el formato sea: máximo 13 dígitos enteros + punto decimal + máximo 2 decimales (total 16 caracteres).
+   * 
+   * @param control - Control del formulario que contiene el valor a validar
+   * @returns Objeto de error si excede el límite, null si es válido
+   */
+  static validarLimiteEnteros(control: { value: string }): { [key: string]: { valor: string; limite: number } } | null {
+    if (!control.value) {
+      return null;
+    }
+    
+    const VALOR = String(control.value);
+    
+    // Validar que coincida con el patrón: máximo 13 enteros + máximo 2 decimales
+    const PATRON_13_2 = REGEX_DECIMAL_13_2_OPTIONAL;
+    if (!PATRON_13_2.test(VALOR)) {
+      const PARTES = VALOR.split('.');
+      const PARTE_ENTERA = PARTES[0] || '';
+      const PARTE_DECIMAL = PARTES[1] || '';
+      
+      // Determinar qué límite se excedió
+      if (PARTE_ENTERA.length > 13) {
+        return { 'excedeLimiteEnteros': { valor: VALOR, limite: 13 } };
+      }
+      if (PARTE_DECIMAL.length > 2) {
+        return { 'excedeLimiteDecimales': { valor: VALOR, limite: 2 } };
+      }
+    }
+    
+    return null;
   }
 
   // ========================================
@@ -766,8 +799,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el evento keypress para el campo cantidad, permitiendo solo caracteres alfanuméricos y espacios.
-   * Previene la entrada de caracteres especiales y símbolos aritméticos.
+   * Maneja el evento keypress para los campos numéricos (cantidad, peso, consecutivo).
+   * BLOQUEA entrada después de 13 dígitos enteros o 2 decimales.
    * @param {KeyboardEvent} event - El evento de teclado
    * @returns {boolean} - false si el carácter no está permitido, true en caso contrario
    * @memberof TipoDeAvisoComponent
@@ -779,14 +812,212 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const CARBONIZARSE = event.key;
-    const PATRONA = REGEX_MERCANCIAS_CHARACTERS;
+    const INPUT = event.target as HTMLInputElement;
+    const KEY = event.key;
     
-    if (!PATRONA.test(CARBONIZARSE)) {
+    // Para campos cantidad, peso y consecutivo: aplicar validaciones numéricas con límites
+    if (INPUT?.id === 'cantidad' || INPUT?.id === 'peso' || INPUT?.id === 'consecutivo') {
+      return TipoDeAvisoComponent.validarEntradaNumerica(INPUT, KEY, event);
+    }
+    
+    // Para otros campos: usar el patrón alfanumérico original
+    return TipoDeAvisoComponent.validarEntradaAlfanumerica(KEY, event);
+  }
+
+  /**
+   * Valida entrada numérica para campos cantidad y peso con límites estrictos.
+   * @param input - Elemento input HTML
+   * @param key - Tecla presionada
+   * @param event - Evento del teclado
+   * @returns true si la entrada es válida, false si debe bloquearse
+   */
+  private static validarEntradaNumerica(input: HTMLInputElement, key: string, event: KeyboardEvent): boolean {
+    // Permitir solo números (0-9) y punto decimal (.)
+    if (!REGEX_NUMERO_PUNTO_CARACTER.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+
+    const VALOR_ACTUAL = input.value;
+    const PARTES = VALOR_ACTUAL.split('.');
+    const PARTE_ENTERA = PARTES[0] || '';
+    const PARTE_DECIMAL = PARTES[1] || '';
+    const CURSOR_POS = input.selectionStart || 0;
+
+    return TipoDeAvisoComponent.aplicarValidacionesNumericas(key, VALOR_ACTUAL, PARTE_ENTERA, PARTE_DECIMAL, CURSOR_POS, event);
+  }
+
+  /**
+   * Aplica validaciones específicas para entrada numérica.
+   */
+  private static aplicarValidacionesNumericas(
+    key: string, 
+    valorActual: string, 
+    parteEntera: string, 
+    parteDecimal: string, 
+    cursorPos: number,
+    event: KeyboardEvent
+  ): boolean {
+    // Bloquear segundo punto decimal
+    if (key === '.' && valorActual.includes('.')) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Bloquear dígitos si ya hay 13 enteros y no hay punto decimal
+    if (key >= '0' && key <= '9' && !valorActual.includes('.') && parteEntera.length >= 13) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Bloquear dígitos antes del punto si ya hay 13 enteros
+    if (key >= '0' && key <= '9' && valorActual.includes('.') && cursorPos <= parteEntera.length && parteEntera.length >= 13) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Bloquear dígitos después del punto si ya hay 2 decimales
+    if (key >= '0' && key <= '9' && valorActual.includes('.') && cursorPos > parteEntera.length && parteDecimal.length >= 2) {
+      event.preventDefault();
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Valida entrada alfanumérica para otros campos.
+   * @param key - Tecla presionada
+   * @param event - Evento del teclado
+   * @returns true si la entrada es válida, false si debe bloquearse
+   */
+  private static validarEntradaAlfanumerica(key: string, event: KeyboardEvent): boolean {
+    if (!REGEX_MERCANCIAS_CHARACTERS.test(key)) {
       event.preventDefault();
       return false;
     }
     return true;
+  }
+
+  /**
+   * @method validarNumeroDecimal
+   * @description Método estático que valida y formatea números decimales para Cantidad y Peso.
+   * - Formato: MÁXIMO 13 dígitos enteros + punto decimal + MÁXIMO 2 decimales (total 16 caracteres)
+   * - TRUNCA tanto parte entera como decimal si exceden límites
+   * 
+   * @param {string} valor - El valor a validar y formatear.
+   * @param {number} decimales - Número máximo de decimales permitidos (2 para cantidad/peso).
+   * @returns {string} El valor validado y formateado con límites aplicados.
+   */
+  static validarNumeroDecimal(valor: string, decimales: number): string {
+    if (!valor) {
+      return '';
+    }
+    
+    // Split into integer and decimal parts
+    const PARTES = valor.split('.');
+    let PARTE_ENTERA = PARTES[0] || '';
+    let PARTE_DECIMAL = PARTES[1] || '';
+    
+    // LÍMITE ESTRICTO: Truncar parte entera a 13 dígitos máximo
+    if (PARTE_ENTERA.length > 13) {
+      PARTE_ENTERA = PARTE_ENTERA.substring(0, 13);
+    }
+    
+    // LÍMITE ESTRICTO: Truncar parte decimal al número especificado (2 para cantidad/peso)
+    if (PARTE_DECIMAL.length > decimales) {
+      PARTE_DECIMAL = PARTE_DECIMAL.substring(0, decimales);
+    }
+    
+    // Reconstruct the number with limits applied
+    let RESULTADO = PARTE_ENTERA;
+    if (PARTES.length > 1) {
+      RESULTADO += '.' + PARTE_DECIMAL;
+    }
+    
+    return RESULTADO;
+  }
+
+    /**
+   * @method limpiarSoloNumeros
+   * @description Método que replica exactamente el comportamiento del JSP: this.value = (this.value + '').replace(/[^0-9]/g, '');
+   * - Solo permite números (0-9)
+   * - Remueve cualquier carácter que no sea número
+   * - Funciona en tiempo real con keyup
+   *
+   * @param {Event} event - Evento del input.
+   * @returns {void}
+   */
+  limpiarSoloNumeros(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_NICO, '');
+      
+      // Actualizar control de formulario
+      this.mercanciaForm.get('consecutivo')?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+    /**
+   * @method limpiarNumeroDecimal
+   * @description Método que valida y formatea números decimales para Cantidad, Peso y Consecutivo.
+   * - Formato: MÁXIMO 13 dígitos enteros + punto decimal + MÁXIMO 2 decimales (total 16 caracteres)
+   * - BLOQUEA entrada después de 13 dígitos enteros o 2 decimales
+   * - this.value = (this.value + '').replace(/[^0-9.]/g, '');
+   * - Aplica límites estrictos en tiempo real
+   *
+   * @param {Event} event - Evento del input.
+   * @returns {void}
+   */
+  limpiarNumeroDecimal(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Paso 1: Solo permitir números y punto decimal
+      let VALOR = String(INPUT.value).replace(/[^0-9.]/g, '');
+      
+      // Paso 2: Aplicar límites estrictos 13+2 format
+      const PARTES = VALOR.split('.');
+      let PARTE_ENTERA = PARTES[0] || '';
+      let PARTE_DECIMAL = PARTES[1] || '';
+      
+      // LÍMITE ESTRICTO: Truncar a 13 dígitos enteros máximo
+      if (PARTE_ENTERA.length > 13) {
+        PARTE_ENTERA = PARTE_ENTERA.substring(0, 13);
+      }
+      
+      // LÍMITE ESTRICTO: Truncar a 2 decimales máximo
+      if (PARTE_DECIMAL.length > 2) {
+        PARTE_DECIMAL = PARTE_DECIMAL.substring(0, 2);
+      }
+      
+      // Reconstruir el valor con límites aplicados
+      VALOR = PARTE_ENTERA;
+      if (PARTES.length > 1) {
+        VALOR += '.' + PARTE_DECIMAL;
+      }
+      
+      // Actualizar input y form control
+      INPUT.value = VALOR;
+      
+      // Determinar cuál campo está siendo editado basado en el ID del input
+      if (INPUT.id === 'cantidad') {
+        const CONTROL_CANTIDAD = this.mercanciaForm.get('cantidad');
+        CONTROL_CANTIDAD?.setValue(VALOR, { emitEvent: false });
+        CONTROL_CANTIDAD?.markAsTouched();
+        CONTROL_CANTIDAD?.updateValueAndValidity();
+      } else if (INPUT.id === 'peso') {
+        const CONTROL_PESO = this.mercanciaForm.get('peso');
+        CONTROL_PESO?.setValue(VALOR, { emitEvent: false });
+        CONTROL_PESO?.markAsTouched();
+        CONTROL_PESO?.updateValueAndValidity();
+      } else if (INPUT.id === 'consecutivo') {
+        const CONTROL_CONSECUTIVO = this.mercanciaForm.get('consecutivo');
+        CONTROL_CONSECUTIVO?.setValue(VALOR, { emitEvent: false });
+        CONTROL_CONSECUTIVO?.markAsTouched();
+        CONTROL_CONSECUTIVO?.updateValueAndValidity();
+      }
+    }
   }
 
 }
