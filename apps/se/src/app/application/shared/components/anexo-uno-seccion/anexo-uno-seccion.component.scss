@@ -79,7 +79,10 @@
   z-index: 2100;
   position: relative;
 }
-
+.pagination {
+    display: table;
+    margin: 0 auto;
+}
 @keyframes slideInNotifTop {
   from {
     transform: translateY(-40px);

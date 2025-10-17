@@ -7,9 +7,9 @@
  */
 
 import { Catalogo, PersonaTerceros } from "@ng-mf/data-access-user";
+import { DetallasDatos, Sensible } from "../../../../shared/models/datos-de-la-solicitue.model";
 import { DatosForma } from "./certificado-zoosanitario.model";
 import { DestinatarioForm } from "../../../220203/models/220203/importacion-de-acuicultura.module";
-import { Sensible } from "../../../../shared/models/datos-de-la-solicitue.model";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 
@@ -205,12 +205,26 @@ export interface DatosParaMovilizacionNacional {
 }
 
 /**
- * Representa una fila de solicitud para trámites fitosanitarios.
- * Contiene información detallada sobre el producto, requisitos, certificados,
- * cantidades y procedencia, utilizada en la gestión de solicitudes.
+ * Representa una fila de solicitud para el trámite 220201, conteniendo la información detallada
+ * sobre un producto, sus requisitos, cantidades, descripciones y datos asociados al proceso.
+ *
+ * Incluye datos como número de partida, tipo y descripción de requisitos, fracciones arancelarias,
+ * unidades de medida, cantidades, uso previsto, tipo y presentación del producto, países de origen
+ * y procedencia, certificados internacionales, y otros campos relevantes para la gestión del trámite.
+ *
+ * Algunos campos son opcionales y pueden estar presentes dependiendo del contexto del producto o
+ * del trámite específico.
  * @interface FilaSolicitud
+ * @property {number} [id] Identificador único de la fila (opcional).
  * @property {string} noPartida Número de partida.
  * @property {string} tipoRequisito Tipo de requisito solicitado.
+ * @property {string} [descripcionTipoRequisito] Descripción del tipo de requisito (opcional).
+ * @property {string} [descripcionUMT] Descripción de la unidad de medida de trámite (opcional).
+ * @property {string} [descripcionUMC] Descripción de la unidad de medida de comercialización (opcional).
+ * @property {string} [descripcionEspecie] Descripción de la especie (opcional).
+ * @property {string} [descripcionUso] Descripción del uso previsto (opcional).
+ * @property {string} [descripcionPaisDeOrigen] Descripción del país de origen (opcional).
+ * @property {string} [descripcionPaisDeProcedencia] Descripción del país de procedencia (opcional).
  * @property {string} requisito Descripción del requisito.
  * @property {string} numeroCertificadoInternacional Número del certificado internacional.
  * @property {string} fraccionArancelaria Fracción arancelaria del producto.
@@ -228,18 +242,28 @@ export interface DatosParaMovilizacionNacional {
  * @property {string} paisDeOrigen País de origen del producto.
  * @property {string} paisDeProcedencia País de procedencia del producto.
  * @property {string} certificadoInternacionalElectronico Certificado internacional electrónico asociado.
+ * @property {string} [especie] Especie del producto (opcional).
+ * @property {string} [tipoPresentacion] Tipo de presentación del producto (opcional).
+ * @property {string} [tipoPlanta] Tipo de planta (opcional).
+ * @property {string} [plantaAutorizadaOrigen] Planta autorizada de origen (opcional).
+ * @property {string} [presentacion] Presentación del producto (opcional).
+ * @property {Sensible[]} [sensibles] Lista de datos sensibles asociados (opcional).
+ * @property {boolean} [modificado] Indica si la fila ha sido modificada (opcional).
  */
 /**
- * Representa una fila de solicitud para el trámite 220201.
- * Contiene información detallada sobre el producto, requisitos, certificados,
- * fracciones arancelarias, cantidades, unidades de medida, país de origen y procedencia,
- * así como datos específicos como especie, tipo de planta y presentación.
- * 
- * @remarks
- * Esta interfaz es utilizada para capturar y manipular los datos de cada partida
- * dentro de una solicitud en el sistema de agricultura.
+ * Representa una fila de solicitud para el trámite 220201, conteniendo la información detallada
+ * sobre un producto, sus requisitos, cantidades, descripciones y datos asociados al proceso.
+ *
+ * Incluye datos como número de partida, tipo y descripción de requisitos, fracciones arancelarias,
+ * unidades de medida, cantidades, uso previsto, tipo y presentación del producto, países de origen
+ * y procedencia, certificados internacionales, y otros campos relevantes para la gestión del trámite.
+ *
+ * Algunos campos son opcionales y pueden estar presentes dependiendo del contexto del producto o
+ * del trámite específico.
  */
 export interface FilaSolicitud {
+  [key: string]: unknown;
+
   id?: number;
   /**
    * Número de partida.
@@ -249,6 +273,36 @@ export interface FilaSolicitud {
    * Tipo de requisito solicitado.
    */
   tipoRequisito: string;
+
+  /**
+   * Descripción del tipo de requisito.
+   */
+  descripcionTipoRequisito?: string;
+
+  /*
+  * Descripción de la unidad de medida de trámite (UMT).
+  */
+  descripcionUMT?: string;
+  /**
+   * Descripción de la unidad de medida de comercialización (UMC).
+   */
+  descripcionUMC?: string;
+  /**
+   * Descripción de la especie.
+   */
+  descripcionEspecie?: string;
+  /**
+   * Descripción del uso.
+   */
+  descripcionUso?: string;
+  /**
+   * Descripción del país de origen.
+   */
+  descripcionPaisDeOrigen?: string;
+  /**
+   * Descripción del país de procedencia.
+   */
+  descripcionPaisDeProcedencia?: string;
   /**
    * Descripción del requisito.
    */
@@ -333,10 +387,26 @@ export interface FilaSolicitud {
    * Planta autorizada de origen.
    */
   plantaAutorizadaOrigen?: string;
+  /**
+   * Presentación del producto.
+   */
   presentacion?: string;
 
+  /**
+   * Descripción del tipo de presentación del producto.
+   */
+  tipoPresentacionDescripcion?: string;
+  /**
+   * Lista de datos sensibles asociados a la mercancía animal.
+   */
   sensibles?: Sensible[];
-
+  /**
+   * Lista de detalles adicionales del producto.
+   */
+  detalleProductos?: DetallasDatos[];
+  /**
+   * Indica si la fila ha sido modificada.
+   */
   modificado?: boolean;
 }
 

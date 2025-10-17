@@ -13,7 +13,7 @@
             id="fraccionArancelaria"
             formControlName="fraccionArancelaria"
             type="text" 
-            maxlength="8"
+            maxlength="10"
             (change)="actualizarControl('anexoUnoFormGroup', 'fraccionArancelaria')"
           />
         </div>
@@ -55,6 +55,12 @@
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
+
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
@@ -140,6 +146,11 @@
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           ></app-tabla-dinamica>
     </div>
+     <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
