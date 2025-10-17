@@ -28,6 +28,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
@@ -445,7 +446,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public consultaioQuery: ConsultaioQuery,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public fitosanitarioStore: FitosanitarioStore
+    public fitosanitarioStore: FitosanitarioStore,
+    public catalogosService: CatalogosService,
   ) {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -639,12 +641,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getaduanaLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('aduana_de_ingreso.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.aduanaList = data as Catalogo[];
-      });
+    // this.agriculturaApiService
+    //   .obtenerSelectorList('aduana_de_ingreso.json')
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe((data) => {
+    //     this.aduanaList = data as Catalogo[];
+    //   });
+
+    this.catalogosService.obtieneCatalogoAduana(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.aduanaList = data.datos ?? [];
+        // eslint-disable-next-line
+        // console.log(this.aduanaList);
+      }
+    );
+    
   }
 
   /**
@@ -659,6 +673,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.agropecuariaList = data as Catalogo[];
       });
+
   }
 
   /**
