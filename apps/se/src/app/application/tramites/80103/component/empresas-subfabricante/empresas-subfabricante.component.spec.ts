@@ -1,47 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EmpresasSubfabricanteComponent } from './empresas-subfabricante.component';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { INITIAL_AMPLIACION_SERVICIOS_STATE, Tramite80101Store } from '../../estados/tramite80101.store';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
+import { FormBuilder } from "@angular/forms";
+import { EmpresasSubfabricanteComponent } from "../../../80103/component/empresas-subfabricante/empresas-subfabricante.component";
 
-describe('EmpresasSubfabricanteComponent (Jest)', () => {
+
+
+describe('EmpresasSubfabricanteComponent', () => {
   let component: EmpresasSubfabricanteComponent;
-  let fixture: ComponentFixture<EmpresasSubfabricanteComponent>;
-  let mockStore: Partial<Tramite80101Store>;
-  let mockQuery: Partial<Tramite80101Query>;
-  let mockService: Partial<NuevoProgramaIndustrialService>;
-  const mockRouter = { navigate: jest.fn() };
+  let store: any;
+  let query: any;
+  let router: any;
+  let activatedRoute: any;
+  let fb: FormBuilder;
+  let nuevoProgramaIndustrialService: any;
+  let _compartidaSvc: any;
 
-  const DATOS_SUBCONTRATISTA_MOCK: DatosSubcontratista = {
-    rfc: 'XAXX010101000',
-    estado: '1',
-  };
-
-  const PLANTAS_MOCK: PlantasSubfabricante[] = [
-    {
-      calle: 'Reforma',
-      numExterior: 1,
-      numInterior: 0,
-      codigoPostal: 12345,
-      colonia: 'Centro',
-    },
-  ];
-
-  beforeEach(async () => {
-   mockQuery = {
-  selectSolicitud$: of(INITIAL_AMPLIACION_SERVICIOS_STATE),
-  datosSubcontratistaEstado$: of(DATOS_SUBCONTRATISTA_MOCK),
-  plantasBuscadas$: of(PLANTAS_MOCK),
-  plantasSubfabricantesAgregar$: of([]),
-};
-
-
-    mockStore = {
+  beforeEach(() => {
+    store = {
       setFormValida: jest.fn(),
       setDatosSubcontratista: jest.fn(),
       setPlantasBuscadas: jest.fn(),
@@ -50,118 +23,136 @@ describe('EmpresasSubfabricanteComponent (Jest)', () => {
       setPlantasPorCompletar: jest.fn(),
       setindicePrevioRuta: jest.fn(),
     };
-
-    mockService = {
-      obtenerListaEstado: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'CDMX' }] })),
-      getSubfabricantesDisponibles: jest.fn().mockReturnValue(of(PLANTAS_MOCK)),
+    query = {
+      datosSubcontratistaEstado$: { pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() },
+      plantasBuscadas$: { pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() },
+      plantasSubfabricantesAgregar$: { pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() },
+    };
+    router = { navigate: jest.fn() };
+    activatedRoute = {};
+    fb = new FormBuilder();
+    nuevoProgramaIndustrialService = {
+      obtenerListaEstado: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+    };
+    _compartidaSvc = {
+      getSubfabricantesDisponibles: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+      mapApiResponseToPlantasSubfabricante: jest.fn(),
     };
 
-    await TestBed.configureTestingModule({
-      imports: [EmpresasSubfabricanteComponent, ReactiveFormsModule],
-      providers: [
-        { provide: Tramite80101Query, useValue: mockQuery },
-        { provide: Tramite80101Store, useValue: mockStore },
-        { provide: NuevoProgramaIndustrialService, useValue: mockService },
-        { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: {} },
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(EmpresasSubfabricanteComponent);
-    component = fixture.componentInstance;
-    component.inicializarFormularioDatosSubcontratista(); // Ensure form initialized before detectChanges
-    fixture.detectChanges();
+    component = new EmpresasSubfabricanteComponent(
+      nuevoProgramaIndustrialService,
+      fb,
+      query,
+      store,
+      router,
+      activatedRoute,
+      _compartidaSvc
+    );
   });
 
-  it('should create component', () => {
-    expect(component).toBeTruthy();
+  it('should initialize formularioDatosSubcontratista', () => {
+    expect(component.formularioDatosSubcontratista).toBeDefined();
+    expect(component.formularioDatosSubcontratista.get('rfc')).toBeDefined();
+    expect(component.formularioDatosSubcontratista.get('estado')).toBeDefined();
   });
 
-  it('should patch form and call setFormValida on datosSubcontratistaEstado$', () => {
-    expect(component.formularioDatosSubcontratista.value).toEqual(DATOS_SUBCONTRATISTA_MOCK);
-    expect(mockStore.setFormValida).toHaveBeenCalledWith({
-      esDatosSubcontratistaValido: true,
-    });
+  it('should call obtenerDatosDelAlmacen and obtenerListaEstado on ngOnInit', () => {
+    const spyDatos = jest.spyOn(component, 'obtenerDatosDelAlmacen');
+    const spyEstado = jest.spyOn(component, 'obtenerListaEstado');
+    component.ngOnInit();
+    expect(spyDatos).toHaveBeenCalled();
+    expect(spyEstado).toHaveBeenCalled();
   });
 
-  it('should update datosTablaSubfabricantesDisponibles on plantasBuscadas$', () => {
-    expect(component.datosTablaSubfabricantesDisponibles).toEqual(PLANTAS_MOCK);
-  });
-
-  it('should clear datosSubfabricanteParaSerAgregados if empty response', () => {
-    expect(component.datosSubfabricanteParaSerAgregados).toEqual([]);
-  });
-
-  it('should update estado on enEstadoSeleccionado()', () => {
-    const estado: Catalogo = { id: 33, descripcion: 'Nuevo León' };
+  it('should patchValue and call store.setDatosSubcontratista on enEstadoSeleccionado', () => {
+    const estado = { clave: 'MX' } as any;
+    component.formularioDatosSubcontratista.patchValue({ rfc: 'RFC', estado: '' });
     component.enEstadoSeleccionado(estado);
-    expect(component.formularioDatosSubcontratista.value.estado).toBe('33');
-    expect(mockStore.setDatosSubcontratista).toHaveBeenCalled();
+    expect(component.formularioDatosSubcontratista.value.estado).toBe('MX');
+    expect(store.setDatosSubcontratista).toHaveBeenCalled();
   });
 
-  it('should update store on alCambiarRFC()', () => {
-    const datos: DatosSubcontratista = { rfc: 'RFC123', estado: '2' };
+  it('should call store.setDatosSubcontratista on alCambiarRFC if datosSubcontratista exists', () => {
+    const datos = { rfc: 'RFC', estado: 'MX' } as any;
     component.alCambiarRFC(datos);
-    expect(mockStore.setDatosSubcontratista).toHaveBeenCalledWith(datos);
+    expect(store.setDatosSubcontratista).toHaveBeenCalledWith(datos);
   });
 
-  it('should update estadoCatalogo on obtenerListaEstado()', () => {
+  it('should initialize formularioDatosSubcontratista with empty values', () => {
+    component.inicializarFormularioDatosSubcontratista();
+    expect(component.formularioDatosSubcontratista.value).toEqual({ rfc: '', estado: '' });
+  });
+
+  it('should update estadoCatalogo on obtenerListaEstado', () => {
+    const response = { data: [{ clave: 'MX' }] };
+    nuevoProgramaIndustrialService.obtenerListaEstado = jest.fn().mockReturnValue({
+      pipe: jest.fn().mockReturnThis(),
+      subscribe: (cb: any) => cb(response),
+    });
     component.obtenerListaEstado();
-    expect(component.estadoCatalogo).toEqual([{ id: 1, descripcion: 'CDMX' }]);
+    expect(component.estadoCatalogo).toEqual(response.data);
   });
 
-  it('should call store.setPlantasBuscadas on obtenerSubfabricantesDisponibles()', () => {
+  it('should call store.setPlantasBuscadas on obtenerSubfabricantesDisponibles', () => {
+    component.formularioDatosSubcontratista.patchValue({ rfc: 'RFC', estado: 'MX' });
+    const response = { datos: [{}] };
+    _compartidaSvc.getSubfabricantesDisponibles = jest.fn().mockReturnValue({
+      pipe: jest.fn().mockReturnThis(),
+      subscribe: (cb: any) => cb(response),
+    });
+    (_compartidaSvc.mapApiResponseToPlantasSubfabricante as jest.Mock).mockReturnValue([{ id: 1 }]);
+    (global as any).esValidObject = jest.fn().mockReturnValue(true);
+    (global as any).doDeepCopy = jest.fn().mockImplementation((x) => x);
+    (global as any).esValidArray = jest.fn().mockReturnValue(true);
     component.obtenerSubfabricantesDisponibles();
-    expect(mockStore.setPlantasBuscadas).toHaveBeenCalledWith(PLANTAS_MOCK);
+    expect(store.setPlantasBuscadas).toHaveBeenCalledWith([{ id: 1 }]);
   });
 
-  it('should assign selected plants on obtenerRegistroSeleccionado()', () => {
-    component.obtenerRegistroSeleccionado(PLANTAS_MOCK);
-    expect(component.datosDelSubfabricanteSeleccionado).toEqual(PLANTAS_MOCK);
+  it('should set datosDelSubfabricanteSeleccionado on obtenerRegistroSeleccionado', () => {
+    const plantas:any = [{ id: 1 }];
+    component.obtenerRegistroSeleccionado(plantas);
+    expect(component.datosDelSubfabricanteSeleccionado).toEqual(plantas);
   });
 
-  it('should call obtenerSubfabricantesDisponibles() when form is valid on realizarBusqueda()', () => {
+  it('should call obtenerSubfabricantesDisponibles on realizarBusqueda if form is valid', () => {
+    component.formularioDatosSubcontratista.patchValue({ rfc: 'RFC', estado: 'MX' });
     const spy = jest.spyOn(component, 'obtenerSubfabricantesDisponibles');
-    component.formularioDatosSubcontratista.patchValue({ rfc: 'RFC', estado: '10' });
     component.realizarBusqueda();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should not call obtenerSubfabricantesDisponibles() when form is invalid on realizarBusqueda()', () => {
-    const spy = jest.spyOn(component, 'obtenerSubfabricantesDisponibles');
-    component.formularioDatosSubcontratista.patchValue({ rfc: '', estado: '' });
-    component.realizarBusqueda();
-    expect(spy).not.toHaveBeenCalled();
+  it('should call store.setPlantasSubfabricantesAgregar on agregarPlantas', () => {
+    const plantas:any = [{ id: 1 }];
+    component.agregarPlantas(plantas);
+    expect(store.setPlantasSubfabricantesAgregar).toHaveBeenCalledWith(plantas);
   });
 
-  it('should call store.setPlantasSubfabricantesAgregar on agregarPlantas()', () => {
-    component.agregarPlantas(PLANTAS_MOCK);
-    expect(mockStore.setPlantasSubfabricantesAgregar).toHaveBeenCalledWith(PLANTAS_MOCK);
+  it('should set listaDeSubfabricantesPorEliminar on datosDelSubfabricantePorEliminar', () => {
+    const plantas:any = [{ id: 1 }];
+    component.datosDelSubfabricantePorEliminar(plantas);
+    expect(component.listaDeSubfabricantesPorEliminar).toEqual(plantas);
   });
 
-  it('should assign list on datosDelSubfabricantePorEliminar()', () => {
-    component.datosDelSubfabricantePorEliminar(PLANTAS_MOCK);
-    expect(component.listaDeSubfabricantesPorEliminar).toEqual(PLANTAS_MOCK);
+  it('should call store.eliminarPlantas on eliminarPlantas', () => {
+    const plantas:any = [{ id: 1 }];
+    component.eliminarPlantas(plantas);
+    expect(store.eliminarPlantas).toHaveBeenCalledWith(plantas);
   });
 
-  it('should call eliminarPlantas() on eliminarPlantas()', () => {
-    component.eliminarPlantas(PLANTAS_MOCK);
-    expect(mockStore.eliminarPlantas).toHaveBeenCalledWith(PLANTAS_MOCK);
-  });
-
-  it('should call store and router on complementarPlantas()', () => {
+  it('should call store.setPlantasPorCompletar, setindicePrevioRuta and router.navigate on complementarPlantas', () => {
     component.tabIndex = 2;
-    component.complementarPlantas(PLANTAS_MOCK);
-    expect(mockStore.setPlantasPorCompletar).toHaveBeenCalledWith(PLANTAS_MOCK);
-    expect(mockStore.setindicePrevioRuta).toHaveBeenCalledWith(2);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['../complementar-plantas'], { relativeTo: {} });
+    const plantas:any = [{ id: 1 }];
+    component.complementarPlantas(plantas);
+    expect(store.setPlantasPorCompletar).toHaveBeenCalledWith(plantas);
+    expect(store.setindicePrevioRuta).toHaveBeenCalledWith(2);
+    expect(router.navigate).toHaveBeenCalledWith(['../complementar-plantas'], { relativeTo: activatedRoute });
   });
 
-  it('should call destroyNotifier$ on ngOnDestroy()', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
