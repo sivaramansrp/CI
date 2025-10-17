@@ -9,7 +9,7 @@ import {
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../models/registro.model';
+import { FECHA_FINAL,FECHA_INICIAL, FECHA_PAGO} from '../../models/registro.model';
 import {
   FormBuilder,
   FormGroup,
@@ -17,12 +17,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud30506State, Tramite30506Store } from '../state/tramite30506.store';
+import { Solicitud30506State, Tramite30506Store } from '../../state/tramite30506.store ';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { RegistroService } from '../services/registro.service';
-import { Solicitud30506Enum } from '../constantes/solicitud30506.enum';
-import { Tramite30506Query } from '../state/tramite30506.query';
+import { RegistroService } from '../../services/registro.service';
+import { Solicitud30506Enum } from '../../constantes/solicitud30506.enum';
+import { Tramite30506Query } from '../../state/tramite30506.query';
 
 
 /**
