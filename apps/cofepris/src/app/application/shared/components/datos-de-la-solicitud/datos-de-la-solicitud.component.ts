@@ -69,6 +69,7 @@ import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
+  MercanciaForm,
   OpcionConfig,
   ScianConfig,
   TablaMercanciasConfig,
@@ -79,6 +80,7 @@ import {
 import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ScianDataService } from '../../services/scian-data.service';
 import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
@@ -100,7 +102,8 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     TooltipModule,
     InputRadioComponent,
     TablePaginationComponent,
-    ScianTablaComponent
+    ScianTablaComponent,
+    DatosMercanciaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -108,6 +111,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
 export class DatosDeLaSolicitudComponent
   implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -147,6 +151,7 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
 
+  @Input() public mercanciaFormState! : MercanciaForm;
   /**
    * @property {boolean} opcionesColapsableState
    * Estado colapsable inicial para mostrar u ocultar ciertas secciones.
@@ -550,6 +555,12 @@ export class DatosDeLaSolicitudComponent
    */
   public scianModalAbierto: boolean = false;
 
+   /**
+   * Indicates if the merchandise modal is currently open
+   */
+  public mercanciaModalAbierto: boolean = false
+
+public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
   /**
    * Constructor del componente.
@@ -627,6 +638,8 @@ export class DatosDeLaSolicitudComponent
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    console.log("mercanciaFormState", this.mercanciaFormState);
+    
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
@@ -1271,15 +1284,10 @@ export class DatosDeLaSolicitudComponent
    *
    * @returns {void} Este método no devuelve ningún valor.
    */
-  agregarMercancias(): void {
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(
-      this.tablaMercanciasLista
-    );
-    if (this.mercanciasSeleccionado) {
-      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
-    }
-    this.irAAcciones('../mercancia-datos');
-  }
+ agregarMercancias(): void {
+  this.mercanciaSeleccionada = undefined; // Clear any previous selection
+  this.abrirMercanciaModal();
+}
 
   /**
    * Emite un evento con los datos seleccionados de las listas asociadas.
@@ -1307,14 +1315,24 @@ export class DatosDeLaSolicitudComponent
       };
       this.mostrarAlerta = true;
     } else if (this.tablaMercanciasLista.length === 1) {
-      this.datosDeTablaSeleccionados.emit({
-        scianSeleccionados: this.scianLista,
-        mercanciasSeleccionados: this.tablaMercanciasLista,
-        opcionSeleccionados: this.opcionLista,
-        opcionesColapsableState: this.opcionesColapsable,
-      });
-      this.irAAcciones('../mercancia-datos');
-    }
+    // Set the selected merchandise data before opening modal
+    this.mercanciaSeleccionada = this.tablaMercanciasLista[0];
+    this.abrirMercanciaModal();
+  } else {
+    // No merchandise selected
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar una mercancía para modificar.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
   }
 
   /**
@@ -1654,7 +1672,91 @@ export class DatosDeLaSolicitudComponent
     this.accioneSolitudValor.emit(event);
   }
 
+   /**
+   * Opens the merchandise selection modal
+   */
+  abrirMercanciaModal(): void {
+    this.mercanciaModalAbierto = true;
+    const MODALELEMENT = document.getElementById('mercanciaModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+   /**
+   * Closes the merchandise selection modal
+   */
+ cerrarMercanciaModal(): void {
+  this.mercanciaModalAbierto = false;
+  this.mercanciaSeleccionada = undefined; // Clear selection when closing
+  const MODALELEMENT = document.getElementById('mercanciaModal');
+  if (MODALELEMENT) {
+    const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
+    if (MODAL) {
+      MODAL.hide();
+    }
+  }
+}
+
+ /**
+ * Handles merchandise selection from the modal
+ */
+onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
+  if (this.mercanciaSeleccionada) {
+    // Update existing merchandise - find by a unique identifier
+    const INDEX = this.tablaMercanciasConfig.datos.findIndex(
+      item => item.clasificacionProducto === this.mercanciaSeleccionada!.clasificacionProducto &&
+              item.denominacionEspecificaProducto === this.mercanciaSeleccionada!.denominacionEspecificaProducto
+    );
+    
+    if (INDEX !== -1) {
+      // Replace the existing item with the modified data
+      this.tablaMercanciasConfig.datos[INDEX] = { ...mercanciaData };
+    } else {
+      // If not found, add as new item
+      this.tablaMercanciasConfig.datos = [
+        ...this.tablaMercanciasConfig.datos,
+        mercanciaData
+      ];
+    }
+  } else {
+    // Add new merchandise
+    this.tablaMercanciasConfig.datos = [
+      ...this.tablaMercanciasConfig.datos,
+      mercanciaData
+    ];
+  }
   
+  // Update the form control value
+  this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
+  
+  if (this.mercanciasSeleccionado) {
+    this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+  }
+  
+  // Clear selected merchandise and close modal
+  this.mercanciaSeleccionada = undefined;
+  this.cerrarMercanciaModal();
+  
+  // Force change detection
+  this.cdr.markForCheck();
+}
+
+  /**
+ * Updates the table after merchandise changes
+ */
+private updateMercanciaTable(): void {
+  // Force the table to refresh by reassigning the data
+  this.tablaMercanciasConfig = {
+    ...this.tablaMercanciasConfig,
+    datos: [...this.tablaMercanciasConfig.datos]
+  };
+  
+  // Update the form control
+  this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
+  this.datosSolicitudForm.get('mercancias')?.updateValueAndValidity();
+}
 
   /**
    * Emite un evento con los datos seleccionados de la tabla.
