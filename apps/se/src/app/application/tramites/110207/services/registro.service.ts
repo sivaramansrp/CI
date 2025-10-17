@@ -96,6 +96,7 @@ export class RegistroService {
     this.tramite110207Store.setPuertoEmbarque(DATOS.puertoEmbarque);
     this.tramite110207Store.setPuertoDesembarque(DATOS.puertoDesembarque);
   }
+  
   /**
    * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
    * @returns Observable con los datos del formulario.
