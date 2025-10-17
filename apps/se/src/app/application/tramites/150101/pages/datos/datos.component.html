@@ -31,7 +31,7 @@
           (keydown.space)="seleccionaTab(3)"
           role="button"
           tabindex="3"
-          [ngClass]="!estaHabilitado ? 'disabled-link' : ''"
+          [ngClass]="estaHabilitado ? 'disabled-link' : ''"
           >Datos de reporte anual</a
         >
       </li>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -49,6 +49,22 @@ const FECHA_FIN = {
   required: false,
   habilitado: true,
 };
+
+// Add custom validator for integer values
+function integerValidator(control: AbstractControl): { [key: string]: any } | null {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === '' || VALUE === undefined) {
+    return null; // Let required validator handle empty values
+  }
+  
+  // Check if value is a valid integer
+  const NUMVALUE = Number(VALUE);
+  if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
+    return { 'notInteger': { value: control.value } };
+  }
+  
+  return null;
+}
 
 @Component({
   selector: 'app-programas-reporte-anual',
@@ -239,30 +255,77 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         { value: this.solicitud150101State?.tipoPrograma, disabled: true },
       ],
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
+      // Add validation for numeric fields
+      ventasTotales: ['', [Validators.required, integerValidator]],
+      totalExportaciones: ['', [Validators.required, integerValidator]]
+    });
+
+    // Add value change listeners for validation
+    this.periodoReporteAnual.get('ventasTotales')?.valueChanges.subscribe(value => {
+      this.validateIntegerField('ventasTotales', value, 'Ventas totales (a):');
+    });
+
+    this.periodoReporteAnual.get('totalExportaciones')?.valueChanges.subscribe(value => {
+      this.validateIntegerField('totalExportaciones', value, 'Total exportaciones (b):');
     });
   }
-  /*
-    * Muestra una alerta cuando el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
-    * La alerta informa al usuario que debe seleccionar otro programa para presentar el reporte anual.
-    * @returns {void}
-    * 
-    */
-  showAlert(): void {
-   
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje:"El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.",
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        }
-        
-      }
+
+  /**
+   * @method validateIntegerField
+   * @description Validates if a field contains a valid integer value and shows notification if invalid
+   * @param fieldName - Name of the form field
+   * @param value - Value to validate
+   * @param fieldLabel - Label to show in error message
+   */
+  validateIntegerField(fieldName: string, value: any, fieldLabel: string): void {
+    const CONTROL = this.periodoReporteAnual.get(fieldName);
     
+    if (value !== null && value !== '' && value !== undefined) {
+      const NUMVALUE = Number(value);
+      if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
+        // Set field to 0 and show notification
+        CONTROL?.setValue('0', { emitEvent: false });
+        this.showValidationAlert(fieldLabel);
+      }
+    }
+  }
+
+  /**
+   * @method showValidationAlert
+   * @description Shows validation alert for invalid integer input
+   * @param fieldName - Name of the field that failed validation
+   */
+  showValidationAlert(fieldName: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: 'Valor inválido',
+      mensaje: `${fieldName} debe ser un número entero válido. El campo se ha establecido en 0.`,
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * @method showAlert
+   * @description Shows a general alert notification
+   */
+  showAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: 'Programa seleccionado',
+      mensaje: 'Se ha seleccionado un programa correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 
   /**
    * @method inicializarEstadoFormulario
@@ -356,7 +419,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
-    this.showAlert();
     this.periodoReporteAnual.patchValue({
       folioPrograma: evento.folioPrograma,
       modalidad: evento.modalidad,

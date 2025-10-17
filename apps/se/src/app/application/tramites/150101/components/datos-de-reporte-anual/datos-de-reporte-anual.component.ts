@@ -49,7 +49,7 @@ export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
    * @descripcion
    * Mensaje de alerta que se muestra al usuario.
    */
-    mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
+    mensajeDeAlerta: string = 'Ventas Totales deben ser mayores o iguales a cero.';
 
   /**
      * @public

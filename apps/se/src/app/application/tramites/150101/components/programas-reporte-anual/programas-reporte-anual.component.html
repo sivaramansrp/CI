@@ -81,8 +81,38 @@
         />
       </div>
     </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label class="form-label" for="ventasTotales">Ventas totales (a):</label>
+        <input
+          type="number"
+          id="ventasTotales"
+          class="form-control"
+          formControlName="ventasTotales"
+          [class.is-invalid]="!isValid(periodoReporteAnual, 'ventasTotales')"
+          [disabled]="formularioDeshabilitado"
+        />
+        <div class="invalid-feedback" *ngIf="!isValid(periodoReporteAnual, 'ventasTotales')">
+          Por favor ingrese un número entero válido.
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="totalExportaciones">Total exportaciones (b):</label>
+        <input
+          type="number"
+          id="totalExportaciones"
+          class="form-control"
+          formControlName="totalExportaciones"
+          [class.is-invalid]="!isValid(periodoReporteAnual, 'totalExportaciones')"
+          [disabled]="formularioDeshabilitado"
+        />
+        <div class="invalid-feedback" *ngIf="!isValid(periodoReporteAnual, 'totalExportaciones')">
+          Por favor ingrese un número entero válido.
+        </div>
+      </div>
+    </div>
   </form>
 </div>
 @if(nuevaNotificacion){
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
-  } 
+}
