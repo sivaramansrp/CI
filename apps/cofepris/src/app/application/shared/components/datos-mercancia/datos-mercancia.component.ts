@@ -85,13 +85,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaComponent implements OnInit, AfterViewInit {
-  requiedField:boolean = false;
 
    /**
    * Event emitter to notify parent component to close the modal
    */
   @Output() cerrarModal = new EventEmitter<void>();
 
+  requiedField:boolean = false;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -750,7 +750,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Restablece los valores de los campos clave en el formulario.
    */
   modificarClave(): void {
-    console.log("clave list>>>>>>>",this.claveLista);
     
     if (!this.claveLista.length) {
       return;
@@ -937,7 +936,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       [
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
-        this.numeroConDecimalesValidator()
+        DatosMercanciaComponent.numeroConDecimalesValidator()
       ],
     ],
     cantidadUmt: [
@@ -952,7 +951,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       [
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
-        this.numeroUMCDecimalesValidator()
+        DatosMercanciaComponent.numeroUMCDecimalesValidator()
+
       ],
     ],
     cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
@@ -1033,7 +1033,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       const VALUE = control.value;
       
       // Skip validation if empty
-     if (!VALUE) {
+      if (!VALUE) {
         return null;
       }
       
@@ -1063,7 +1063,7 @@ public obtenerValor(
 }
 
 
-private convertToStringArray(value: any): string[] {
+public convertToStringArray(value: unknown): string[] {
   if (!value){
     return [];
   }

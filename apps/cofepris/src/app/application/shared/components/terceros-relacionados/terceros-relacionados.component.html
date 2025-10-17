@@ -178,7 +178,6 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="onAgregarProveedorFinal()"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
         >
@@ -331,7 +330,6 @@
       </div>
       <div class="modal-body">
         <app-agregar-proveedor
-          *ngIf="proveedorModalAbierto"
           >
         </app-agregar-proveedor>
       </div>
