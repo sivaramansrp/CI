@@ -1,11 +1,10 @@
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { CatalogoLista, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
 import { Observable, map } from 'rxjs';
+import { PROC_110214, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { PROC_110214, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
-import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
 import { Tramite110214Query } from '../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../estados/tramites/tramite110214.store';
 /**
