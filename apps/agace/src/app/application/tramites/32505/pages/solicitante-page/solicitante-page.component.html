@@ -1,8 +1,13 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <h3>Aviso mensual sobre importación y venta de vehículos usados (Regla 3.5.7 RCGE)</h3>
+      </div>
+      <div class="col-md-12">
+        @if (indice === 1){
+        <ng-alert class="text-center" [CONTENIDO]="TEXTOS"></ng-alert>
+        }
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
@@ -17,6 +22,10 @@
       }
       
       <btn-continuar [datos]="datosPasos"  (continuarEvento)="getValorIndice($event)"></btn-continuar>
+
+      @if(indice ===1){
+      <ng-alert [CONTENIDO]="AVISO"></ng-alert>
+      }
     </div>
   </div>
   @if (confirmacionNotificacion) {

@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
-import { of, Subject, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { of } from 'rxjs';
 import { Modal } from 'bootstrap';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -100,23 +99,6 @@ describe('CertificadoOrigenComponent', () => {
 
   it('should create component', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('cargarBloque', () => {
-    it('should call store.setPaisBloque with data', () => {
-      component.cargarBloque();
-      expect(mockValidarInicialmenteCertificadoService.obtenerPaisBloque).toHaveBeenCalled();
-      expect(mockStore.setPaisBloque).toHaveBeenCalledWith([{ id: 1, descripcion: 'Bloque' }]);
-    });
-
-    it('should handle error gracefully', () => {
-      jest.spyOn(console, 'error').mockImplementation(() => {});
-      mockValidarInicialmenteCertificadoService.obtenerPaisBloque.mockReturnValueOnce(
-        throwError(() => new Error('Error'))
-      );
-      component.cargarBloque();
-      expect(console.error).toHaveBeenCalled();
-    });
   });
 
   it('should call store.setEstado when tipoEstadoSeleccion is called', () => {

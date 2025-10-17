@@ -5,7 +5,7 @@
     [agregarDatosProductor]="agregarDatosProductor"
     [productoresExportador]="productoresExportador || []"
     [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
-    [mercanciaDatos]="(mercanciaProductores$ | async) || []"
+    [mercanciaDatos]="[]"
     [ocultarFax]="ocultarFax"
     [esTipoDeSeleccionado]="esTipoDeSeleccionado"
     [optionsTipoFactura]="optionsTipoFactura || []"
@@ -14,3 +14,5 @@
     (emitAgregarExportador)="emitAgregarExportador($event)" 
     (formaValida)="formaValida($event)"
     ></app-historico-productores>
+
+    <!-- [mercanciaDatos]="(mercanciaProductores$ | async) || []" -->

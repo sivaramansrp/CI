@@ -89,6 +89,11 @@ export interface ColumnasTabla {
   headerMontoIGI: string;
   headerFormaPago: string;
   headerMontoDTA: string;
+  headerNoCilindros: string;
+  headerNoPuertas: string;
+  headerTipoCombustible: string;
+  headerMontoIVA: string;
+  headerValorVentaSinIVA: string;
 }
 /**
  * Representa las columnas de la tabla de consulta.
