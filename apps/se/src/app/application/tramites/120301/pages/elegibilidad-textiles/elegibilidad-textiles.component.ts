@@ -381,65 +381,52 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    * @throws {Error} No lanza errores explícitamente, pero valida el rango de valores
    */
   getValorIndice(e: AccionBoton): void {
-    const PESTANA_ACTIVA = this.pasoUnoComponent.indice;
     // Si la acción es continuar, validar formularios del paso actual
     if (e.accion === 'cont') {
-      // Validación para pestañas 1 o 2
-      if (PESTANA_ACTIVA === 1 || PESTANA_ACTIVA === 2) {
+      if (e.valor <= 2) {
         const ISVALID =
           this.solicitudState.validarFormularioFacturasAsociadas &&
           this.solicitudState.validarFormularioImportadorDestino;
-        if (!ISVALID) {
-          this.esFormaValido = true;
-          // Mantener el wizard en el índice 1 para que no se visualice el botón "Anterior"
-          this.indice = 1;
-          this.datosPasos.indice = 1;
-          window.scrollTo(0, 0);
-          return;
+        if (ISVALID) {
+          this.guardarSolicitudCompleta();
         }
-        this.esFormaValido = false;
-        this.guardarSolicitudCompleta();
-        this.datosPasos.indice = this.indice;
-      } else {
-        // Para otras pestañas, empezar con esFormaValido como false
-        this.esFormaValido = false;
-
-        // Validar campos requeridos de las pestañas 3 y 6
-        const CAMPOS_TAB3_VALIDOS = this.solicitudState.validarFormularioFacturasAsociadas;
-        const CAMPOS_TAB6_VALIDOS = this.solicitudState.validarFormularioImportadorDestino;
-
-        if (!CAMPOS_TAB3_VALIDOS || !CAMPOS_TAB6_VALIDOS) {
-          // Activar la pestaña 6 del componente PasoUnoComponent
-          this.pasoUnoComponent.indice = 6;
-          this.esFormaValido = true;
-          this.formularioAlertaError = ERROR_FORMA_FALTAN;
-
-          // Mantener el wizard en el índice 1 para que no se visualice el botón "Anterior"
-          this.indice = 1;
-          this.datosPasos.indice = 1;
-
-          // Si los campos de la pestaña 6 están incompletos, marcar en rojo después de un pequeño delay
-          if (!CAMPOS_TAB6_VALIDOS) {
-            // Usar setTimeout para asegurar que el cambio de pestaña se complete antes de marcar campos
-            setTimeout(() => {
-              this.marcarCamposTab6EnRojo();
-            }, 150);
+        if (!ISVALID) {
+          const PESTANA_ACTIVA = (this.pasoUnoComponent.indice);
+          if (PESTANA_ACTIVA === 1 || PESTANA_ACTIVA === 2) {
+            this.esFormaValido = true;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            window.scrollTo(0, 0);
           }
-
-          window.scrollTo(0, 0);
+          else {
+            const CAMPOS_TAB3_VALIDOS = this.solicitudState.validarFormularioFacturasAsociadas;
+            const CAMPOS_TAB6_VALIDOS = this.solicitudState.validarFormularioImportadorDestino;
+            if (!CAMPOS_TAB3_VALIDOS || !CAMPOS_TAB6_VALIDOS) {
+              this.formularioAlertaError = ERROR_FORMA_FALTAN;
+              this.esFormaValido = true;
+              this.indice = 1;
+              this.datosPasos.indice = 1;
+              // Si los campos de la pestaña 6 están incompletos, marcar en rojo después de un pequeño delay
+              if (!CAMPOS_TAB6_VALIDOS) {
+                // Usar setTimeout para asegurar que el cambio de pestaña se complete antes de marcar campos
+                setTimeout(() => {
+                  this.marcarCamposTab6EnRojo();
+                }, 150);
+              }
+              window.scrollTo(0, 0);
+            }
+          }
           return;
         }
       }
-
+      this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-
       // Avanzar al siguiente paso
       this.wizardComponent.siguiente();
       this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
       return;
     }
-
     // Para botón "Anterior" - actualizar índice sin validación
     this.indice = e.valor;
     this.datosPasos.indice = this.indice;

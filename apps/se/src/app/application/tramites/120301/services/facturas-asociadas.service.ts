@@ -49,7 +49,7 @@ export class FacturasAsociadasService {
     idExpedicion: number,
     tipoRegimen: string,
     page: number = 0,
-    size: number = 1,
+    size: number = 10,
     sort: string = 'asc'
   ): Observable<BaseResponse<FacturasTplResponse>> {
     const ENDPOINT = `${this.host}${API_GET_FACTURAS_TPL}`;
