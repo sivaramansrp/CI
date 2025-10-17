@@ -1,9 +1,10 @@
-import { Catalogo, ENVIRONMENT } from '@ng-mf/data-access-user';
+import { API_GET_CATALOGO_ADUANAS } from '../../../../../core/server/api-router';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { API_GET_CATALOGO_ADUANAS } from '../../../../../core/server/api-router';
 
 @Injectable({
   providedIn: 'root'
