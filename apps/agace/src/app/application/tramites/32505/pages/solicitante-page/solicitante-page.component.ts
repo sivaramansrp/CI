@@ -26,6 +26,9 @@ export class SolicitantePageComponent {
   TEXTOS ='La solicitud ha quedado registrada con el número temporal 202786060. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada. <br> Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.'
   
 
+  /**
+   * Contenido HTML del aviso de privacidad simplificado.
+   */
   AVISO = AVISO_CONTRNIDO;
 
   /**

@@ -449,6 +449,12 @@ export const RADIO_OPCIONS_AVISO = [
   { label: 'Importación y venta', value: 'Importación y venta' },
 ];
 
+/**
+ * @constant AVISO_CONTRNIDO
+ * @description Contenido HTML del aviso de privacidad simplificado para el SAT y VUCEM.
+ * Incluye información sobre el tratamiento de datos personales y un enlace al aviso de privacidad integral.
+ * @type {string}
+ */
 export const AVISO_CONTRNIDO = 
    `<div>
     <div class="text-center"><b>Aviso de privacidad simplificado</b></div>

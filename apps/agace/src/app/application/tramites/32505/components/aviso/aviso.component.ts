@@ -242,6 +242,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   optionCilindros!: Catalogo[];
 
+  /**
+   * @property {Catalogo[]} anoModelo
+   * @description Opciones disponibles para los años modelo de vehículos.
+   */
   anoModelo!: Catalogo[];
 
   /**
@@ -268,6 +272,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   datosDelAvisoVisible: boolean = false;
 
+  /**
+   * @property {boolean} mostrarTipoDeCarga
+   * @description Indica si se debe mostrar la sección de tipo de carga en el formulario.
+   */
   mostrarTipoDeCarga: boolean = false;
 
   /**

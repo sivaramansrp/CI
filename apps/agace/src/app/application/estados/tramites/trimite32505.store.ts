@@ -191,8 +191,14 @@ export interface Solicitud32505State {
    */
   datosSolicitante: DatosSolicitante;
 
+  /**
+   * Identificador de la transacción en VUCEM.
+   */
   identificadorTransaccionVucem?: string;
 
+  /**
+   * NIV o número de serie del vehículo.
+   */
   nivNumeroSerie?: string;
 }
 
