@@ -1,9 +1,18 @@
-import { AccionBoton, ConsultaioState, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import {
+  AccionBoton,
+  ConsultaioState,
+  DatosPasos,
+  ListaPasosWizard,
+  Notificacion,
+  PAGO_DE_DERECHOS,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoDeReciclajeServiceService } from '../../service/aviso-de-reciclaje-service.service';
-import { ConsultaioQuery} from '@ng-mf/data-access-user'
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
+import { PasoUnoT231003Component } from '../solicitud-datos-solicitante/paso-uno-t231003.component';
 /**
  * Componente que representa la sección de aviso de reciclaje.
  * - selector: Etiqueta personalizada para utilizar este componente en otras plantillas.
@@ -14,12 +23,43 @@ import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
   templateUrl: './aviso-reciclaje.component.html',
 })
 export class AvisoReciclajeComponent implements OnInit {
+  /**
+   * Referencia al componente Wizard utilizado en la plantilla.
+   */
+  PASO_UNO = 1;
 
   /**
-     * @property pasos
-     * @type {ListaPasosWizard[]}
-     *  Arreglo que contiene los pasos del wizard.
-     */
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;
+  /**
+   * Indica si el formulario actual es válido.
+   */
+  esFormaValido: boolean = true;
+
+  /**
+   * Notificación que se puede utilizar para mostrar mensajes emergentes (toastr).
+   * Null cuando no hay notificación nueva.
+   */
+  public nuevaNotificacion: Notificacion | null = null;
+
+  /**
+   * Notificación tipo banner que se muestra tras operaciones exitosas.
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
+   * @property pasos
+   * @type {ListaPasosWizard[]}
+   *  Arreglo que contiene los pasos del wizard.
+   */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
@@ -29,12 +69,16 @@ export class AvisoReciclajeComponent implements OnInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   * Referencia al componente del primer paso para validar formularios.
+   */
+  @ViewChild(PasoUnoT231003Component) pasoUno!: PasoUnoT231003Component;
+
   /** Clase CSS utilizada para mostrar una alerta de tipo informativo */
   public infoAlert = 'alert-info';
 
   /** Textos utilizados relacionados con el pago de derechos */
   TEXTOS = PAGO_DE_DERECHOS;
-
 
   /**
    * @property indice
@@ -69,7 +113,7 @@ export class AvisoReciclajeComponent implements OnInit {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private avisoDeReciclajeServiceService: AvisoDeReciclajeServiceService
-  ) { }
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -99,9 +143,8 @@ export class AvisoReciclajeComponent implements OnInit {
    */
   guardarDatosFormulario(): void {
     this.avisoDeReciclajeServiceService
-      .obtenerDatosSolicitudInicial().pipe(
-        takeUntil(this.destroy$)
-      )
+      .obtenerDatosSolicitudInicial()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
         // Si la respuesta existe, actualiza el estado del formulario
         if (resp) {
@@ -111,17 +154,41 @@ export class AvisoReciclajeComponent implements OnInit {
   }
 
   /**
- * Updates the index value based on the action button event.
- * @param e The action button event containing the action and value.
- */
-  public getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent?.siguiente();
-      } else {
-        this.wizardComponent.atras();
+   * Updates the index value based on the action button event.
+   * @param e The action button event containing the action and value.
+   */
+  getValorIndice(e: AccionBoton): void {
+    if (this.indice === this.PASO_UNO) {
+      const FORM_VALIDO = this.pasoUno?.validarTodosLosFormularios();
+      this.esFormaValido = FORM_VALIDO;
+      if (!FORM_VALIDO) {
+        this.datosPasos.indice = this.indice;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+      console.log('aqui ira el guardar solicitud');
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        this.actualizarDatosPasos();
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
+  }
+
+  /**
+   * Actualiza los datos del componente de pasos con el índice actual y el número total de pasos.
+   */
+  actualizarDatosPasos(): void {
+    this.datosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
   }
 }

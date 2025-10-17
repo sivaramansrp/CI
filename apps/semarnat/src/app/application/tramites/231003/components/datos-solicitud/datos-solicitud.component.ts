@@ -588,6 +588,27 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.datoSolicitudStore.actualizarResiduos(this.administrarResiduos);
   }
 
+  validaTodoLosFormularios(): boolean {
+    const IS_VALID =
+      this.solicitudForm.valid &&
+      this.formularioEmpresaTransportista.valid &&
+      this.formularioEmpresaReciclaje.valid &&
+      this.formularioPrecaucionesManejo.valid &&
+      this.formularioLugarReciclaje.valid;
+    if (!IS_VALID) {
+      this.marcarCamposcomoTocados();
+    }
+    return IS_VALID;
+  }
+
+  marcarCamposcomoTocados(): void {
+    this.solicitudForm.markAllAsTouched();
+    this.formularioEmpresaTransportista.markAllAsTouched();
+    this.formularioEmpresaReciclaje.markAllAsTouched();
+    this.formularioPrecaucionesManejo.markAllAsTouched();
+    this.formularioLugarReciclaje.markAllAsTouched();
+  }
+
   /**
    * Método del ciclo de vida que se llama cuando el componente es destruido.
    * Emite un valor y completa el subject `destroy$` para limpiar suscripciones y evitar fugas de memoria.
