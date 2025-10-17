@@ -314,6 +314,30 @@ export class AvisoComponent implements OnInit, OnDestroy {
   public elementoParaEliminar!: number;
 
   /**
+   * @property {boolean} esModoEdicionMercancia
+   * @description Indica si el modal de mercancía está en modo edición (true) o modo agregar (false).
+   * @default false
+   */
+  esModoEdicionMercancia: boolean = false;
+
+  /**
+   * @property {number | null} idMercanciaEnEdicion
+   * @description ID de la mercancía que se está editando actualmente.
+   * @default null
+   */
+  idMercanciaEnEdicion: number | null = null;
+
+
+
+  /**
+   * @property {number | null} idDomicilioEnEdicion
+   * @description ID del domicilio que se está editando actualmente.
+   * @default null
+   */
+  idDomicilioEnEdicion: number | null = null;
+
+
+  /**
    * @method cerrarModalDomicilio
    * @description Método para cerrar el modal de domicilio.
    * @returns {void}
@@ -393,6 +417,107 @@ export class AvisoComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  /**
+   * @method obtenerDescripcionEntidadFederativa
+   * @description Obtiene la descripción de la entidad federativa basada en la clave
+   * @param {string} clave - La clave de la entidad federativa
+   * @returns {string} La descripción de la entidad federativa o la clave si no se encuentra
+   */
+  private obtenerDescripcionEntidadFederativa(clave: string): string {
+    const ENTIDAD_ENCONTRADA = this.entidadFederativa.find(e => 
+      e.id?.toString() === clave || e.clave?.toString() === clave
+    );
+    return ENTIDAD_ENCONTRADA ? ENTIDAD_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionDelegacionMunicipio
+   * @description Obtiene la descripción del municipio/delegación basada en la clave
+   * @param {string} clave - La clave del municipio/delegación
+   * @returns {string} La descripción del municipio/delegación o la clave si no se encuentra
+   */
+  private obtenerDescripcionDelegacionMunicipio(clave: string): string {
+    const MUNICIPIO_ENCONTRADO = this.delegacionMunicipio.find(m => 
+      m.id?.toString() === clave || m.clave?.toString() === clave
+    );
+    return MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionColonia
+   * @description Obtiene la descripción de la colonia basada en la clave
+   * @param {string} clave - La clave de la colonia
+   * @returns {string} La descripción de la colonia o la clave si no se encuentra
+   */
+  private obtenerDescripcionColonia(clave: string): string {
+    const COLONIA_ENCONTRADA = this.colonia.find(c => 
+      c.id?.toString() === clave || c.clave?.toString() === clave
+    );
+    return COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionFraccionArancelaria
+   * @description Obtiene la descripción de la fracción arancelaria basada en la clave
+   * @param {string} clave - La clave de la fracción arancelaria
+   * @returns {string} La descripción de la fracción arancelaria o la clave si no se encuentra
+   */
+  private obtenerDescripcionFraccionArancelaria(clave: string): string {
+    const FRACCION_ENCONTRADA = this.fraccionArancelaria.find(f => 
+      f.id?.toString() === clave || f.clave?.toString() === clave
+    );
+    return FRACCION_ENCONTRADA ? FRACCION_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method obtenerDescripcionUnidadMedida
+   * @description Obtiene la descripción de la unidad de medida basada en la clave
+   * @param {string} clave - La clave de la unidad de medida
+   * @returns {string} La descripción de la unidad de medida o la clave si no se encuentra
+   */
+  private obtenerDescripcionUnidadMedida(clave: string): string {
+    const UNIDAD_ENCONTRADA = this.unidadMedida.find(u => 
+      u.id?.toString() === clave || u.clave?.toString() === clave
+    );
+    return UNIDAD_ENCONTRADA ? UNIDAD_ENCONTRADA.descripcion : clave;
+  }
+
+  /**
+   * @method enriquecerDatosExistentesConDescripciones
+   * @description Agrega las descripciones a los datos existentes en las tablas que no las tengan.
+   * Este método debe ser llamado después de cargar los catálogos para asegurar que 
+   * los datos existentes también muestren descripciones en lugar de claves.
+   * @returns {void}
+   */
+  private enriquecerDatosExistentesConDescripciones(): void {
+    // Enrich domicilio table data
+    if (this.tablaDeDatos.datos && this.tablaDeDatos.datos.length > 0) {
+      this.tablaDeDatos.datos = this.tablaDeDatos.datos.map(item => ({
+        ...item,
+        descripcionEntidadFederativa: item.descripcionEntidadFederativa || 
+          this.obtenerDescripcionEntidadFederativa(item.claveEntidadFederativa),
+        descripcionDelegacionMunicipio: item.descripcionDelegacionMunicipio || 
+          this.obtenerDescripcionDelegacionMunicipio(item.claveDelegacionMunicipio),
+        descripcionColonia: item.descripcionColonia || 
+          this.obtenerDescripcionColonia(item.claveColonia)
+      }));
+      
+      // Actualizar la tienda con datos enriquecidos
+      this.store.setTablaDeDatos(this.tablaDeDatos.datos);
+    }
+
+    // Enriquecer datos de la tabla de mercancia
+    if (this.tablaDeMercancia.datos && this.tablaDeMercancia.datos.length > 0) {
+      this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.map(item => ({
+        ...item,
+        descripcionFraccionArancelaria: item.descripcionFraccionArancelaria || 
+          this.obtenerDescripcionFraccionArancelaria(item.claveFraccionArancelaria),
+        descripcionUnidadMedida: item.descripcionUnidadMedida || 
+          this.obtenerDescripcionUnidadMedida(item.claveUnidadMedida)
+      }));
+    }
+  }
   /**
    * Método que se ejecuta al inicializar el componente.
    * 
@@ -419,13 +544,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.tablaDeDatos.datos = [];
-    this.tablaDeMercancia.datos = [];
-
     this.cargarFederativa();
     this.cargarMunicipio();
     this.cargarColonias();
-    this.cargarAvisoTabla();
     this.cargarFraccionArancelaria();
     this.cargarUnidadMedida();
     this.inicializarFormulario();
@@ -476,6 +597,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe(
         (datos: CatalogoLista) => {
           this.unidadMedida = datos.datos;
+          // Enriquecer los datos existentes después de cargar todos los catálogos
+          this.enriquecerDatosExistentesConDescripciones();
         }
       );
   }
@@ -527,6 +650,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe(
         (datos: CatalogoLista) => {
           this.colonia = datos.datos;
+          // Enriquecer los datos existentes después de cargar todos los catálogos
+          this.enriquecerDatosExistentesConDescripciones();
         }
       );
   }
@@ -923,44 +1048,61 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   abiertoDomicilio(esModificacion: boolean = false): void {
     this.mostrarAlertaValidacionDomicilio = false;
-    
+    // Establecer el ID de edición
+    this.idDomicilioEnEdicion = null;
+
     if (esModificacion && this.filaSeleccionadaLista && this.filaSeleccionadaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaLista[0];
-      const DATOS_COMPLETOS = this.datosCompletosAvisos[REGISTRO_SELECCIONADO.id];
-
-      if (DATOS_COMPLETOS) {
-        this.domicilioFormulario.patchValue({
-          rfc: DATOS_COMPLETOS.rfc || '',
-          nombreComercial: DATOS_COMPLETOS.nombreComercial || '',
-          claveEntidadFederativa: DATOS_COMPLETOS.claveEntidadFederativa || '',
-          claveDelegacionMunicipio: DATOS_COMPLETOS.claveDelegacionMunicipio || '',
-          claveColonia: DATOS_COMPLETOS.claveColonia || '',
-          calle: DATOS_COMPLETOS.calle || '',
-          numeroExterior: DATOS_COMPLETOS.numeroExterior || '',
-          numeroInterior: DATOS_COMPLETOS.numeroInterior || '',
-          codigoPostal: DATOS_COMPLETOS.codigoPostal || ''
-        });
-      } else {
-        this.domicilioFormulario.patchValue({
-          rfc: REGISTRO_SELECCIONADO.rfc || '',
-          nombreComercial: REGISTRO_SELECCIONADO.nombreComercial || '',
-          claveEntidadFederativa: REGISTRO_SELECCIONADO.entidadFederativa || '',
-          claveDelegacionMunicipio: REGISTRO_SELECCIONADO.alcaldioOMuncipio || '',
-          claveColonia: REGISTRO_SELECCIONADO.colonia || '',
-          calle: '',
-          numeroExterior: '',
-          numeroInterior: '',
-          codigoPostal: ''
+      this.idDomicilioEnEdicion = REGISTRO_SELECCIONADO.id;
+      this.precargarDatosDelAviso(REGISTRO_SELECCIONADO);
+    } else {
+      // Modo agregar: resetear completamente el formulario
+      if (this.domicilioFormulario) {
+        this.domicilioFormulario.reset();
+        // Limpiar también las validaciones
+        Object.keys(this.domicilioFormulario.controls).forEach(key => {
+          this.domicilioFormulario.get(key)?.markAsUntouched();
+          this.domicilioFormulario.get(key)?.markAsPristine();
         });
       }
-    } else {
-      this.domicilioFormulario.reset();
     }
 
     if (this.modalDomicilio) {
       AvisoComponent.showModal(this.modalDomicilio);
     }
   }
+
+/**
+ * Carga los datos del aviso seleccionado en el formulario de domicilio.
+ * Usa datos completos si existen; de lo contrario, usa los datos básicos del registro.
+ * @param {AvisoTabla} registroSeleccionado - Aviso seleccionado de la tabla.
+ */
+  private precargarDatosDelAviso(registroSeleccionado: AvisoTabla): void {
+    const DATOS_COMPLETOS = this.datosCompletosAvisos[registroSeleccionado.id];
+
+    if (DATOS_COMPLETOS) {
+      this.domicilioFormulario.patchValue({
+        rfc: DATOS_COMPLETOS.rfc || '',
+        nombreComercial: DATOS_COMPLETOS.nombreComercial || '',
+        claveEntidadFederativa: DATOS_COMPLETOS.claveEntidadFederativa || '',
+        claveDelegacionMunicipio: DATOS_COMPLETOS.claveDelegacionMunicipio || '',
+        claveColonia: DATOS_COMPLETOS.claveColonia || '',
+        calle: DATOS_COMPLETOS.calle || '',
+        numeroExterior: DATOS_COMPLETOS.numeroExterior || '',
+        numeroInterior: DATOS_COMPLETOS.numeroInterior || '',
+        codigoPostal: DATOS_COMPLETOS.codigoPostal || ''
+      });
+    } else {
+      this.domicilioFormulario.patchValue({
+        rfc: registroSeleccionado.rfc || '',
+        nombreComercial: registroSeleccionado.nombreComercial || '',
+        claveEntidadFederativa: registroSeleccionado.claveEntidadFederativa || '',
+        claveDelegacionMunicipio: registroSeleccionado.claveDelegacionMunicipio || '',
+        claveColonia: registroSeleccionado.claveColonia || ''
+      });
+    }
+  }
+
   /**
    * @method precargarDatosMercancia
    * @description Método auxiliar para pre-cargar los datos de mercancía en el formulario.
@@ -1022,8 +1164,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
     this.mostrarAlertaValidacionDomicilio = false;
 
+    // Establecer el modo de operación
+    this.esModoEdicionMercancia = esModificacion;
+    this.idMercanciaEnEdicion = null;
+
     if (esModificacion && this.filaSeleccionadaMercanciaLista && this.filaSeleccionadaMercanciaLista.length > 0) {
       const REGISTRO_SELECCIONADO = this.filaSeleccionadaMercanciaLista[0];
+      this.idMercanciaEnEdicion = REGISTRO_SELECCIONADO.id;
       this.precargarDatosMercancia(REGISTRO_SELECCIONADO);
     } else {
       if (this.mercanciaFormulario) {
@@ -1056,11 +1203,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method agregarMercancia
-   * @description Método para agregar mercancías a la tabla de mercancías.
+   * @description Método para agregar o modificar mercancías en la tabla de mercancías.
    * 
-   * - Toma los valores del formulario de mercancía y los agrega a la tabla existente.
-   * - Valida que el formulario sea válido antes de agregar.
-   * - Cierra el modal después de agregar exitosamente.
+   * - Si está en modo edición, actualiza el registro existente.
+   * - Si está en modo agregar, crea un nuevo registro.
+   * - Valida que el formulario sea válido antes de procesar.
+   * - Cierra el modal después de procesar exitosamente.
    *
    * @returns {void}
    */
@@ -1069,34 +1217,87 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
       
       const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
-      const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
 
-      const NUEVA_MERCANCIA: MercanciaTabla = {
-        id: SIGUIENTE_ID,
-        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
-        nico: VALORES_DE_FORMULARIO.nico,
-        cantidad: VALORES_DE_FORMULARIO.cantidad,
-        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
-        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
-        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
-        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
-      };
+      if (this.esModoEdicionMercancia && this.idMercanciaEnEdicion !== null) {
+        // Modo edición: actualizar registro existente
+        const INDICE_A_ACTUALIZAR = this.tablaDeMercancia.datos.findIndex(item => item.id === this.idMercanciaEnEdicion);
+        
+        if (INDICE_A_ACTUALIZAR !== -1) {
+          // Actualizar datos en la tabla
+          const MERCANCIA_ACTUALIZADA: MercanciaTabla = {
+            id: this.idMercanciaEnEdicion,
+            claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+            nico: VALORES_DE_FORMULARIO.nico,
+            cantidad: VALORES_DE_FORMULARIO.cantidad,
+            claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+            valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+            numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+            numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion,
+            // Añadir descripciones para una mejor visualización en la tabla
+            descripcionFraccionArancelaria: this.obtenerDescripcionFraccionArancelaria(VALORES_DE_FORMULARIO.claveFraccionArancelaria),
+            descripcionUnidadMedida: this.obtenerDescripcionUnidadMedida(VALORES_DE_FORMULARIO.claveUnidadMedida)
+          };
 
-      this.datosCompletosMercancias[SIGUIENTE_ID] = {
-        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
-        nico: VALORES_DE_FORMULARIO.nico,
-        cantidad: VALORES_DE_FORMULARIO.cantidad,
-        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
-        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
-        descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
-        descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
-        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
-        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
-      };
+          // Actualizar datos completos
+          this.datosCompletosMercancias[this.idMercanciaEnEdicion] = {
+            claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+            nico: VALORES_DE_FORMULARIO.nico,
+            cantidad: VALORES_DE_FORMULARIO.cantidad,
+            claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+            valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+            descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
+            descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
+            numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+            numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+          };
 
-      this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, NUEVA_MERCANCIA];
+          // Crear nueva copia del array con el elemento actualizado
+          this.tablaDeMercancia.datos = [
+            ...this.tablaDeMercancia.datos.slice(0, INDICE_A_ACTUALIZAR),
+            MERCANCIA_ACTUALIZADA,
+            ...this.tablaDeMercancia.datos.slice(INDICE_A_ACTUALIZAR + 1)
+          ];
 
+          // Limpiar selección
+          this.filaSeleccionadaMercanciaLista = [];
+        }
+      } else {
+        // Modo agregar: crear nuevo registro
+        const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
+
+        const NUEVA_MERCANCIA: MercanciaTabla = {
+          id: SIGUIENTE_ID,
+          claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+          nico: VALORES_DE_FORMULARIO.nico,
+          cantidad: VALORES_DE_FORMULARIO.cantidad,
+          claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+          valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+          numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+          numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion,
+          // Add descriptions for better display in table
+          descripcionFraccionArancelaria: this.obtenerDescripcionFraccionArancelaria(VALORES_DE_FORMULARIO.claveFraccionArancelaria),
+          descripcionUnidadMedida: this.obtenerDescripcionUnidadMedida(VALORES_DE_FORMULARIO.claveUnidadMedida)
+        };
+
+        this.datosCompletosMercancias[SIGUIENTE_ID] = {
+          claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+          nico: VALORES_DE_FORMULARIO.nico,
+          cantidad: VALORES_DE_FORMULARIO.cantidad,
+          claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+          valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+          descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
+          descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
+          numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+          numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+        };
+
+        this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, NUEVA_MERCANCIA];
+      }
+
+      // Resetear formulario y cerrar modal
       this.mercanciaFormulario.reset();
+      this.esModoEdicionMercancia = false;
+      this.idMercanciaEnEdicion = null;
       this.closeMercancia?.nativeElement?.click();
     } else {
 
@@ -1108,53 +1309,131 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method agregarDomicilio
-   * @description Método para agregar domicilios a la tabla de avisos.
+   * @description Método para agregar o modificar domicilios en la tabla de avisos.
    * 
-   * - Carga los datos de la tabla de avisos y cierra el modal de domicilio.
+   * - Si está en modo edición, actualiza el registro existente.
+   * - Si está en modo agregar, crea un nuevo registro.
+   * - Valida que el formulario sea válido antes de procesar.
+   * - Cierra el modal después de procesar exitosamente.
    *
    * @returns {void}
    */
   agregarDomicilio(): void {
+    if (this.domicilioFormulario.valid) {
+      const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
 
-    if (this.domicilioFormulario.invalid) {
-     Object.keys(this.domicilioFormulario.controls).forEach(key => {
+      if (this.idDomicilioEnEdicion !== null) {
+        // Modo edición: actualizar registro existente
+        const INDICE_A_ACTUALIZAR = this.tablaDeDatos.datos.findIndex(item => item.id === this.idDomicilioEnEdicion);
+        
+        if (INDICE_A_ACTUALIZAR !== -1) {
+          // Actualizar datos en la tabla
+          const DOMICILIO_ACTUALIZADO: AvisoTabla = {
+            id: this.idDomicilioEnEdicion,
+            rfc: VALORES_DE_FORMULARIO.rfc,
+            nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+            claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+            claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+            claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+            // Add descriptions for better display in table
+            descripcionEntidadFederativa: this.obtenerDescripcionEntidadFederativa(VALORES_DE_FORMULARIO.claveEntidadFederativa),
+            descripcionDelegacionMunicipio: this.obtenerDescripcionDelegacionMunicipio(VALORES_DE_FORMULARIO.claveDelegacionMunicipio),
+            descripcionColonia: this.obtenerDescripcionColonia(VALORES_DE_FORMULARIO.claveColonia)
+          };
+
+          // Actualizar datos completos
+          this.datosCompletosAvisos[this.idDomicilioEnEdicion] = {
+            rfc: VALORES_DE_FORMULARIO.rfc,
+            nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+            claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+            claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+            claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+            calle: VALORES_DE_FORMULARIO.calle,
+            numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
+            numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
+            codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
+          };
+
+          // Crear nueva copia del array con el elemento actualizado
+          this.tablaDeDatos.datos = [
+            ...this.tablaDeDatos.datos.slice(0, INDICE_A_ACTUALIZAR),
+            DOMICILIO_ACTUALIZADO,
+            ...this.tablaDeDatos.datos.slice(INDICE_A_ACTUALIZAR + 1)
+          ];
+          
+          // Actualizar la tienda para conservar los datos actualizados
+          this.store.setTablaDeDatos(this.tablaDeDatos.datos);
+          
+          // Limpiar selección
+          this.filaSeleccionadaLista = [];
+        }
+      } else {
+        // Modo agregar: crear nuevo registro con ID único
+        const SIGUIENTE_ID = this.generarIdUnico();
+
+        const NUEVO_DOMICILIO: AvisoTabla = {
+          id: SIGUIENTE_ID,
+          rfc: VALORES_DE_FORMULARIO.rfc,
+          nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+          claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+          claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+          claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+          // Add descriptions for better display in table
+          descripcionEntidadFederativa: this.obtenerDescripcionEntidadFederativa(VALORES_DE_FORMULARIO.claveEntidadFederativa),
+          descripcionDelegacionMunicipio: this.obtenerDescripcionDelegacionMunicipio(VALORES_DE_FORMULARIO.claveDelegacionMunicipio),
+          descripcionColonia: this.obtenerDescripcionColonia(VALORES_DE_FORMULARIO.claveColonia)
+        };
+
+        this.datosCompletosAvisos[SIGUIENTE_ID] = {
+          rfc: VALORES_DE_FORMULARIO.rfc,
+          nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+          claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+          claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+          claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+          calle: VALORES_DE_FORMULARIO.calle,
+          numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
+          numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
+          codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
+        };
+
+        this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
+        
+        // Actualizar la tienda para conservar los datos
+        this.store.setTablaDeDatos(this.tablaDeDatos.datos);
+      }
+
+      // Resetear formulario, limpiar estado y cerrar modal
+      this.domicilioFormulario.reset();
+      this.idDomicilioEnEdicion = null;
+      this.filaSeleccionadaLista = [];
+      this.closeDomicilio.nativeElement.click();
+    } else {
+      Object.keys(this.domicilioFormulario.controls).forEach(key => {
         this.domicilioFormulario.get(key)?.markAsTouched();
       });
     }
-
-    if (this.domicilioFormulario.valid) {
-
-      
-      const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
-      const NUEVO_ID = Date.now();
-
-      const NUEVO_DOMICILIO = {
-        id: NUEVO_ID,
-        rfc: VALORES_DE_FORMULARIO.rfc,
-        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
-        entidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
-        alcaldioOMuncipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
-        colonia: VALORES_DE_FORMULARIO.claveColonia
-      };
-
-      this.datosCompletosAvisos[NUEVO_ID] = {
-        rfc: VALORES_DE_FORMULARIO.rfc,
-        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
-        claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
-        claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
-        claveColonia: VALORES_DE_FORMULARIO.claveColonia,
-        calle: VALORES_DE_FORMULARIO.calle,
-        numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
-        numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
-        codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
-      };
-
-      this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
-
-      this.domicilioFormulario.reset();
-      this.closeDomicilio.nativeElement.click();
-    }
   }
+
+  /**
+   * @method generarIdUnico
+   * @description Genera un ID único que no existe en la tabla actual ni en los datos completos.
+   * @returns {number} ID único generado.
+   */
+  private generarIdUnico(): number {
+    let NUEVO_ID = Date.now() + Math.floor(Math.random() * 1000);
+    
+    // Verificar si existe conflicto de ID
+    const EXISTE_EN_TABLA = this.tablaDeDatos.datos.find(item => item.id === NUEVO_ID);
+    const EXISTE_EN_DATOS = this.datosCompletosAvisos[NUEVO_ID];
+    
+    if (EXISTE_EN_TABLA || EXISTE_EN_DATOS) {
+      // Si hay conflicto, generar un ID diferente agregando más aleatoriedad
+      NUEVO_ID = Date.now() + Math.floor(Math.random() * 10000) + 1;
+    }
+    
+    return NUEVO_ID;
+  }
+
   /**
    * @method desinfectarAlfanumerico
    * @description Método para limpiar un campo de formulario, eliminando caracteres no alfanuméricos.

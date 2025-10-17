@@ -216,8 +216,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
     
     // Tab 4: Destinatario  
-    if (tabIndex === 4 && this.destinatarioComp?.registroFormulario) {
-      isValid = this.destinatarioComp.registroFormulario.valid;
+    if (tabIndex === 4 && this.destinatarioComp?.validateAllForms) {
+      isValid = this.destinatarioComp.validateAllForms();
     }
     
     // Tab 5: Datos certificado
@@ -261,8 +261,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.certificadoOrigenComp.formCertificado.markAllAsTouched();
       }
       
-      if (this.indice === 4 && this.destinatarioComp?.registroFormulario) {
-        this.destinatarioComp.registroFormulario.markAllAsTouched();
+      if (this.indice === 4 && this.destinatarioComp?.markAllFormsAsTouched) {
+        this.destinatarioComp.markAllFormsAsTouched();
       }
       
       if (this.indice === 5 && this.datosCertificadoComp?.formDatosCertificado) {

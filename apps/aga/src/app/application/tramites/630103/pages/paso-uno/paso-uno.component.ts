@@ -123,45 +123,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
   * Valida los formularios del solicitante y de datos de solicitud.
   * @returns {string} - Indica el resultado de la validación:
   * */
-  public validarFormularios(): string {
-    let isSolicitaneValid = true;
-    if (!this.solicitante?.form || this.solicitante.form.invalid) {
-      this.solicitante?.form?.markAllAsTouched();
-      isSolicitaneValid = false;
-    }
-  
-    let isDatosSolicitudValid = true;
-    let isManifiestoValid = true;
-    if (!this.datosSolicitud) {
-      isDatosSolicitudValid = false;
-      isManifiestoValid = false;
+  public validarFormularios(): boolean {
+    
+    let isValid = true;
+    if (this.datosSolicitud) {
+      if (!this.datosSolicitud.validarFormulario()) {
+       
+       
+        isValid = false;
+      }
     } else {
-      isDatosSolicitudValid = this.datosSolicitud.validarFormulario();
-      isManifiestoValid = this.datosSolicitud.validarManifiesto();
+      isValid = false;
     }
-  
-    if (this.indice === 2) {
-      if ((!isDatosSolicitudValid || !isSolicitaneValid) && !isManifiestoValid) {
-        return "showBothErrors";
-      }
-      if ((!isDatosSolicitudValid || !isSolicitaneValid) && isManifiestoValid) {
-        return "showFirstError";
-      }
-    }
-  
-    if (this.indice === 1) {
-      if (!isSolicitaneValid && !isManifiestoValid) {
-        return "showBothErrors";
-      }
-      if (!isSolicitaneValid && isManifiestoValid) {
-        return "showFirstError";
-      }
-      if (isSolicitaneValid && !isManifiestoValid) {
-        return "showSecondError";
-      }
-    }
-  
-    return "showNoErrors";
+    return isValid;
+
   }
 
   /**

@@ -1,9 +1,12 @@
-import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { CatalogoLista, DisponiblesTabla, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PROC_110216 } from '../servers/api-route';
 import { ProductorExportador } from '../models/certificado-origen.model';
+import { Tramite110216Query } from '../../../estados/queries/tramite110216.query';
+import { Tramite110216State } from '../../../estados/tramites/tramite110216.store';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -21,7 +24,11 @@ export class CertificadosOrigenService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient, public httpService: HttpCoreService) { }
+  constructor(
+    private http: HttpClient,
+    public httpService: HttpCoreService,
+    private tramite110216Query: Tramite110216Query
+  ) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.
@@ -128,5 +135,32 @@ export class CertificadosOrigenService {
    */
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/110216/consulta-110216.json`);
+  }
+
+  /**
+     * Obtiene todos los datos del estado almacenado en el store.
+     * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+    */
+  getAllState(): Observable<Tramite110216State> {
+    return this.tramite110216Query.allStoreData$;
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110216.GUARDAR, { body: body });
+  }
+
+  /**
+   * Obtiene la lista de mercancías seleccionadas.
+   * 
+   * @returns {Observable<SeleccionadasTabla[]>} Un observable con la lista de mercancías seleccionadas.
+   */
+  getMercanciasSeleccionadas(): Observable<MercanciaTabla[]> {
+    return this.http.get<MercanciaTabla[]>('assets/json/110214/mercancias-seleccionadas.json');
   }
 }

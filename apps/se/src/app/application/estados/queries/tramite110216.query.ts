@@ -12,6 +12,41 @@ import { Tramite110216Store } from '../tramites/tramite110216.store';
 export class Tramite110216Query extends Query<Tramite110216State> {
 
   /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
+  /**
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */ 
+    datosProductorFormulario$ = this.select((state) => {
+      return state.datosProductorFormulario;
+    });
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
+    formulario$ = this.select((state) => {
+      return state.formHistorico;
+    });
+    
+    /**
+   * Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite.
+   */
+    selectMercanciaProductores$ = this.select((state) => {
+      return state.mercanciaProductores;
+    });
+
+  /**
+   * Observable que expone la lista de productores exportador agregados al estado del trámite.
+   */
+    selectAgregarProductoresExportador$ = this.select((state) => {
+      return state.agregarProductoresExportador;
+    });
+
+  /**
    * Observable que selecciona el estado completo del trámite.
    */
   selectSolicitud$ = this.select((state) => {
@@ -41,14 +76,6 @@ export class Tramite110216Query extends Query<Tramite110216State> {
    */
   formCertificado$ = this.select((state) => {
     return state.formCertificado;
-  });
-
-  /**
-   * Selecciona las fechas del certificado.
-   * @returns {Observable<any>} - Observable con las fechas del certificado.
-   */
-  formDatosCertificado$ = this.select((state) => {
-    return state.formDatosCertificado;
   });
 
   /**
@@ -130,8 +157,15 @@ export class Tramite110216Query extends Query<Tramite110216State> {
   selectmercanciaTabla$ = this.select((state) => {
     return state.mercanciaTabla;
   });
-  datosProductorFormulario$ = this.select((state) => state.formDatosProductor);
-formulario$ = this.select((state) => state.formHistorico);
+  
+  /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+  formDatosCertificado$ = this.select((state) => {
+    return state.formDatosCertificado;
+  });
+
   /**
    * Constructor de la clase Tramite110216Query.
    * 

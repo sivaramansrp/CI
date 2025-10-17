@@ -1,7 +1,6 @@
-<app-certificado-de-origen 
+<app-certificado-de-origen #CertificadoDeOrigenComponent
     [operador]="operador"
-    [tratadoAcuerdo]="estado || []"
-    [paisBloqu]="pais || []"
+    [paises]="(paisBloqu$ | async) || []" 
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
@@ -19,7 +18,7 @@
     (formCertificadoEvent)="setValoresStore($event)"
     [tramiteState]="formCertificadoValues"
     [domicilio]="false"
-    [domTercerOperador]="true"
+    [domicilioTercer]="true"
     [domTercerOperadorRadio]="true"
     [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
     [idProcedimiento]="idProcedimiento">
