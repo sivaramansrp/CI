@@ -3,14 +3,14 @@ import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, In
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { DatosLabelEnum } from '../../constantes/labels32606.enum';
 import { DomicillioComponent } from '../domicillio/domicillio.component';
 import { EconomicoService } from '../../services/economico.service';
 import { MiembroComponent } from '../miembro/miembro.component';
 import { QuerellaComponent } from '../querella/querella.component';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 
 /** Componente para la sección de datos comunes del trámite 32606. */
 @Component({
@@ -19,7 +19,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
   imports: [CommonModule, CatalogoSelectComponent, InputRadioComponent, ReactiveFormsModule,
     DomicillioComponent, QuerellaComponent, MiembroComponent, TituloComponent, NotificacionesComponent],
   templateUrl: './datos-comunes.component.html',
-  styleUrl: './datos-comunes.component.css',
+  styleUrl: './datos-comunes.component.scss',
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
   /** Catálogo de sector productivo. */
