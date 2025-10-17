@@ -19,7 +19,6 @@ import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificaci
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
@@ -146,7 +145,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
-  public idProcedimiento = 110214;
+  public idProcedimiento = 110214; 
 
   /**
    * Configuración de las columnas de la tabla de carga de mercancías.
@@ -166,6 +165,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @default false
    */
   fromMercanciasDisponibles: boolean = false;
+
+   /**
+   * Constructor del componente.
+   * Inicializa el formulario y las dependencias necesarias para la carga de datos.
+   */
+  private actualizandoFormulario = false;
 
   /**
    * @descripcion
@@ -228,8 +233,18 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
-    this.estadoOpcion();
-    this.paisOpcion();
+    /**
+     * Suscripción para cargar los valores del formulario desde el store.
+     */
+    this.query.formCertificado$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(estado => {
+      if (!this.actualizandoFormulario && estado) {
+        this.actualizandoFormulario = true;        
+        this.formCertificadoValues=estado;
+        this.actualizandoFormulario = false;
+      }
+    });
   }
 
   /**
@@ -245,44 +260,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
   }
 
   /**

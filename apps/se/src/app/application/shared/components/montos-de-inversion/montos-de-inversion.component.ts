@@ -110,6 +110,11 @@ export class MontosDeInversionComponent implements OnInit {
   public nuevaNotificacionEditor!: Notificacion;
 
   /**
+   * Notificación para eliminar un monto de inversión.
+   * @property {Notificacion} NotificacionEliminarMonto
+   */
+  public NotificacionEliminarMonto!: Notificacion;
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
@@ -257,15 +262,38 @@ export class MontosDeInversionComponent implements OnInit {
    * @returns {void}
    */
   eliminarMonto(): void {
-    this.montosDeInversionDatos = this.montosDeInversionDatos.filter(
-      data => !this.seleccionados.some(sel =>
-        sel.TIPO === data.TIPO &&
-        sel.CANTIDAD === data.CANTIDAD &&
-        sel.DESCRIPCION === data.DESCRIPCION &&
-        sel.MONTO === data.MONTO
-      )
-    );
-    this.seleccionados = [];
+    if (this.seleccionados.length > 0) {
+      this.mostrarNotificacionEliminarMonto();
+      this.montosDeInversionDatos = this.montosDeInversionDatos.filter(
+        data => !this.seleccionados.some(sel =>
+          sel.TIPO === data.TIPO &&
+          sel.CANTIDAD === data.CANTIDAD &&
+          sel.DESCRIPCION === data.DESCRIPCION &&
+          sel.MONTO === data.MONTO
+        )
+      );
+      this.seleccionados = [];
+    }
+    else {
+      this.mostrarNotificacionEliminarMonto();
+    }
+  }
+
+  /**
+   * Muestra una notificación de eliminación de monto.
+   * @returns {void} 
+   */
+  mostrarNotificacionEliminarMonto(): void {
+    this.NotificacionEliminarMonto = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.seleccionados.length > 0 ? 'El registro fue eliminado correctamente.' : 'Debe elegir al menos un registro de monto de inversion para eliminar.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
   /**
    * Maneja la edición de un monto de inversión seleccionado.

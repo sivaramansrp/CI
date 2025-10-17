@@ -1,14 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { SolicitudComponent } from './Solicitud.component';
-import { RegistroService } from '../services/registro.service';
-import { Tramite30506Store, Solicitud30506State, Catalogo } from '../state/Tramite30506.store';
-import { Tramite30506Query } from '../state/Tramite30506.query';
-import { ConsultaioQuery, ConsultaioState, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { SolicitudComponent } from './solicitud.component';
+import { Catalogo, ConsultaioQuery, ConsultaioState, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { of, BehaviorSubject } from 'rxjs';
-import { Solicitud30506Enum } from '../constantes/solicitud30506.enum';
-import { FECHA_INICIAL, FECHA_FINAL, FECHA_PAGO } from '../models/registro.model';
+import { Solicitud30506State } from '../../state/tramite30506.store';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;

@@ -19,6 +19,7 @@ import {
   BotonAccionesTipos,
   Catalogo,
   CatalogoSelectComponent,
+  REG_X,
   TablaDinamicaComponent,
   TablaSeleccion,
   ValidacionesFormularioService,
@@ -242,6 +243,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
   optionCilindros!: Catalogo[];
 
   /**
+   * @property {Catalogo[]} anoModelo
+   * @description Opciones disponibles para los años modelo de vehículos.
+   */
+  anoModelo!: Catalogo[];
+
+  /**
    * @property {Catalogo[]} optionCombustible
    * @description Opciones disponibles para los tipos de combustible.
    */
@@ -264,6 +271,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Indica si la sección de datos del aviso es visible.
    */
   datosDelAvisoVisible: boolean = false;
+
+  /**
+   * @property {boolean} mostrarTipoDeCarga
+   * @description Indica si se debe mostrar la sección de tipo de carga en el formulario.
+   */
+  mostrarTipoDeCarga: boolean = false;
 
   /**
    * @property {boolean} datosCargaMasiva
@@ -338,6 +351,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     this.mostrarCamposAviso();
     this.cargarCilindros();
+    this.cargarAnoModelo();
     this.cargarCombustible();
     this.cargarPaisIssued();
     this.cargarAduana();
@@ -383,6 +397,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   datosDelAviso(): void {
     this.esPopupAbierto = true;
+    this.aviosForm.reset();
     if (this.datosAviso) {
       const MODAL_INSTANCE = new Modal(this.datosAviso.nativeElement);
       MODAL_INSTANCE.show();
@@ -400,8 +415,14 @@ export class AvisoComponent implements OnInit, OnDestroy {
         this.esManualAsivoAgregarClicked = true;
         break;
       case BotonAccionesTipos.ELIMINAR:
+        if (this.filaSeleccionadaLista.length === 0) {
+          this.mostrarNotificacionSeleccion('Selecciona el(los) registro(s) a eliminar');
+        }
         break;
       case BotonAccionesTipos.MODIFICAR:
+        if (this.filaSeleccionadaLista.length === 0) {
+          this.mostrarNotificacionSeleccion('Selecciona un registro para modificar');
+        }
         break;
       default:
         break;
@@ -555,6 +576,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method mostrarTipoDeCargaCampos
+   * @description Controla la visibilidad de los campos del tipo de carga basándose en el valor de confirmidad.
+   * Evalúa el valor del campo 'confirmidad' del formulario y actualiza la propiedad `mostrarTipoDeCarga`
+   */
+  mostrarTipoDeCargaCampos(): void {
+    const CONFIRMIDAD = this.adaceForm.get('confirmidad')?.value;
+    if (CONFIRMIDAD === 'si') {
+      this.mostrarTipoDeCarga = true;
+    } else if (CONFIRMIDAD === 'no'){
+      this.mostrarTipoDeCarga = false;
+    }
+  }
 
 
   /**
@@ -593,6 +627,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.optionCilindros = datos.datos;
+      });
+  }
+
+  /**
+   * @method cargarCilindros
+   * @description Carga las opciones disponibles para los cilindros.
+   */
+  cargarAnoModelo(): void {
+    this.avisoService
+      .obtenerAnoModelo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.anoModelo = datos.datos;
       });
   }
 
@@ -717,42 +764,63 @@ export class AvisoComponent implements OnInit, OnDestroy {
         adace: [{ value: this.solicitudState.adace, disabled: true }, [Validators.required]],
         pais: [{ value: this.solicitudState.pais, disabled: this.soloLectura }, [Validators.required]],
         anio: [{ value: this.solicitudState.anio, disabled: this.soloLectura }, [Validators.required]],
+        confirmidad: [this.solicitudState?.confirmidad ],
         tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
         tipoBusquedaAviso: [this.solicitudState?.tipoBusquedaAviso, Validators.required],
         folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
         numeroSerie: [{ value: this.solicitudState?.numeroSerie, disable: this.soloLectura }, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        numeroNIV: [this.solicitudState?.numeroNIV, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        numeroNIV: [this.solicitudState?.numeroNIV, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(17)]],
         anoModelo: [this.solicitudState?.anoModelo, [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
-        modelo: [this.solicitudState?.modelo, [Validators.required]],
-        tipoVariante: [this.solicitudState?.tipoVariante, [Validators.required]],
+        marca: [this.solicitudState?.marca, [Validators.required, Validators.maxLength(250)]],
+        modelo: [this.solicitudState?.modelo, [Validators.required, Validators.maxLength(250)]],
+        tipoVariante: [this.solicitudState?.tipoVariante, [Validators.required, Validators.maxLength(250)]],
         cilindros: [this.solicitudState?.cilindros, [Validators.required]],
         puertas: [this.solicitudState?.puertas, [Validators.required]],
         combustible: [this.solicitudState?.combustible, [Validators.required]],
-        propiedad: [this.solicitudState?.propiedad, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        nombreTitulo: [this.solicitudState?.nombreTitulo, [Validators.required]],
+        propiedad: [this.solicitudState?.propiedad, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(250)]],
+        nombreTitulo: [this.solicitudState?.nombreTitulo, [Validators.required, Validators.maxLength(250)]],
         paisEmitio: [this.solicitudState?.paisEmitio, [Validators.required]],
-        provinciaEmision: [this.solicitudState?.provinciaEmision, [Validators.required]],
-        procedencia: [this.solicitudState?.procedencia, [Validators.required]],
+        provinciaEmision: [this.solicitudState?.provinciaEmision, [Validators.required, Validators.maxLength(250)]],
+        procedencia: [this.solicitudState?.procedencia, [Validators.maxLength(250)]],
         vehiculoImportado: [this.solicitudState?.vehiculoImportado, [Validators.required]],
-        exportacion: [this.solicitudState?.exportacion, [Validators.required]],
+        exportacion: [this.solicitudState?.exportacion, [Validators.required, Validators.maxLength(250)]],
         aduanaImportacion: [this.solicitudState?.aduanaImportacion, [Validators.required]],
-        patenteImportacion: [this.solicitudState?.patenteImportacion, [Validators.required]],
-        pedimentoImportacion: [this.solicitudState?.pedimentoImportacion, [Validators.required]],
-        valorAduana: [this.solicitudState?.valorAduana, [Validators.required]],
-        kilometraje: [this.solicitudState?.kilometraje, [Validators.required]],
-        montoIGI: [this.solicitudState?.montoIGI, [Validators.required]],
-        formaPagoIGI: [this.solicitudState?.formaPagoIGI, [Validators.required]],
-        montoDTA: [this.solicitudState?.montoDTA, [Validators.required]],
-        montoIVA: [this.solicitudState?.montoIVA, [Validators.required]],
-        valorDolares: [this.solicitudState?.valorDolares, [Validators.required]],
-        folioCFDI: [this.solicitudState?.folioCFDI, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        folioVenta: [this.solicitudState?.folioVenta, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
-        valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
+        patenteImportacion: [this.solicitudState?.patenteImportacion, [Validators.required, Validators.maxLength(4)]],
+        pedimentoImportacion: [this.solicitudState?.pedimentoImportacion, [Validators.required, Validators.maxLength(7)]],
+        valorAduana: [this.solicitudState?.valorAduana, [Validators.required, Validators.maxLength(11),Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        kilometraje: [this.solicitudState?.kilometraje, [Validators.required, Validators.maxLength(9), Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        montoIGI: [this.solicitudState?.montoIGI, [Validators.required, Validators.maxLength(9), Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        formaPagoIGI: [this.solicitudState?.formaPagoIGI, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        montoDTA: [this.solicitudState?.montoDTA, [Validators.required, Validators.maxLength(9), Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        montoIVA: [this.solicitudState?.montoIVA, [Validators.required, Validators.maxLength(9), Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        valorDolares: [this.solicitudState?.valorDolares, [Validators.required, Validators.maxLength(9), Validators.pattern(REG_X.SOLO_NUMEROS)]],
+        folioCFDI: [this.solicitudState?.folioCFDI, [Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(32)]],
+        folioVenta: [this.solicitudState?.folioVenta, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN), Validators.maxLength(32)]],
+        valorVenta: [this.solicitudState?.valorVenta, [Validators.required, Validators.maxLength(13)]],
+        identificadorTransaccionVucem: [this.solicitudState?.identificadorTransaccionVucem],
+        nivNumeroSerie: [this.solicitudState?.nivNumeroSerie, [Validators.required]],
       }),
     });
     this.mostrarCampos();
     this.mostrarCamposAviso();
+  }
+
+  /**
+   * @method mostrarNotificacionSeleccion
+   * @description Muestra una notificación de alerta con el mensaje proporcionado.
+   * @param {string} mensaje - El mensaje a mostrar en la notificación.
+   */
+  mostrarNotificacionSeleccion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
