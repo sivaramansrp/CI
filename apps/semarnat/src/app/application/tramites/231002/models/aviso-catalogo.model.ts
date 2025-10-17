@@ -2,6 +2,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import {
   MateriaPrima231001
 } from '../../231001/models/datos.model';
+import { MateriaResiduo } from './materia-residuo.model';
 
 /**
  * Representa un aviso de catálogo con diversas opciones seleccionables.
@@ -196,5 +197,5 @@ export interface ResiduoPeligroso {
   estadoFisicoDesc: string;
   tipoContenedorDesc: string;
   descripcionOtro?: string;
-  materiasPrimasRelacionadas?: MateriaPrima231001[];
+  materiasPrimasRelacionadas?: MateriaResiduo[];
 }

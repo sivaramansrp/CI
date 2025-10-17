@@ -1,4 +1,4 @@
-<div class="container mb-5">
+<div #modalDatosResiduosPeligrosos class="container mb-5">
   <div class="form">
     <ng-titulo titulo="Agregar residuo o materia prima a importar" />
     <div class="row mb-3">
@@ -13,7 +13,7 @@
     </div>
     <ng-titulo titulo="Materias primas relacionadas" />
     <div class="col-12">
-      @if (esFormaValido) {
+      @if (!esFormaValido) {
       <div
         class="alert alert-info alert-danger text-center"
         [innerHTML]="alertaErrorFormulario"
@@ -24,7 +24,14 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <div class="form-group mb-3">
-            <label for="numero" class="form-label">Número de bitácora*:</label>
+            <label for="numero" class="form-label"
+              >Número de bitácora<span
+                [ngClass]="
+                  esControlValido(formularioDatos, 'numero') ? 'has-error' : ''
+                "
+                >*</span
+              >:</label
+            >
             <input
               type="text"
               class="form-control"
@@ -34,7 +41,7 @@
               [ngClass]="
                 formularioDatos.get('numero')?.invalid &&
                 formularioDatos.get('numero')?.touched
-                  ? 'is-invalid'
+                  ? 'required'
                   : ''
               "
             />
@@ -51,6 +58,7 @@
             type="button"
             class="btn btn-primary"
             (click)="buscarMateriaPrima()"
+            [disabled]="!formularioDatos.get('numero')?.valid"
           >
             Buscar
           </button>
@@ -59,7 +67,10 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select
-            [catalogo]="etiquetasForm.nombre"
+            [markTouched]="
+              formularioDatos.get('nombreMateriaPrima')?.touched ?? false
+            "
+            [catalogo]="materiasPrimasCatalogo"
             [label]="'Nombre de la materia prima'"
             [required]="true"
             formControlName="nombreMateriaPrima"
@@ -70,6 +81,7 @@
           ></app-catalogo-select>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-4">
           <div class="form-group mb-3">
@@ -115,6 +127,7 @@
           </div>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-4">
           <div class="form-group mb-3">
@@ -132,9 +145,11 @@
           </div>
         </div>
       </div>
+
       <div class="row mt-5">
         <div class="col-md-12 d-flex justify-content-end align-items-end">
           <button
+            (click)="agregarMateriaPrima()"
             type="button"
             class="btn btn-primary ms-3"
             [disabled]="!agregarHabilitado"
@@ -144,11 +159,18 @@
         </div>
       </div>
     </form>
+
     <div class="row mt-5">
-      <h6>Materias primas relacionadas*:</h6>
+      <h6>
+        Materias primas relacionadas<span
+          [ngClass]="{ 'has-error': !esFormaValido }"
+          >*</span
+        ><span>:</span>
+      </h6>
       <div class="row mb-3">
         <div class="col-md-12">
           <app-tabla-dinamica
+            [isInvalida]="!esFormaValido && materiasPrimasTabla.length === 0"
             [configuracionTabla]="configuracionTablaMaterias"
             [datos]="materiasPrimasTabla"
             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
@@ -160,24 +182,29 @@
         </div>
       </div>
     </div>
+
     <div class="row mt-5">
       <div class="col-md-12 d-flex justify-content-end align-items-end">
         <button
           class="btn btn-danger"
           type="button"
           [disabled]="!borrarHabilitado"
-          (click)="borrarElementosSeleccionados()"
+          (click)="borrarFilasSeleccionadas()"
         >
           Borrar
         </button>
       </div>
     </div>
     <ng-titulo titulo="Datos de los residuos peligrosos a retornar" />
+
     <form [formGroup]="formularioResiduo">
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select
-            [catalogo]="etiquetasForm.arancelaria"
+            [markTouched]="
+              esControlValido(formularioResiduo, 'fraccionArancelaria') ?? false
+            "
+            [catalogo]="fraccionesArancelariasCatalogo"
             [label]="'Fracción arancelaria'"
             [required]="true"
             formControlName="fraccionArancelaria"
@@ -189,6 +216,7 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select
+            [markTouched]="esControlValido(formularioResiduo, 'nico') ?? false"
             [catalogo]="etiquetasForm.nico"
             [label]="'N I C O'"
             [required]="true"
@@ -197,9 +225,10 @@
           ></app-catalogo-select>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-8">
-          <label class="form-label">Acotación*:</label>
+          <label class="form-label">Acotación:</label>
           <textarea
             class="form-control textarea-auto-height"
             cols="50"
@@ -209,10 +238,18 @@
           ></textarea>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-8">
           <label for="peligroso" class="form-label"
-            >Nombre del residuo peligroso generado*:</label
+            >Nombre del residuo peligroso generado<span
+              [ngClass]="
+                esControlValido(formularioResiduo, 'residuoPeligroso')
+                  ? 'has-error'
+                  : ''
+              "
+              >*</span
+            >:</label
           >
           <input
             type="text"
@@ -236,12 +273,21 @@
           }
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="cantidad" class="form-label">Cantidad*:</label>
+          <label for="cantidad" class="form-label"
+            >Cantidad<span
+              [ngClass]="
+                esControlValido(formularioResiduo, 'cantidad')
+                  ? 'has-error'
+                  : ''
+              "
+              >*</span
+            >:</label
+          >
           <input
             type="text"
-            [libSoloNumericaDecimal]="true"
             class="form-control"
             id="cantidad"
             maxlength="18.5"
@@ -302,6 +348,9 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select
+            [markTouched]="
+              esControlValido(formularioResiduo, 'unidadMedida') ?? false
+            "
             [catalogo]="etiquetasForm.unidad"
             [label]="'Unidad de medida'"
             [required]="true"
@@ -331,6 +380,9 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select
+            [markTouched]="
+              esControlValido(formularioResiduo, 'claveResiduo') ?? false
+            "
             [catalogo]="etiquetasForm.residuo"
             [label]="'Clave de residuo'"
             [required]="true"
@@ -343,6 +395,7 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select
+            [markTouched]="esControlValido(formularioDatos, 'nombre') ?? false"
             [catalogo]="etiquetasForm.tipoNombre"
             [label]="'Nombre'"
             [required]="true"
@@ -352,9 +405,13 @@
           ></app-catalogo-select>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select
+            [markTouched]="
+              esControlValido(formularioDatos, 'descripcion') ?? false
+            "
             [catalogo]="etiquetasForm.descripcion"
             [label]="'Descripción'"
             [required]="true"
@@ -364,9 +421,11 @@
           ></app-catalogo-select>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-8">
           <app-catalogo-select
+            [markTouched]="esControlValido(formularioResiduo, 'creti') ?? false"
             [catalogo]="etiquetasForm.creti"
             [label]="'CRETI'"
             [required]="true"
@@ -375,9 +434,13 @@
           ></app-catalogo-select>
         </div>
       </div>
+
       <div class="row mb-3">
         <div class="col-md-8">
           <app-catalogo-select
+            [markTouched]="
+              esControlValido(formularioResiduo, 'estadoFisico') ?? false
+            "
             [catalogo]="etiquetasForm.estadoFisico"
             [label]="'Estado físico'"
             [required]="true"
@@ -388,7 +451,16 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <label for="manifiesto" class="form-label">No de manifiesto*:</label>
+          <label for="manifiesto" class="form-label"
+            >No de manifiesto<span
+              [ngClass]="
+                esControlValido(formularioResiduo, 'manifiesto')
+                  ? 'has-error'
+                  : ''
+              "
+              >*</span
+            >:</label
+          >
           <input
             type="text"
             class="form-control"
@@ -414,6 +486,9 @@
       <div class="row mb-3">
         <div class="col-md-8">
           <app-catalogo-select
+            [markTouched]="
+              esControlValido(formularioResiduo, 'tipoContenedor') ?? false
+            "
             [catalogo]="etiquetasForm.tipoContenedor"
             [label]="'Tipo de Contenedor'"
             [required]="true"
@@ -424,7 +499,16 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <label for="capacidad" class="form-label">Capacidad*:</label>
+          <label for="capacidad" class="form-label"
+            >Capacidad<span
+              [ngClass]="
+                esControlValido(formularioResiduo, 'capacidad')
+                  ? 'has-error'
+                  : ''
+              "
+              >*</span
+            >:</label
+          >
           <input
             type="text"
             class="form-control"
@@ -434,10 +518,7 @@
             [libSoloNumerica]="true"
             (change)="actualizarCampoFormularioResiduo('capacidad')"
             [ngClass]="
-              formularioResiduo.get('capacidad')?.invalid &&
-              formularioResiduo.get('capacidad')?.touched
-                ? 'required'
-                : ''
+              esControlValido(formularioResiduo, 'capacidad') ? 'required' : ''
             "
           />
           @if (formularioResiduo.get('capacidad')?.hasError('required') &&

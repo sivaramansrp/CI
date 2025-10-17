@@ -6,34 +6,38 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {
-  MateriaPrima,
-  MateriaPrima231001,
-} from '../../../231001/models/datos.model';
 
 import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import {
+  MATERIA_RESIDUO_TABLA,
+  MateriaResiduo,
+} from '../../models/materia-residuo.model';
+import {
+  MAX_DIGITS_VALIDATOR,
+  REGEX_DECIMAL,
+  Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
-  MAX_DIGITS_VALIDATOR,
   Notificacion,
   NotificacionesComponent,
-  REGEX_DECIMAL,
   TablaDinamicaComponent,
   TituloComponent,
+  TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import {
   RadioOpcion,
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
+import { Subject, takeUntil } from 'rxjs';
+import { CatalogoT231002Service } from '../../services/catalogo-t231002.service';
+import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user/src/core/utils/convertNumberAmountToStringAmount';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
@@ -41,9 +45,7 @@ import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.que
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 import { Modal } from 'bootstrap';
 import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
-import { SoloNumericaDecimalDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numeros-punto/solo-numero-y-punto.directive';
 import { SoloNumericaDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numerica/solo-numerica.directive';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
@@ -67,12 +69,30 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     NotificacionesComponent,
-    SoloNumericaDecimalDirective,
   ],
   templateUrl: './datos-residuos-peligrosos.component.html',
   styleUrl: './datos-residuos-peligrosos.component.scss',
 })
-export class DatosResiduosPeligrososComponent implements OnInit {
+export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
+  /** Enum de tipos de selección de tabla para uso en template */
+  TablaSeleccion = TablaSeleccion;
+
+  /** Mensaje para formulario incompleti */
+  FALTAN_DATOS = 'Faltan datos por capturar.';
+
+  /**
+   * Mensaje para materia prima faltante
+   */
+  MATERIA_FALTANTE = 'Debe agregar al menos una materia prima relacionada';
+
+  /** Subject para gestionar la destrucción de suscripciones */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Catálogo de materias primas obtenido del servicio.
+   */
+  materiasPrimasCatalogo: Catalogo[] = [];
+
   /** Event emitter para enviar datos del residuo al componente padre */
   @Output() residuoAgregado = new EventEmitter<ResiduoPeligroso>();
 
@@ -93,7 +113,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   etiquetasForm = RADIO_OPCIONES;
 
   /** Control para mostrar/ocultar mensaje de error */
-  esFormaValido = false;
+  esFormaValido = true;
 
   /** Mensaje de error a mostrar */
   alertaErrorFormulario = '';
@@ -102,13 +122,18 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   public nuevaNotificacion: Notificacion = {} as Notificacion;
 
   /** Lista de materias primas para la tabla */
-  materiasPrimas: MateriaPrima231001[] = [];
+  materiasPrimas: MateriaResiduo[] = [];
 
   /** Lista de elementos seleccionados en la tabla */
   itemsSeleccionados: Set<number> = new Set();
 
   /** Estado del botón borrar */
   borrarHabilitado = false;
+
+  /**
+   * Catálogo de fracciones arancelarias para el dropdown
+   */
+  fraccionesArancelariasCatalogo: Catalogo[] = [];
 
   /**
    * Instancia del modal para gestionar archivos.
@@ -169,42 +194,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return this.formularioResiduo?.getRawValue()?.descripcion || '';
   }
 
-  /** Enum de tipos de selección de tabla para uso en template */
-  TablaSeleccion = TablaSeleccion;
-
   /** Configuración de columnas para la tabla dinámica */
-  configuracionTablaMaterias: ConfiguracionColumna<MateriaPrima>[] = [
-    {
-      encabezado: 'Id materia prima',
-      clave: (item: MateriaPrima) => item.id,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre materia prima',
-      clave: (item: MateriaPrima) => item.nombreMateriaPrima,
-      orden: 2,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (item: MateriaPrima) => item.cantidad,
-      orden: 3,
-    },
-    {
-      encabezado: 'Cantidad letra',
-      clave: (item: MateriaPrima) => item.cantidadLetra,
-      orden: 4,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (item: MateriaPrima) => item.unidadMedida,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fracción',
-      clave: (item: MateriaPrima) => item.fraccionArancelaria,
-      orden: 6,
-    },
-  ];
+  configuracionTablaMaterias: ConfiguracionColumna<MateriaResiduo>[] =
+    MATERIA_RESIDUO_TABLA;
 
   /** Datos de fracción arancelaria con sus NICOs relacionados */
   private readonly fraccionArancelariaData = [
@@ -266,35 +258,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   ];
 
   /** Datos para la tabla dinámica */
-  materiasPrimasTabla: MateriaPrima[] = [];
-
-  /** Datos simulados de materias primas para búsqueda */
-  private readonly materiasDisponibles = [
-    {
-      id: 'E5/00000003/10/2022',
-      nombre: 'Polietileno de alta densidad',
-      cantidad: '1000',
-      cantidadLetra: 'MIL',
-      unidadMedida: 'Tonelada',
-      fraccionArancelaria: '39012099',
-    },
-    {
-      id: 'E5/00000004/10/2022',
-      nombre: 'Policarbonato reciclado',
-      cantidad: '750',
-      cantidadLetra: 'SETECIENTOS CINCUENTA',
-      unidadMedida: 'Kilogramos',
-      fraccionArancelaria: '39074001',
-    },
-    {
-      id: 'E5/00000005/10/2022',
-      nombre: 'ABS virgen',
-      cantidad: '2500',
-      cantidadLetra: 'DOS MIL QUINIENTOS',
-      unidadMedida: 'Kilogramos',
-      fraccionArancelaria: '39033099',
-    },
-  ];
+  materiasPrimasTabla: MateriaResiduo[] = [];
 
   /**
    * Constructor del componente.
@@ -308,7 +272,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     public fb: FormBuilder,
     private formularioStore: FormularioResiduoStore,
     private formularioQuery: FormularioResiduoQuery,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private catalogosService: CatalogoT231002Service
   ) {}
 
   /**
@@ -339,8 +304,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   private inicializarFormulario(): void {
     this.formularioDatos = this.fb.group({
+      idMercancia: [''],
       numero: ['', Validators.required],
       nombreMateriaPrima: ['', Validators.required],
+      descripcionMateriaPrima: [''],
       cantidad: [{ value: '', disabled: true }],
       cantidadLetra: [{ value: '', disabled: true }],
       unidadDeMedida: [{ value: '', disabled: true }],
@@ -481,93 +448,54 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   buscarMateriaPrima(): void {
     const NUMERO = this.formularioDatos.get('numero')?.value;
-
     // Marcar el campo como touched para mostrar validaciones
     this.formularioDatos.get('numero')?.markAsTouched();
 
-    if (!NUMERO) {
-      // No mostrar alert, solo la validación del campo
-      this.esFormaValido = false;
-      this.alertaErrorFormulario = '';
-      return;
-    }
-
     // Verificar si ya existe una materia prima con el mismo número de bitácora en la tabla
     const MATERIA_EXISTENTE = this.materiasPrimas.find(
-      (materia) => materia.id === NUMERO
+      (materia) => materia.id_mercancia === NUMERO
     );
 
     if (MATERIA_EXISTENTE) {
-      // Mostrar notificación de duplicado si ya existe en la tabla
       this.mostrarNotificacionDuplicado();
       return;
     }
-
-    // Simular búsqueda en base de datos
-    const MATERIA_ENCONTRADA = this.materiasDisponibles.find(
-      (m) => m.id === NUMERO
-    );
-
-    if (MATERIA_ENCONTRADA) {
-      // Ocultar mensaje de error si existe
-      this.esFormaValido = false;
-      this.alertaErrorFormulario = '';
-
-      // Solo actualizar las opciones del dropdown cuando se encuentra la materia
-      this.etiquetasForm.nombre = [
-        { id: 1, descripcion: MATERIA_ENCONTRADA.nombre },
-      ];
-
-      // Los campos permanecen deshabilitados hasta que se seleccione del dropdown
-    } else {
-      // Mostrar mensaje de error cuando no se encuentra la materia prima
-      this.esFormaValido = true;
-      this.alertaErrorFormulario = 'El número de bitácora no existe';
-
-      // Si no se encuentra, limpiar el dropdown
-      this.etiquetasForm.nombre = [];
-
-      // También limpiar los campos deshabilitados
-      this.formularioDatos.get('cantidad')?.setValue('');
-      this.formularioDatos.get('cantidadLetra')?.setValue('');
-      this.formularioDatos.get('unidadDeMedida')?.setValue('');
-      this.formularioDatos.get('fraccionArancelaria')?.setValue('');
-    }
+    this.obtenerMateriasPrimasPorNoBitacora(NUMERO, 'AAL0409235E6');
   }
 
   /**
    * Maneja el cambio en el dropdown de nombre de materia prima
    */
   onNombreMateriaPrimaChange(): void {
-    const NUMERO = this.formularioDatos.get('numero')?.value;
-    const MATERIA_ENCONTRADA = this.materiasDisponibles.find(
-      (m) => m.id === NUMERO
+    const NUMERO = this.formularioDatos.get('nombreMateriaPrima')?.value;
+    this.obtenerMateriaPrimaPorId(NUMERO);
+  }
+
+  agregarMateriaPrima(): void {
+    const NUEVA_MATERIA: MateriaResiduo = {
+      id_mercancia: this.formularioDatos.get('idMercancia')?.value,
+      descripcion_mercancia: this.formularioDatos.get('descripcionMateriaPrima')
+        ?.value,
+      cantidad: this.formularioDatos.get('cantidad')?.value,
+      cantidad_letra: this.formularioDatos.get('cantidadLetra')?.value,
+      descripcion_umc: this.formularioDatos.get('unidadDeMedida')?.value,
+      cve_fraccion_arancelaria:
+        this.formularioDatos.get('fraccionArancelaria')?.value || '',
+    };
+
+    this.materiasPrimas.push(NUEVA_MATERIA);
+    // Actualizar los datos de la tabla dinámica
+    this.materiasPrimasTabla = [...this.materiasPrimas];
+    // Limpiar el formulario
+    this.formularioDatos.reset();
+    this.materiasPrimasCatalogo = this.materiasPrimasCatalogo.filter(
+      (m) => m.clave !== NUEVA_MATERIA.id_mercancia.toString()
     );
-
-    if (MATERIA_ENCONTRADA) {
-      // Ocultar mensaje de error si existe
-      this.esFormaValido = false;
-      this.alertaErrorFormulario = '';
-
-      // Auto-llenar los campos PERO mantenerlos disabled
-      this.formularioDatos
-        .get('cantidad')
-        ?.setValue(MATERIA_ENCONTRADA.cantidad);
-      this.formularioDatos
-        .get('cantidadLetra')
-        ?.setValue(MATERIA_ENCONTRADA.cantidadLetra);
-      this.formularioDatos
-        .get('unidadDeMedida')
-        ?.setValue(MATERIA_ENCONTRADA.unidadMedida);
-      this.formularioDatos
-        .get('fraccionArancelaria')
-        ?.setValue(MATERIA_ENCONTRADA.fraccionArancelaria);
-
-      // Actualizar el store
-      this.formularioStore.actualizarFormularioDatos(
-        this.formularioDatos.getRawValue()
-      );
-    }
+    this.fraccionesArancelariasCatalogo.push({
+      id: parseInt(NUEVA_MATERIA.cve_fraccion_arancelaria, 10),
+      clave: NUEVA_MATERIA.cve_fraccion_arancelaria,
+      descripcion: NUEVA_MATERIA.cve_fraccion_arancelaria,
+    });
   }
 
   /**
@@ -676,7 +604,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   onClasificacionChange(): void {
     const CLASIFICACION_SELECCIONADA =
       this.formularioResiduo.get('clasificacion')?.value;
-
     if (CLASIFICACION_SELECCIONADA) {
       this.manejarCambioClasificacion(CLASIFICACION_SELECCIONADA);
     } else {
@@ -765,11 +692,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   /**
    * Borra los elementos seleccionados de la tabla
    */
-  borrarElementosSeleccionados(): void {
+  borrarFilasSeleccionadas(): void {
     if (this.itemsSeleccionados.size === 0) {
       return;
     }
-
     // Convertir a array y ordenar de mayor a menor para eliminar correctamente
     const INDICES_A_ELIMINAR = Array.from(this.itemsSeleccionados).sort(
       (a, b) => b - a
@@ -778,42 +704,46 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     INDICES_A_ELIMINAR.forEach((index) => {
       this.materiasPrimas.splice(index, 1);
     });
-
-    // Limpiar selecciones y actualizar tabla
+    // Limpiar selecciones
     this.itemsSeleccionados.clear();
-    this.borrarHabilitado = false;
+    this.removerFraccionCombo(this.materiasPrimas);
+    // Forzar actualización de la tabla
+    this.materiasPrimasTabla = [...this.materiasPrimas];
   }
 
   /**
-   * Maneja el clic en una fila de la tabla dinámica
+   * remueve las fracciones que corresponden a las materias borradas
    */
-  onSeleccionarFila(materia: MateriaPrima): void {
-    const INDEX = this.materiasPrimas.findIndex((m) => m.id === materia.id);
-    if (INDEX !== -1) {
-      if (this.itemsSeleccionados.has(INDEX)) {
-        this.itemsSeleccionados.delete(INDEX);
-      } else {
-        this.itemsSeleccionados.add(INDEX);
-      }
-      this.borrarHabilitado = this.itemsSeleccionados.size > 0;
+  removerFraccionCombo(materiasResiduos: MateriaResiduo[]): void {
+    const CLAVES_FRACCIONES = materiasResiduos.map(
+      (materia) => materia.cve_fraccion_arancelaria
+    );
+    this.fraccionesArancelariasCatalogo =
+      this.fraccionesArancelariasCatalogo.filter((fraccion) =>
+        CLAVES_FRACCIONES.includes(fraccion.id.toString())
+      );
+
+    if (this.fraccionesArancelariasCatalogo.length === 0) {
+      this.formularioResiduo.get('fraccionArancelaria')?.setValue('');
+      this.formularioResiduo.get('fraccionArancelaria')?.reset(null);
     }
   }
 
   /**
    * Maneja la selección de filas desde la tabla dinámica (checkbox selection)
    */
-  onFilasSeleccionadas(filasSeleccionadas: MateriaPrima[]): void {
+  onFilasSeleccionadas(filasSeleccionadas: MateriaResiduo[]): void {
     // Limpiar selecciones previas
     this.itemsSeleccionados.clear();
-
     // Agregar nuevas selecciones
     filasSeleccionadas.forEach((materia) => {
-      const INDEX = this.materiasPrimas.findIndex((m) => m.id === materia.id);
+      const INDEX = this.materiasPrimas.findIndex(
+        (m) => m.id_mercancia === materia.id_mercancia
+      );
       if (INDEX !== -1) {
         this.itemsSeleccionados.add(INDEX);
       }
     });
-
     // Actualizar estado del botón borrar
     this.borrarHabilitado = this.itemsSeleccionados.size > 0;
   }
@@ -822,24 +752,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Agrega un residuo peligroso y emite el evento al componente padre
    */
   agregarResiduoPeligroso(): void {
-    // Validar que el formulario de residuo sea válido
-    if (this.formularioResiduo.invalid) {
-      // Marcar todos los campos como tocados para mostrar mensajes de error del formulario de residuo
-      Object.keys(this.formularioResiduo.controls).forEach((key) => {
-        const CONTROL = this.formularioResiduo.get(key);
-        if (CONTROL) {
-          CONTROL.markAsTouched();
-        }
-      });
-      return; // Salir de la función si el formulario es inválido
-    }
-
-    // Validar que se hayan agregado materias primas
-    if (this.materiasPrimas.length === 0) {
-      // Mostrar mensaje de error si no hay materias primas
-      this.esFormaValido = true;
-      this.alertaErrorFormulario =
-        'Debe agregar al menos una materia prima relacionada';
+    if (!this.validarForms()) {
       return;
     }
 
@@ -894,11 +807,59 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.borrarHabilitado = false;
 
     // Limpiar mensaje de error si existe
-    this.esFormaValido = false;
+    this.esFormaValido = true;
     this.alertaErrorFormulario = '';
 
     // Cerrar el modal usando Bootstrap's modal API
     DatosResiduosPeligrososComponent.cerrarModal();
+  }
+
+  /**
+   * Valida el formulario de residuos peligrosos.
+   * @returns Verdadero si el formulario es válido, falso en caso contrario.
+   */
+  validarForms(): boolean {
+    const FORMS_DATOS_VALID =
+      this.formularioDatos.invalid && !this.validarMateriasPrimas();
+    if (FORMS_DATOS_VALID) {
+      this.esFormaValido = false;
+      Object.keys(this.formularioDatos.controls).forEach((key) => {
+        const CONTROL = this.formularioDatos.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      this.alertaErrorFormulario = this.FALTAN_DATOS;
+    }
+    const FORMULARIO_RESIDUO_VALID = this.formularioResiduo.invalid;
+    if (FORMULARIO_RESIDUO_VALID) {
+      Object.keys(this.formularioResiduo.controls).forEach((key) => {
+        const CONTROL = this.formularioResiduo.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      this.alertaErrorFormulario = this.FALTAN_DATOS;
+      return false;
+    }
+    this.scrollModalToTop();
+    return !FORMS_DATOS_VALID || !FORMULARIO_RESIDUO_VALID;
+  }
+
+  /**
+   * Valida las materias primas relacionadas.
+   * @returns Verdadero si hay materias primas válidas, falso en caso contrario.
+   */
+  validarMateriasPrimas(): boolean {
+    if (this.materiasPrimas.length === 0) {
+      // Mostrar mensaje de error si no hay materias primas
+      this.esFormaValido = false;
+      this.alertaErrorFormulario = this.MATERIA_FALTANTE;
+      return false;
+    }
+    this.esFormaValido = true;
+    this.alertaErrorFormulario = '';
+    return true;
   }
 
   /**
@@ -1044,4 +1005,124 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     )?.descripcion;
     return TIPO_DESC || '';
   };
+
+  /**
+   * Obtiene las materias primas asociadas a un número de bitácora y RFC.
+   * Actualiza el catálogo de materias primas con los datos obtenidos.
+   *
+   * @param noBitacora - Número de bitácora para la búsqueda.
+   * @param rfc - RFC asociado para la búsqueda.
+   */
+  private obtenerMateriasPrimasPorNoBitacora(
+    noBitacora: string,
+    rfc: string
+  ): void {
+    this.formularioDatos.get('nombreMateriaPrima')?.reset(null);
+    this.materiasPrimasCatalogo = [];
+    this.catalogosService
+      .obtenerMateriasPrimasPorNoBitacora(noBitacora, rfc)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.materiasPrimasCatalogo = data.datos;
+        this.validaNoBitacora(data.datos.length > 0);
+      });
+  }
+
+  /**
+   *  Valida si existe la bitácora y muestra/oculta mensajes de error en consecuencia.
+   * @param existeBitacora
+   */
+  private validaNoBitacora(existeBitacora: boolean): void {
+    if (existeBitacora) {
+      // Ocultar mensaje de error si existe
+      this.esFormaValido = true;
+      this.alertaErrorFormulario = '';
+    } else {
+      this.esFormaValido = false;
+      this.alertaErrorFormulario = 'El número de bitácora no existe';
+      // También limpiar los campos deshabilitados
+      this.formularioDatos.get('cantidad')?.setValue('');
+      this.formularioDatos.get('cantidadLetra')?.setValue('');
+      this.formularioDatos.get('unidadDeMedida')?.setValue('');
+      this.formularioDatos.get('fraccionArancelaria')?.setValue('');
+    }
+  }
+
+  /**
+   * Verifica si un control del formulario es válido.
+   * @param control - Nombre del control a verificar.
+   * @returns true si el control es válido, false en caso contrario.
+   */
+  esControlValido(form: FormGroup, control: string): boolean | undefined {
+    const CONTROL = form.get(control);
+    return CONTROL?.invalid && (CONTROL?.dirty || CONTROL?.touched);
+  }
+
+  /**
+   * Obtiene una materia prima por su ID.
+   * @param materiaPrimaId - ID de la materia prima a obtener.
+   */
+  obtenerMateriaPrimaPorId(materiaPrimaId: string): void {
+    this.catalogosService
+      .obtenerMateriaPrimaPorId(materiaPrimaId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.setMateriaPrimaSeleccionada(data.datos);
+      });
+  }
+
+  /**
+   * Establece los valores del formulario de datos generales basados en la materia prima seleccionada.
+   */
+  setMateriaPrimaSeleccionada(materia: MateriaResiduo): void {
+    this.formularioDatos.get('idMercancia')?.setValue(materia.id_mercancia);
+    this.formularioDatos
+      .get('descripcionMateriaPrima')
+      ?.setValue(materia.descripcion_mercancia);
+    this.formularioDatos.get('cantidad')?.setValue(materia.cantidad);
+    this.formularioDatos.get('cantidadLetra')?.setValue(materia.cantidad_letra);
+    this.formularioDatos
+      .get('unidadDeMedida')
+      ?.setValue(materia.descripcion_umc);
+    this.formularioDatos
+      .get('fraccionArancelaria')
+      ?.setValue(materia.cve_fraccion_arancelaria);
+  }
+
+  /**
+   * Desplaza el modal hacia arriba para asegurar que los mensajes de error sean visibles.
+   */
+  private scrollModalToTop(): void {
+    const MODAL_ELEMENT = document.getElementById('modalAgregarMercancias');
+    if (MODAL_ELEMENT) {
+      // intenta el body del modal primero, luego modal-content, finalmente el propio elemento
+      const MODAL_BODY = MODAL_ELEMENT.querySelector(
+        '.modal-body'
+      ) as HTMLElement | null;
+      const MODAL_CONTENT = MODAL_ELEMENT.querySelector(
+        '.modal-content'
+      ) as HTMLElement | null;
+      const SCROLL_TARGET =
+        MODAL_BODY ?? MODAL_CONTENT ?? (MODAL_ELEMENT as HTMLElement);
+
+      if (SCROLL_TARGET && typeof SCROLL_TARGET.scrollTo === 'function') {
+        SCROLL_TARGET.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      } else if (SCROLL_TARGET) {
+        (SCROLL_TARGET as HTMLElement).scrollTop = 0;
+        return;
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /**
+   * Limpieza al destruir el componente:
+   * - Completa los subjects de destrucción
+   * - Cancela suscripciones activas
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }

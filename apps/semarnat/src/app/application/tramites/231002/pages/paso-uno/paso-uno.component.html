@@ -33,7 +33,7 @@
        } 
       @case (2) {
         @if (esDatosRespuesta){
-       <app-datos-solicitud></app-datos-solicitud> 
+       <app-datos-solicitud [esFormValido]="esFormaValido" #solicitud></app-datos-solicitud> 
       }
     } }
     </ng-container>

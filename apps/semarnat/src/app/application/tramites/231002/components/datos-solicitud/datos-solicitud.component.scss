@@ -16,3 +16,12 @@
 .modal-footer {
   padding: 1rem 1.5rem;
 }
+
+.textarea-auto-height {
+  min-height: 150px;
+  max-height: 300px;
+}
+
+.has-error {
+  color: #dc3545;
+}

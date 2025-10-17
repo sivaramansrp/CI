@@ -3,6 +3,8 @@ import {
   BtnContinuarComponent,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
+  NotificacionesComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
@@ -11,11 +13,18 @@ import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
+/**
+ * Interfaz que define la estructura de un objeto para manejar acciones de botones en el componente.
+ */
 export interface AccionBoton {
   accion: string;
   valor: number;
 }
 
+/**
+ * Constante que representa el índice del primer paso en el proceso de wizard.
+ */
+const PASO_UNO = 1;
 /**
  * Componente que gestiona el proceso de aviso de retorno mediante un sistema de pasos (wizard).
  * Controla la navegación entre diferentes pasos del proceso y maneja la lógica relacionada con:
@@ -34,11 +43,37 @@ export interface AccionBoton {
     PasoDosComponent,
     BtnContinuarComponent,
     AlertComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './solicitud-page.component.html',
 })
 export class SolicitudPageComponent {
-  esFormaValido: boolean = false;
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;
+  /**
+   * Notificación que se puede utilizar para mostrar mensajes emergentes (toastr).
+   * Null cuando no hay notificación nueva.
+   */
+  public nuevaNotificacion: Notificacion | null = null;
+
+  /**
+   * Notificación tipo banner que se muestra tras operaciones exitosas.
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
+   * Indica si el formulario actual es válido.
+   */
+  esFormaValido: boolean = true;
   /**
    * Lista de pasos configurados para el wizard.
    * @type {ListaPasosWizard[]}
@@ -51,6 +86,10 @@ export class SolicitudPageComponent {
    */
   @ViewChild('wizard', { static: false }) wizardComponent!: WizardComponent;
 
+
+  /**
+   * Referencia al componente del primer paso para validar formularios.
+   */
   @ViewChild(PasoUnoComponent) pasoUno!: PasoUnoComponent;
 
   /**
@@ -87,27 +126,37 @@ export class SolicitudPageComponent {
    * @param e Objeto con información de la acción del botón
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.accion === 'cont') {
-      let isValid = true;
-
-      if (this.indice === 1 && this.pasoUno) {
-        isValid = this.pasoUno.datosSolicitudComponent.validarFormulario();
-      }
-      if (!isValid) {
-        this.esFormaValido = true;
+    if (this.indice === PASO_UNO) {
+      const FORM_VALIDO = this.pasoUno?.validarTodosLosFormularios();
+      this.esFormaValido = FORM_VALIDO;
+      if (!FORM_VALIDO) {
         this.datosPasos.indice = this.indice;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
-
-      this.esFormaValido = false;
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-
-      this.wizardComponent.siguiente();
-      return;
+      console.log('aqui');
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        this.actualizarDatosPasos();
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
     }
-    this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
+  }
+
+  /**
+   * Actualiza los datos del componente de pasos con el índice actual y el número total de pasos.
+   */
+  actualizarDatosPasos(): void {
+    this.datosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
   }
 }

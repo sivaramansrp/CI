@@ -3,6 +3,7 @@ import {
   ResiduoPeligroso,
 } from '../../models/aviso-catalogo.model';
 import {
+  Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
   REGEX_POSTAL,
@@ -12,6 +13,7 @@ import {
 import {
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -28,12 +30,15 @@ import {
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoT231002Service } from '../../services/catalogo-t231002.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
+import { ES_CONTROL_INVALIDO } from '../../../../shared/helpers';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
+import { ImmexResponse } from '../../../231001/models/catalogo-response';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { TEXTOS } from '../../constantes/aviso-retorno.enum';
@@ -73,6 +78,14 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario actual es válido.
+   */
+  esControlInvalido = ES_CONTROL_INVALIDO;
+
+  /** Indica si el formulario es válido */
+  @Input() esFormValido!: boolean;
+
   /** Referencia al elemento modal para agregar mercancías */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
@@ -129,6 +142,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /** Lista de índices de filas seleccionadas en la tabla */
   filasSeleccionadas: Set<number> = new Set();
 
+  /** catalogo immex para llenar el combo */
+  immexCatalogo: Catalogo[] = [];
+
   /** Getter para verificar si hay filas seleccionadas */
   get hayFilasSeleccionadas(): boolean {
     return this.filasSeleccionadas.size > 0;
@@ -150,7 +166,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     private datoSolicitudStore: DatoSolicitudStore,
     private datoSolicitudQuery: DatoSolicitudQuery,
     private consultaQuery: ConsultaioQuery,
-    public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService
+    public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService,
+    private catalogosService: CatalogoT231002Service
   ) {
     this.obtenerAvisoOpcionesDeRadio();
   }
@@ -170,6 +187,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.inicializarConfiguracionTabla();
     this.recuperarValoresDesdeStore();
     this.configurarSuscripcionEstadoConsulta();
+    this.obtenerDatosImmex();
+    this.validaEsFormularioValido();
+  }
+
+  /**
+   * Valida si el formulario es válido y marca los campos como tocados si no lo es.
+   */
+  validaEsFormularioValido(): void {
+    if (!this.esFormValido) {
+      this.marcarCamposComoTocados();
+    }
   }
 
   /**
@@ -243,7 +271,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private inicializarFormularioEmpresaReciclaje(): void {
     this.formularioEmpresaReciclaje = this.fb.group({
-      requiereEmpresa: ['Si', Validators.required],
+      requiereEmpresa: ['', Validators.required],
       nombreEmpresa: ['', Validators.required],
       representanteLegal: ['', Validators.required],
       telefono: ['', Validators.required],
@@ -643,6 +671,22 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ...this.formularioLugarReciclaje.getRawValue(),
       [campo]: VALOR,
     });
+  }
+
+  /**
+   * Obtiene los datos IMMEX desde el servicio y los asigna al catálogo correspondiente.
+   * Se utiliza un RFC estático para pruebas en lo que se termina el servicio de autenticación.
+   */
+  obtenerDatosImmex(): void {
+    this.catalogosService
+      .obtenerDatosImmexByRfc('AAL0409235E6')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.immexCatalogo = data.datos.map((item: ImmexResponse) => ({
+          id: item.id_prog_autorizado,
+          descripcion: item.num_folio_tramite,
+        }));
+      });
   }
 
   /**
