@@ -268,6 +268,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   datosDelAvisoVisible: boolean = false;
 
+  mostrarTipoDeCarga: boolean = false;
+
   /**
    * @property {boolean} datosCargaMasiva
    * @description Indica si la sección de carga masiva es visible.
@@ -392,18 +394,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.datosAviso.nativeElement);
       MODAL_INSTANCE.show();
     }
-  }
-
-  /**
-   * @method modificarAviso
-   * @description Muestra el modal para modificar un aviso solo si hay registros seleccionados.
-   */
-  modificarAviso(): void {
-    if (this.filaSeleccionadaLista.length === 0) {
-      this.mostrarNotificacionSeleccion('Selecciona un registro para modificar');
-      return;
-    }
-    this.datosDelAviso();
   }
 
   /**
@@ -578,6 +568,14 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  mostrarTipoDeCargaCampos(): void {
+    const CONFIRMIDAD = this.adaceForm.get('confirmidad')?.value;
+    if (CONFIRMIDAD === 'si') {
+      this.mostrarTipoDeCarga = true;
+    } else if (CONFIRMIDAD === 'no'){
+      this.mostrarTipoDeCarga = false;
+    }
+  }
 
 
   /**
@@ -753,6 +751,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         adace: [{ value: this.solicitudState.adace, disabled: true }, [Validators.required]],
         pais: [{ value: this.solicitudState.pais, disabled: this.soloLectura }, [Validators.required]],
         anio: [{ value: this.solicitudState.anio, disabled: this.soloLectura }, [Validators.required]],
+        confirmidad: [this.solicitudState?.confirmidad ],
         tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
         tipoBusquedaAviso: [this.solicitudState?.tipoBusquedaAviso, Validators.required],
         folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],

@@ -29,29 +29,22 @@
         </div>
       </div>
     </ng-container>
-    <ng-container formGroupName="adaceForm" *ngIf="consultaDatos.parameter === 'READ_PROCEDURE'">
-      <ng-titulo titulo="" />
-      <div class="row">
-        <div class="col-md-12">
-          <label>De conformidad con el artículo 8 del Decreto por el</label>
-            <app-input-radio [radioOptions]="radioConfirmidad" formControlName="confirmidad" [layout]="'horizontal'" (change)="setValoresStore(adaceForm, 'confirmidad', 'setConfirmidad');"></app-input-radio>
+    <ng-container formGroupName="adaceForm">
+      <div class="row mt-5">
+        <div class="col-md-11">
+          <label>De conformidad con el artículo 8 del Decreto por el que se regula la importación definitiva de vehículos usados, ¿ Declara información para el periodo seleccionado?</label>
+            <app-input-radio 
+              [radioOptions]="radioConfirmidad" 
+              formControlName="confirmidad" 
+              [layout]="'horizontal'" 
+              (change)="setValoresStore(adaceForm, 'confirmidad', 'setConfirmidad');mostrarTipoDeCargaCampos()"
+            ></app-input-radio>
         </div>
       </div>
     </ng-container>
-    <ng-container formGroupName="adaceForm" *ngIf="consultaDatos.parameter === 'READ_PROCEDURE'">
-      <ng-titulo titulo="Datos del aviso" />
-      <div class="row">
-        <div class="col-md-12">
-          <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatosConsulta.encabezadas" [datos]="tablaDeDatosConsulta.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
-          <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary ms-3" [disabled]="true" (click)="accionesBotones(botonAccionesTipos.ELIMINAR)" [disabled]="soloLectura"> Eliminar </button>
-            <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="modificarAviso()" [disabled]="soloLectura"> Modificar </button>
-            <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura"> Agregar </button>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container formGroupName="adaceForm" *ngIf="consultaDatos.parameter !== 'READ_PROCEDURE'">
+
+    @if(mostrarTipoDeCarga){
+    <ng-container formGroupName="adaceForm">
       <ng-titulo titulo="Tipo de carga" />
       <div class="row">
         <div class="col-md-12">
@@ -61,20 +54,20 @@
         </div>
       </div>
     </ng-container>
-    
-    <ng-container formGroupName="adaceForm" *ngIf="datosDelAvisoVisible && consultaDatos.parameter !== 'READ_PROCEDURE'">
+    <ng-container formGroupName="adaceForm" *ngIf="datosDelAvisoVisible">
       <ng-titulo titulo="Datos del aviso" />
       <div class="row">
         <div class="col-md-12">
           <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
           <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary ms-3" [disabled]="true" (click)="accionesBotones(botonAccionesTipos.ELIMINAR)" [disabled]="soloLectura"> Eliminar </button>
-            <button type="button" class="btn btn-primary ms-3" (click)="modificarAviso()" [disabled]="soloLectura"> Modificar </button>
+            <button type="button" class="btn btn-primary ms-3" (click)="accionesBotones(botonAccionesTipos.MODIFICAR)" [disabled]="soloLectura"> Modificar </button>
             <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura"> Agregar </button>
           </div>
         </div>
       </div>
     </ng-container>
+    }
     <ng-container *ngIf="datosCargaMasiva">
       <app-carga-masiva></app-carga-masiva>
     </ng-container>
