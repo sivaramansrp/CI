@@ -26,8 +26,12 @@
       }
       }
 
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
-        [dePadre]="true"></btn-continuar>
+        
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button type="button" class="btn btn-default">Guardar</button>
+            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true" [dePadre]="true"></btn-continuar>
+          </div>
+      
           <ng-alert [CONTENIDO]="PRIVACY_NOTICE_CONTENT"></ng-alert>
     </div>
   </div>

@@ -127,7 +127,7 @@ export class CertificadosOrigenGridService {
   }
 
  /** Construye el objeto certificado a partir del estado del trámite TramiteState. */
-  buildCertificado(item: TramiteState): unknown {
+  buildCertificado(item: TramiteState): unknown {    
     return {
       tratado_acuerdo: item.formCertificado['entidadFederativa'] || '',
       pais_bloque: item.formCertificado['bloque'] || '',
@@ -143,6 +143,16 @@ export class CertificadosOrigenGridService {
         segundo_apellido: item.formCertificado['segundoApellido'] || '',
         numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'] || '',
         razon_social: item.formCertificado['razonSocial'] || '',
+      },
+      domicilio_tercer_operador:{
+        pais: item.formCertificado['pais'] || '',
+        calle: item.formCertificado['calle'] || '',
+        Ciudad: item.formCertificado['ciudad'] || '',
+        numero_letra: item.formCertificado['numeroLetra'] || '',
+        lada: item.formCertificado['lada'] || '',
+        telefono: item.formCertificado['telefono'] || '',
+        correo_electronico:item.formCertificado['correo'],
+        fax:item.formCertificado['fax']
       },
       mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaTabla),
     };
