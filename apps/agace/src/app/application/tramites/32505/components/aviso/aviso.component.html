@@ -45,7 +45,7 @@
           <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatosConsulta.encabezadas" [datos]="tablaDeDatosConsulta.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
           <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary ms-3" [disabled]="true" (click)="accionesBotones(botonAccionesTipos.ELIMINAR)" [disabled]="soloLectura"> Eliminar </button>
-            <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura"> Modificar </button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="modificarAviso()" [disabled]="soloLectura"> Modificar </button>
             <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura"> Agregar </button>
           </div>
         </div>
@@ -69,7 +69,7 @@
           <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
           <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary ms-3" [disabled]="true" (click)="accionesBotones(botonAccionesTipos.ELIMINAR)" [disabled]="soloLectura"> Eliminar </button>
-            <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura"> Modificar </button>
+            <button type="button" class="btn btn-primary ms-3" (click)="modificarAviso()" [disabled]="soloLectura"> Modificar </button>
             <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura"> Agregar </button>
           </div>
         </div>

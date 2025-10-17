@@ -387,10 +387,23 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   datosDelAviso(): void {
     this.esPopupAbierto = true;
+    this.aviosForm.reset();
     if (this.datosAviso) {
       const MODAL_INSTANCE = new Modal(this.datosAviso.nativeElement);
       MODAL_INSTANCE.show();
     }
+  }
+
+  /**
+   * @method modificarAviso
+   * @description Muestra el modal para modificar un aviso solo si hay registros seleccionados.
+   */
+  modificarAviso(): void {
+    if (this.filaSeleccionadaLista.length === 0) {
+      this.mostrarNotificacionSeleccion('Selecciona un registro para modificar');
+      return;
+    }
+    this.datosDelAviso();
   }
 
   /**
@@ -404,8 +417,14 @@ export class AvisoComponent implements OnInit, OnDestroy {
         this.esManualAsivoAgregarClicked = true;
         break;
       case BotonAccionesTipos.ELIMINAR:
+        if (this.filaSeleccionadaLista.length === 0) {
+          this.mostrarNotificacionSeleccion('Selecciona el(los) registro(s) a eliminar');
+        }
         break;
       case BotonAccionesTipos.MODIFICAR:
+        if (this.filaSeleccionadaLista.length === 0) {
+          this.mostrarNotificacionSeleccion('Selecciona un registro para modificar');
+        }
         break;
       default:
         break;
@@ -772,6 +791,24 @@ export class AvisoComponent implements OnInit, OnDestroy {
     });
     this.mostrarCampos();
     this.mostrarCamposAviso();
+  }
+
+  /**
+   * @method mostrarNotificacionSeleccion
+   * @description Muestra una notificación de alerta con el mensaje proporcionado.
+   * @param {string} mensaje - El mensaje a mostrar en la notificación.
+   */
+  mostrarNotificacionSeleccion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
