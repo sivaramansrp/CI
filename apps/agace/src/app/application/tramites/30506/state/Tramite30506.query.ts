@@ -1,4 +1,4 @@
-import { Solicitud30506State, Tramite30506Store } from './Tramite30506.store';
+import { Solicitud30506State, Tramite30506Store } from './tramite30506.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 /**
