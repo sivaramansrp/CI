@@ -153,6 +153,10 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   tramites:string='110203';
 
+  public filaSeleccionada: boolean = false;
+
+  public datosFilasSeleccionadas: TableBodyData[] = [];
+
   /** 
    * Constructor del componente.
    * Se inyectan las dependencias necesarias para el funcionamiento del componente.
@@ -391,8 +395,21 @@ public buscar(): void {
    * Redirects to `/pago/seleccion-tramite` using Angular's Router.
    */
   navigateToSeleccionTramite(): void {
+    if (!this.filaSeleccionada) {
+    this.alertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Es necesario seleccionar un certificado',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  } else {
     this.router.navigate(['../tecnicosdatos'], { relativeTo: this.route });
-
+  }
   }
 
   /**
@@ -427,6 +444,15 @@ public buscar(): void {
         }
       });
   }
+
+  onRowSelectionChange(tieneSeleccion: boolean): void {
+  this.filaSeleccionada = tieneSeleccion;
+    if (tieneSeleccion) {
+    this.datosFilasSeleccionadas = this.establecimientoBodyData.filter(row => row.selected);
+  } else {
+    this.datosFilasSeleccionadas = [];
+  }
+}
 
   /** 
    * Método de ciclo de vida de Angular que se ejecuta cuando el componente se destruye.  

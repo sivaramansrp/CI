@@ -3,14 +3,14 @@ import {
   Solicitud110203State,
   Tramite110203Store,
 } from '../../../../estados/tramites/tramite110203.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
+import { DatosPasos, esValidObject, getValidDatos, JSONResponse } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-
+import { Solocitud110203Service } from '../../service/service110203.service';
 @Component({
   selector: 'app-tecnicos',
   templateUrl: './tecnicos.component.html',
@@ -95,7 +95,8 @@ export class TecnicosComponent {
    */
   constructor(
     private tramite110203Query: Tramite110203Query,
-    private tramite110203Store: Tramite110203Store
+    private tramite110203Store: Tramite110203Store,
+    private servicio110203: Solocitud110203Service,
   ) {
     this.tramite110203Query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -121,5 +122,87 @@ export class TecnicosComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  guardar(data: Solicitud110203State): any {
+    console.log(data);
+    const TRATADOS = this.servicio110203.buildTratados(data);
+    const DESTINATARIO = this.servicio110203.buildDestinatario(data);
+    const TRANSPORTE = this.servicio110203.buildTransporte(data);
+    const DATOS_CERTIFICADO = this.servicio110203.buildDatosCertificado(data);
+    const PAYLOAD = {
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 0,
+    "idTipoTramite": 110203,
+    "discriminatorValue": "110203",
+    "rfc_solicitante": "AAL0409235E6",
+    "rfc": "AAL0409235E6",
+    "cve_unidad_administrativa": "0203",
+    "costoTotal": 10000.5,
+    "certificado_serial_number": "1234567890ABCDEF",
+    "numero_folio_tramite_original": "TRM-2023-00001",
+    "nombre": "Juan",
+    "apPaterno": "Pérez",
+    "apMaterno": "López",
+    "telefono": "5551234567",
+     "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividad_economica": "Fabricación de productos de hierro y acero",
+        "correo_electronico": "contacto@acerosalvarado.com",
+        "domicilio": {
+            "pais": "México",
+            "codigo_postal": "06700",
+            "estado": "Ciudad de México",
+            "municipio_alcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numero_exterior": "123",
+            "numero_interior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+        }
+    },
+      "tratados": TRATADOS,
+      "transporte": TRANSPORTE,
+      "certificado": {},
+     "destinatario": DESTINATARIO,
+     "datos_del_cerificado": DATOS_CERTIFICADO
+    }
+    console.log(PAYLOAD);
+    return new Promise((resolve, reject) => {
+        this.servicio110203.guardarDatosPost(PAYLOAD).subscribe({
+          next: (response) => {
+            if (esValidObject(response) && esValidObject(response['datos'])) {
+              const DATOS = response['datos'] as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.tramite110203Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.tramite110203Store.setIdSolicitud(0);
+              }
+            }
+            resolve({
+              id: response['id'] ?? 0,
+              descripcion: response['descripcion'] ?? '',
+              codigo: response['codigo'] ?? '',
+              data: response['data'] ?? response['datos'] ?? null,
+              ...response
+            } as JSONResponse);
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+        });
+  }
+
+
+  obtenerDatosDelStore(): void {
+    this.servicio110203.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
   }
 }

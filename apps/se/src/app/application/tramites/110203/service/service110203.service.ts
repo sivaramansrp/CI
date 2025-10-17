@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Solicitud110203State, Tramite110203Store } from '../../../estados/tramites/tramite110203.store';
+import { Tramite110203Query } from '../../../estados/queries/tramite110203.query';
+import { PROC_110203 } from '../servers/api.route';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +23,11 @@ export class Solocitud110203Service {
 
 /** Constructor que inyecta servicios HTTP y el store del trámite 110203.  
  *  Utilizado para inicializar dependencias necesarias en el componente. */
-  constructor(private http: HttpClient, private tramite110203Store: Tramite110203Store,) {
+  constructor(private http: HttpClient, 
+    private tramite110203Store: Tramite110203Store,
+    private tramite110203Query: Tramite110203Query,
+    public httpService: HttpCoreService,
+  ) {
     // Lógica de inicialización si es necesario
   }
 /** Actualiza el estado del formulario en el store con los datos proporcionados.  
@@ -62,6 +69,68 @@ this.tramite110203Store.setMedida(DATOS.medida);
  *  desde un archivo JSON local para el trámite 110203. */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud110203State> {
     return this.http.get<Solicitud110203State>('assets/json/110203/serviciosExtraordinarios.json');
+  }
+
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110203.GUARDAR, { body: body });
+  }
+
+  getAllState(): Observable<Solicitud110203State> {
+    return this.tramite110203Query.selectSolicitud$;
+  }
+
+  buildTratados(data:any): unknown {
+  return {
+    "tratadoAcuerdo":data.tratado,
+    "paisBloque": data.bloque,
+    "pais": data.origen,
+    "paisDestino": data.destino,
+    "fechaExpedicion": data.expedicion,
+    "fechaVencimiento": data.vencimiento
+  };
+}
+
+buildDestinatario(data:any):unknown {
+  return {
+    "nombre": data.nombre,
+    "primer_apellido": data.primer,
+    "segundo_apellido": data.segundo,
+    "numero_registro_fiscal": data.fiscal,
+    "razon_social": data.razon,
+    "domicilio": {
+      "ciudad_poblacion_estado_provincia": data.ciudad,
+      "calle": data.calle,
+      "numero_letra": data.letra,
+      "lada": data.lada ?? '',
+      "telefono": data.telefono,
+      "fax": data.fax,
+      "correo_electronico": data.correo,
+      "pais_destino": data.paisDestino ?? ''
+  },
+    "medio_transporte": data.medio ?? ''
+}
+}
+
+buildTransporte(data:any): unknown {
+  return {
+    "medio_de_transporte": data.medio
+  };
+}
+
+  buildDatosCertificado(data: any): unknown {
+    return {
+      "observaciones": data.observaciones,
+      "precisa": data.precisa,
+      "presenta": data.presenta,
+      "mercanciasSeleccionadas": {
+           "numero_de_orden":"",
+            "fraccion_arancelaria":"",
+            "nombre_tecnico":"",
+            "nombre_comercial":"",
+            "nombre_ingles":"",
+            "numero_de_registro":""
+      }
+    }
   }
 
 }
