@@ -4,11 +4,11 @@ import { ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, Inpu
 import { FECHA_INICIO, FECHA_PAGO } from '../../models/adace.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { ControladoraLabelEnum } from '../../constantes/labels32606.enum';
 import { EconomicoService } from '../../services/economico.service';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 /**
  * Componente encargado de gestionar el formulario de la sección "Controladora".
  * Permite inicializar, habilitar/deshabilitar y actualizar los valores del formulario,
@@ -21,7 +21,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
     TablaDinamicaComponent
   ],
   templateUrl: './controladora.component.html',
-  styleUrl: './controladora.component.css',
+  styleUrl: './controladora.component.scss',
 })
 export class ControladoraComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de la sección controladora. */
