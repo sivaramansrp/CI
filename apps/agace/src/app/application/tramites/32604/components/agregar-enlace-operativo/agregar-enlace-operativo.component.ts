@@ -6,19 +6,21 @@
  * actualización de estado y emisión de eventos al componente padre.
  */
 
-import { ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento } from '@ng-mf/data-access-user';
-import { EventEmitter, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { OnInit, Output } from '@angular/core';
-import { REGEX_RFC, REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-import { EnlaceOperativo } from '../../models/empresas-comercializadoras.model';
-import { RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
+
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { EnlaceOperativo, RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
+
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 /**
  * Componente para agregar y gestionar enlaces operativos en el trámite 32604.
  * 
@@ -296,11 +298,11 @@ abrirModal(i: number = 0): void {
       agregarEnlaceCargo: [this.solicitud32604State.agregarEnlaceCargo],
       agregarEnlaceTelefono: [
         this.solicitud32604State.telefono,
-        [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       agregarEnlaceCorreoElectronico: [
         this.solicitud32604State.correoElectronico,
-        [Validators.required, Validators.email],
+        [Validators.email],
       ],
       agregarEnlaceSuplente: [this.solicitud32604State.agregarEnlaceSuplente],
     });
@@ -331,6 +333,22 @@ abrirModal(i: number = 0): void {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Getter para acceder al control de teléfono del formulario.
+   * @returns {AbstractControl} Control del formulario para teléfono
+   */
+  get agregarEnlaceTelefono(): AbstractControl | null {
+    return this.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono');
+  }
+
+  /**
+   * Getter para acceder al control de correo electrónico del formulario.
+   * @returns {AbstractControl} Control del formulario para correo electrónico
+   */
+  get agregarEnlaceCorreoElectronico(): AbstractControl | null {
+    return this.agregarEnlaceOperativoForm.get('agregarEnlaceCorreoElectronico');
   }
 
   /**
@@ -450,17 +468,31 @@ abrirModal(i: number = 0): void {
 
   /**
    * Valida el formulario y procesa los datos del enlace operativo si es válido.
+   * Si no es válido, muestra los errores y previene el cierre del modal.
    */
   private validarYProcesarEnlaceOperativo(): void {
     if (this.agregarEnlaceOperativoForm.valid) {
       this.procesarDatosEnlaceOperativo();
     } else {
       this.marcarCamposComoTocados();
+      // Mostrar notificación de error cuando el formulario no es válido
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Error de validación',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
   /**
    * Procesa los datos del enlace operativo cuando el formulario es válido.
+   * Emite los datos al componente padre y cierra el modal.
    */
   private procesarDatosEnlaceOperativo(): void {
     const OBJETO_JSON: EnlaceOperativo = {
@@ -494,7 +526,30 @@ abrirModal(i: number = 0): void {
       localidad: '',
       delegacionMunicipio: '',
     };
+    
+    // Emitir los datos al componente padre
     this.agregarEnlaceOperativo.emit(OBJETO_JSON);
+    
+    // Resetear el formulario después de envío exitoso
+    this.agregarEnlaceOperativoForm.reset();
+    
+    // Cerrar el modal solo cuando los datos son válidos
+    AgregarEnlaceOperativoComponent.cerrarModal();
+  }
+
+  /**
+   * Cierra el modal programáticamente.
+   */
+  private static cerrarModal(): void {
+    // Cerrar usando el modal de Bootstrap
+    const MODAL_ELEMENT = document.getElementById('agregarEnlaceOperativo');
+    if (MODAL_ELEMENT) {
+      const BOOTSTRAP_GLOBAL = (window as unknown as { bootstrap?: { Modal: { getInstance: (element: Element) => { hide: () => void } | null } } }).bootstrap;
+      const MODAL_BOOTSTRAP = BOOTSTRAP_GLOBAL?.Modal?.getInstance(MODAL_ELEMENT);
+      if (MODAL_BOOTSTRAP) {
+        MODAL_BOOTSTRAP.hide();
+      }
+    }
   }
 
   /**

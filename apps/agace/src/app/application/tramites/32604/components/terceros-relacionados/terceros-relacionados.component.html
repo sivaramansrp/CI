@@ -35,16 +35,9 @@
               id="Buscar"
               class="btn btn-primary me-5"
               (click)="buscarTerceroNacionalIDC()"
-              [disabled]="esFormularioSoloLectura ? true : false">            
+              [disabled]="esFormularioSoloLectura">            
               Buscar
             </button>
-            
-@if (nuevaNotificacion) {
-  <section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-  </lib-notificaciones>
-  </section>
-  }
           </div>
         </div>
         <div class="col-md-4">
@@ -105,28 +98,46 @@
           <input
             class="form-control"
             type="text"
-            size="25"
+            size="15"
             id="telefono"
             name="telefono"
             formControlName="telefono"
+            placeholder="Número de teléfono"
+            maxlength="20"
+            [class.is-invalid]="telefono?.invalid && (telefono?.dirty || telefono?.touched)"
             (change)="actualizarTelefono($event)"
             [disabled]="esFormularioSoloLectura"
           />
+          @if(telefono?.invalid && (telefono?.dirty || telefono?.touched)) {
+            <div class="text-danger">
+              @if(telefono?.errors?.['pattern']) {
+                <small>Teléfono debe contener solo dígitos.</small>
+              }
+            </div>
+          }
         </div>
         <div class="col-md-4">
-          <label class="form-label text-start" for="correoElectronico"
-            >Correo Electrónico:</label
-          >
+          <label class="form-label text-start" for="correoElectronico">Correo Electrónico:</label>
           <input
             class="form-control"
-            type="text"
-            size="25"
+            type="email"
+            size="30"
             id="correoElectronico"
             name="correoElectronico"
             formControlName="correoElectronico"
+            placeholder="correo@ejemplo.com"
+            maxlength="100"
+            [class.is-invalid]="correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)"
             (change)="actualizarCorreoElectronico($event)"
             [disabled]="esFormularioSoloLectura"
           />
+          @if(correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)) {
+            <div class="text-danger">
+              @if(correoElectronico?.errors?.['email']) {
+                <small>Ingrese un correo electrónico válido.</small>
+              }
+            </div>
+          }
         </div>
         <div class="col-md-12">
           <ng-titulo titulo="Enlace Operativo" />
@@ -149,32 +160,31 @@
             type="button"
             name="btnAceptarEnlace"
             id="btnAceptarEnlace"
-            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary me-2"
             data-bs-toggle="modal"
             data-bs-target="#agregarEnlaceOperativo"
             (click)="guardarDatosEnlaceOperativo()"
-            [disabled]="esFormularioSoloLectura ? true : false">            
+            [disabled]="esFormularioSoloLectura">            
             Agregar
           </button>
           <button
             type="button"
             name="btnModificarEnlace"
             id="btnModificar"
-            class="btn btn-primary me-2"
+            class="btn btn-default me-2"
             data-bs-toggle="modal"
             data-bs-target="#agregarEnlaceOperativo"
             (click)="guardarModificacionEnlaceOperativo()"
-            [disabled]="esFormularioSoloLectura ? true : false">            
+            [disabled]="esFormularioSoloLectura || seleccionEnlaceOperativoDatos.length === 0">            
             Modificar
           </button>
           <button
             type="button"
-            name="btnCancelarEnlace"
-            id="btnCancelar"
+            name="btnEliminarEnlace"
+            id="btnEliminar"
             class="btn btn-danger"
-            (click)="cerrarDialogoEnlaceOperativo()"
-            [disabled]="esFormularioSoloLectura ? true : false">            
+            (click)="confirmarEliminarEnlaceOperativo()"
+            [disabled]="esFormularioSoloLectura || seleccionEnlaceOperativoDatos.length === 0">            
             Eliminar
           </button>
         </div>
@@ -195,7 +205,7 @@
       </div>
     </form>
   </div>
-  
+
   <div
     class="modal fade"
     id="agregarEnlaceOperativo"
@@ -211,4 +221,19 @@
       </div>
     </div>
   </div>
+
+  @if(alertaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+</section>
+}
+
+@if(nuevaNotificacion && nuevaNotificacion.tipoNotificacion) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="manejarConfirmacionEliminacion($event)">
+  </lib-notificaciones>
+</section>
+}
   

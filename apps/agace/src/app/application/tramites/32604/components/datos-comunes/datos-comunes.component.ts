@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
@@ -28,7 +28,6 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  TablaConEntradaComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent
@@ -37,7 +36,9 @@ import {
 import {
   DOMICILIOS_CONFIGURACION_COLUMNAS,
   INVENTARIOS_CONFIGURACION,
+  LibroTrabajoExcel,
   NUMERO_DE_EMPLEADOS_CONFIGURACION,
+  RegistroExcel,
   SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS
 } from '../../constants/empresas-comercializadoras.enum';
 
@@ -88,7 +89,6 @@ import { ModificarComponent } from '../modificar/modificar.component';
     InputRadioComponent,
     TituloComponent,
     TablaDinamicaComponent,
-    TablaConEntradaComponent,
     ToastrModule,
     ModificarComponent,
     EmpresaComponent,
@@ -302,6 +302,26 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   seleccionarInventarios: Inventarios[] = [] as Inventarios[];
 
   /**
+   * Indica si se está en modo de modificación de inventario.
+   * 
+   * Controla si el formulario de inventarios está en modo
+   * de edición (true) o en modo de agregar nuevo (false).
+   * 
+   * @property {boolean} modoModificacionInventario
+   */
+  modoModificacionInventario: boolean = false;
+
+  /**
+   * Inventario seleccionado para modificación.
+   * 
+   * Almacena el inventario que se está editando cuando
+   * se encuentra en modo de modificación.
+   * 
+   * @property {Inventarios | null} inventarioSeleccionadoParaModificar
+   */
+  inventarioSeleccionadoParaModificar: Inventarios | null = null;
+
+  /**
    * Configuración de columnas para la sección de socios IC.
    * 
    * Define la estructura de las columnas para mostrar
@@ -338,10 +358,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * ViewChild que permite acceder al elemento DOM del modal
    * utilizado para agregar nuevos miembros a la empresa.
    * 
-   * @property {ElementRef} modalElement
+   * @property {ElementRef} elementoModalAgregarMiembros
    */
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
-  modalElement!: ElementRef;
+  elementoModalAgregarMiembros!: ElementRef;
 
   /**
    * Referencia al modal de la sección de subcontratados.
@@ -349,10 +369,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * ViewChild que proporciona acceso al modal utilizado
    * para gestionar la información de subcontratados.
    * 
-   * @property {ElementRef} modalSeccionSubcontratadosElement
+   * @property {ElementRef} elementoModalSeccionSubcontratados
    */
   @ViewChild('modalSeccionSubcontratados', { static: false })
-  modalSeccionSubcontratadosElement!: ElementRef;
+  elementoModalSeccionSubcontratados!: ElementRef;
 
   /**
    * Referencia al modal de instalaciones principales.
@@ -360,10 +380,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * ViewChild que permite controlar el modal destinado
    * a la gestión de instalaciones principales de la empresa.
    * 
-   * @property {ElementRef} modalInstalacionesPrincipalesElement
+   * @property {ElementRef} elementoModalInstalacionesPrincipales
    */
   @ViewChild('modalInstalacionesPrincipalesElement', { static: false })
-  modalInstalacionesPrincipalesElement!: ElementRef;
+  elementoModalInstalacionesPrincipales!: ElementRef;
 
   /**
    * Referencia al modal de modificación.
@@ -371,10 +391,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * ViewChild que proporciona acceso al modal utilizado
    * para modificar información existente.
    * 
-   * @property {ElementRef} modalModificarElement
+   * @property {ElementRef} elementoModalModificar
    */
   @ViewChild('modalModificarElement', { static: false })
-  modalModificarElement!: ElementRef;
+  elementoModalModificar!: ElementRef;
 
   /**
    * Referencia al modal de la sección de empresa.
@@ -382,10 +402,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * ViewChild que permite acceder al modal utilizado
    * para gestionar información general de la empresa.
    * 
-   * @property {ElementRef} modalEmpresaElement
+   * @property {ElementRef} elementoModalEmpresa
    */
   @ViewChild('modalEmpresaElement', { static: false })
-  modalEmpresaElement!: ElementRef;
+  elementoModalEmpresa!: ElementRef;
 
   /**
    * Referencia al componente agregar dentro del modal.
@@ -393,10 +413,74 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * ViewChild que proporciona acceso directo al componente
    * AgregarComponent para controlar su estado y comportamiento.
    * 
-   * @property {AgregarComponent} agregarComponent
+   * @property {AgregarComponent} componenteAgregar
    */
-  @ViewChild(AgregarComponent, { static: false })
-  agregarComponent!: AgregarComponent;
+  @ViewChild('agregarComponent', { static: false })
+  componenteAgregar!: AgregarComponent;
+
+  /**
+   * Referencia al componente modificar dentro del modal.
+   * 
+   * ViewChild que proporciona acceso directo al componente
+   * ModificarComponent para controlar su estado y comportamiento.
+   * 
+   * @property {ModificarComponent} componenteModificar
+   */
+  @ViewChild('modificarComponent', { static: false })
+  componenteModificar!: ModificarComponent;
+
+  /**
+   * Referencia al modal para modificar miembros de la empresa.
+   * 
+   * ViewChild que permite acceder al elemento DOM del modal
+   * utilizado para modificar miembros existentes de la empresa.
+   * 
+   * @property {ElementRef} modalModificarMiembro
+   */
+  @ViewChild('modalModificarMiembro', { static: false })
+  modalModificarMiembro!: ElementRef;
+
+  /**
+   * Referencia al modal para modificar inventarios.
+   * 
+   * ViewChild que permite acceder al elemento DOM del modal
+   * utilizado para modificar inventarios existentes.
+   * 
+   * @property {ElementRef} modalModificarInventario
+   */
+  @ViewChild('modalModificarInventario', { static: false })
+  modalModificarInventario!: ElementRef;
+
+  /**
+   * Formulario reactivo para el modal de modificación de inventarios.
+   * 
+   * FormGroup que gestiona los campos del modal de modificación,
+   * incluyendo identificación y lugar de radicación.
+   * 
+   * @property {FormGroup} inventarioModalForm
+   */
+  inventarioModalForm!: FormGroup;
+
+  /**
+   * Referencia al componente empresa dentro del modal.
+   * 
+   * ViewChild que proporciona acceso directo al componente
+   * EmpresaComponent para controlar su estado y comportamiento.
+   * 
+   * @property {EmpresaComponent} modificarMiembroComponent
+   */
+  @ViewChild('modificarMiembroComponent', { static: false })
+  modificarMiembroComponent!: EmpresaComponent;
+
+  /**
+   * Domicilio seleccionado para modificar
+   */
+  domicilioSeleccionadoParaModificar: Domicilios | null = null;
+
+  /**
+   * Miembro seleccionado para modificar
+   */
+  miembroSeleccionadoParaModificar: SeccionSociosIC | null = null;
 
   /**
    * Notificación utilizada para mostrar mensajes al usuario.
@@ -408,6 +492,25 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @property {Notificacion} nuevaNotificacion
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Notificación de éxito para mostrar cuando se guardan datos correctamente.
+   * 
+   * Siguiendo el patrón del 40402, esta notificación se muestra cuando
+   * las operaciones de Add/Modify se completan exitosamente.
+   * 
+   * @public
+   * @property {Notificacion} alertaNotificacion
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
+   * Indica si se debe mostrar la notificación de éxito.
+   * 
+   * @public
+   * @property {boolean} mostrarNotificacion
+   */
+  public mostrarNotificacion: boolean = false;
 
   /**
    * Índice o identificador del elemento que se desea eliminar de la tabla de pedimentos.
@@ -464,7 +567,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     public empresasComercializadorasService: EmpresasComercializadorasService,
     public solicitud32604Store: Solicitud32604Store,
     public solicitud32604Query: Solicitud32604Query,
-    public consultaioQuery: ConsultaioQuery
+    public consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -523,6 +627,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.conseguirOpcionDeRadio();
     this.conseguirOpcionDeRadio();
     this.conseguirSolicitudCatologoSelectLista();
+    
+    // Inicializar los campos de registros con contadores iniciales
+    this.actualizarCampoRegistrosExistentes();
+    this.actualizarCampoProveedoresExistentes();
   }
 
   /**
@@ -596,16 +704,22 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       file2: [this.solicitud32604State.file2],
       '247': [this.solicitud32604State['247'], Validators.required],
       '248': [this.solicitud32604State['248']],
-      identificacion: [this.solicitud32604State.identificacion, Validators.required],
-      lugarDeRadicacion: [this.solicitud32604State.lugarDeRadicacion, Validators.required],
+      identificacion: [{ value: this.solicitud32604State.identificacion, disabled: true }, Validators.required],
+      lugarDeRadicacion: [{ value: this.solicitud32604State.lugarDeRadicacion, disabled: true }, Validators.required],
       '249': [this.solicitud32604State['249']],
       '250': [this.solicitud32604State['250'], Validators.required],
       '251': [this.solicitud32604State['251'], Validators.required],
       checkbox1: [this.solicitud32604State.checkbox1],
       checkbox2: [this.solicitud32604State.checkbox2, Validators.required],
       checkbox3: [this.solicitud32604State.checkbox3],
-      actualmente2: [this.solicitud32604State.actualmente2],
-      actualmente1: [this.solicitud32604State.actualmente1],
+      actualmente2: [{ value: this.solicitud32604State.actualmente2, disabled: true }],
+      actualmente1: [{ value: this.solicitud32604State.actualmente1, disabled: true }],
+    });
+
+    // Inicializar formulario del modal de modificar inventario
+    this.inventarioModalForm = this.fb.group({
+      identificacion: ['', Validators.required],
+      lugarDeRadicacion: ['', Validators.required]
     });
 
     /**
@@ -656,9 +770,37 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.domiciliosDatos = this.solicitud32604State.domiciliosDatos;
           this.listaSeccionSociosIC =
             this.solicitud32604State.listaSeccionSociosIC;
+          
+          // Configurar estado inicial de campos identificacion y lugarDeRadicacion basado en el valor de '249'
+          this.configurarEstadoInicialCampos();
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Configura el estado inicial de los campos 'identificacion' y 'lugarDeRadicacion'
+   * basado en el valor actual del campo '249'.
+   * 
+   * Si el campo '249' tiene valor 1 ('Si'), habilita los campos.
+   * Si tiene cualquier otro valor, los mantiene deshabilitados.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private configurarEstadoInicialCampos(): void {
+    const VALOR_249 = this.solicitud32604State['249'];
+    const IDENTIFICACION_CONTROL = this.datosComunesForm.get('identificacion');
+    const LUGAR_DE_RADICACION_CONTROL = this.datosComunesForm.get('lugarDeRadicacion');
+    
+    if (VALOR_249 === 1 || VALOR_249 === '1' || VALOR_249 === 2 || VALOR_249 === '2') {
+      // Si hay cualquier selección ("Si" o "No"), habilitar los campos
+      IDENTIFICACION_CONTROL?.enable();
+      LUGAR_DE_RADICACION_CONTROL?.enable();
+    } else {
+      // Si no hay selección, deshabilitar los campos
+      IDENTIFICACION_CONTROL?.disable();
+      LUGAR_DE_RADICACION_CONTROL?.disable();
+    }
   }
 
   /**
@@ -700,9 +842,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.servicio = { ...this.servicio, ...respuesta.servicio };
           this.bimestre = { ...this.bimestre, ...respuesta.bimestre };
           this.indiqueTodos = { ...this.indiqueTodos, ...respuesta.indiqueTodos };
-        },
-        error: (error) => {
-          console.error('Error loading catalog data:', error);
         }
       });
   }
@@ -710,16 +849,26 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /**
    * Muestra el modal para agregar miembros de la empresa.
    * 
-   * Utiliza el elemento del DOM referenciado como modalElement
-   * para crear una instancia de modal de Bootstrap y mostrarlo.
+   * Utiliza el elemento del DOM referenciado como modalModificarMiembro
+   * para mostrar el formulario en modo "agregar" (sin datos precargados).
    * Verifica que el elemento exista antes de proceder.
    * 
    * @memberof DatosComunesComponent
    */
   agregarMiembrosEmpresa(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    // Limpiar cualquier dato de modificación previo
+    this.miembroSeleccionadoParaModificar = null;
+    
+    if (this.modalModificarMiembro) {
+      const INSTANCIA_MODAL = new Modal(this.modalModificarMiembro.nativeElement);
+      INSTANCIA_MODAL.show();
+      
+      // Asegurar que el formulario se resetee cuando se abra para agregar
+      setTimeout(() => {
+        if (this.modificarMiembroComponent) {
+          this.modificarMiembroComponent.resetearFormulario();
+        }
+      }, 100);
     }
   }
 
@@ -727,17 +876,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Muestra el modal para agregar subcontratados a la empresa.
    * 
    * Crea una instancia de modal de Bootstrap utilizando el elemento
-   * referenciado como modalSeccionSubcontratadosElement y lo muestra.
+   * referenciado como elementoModalSeccionSubcontratados y lo muestra.
    * Incluye validación de existencia del elemento modal.
    * 
    * @memberof DatosComunesComponent
    */
   agregarSubcontratados(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(
-        this.modalSeccionSubcontratadosElement.nativeElement
+    if (this.elementoModalSeccionSubcontratados) {
+      const INSTANCIA_MODAL = new Modal(
+        this.elementoModalSeccionSubcontratados.nativeElement
       );
-      MODAL_INSTANCE.show();
+      INSTANCIA_MODAL.show();
     }
   }
 
@@ -746,21 +895,97 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * 
    * Reinicia el estado del componente agregar antes de mostrar el modal
    * y luego crea una instancia de modal de Bootstrap para mostrarlo.
-   * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
+   * Utiliza el elemento referenciado como elementoModalInstalacionesPrincipales.
    * 
    * @memberof DatosComunesComponent
    */
   agregarInstalacionesPrincipales(): void {
-    if (this.modalInstalacionesPrincipalesElement) {
+    if (this.elementoModalInstalacionesPrincipales) {
       // Restablecer el estado del componente Agregar al abrir modal
-      if (this.agregarComponent) {
-        this.agregarComponent.resetModalState();
+      if (this.componenteAgregar) {
+        this.componenteAgregar.resetModalState();
       }
       
-      const MODAL_INSTANCE = new Modal(
-        this.modalInstalacionesPrincipalesElement.nativeElement
+      const INSTANCIA_MODAL = new Modal(
+        this.elementoModalInstalacionesPrincipales.nativeElement
       );
-      MODAL_INSTANCE.show();
+      INSTANCIA_MODAL.show();
+    }
+  }
+
+  /**
+   * Cierra el modal de instalaciones principales.
+   * 
+   * Utiliza Bootstrap para obtener la instancia del modal y cerrarlo.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cerrarModalInstalaciones(): void {
+    if (this.elementoModalInstalacionesPrincipales) {
+      const ELEMENTO_MODAL = this.elementoModalInstalacionesPrincipales.nativeElement;
+      const INSTANCIA_MODAL = Modal.getInstance(ELEMENTO_MODAL);
+      
+      if (INSTANCIA_MODAL) {
+        INSTANCIA_MODAL.hide();
+      }
+    }
+  }
+
+  /**
+   * Cierra el modal de modificar domicilio.
+   * 
+   * Utiliza Bootstrap para obtener la instancia del modal y cerrarlo.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cerrarModalModificar(): void {
+    if (this.elementoModalModificar) {
+      const ELEMENTO_MODAL = this.elementoModalModificar.nativeElement;
+      const INSTANCIA_MODAL = Modal.getInstance(ELEMENTO_MODAL);
+      
+      if (INSTANCIA_MODAL) {
+        INSTANCIA_MODAL.hide();
+      }
+    }
+  }
+
+  /**
+   * Maneja la modificación de un domicilio
+   * @param domicilioModificado - Domicilio con las modificaciones aplicadas
+   */
+  onDomicilioModificado(domicilioModificado: Domicilios): void {
+    if (this.seleccionarDomiciliosDatos.length === 1) {
+      const DOMICILIO_SELECCIONADO = this.seleccionarDomiciliosDatos[0];
+      
+      // Encontrar el índice del domicilio seleccionado en la lista principal
+      const INDICE_SELECCIONADO = this.domiciliosDatos.findIndex(domicilio => 
+        domicilio === DOMICILIO_SELECCIONADO ||
+        (domicilio.entidadFederativa === DOMICILIO_SELECCIONADO.entidadFederativa &&
+         domicilio.municipioDelegacion === DOMICILIO_SELECCIONADO.municipioDelegacion &&
+         domicilio.direccion === DOMICILIO_SELECCIONADO.direccion &&
+         domicilio.codigoPostal === DOMICILIO_SELECCIONADO.codigoPostal)
+      );
+      
+      if (INDICE_SELECCIONADO !== -1) {
+        // Actualizar el domicilio en la lista
+        this.domiciliosDatos[INDICE_SELECCIONADO] = domicilioModificado;
+        
+        // Actualizar el store con los datos modificados
+        this.solicitud32604Store.actualizarDomiciliosDatos(this.domiciliosDatos);
+        
+        // Limpiar la selección y resetear el domicilio seleccionado para modificar
+        this.seleccionarDomiciliosDatos = [];
+        this.domicilioSeleccionadoParaModificar = null;
+        
+        // Forzar la actualización de la vista creando una nueva referencia del array
+        this.domiciliosDatos = [...this.domiciliosDatos];
+        
+        // Forzar la detección de cambios para actualizar la tabla
+        this.cdr.detectChanges();
+        
+        // Mostrar mensaje de confirmación
+        this.abrirModal('Domicilio modificado exitosamente');
+      }
     }
   }
 
@@ -774,16 +999,27 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   agregarModificarPrincipales(): void {
-    if (this.modalModificarElement) {
-      // Restablecer el estado del componente Agregar al abrir modal
-      if (this.agregarComponent) {
-        this.agregarComponent.resetModalState();
-      }
-      
-      const MODAL_INSTANCE = new Modal(
-        this.modalModificarElement.nativeElement
+    // Validar que haya domicilios seleccionados
+    if (this.seleccionarDomiciliosDatos.length === 0) {
+      this.abrirModal('Debe seleccionar un domicilio para modificar.');
+      return;
+    }
+    
+    // Validar que solo haya un domicilio seleccionado
+    if (this.seleccionarDomiciliosDatos.length > 1) {
+      this.abrirModal('Solo puede modificar un domicilio a la vez. Seleccione únicamente el domicilio que desea modificar.');
+      return;
+    }
+
+    // Obtener el domicilio seleccionado
+    const DOMICILIO_SELECCIONADO = this.seleccionarDomiciliosDatos[0];
+    this.domicilioSeleccionadoParaModificar = DOMICILIO_SELECCIONADO;
+
+    if (this.elementoModalModificar) {
+      const INSTANCIA_MODAL = new Modal(
+        this.elementoModalModificar.nativeElement
       );
-      MODAL_INSTANCE.show();
+      INSTANCIA_MODAL.show();
     }
   }
 
@@ -792,22 +1028,142 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * 
    * Reinicia el estado del componente agregar antes de mostrar el modal
    * y luego crea una instancia de modal de Bootstrap para mostrarlo.
-   * Utiliza el elemento referenciado como modalEmpresaElement.
+   * Utiliza el elemento referenciado como elementoModalEmpresa.
    * 
    * @memberof DatosComunesComponent
    */
   agregarEmpresaPrincipales(): void {
-    if (this.modalEmpresaElement) {
+    if (this.elementoModalEmpresa) {
       // Restablecer el estado del componente Agregar al abrir modal
-      if (this.agregarComponent) {
-        this.agregarComponent.resetModalState();
+      if (this.componenteAgregar) {
+        this.componenteAgregar.resetModalState();
       }
       
-      const MODAL_INSTANCE = new Modal(
-        this.modalEmpresaElement.nativeElement
+      const INSTANCIA_MODAL = new Modal(
+        this.elementoModalEmpresa.nativeElement
       );
-      MODAL_INSTANCE.show();
+      INSTANCIA_MODAL.show();
     }
+  }
+
+  /**
+   * Muestra el modal para modificar un miembro de la empresa.
+   * 
+   * Valida que haya un miembro seleccionado antes de abrir el modal
+   * y luego crea una instancia de modal de Bootstrap para mostrarlo.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  agregarModificarMiembro(): void {
+    // Validar que haya miembros seleccionados
+    if (this.seleccionarListaSeccionSociosIC.length === 0) {
+      this.abrirModal('Debe seleccionar un miembro para modificar.');
+      return;
+    }
+    
+    // Validar que solo haya un miembro seleccionado
+    if (this.seleccionarListaSeccionSociosIC.length > 1) {
+      this.abrirModal('Seleccione sólo un registro a modificar.');
+      return;
+    }
+
+    // Obtener el miembro seleccionado
+    const MIEMBRO_SELECCIONADO = this.seleccionarListaSeccionSociosIC[0];
+    this.miembroSeleccionadoParaModificar = MIEMBRO_SELECCIONADO;
+
+    if (this.modalModificarMiembro) {
+      const INSTANCIA_MODAL = new Modal(
+        this.modalModificarMiembro.nativeElement
+      );
+      INSTANCIA_MODAL.show();
+    }
+  }
+
+  /**
+   * Cierra el modal de modificar miembro.
+   * 
+   * Utiliza Bootstrap para obtener la instancia del modal y cerrarlo.
+   * También maneja la limpieza del backdrop para evitar que quede visible.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cerrarModalModificarMiembro(): void {
+    if (this.modalModificarMiembro) {
+      const ELEMENTO_MODAL = this.modalModificarMiembro.nativeElement;
+      let instanciaModal = Modal.getInstance(ELEMENTO_MODAL);
+      
+      // Si no hay instancia, crear una nueva
+      if (!instanciaModal) {
+        instanciaModal = new Modal(ELEMENTO_MODAL);
+      }
+      
+      // Agregar listener para limpiar backdrop cuando se cierre completamente
+      ELEMENTO_MODAL.addEventListener('hidden.bs.modal', () => {
+        // Limpiar cualquier backdrop residual
+        const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+        BACKDROPS.forEach(backdrop => backdrop.remove());
+        
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+      }, { once: true });
+      
+      // Cerrar el modal
+      instanciaModal.hide();
+    }
+  }
+
+  /**
+   * Maneja tanto la modificación como la adición de miembros de la empresa.
+   * 
+   * Si hay un miembro seleccionado (miembroSeleccionadoParaModificar), actualiza ese miembro.
+   * Si no hay selección, agrega un nuevo miembro a la lista.
+   * 
+   * @param {SeccionSociosIC} miembroModificado - Datos del miembro modificado o nuevo
+   * @memberof DatosComunesComponent
+   */
+  onMiembroModificado(miembroModificado: SeccionSociosIC): void {
+    if (this.miembroSeleccionadoParaModificar) {
+      // Modo modificación - hay un miembro seleccionado
+      const INDICE_SELECCIONADO = this.listaSeccionSociosIC.findIndex(miembro => 
+        miembro === this.miembroSeleccionadoParaModificar ||
+        (miembro.nombre === this.miembroSeleccionadoParaModificar?.nombre &&
+         miembro.rfc === this.miembroSeleccionadoParaModificar?.rfc)
+      );
+      
+      if (INDICE_SELECCIONADO !== -1) {
+        // Actualizar el miembro en la lista
+        this.listaSeccionSociosIC[INDICE_SELECCIONADO] = miembroModificado;
+        
+        // Mantener el miembro modificado seleccionado para permitir acciones adicionales
+        this.seleccionarListaSeccionSociosIC = [miembroModificado];
+        this.miembroSeleccionadoParaModificar = null;
+        
+        // Mostrar mensaje de confirmación
+        this.abrirModal('Miembro modificado exitosamente');
+      }
+    } else {
+      // Modo agregar - no hay miembro seleccionado
+      this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, miembroModificado];
+      
+      // No seleccionar automáticamente - el usuario debe seleccionar manualmente para habilitar botones
+      this.seleccionarListaSeccionSociosIC = [];
+      
+      // Resetear el formulario para la próxima adición
+      this.miembroSeleccionadoParaModificar = null;
+      
+      // Mostrar mensaje de confirmación
+      this.abrirModal('Datos guardados correctamente.');
+    }
+    
+    // Actualizar el store con los datos modificados
+    this.solicitud32604Store.actualizarListaSeccionSociosIC(this.listaSeccionSociosIC);
+    
+    // Forzar la actualización de la vista creando una nueva referencia del array
+    this.listaSeccionSociosIC = [...this.listaSeccionSociosIC];
+    
+    // Forzar la detección de cambios para actualizar la tabla
+    this.cdr.detectChanges();
   }
 
   /**
@@ -825,7 +1181,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.solicitud32604Store.actualizarListaSeccionSociosIC(
       this.listaSeccionSociosIC
     );
-    const PEDIMENTO = {
+    const PEDIMENTO_INICIAL = {
       patente: 0,
       pedimento: 0,
       aduana: 0,
@@ -835,8 +1191,23 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       comprobanteValor: '',
       pedimentoValidado: false,
     };
-    this.abrirModal('Datos guardados correctamente.');
-    this.pedimentos.push(PEDIMENTO);
+    
+    // Mostrar notificación de éxito siguiendo el patrón 40402
+    setTimeout(() => {
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'Datos guardados correctamente',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
+    }, 100);
+    
+    this.pedimentos.push(PEDIMENTO_INICIAL);
   }
 
   /**
@@ -896,12 +1267,34 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /**
    * Cierra el modal de notificación.
    * 
-   * Resetea la notificación actual para cerrar el modal.
+   * Resetea la notificación actual para cerrar el modal y limpia cualquier
+   * backdrop residual que pueda haber quedado visible.
    * 
    * @memberof DatosComunesComponent
    */
   cerrarModal(): void {
     this.nuevaNotificacion = {} as Notificacion;
+    
+    // Limpiar cualquier backdrop residual después de un pequeño delay
+    setTimeout(() => {
+      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+      BACKDROPS.forEach(backdrop => backdrop.remove());
+      
+      // Restaurar el estado del body si fue modificado
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+    }, 100);
+  }
+
+  /**
+   * Cierra la notificación de éxito y limpia la alerta.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cerrarNotificacionExito(): void {
+    this.mostrarNotificacion = false;
+    this.alertaNotificacion = {} as Notificacion;
   }
 
   /**
@@ -916,9 +1309,28 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   seccionSubcontratados(evento: NumeroDeEmpleados): void {
     this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, evento];
+    
+    // Seleccionar automáticamente el subcontratado recién agregado para permitir acciones inmediatas
+    this.seleccionarNumeroDeEmpleadosLista = [evento];
+    
     this.solicitud32604Store.actualizarNumeroDeEmpleadosLista(
       this.numeroDeEmpleadosLista
     );
+    
+    // Mostrar notificación de éxito
+    setTimeout(() => {
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'Datos guardados correctamente',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
+    }, 100);
   }
 
   /**
@@ -933,8 +1345,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   instalacionesPrincipales(evento: Domicilios): void {
     this.domiciliosDatos = [...this.domiciliosDatos, evento];
+    
+    // Seleccionar automáticamente el domicilio recién agregado para permitir acciones inmediatas
+    this.seleccionarDomiciliosDatos = [evento];
+    
     this.solicitud32604Store.actualizarDomiciliosDatos(this.domiciliosDatos);
-    const PEDIMENTO = {
+    const PEDIMENTO_INICIAL = {
       patente: 0,
       pedimento: 0,
       aduana: 0,
@@ -944,8 +1360,24 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       comprobanteValor: '',
       pedimentoValidado: false,
     };
-    this.abrirModal('Datos guardados correctamente.');
-    this.pedimentos.push(PEDIMENTO);
+    
+    // Mostrar notificación de éxito siguiendo el patrón 40402
+    setTimeout(() => {
+      this.alertaNotificacion = {
+        tipoNotificacion: 'INFORMACION',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Datos guardados correctamente.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
+    }, 100);
+    
+    this.pedimentos.push(PEDIMENTO_INICIAL);
   }
   /**
    * Actualiza el valor del catálogo seleccionado en el estado global.
@@ -1069,8 +1501,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarEmpleados(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarEmpleados(VALOR);
+    const VALOR_EMPLEADOS = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarEmpleados(VALOR_EMPLEADOS);
   }
 
   /**
@@ -1138,7 +1570,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   actualizar239(valor: string | number): void {
     this.solicitud32604Store.actualizar239(valor);
     if (valor === 1) {
-      const PEDIMENTO = {
+      const PEDIMENTO_INICIAL = {
         patente: 0,
         pedimento: 0,
         aduana: 0,
@@ -1151,7 +1583,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       this.abrirModal(
         'Es un requisito obligatorio para acceder a Registro en el Esquema de Certificacion de Empresas, de conformidad con la regla 7.1.1. de las RGCE.'
       );
-      this.pedimentos.push(PEDIMENTO);
+      this.pedimentos.push(PEDIMENTO_INICIAL);
     }
   }
 
@@ -1245,8 +1677,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarFile1(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarFile1(VALOR);
+    const VALOR_ARCHIVO = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarFile1(VALOR_ARCHIVO);
   }
 
   /**
@@ -1259,8 +1691,422 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarFile2(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarFile2(VALOR);
+    const VALOR_ARCHIVO = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarFile2(VALOR_ARCHIVO);
+  }
+
+  /**
+   * Lista de registros leídos del archivo Excel subido.
+   * Limitado a máximo 6 registros por sección.
+   */
+  registrosExcelSubidos: RegistroExcel[] = [];
+
+  /**
+   * Texto formateado que muestra los registros del Excel para el campo de solo lectura.
+   */
+  textoRegistrosExcel: string = '';
+
+  /**
+   * Array para rastrear nombres de archivos subidos de extranjeros para evitar duplicados.
+   */
+  archivosExtranjerosSubidos: string[] = [];
+
+  /**
+   * Lista de registros de proveedores leídos del segundo archivo Excel.
+   * Limitado a máximo 6 registros por sección.
+   */
+  registrosProveedoresExcel: RegistroExcel[] = [];
+
+  /**
+   * Texto formateado que muestra los registros de proveedores del Excel.
+   */
+  textoProveedoresExcel: string = '';
+
+  /**
+   * Array para rastrear nombres de archivos subidos de proveedores para evitar duplicados.
+   */
+  archivosProveedoresSubidos: string[] = [];
+
+  /**
+   * Límite máximo de registros permitidos por sección
+   */
+  readonly LIMITE_MAXIMO_REGISTROS = 6;
+
+  /**
+   * Contador de registros restantes permitidos para clientes/proveedores extranjeros
+   */
+  registrosRestantes: number = this.LIMITE_MAXIMO_REGISTROS;
+
+  /**
+   * Contador de registros restantes permitidos para proveedores nacionales
+   */
+  proveedoresRestantes: number = this.LIMITE_MAXIMO_REGISTROS;
+
+  /**
+   * Valida el formato del archivo Excel para Clientes y Proveedores en el Extranjero.
+   * 
+   * Verifica que el archivo seleccionado tenga el formato correcto (.xlsx o .xls)
+   * antes de proceder con la anexión. Si el formato es incorrecto, muestra
+   * un modal con mensaje de error.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  validarYAnexarArchivoExtranjeros(): void {
+    const ELEMENTO_INPUT_ARCHIVO = document.getElementById('archivoExtranjero') as HTMLInputElement;
+    
+    // Validar que se haya seleccionado un archivo
+    if (!ELEMENTO_INPUT_ARCHIVO || !ELEMENTO_INPUT_ARCHIVO.files || ELEMENTO_INPUT_ARCHIVO.files.length === 0) {
+      this.abrirModal('Error, No se ha seleccionado un archivo');
+      return;
+    }
+
+    const ARCHIVO_SELECCIONADO = ELEMENTO_INPUT_ARCHIVO.files[0];
+    const NOMBRE_ARCHIVO_MINUSCULA = ARCHIVO_SELECCIONADO.name.toLowerCase();
+
+    // Verificar si el archivo ya fue subido (duplicado)
+    if (this.archivosExtranjerosSubidos.includes(NOMBRE_ARCHIVO_MINUSCULA)) {
+      this.abrirModal('Este archivo ya existe.');
+      return;
+    }
+
+    // Verificar límite antes de procesar
+    if (this.registrosExcelSubidos.length >= this.LIMITE_MAXIMO_REGISTROS) {
+      this.abrirModal(`Ha alcanzado el límite máximo de ${this.LIMITE_MAXIMO_REGISTROS} archivos para Clientes y Proveedores en el Extranjero.`);
+      return;
+    }
+
+    const ES_FORMATO_EXCEL_VALIDO = NOMBRE_ARCHIVO_MINUSCULA.endsWith('.xlsx') || NOMBRE_ARCHIVO_MINUSCULA.endsWith('.xls');
+
+    // Validar formato del archivo
+    if (!ES_FORMATO_EXCEL_VALIDO) {
+      this.abrirModal('El formato del archivo es incorrecto.');
+      return;
+    }
+
+    // Si el formato es válido, proceder con la lectura y anexión
+    this.procesarAnexionArchivoExtranjeros(ARCHIVO_SELECCIONADO);
+  }
+
+  /**
+   * Valida el formato del archivo Excel para Proveedores Nacionales.
+   * 
+   * Verifica que el archivo seleccionado tenga el formato correcto (.xlsx o .xls)
+   * antes de proceder con la anexión. Si el formato es incorrecto, muestra
+   * un modal con mensaje de error.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  validarYAnexarArchivoProveedores(): void {
+    const ELEMENTO_INPUT_ARCHIVO_PROVEEDORES = document.getElementById('archivoProveedores') as HTMLInputElement;
+    
+    // Validar que se haya seleccionado un archivo
+    if (!ELEMENTO_INPUT_ARCHIVO_PROVEEDORES || !ELEMENTO_INPUT_ARCHIVO_PROVEEDORES.files || ELEMENTO_INPUT_ARCHIVO_PROVEEDORES.files.length === 0) {
+      this.abrirModal('Error, No se ha seleccionado un archivo');
+      return;
+    }
+
+    const ARCHIVO_PROVEEDORES_SELECCIONADO = ELEMENTO_INPUT_ARCHIVO_PROVEEDORES.files[0];
+    const NOMBRE_ARCHIVO_PROVEEDORES_MINUSCULA = ARCHIVO_PROVEEDORES_SELECCIONADO.name.toLowerCase();
+
+    // Verificar si el archivo ya fue subido (duplicado)
+    if (this.archivosProveedoresSubidos.includes(NOMBRE_ARCHIVO_PROVEEDORES_MINUSCULA)) {
+      this.abrirModal('Este archivo ya existe.');
+      return;
+    }
+
+    // Verificar límite antes de procesar
+    if (this.registrosProveedoresExcel.length >= this.LIMITE_MAXIMO_REGISTROS) {
+      this.abrirModal(`Ha alcanzado el límite máximo de ${this.LIMITE_MAXIMO_REGISTROS} archivos para Proveedores.`);
+      return;
+    }
+
+    const ES_FORMATO_EXCEL_PROVEEDORES_VALIDO = NOMBRE_ARCHIVO_PROVEEDORES_MINUSCULA.endsWith('.xlsx') || NOMBRE_ARCHIVO_PROVEEDORES_MINUSCULA.endsWith('.xls');
+
+    // Validar formato del archivo
+    if (!ES_FORMATO_EXCEL_PROVEEDORES_VALIDO) {
+      this.abrirModal('El formato del archivo es incorrecto.');
+      return;
+    }
+
+    // Si el formato es válido, proceder con la lectura y anexión
+    this.procesarAnexionArchivoProveedores(ARCHIVO_PROVEEDORES_SELECCIONADO);
+  }
+
+  /**
+   * Procesa la anexión del archivo Excel de Clientes y Proveedores en el Extranjero.
+   * Lee el contenido del archivo Excel y extrae los registros.
+   * 
+   * @param {File} archivoExcelExtranjeros - El archivo Excel validado a procesar
+   * @memberof DatosComunesComponent
+   */
+  private procesarAnexionArchivoExtranjeros(archivoExcelExtranjeros: File): void {
+    const LECTOR_ARCHIVO = new FileReader();
+    
+    LECTOR_ARCHIVO.onload = (evento: ProgressEvent<FileReader>): void => {
+      try {
+        const DATOS_BINARIOS_ARCHIVO = evento.target?.result as ArrayBuffer;
+        const LIBRO_TRABAJO_EXCEL = DatosComunesComponent.leerArchivoExcel(DATOS_BINARIOS_ARCHIVO);
+        
+        if (LIBRO_TRABAJO_EXCEL) {
+          this.extraerRegistrosExcelExtranjeros(LIBRO_TRABAJO_EXCEL, archivoExcelExtranjeros.name);
+          this.actualizarContadorRegistrosRestantes();
+          this.actualizarCampoRegistrosExistentes();
+          this.abrirModal(`El archivo se ha subido correctamente.`);
+        }
+      } catch (error) {
+        this.abrirModal('Error al procesar el archivo Excel. Verifique el formato del archivo.');
+      }
+    };
+    
+    LECTOR_ARCHIVO.onerror = (): void => {
+      this.abrirModal('Error al leer el archivo Excel de Clientes y Proveedores en el Extranjero.');
+    };
+    LECTOR_ARCHIVO.readAsArrayBuffer(archivoExcelExtranjeros);
+  }
+
+  /**
+   * Procesa la anexión del archivo Excel de Proveedores.
+   * Lee el contenido del archivo Excel y extrae los registros de proveedores.
+   * 
+   * @param {File} archivoExcelProveedores - El archivo Excel de proveedores validado a procesar
+   * @memberof DatosComunesComponent
+   */
+  private procesarAnexionArchivoProveedores(archivoExcelProveedores: File): void {
+    const LECTOR_ARCHIVO_PROVEEDORES = new FileReader();
+    
+    LECTOR_ARCHIVO_PROVEEDORES.onload = (evento: ProgressEvent<FileReader>): void => {
+      try {
+        const DATOS_BINARIOS_PROVEEDORES = evento.target?.result as ArrayBuffer;
+        const LIBRO_TRABAJO_PROVEEDORES = DatosComunesComponent.leerArchivoExcel(DATOS_BINARIOS_PROVEEDORES);
+        
+        if (LIBRO_TRABAJO_PROVEEDORES) {
+          this.extraerRegistrosProveedoresExcel(LIBRO_TRABAJO_PROVEEDORES, archivoExcelProveedores.name);
+          this.actualizarContadorProveedoresRestantes();
+          this.actualizarCampoProveedoresExistentes();
+          this.abrirModal(`El archivo se ha subido correctamente.`);
+        }
+      } catch (error) {
+        this.abrirModal('Error al procesar el archivo Excel de Proveedores. Verifique el formato del archivo.');
+      }
+    };
+    
+    LECTOR_ARCHIVO_PROVEEDORES.onerror = (): void => {
+      this.abrirModal('Error al leer el archivo Excel de Proveedores.');
+    };
+    
+    LECTOR_ARCHIVO_PROVEEDORES.readAsArrayBuffer(archivoExcelProveedores);
+  }
+
+  /**
+   * Lee el archivo Excel usando una biblioteca de lectura de hojas de cálculo.
+   * Esta es una implementación simplificada - en producción se recomendaría usar
+   * una biblioteca como SheetJS (xlsx) para manejo completo de archivos Excel.
+   * 
+   * @param {ArrayBuffer} _datosBinariosArchivo - Datos binarios del archivo Excel
+   * @returns {LibroTrabajoExcel | null} Objeto del libro de trabajo Excel o null si hay error
+   */
+  private static leerArchivoExcel(_datosBinariosArchivo: ArrayBuffer): LibroTrabajoExcel | null {
+    // Implementación simplificada para demostración
+    // En producción, usar biblioteca SheetJS (xlsx):
+    // const workbook = XLSX.read(datosBinarios, { type: 'array' });
+    // return workbook;
+    
+    // Para esta implementación, simularemos la lectura exitosa con nombres en español
+    return {
+      NombresHojas: ['HojaDatos'],
+      Hojas: {
+        'HojaDatos': {
+          // Datos simulados para demostración
+          '!range': { s: { c: 0, r: 0 }, e: { c: 2, r: 10 } }
+        }
+      }
+    };
+  }
+
+  /**
+   * Extrae los registros del archivo Excel de Clientes y Proveedores en el Extranjero.
+   * Limita a máximo 6 registros por sección según requerimientos.
+   * 
+   * @param {LibroTrabajoExcel} _libroTrabajoExcelExtranjeros - Objeto del libro de trabajo Excel
+   * @memberof DatosComunesComponent
+   */
+  private extraerRegistrosExcelExtranjeros(_libroTrabajoExcelExtranjeros: LibroTrabajoExcel, nombreArchivo: string): void {
+    // Implementación simplificada para demostración
+    // En producción, usar biblioteca SheetJS (xlsx):
+    // const hojaDatos = libroTrabajo.Hojas[libroTrabajo.NombresHojas[0]];
+    // const datosJson = XLSX.utils.sheet_to_json(hojaDatos);
+    
+    // Agregar el nombre del archivo a la lista de archivos subidos
+    this.archivosExtranjerosSubidos.push(nombreArchivo.toLowerCase());
+    
+    // Simular extracción de un nuevo registro por archivo subido
+    const SIGUIENTE_ID = this.registrosExcelSubidos.length + 1;
+    const NUEVO_REGISTRO: RegistroExcel = {
+      id: SIGUIENTE_ID,
+      nombre: `Cliente/Proveedor Extranjero ${SIGUIENTE_ID}`,
+      descripcion: `Registro extraído del archivo Excel - Archivo ${SIGUIENTE_ID}`
+    };
+    
+    // Añadir el nuevo registro al array existente
+    this.registrosExcelSubidos.push(NUEVO_REGISTRO);
+  }
+
+  /**
+   * Extrae los registros del archivo Excel de Proveedores.
+   * Limita a máximo 6 registros por sección según requerimientos.
+   * 
+   * @param {LibroTrabajoExcel} _libroTrabajoProveedores - Objeto del libro de trabajo Excel de proveedores
+   * @memberof DatosComunesComponent
+   */
+  private extraerRegistrosProveedoresExcel(_libroTrabajoProveedores: LibroTrabajoExcel, nombreArchivo: string): void {
+    // Implementación simplificada para demostración
+    // En producción, usar biblioteca SheetJS (xlsx):
+    // const hojaDatos = libroTrabajo.Hojas[libroTrabajo.NombresHojas[0]];
+    // const datosJson = XLSX.utils.sheet_to_json(hojaDatos);
+    
+    // Agregar el nombre del archivo a la lista de archivos subidos
+    this.archivosProveedoresSubidos.push(nombreArchivo.toLowerCase());
+    
+    // Simular extracción de un nuevo registro por archivo subido
+    const SIGUIENTE_ID = this.registrosProveedoresExcel.length + 1;
+    const NUEVO_REGISTRO: RegistroExcel = {
+      id: SIGUIENTE_ID,
+      nombre: `Proveedor Nacional ${SIGUIENTE_ID}`,
+      descripcion: `RFC: ABC${SIGUIENTE_ID.toString().padStart(9, '0')} - Registro del archivo ${SIGUIENTE_ID}`
+    };
+    
+    // Añadir el nuevo registro al array existente
+    this.registrosProveedoresExcel.push(NUEVO_REGISTRO);
+  }
+
+  /**
+   * Actualiza el contador de registros restantes permitidos.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private actualizarContadorRegistrosRestantes(): void {
+    this.registrosRestantes = this.LIMITE_MAXIMO_REGISTROS - this.registrosExcelSubidos.length;
+  }
+
+  /**
+   * Actualiza el contador de proveedores restantes permitidos.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private actualizarContadorProveedoresRestantes(): void {
+    this.proveedoresRestantes = this.LIMITE_MAXIMO_REGISTROS - this.registrosProveedoresExcel.length;
+  }
+
+  /**
+   * Actualiza el campo "Registros que existen actualmente" con los datos del Excel.
+   * Este campo se mantiene como solo lectura según requerimientos.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private actualizarCampoRegistrosExistentes(): void {
+    // Calcular el conteo restante para Clientes y Proveedores en el Extranjero
+    const ARCHIVOS_SUBIDOS_EXTRANJEROS = this.registrosExcelSubidos.length;
+    const RESTANTES_EXTRANJEROS = this.LIMITE_MAXIMO_REGISTROS - ARCHIVOS_SUBIDOS_EXTRANJEROS;
+    
+    // Mostrar vacío por defecto, solo mostrar conteo restante después de subir archivo
+    const CONTEO_RESTANTE = ARCHIVOS_SUBIDOS_EXTRANJEROS > 0 ? RESTANTES_EXTRANJEROS.toString() : '';
+    
+    // Actualizar la propiedad local
+    this.textoRegistrosExcel = CONTEO_RESTANTE;
+    
+    // Actualizar el campo actualmente1 que representa "Registros que existen actualmente" para extranjeros
+    this.datosComunesForm.patchValue({
+      actualmente1: CONTEO_RESTANTE
+    });
+    
+    // Asegurar que el campo permanezca deshabilitado para que sea solo lectura
+    this.datosComunesForm.get('actualmente1')?.disable();
+    
+    // Actualizar también el store para persistencia
+    this.solicitud32604Store.actualizarActualmente1(CONTEO_RESTANTE);
+  }
+
+  /**
+   * Actualiza el campo de registros de proveedores con los datos del Excel.
+   * Este campo se mantiene como solo lectura según requerimientos.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  private actualizarCampoProveedoresExistentes(): void {
+    // Calcular el conteo restante para Proveedores Nacionales
+    const ARCHIVOS_SUBIDOS_PROVEEDORES = this.registrosProveedoresExcel.length;
+    const RESTANTES_PROVEEDORES = this.LIMITE_MAXIMO_REGISTROS - ARCHIVOS_SUBIDOS_PROVEEDORES;
+    
+    // Mostrar vacío por defecto, solo mostrar conteo restante después de subir archivo
+    const CONTEO_PROVEEDORES_RESTANTE = ARCHIVOS_SUBIDOS_PROVEEDORES > 0 ? RESTANTES_PROVEEDORES.toString() : '';
+    
+    // Actualizar la propiedad local
+    this.textoProveedoresExcel = CONTEO_PROVEEDORES_RESTANTE;
+    
+    // Actualizar el campo actualmente2 que representa "Registros que existen actualmente" para proveedores
+    this.datosComunesForm.patchValue({
+      actualmente2: CONTEO_PROVEEDORES_RESTANTE
+    });
+    
+    // Asegurar que el campo permanezca deshabilitado para que sea solo lectura
+    this.datosComunesForm.get('actualmente2')?.disable();
+    
+    // Actualizar también el store para persistencia
+    this.solicitud32604Store.actualizarActualmente2(CONTEO_PROVEEDORES_RESTANTE);
+  }
+
+  /**
+   * Limpia los registros del Excel de Clientes y Proveedores en el Extranjero.
+   * Útil para cuando se necesita cargar un nuevo archivo.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  limpiarRegistrosExcelExtranjeros(): void {
+    // Limpiar arrays de registros extranjeros
+    this.registrosExcelSubidos = [];
+    this.textoRegistrosExcel = '';
+    
+    // Limpiar lista de archivos subidos para permitir subir los mismos archivos nuevamente
+    this.archivosExtranjerosSubidos = [];
+    
+    // Resetear contador de registros restantes
+    this.registrosRestantes = this.LIMITE_MAXIMO_REGISTROS;
+    
+    // Actualizar campo en el formulario
+    this.actualizarCampoRegistrosExistentes();
+    
+    // Limpiar también el input de archivo
+    const ELEMENTO_INPUT_ARCHIVO = document.getElementById('archivoExtranjero') as HTMLInputElement;
+    if (ELEMENTO_INPUT_ARCHIVO) {
+      ELEMENTO_INPUT_ARCHIVO.value = '';
+    }
+  }
+
+  /**
+   * Limpia los registros del Excel de Proveedores.
+   * Útil para cuando se necesita cargar un nuevo archivo de proveedores.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  limpiarRegistrosProveedores(): void {
+    // Limpiar arrays de registros de proveedores
+    this.registrosProveedoresExcel = [];
+    this.textoProveedoresExcel = '';
+    
+    // Limpiar lista de archivos subidos para permitir subir los mismos archivos nuevamente
+    this.archivosProveedoresSubidos = [];
+    
+    // Resetear contador de proveedores restantes
+    this.proveedoresRestantes = this.LIMITE_MAXIMO_REGISTROS;
+    
+    // Actualizar campo en el formulario
+    this.actualizarCampoProveedoresExistentes();
+    
+    // Limpiar también el input de archivo de proveedores
+    const ELEMENTO_INPUT_ARCHIVO_PROVEEDORES = document.getElementById('archivoProveedores') as HTMLInputElement;
+    if (ELEMENTO_INPUT_ARCHIVO_PROVEEDORES) {
+      ELEMENTO_INPUT_ARCHIVO_PROVEEDORES.value = '';
+    }
   }
 
   /**
@@ -1301,8 +2147,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarIdentificacion(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarIdentificacion(VALOR);
+    const VALOR_IDENTIFICACION = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarIdentificacion(VALOR_IDENTIFICACION);
   }
 
   /**
@@ -1315,27 +2161,36 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarLugarDeRadicacion(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarLugarDeRadicacion(VALOR);
+    const VALOR_RADICACION = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarLugarDeRadicacion(VALOR_RADICACION);
   }
 
   /**
    * Valida y procesa el control de inventarios.
    * 
-   * Verifica que los campos obligatorios (identificacion y lugarDeRadicacion) sean válidos
-   * antes de procesar los datos. Si el formulario no es válido, marca todos los campos como tocados
-   * para mostrar los mensajes de error correspondientes y muestra un modal con mensaje de error.
+   * Verifica que el campo '249' esté seleccionado como 'Si' y que los campos obligatorios 
+   * (identificacion y lugarDeRadicacion) tengan valores válidos antes de procesar los datos.
+   * Si la validación falla, muestra un mensaje de error apropiado.
    * Si la validación es exitosa, agrega los datos a la tabla de inventarios y muestra un mensaje de éxito.
    * 
    * @memberof DatosComunesComponent
    */
   validarYProcesarControlInventarios(): void {
-    const CAMPOS_CONTROL_INVENTARIOS = ['identificacion', 'lugarDeRadicacion'];
-    const CAMPOS_INVALIDOS = CAMPOS_CONTROL_INVENTARIOS.some(campo => 
-      this.datosComunesForm.get(campo)?.invalid
-    );
-
-    if (CAMPOS_INVALIDOS) {
+    const VALOR_249 = this.datosComunesForm.get('249')?.value;
+    
+    // Primero verificar si se ha seleccionado "Si" en el campo 249
+    if (VALOR_249 !== 1 && VALOR_249 !== '1') {
+      this.abrirModal('Debe seleccionar "Si" en la pregunta de control de inventarios antes de poder agregar datos.');
+      return;
+    }
+    
+    const IDENTIFICACION_VALUE = this.datosComunesForm.get('identificacion')?.value;
+    const LUGAR_RADICACION_VALUE = this.datosComunesForm.get('lugarDeRadicacion')?.value;
+    
+    // Verificar que los campos tengan valores válidos (no vacíos o solo espacios)
+    const CAMPOS_VACIOS = !IDENTIFICACION_VALUE?.trim() || !LUGAR_RADICACION_VALUE?.trim();
+    
+    if (CAMPOS_VACIOS) {
       this.marcarCamposInventariosComoTocados();
       this.abrirModal('Debe capturar todos los datos marcados como obligatorios.');
     } else {
@@ -1346,23 +2201,47 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /**
    * Procesa los datos del control de inventarios.
    * 
-   * Crea un nuevo registro de inventario con los datos del formulario,
-   * lo agrega a la lista de inventarios, actualiza el store y muestra
-   * un mensaje de éxito al usuario.
+   * Dependiendo del modo (agregar o modificar), crea un nuevo registro
+   * o actualiza uno existente en la lista de inventarios.
    * 
    * @memberof DatosComunesComponent
    */
   private procesarDatosControlInventarios(): void {
-    const NUEVO_INVENTARIO = {
+    const DATOS_INVENTARIO = {
       nombre: this.datosComunesForm.get('identificacion')?.value || '',
       lugarRadicacion: this.datosComunesForm.get('lugarDeRadicacion')?.value || '',
       anexo24: 'Por determinar'
     };
 
-    this.inventariosDatos = [...this.inventariosDatos, NUEVO_INVENTARIO];
-    this.abrirModal('Datos guardados correctamente.');
+    if (this.modoModificacionInventario && this.inventarioSeleccionadoParaModificar) {
+      // Modo modificación: actualizar inventario existente
+      const INDICE = this.inventariosDatos.findIndex(
+        inventario => inventario.nombre === this.inventarioSeleccionadoParaModificar?.nombre &&
+                     inventario.lugarRadicacion === this.inventarioSeleccionadoParaModificar?.lugarRadicacion
+      );
+
+      if (INDICE !== -1) {
+        this.inventariosDatos[INDICE] = DATOS_INVENTARIO;
+        this.inventariosDatos = [...this.inventariosDatos]; // Trigger change detection
+      }
+
+      this.abrirModal('Inventario modificado correctamente.');
+      
+      // Resetear modo de modificación
+      this.modoModificacionInventario = false;
+      this.inventarioSeleccionadoParaModificar = null;
+      this.seleccionarInventarios = [];
+    } else {
+      // Modo agregar: añadir nuevo inventario
+      this.inventariosDatos = [...this.inventariosDatos, DATOS_INVENTARIO];
+      
+      // Seleccionar automáticamente el inventario recién agregado
+      this.seleccionarInventarios = [DATOS_INVENTARIO];
+      
+      this.abrirModal('Datos guardados correctamente.');
+    }
     
-    // Limpiar los campos después de agregar
+    // Limpiar los campos después de procesar
     this.datosComunesForm.patchValue({
       identificacion: '',
       lugarDeRadicacion: ''
@@ -1373,6 +2252,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.datosComunesForm.get('identificacion')?.markAsPristine();
     this.datosComunesForm.get('lugarDeRadicacion')?.markAsUntouched();
     this.datosComunesForm.get('lugarDeRadicacion')?.markAsPristine();
+    
+    // Deshabilitar campos si el radio button '249' no está en "Si"
+    const VALOR_249 = this.datosComunesForm.get('249')?.value;
+    if (VALOR_249 !== 1 && VALOR_249 !== '1') {
+      this.datosComunesForm.get('identificacion')?.disable();
+      this.datosComunesForm.get('lugarDeRadicacion')?.disable();
+    }
   }
 
   /**
@@ -1389,10 +2275,181 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Inicia el proceso de modificación de un inventario seleccionado.
+   * 
+   * Valida que haya exactamente un inventario seleccionado, luego
+   * abre el modal de modificación y popula los campos del formulario
+   * con los datos del inventario seleccionado.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  modificarInventario(): void {
+    // Validar que haya inventarios seleccionados
+    if (this.seleccionarInventarios.length === 0) {
+      this.abrirModal('Debe seleccionar un inventario para modificar.');
+      return;
+    }
+    
+    // Validar que solo haya un inventario seleccionado
+    if (this.seleccionarInventarios.length > 1) {
+      this.abrirModal('Solo puede modificar un inventario a la vez. Seleccione únicamente el inventario que desea modificar.');
+      return;
+    }
+
+    // Verificar que el radio button '249' esté seleccionado como "Si"
+    const VALOR_249 = this.datosComunesForm.get('249')?.value;
+    if (VALOR_249 !== 1 && VALOR_249 !== '1') {
+      this.abrirModal('Debe seleccionar "Si" en la pregunta de control de inventarios para poder modificar datos.');
+      return;
+    }
+
+    // Obtener el inventario seleccionado
+    const INVENTARIO_SELECCIONADO = this.seleccionarInventarios[0];
+    this.inventarioSeleccionadoParaModificar = INVENTARIO_SELECCIONADO;
+
+    // Poblar los campos del modal con los datos del inventario seleccionado
+    this.inventarioModalForm.patchValue({
+      identificacion: INVENTARIO_SELECCIONADO.nombre,
+      lugarDeRadicacion: INVENTARIO_SELECCIONADO.lugarRadicacion
+    });
+
+    // Abrir el modal
+    const MODAL = new Modal(this.modalModificarInventario.nativeElement);
+    MODAL.show();
+  }
+
+  /**
+   * Maneja la acción de aceptar en el modal de modificación de inventario.
+   * 
+   * Actualiza el inventario en la lista principal. El botón está deshabilitado
+   * cuando el formulario no es válido, por lo que este método solo se ejecuta
+   * cuando la validación es exitosa.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  aceptarModalInventario(): void {
+    // El botón está deshabilitado si el form no es válido, así que aquí solo procesamos datos válidos
+    if (this.inventarioSeleccionadoParaModificar) {
+      const VALORES_FORMULARIO = this.inventarioModalForm.value;
+      
+      // Buscar el inventario en la lista usando nombre y lugar de radicación
+      const INDICE = this.inventariosDatos.findIndex(
+        inventario => 
+          inventario.nombre === this.inventarioSeleccionadoParaModificar?.nombre &&
+          inventario.lugarRadicacion === this.inventarioSeleccionadoParaModificar?.lugarRadicacion
+      );
+      
+      if (INDICE !== -1) {
+        // Actualizar el inventario con los nuevos valores
+        this.inventariosDatos[INDICE] = {
+          ...this.inventariosDatos[INDICE],
+          nombre: VALORES_FORMULARIO.identificacion,
+          lugarRadicacion: VALORES_FORMULARIO.lugarDeRadicacion
+        };
+        
+        // Trigger change detection
+        this.inventariosDatos = [...this.inventariosDatos];
+        this.cdr.detectChanges();
+        
+        // Cerrar el modal y resetear la selección
+        const MODAL = Modal.getInstance(this.modalModificarInventario.nativeElement);
+        if (MODAL) {
+          MODAL.hide();
+        }
+        
+        // Resetear el formulario del modal
+        this.inventarioModalForm.reset();
+        
+        // Resetear las variables de estado después del éxito
+        this.inventarioSeleccionadoParaModificar = null;
+        this.seleccionarInventarios = [];
+        
+        // Mostrar notificación de éxito siguiendo el patrón 40402
+        setTimeout(() => {
+          this.alertaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'INFORMACION',
+            modo: 'action',
+            titulo: 'Alerta',
+            mensaje: 'Datos guardados correctamente',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+          this.mostrarNotificacion = true;
+        }, 300);
+      }
+    }
+  }
+
+  /**
+   * Maneja la acción de cancelar en el modal de modificación de inventario.
+   * 
+   * Cierra el modal y resetea solo el formulario, manteniendo la selección.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cancelarModalInventario(): void {
+    // Cerrar el modal
+    const MODAL = Modal.getInstance(this.modalModificarInventario.nativeElement);
+    if (MODAL) {
+      MODAL.hide();
+    }
+    
+    // Resetear el formulario del modal
+    this.inventarioModalForm.reset();
+    
+    // Limpiar solo las variables relacionadas con el modal
+    // Mantener la selección de la tabla para permitir reintentos
+    this.inventarioSeleccionadoParaModificar = null;
+  }
+
+  /**
+   * Cancela el proceso de modificación de inventario.
+   * 
+   * Resetea el modo de modificación, limpia los campos del formulario
+   * y vuelve al estado normal de agregar nuevos inventarios.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  cancelarModificacionInventario(): void {
+    // Resetear modo de modificación
+    this.modoModificacionInventario = false;
+    this.inventarioSeleccionadoParaModificar = null;
+    this.seleccionarInventarios = [];
+
+    // Limpiar los campos del formulario
+    this.datosComunesForm.patchValue({
+      identificacion: '',
+      lugarDeRadicacion: ''
+    });
+
+    // Resetear el estado de validación de los campos
+    this.datosComunesForm.get('identificacion')?.markAsUntouched();
+    this.datosComunesForm.get('identificacion')?.markAsPristine();
+    this.datosComunesForm.get('lugarDeRadicacion')?.markAsUntouched();
+    this.datosComunesForm.get('lugarDeRadicacion')?.markAsPristine();
+
+    // Configurar estado inicial de campos basado en el valor de '249'
+    const VALOR_249 = this.datosComunesForm.get('249')?.value;
+    if (VALOR_249 === 1 || VALOR_249 === '1' || VALOR_249 === 2 || VALOR_249 === '2') {
+      // Si hay cualquier selección, habilitar los campos
+      this.datosComunesForm.get('identificacion')?.enable();
+      this.datosComunesForm.get('lugarDeRadicacion')?.enable();
+    } else {
+      // Si no hay selección, deshabilitar los campos
+      this.datosComunesForm.get('identificacion')?.disable();
+      this.datosComunesForm.get('lugarDeRadicacion')?.disable();
+    }
+  }
+
+  /**
    * Actualiza el campo '249' en el estado global.
    * 
    * Almacena el valor recibido directamente en el store
    * para el campo identificado como '249'.
+   * También habilita o deshabilita los campos 'identificacion' y 'lugarDeRadicacion'
+   * basado en la selección (Si=1 habilita, No=2 deshabilita).
    * 
    * @param {string | number} valor - Valor para el campo 249
    * @memberof DatosComunesComponent
@@ -1400,6 +2457,20 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   actualizar249(valor: string | number): void {
     this.verificarSeleccionesRadio('249', valor);
     this.solicitud32604Store.actualizar249(valor);
+    
+    // Habilitar o deshabilitar campos basado en la selección
+    const IDENTIFICACION_CONTROL = this.datosComunesForm.get('identificacion');
+    const LUGAR_DE_RADICACION_CONTROL = this.datosComunesForm.get('lugarDeRadicacion');
+    
+    if (valor === 1 || valor === '1' || valor === 2 || valor === '2') {
+      // Si selecciona cualquier opción ("Si" o "No"), habilitar los campos
+      IDENTIFICACION_CONTROL?.enable();
+      LUGAR_DE_RADICACION_CONTROL?.enable();
+    } else {
+      // Si no ha seleccionado nada, deshabilitar los campos
+      IDENTIFICACION_CONTROL?.disable();
+      LUGAR_DE_RADICACION_CONTROL?.disable();
+    }
   }
 
   /**
@@ -1669,8 +2740,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarCheckbox1(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32604Store.actualizarCheckbox1(VALOR);
+    const VALOR_CHECKBOX = (valor.target as HTMLInputElement).checked;
+    this.solicitud32604Store.actualizarCheckbox1(VALOR_CHECKBOX);
   }
 
   /**
@@ -1683,8 +2754,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarCheckbox2(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32604Store.actualizarCheckbox2(VALOR);
+    const VALOR_CHECKBOX = (valor.target as HTMLInputElement).checked;
+    this.solicitud32604Store.actualizarCheckbox2(VALOR_CHECKBOX);
   }
 
   /**
@@ -1697,8 +2768,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarCheckbox3(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32604Store.actualizarCheckbox3(VALOR);
+    const VALOR_CHECKBOX = (valor.target as HTMLInputElement).checked;
+    this.solicitud32604Store.actualizarCheckbox3(VALOR_CHECKBOX);
   }
 
   /**
@@ -1711,8 +2782,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarActualmente2(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarActualmente2(VALOR);
+    const VALOR_ACTUAL = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarActualmente2(VALOR_ACTUAL);
   }
 
   /**
@@ -1725,8 +2796,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   actualizarActualmente1(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32604Store.actualizarActualmente1(VALOR);
+    const VALOR_ACTUAL = (valor.target as HTMLInputElement).value;
+    this.solicitud32604Store.actualizarActualmente1(VALOR_ACTUAL);
   }
 
   /**
@@ -1747,21 +2818,25 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Elimina los inventarios seleccionados de la lista principal.
    * 
    * Itera sobre los inventarios seleccionados, busca cada uno en la lista
-   * principal por nombre y los elimina. Utiliza el método splice para
-   * remover elementos del array de forma segura.
+   * principal por nombre y los elimina. Utiliza el método filter para
+   * crear un nuevo array sin los elementos seleccionados.
    * 
    * @memberof DatosComunesComponent
    */
   eliminarInventariosDatos(): void {
     if (this.seleccionarInventarios.length > 0) {
-      this.seleccionarInventarios.forEach((elemento) => {
-        const INDICE = this.inventariosDatos.findIndex(
-          (inv) => inv.nombre === elemento.nombre
-        );
-        if (INDICE !== -1) {
-          this.inventariosDatos.splice(INDICE, 1);
-        }
-      });
+      // Crear una nueva copia del array excluyendo los elementos seleccionados
+      const INVENTARIOS_ACTUALIZADOS = this.inventariosDatos.filter(inventario => 
+        !this.seleccionarInventarios.some(seleccionado => seleccionado.nombre === inventario.nombre)
+      );
+      
+      this.inventariosDatos = [...INVENTARIOS_ACTUALIZADOS];
+      
+      // Limpiar la selección después de eliminar
+      this.seleccionarInventarios = [];
+      
+      // Mostrar mensaje de confirmación
+      this.abrirModal('Inventarios eliminados correctamente.');
     }
   }
 
@@ -1791,13 +2866,23 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   eliminarlistaSeccionSociosIC(): void {
     if (this.seleccionarListaSeccionSociosIC.length > 0) {
       this.seleccionarListaSeccionSociosIC.forEach((elemento) => {
-        const INDICE = this.listaSeccionSociosIC.findIndex(
+        const INDICE_SOCIO = this.listaSeccionSociosIC.findIndex(
           (inv) => inv.nombre === elemento.nombre
         );
-        if (INDICE !== -1) {
-          this.listaSeccionSociosIC.splice(INDICE, 1);
+        if (INDICE_SOCIO !== -1) {
+          this.listaSeccionSociosIC.splice(INDICE_SOCIO, 1);
         }
       });
+      
+      // Limpiar la selección después de eliminar
+      this.seleccionarListaSeccionSociosIC = [];
+      
+      // Actualizar el store con los datos modificados
+      this.solicitud32604Store.actualizarListaSeccionSociosIC(this.listaSeccionSociosIC);
+      
+      // Forzar la actualización de la vista
+      this.listaSeccionSociosIC = [...this.listaSeccionSociosIC];
+      this.cdr.detectChanges();
     }
   }
 
@@ -1819,21 +2904,27 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Elimina los domicilios seleccionados de la lista principal.
    * 
    * Busca cada domicilio seleccionado en la lista principal por tipo de instalación
-   * y los elimina utilizando splice. Permite remover múltiples domicilios
-   * de forma segura del array principal.
+   * y los elimina utilizando el método filter para crear un nuevo array.
+   * Permite remover múltiples domicilios de forma segura del array principal.
    * 
    * @memberof DatosComunesComponent
    */
   eliminarDomiciliosDatos(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
-      this.seleccionarDomiciliosDatos.forEach((elemento) => {
-        const INDICE = this.domiciliosDatos.findIndex(
-          (inv) => inv.tipoInstalacion === elemento.tipoInstalacion
-        );
-        if (INDICE !== -1) {
-          this.domiciliosDatos.splice(INDICE, 1);
-        }
-      });
+      // Crear una nueva copia del array excluyendo los elementos seleccionados
+      const DOMICILIOS_ACTUALIZADOS = this.domiciliosDatos.filter(domicilio => 
+        !this.seleccionarDomiciliosDatos.some(seleccionado => 
+          seleccionado.tipoInstalacion === domicilio.tipoInstalacion
+        )
+      );
+      
+      this.domiciliosDatos = [...DOMICILIOS_ACTUALIZADOS];
+      
+      // Limpiar la selección después de eliminar
+      this.seleccionarDomiciliosDatos = [];
+      
+      // Mostrar mensaje de confirmación
+      this.abrirModal('Domicilios eliminados correctamente.');
     }
   }
 
@@ -1863,13 +2954,23 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   eliminarNumeroDeEmpleadosDato(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
       this.seleccionarNumeroDeEmpleadosLista.forEach((elemento) => {
-        const INDICE = this.numeroDeEmpleadosLista.findIndex(
+        const INDICE_EMPLEADO = this.numeroDeEmpleadosLista.findIndex(
           (inv) => inv.numeroDeEmpleados === elemento.numeroDeEmpleados
         );
-        if (INDICE !== -1) {
-          this.numeroDeEmpleadosLista.splice(INDICE, 1);
+        if (INDICE_EMPLEADO !== -1) {
+          this.numeroDeEmpleadosLista.splice(INDICE_EMPLEADO, 1);
         }
       });
+      
+      // Limpiar la selección después de eliminar
+      this.seleccionarNumeroDeEmpleadosLista = [];
+      
+      // Actualizar el store con los datos modificados
+      this.solicitud32604Store.actualizarNumeroDeEmpleadosLista(this.numeroDeEmpleadosLista);
+      
+      // Forzar la actualización de la vista
+      this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista];
+      this.cdr.detectChanges();
     }
   }
 
@@ -1877,7 +2978,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Maneja los datos seleccionados desde el componente agregar.
    * 
    * Recibe un array de instalaciones seleccionadas desde el componente
-   * agregar, las agrega a la lista de socios IC, actualiza el store
+   * agregar, las agrega a la lista de domicilios, actualiza el store
    * y muestra un mensaje de confirmación al usuario.
    * 
    * @param {Instalaciones[]} datosSeleccionados - Array de datos seleccionados desde el componente agregar
@@ -1885,12 +2986,129 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   onDatosSeleccionados(datosSeleccionados: Instalaciones[]): void {
     if (datosSeleccionados && datosSeleccionados.length > 0) {
-      this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, ...datosSeleccionados];
-      this.solicitud32604Store.actualizarListaSeccionSociosIC(
-        this.listaSeccionSociosIC
-      );
-      this.abrirModal('Datos agregados exitosamente');
+      const DOMICILIOS_TRANSFORMADOS = datosSeleccionados.map(instalacion => ({
+        instalacionPrincipal: 'No',
+        cveTipoInstalacion: '',
+        tipoInstalacion: 'Instalación comercial',
+        cveEntidadFederativa: '',
+        entidadFederativa: instalacion.entidadFederativa || '',
+        cveDelegacionMunicipio: '',
+        municipioDelegacion: instalacion.municipio || '',
+        direccion: instalacion.coloniaCalleNumero || '',
+        codigoPostal: instalacion.codigoPostal || '',
+        registroSESAT: instalacion.registroAduana || '',
+        procesoProductivo: 'Sí',
+        acreditaInmueble: 'Sí',
+        operacionesCExt: 'Sí',
+        instalacionCtpat: 'No',
+        instalacionPerfil: instalacion.instalacionPerfil || 'Comercial',
+        instalacionPerfilRFE: instalacion.instalacionPerfilRFE || 'No aplica',
+        instalacionPerfilAuto: instalacion.instalacionPerfilAuto || 'No aplica',
+        instalacionPerfilFerro: instalacion.instalacionPerfilFerro || 'No aplica',
+        instalacionPerfilRf: instalacion.instalacionPerfilRf || 'No aplica',
+        instalacionPerfilMensajeria: instalacion.instalacionPerfilMensajeria || 'No aplica',
+        instalacionPerfilAlmacen: instalacion.instalacionPerfilAlmacen || 'No aplica',
+        noExterior: '',
+        noInterior: '',
+        cveColonia: '',
+        calle: '',
+        descCol: '',
+        idRecinto: ''
+      }));
+      
+      this.domiciliosDatos = [...this.domiciliosDatos, ...DOMICILIOS_TRANSFORMADOS];
+      this.solicitud32604Store.actualizarDomiciliosDatos(this.domiciliosDatos);
+      this.abrirModal('Domicilios agregados exitosamente');
     }
+  }
+
+  // Propiedades para manejar confirmaciones de eliminación
+  accionConfirmarEliminar: string = '';
+
+  /**
+   * Muestra un modal de confirmación para eliminar domicilios usando lib-notificaciones.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  confirmarEliminarDomicilios(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: '¿Está seguro de que desea eliminar este domicilio?',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Eliminar',
+      txtBtnCancelar: 'Cancelar'
+    };
+    this.accionConfirmarEliminar = 'domicilios';
+  }
+
+  /**
+   * Muestra un modal de confirmación para eliminar inventarios usando lib-notificaciones.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  confirmarEliminarInventarios(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: '¿Está seguro de que desea eliminar este inventario?',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Eliminar',
+      txtBtnCancelar: 'Cancelar'
+    };
+    this.accionConfirmarEliminar = 'inventarios';
+  }
+
+  /**
+   * Muestra un modal de confirmación para eliminar socios usando lib-notificaciones.
+   * 
+   * @memberof DatosComunesComponent
+   */
+  confirmarEliminarSocios(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: '¿Está seguro de que desea eliminar este socio?',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Eliminar',
+      txtBtnCancelar: 'Cancelar'
+    };
+    this.accionConfirmarEliminar = 'socios';
+  }
+
+  /**
+   * Maneja la respuesta de confirmación para las eliminaciones.
+   * 
+   * @param confirmar - True si el usuario confirma, false si cancela
+   * @memberof DatosComunesComponent
+   */
+  manejarConfirmacionEliminacion(confirmar: boolean): void {
+    if (confirmar) {
+      switch (this.accionConfirmarEliminar) {
+        case 'domicilios':
+          this.eliminarDomiciliosDatos();
+          break;
+        case 'inventarios':
+          this.eliminarInventariosDatos();
+          break;
+        case 'socios':
+          this.eliminarlistaSeccionSociosIC();
+          break;
+        default:
+          break;
+      }
+    }
+    this.accionConfirmarEliminar = '';
+    this.cerrarModal();
   }
 
   /**

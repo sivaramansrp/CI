@@ -139,7 +139,7 @@ export class EmpresasComercializadorasService {
     return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipoLista.json`);
   }
 
-      /**
+  /**
    * Obtener una lista de Contenedores
    * 
    * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
@@ -147,7 +147,14 @@ export class EmpresasComercializadorasService {
   getNationalidad(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/32604/nacionalidad.json`);
   }
-
+  /**
+   * Obtener una lista de Contenedores
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
+   */
+  getTipPersona(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipo-persona.json`);
+  }
   /**
    * Actualiza el estado del formulario en el store `solicitud32604Store`
    * con los datos proporcionados en la respuesta.

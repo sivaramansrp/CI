@@ -1,8 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS } from '../../constants/empresas-comercializadoras.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que define la estructura de una acción de botón.

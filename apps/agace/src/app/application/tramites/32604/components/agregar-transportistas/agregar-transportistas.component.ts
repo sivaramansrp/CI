@@ -1,6 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion, NotificacionesComponent, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -42,11 +44,34 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   /** Evento que emite los datos del transportista seleccionado al componente padre */
   @Output() seccionTransportistasLista = new EventEmitter<TransportistasTable>();
 
+  /** Datos del transportista a modificar (opcional) */
+  @Input() transportistaAModificar: TransportistasTable | null = null;
+
+  /** Lista de transportistas existentes para validación de duplicados */
+  @Input() transportistasExistentes: TransportistasTable[] = [];
+
   /**
    * Representa una confirmar instancia de notificación asociada con el componente.
    * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
   public confirmarNotificacion!: Notificacion;
+
+  /**
+   * Nueva notificación para mostrar mensajes modales.
+   * 
+   * @public
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Getter que devuelve el título dinámico del modal basado en si se está agregando o modificando.
+   * 
+   * @returns {string} "Modificar transportistas" si hay un transportista a modificar, "Agregar transportistas" en caso contrario
+   */
+  get tituloModal(): string {
+    return this.transportistaAModificar ? 'Modificar transportistas' : 'Agregar transportistas';
+  }
 
   /**
    * Constructor de la clase AgregarTransportistasComponent.
@@ -67,7 +92,8 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     public empresasComercializadorasService: EmpresasComercializadorasService,
     public solicitud32604Store: Solicitud32604Store,
     public solicitud32604Query: Solicitud32604Query,
-    public consultaioQuery: ConsultaioQuery
+    public consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -111,18 +137,11 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.transportistaCertificacionForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.transportistaCertificacionForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
   }
 
    /**
    * Inicializa el formulario `agregarEnlaceOperativoForm` con los valores actuales
-   * del estado `solicitud32604State`.
+   * del estado `solicitud32604State` o con los datos del transportista a modificar.
    *
    * Algunos campos están deshabilitados porque no deben ser editables por el usuario.
    * Aplica validaciones como `required`, `email`, y un patrón para el teléfono.
@@ -133,53 +152,90 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarFormulario(): void {
+    // Si hay transportista a modificar, usar esos valores; de lo contrario, usar valores del state
+    const VALORES_FORMULARIO = this.transportistaAModificar ? {
+      transportistaRFC: '', // Este valor no está en TransportistasTable, usar vacío para modificación
+      transportistaRFCModifTrans: this.transportistaAModificar.transportistaRFCModifTrans,
+      transportistaRazonSocial: this.transportistaAModificar.transportistaRazonSocial,
+      transportistaDomicilio: this.transportistaAModificar.transportistaDomicilio,
+      transportistaCaat: this.transportistaAModificar.transportistaCaat,
+      transportistaIdDomicilio: '', // Valores por defecto para campos que no están en TransportistasTable
+      transportistaIdRFC: '',
+      transportistaIdRazonSocial: '',
+      transportistaIdCaat: ''
+    } : {
+      transportistaRFC: this.solicitud32604State.transportistaRFC,
+      transportistaRFCModifTrans: this.solicitud32604State.transportistaRFCModifTrans,
+      transportistaRazonSocial: this.solicitud32604State.transportistaRazonSocial,
+      transportistaDomicilio: this.solicitud32604State.transportistaDomicilio,
+      transportistaCaat: this.solicitud32604State.transportistaCaat,
+      transportistaIdDomicilio: this.solicitud32604State.transportistaIdDomicilio,
+      transportistaIdRFC: this.solicitud32604State.transportistaIdRFC,
+      transportistaIdRazonSocial: this.solicitud32604State.transportistaIdRazonSocial,
+      transportistaIdCaat: this.solicitud32604State.transportistaIdCaat
+    };
+
     this.transportistaCertificacionForm = this.fb.group({
       transportistaRFC: [
-        this.solicitud32604State.transportistaRFC,
+        VALORES_FORMULARIO.transportistaRFC,
         [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]
       ],
-      transportistaRFCModifTrans: [ 
-        this.solicitud32604State.transportistaRFCModifTrans, 
+      transportistaRFCModifTrans: [
+        VALORES_FORMULARIO.transportistaRFCModifTrans,
         [Validators.maxLength(13), Validators.pattern(REGEX_RFC)]
       ],
       transportistaRazonSocial: [
-        this.solicitud32604State.transportistaRazonSocial,
+        VALORES_FORMULARIO.transportistaRazonSocial,
         [Validators.maxLength(254)]
       ],
       transportistaDomicilio: [
-        this.solicitud32604State.transportistaDomicilio,
+        VALORES_FORMULARIO.transportistaDomicilio,
         [Validators.maxLength(300)],
       ],
       transportistaCaat: [
-        this.solicitud32604State.transportistaCaat,
+        VALORES_FORMULARIO.transportistaCaat,
         [Validators.maxLength(254)],
       ],
       transportistaIdDomicilio: [
-        this.solicitud32604State.transportistaIdDomicilio,
+        VALORES_FORMULARIO.transportistaIdDomicilio,
       ],
-      transportistaIdRFC: [this.solicitud32604State.transportistaIdRFC],
+      transportistaIdRFC: [VALORES_FORMULARIO.transportistaIdRFC],
       transportistaIdRazonSocial: [
-        this.solicitud32604State.transportistaIdRazonSocial,
+        VALORES_FORMULARIO.transportistaIdRazonSocial,
       ],
-      transportistaIdCaat: [this.solicitud32604State.transportistaIdCaat],
+      transportistaIdCaat: [VALORES_FORMULARIO.transportistaIdCaat],
     });
 
-    /** Se suscribe al estado de la solicitud para mantener sincronizado el formulario */
-    this.solicitud32604Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((respuesta: Solicitud32604State) => {
-          this.solicitud32604State = respuesta;
-          this.transportistaCertificacionForm.patchValue({
-            transportistaRFC: respuesta.transportistaRFC,
-            transportistaRFCModifTrans: respuesta.transportistaRFCModifTrans,
-            transportistaRazonSocial: respuesta.transportistaRazonSocial,
-            transportistaDomicilio: respuesta.transportistaDomicilio,
-            transportistaCaat: respuesta.transportistaCaat,
-          });
-        })
-      )
-      .subscribe();
+    // Disable specific fields
+    this.transportistaCertificacionForm.get('transportistaRFCModifTrans')?.disable();
+    this.transportistaCertificacionForm.get('transportistaRazonSocial')?.disable();
+    this.transportistaCertificacionForm.get('transportistaDomicilio')?.disable();
+    this.transportistaCertificacionForm.get('transportistaCaat')?.disable();
+
+    // Apply overall disable/enable state if needed
+    if (this.esFormularioSoloLectura) {
+      this.transportistaCertificacionForm.disable();
+    }
+
+    // Solo suscribirse al state si no estamos modificando un transportista existente
+    if (!this.transportistaAModificar) {
+      /** Se suscribe al estado de la solicitud para mantener sincronizado el formulario */
+      this.solicitud32604Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((respuesta: Solicitud32604State) => {
+            this.solicitud32604State = respuesta;
+            this.transportistaCertificacionForm.patchValue({
+              transportistaRFC: respuesta.transportistaRFC,
+              transportistaRFCModifTrans: respuesta.transportistaRFCModifTrans,
+              transportistaRazonSocial: respuesta.transportistaRazonSocial,
+              transportistaDomicilio: respuesta.transportistaDomicilio,
+              transportistaCaat: respuesta.transportistaCaat,
+            });
+          })
+        )
+        .subscribe();
+    }
   }
 
   /**
@@ -234,11 +290,165 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
 
   /**
    * Ejecuta la búsqueda del transportista si el RFC ha sido ingresado.
+   * Valida que el campo RFC sea válido antes de proceder con la búsqueda.
    */
   selectBuscarTransportista(): void {
-    if (this.transportistaCertificacionForm.get('transportistaRFC')?.value) {
-      this.conseguirTransportistasLista();
+    const RFC_CONTROL = this.transportistaCertificacionForm.get('transportistaRFC');
+    
+    // Mark field as touched to show validation errors
+    RFC_CONTROL?.markAsTouched();
+    
+    if (RFC_CONTROL?.invalid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
+        cerrar: false,
+        tiempoDeEspera: 4000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: ''
+      };
+      
+      this.cdr.detectChanges();
+      return;
     }
+    
+    if (RFC_CONTROL?.value) {
+      this.validarRFCContraJSON(RFC_CONTROL.value);
+    }
+  }
+
+  /**
+   * Valida el RFC contra los datos del JSON y procede con la búsqueda si es válido.
+   * 
+   * @param {string} rfc - RFC a validar contra el JSON
+   * @memberof AgregarTransportistasComponent
+   */
+  private validarRFCContraJSON(rfc: string): void {
+    // Primero verificar si el RFC ya existe en la lista de transportistas existentes
+    const TRANSPORTISTA_DUPLICADO = this.transportistasExistentes.find(
+      (transportista) => transportista.transportistaRFCModifTrans === rfc
+    );
+
+    if (TRANSPORTISTA_DUPLICADO && !this.transportistaAModificar) {
+      // RFC ya existe en la lista y no estamos modificando, mostrar error de duplicado
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Mensaje',
+        mensaje: 'Ya existe un registro con ese RFC',
+        cerrar: false,
+        tiempoDeEspera: 4000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: ''
+      };
+      
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Si estamos modificando un transportista, verificar que no sea el mismo RFC
+    if (TRANSPORTISTA_DUPLICADO && this.transportistaAModificar && 
+        TRANSPORTISTA_DUPLICADO.transportistaRFCModifTrans !== this.transportistaAModificar.transportistaRFCModifTrans) {
+      // RFC ya existe en otro registro diferente al que estamos modificando
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Ya existe un registro con ese RFC',
+        cerrar: false,
+        tiempoDeEspera: 4000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: ''
+      };
+      
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.empresasComercializadorasService
+      .conseguirTransportistasLista()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: TransportistasTable[]) => {
+          // Compruebe si el RFC existe en la respuesta JSON
+          // El usuario ingresa el RFC en el primer campo, y lo buscamos en transportistaRFCModifTrans
+          const TRANSPORTISTA_ENCONTRADO = respuesta.find(
+            (transportista) => transportista.transportistaRFCModifTrans === rfc
+          );
+          
+          if (TRANSPORTISTA_ENCONTRADO) {
+            // RFC encontrado, llenar formulario con los datos del transportista
+            this.actualizarFormularioConDatos(TRANSPORTISTA_ENCONTRADO);
+          } else {
+            // RFC no encontrado en JSON, muestra notificación de error
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: 'Existen datos incorrectos que no cumplen con el formato esperado.',
+              cerrar: false,
+              tiempoDeEspera: 4000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: ''
+            };
+            
+            this.cdr.detectChanges();
+          }
+        },
+        error: () => {
+          // Manejar error del servicio
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'Existen datos incorrectos que no cumplen con el formato esperado.',
+            cerrar: false,
+            tiempoDeEspera: 4000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: ''
+          };
+          
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * Actualiza el formulario con los datos del transportista encontrado.
+   * 
+   * @param {TransportistasTable} transportista - Datos del transportista
+   * @memberof AgregarTransportistasComponent
+   */
+  private actualizarFormularioConDatos(transportista: TransportistasTable): void {
+    this.transportistaCertificacionForm.patchValue({
+      transportistaRFCModifTrans: transportista.transportistaRFCModifTrans,
+      transportistaRazonSocial: transportista.transportistaRazonSocial,
+      transportistaDomicilio: transportista.transportistaDomicilio,
+      transportistaCaat: transportista.transportistaCaat
+    });
+
+    this.solicitud32604Store.actualizarTransportistaRFCModifTrans(
+      transportista.transportistaRFCModifTrans
+    );
+    this.solicitud32604Store.actualizarTransportistaRazonSocial(
+      transportista.transportistaRazonSocial
+    );
+    this.solicitud32604Store.actualizarTransportistaDomicilio(
+      transportista.transportistaDomicilio
+    );
+    this.solicitud32604Store.actualizarTransportistaCaat(
+      transportista.transportistaCaat
+    );
+
+    // Force change detection to ensure UI updates
+    this.cdr.detectChanges();
   }
 
   /**
@@ -289,17 +499,28 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   private procesarDatosTransportista(): void {
     const OBJETO_JSON: TransportistasTable = {
-      transportistaRFCModifTrans: this.transportistaCertificacionForm.get('transportistaRFCModifTrans')
-        ?.value,
-      transportistaRazonSocial: this.transportistaCertificacionForm.get(
-        'transportistaRazonSocial'
-      )?.value,
-      transportistaDomicilio: this.transportistaCertificacionForm.get(
-        'transportistaDomicilio'
-      )?.value,
-      transportistaCaat: this.transportistaCertificacionForm.get('transportistaCaat')?.value,
+      transportistaRFCModifTrans: this.transportistaCertificacionForm.getRawValue().transportistaRFCModifTrans,
+      transportistaRazonSocial: this.transportistaCertificacionForm.getRawValue().transportistaRazonSocial,
+      transportistaDomicilio: this.transportistaCertificacionForm.getRawValue().transportistaDomicilio,
+      transportistaCaat: this.transportistaCertificacionForm.getRawValue().transportistaCaat,
     };
     this.seccionTransportistasLista.emit(OBJETO_JSON);
+    
+    // Mostrar notificación de éxito después de guardar los datos
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'INFORMACION',
+      categoria: 'success',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente',
+      cerrar: false,
+      tiempoDeEspera: 4000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: ''
+    };
+    
+    // Limpiar el formulario después de guardar exitosamente
+    this.limpiar();
   }
 
   /**
@@ -314,6 +535,18 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   public limpiar(): void {
     this.transportistaCertificacionForm.reset();
+    // Al limpiar, también se debe resetear la referencia del transportista a modificar
+    this.transportistaAModificar = null;
+  }
+
+  /**
+   * Maneja la confirmación de la notificación de validación.
+   * 
+   * @param {boolean} _confirmar - True si el usuario confirma, false si cancela
+   * @memberof AgregarTransportistasComponent
+   */
+  manejarConfirmacionNotificacion(_confirmar: boolean): void {
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**

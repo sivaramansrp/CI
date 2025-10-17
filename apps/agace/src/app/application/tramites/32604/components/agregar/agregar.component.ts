@@ -1,13 +1,21 @@
-import { Aduanas, Instalaciones } from '../../constants/agregar.model';
-import { Catalogo, CatalogoSelectComponent,ConsultaioQuery,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Modal } from 'bootstrap';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
+
+import { Aduanas, Instalaciones } from '../../constants/agregar.model';
 import { ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../constants/empresas-comercializadoras.enum';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
+
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { Domicilios } from '../../models/empresas-comercializadoras.model';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 
 @Component({
   selector: 'app-agregar',
@@ -67,9 +75,22 @@ export class AgregarComponent implements OnInit, OnDestroy {
   public encabezadoDeTablaManifiesto = ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO;
 
   /**
-   * Array to store selected data from the table
+   * Array para almacenar los datos seleccionados de la tabla
    */
-  selectedTableData: Instalaciones[] = [];
+  datosTablaSeleccionados: Instalaciones[] = [];
+
+  /**
+   * Mensaje de error que se mostrará en el modal
+   */
+  mensajeError: string = '';
+
+  /**
+   * Referencia al modal de error.
+   * ViewChild que permite acceder al elemento DOM del modal de error
+   * para mostrar mensajes de validación.
+   */
+  @ViewChild('modalError', { static: false })
+  elementoModalError!: ElementRef;
 
     /**
      * Estado de la solicitud.
@@ -77,9 +98,19 @@ export class AgregarComponent implements OnInit, OnDestroy {
     public seccionState!: Solicitud32604State;
 
   /**
-   * Event emitter to send selected data to parent component
+   * Emisor de eventos para enviar datos seleccionados al componente padre
    */
   @Output() datosSeleccionados = new EventEmitter<Instalaciones[]>();
+
+  /**
+   * Emisor de eventos para notificar al componente padre que debe cerrar el modal
+   */
+  @Output() cerrarModalEvento = new EventEmitter<void>();
+
+  /**
+   * Datos existentes de domicilios para verificar duplicados
+   */
+  @Input() domiciliosExistentes: Domicilios[] = [];
 
   constructor(
     public fb: FormBuilder,
@@ -133,12 +164,13 @@ export class AgregarComponent implements OnInit, OnDestroy {
    * 
    * Crea un nuevo formulario utilizando FormBuilder y asigna el valor inicial del campo 'aduana'
    * a partir del estado actual de la sección (`seccionState.aduana`).
+   * También añade validadores requeridos para el campo aduana.
    * 
    * @returns {void} No retorna ningún valor.
    */
     inicializeFormulario(): void {
     this.form = this.fb.group({
-      aduana: [this.seccionState.aduana]
+      aduana: [this.seccionState.aduana, [Validators.required]]
     });
   }
   
@@ -160,15 +192,15 @@ export class AgregarComponent implements OnInit, OnDestroy {
     /**
    * Cargar datos de la tabla.
    *
-   * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
+   * Este método obtiene los datos de la tabla desde el servicio `empresasComercializadorasService`
    * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
    * cuando el componente se destruye, evitando fugas de memoria.
    *
    * @example
    * // Llamar al método para cargar los datos de la tabla
-   * this.loadDatosTablaData();
+   * this.cargarDatosDeLaTabla();
    */
-  loadDatosTablaData(): void {
+  cargarDatosDeLaTabla(): void {
     this.empresasComercializadorasService
       .getDatosTableData()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -187,7 +219,7 @@ export class AgregarComponent implements OnInit, OnDestroy {
   onAduanaSelectionChange(selectedAduana: Catalogo): void {
     if (selectedAduana) {
       // Una aduana fue seleccionada, cargar los datos de la tabla
-      this.loadDatosTablaData();
+      this.cargarDatosDeLaTabla();
     } else {
       // No hay selección válida, limpiar la tabla
       this.datosTabla = [];
@@ -196,37 +228,123 @@ export class AgregarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles table row selection events
-   * @param selectedData - Array of selected rows from the table
+   * Maneja eventos de selección de filas de la tabla
+   * @param datosSeleccionados - Array de filas seleccionadas de la tabla
    */
-  onTableRowSelected(selectedData: Instalaciones[]): void {
-    this.selectedTableData = selectedData;
+  onTableRowSelected(datosSeleccionados: Instalaciones[]): void {
+    this.datosTablaSeleccionados = datosSeleccionados;
   }
 
   /**
-   * Handles the "Aceptar" button click
-   * Emits selected data to parent component and closes modal
+   * Verifica si alguno de los registros seleccionados ya existe en los datos guardados
+   * @param datosSeleccionados - Array de instalaciones seleccionadas
+   * @returns Array de registros duplicados encontrados
+   */
+  verificarDuplicados(datosSeleccionados: Instalaciones[]): Instalaciones[] {
+    const DUPLICADOS: Instalaciones[] = [];
+    
+    datosSeleccionados.forEach(instalacion => {
+      // Buscar si ya existe un domicilio con los mismos datos clave
+      const EXISTE_DUPLICADO = this.domiciliosExistentes.some(domicilio => 
+        domicilio.entidadFederativa === instalacion.entidadFederativa &&
+        domicilio.municipioDelegacion === instalacion.municipio &&
+        domicilio.direccion === instalacion.coloniaCalleNumero &&
+        domicilio.codigoPostal === instalacion.codigoPostal
+      );
+      
+      if (EXISTE_DUPLICADO) {
+        DUPLICADOS.push(instalacion);
+      }
+    });
+    
+    return DUPLICADOS;
+  }
+
+  /**
+   * Método público para verificar duplicados usado en el template
+   * @returns true si hay registros duplicados
+   */
+  tieneRegistrosDuplicados(): boolean {
+    return this.verificarDuplicados(this.datosTablaSeleccionados).length > 0;
+  }
+
+  /**
+   * Maneja el clic del botón "Aceptar"
+   * Valida el formulario y los datos seleccionados antes de emitir al componente padre y cerrar el modal
    */
   cerrarModal(): void {
-    this.datosSeleccionados.emit(this.selectedTableData);
-    this.selectedTableData = [];
+    // Siempre validar si hay datos seleccionados primero
+    if (!this.datosTablaSeleccionados || this.datosTablaSeleccionados.length === 0) {
+      this.mostrarModalError('Seleccione un registro.');
+      return;
+    }
+
+    // Validar formulario
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    // Verificar registros duplicados
+    const DUPLICADOS = this.verificarDuplicados(this.datosTablaSeleccionados);
+    if (DUPLICADOS.length > 0) {
+      // Mostrar mensaje de error específico para duplicados
+      this.mostrarModalError('Los registros seleccionados ya han sido agregados anteriormente. Por favor, seleccione registros diferentes.');
+      return;
+    }
+
+    // Si todas las validaciones pasan, emitir datos y notificar cierre de modal
+    this.datosSeleccionados.emit(this.datosTablaSeleccionados);
+    this.datosTablaSeleccionados = [];
+    
+    // Notificar al componente padre para cerrar el modal
+    this.cerrarModalEvento.emit();
   }
 
   /**
-   * Handles the "Cancelar" button click
-   * Resets selected data and closes modal without emitting data
+   * Maneja el clic del botón "Cancelar"
+   * Reinicia los datos seleccionados y cierra el modal sin emitir datos
    */
   cancelarModal(): void {
-    this.selectedTableData = [];
+    this.datosTablaSeleccionados = [];
   }
 
   /**
-   * Resets the component state when modal is opened
+   * Reinicia el estado del componente cuando se abre el modal
    */
   resetModalState(): void {
-    this.selectedTableData = [];
+    this.datosTablaSeleccionados = [];
     this.aduanaSeleccionada = false;
     this.datosTabla = [];
     this.form.reset();
+  }
+
+  /**
+   * Muestra el modal de error con el mensaje especificado.
+   * @param mensaje El mensaje de error a mostrar en el modal
+   */
+  private mostrarModalError(mensaje: string): void {
+    this.mensajeError = mensaje;
+    
+    if (this.elementoModalError) {
+      const MODAL_INSTANCE = new Modal(this.elementoModalError.nativeElement, {
+        backdrop: true,
+        keyboard: true,
+        focus: true
+      });
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Cierra el modal de error.
+   */
+  private cerrarModalError(): void {
+    if (this.elementoModalError) {
+      const MODAL_INSTANCE = Modal.getInstance(this.elementoModalError.nativeElement);
+      if (MODAL_INSTANCE) {
+        MODAL_INSTANCE.hide();
+      }
+    }
   }
 }

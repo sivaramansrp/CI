@@ -7,11 +7,11 @@
  * los datos obtenidos de servicios especializados.
  */
 
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ENLACE_OPERATIVO_CONFIGURACION, RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
 import { EnlaceOperativo, RecibirNotificaciones, RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
@@ -43,7 +43,7 @@ import { Solicitud32604Query } from '../../estados/solicitud32604.query';
     TablaDinamicaComponent,
     HttpClientModule,
     AgregarEnlaceOperativoComponent,
-    NotificacionesComponent,
+    NotificacionesComponent
   ],
   providers: [EmpresasComercializadorasService],
   templateUrl: './terceros-relacionados.component.html',
@@ -65,6 +65,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @property {Notificacion} nuevaNotificacion
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Notificación de alerta para mostrar mensajes de éxito.
+   * 
+   * @public
+   * @property {Notificacion} alertaNotificacion
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
+   * Flag para mostrar o ocultar la notificación de éxito.
+   * 
+   * @public
+   * @property {boolean} mostrarNotificacion
+   */
+  public mostrarNotificacion = false;
 
   /**
    * Elemento para eliminar de la tabla de pedimentos.
@@ -339,10 +355,10 @@ eliminarPedimento(borrar: boolean): void {
       apellidoMaterno: [
         { value: this.solicitud32604State.apellidoMaterno, disabled: true },
       ],
-      telefono: [this.solicitud32604State.telefono, [Validators.required]],
+      telefono: [this.solicitud32604State.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
       correoElectronico: [
         this.solicitud32604State.correoElectronico,
-        [Validators.required, Validators.email],
+        [Validators.email],
       ],
     });
 
@@ -366,6 +382,22 @@ eliminarPedimento(borrar: boolean): void {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Getter para acceder al control de teléfono del formulario.
+   * @returns {AbstractControl} Control del formulario para teléfono
+   */
+  get telefono(): AbstractControl | null {
+    return this.tercerosRelacionadosForm.get('telefono');
+  }
+
+  /**
+   * Getter para acceder al control de correo electrónico del formulario.
+   * @returns {AbstractControl} Control del formulario para correo electrónico
+   */
+  get correoElectronico(): AbstractControl | null {
+    return this.tercerosRelacionadosForm.get('correoElectronico');
   }
 
   /**
@@ -412,28 +444,63 @@ eliminarPedimento(borrar: boolean): void {
    * @memberof TercerosRelacionadosComponent
    */
   buscarTerceroNacionalIDC(): void {
-    if (this.tercerosRelacionadosForm.get('rfcTercero')?.value) {
-      this.empresasComercializadorasService
-        .conseguirRepresentanteLegalDatos()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((respuesta: RepresentanteLegal) => {
+    const RFC_TERCERO = this.tercerosRelacionadosForm.get('rfcTercero')?.value;
+    
+    // Validar que el campo RFC del tercero esté lleno
+    if (!RFC_TERCERO?.trim()) {
+      this.abrirModal('Debe capturar el RFC del tercero para realizar la búsqueda.');
+      return;
+    }
+    
+    // Validar que el RFC del tercero sea válido
+    if (this.tercerosRelacionadosForm.get('rfcTercero')?.invalid) {
+      this.abrirModal('El RFC del tercero tiene un formato inválido.');
+      return;
+    }
+    
+    this.empresasComercializadorasService
+      .conseguirRepresentanteLegalDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: RepresentanteLegal) => {
+          // Actualizar el store con los datos obtenidos
           this.solicitud32604Store.actualizarRfc(respuesta.rfc);
           this.solicitud32604Store.actualizarNombre(respuesta.nombre);
-          this.solicitud32604Store.actualizarApellidoPaterno(
-            respuesta.apellidoPaterno
-          );
-          this.solicitud32604Store.actualizarApellidoMaterno(
-            respuesta.apellidoMaterno
-          );
+          this.solicitud32604Store.actualizarApellidoPaterno(respuesta.apellidoPaterno);
+          this.solicitud32604Store.actualizarApellidoMaterno(respuesta.apellidoMaterno);
           this.solicitud32604Store.actualizarTelefono(respuesta.telefono);
-          this.solicitud32604Store.actualizarCorreoElectronico(
-            respuesta.correoElectronico
-          );
-        });
-    }
-    this.abrirModal(
-      'No se ha proporcionado información que es requerida.'
-    );
+          this.solicitud32604Store.actualizarCorreoElectronico(respuesta.correoElectronico);
+          
+          // Actualizar también los campos del formulario inmediatamente
+          this.tercerosRelacionadosForm.patchValue({
+            rfc: respuesta.rfc,
+            nombre: respuesta.nombre,
+            apellidoPaterno: respuesta.apellidoPaterno,
+            apellidoMaterno: respuesta.apellidoMaterno,
+            telefono: respuesta.telefono,
+            correoElectronico: respuesta.correoElectronico
+          });
+          
+          // Mostrar mensaje de éxito
+          this.alertaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'INFORMACION',
+            modo: 'action',
+            titulo: 'Alerta',
+            mensaje: 'Datos obtenidos correctamente.',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+          setTimeout(() => {
+            this.mostrarNotificacion = true;
+          }, 300);
+        },
+        error: (error) => {
+          console.error('Error al buscar representante legal:', error);
+          this.abrirModal('No se encontró información para el RFC especificado o ocurrió un error en la consulta.');
+        }
+      });
   }
 
   /**
@@ -479,14 +546,15 @@ eliminarPedimento(borrar: boolean): void {
   }
 
   /**
-   * Abre el modal para guardar datos del enlace operativo.
+   * Valida y procesa los datos del enlace operativo para agregar nuevos registros.
    * 
-   * Crea una instancia de modal de Bootstrap utilizando el elemento
-   * referenciado y lo muestra para capturar datos del enlace operativo.
+   * Este método se ejecuta cuando se hace clic en el botón "Agregar" y debe
+   * abrir el modal para capturar los datos del nuevo enlace operativo.
    * 
    * @memberof TercerosRelacionadosComponent
    */
   guardarDatosEnlaceOperativo(): void {
+    // Abrir el modal para agregar enlace operativo
     if (this.modificacionEnlaceOperativoElement) {
       const MODAL_INSTANCE = new Modal(
         this.modificacionEnlaceOperativoElement.nativeElement
@@ -496,14 +564,26 @@ eliminarPedimento(borrar: boolean): void {
   }
 
   /**
-   * Guarda la modificación del enlace operativo en el modal.
+   * Abre el modal para modificar un enlace operativo seleccionado.
    * 
-   * Abre el modal de modificación para permitir la edición
-   * de los datos del enlace operativo seleccionado.
+   * Valida que hay un enlace operativo seleccionado y abre el modal
+   * para permitir la edición de los datos.
    * 
    * @memberof TercerosRelacionadosComponent
    */
   guardarModificacionEnlaceOperativo(): void {
+    // Validar que hay un enlace operativo seleccionado para modificar
+    if (this.seleccionEnlaceOperativoDatos.length === 0) {
+      this.abrirModal('Debe seleccionar un enlace operativo para modificar.');
+      return;
+    }
+    
+    if (this.seleccionEnlaceOperativoDatos.length > 1) {
+      this.abrirModal('Solo puede modificar un enlace operativo a la vez. Seleccione únicamente el enlace operativo que desea modificar.');
+      return;
+    }
+
+    // Abrir el modal para modificar enlace operativo
     if (this.modificacionEnlaceOperativoElement) {
       const MODAL_INSTANCE = new Modal(
         this.modificacionEnlaceOperativoElement.nativeElement
@@ -530,6 +610,7 @@ eliminarPedimento(borrar: boolean): void {
    * 
    * Filtra la lista de enlaces operativos para remover el elemento
    * seleccionado utilizando el RFC como identificador único.
+   * Actualiza el store y limpia la selección.
    * 
    * @memberof TercerosRelacionadosComponent
    */
@@ -538,38 +619,65 @@ eliminarPedimento(borrar: boolean): void {
       this.enlaceOperativosLista = this.enlaceOperativosLista.filter(
         (element) => element.rfc !== this.seleccionEnlaceOperativoDatos[0].rfc
       );
+      
+      // Actualizar el store
+      this.solicitud32604Store.actualizarEnlaceOperativosLista(this.enlaceOperativosLista);
+      
+      // Limpiar la selección para que los botones vuelvan a estar deshabilitados
+      this.seleccionEnlaceOperativoDatos = [];
     }
   }
 
   /**
-   * Agrega un enlace operativo y un pedimento a las listas correspondientes.
+   * Agrega un enlace operativo recibido desde el modal.
    * 
-   * Crea un pedimento por defecto, agrega el enlace operativo recibido a la lista,
-   * actualiza el estado en el store y muestra un modal de notificación con
-   * información sobre datos obligatorios.
+   * Recibe los datos de enlace operativo del componente modal,
+   * valida que no exista duplicado por RFC y lo agrega a la lista.
+   * Actualiza el store y muestra notificación de éxito.
    *
    * @param {EnlaceOperativo} evento - El objeto de tipo EnlaceOperativo que se va a agregar a la lista
    * @memberof TercerosRelacionadosComponent
    */
   agregarEnlaceOperativo(evento: EnlaceOperativo): void {
-    const PEDIMENTO = {
-      patente: 0,
-      pedimento: 0,
-      aduana: 0,
-      idTipoPedimento: 0,
-      descTipoPedimento: 'Por evaluar',
-      numero: '',
-      comprobanteValor: '',
-      pedimentoValidado: false,
-    };
-    this.abrirModal(
-      'Debe capturar todos los datos marcados como obligatorios.'
-    );
-    this.pedimentos.push(PEDIMENTO);
+    // Verificar que no exista ya un enlace operativo con el mismo RFC
+    const RFC_EXISTENTE = this.enlaceOperativosLista.find(enlace => enlace.rfc === evento.rfc);
+    if (RFC_EXISTENTE) {
+      this.abrirModal('Ya existe un enlace operativo con el RFC especificado.');
+      return;
+    }
+    
+    // Agregar el nuevo enlace operativo a la lista
     this.enlaceOperativosLista = [...this.enlaceOperativosLista, evento];
-    this.solicitud32604Store.actualizarEnlaceOperativosLista(
-      this.enlaceOperativosLista
-    );
+    
+    // Actualizar el store
+    this.solicitud32604Store.actualizarEnlaceOperativosLista(this.enlaceOperativosLista);
+    
+    // Limpiar la selección para que los botones vuelvan a estar deshabilitados
+    this.seleccionEnlaceOperativoDatos = [];
+    
+    // Cerrar el modal
+    const MODAL_AGREGAR = document.getElementById('agregarEnlaceOperativo');
+    if (MODAL_AGREGAR) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_AGREGAR);
+      if (MODAL_INSTANCE) {
+        MODAL_INSTANCE.hide();
+      }
+    }
+
+    // Mostrar notificación de éxito siguiendo el patrón correcto
+    this.alertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'INFORMACION',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    setTimeout(() => {
+      this.mostrarNotificacion = true;
+    }, 300);
   }
 
   /**
@@ -596,6 +704,56 @@ eliminarPedimento(borrar: boolean): void {
     };
 
     this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Cierra la notificación de éxito y limpia la alerta.
+   * 
+   * @memberof TercerosRelacionadosComponent
+   */
+  cerrarNotificacionExito(): void {
+    this.mostrarNotificacion = false;
+    this.alertaNotificacion = {} as Notificacion;
+  }
+
+  /**
+   * Muestra un modal de confirmación para eliminar enlace operativo usando lib-notificaciones.
+   * 
+   * Valida que haya un enlace operativo seleccionado antes de mostrar la confirmación.
+   * 
+   * @memberof TercerosRelacionadosComponent
+   */
+  confirmarEliminarEnlaceOperativo(): void {
+    // Validar que hay un enlace operativo seleccionado
+    if (this.seleccionEnlaceOperativoDatos.length === 0) {
+      this.abrirModal('Debe seleccionar un enlace operativo para eliminar.');
+      return;
+    }
+    
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: '¿Está seguro de que desea eliminar este enlace operativo?',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Eliminar',
+      txtBtnCancelar: 'Cancelar'
+    };
+  }
+
+  /**
+   * Maneja la respuesta de confirmación para la eliminación de enlace operativo.
+   * 
+   * @param confirmar - True si el usuario confirma, false si cancela
+   * @memberof TercerosRelacionadosComponent
+   */
+  manejarConfirmacionEliminacion(confirmar: boolean): void {
+    if (confirmar) {
+      this.cerrarDialogoEnlaceOperativo();
+    }
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**

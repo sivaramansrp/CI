@@ -152,30 +152,46 @@
         <input
           class="form-control"
           type="text"
-          size="25"
+          size="15"
           id="telefono"
           name="telefono"
           formControlName="agregarEnlaceTelefono"
+          placeholder="Número de teléfono"
+          maxlength="20"
+          [class.is-invalid]="agregarEnlaceTelefono?.invalid && (agregarEnlaceTelefono?.dirty || agregarEnlaceTelefono?.touched)"
           (change)="actualizarTelefono($event)"
           [disabled]="esFormularioSoloLectura"
-
         />
+        @if(agregarEnlaceTelefono?.invalid && (agregarEnlaceTelefono?.dirty || agregarEnlaceTelefono?.touched)) {
+          <div class="text-danger">
+            @if(agregarEnlaceTelefono?.errors?.['pattern']) {
+              <small>Teléfono debe contener solo dígitos.</small>
+            }
+          </div>
+        }
       </div>
       <div class="col-md-4">
-        <label class="form-label text-start" for="correoElectronico"
-          >Correo Electrónico:</label
-        >
+        <label class="form-label text-start" for="correoElectronico">Correo Electrónico:</label>
         <input
           class="form-control"
-          type="text"
-          size="25"
+          type="email"
+          size="30"
           id="correoElectronico"
           name="correoElectronico"
           formControlName="agregarEnlaceCorreoElectronico"
+          placeholder="correo@ejemplo.com"
+          maxlength="100"
+          [class.is-invalid]="agregarEnlaceCorreoElectronico?.invalid && (agregarEnlaceCorreoElectronico?.dirty || agregarEnlaceCorreoElectronico?.touched)"
           (change)="actualizarCorreoElectronico($event)"
           [disabled]="esFormularioSoloLectura"
-
         />
+        @if(agregarEnlaceCorreoElectronico?.invalid && (agregarEnlaceCorreoElectronico?.dirty || agregarEnlaceCorreoElectronico?.touched)) {
+          <div class="text-danger">
+            @if(agregarEnlaceCorreoElectronico?.errors?.['email']) {
+              <small>Ingrese un correo electrónico válido.</small>
+            }
+          </div>
+        }
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="correoElectronico"
@@ -199,12 +215,9 @@
         type="button"
         name="btnAceptarEnlace"
         id="btnAceptarEnlace"
-        [disabled]="esFormularioSoloLectura"
         class="btn btn-primary me-2"
-        data-bs-dismiss="modal"
-        #closeModal
         (click)="aceptarEnlaceSuplente()"
-        [disabled]="esFormularioSoloLectura ? true : false">            
+        [disabled]="esFormularioSoloLectura">            
         Aceptar
       </button>
       <button

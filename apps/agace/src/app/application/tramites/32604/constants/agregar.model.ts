@@ -35,6 +35,13 @@ export interface RespuestaAduanas {
  * @property {string} coloniaCalleNumero - Dirección detallada: colonia, calle y número.
  * @property {string} codigoPostal - Código postal de la instalación.
  * @property {string} registroAduana - Registro de la aduana correspondiente.
+ * @property {string} instalacionPerfil - Principal de la instalación.
+ * @property {string} instalacionPerfilRFE - Recinto Fiscalizado Estratégico.
+ * @property {string} instalacionPerfilAuto - Auto Transportista.
+ * @property {string} instalacionPerfilFerro - Transportista Ferroviario.
+ * @property {string} instalacionPerfilRf - Recinto Fiscalizado.
+ * @property {string} instalacionPerfilMensajeria - Mensajería.
+ * @property {string} instalacionPerfilAlmacen - Almacén General.
  */
 export interface Instalaciones extends SeccionSociosIC {
   id: number;
@@ -43,4 +50,11 @@ export interface Instalaciones extends SeccionSociosIC {
   coloniaCalleNumero: string;
   codigoPostal: string;
   registroAduana: string;
+  instalacionPerfil: string;
+  instalacionPerfilRFE: string;
+  instalacionPerfilAuto: string;
+  instalacionPerfilFerro: string;
+  instalacionPerfilRf: string;
+  instalacionPerfilMensajeria: string;
+  instalacionPerfilAlmacen: string;
 }

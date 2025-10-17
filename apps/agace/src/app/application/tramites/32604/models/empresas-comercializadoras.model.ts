@@ -421,6 +421,10 @@ export interface Domicilios {
    */
   instalacionPerfilMensajeria: string;
 
+    /**
+   * Perfil de la instalación dedicada a mensajería y paquetería.
+   */
+  instalacionPerfilAlmacen: string;
   /**
    * Número exterior del domicilio.
    */
@@ -474,6 +478,19 @@ export interface Inventarios {
    * Hace referencia al Anexo 24 correspondiente en el contexto del inventario.
    */
   anexo24: string;
+}
+
+/**
+ * Interface para el miembro de empresa desde el archivo JSON.
+ */
+export interface MiembroEmpresa {
+  id: number;
+  caracterDe: string;
+  rfc: string;
+  instalacionesPrincipales: string;
+  registroFederalContribuyentes: string;
+  nacionalidad: string;
+  nombreCompleto: string;
 }
 
 /** Identificador del miembro en la empresa */

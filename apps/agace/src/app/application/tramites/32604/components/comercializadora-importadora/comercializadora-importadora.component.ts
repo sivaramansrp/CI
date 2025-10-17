@@ -7,7 +7,7 @@
  * y tablas dinámicas para la gestión completa de datos relacionados.
  */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -173,6 +173,22 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
 
   /**
+   * Notificación de alerta para mostrar mensajes de éxito.
+   * 
+   * @public
+   * @property {Notificacion} alertaNotificacion
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
+   * Flag para mostrar o ocultar la notificación de éxito.
+   * 
+   * @public
+   * @property {boolean} mostrarNotificacion
+   */
+  public mostrarNotificacion = false;
+
+  /**
    * Referencia a la vista del modal de transportistas.
    * 
    * ViewChild que permite acceder al elemento DOM del modal
@@ -184,6 +200,17 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   transportistaElement!: ElementRef;
 
   /**
+   * Referencia al componente de agregar transportistas.
+   * 
+   * Utiliza ViewChild para obtener una referencia al componente hijo
+   * AgregarTransportistasComponent para poder acceder a sus métodos como limpiar().
+   * 
+   * @property {AgregarTransportistasComponent} agregarTransportistasComponent
+   */
+  @ViewChild(AgregarTransportistasComponent, { static: false })
+  agregarTransportistasComponent!: AgregarTransportistasComponent;
+
+  /**
    * Transportistas seleccionados por el usuario.
    * 
    * Almacena los transportistas que el usuario ha seleccionado
@@ -192,6 +219,16 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @property {TransportistasTable[]} seleccionDatos
    */
   seleccionDatos: TransportistasTable[] = [] as TransportistasTable[];
+
+  /**
+   * Transportista seleccionado para modificación.
+   * 
+   * Almacena el transportista que se va a modificar cuando se abre
+   * el modal de edición.
+   * 
+   * @property {TransportistasTable | null} transportistaAModificar
+   */
+  transportistaAModificar: TransportistasTable | null = null;
 
   /**
    * Modelo para la opción de tipo sí/no representado como radio button.
@@ -221,7 +258,8 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
     public empresasComercializadorasService: EmpresasComercializadorasService,
     public solicitud32604Store: Solicitud32604Store,
     public solicitud32604Query: Solicitud32604Query,
-    public consultaioQuery: ConsultaioQuery
+    public consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -271,14 +309,14 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.modalidadForm = this.fb.group({
       fechaPago: [this.solicitudState.fechaPago],
-      monto: [this.solicitudState.monto, [Validators.maxLength(10)]],
+      monto: [this.solicitudState.monto, [Validators.required, Validators.maxLength(10)]],
       operacionesBancarias: [
         this.solicitudState.operacionesBancarias,
-        [Validators.maxLength(25)],
+        [Validators.required, Validators.maxLength(25)],
       ],
       llavePago: [
         this.solicitudState.llavePago,
-        [Validators.maxLength(25)],
+        [Validators.required, Validators.maxLength(25)],
       ],
       programaImmex: [this.solicitudState.programaImmex, Validators.required],
       importsRadio: [this.solicitudState.importsRadio, Validators.required],
@@ -309,13 +347,40 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * 
    * Crea una instancia de modal de Bootstrap utilizando el elemento
    * referenciado y lo muestra para permitir agregar un nuevo transportista.
+   * También resetea el formulario del componente hijo para asegurar
+   * un estado limpio para nuevos datos.
    * 
    * @memberof ComercializadoraImportadoraComponent
    */
-  agregarTransportistaModel(): void {
+  agregarTransportistaModal(): void {
+    this.transportistaAModificar = null; // Limpiar cualquier selección anterior
+    
+    // Resetear el formulario del componente hijo para un estado limpio
+    if (this.agregarTransportistasComponent) {
+      this.agregarTransportistasComponent.limpiar();
+    }
+    
     if (this.transportistaElement) {
-      const MODAL_INSTANCE = new Modal(this.transportistaElement.nativeElement);
-      MODAL_INSTANCE.show();
+      const INSTANCIA_MODAL = new Modal(this.transportistaElement.nativeElement);
+      INSTANCIA_MODAL.show();
+    }
+  }
+
+  /**
+   * Abre el modal para modificar el transportista seleccionado.
+   * 
+   * Verifica que solo haya un transportista seleccionado, lo asigna como
+   * transportista a modificar y abre el modal correspondiente.
+   * 
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  modificarTransportistaModal(): void {
+    if (this.seleccionDatos.length === 1) {
+      this.transportistaAModificar = this.seleccionDatos[0];
+      if (this.transportistaElement) {
+        const INSTANCIA_MODAL = new Modal(this.transportistaElement.nativeElement);
+        INSTANCIA_MODAL.show();
+      }
     }
   }
 
@@ -325,19 +390,46 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * Busca cada transportista seleccionado en la lista principal utilizando
    * el RFC como identificador y los elimina usando splice. Permite remover
    * múltiples transportistas de forma segura del array principal.
+   * Después de la eliminación, actualiza el store y limpia la selección.
    * 
    * @memberof ComercializadoraImportadoraComponent
    */
   eliminarDato(): void {
     if (this.seleccionDatos.length > 0) {
-      this.seleccionDatos.forEach((elemento) => {
-        const INDICE = this.transportistasLista.findIndex(
-          (inv) => inv.transportistaRFCModifTrans === elemento.transportistaRFCModifTrans
+
+      // Usar un enfoque más seguro: crear nueva lista sin los elementos seleccionados
+      this.transportistasLista = this.transportistasLista.filter(transportista => {
+        const DEBE_ELIMINAR = this.seleccionDatos.some(
+          seleccionado => seleccionado.transportistaRFCModifTrans === transportista.transportistaRFCModifTrans
         );
-        if (INDICE !== -1) {
-          this.transportistasLista.splice(INDICE, 1);
-        }
+        
+        return !DEBE_ELIMINAR; // Mantener elementos que NO deben ser eliminados
       });
+      
+      // Actualizar el store con la lista modificada
+      this.solicitud32604Store.actualizarTransportistasLista(this.transportistasLista);
+      
+      // Limpiar la selección después de la eliminación
+      this.seleccionDatos = [];
+
+      // Forzar detección de cambios para actualizar la UI
+      this.cdr.detectChanges();
+
+      // Mostrar notificación de éxito
+      this.alertaNotificacion = {
+        tipoNotificacion: 'INFORMACION',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: '',
+        mensaje: `Datos eliminados correctamente`,
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnCancelar: '',
+        txtBtnAceptar: 'Aceptar',
+      };
+      setTimeout(() => {
+        this.mostrarNotificacion = true;
+      }, 100);
     }
   }
 
@@ -364,16 +456,86 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   /**
    * Actualiza la fecha de pago en el estado global de la solicitud.
    * 
-   * Recibe un valor de fecha como string y actualiza el campo correspondiente
-   * en el store global utilizando el servicio de actualización.
+   * Recibe un valor de fecha como string, valida que no sea una fecha futura
+   * y actualiza el campo correspondiente en el store global utilizando el servicio de actualización.
    * Esta fecha se utiliza para el registro de pagos de importación.
+   * Si la fecha es futura, muestra una notificación de error.
    * 
    * @param {string} evento - Fecha de pago en formato string
    * 
    * @memberof ComercializadoraImportadoraComponent
    */
   actualizarFechaPago(evento: string): void {
+    if (evento && evento.trim()) {
+      // Parsear fecha
+      let fechaSeleccionada: Date;
+      
+      if (evento.includes('/')) {
+        fechaSeleccionada = ComercializadoraImportadoraComponent.parsearFecha(evento);
+      } else if (evento.includes('-')) {
+        fechaSeleccionada = new Date(evento);
+      } else {
+        fechaSeleccionada = new Date(evento);
+      }
+      
+      // Verificar si la fecha es válida
+      if (isNaN(fechaSeleccionada.getTime())) {
+        return;
+      }
+      
+      const FECHA_ACTUAL = new Date();
+      FECHA_ACTUAL.setHours(0, 0, 0, 0);
+      fechaSeleccionada.setHours(0, 0, 0, 0);
+      
+      const ES_FECHA_FUTURA = fechaSeleccionada > FECHA_ACTUAL;
+      
+      if (ES_FECHA_FUTURA) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Fecha Inválida. La Fecha actual no puede ser más grande que el día de hoy.',
+          cerrar: false,
+          tiempoDeEspera: 4000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: ''
+        };
+        
+        this.modalidadForm.get('fechaPago')?.setValue('');
+        this.modalidadForm.get('fechaPago')?.markAsTouched();
+        return;
+      }
+    }
+    
     this.solicitud32604Store.actualizarFechaPago(evento);
+    
+    // Forzar detección de cambios para que se actualice la validación de campos de pago
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Parsea una fecha en formato dd/MM/yyyy a objeto Date.
+   * 
+   * Convierte una cadena de fecha en formato europeo (día/mes/año)
+   * a un objeto Date válido para comparaciones.
+   * 
+   * @param {string} fechaStr - Fecha en formato dd/MM/yyyy
+   * @returns {Date} Objeto Date parseado
+   * 
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  private static parsearFecha(fechaStr: string): Date {
+    const PARTES = fechaStr.split('/');
+    if (PARTES.length !== 3) {
+      return new Date(''); // Fecha inválida
+    }
+    
+    const DIA = parseInt(PARTES[0], 10);
+    const MES = parseInt(PARTES[1], 10) - 1; // Los meses en Date son 0-indexados
+    const ANIO = parseInt(PARTES[2], 10);
+    
+    return new Date(ANIO, MES, DIA);
   }
 
   /**
@@ -419,19 +581,53 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   /**
    * Actualiza la lista de transportistas en el estado global.
    * 
-   * Recibe un nuevo transportista y lo agrega a la lista existente
-   * utilizando el operador spread para mantener inmutabilidad.
-   * Después actualiza el estado global con la lista completa.
+   * Maneja tanto la adición de nuevos transportistas como la modificación de existentes.
+   * Si hay un transportista marcado para modificar, reemplaza el existente en la lista.
+   * De lo contrario, agrega el nuevo transportista al final de la lista.
    * 
-   * @param {TransportistasTable} evento - Nuevo transportista a agregar
+   * @param {TransportistasTable} evento - Transportista a agregar o modificar
    * 
    * @memberof ComercializadoraImportadoraComponent
    */
   seccionTransportistasLista(evento: TransportistasTable): void {
-    this.transportistasLista = [...this.transportistasLista, evento];
+    if (this.transportistaAModificar) {
+      // Modificar transportista existente
+      const INDICE = this.transportistasLista.findIndex(
+        transportista => transportista.transportistaRFCModifTrans === this.transportistaAModificar?.transportistaRFCModifTrans
+      );
+      if (INDICE !== -1) {
+        this.transportistasLista[INDICE] = evento;
+      }
+      this.transportistaAModificar = null; // Limpiar la selección
+    } else {
+      // Agregar nuevo transportista
+      this.transportistasLista = [...this.transportistasLista, evento];
+    }
+    
     this.solicitud32604Store.actualizarTransportistasLista(
       this.transportistasLista
     );
+
+    // Limpiar el formulario después de guardar exitosamente para prepararlo para una nueva entrada
+    if (this.agregarTransportistasComponent) {
+      this.agregarTransportistasComponent.limpiar();
+    }
+
+    // Mostrar notificación de éxito
+    this.alertaNotificacion = {
+      tipoNotificacion: 'INFORMACION',
+      categoria: 'INFORMACION',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnCancelar: '',
+      txtBtnAceptar: 'Aceptar',
+    };
+    setTimeout(() => {
+      this.mostrarNotificacion = true;
+    }, 100);
   }
 
   /**
@@ -496,6 +692,107 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
 
     this.elementoParaEliminar = i;
   }
+
+  /**
+   * Cierra la notificación de éxito y limpia la alerta.
+   * 
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  cerrarNotificacionExito(): void {
+    this.mostrarNotificacion = false;
+    this.alertaNotificacion = {} as Notificacion;
+  }
+
+  /**
+   * Muestra un modal de confirmación para eliminar transportista usando lib-notificaciones.
+   * 
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  confirmarEliminarTransportista(): void {
+    if (this.seleccionDatos.length === 0) {
+      // Mostrar notificación informando que debe seleccionar al menos un elemento
+      this.alertaNotificacion = {
+        tipoNotificacion: 'INFORMACION',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar al menos un transportista para eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnCancelar: '',
+        txtBtnAceptar: 'Aceptar',
+      };
+      setTimeout(() => {
+        this.mostrarNotificacion = true;
+      }, 100);
+      
+      return;
+    }
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El registro se ha eliminado correctamente',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Eliminar',
+      txtBtnCancelar: 'Cancelar'
+    };
+  }
+
+  /**
+   * Maneja la respuesta de confirmación para la eliminación de transportista.
+   * 
+   * @param confirmar - True si el usuario confirma, false si cancela
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  manejarConfirmacionEliminacion(confirmar: boolean): void {
+    if (confirmar) {
+      this.eliminarDato();
+    }
+    this.nuevaNotificacion = {} as Notificacion;
+  }
+
+  /**
+   * Verifica si alguno de los campos de pago tiene errores de validación.
+   * 
+   * Comprueba los campos monto, operacionesBancarias y llavePago para determinar
+   * si alguno tiene errores de validación y ha sido interactuado por el usuario
+   * (touched o dirty). También verifica si hay una fecha seleccionada pero los
+   * campos de pago están vacíos. Retorna true si se debe mostrar el mensaje de error.
+   * 
+   * @returns {boolean} true si algún campo de pago tiene errores y ha sido interactuado
+   * 
+   * @memberof ComercializadoraImportadoraComponent
+   */
+  tieneErroresCamposPago(): boolean {
+    // Verificar que el formulario esté inicializado
+    if (!this.modalidadForm) {
+      return false;
+    }
+    
+    const CAMPOS_PAGO = ['monto', 'operacionesBancarias', 'llavePago'];
+    const FECHA_PAGO = this.modalidadForm.get('fechaPago')?.value;
+    
+    // Si hay fecha seleccionada, verificar que todos los campos de pago estén llenos
+    if (FECHA_PAGO && FECHA_PAGO.trim()) {
+      return CAMPOS_PAGO.some(campo => {
+        const CONTROL = this.modalidadForm.get(campo);
+        const VALOR = CONTROL?.value;
+        // Mostrar error si el campo está vacío o solo tiene espacios en blanco
+        return !VALOR || !VALOR.toString().trim();
+      });
+    }
+    
+    // Validación original: mostrar error si los campos han sido tocados y son inválidos
+    return CAMPOS_PAGO.some(campo => {
+      const CONTROL = this.modalidadForm.get(campo);
+      return CONTROL?.invalid && (CONTROL?.touched || CONTROL?.dirty);
+    });
+  }
+
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
    * 

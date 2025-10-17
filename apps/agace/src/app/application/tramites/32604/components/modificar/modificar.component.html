@@ -1,8 +1,8 @@
 <div class="container">
-    <form>
+    <form [formGroup]="form">
         <div class="row mb-3">
                 <div class="col-md-4">
-                    <ng-titulo titulo="Agregar" />
+                    <ng-titulo titulo="Modificar Domicilio" />
                 </div>
                 <div class="col-md-12">
                     <label class="form-label text-start">
@@ -13,35 +13,68 @@
                         [isRequired]="sinoOpcion.isRequired"
                         [layout]="'horizontal'"
                         [gap]="'50px'"
+                        formControlName="instalacionPrincipal"
                         (valueChange)="actualizar290($event)"
                         ></app-input-radio>
                     </div>
-                    <div class="col-md-4">
-                        <label for="rfc" class="form-label">Municipio o alcaldia</label>
-                        <input type="text" id="rfc" class="form-control"/>
+                    <div class="col-md-6 mt-3">
+                        <label for="municipio" class="form-label">Municipio o alcaldía</label>
+                        <input type="text" id="municipio" class="form-control" formControlName="municipioDelegacion"/>
+                        <div *ngIf="form.get('municipioDelegacion')?.invalid && form.get('municipioDelegacion')?.touched" class="text-danger small mt-1">
+                            <div *ngIf="form.get('municipioDelegacion')?.errors?.['required']">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                     <div class="col-md-6">
-                        <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre" [placeholder]="contenedores.primerOpcion" [required]="true"></app-catalogo-select>
+                        <app-catalogo-select 
+                            [catalogo]="contenedores.catalogos" 
+                            [label]="contenedores.labelNombre" 
+                            [placeholder]="contenedores.primerOpcion" 
+                            [required]="true"
+                            [markTouched]="!!form.get('tipoInstalacion')?.touched"
+                            formControlName="tipoInstalacion">
+                        </app-catalogo-select>
                     </div>
                     <div class="col-md-6">
                         <label for="entidad" class="form-label">Entidad federativa</label>
-                        <input type="text" id="entidad" class="form-control"/>
+                        <input type="text" id="entidad" class="form-control" formControlName="entidadFederativa"/>
+                        <div *ngIf="form.get('entidadFederativa')?.invalid && form.get('entidadFederativa')?.touched" class="text-danger small mt-1">
+                            <div *ngIf="form.get('entidadFederativa')?.errors?.['required']">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label for="registro" class="form-label">Registro ante SE/SAT</label>
-                        <input type="text" id="registro" class="form-control"/>
+                        <input type="text" id="registro" class="form-control" formControlName="registroSESAT"/>
+                        <div *ngIf="form.get('registroSESAT')?.invalid && form.get('registroSESAT')?.touched" class="text-danger small mt-1">
+                            <div *ngIf="form.get('registroSESAT')?.errors?.['required']">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
                     </div>
         </div>
         <div class="row mb-3">
              <div class="col-md-12">
                 <label for="colonia" class="form-label">Colonia, calle y número</label>
-                <input type="text" id="colonia" class="form-control"/>
+                <input type="text" id="colonia" class="form-control" formControlName="direccion"/>
+                <div *ngIf="form.get('direccion')?.invalid && form.get('direccion')?.touched" class="text-danger small mt-1">
+                    <div *ngIf="form.get('direccion')?.errors?.['required']">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
                 <label for="codigoPostal" class="form-label">Código postal</label>
-                <input type="text" id="codigoPostal" class="form-control"/>
+                <input type="text" id="codigoPostal" class="form-control" formControlName="codigoPostal"/>
+                <div *ngIf="form.get('codigoPostal')?.invalid && form.get('codigoPostal')?.touched" class="text-danger small mt-1">
+                    <div *ngIf="form.get('codigoPostal')?.errors?.['required']">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
             </div>
         </div>
         <div class="d-flex justify-content-end mt-4">
@@ -49,7 +82,7 @@
             type="button"
             id="aceptar"
             class="btn btn-primary"
-            data-bs-dismiss="modal"
+            (click)="guardarModificaciones()"
             #closeModal
           >
             Aceptar
@@ -59,7 +92,7 @@
             type="button"
             id="cancelar"
             class="btn btn-danger ms-3"
-            data-bs-dismiss="modal"
+            (click)="cancelarModificacion()"
             #closeModal
           >
             Cancelar
