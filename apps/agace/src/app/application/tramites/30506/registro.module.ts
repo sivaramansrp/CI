@@ -7,7 +7,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroRoutingModule } from './registro-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { SolicitudComponent } from './components/solicitud.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
 
 @NgModule({
