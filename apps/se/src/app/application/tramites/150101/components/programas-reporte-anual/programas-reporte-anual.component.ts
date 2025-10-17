@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -50,14 +51,14 @@ const FECHA_FIN = {
   habilitado: true,
 };
 
-// Add custom validator for integer values
-function integerValidator(control: AbstractControl): { [key: string]: any } | null {
+import { ValidationErrors } from '@angular/forms';
+
+function integerValidator(control: AbstractControl): ValidationErrors | null {
   const VALUE = control.value;
   if (VALUE === null || VALUE === '' || VALUE === undefined) {
-    return null; // Let required validator handle empty values
+    return null; 
   }
   
-  // Check if value is a valid integer
   const NUMVALUE = Number(VALUE);
   if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
     return { 'notInteger': { value: control.value } };
@@ -277,7 +278,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    * @param value - Value to validate
    * @param fieldLabel - Label to show in error message
    */
-  validateIntegerField(fieldName: string, value: any, fieldLabel: string): void {
+  validateIntegerField(fieldName: string, value: string | number | null | undefined, fieldLabel: string): void {
     const CONTROL = this.periodoReporteAnual.get(fieldName);
     
     if (value !== null && value !== '' && value !== undefined) {
