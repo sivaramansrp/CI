@@ -630,6 +630,13 @@ export const API_POST_GUARDAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE:
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
  */
 export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/mostrar-firmar`;
+
+/**
+ * API para generar los documentos específicos del requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
+ */
+export const API_POST_DOCUMENTOS_ESPECIFICOS_REQ = (TRAMITE: string) : string => `sat-t${TRAMITE}/requerimiento/generar/documentos-especificos`;
+
  
 /**
  * API para generar la firma del requerimiento del trámite 130118

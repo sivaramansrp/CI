@@ -156,7 +156,7 @@ getEstadosCatalogo(): Observable<Catalogo> {
           descripcionLugarEmbarque: DATOS_COMPLIMENTOS.datosGeneralis.localizacion,
           capacidadAlmacenaje: DATOS_COMPLIMENTOS.formaModificaciones.nombreDeNotaria,
           numeroPermiso: DATOS_COMPLIMENTOS.obligacionesFiscales.opinionPositiva === '1' ? 'SI' : '',
-          fechaOperacion: DATOS_COMPLIMENTOS.obligacionesFiscales.fechaExpedicion,
+          fechaOperacion: formatearFechaYyyyMmDd(DATOS_COMPLIMENTOS.obligacionesFiscales.fechaExpedicion),
           nomOficialAutorizado: DATOS_COMPLIMENTOS.formaModificaciones.nombreDelFederatario,
     
         };

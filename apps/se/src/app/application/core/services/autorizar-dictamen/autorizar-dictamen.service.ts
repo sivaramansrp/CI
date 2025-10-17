@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-autorizar-dictamen-response.model';
 
 import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
+import { Firma } from '../../models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../../models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../../models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../../models/autorizar-requerimiento/response/mostrar-firmar-response.model';
@@ -84,9 +85,10 @@ export class AutorizarDictamenService {
    * @param idSolicitud - ID de la solicitud a autorizar
    * @returns Observable con la respuesta del oficio generado
   */
-  postOficioAutorizacion(tramite: number, idSolicitud : number): Observable<BaseResponse<DocumentoOficialResponse>> {
+  postOficioAutorizacion(tramite: number, idSolicitud : number, PAYLOAD?: Firma | null): Observable<BaseResponse<DocumentoOficialResponse>> {
     const ENDPOINT = `${this.host}${API_POST_OFICIO_AUTORIZACION.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud.toString())}`;
-    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, null);
+    const BODY = PAYLOAD ? PAYLOAD : null;
+    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, BODY);
   }
 
   /** 
@@ -95,9 +97,10 @@ export class AutorizarDictamenService {
    * @param idSolicitud - ID de la solicitud a autorizar
    * @returns Observable con la respuesta del oficio generado
   */
-  postOficioRechazado(tramite: number, idSolicitud : number): Observable<BaseResponse<DocumentoOficialResponse>>{
-     const ENDPOINT = `${this.host}${API_POST_OFICIO_RECHAZADO.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud.toString())}`;
-    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, null);
+  postOficioRechazado(tramite: number, idSolicitud : number, PAYLOAD?: Firma | null): Observable<BaseResponse<DocumentoOficialResponse>>{
+    const ENDPOINT = `${this.host}${API_POST_OFICIO_RECHAZADO.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud.toString())}`;
+    const BODY = PAYLOAD ? PAYLOAD : null;
+    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, BODY);
   }
 
   /** 
