@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110216State, Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 
 @Component({
   selector: 'app-hist-productores',
@@ -73,6 +73,23 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   /** Indica si el formulario es válido. */
   public isFormValid: boolean = false;
 
+  /** Observable que expone la lista de productores exportador agregados al store. */
+  public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
+
+  /**
+   * Solicitud actual del trámite.
+   */
+  public solicitudState!: Tramite110216State;
+
+  /**
+   * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
+   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
+   */
+  public mercancia: MercanciaTabla[] = [];
+
+  /** Observable que expone la lista de mercancia al store. */
+    public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+
   /**
    * Constructor del componente.
    * 
@@ -94,6 +111,17 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+    this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
+    this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
+    this.tramiteQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          this.productoresExportador = seccionState.productoresExportador || [];
+        })
+      )
+      .subscribe();
 
     this.tramiteQuery.formulario$
       .pipe(
@@ -179,6 +207,58 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    */
   public validarFormulario(): void {
     this.historicoProductoresComponent.validarFormulario();
+  }
+
+  /**
+   * Agrega un productor exportador al estado del store a partir del evento recibido.
+   * Si el evento contiene los datos completos del productor, los utiliza; de lo contrario, asigna valores por defecto.
+   * Si ya existen productores agregados, carga la mercancía relacionada.
+   * @param event Objeto con los datos del productor exportador o con el número de registro fiscal.
+   */
+    public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+      let DATOS: HistoricoColumnas | null = null;
+      if (event && typeof event === 'object' && 'nombreProductor' in event) {
+        DATOS = {
+            id: (event as HistoricoColumnas).id ?? 0,
+            nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+            numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+            direccion: String((event as HistoricoColumnas).direccion ?? ''),
+            correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+            telefono: String((event as HistoricoColumnas).telefono ?? ''),
+            fax: String((event as HistoricoColumnas).fax ?? '')
+        };
+      } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+        DATOS = {
+            id: 0,
+            nombreProductor: "LAURA CONTRERAS",
+            numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
+            direccion: "SAN GABRIEL 144 DURANGO", 
+            correoElectronico: "laura2992@hotmail.com",
+            telefono: "044-6182999535",
+            fax: String(event['fax'] ?? '') || '6182999535'
+        };
+      }
+      if (DATOS) { 
+        this.store.setAgregarProductoresExportador(DATOS);
+      }
+      if (this.solicitudState.agregarProductoresExportador.length) {
+        this.cargarMercancia();
+      }
+    }
+
+    /**
+   * Carga la lista de productores disponibles para el exportador desde el servicio.
+   */
+  cargarMercancia(): void {
+    this.certificadoDeService
+    .getMercanciasSeleccionadas()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe(respuesta => {
+      this.mercancia = respuesta;
+      this.store.setMercanciaProductores(respuesta);
+    });
   }
 
 /**

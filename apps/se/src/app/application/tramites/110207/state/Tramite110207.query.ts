@@ -11,8 +11,14 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110207Query extends Query<Solicitud110207State> {
-
-    /**
+  /**
+   * Selecciona todo el estado del trámite.
+   * @returns {Observable<any>} - Observable con todo el estado del trámite.
+   */
+  selectState$ = this.select((state) => {
+    return state;
+  });
+  /**
    * Selecciona las fechas del certificado.
    * @returns {Observable<any>} - Observable con las fechas del certificado.
    */
@@ -20,7 +26,7 @@ export class Tramite110207Query extends Query<Solicitud110207State> {
     return state.formDatosCertificado;
   });
 
-    /**
+  /**
    * Selecciona los datos de la entidad federativa.
    * @returns {Observable<any>} - Observable con los datos de la entidad federativa.
    */
@@ -206,4 +212,60 @@ export class Tramite110207Query extends Query<Solicitud110207State> {
    * Selecciona el catálogo de tipos de factura.
    */
   selectTipoFactura$ = this.select((state) => state.tipoFactura);
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de destinatario.
+   */
+  selectFormDatosDelDestinatario$ = this.select((state) => {
+    return state.formDatosDelDestinatario;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona el formulario de destinatario.
+   */
+  selectFormDestinatario$ = this.select((state) => {
+    return state.formDestinatario;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona el estado completo del certificado.
+   */
+  selectPeru$ = this.select((state) => {
+    return state;
+  });
+
+    /**
+   * Observable que emite la lista de medios de transporte disponibles
+   * @returns Observable<Catalogo[]> con los medios de transporte
+   */
+  selectMedioDeTransporte$ = this.select((state) => {
+    return state.medioDeTransporte;
+  });
+
+   /**
+   * Observable que emite la lista de países de destino
+   * @returns Observable<Catalogo[]> con los países de destino disponibles
+   */
+  selectPaisDestino$ = this.select((state) => {
+    return state.paisDestin;
+  });
+
+    /**
+   * Observable que emite los valores del formulario de destinatario
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectDestinatarioForm$ = this.select((state) => {
+    return state.destinatarioForm;
+  });
+
+    /**
+   * Selecciona el formulario del certificado.
+   * @returns {Observable<any>} - Observable con el formulario del certificado.
+   */
+  formCertificado$ = this.select((state) => {    
+    return state.formCertificado;
+  });
 }

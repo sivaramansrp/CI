@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, map, of, takeUntil } from 'rxjs';
-import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
-import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component'
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
@@ -334,9 +333,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    this.cargarEstados();
-    this.cargarBloque();
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -349,39 +345,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
   }
 
-  /**
-   * Carga la lista de estados desde el servicio y actualiza el store con los datos.
-   */
-  cargarEstados(): void {
-    this.certificadoService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setaltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
-
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.certificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
 
   /**
    * Establece el estado seleccionado en el store.

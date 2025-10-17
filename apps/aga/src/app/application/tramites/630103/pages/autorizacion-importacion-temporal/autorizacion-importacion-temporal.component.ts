@@ -114,78 +114,31 @@ export class AutorizacionImportacionTemporalComponent {
    * Actualiza el valor del índice según el evento del botón de acción.
    * @param e El evento del botón de acción que contiene la acción y el valor.
    */
-  public getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = false;
-    // Validar formularios antes de continuar desde el paso uno
-    if (this.indice === 1 && e.accion === 'cont') {
-      const ISVALID = this.validarTodosFormulariosPasoUno();
-    
-       if(ISVALID==="showFirstError"){
-        this.esFormaValido = true;
-        this.esFormaValidoDos = false;
-        return;
-
-       }
-       if(ISVALID==="showSecondError"){
-        this.esFormaValido = false;
-        this.esFormaValidoDos = true;
-        return;
-
-       }
-       if(ISVALID==="showBothErrors"){
-        this.esFormaValido = true;
-        this.esFormaValidoDos =true;
-        return;
-
-       }
-
-       if(ISVALID==="showNoError"){
-        this.esFormaValido = false;
-        this.esFormaValidoDos = false;
-        
-       }
-
-    }
-
-    let indiceActualizado = e.valor;
+  getValorIndice(e: AccionBoton): void {
     if (e.accion === 'cont') {
-      indiceActualizado = e.valor + 1;
-    } else if (e.accion === 'ant') {
-      indiceActualizado = e.valor - 1;
-    }
-
-    // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-
-      // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else if (e.accion === 'ant') {
-        this.wizardComponent.atras();
+      let isValid = true;
+    
+        if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarFormularios();
       }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+    
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+    
+      this.wizardComponent.siguiente();
+      return;
     }
-  }
-  /**
-   * @method validarTodosFormulariosPasoUno
-   * @description
-   * Valida todos los formularios del componente `PasoUnoComponent`.
-   * Si la referencia al componente no existe, retorna `true` para permitir la navegación.
-   * Llama al método `validarFormularios()` del componente hijo para verificar la validez de todos sus formularios.
-   * Si algún formulario es inválido, retorna `false` para impedir el avance al siguiente paso.
-   * 
-   * @returns {boolean} `true` si todos los formularios son válidos o si el componente no existe, `false` si algún formulario es inválido.
-   * @private
-   */
-  private validarTodosFormulariosPasoUno(): string {
-    if (!this.pasoUnoComponent) {
-      return "showNoError";
-    }
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
-   
-    return ISFORM_VALID_TOUCHED;
-  }         
+    
+      this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
+    
+}    
 
 }

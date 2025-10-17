@@ -224,7 +224,7 @@ export class FederatariosYPlantasVistaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setDatosFederatarios(datos: FederatariosEncabezado): void {
-    this.estadoValor = datos.estadoUno;
+    this.estadoValor = datos.estadoDos;
     this.store.setFederatariosCatalogo(datos);
   }
 

@@ -1,4 +1,4 @@
-import { Catalogo, Solicitud30506State, Tramite30506Store } from '../state/Tramite30506.store';
+import { Catalogo, Solicitud30506State, Tramite30506Store } from '../state/tramite30506.store';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

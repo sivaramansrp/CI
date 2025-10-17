@@ -39,12 +39,9 @@
           </div>
           <div class="col-md-4 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
               name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
-            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched ||
-            formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid">
-              @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es
-                obligatorio</span> } </div> }
           </div>
         </div>
         <div class="row">
@@ -246,12 +243,10 @@
                 class="mensaje-error">Por favor, no escribas más de 70 caracteres</span> } </div> }
           </div> @if(paisDestino){ <div class="col-md-8 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
               name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
-            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched ||
-            formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid">
-              @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es
-                obligatorio</span> } </div> }
+  
           </div> }
         </div>
       </ng-template>

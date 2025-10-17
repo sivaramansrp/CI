@@ -4,12 +4,12 @@ import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, ENTIDAD_CATALOGO, ENTIDAD_TABLA, 
 import { Domicillio, EntidadFederativa } from '../../models/adace.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { DomicillioLabelEnum } from '../../constantes/labels32606.enum';
 import { EconomicoService } from '../../services/economico.service';
 import { Modal } from 'bootstrap';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 
 /** Componente para la sección de domicilio del trámite 32606. */
 @Component({
@@ -18,7 +18,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
   imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputRadioComponent, TituloComponent,
     NotificacionesComponent],
   templateUrl: './domicillio.component.html',
-  styleUrl: './domicillio.component.css',
+  styleUrl: './domicillio.component.scss',
 })
 export class DomicillioComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de domicilio. */

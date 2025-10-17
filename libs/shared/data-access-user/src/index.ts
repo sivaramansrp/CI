@@ -42,6 +42,7 @@ export * from './core/services/shared/validaciones-formulario/validaciones-formu
 export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
 export { AccionBoton } from './core/models/260514/aviso-pantallas.model';
 export * from './core/ambientes';
+export { TablaDinamicaExpandidaComponent } from './tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 // export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
 export * from './core/enums/constantes-alertas.enum';
@@ -217,6 +218,7 @@ export * from './core/servers/api-router';
 export * from './core/resolvers/iniciar-tramite.resolver';
 export * from './core/services/shared/cargar-documento/cargar-documento.service';
 export * from './core/models/shared/cargar-documentos.model';
+export * from './core/models/shared/documentos-especificos.model';
 export * from './tramites/components/paso-firma/paso-firma.component';
 export * from './core/services/shared/catalogo.service';
 export * from './tramites/components/paso-carga-documento/paso-carga-documento.component';

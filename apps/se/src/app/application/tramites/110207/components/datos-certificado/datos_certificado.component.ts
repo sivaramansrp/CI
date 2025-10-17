@@ -1,14 +1,24 @@
-import {Catalogo,CatalogosSelect,ConsultaioQuery,SeccionLibQuery,SeccionLibState,SeccionLibStore,TituloComponent,ValidacionesFormularioService} from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {FormBuilder,FormControl,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
-import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import {Solicitud110207State,Tramite110207Store} from '../../state/Tramite110207.store';
+import {
+  Catalogo,
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
+import { Tramite110207Store } from '../../state/Tramite110207.store';
 
 /**
  * Componente que representa el formulario de datos del certificado en el trámite.
@@ -21,20 +31,25 @@ import { Tramite110207Query } from '../../state/Tramite110207.query';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    DatosCertificadoDeComponent
-],
+    DatosCertificadoDeComponent,
+  ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
-  
-  // Variable booleana que indica si es necesario o no (precisa) en el formulario
+  /**
+   *   Variable booleana que indica si es necesario o no (precisa) en el formulario
+   */
   precisa: boolean = true;
-  
-  // Variable booleana que indica si el idioma está habilitado o no
+
+  /**
+   * Variable booleana que indica si el idioma está habilitado o no
+   */
   idioma: boolean = true;
-  
-  // Variable booleana que indica si el idioma está habilitado o no
+
+  /**
+   * Variable booleana que indica si el idioma está habilitado o no
+   */
   presenta: boolean = true;
   /**
    * Formulario reactivo que contiene los datos del certificado.
@@ -45,7 +60,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Valores actuales del formulario de datos del certificado.
    */
-  formDatosCertificadoValues!: { [key: string]: unknown};
+  formDatosCertificadoValues!: { [key: string]: unknown };
 
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar las suscripciones.
@@ -72,23 +87,11 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
-   /**
- * Indica si el formulario está en modo solo lectura.
- * Cuando es `true`, los campos del formulario no se pueden editar.
- */
-  esFormularioSoloLectura: boolean = false;
-
   /**
-   * Código del procedimiento asociado a la funcionalidad actual.
-   * 
-   * @remarks
-   * Actualmente está configurado como "110204" de manera temporal.
-   * Se debe cambiar a "110202" cuando la API correspondiente esté disponible.
-   * 
-   * @example
-   * procedure = "110202";
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  procedure = "110204"; // Need to change it to 110202 when api for 110202 will be ready
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Referencia al componente hijo DatosCertificadoDeComponent
@@ -114,15 +117,14 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     public consultaQuery: ConsultaioQuery
   ) {
-
     /**
      * Suscripción al estado del formulario para actualizar los valores del formulario al obtener datos.
      */
-    this.tramiteQuery.formDatosCertificado$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe(estado => {
+    this.tramiteQuery.formDatosCertificado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
         this.formDatosCertificadoValues = estado;
-    });
+      });
 
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
@@ -141,7 +143,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      */
     this.idiomaDatos$ = this.tramiteQuery.selectIdioma$;
     this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
-    this.representacionFederal$ = this.tramiteQuery.selectrepresentacionFederal$;
+    this.representacionFederal$ =
+      this.tramiteQuery.selectrepresentacionFederal$;
   }
 
   /**
@@ -160,27 +163,32 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {          
+        map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
   }
 
-   /**
+  /**
    * Establece valores en el estado de la tienda para un formulario genérico de certificado.
-   * 
+   *
    * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
    * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
    * @param event.campo - Nombre del campo que se actualizará en el estado.
    * @param event.valor - Valor que se asignará al campo especificado.
    * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
-   * 
+   *
    * @returns void
-   * 
+   *
    * @command Este método actualiza el estado de la tienda con los valores proporcionados.
    */
-   setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
   }
@@ -197,7 +205,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @param e Los datos del formulario.
    */
   obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormDatosCertificado(e as { [key: string]: unknown});
+    this.store.setFormDatosCertificado(e as { [key: string]: unknown });
   }
 
   /**
@@ -238,7 +246,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @returns FormControl o null si no se encuentra
    */
   getChildFormControl(controlName: string): FormControl | null {
-    return this.childForm?.get(controlName) as FormControl || null;
+    return (this.childForm?.get(controlName) as FormControl) || null;
   }
 
   /**
@@ -251,25 +259,26 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * Método público para validar todos los formularios del componente datos-certificado.
    * Valida el formulario del componente hijo DatosCertificadoDeComponent y actualiza el estado.
    * @returns boolean indicando si todos los formularios son válidos
    */
   public validateAll(): boolean {
     let valid = true;
-    
+
     // Validar el componente hijo datos-certificado-de
     if (this.datosCertificadoDeRef) {
       // Usar el método validarFormularios del componente hijo que marca los campos como touched
-      const IS_CHILD_FORM_VALID = this.datosCertificadoDeRef.validarFormularios();
+      const IS_CHILD_FORM_VALID =
+        this.datosCertificadoDeRef.validarFormularios();
       if (!IS_CHILD_FORM_VALID) {
         valid = false;
       }
       // Actualizar el estado de validez en el store
       this.setFormValida(IS_CHILD_FORM_VALID);
     }
-    
+
     return valid;
   }
 
