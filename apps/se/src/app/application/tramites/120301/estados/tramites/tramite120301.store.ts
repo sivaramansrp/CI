@@ -26,7 +26,11 @@ export interface Solicitud120301State {
     /** ID de asignación del trámite */
     id_asignacion: number;
     /** ID de la factura de expedición */
-    id_factura_expedicion:number;
+    id_factura_expedicion: number;
+    /** Indica si el formulario de facturas asociadas es válido */
+    validarFormularioFacturasAsociadas?: boolean;
+    /** Indica si el formulario de importador en destino es válido */
+    validarFormularioImportadorDestino?: boolean;
 }
 /**
  * Crea el estado inicial del trámite 120301.
@@ -44,7 +48,9 @@ export function createInitialState(): Solicitud120301State {
         cve_pais: '',
         id_mecanismo: 0,
         id_asignacion: 0,
-        id_factura_expedicion:0
+        id_factura_expedicion: 0,
+        validarFormularioFacturasAsociadas: false,
+        validarFormularioImportadorDestino: false,
     };
 }
 
@@ -164,6 +170,10 @@ export class Tramite120301Store extends Store<Solicitud120301State> {
         }));
     }
 
+    /**
+     * Actualiza el ID de la solicitud.
+     * @param idSolicitud 
+     */
     public setId(idSolicitud: number): void {
         this.update((state) => ({
             ...state,
@@ -171,17 +181,46 @@ export class Tramite120301Store extends Store<Solicitud120301State> {
         }));
     }
 
+    /**
+     * Actualizar el ID de asignación del trámite.
+     * @param id_asignacion 
+     */
     public setIdAsignacion(id_asignacion: number): void {
         this.update((state) => ({
             ...state,
             id_asignacion,
         }));
     }
-
-     public setFacturaExpedicion(id_factura_expedicion: number): void {
+    /**
+     * Actualiza el ID de la factura de expedición.
+     * @param id_factura_expedicion 
+     */
+    public setFacturaExpedicion(id_factura_expedicion: number): void {
         this.update((state) => ({
             ...state,
             id_factura_expedicion,
+        }));
+    }
+
+    /**
+     * Actualizar el estado de validación del formulario de facturas asociadas.
+     * @param valor 
+     */
+    public setValidarFormularioFacturasAsociadas(valor: boolean): void {
+        this.update(state => ({
+            ...state,
+            validarFormularioFacturasAsociadas: valor,
+        }));
+    }
+
+    /**
+     * Actualizar el estado de validación del formulario de importador en destino.
+     * @param valor 
+     */
+    public setValidarFormularioImportadorDestino(valor: boolean): void {
+        this.update(state => ({
+            ...state,
+            validarFormularioImportadorDestino: valor,
         }));
     }
 }

@@ -28,6 +28,7 @@ import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enu
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ImportadorDestinoResponse } from '../../models/response/importador-destino-response.model'
 import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
+import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -151,6 +152,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  validarFormulario: boolean = false;
 
   /**
    * @property {TextilesState} importadorState - Estado actual del importador.
@@ -202,6 +204,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
     private importeRecordService: ImporteRecordService,
     private cdr: ChangeDetectorRef,
     private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
+    private tramite120301: Tramite120301Store,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -255,6 +258,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
           }
           this.seccionStore.establecerSeccion([true]);
           this.seccionStore.establecerFormaValida([true]);
+          this.validarFormulario = this.importadorForm.valid;
+          this.tramite120301.setValidarFormularioImportadorDestino(this.validarFormulario);
         })
       )
       .subscribe();

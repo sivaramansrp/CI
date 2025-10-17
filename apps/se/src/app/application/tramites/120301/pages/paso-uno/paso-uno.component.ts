@@ -787,6 +787,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * // Desde el padre: <app-paso-uno (mostrarOtraPestanaChange)="onCambioPestana($event)"></app-paso-uno>
    */
   public onMostrarTabs(event: boolean): void {
+    if (event === true) {
+      this.mostrarEvaluar = false;
+    }
     if (event) {
       this.mostrarOtraPestana = true;
       this.mostrarEvaluar = true;

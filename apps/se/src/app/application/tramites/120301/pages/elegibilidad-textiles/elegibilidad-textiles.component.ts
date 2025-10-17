@@ -386,7 +386,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     if (e.accion === 'cont') {
       // Validación para pestañas 1 o 2
       if (PESTANA_ACTIVA === 1 || PESTANA_ACTIVA === 2) {
-        const ISVALID = this.validacionPasos.validarTodosLosFormularios();
+        const ISVALID =
+          this.solicitudState.validarFormularioFacturasAsociadas &&
+          this.solicitudState.validarFormularioImportadorDestino;
         if (!ISVALID) {
           this.esFormaValido = true;
           // Mantener el wizard en el índice 1 para que no se visualice el botón "Anterior"
@@ -395,7 +397,6 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
           window.scrollTo(0, 0);
           return;
         }
-
         this.esFormaValido = false;
         this.guardarSolicitudCompleta();
         this.datosPasos.indice = this.indice;
@@ -404,8 +405,8 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
         this.esFormaValido = false;
 
         // Validar campos requeridos de las pestañas 3 y 6
-        const CAMPOS_TAB3_VALIDOS = this.validarCamposRequeridosTab3();
-        const CAMPOS_TAB6_VALIDOS = this.validarCamposRequeridosTab6();
+        const CAMPOS_TAB3_VALIDOS = this.solicitudState.validarFormularioFacturasAsociadas;
+        const CAMPOS_TAB6_VALIDOS = this.solicitudState.validarFormularioImportadorDestino;
 
         if (!CAMPOS_TAB3_VALIDOS || !CAMPOS_TAB6_VALIDOS) {
           // Activar la pestaña 6 del componente PasoUnoComponent
@@ -483,18 +484,6 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     // Siempre cambiar esFormaValido a false cuando cambia de pestaña
     // Esto incluye específicamente cuando se inicializa la pestaña 3
     this.esFormaValido = false;
-  }
-
-  /**
-   * @method validarCamposRequeridosTab3
-   * @description Valida que los campos requeridos de la pestaña 3 estén completos
-   * @returns {boolean} true si todos los campos requeridos están completos, false en caso contrario
-   */
-  private validarCamposRequeridosTab3(): boolean {
-    if (!this.validacionPasos?.formularioAsociacionFacturaComp?.formularioAsociacionFactura) {
-      return false;
-    }
-    return this.validacionPasos.formularioAsociacionFacturaComp.formularioAsociacionFactura.valid;
   }
 
   /**
@@ -641,7 +630,6 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
         })
       )
       .subscribe();
-
     this.solicitanteQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -651,7 +639,6 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
         })
       )
       .subscribe();
-
   }
 
   /**
