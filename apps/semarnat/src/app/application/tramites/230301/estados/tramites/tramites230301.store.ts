@@ -4,32 +4,44 @@ import { Injectable } from '@angular/core';
 /**
  * Interfaz que define el estado del trámite 230301.
  */
-export interface Solicitud230301State {
+export interface Tramite230301State {
   /**
    * Folio de desistimiento del trámite.
    */
-  desistimientoFolio: string;
+  folioAnterior: string;
 
   /**
    * Tipo de solicitud del trámite.
    */
-  solicitudTipo: string;
+  tipoSolicitud: string;
 
   /**
    * Motivo de desistimiento del trámite.
    */
-  desistimientoMotivo: string;
+  motivoDesistimiento: string;
+
+  /**
+   * Identificador de la solicitud anterior.
+   */
+  solicitudAnterior: number;
+
+  /**
+   * Identificador de la solicitud actual.
+   */
+  idSolicitud: number;
 }
 
 /**
  * Crea el estado inicial para la interfaz de trámite 230301.
- * @returns {Solicitud230301State} Estado inicial del trámite 230301.
+ * @returns {Tramite230301State} Estado inicial del trámite 230301.
  */
-export function createInitialSolicitudState(): Solicitud230301State {
+export function createInitialSolicitudState(): Tramite230301State {
   return {
-    desistimientoFolio: '',
-    solicitudTipo: '',
-    desistimientoMotivo: '',
+    folioAnterior: '',
+    solicitudAnterior: 0,
+    tipoSolicitud: '',
+    motivoDesistimiento: '',
+    idSolicitud: 0,
   };
 }
 
@@ -37,7 +49,7 @@ export function createInitialSolicitudState(): Solicitud230301State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'solicitud230301', resettable: true })
-export class Solicitud230301Store extends Store<Solicitud230301State> {
+export class Tramite230301Store extends Store<Tramite230301State> {
   /**
    * Constructor de la clase `Solicitud230301Store`.
    * Inicializa el estado con los valores predeterminados.
@@ -48,34 +60,43 @@ export class Solicitud230301Store extends Store<Solicitud230301State> {
 
   /**
    * Actualiza el motivo de desistimiento en el estado.
-   * @param {string} desistimientoMotivo - Nuevo valor para el motivo de desistimiento.
+   * @param {string} motivoDesistimiento - Nuevo valor para el motivo de desistimiento.
    */
-  public setDesistimientoMotivo(desistimientoMotivo: string): void {
+  public setMotivoDesistimiento(motivoDesistimiento: string): void {
     this.update((state) => ({
       ...state,
-      desistimientoMotivo,
-    }));
-  }
-
-  /**
-   * Actualiza el folio de desistimiento en el estado.
-   * @param {string} desistimientoFolio - Nuevo valor para el folio de desistimiento.
-   */
-  public setDesistimientoFolio(desistimientoFolio: string): void {
-    this.update((state) => ({
-      ...state,
-      desistimientoFolio,
+      motivoDesistimiento: motivoDesistimiento,
     }));
   }
 
   /**
    * Actualiza el tipo de solicitud en el estado.
-   * @param {string} solicitudTipo - Nuevo valor para el tipo de solicitud.
+   * @param {string} tipoDeTramite - Nuevo valor para el tipo de solicitud.
    */
-  public setSolicitudTipo(solicitudTipo: string): void {
+  public setTipoSolicitud(tipoDeTramite: string): void {
     this.update((state) => ({
       ...state,
-      solicitudTipo,
+      tipoSolicitud: tipoDeTramite,
+    }));
+  }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud: idSolicitud,
+    }));
+  }
+
+  public setInitialState(param: {
+    folioAnterior: string;
+    tipoSolicitud: string;
+    solicitudAnterior: number;
+  }) {
+    this.update((state) => ({
+      ...state,
+      folioAnterior: param.folioAnterior,
+      tipoSolicitud: param.tipoSolicitud,
+      solicitudAnterior: param.solicitudAnterior,
     }));
   }
 }

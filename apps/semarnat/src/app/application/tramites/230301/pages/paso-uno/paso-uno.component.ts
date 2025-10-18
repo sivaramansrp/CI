@@ -8,7 +8,7 @@
  */
 
 /** Importaciones necesarias para el acceso a datos de usuario y estados de consulta */
-import { AVISO, ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AVISO, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 /** Importaciones del núcleo de Angular para componentes y ciclo de vida */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 /** Importaciones de RxJS para manejo de observables y operadores reactivos */
@@ -16,7 +16,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 /** Servicio para manejar el desistimiento de solicitudes del trámite */
 import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
 /** Store para gestionar el estado global del trámite 230301 */
-import { Solicitud230301Store } from '../../estados/tramites/tramites230301.store';
+import { Tramite230301Store } from '../../estados/tramites/tramites230301.store';
 import { SolicitudComponent } from '../../component/solicitud/solicitud.component';
 
 /**
@@ -108,15 +108,6 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {SolicitanteComponent} SolicitanteComponent
-   * @description
-   * Referencia al componente hijo SolicitanteComponent a través del selector 'solicitante'.
-   * Permite acceder a los métodos y propiedades del componente, especialmente para validar
-   * el formulario de datos del solicitante.
-   */
-  @ViewChild('solicitante') SolicitanteComponent!: SolicitanteComponent;
-
-  /**
    * @property {SolicitudComponent} SolicitudComponent
    * @description
    * Referencia al componente hijo SolicitudComponent a través del selector 'solicitud'.
@@ -143,7 +134,7 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    * Inicializa el componente y establece la suscripción al estado de la consulta para
    * obtener información sobre el procedimiento actual y configurar el estado del formulario.
    * 
-   * @param {Solicitud230301Store} tramite230301Store - Almacén (store) para gestionar el estado global de la solicitud del trámite 230301
+   * @param {Tramite230301Store} tramite230301Store - Almacén (store) para gestionar el estado global de la solicitud del trámite 230301
    * @param {ConsultaioQuery} consultaQuery - Servicio de consulta para obtener el estado actual de la consulta y sus cambios reactivos
    * @param {DesistimientoSolicitudService} desistimientoSolicitudService - Servicio especializado para manejar solicitudes de desistimiento del trámite
    * 
@@ -162,7 +153,7 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    * // No es necesario llamarlo manualmente
    * ```
    */
-   constructor(private tramite230301Store:Solicitud230301Store,
+   constructor(private tramite230301Store:Tramite230301Store,
     private consultaQuery: ConsultaioQuery,
     private desistimientoSolicitudService: DesistimientoSolicitudService) {
        this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
@@ -198,7 +189,7 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    ngOnInit(): void {
       if (this.consultaState && this.consultaState.procedureId === '230301' &&
       this.consultaState.update) {
-      this.cargarDatosFormulario();
+        //
     } else {
       this.esDatosRespuesta = true;
     }
@@ -231,44 +222,6 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
   }
 
   /**
-   * @method cargarDatosFormulario
-   * @description Método para cargar y procesar datos existentes del formulario desde el servidor.
-   * Obtiene los datos de registro de toma de muestras de mercancías y actualiza el estado
-   * del formulario con la información recuperada. Este método es esencial para la funcionalidad
-   * de actualización de solicitudes existentes.
-   * 
-   * @returns {void}
-   * 
-   * @description
-   * Flujo de ejecución:
-   * 1. Llama al servicio para obtener datos del registro de toma de muestras
-   * 2. Utiliza el operador `takeUntil` para manejar la limpieza automática de suscripciones
-   * 3. Si se reciben datos válidos, marca el componente como datos de respuesta
-   * 4. Actualiza el estado del formulario a través del servicio correspondiente
-   * 
-   * @throws {Error} Si hay problemas en la comunicación con el servidor
-   * 
-   * @example
-   * ```typescript
-   * // Llamar manualmente para cargar datos
-   * this.guardarDatosFormulario();
-   * ```
-   * 
-   * @see {@link DesistimientoSolicitudService.getRegistroTomaMuestrasMercanciasData} - Método para obtener datos
-   * @see {@link DesistimientoSolicitudService.actualizarEstadoFormulario} - Método para actualizar estado
-   * @see {@link esDatosRespuesta} - Propiedad que se actualiza tras cargar datos
-   */
-  cargarDatosFormulario(): void {
-    this.desistimientoSolicitudService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-          if (resp) {
-            this.esDatosRespuesta = true;
-            this.desistimientoSolicitudService.actualizarEstadoFormulario(resp);
-          }
-        });
-  }
-  /**
    * @method validarFormularios
    * @description
    * Valida todos los formularios contenidos en los componentes hijos del primer paso.
@@ -280,26 +233,10 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    * @public
    */
   public validarFormularios(): boolean {
-    let isValid = true;
-
-    if (this.SolicitanteComponent?.form) {
-      if (this.SolicitanteComponent.form.invalid) {
-        this.SolicitanteComponent.form.markAllAsTouched();
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
-
     if (this.SolicitudComponent) {
-      if (!this.SolicitudComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
+      return this.SolicitudComponent.validarFormulario();
     }
-
-    return isValid;
+    return false;
   }
 
   /**

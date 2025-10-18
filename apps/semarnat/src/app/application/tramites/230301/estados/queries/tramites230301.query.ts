@@ -1,25 +1,50 @@
-import { Solicitud230301State, Solicitud230301Store } from '../tramites/tramites230301.store';
+import { Tramite230301State, Tramite230301Store } from '../tramites/tramites230301.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class ConsultaSolicitud230301Query extends Query<Solicitud230301State> {
+export class Tramite230301Query extends Query<Tramite230301State> {
 
   /**
-   * Observable que selecciona el estado completo de la solicitud.
-   * @type {Observable<Solicitud230301State>}
+   * Observable that selects the entire request state.
+   * @type {Observable<Tramite230301State>}
    */
-  estadoSolicitud$ = this.select((estado) => {
-    return estado;
-  });
+  selectSolicitud$: Observable<Tramite230301State> = this.select();
 
   /**
-   * Constructor de la clase `ConsultaSolicitud230301Query`.
-   * Inicializa la consulta con el store proporcionado.
-   * @param {Solicitud230301Store} store - Store que contiene el estado de la solicitud.
+   * Observable that selects the previous folio from the state.
+   */
+  selectFolioAnterior$ = this.select('folioAnterior');
+
+  /**
+   * Observable that selects the request type from the state.
+   */
+  selectTipoSolicitud$ = this.select('tipoSolicitud');
+
+  /**
+   * Observable that selects the withdrawal reason from the state.
+   */
+  selectMotivoDesistimiento$ = this.select('motivoDesistimiento');
+
+  /**
+   * Observable that selects the previous request ID from the state.
+   */
+  selectSolicitudAnterior$ = this.select('solicitudAnterior');
+
+  /**
+   * Observable that selects the current request ID from the state.
+   */
+  selectIdSolicitud$ = this.select('idSolicitud');
+
+
+  /**
+   * Constructor for the `Tramite230301Query` class.
+   * Initializes the query with the provided store.
+   * @param {Tramite230301Store} store - Store containing the request state.
    */
   constructor(
-    protected override store: Solicitud230301Store
+    protected override store: Tramite230301Store
   ) {
     super(store);
   }

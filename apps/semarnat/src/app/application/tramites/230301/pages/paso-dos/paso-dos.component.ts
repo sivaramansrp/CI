@@ -7,85 +7,287 @@
  * @version 1.0.0
  * @since 2025
  */
+import {
+  CategoriaMensaje,
+  FirmaElectronicaComponent,
+  Notificacion,
+  NotificacionesComponent,
+  SessionQuery,
+  TramiteFolioQueries,
+  base64ToHex,
+  encodeToISO88591Hex,
+} from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { CadenaOriginal230301Service } from '../../services/cadena-original230301.service';
+import { CadenaOriginalRequest } from '../../models/cadena-original-request';
+import { CommonModule } from '@angular/common';
+import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
+import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store';
+import { Firma230301Service } from '../../services/firma230301.service';
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
+import { Router } from '@angular/router';
+import { Tramite230301State } from '../../estados/tramites/tramites230301.store';
 
-/** Importación del núcleo de Angular para la creación de componentes */
-import { Component } from '@angular/core';
+import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
+import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
 
-/**
- * @class PasoDosComponent
- * @description Componente Angular que representa el segundo paso del trámite 230301 de SEMARNAT.
- * Este componente se encarga de gestionar la firma electrónica del usuario como parte
- * del proceso de autenticación y validación de la solicitud. Incluye la integración
- * con el componente de firma electrónica y maneja el flujo de validación correspondiente.
- * 
- * @example
- * ```typescript
- * // Uso del componente en el template
- * <app-paso-dos></app-paso-dos>
- * ```
- * 
- * @example
- * ```html
- * <!-- El componente renderiza automáticamente la interfaz de firma electrónica -->
- * <div class="container">
- *   <div class="row">
- *     <div class="col-md-4">
- *       <firma-electronica [tipo]="''"></firma-electronica>
- *     </div>
- *   </div>
- * </div>
- * ```
- * 
- * @remarks
- * - Este componente forma parte del flujo multi-paso del trámite 230301
- * - Se ejecuta después del paso uno (paso-uno.component)
- * - Requiere que el usuario complete la firma electrónica para continuar
- * - Utiliza Bootstrap para el diseño responsive de la interfaz
- * 
- * @see {@link PasoUnoComponent} Para el paso anterior del proceso
- * @see {@link FirmaElectronicaComponent} Para el componente de firma utilizado
- * 
- * @public
- */
+import { PerfilUsuario } from '@libs/shared/data-access-user/src/core/models/usuario/perfilUsuario.model';
+import { Rol } from '@libs/shared/data-access-user/src/core/models/usuario/rol.model';
+
 @Component({
-  /**
-   * @description Selector CSS utilizado para identificar y renderizar el componente
-   * en las plantillas HTML. Permite usar <app-paso-dos></app-paso-dos> en templates.
-   */
   selector: 'app-paso-dos',
-  
-  /**
-   * @description Ruta relativa al archivo de plantilla HTML que define la estructura
-   * visual del componente. Contiene la interfaz de usuario para el segundo paso.
-   */
+  standalone: true,
+  imports: [CommonModule, FirmaElectronicaComponent],
   templateUrl: './paso-dos.component.html',
-  
-  /**
-   * @description Ruta relativa al archivo de estilos SCSS que define la apariencia
-   * visual específica del componente, incluyendo layouts y temas personalizados.
-   */
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent {
-  /**
-   * @description Constructor del componente PasoDosComponent.
-   * Inicializa una nueva instancia del componente para el manejo del segundo paso
-   * del trámite 230301, preparando la interfaz para la firma electrónica.
-   * 
-   * @example
-   * ```typescript
-   * // El constructor se ejecuta automáticamente al crear el componente
-   * const component = new PasoDosComponent();
-   * ```
-   * 
-   * @remarks
-   * - Se ejecuta automáticamente durante la creación del componente
-   * - No requiere parámetros de inicialización en esta implementación
-   * - Prepara el estado inicial para la gestión de firma electrónica
-   * 
-   * @public
-   */
-  constructor() {
-    // Implementación futura para inicialización de servicios y estado del componente
+export class PasoDosComponent implements OnInit, OnDestroy {
+  private documentosState!: DocumentosState;
+  private destroy$ = new Subject<void>();
+  cadenaOriginal?: string;
+  nuevaNotificacion!: Notificacion;
+  url?: string;
+  datosFirmaReales!: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  };
+  public solicitudState!: Tramite230301State;
+  folio!: string;
+  @Input() procedureUrl: string = '';
+  @Input() procedure: number = 0;
+  userProfile: PerfilUsuario | undefined;
+  roles: Rol[] = [];
+  userId = '';
+
+  constructor(
+    private router: Router,
+    private documentosQuery: DocumentosQuery,
+    private tramite230301Query: Tramite230301Query,
+    private firma: Firma230301Service,
+    private cadena: CadenaOriginal230301Service,
+    private tramiteStore: TramiteFolioStore,
+    private sessionQuery: SessionQuery
+  ) {}
+
+  ngOnInit(): void {
+    this.documentosQuery.selectDocumentoState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((documentosState) => {
+          this.documentosState = documentosState;
+        })
+      )
+      .subscribe();
+
+    this.tramite230301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((state) => {
+          this.solicitudState = state;
+        })
+      )
+      .subscribe();
+
+    this.sessionQuery.selectPerfilUsuario$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userProfile) => {
+        this.userProfile = userProfile;
+      });
+
+    this.sessionQuery.selectRolesUsuario$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((roles) => {
+        this.roles = roles;
+      });
+
+    this.sessionQuery.selectUsuarioState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.userId = state.idUsuario;
+      });
+
+    const URL_ACTUAL = this.router.url;
+    const URL_SEPARADA = URL_ACTUAL.split('/');
+    this.url = URL_SEPARADA.slice(0, 3).join('/');
+
+    this.obtenerCadenaOriginal();
+  }
+
+  obtenerCadenaOriginal(): void {
+    if (!this.userProfile || this.roles.length === 0 || !this.userId) {
+      console.error('User profile, roles or userId not loaded yet');
+      return;
+    }
+    const PAYLOAD: CadenaOriginalRequest = {
+      num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
+      boolean_extranjero: true,
+      solicitante: {
+        rfc: this.userProfile.rfc,
+        nombre: this.userProfile.nombreCompleto,
+        es_persona_moral: this.userProfile.tipoPersona === 'M',
+        // eslint-disable-next-line no-warning-comments
+        //TODO donde se obtiene el certificado serial number
+        certificado_serial_number: 'string',
+      },
+      cve_rol_capturista: this.roles[0].codigoRol,
+      cve_usuario_capturista: this.userId,
+      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+    };
+    this.cadena
+      .obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje: resp.error || 'Error al generar la cadena original.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+          this.cadenaOriginal =
+            typeof resp.datos === 'string' ? resp.datos : 'cadenajemeplo';
+        },
+        error: (error) => {
+          console.error('Error al iniciar trámite:', error);
+          const MENSAJE =
+            error?.error?.error || 'Error inesperado al iniciar trámite.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        },
+      });
+  }
+
+  datosFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
+    this.datosFirmaReales = datos;
+    this.obtieneFirma(datos.firma);
+  }
+
+  obtieneFirma(firma: string): void {
+    if (!this.cadenaOriginal || !this.datosFirmaReales) {
+      console.error('Faltan datos para completar la firma');
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
+
+    const PAYLOAD: FirmarRequest = {
+      cadena_original: CADENAHEX,
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+      clave_rol: 'Solicitante',
+      sello: FIRMAHEX,
+      fecha_fin_vigencia: PasoDosComponent.formatFecha(
+        this.datosFirmaReales.fechaFin
+      ),
+      documentos_requeridos: [],
+    };
+
+    this.firma
+      .enviarFirma<string>(String(this.solicitudState.idSolicitud), PAYLOAD)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((firmaResponse: BaseResponse<string>) => {
+          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje:
+                firmaResponse.mensaje ||
+                firmaResponse.error ||
+                'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            throw new Error('Firma no exitosa');
+          }
+
+          this.folio = firmaResponse.datos;
+        }),
+        tap(() => {
+          this.tramiteStore.establecerTramite(
+            this.folio,
+            firma,
+            this.solicitudState.idSolicitud ?? 0,
+            this.procedure
+          );
+          this.router.navigate([`${this.url}/acuse`]);
+        }),
+        catchError((error) => {
+          console.error('Error en el proceso de firma:', error);
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje:
+                error?.error?.error ||
+                'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  static formatFecha(fecha: string | Date): string {
+    const DATE_OBJ = new Date(fecha);
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+
+    const YYYY = DATE_OBJ.getFullYear();
+    const MM = PAD(DATE_OBJ.getMonth() + 1);
+    const DD = PAD(DATE_OBJ.getDate());
+    const HH = PAD(DATE_OBJ.getHours());
+    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
+    const SS = PAD(DATE_OBJ.getSeconds());
+
+    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
