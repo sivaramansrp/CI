@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import {
   CatalogosSelect,
   ConfiguracionColumna,
+  InputCheckComponent,
   Notificacion,
   NotificacionesComponent,
   REGEX_RFC,
@@ -89,6 +90,7 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
     TituloComponent,
     CommonModule,
     InputRadioComponent,
+    InputCheckComponent,
     TablaDinamicaComponent,
     ModalModule,
     NotificacionesComponent,

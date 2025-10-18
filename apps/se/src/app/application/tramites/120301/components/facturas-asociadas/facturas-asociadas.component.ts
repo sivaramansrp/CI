@@ -272,7 +272,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   asociadastableColumns: ConfiguracionColumna<AsociadasTableColumns>[] = [
     {
-      encabezado: 'Candidad asociada',
+      encabezado: 'Cantidad asociada',
       clave: (fila) => fila.candidadAsociada,
       orden: 1,
     },
@@ -292,7 +292,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       orden: 4,
     },
     {
-      encabezado: 'Fecha de expedición de la factura',
+      encabezado: 'Fecha de emisión/expedición de la factura',
       clave: (fila) => fila.fechaExpedicionFactura,
       orden: 5,
     },
@@ -306,6 +306,16 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       clave: (fila) => fila.cantidadDisponible,
       orden: 7,
     },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (fila) => fila.unidadMedida,
+      orden: 8,
+    },
+    {
+      encabezado: 'Valor en dólares',
+      clave: (fila) => fila.valorDolares,
+      orden: 9,
+    }
   ];
 
   /**

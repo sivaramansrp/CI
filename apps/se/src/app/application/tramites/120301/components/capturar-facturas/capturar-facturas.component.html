@@ -44,7 +44,7 @@
                             facturaForm.get('numeroFactura')?.invalid &&
                             (facturaForm.get('numeroFactura')?.touched ||
                               facturaForm.get('numeroFactura')?.dirty)
-                        }">*</span>:
+                        }">*</span>
                     </label>
                     <input class="form-control" value="" id="numeroFactura" placeholder="" type="text" libUppercase
                       name="numeroFactura" formControlName="numeroFactura" (change)="
@@ -90,22 +90,24 @@
                     }
                   </div>
                 </div>
-              <div class="col-md-4">
-                <label for="unidadDeMedida" class="form-label">Unidad de medida*</label>
-                <select class="form-control" formControlName="unidadDeMedida" [disabled]="true || formularioDeshabilitado"
-                  (change)="setValoresStore(facturaForm, 'unidadDeMedida', 'setUnidadDeMedida')">
-                  <option value="">Seleccione una opción</option>
-                  <option *ngFor="let unidad of unidadDeMedida" [value]="unidad.clave">
-                    {{ unidad.descripcion }}
-                  </option>
-                </select>
-              </div>
-              
-              <div class="col-md-4">
+                <div class="col-md-4">
+                  <label for="unidadDeMedida" class="form-label">Unidad de medida*:</label>
+                  <select class="form-control" formControlName="unidadDeMedida"
+                    [disabled]="true || formularioDeshabilitado"
+                    (change)="setValoresStore(facturaForm, 'unidadDeMedida', 'setUnidadDeMedida')">
+                    <option value="">Seleccione una opción</option>
+                    <option *ngFor="let unidad of unidadDeMedida" [value]="unidad.clave">
+                      {{ unidad.descripcion }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-md-4">
                   <div class="form-group capturar-factura-datepicker">
                     <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
-                      [datos]="fechaInicioInputs" 
-                      (valorCambiado)="facturaForm.get('fechaExpedicionFactura')?.setValue($event)"  [deshabilitarFuturas]="true">
+                      [datos]="fechaInicioInputs"
+                      (valorCambiado)="facturaForm.get('fechaExpedicionFactura')?.setValue($event)"
+                      [deshabilitarFuturas]="true">
                     </input-fecha>
                   </div>
                   <div

@@ -197,7 +197,7 @@ export const EXPEDICION_FACTURA_FECHA = {
      * @property {string} labelNombre
      * Etiqueta descriptiva para el campo de fecha.
      */
-    labelNombre: 'Fecha de expedición de la factura:',
+    labelNombre: 'Fecha de expedición de la factura',
 
     /**
      * @property {boolean} required

@@ -19,7 +19,7 @@
       <div class="row alinear-inferior">
         <div class="col-md-6">
           <app-catalogo-select [catalogo]="anios" formControlName="anoDeLaConstancia"
-            [label]="'Año de la Constancia de registro'" [required]="true" [isDisabled]="formularioDeshabilitado"
+            [label]="'Año de la constancia de registro'" [required]="true" [isDisabled]="formularioDeshabilitado"
             [placeholder]="'Seleccione un año'"
             [markTouched]="fitosanitarioForm.get('anoDeLaConstancia')?.touched??false"></app-catalogo-select>
         </div>
@@ -52,7 +52,7 @@
     <div class="row">
       @if(visualizarEvaluacion){
       <div class="row pb-5">
-        <ng-titulo titulo="Representación-federal"></ng-titulo>
+        <ng-titulo titulo="Representación federal"></ng-titulo>
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="estado">Estado:</label>
