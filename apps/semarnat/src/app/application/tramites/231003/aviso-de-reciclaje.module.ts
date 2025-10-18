@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoUnoT231003Component } from './pages/solicitud-datos-solicitante/paso-uno-t231003.component';
+import { PasoUnoT231003Component } from './pages/paso-uno/paso-uno-t231003.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 

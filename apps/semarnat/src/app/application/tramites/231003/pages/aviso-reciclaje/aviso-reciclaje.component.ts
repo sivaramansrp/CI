@@ -12,7 +12,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoDeReciclajeServiceService } from '../../service/aviso-de-reciclaje-service.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
-import { PasoUnoT231003Component } from '../solicitud-datos-solicitante/paso-uno-t231003.component';
+import { PasoUnoT231003Component } from '../paso-uno/paso-uno-t231003.component';
 /**
  * Componente que representa la sección de aviso de reciclaje.
  * - selector: Etiqueta personalizada para utilizar este componente en otras plantillas.

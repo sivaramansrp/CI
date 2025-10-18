@@ -3,17 +3,21 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputRadioComponent,
+  MAX_DIGITS_VALIDATOR,
   Notificacion,
   NotificacionesComponent,
+  REGEX_DECIMAL,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import {
@@ -34,6 +38,7 @@ import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.st
 import { ResiduoPeligroso } from '../../../231002/models/aviso-catalogo.model';
 import { SoloNumericaDecimalDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numeros-punto/solo-numero-y-punto.directive';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
+import { ES_CONTROL_INVALIDO } from '../../../../shared/helpers';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -63,6 +68,16 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   styleUrl: './datos-residuos-peligrosos.component.scss',
 })
 export class DatosResiduosPeligrososComponent implements OnInit {
+  /** Mensaje de validación para campos obligatorios. */
+  mensajeCampoObligatorio: string = `<div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>`;
+
+  /**
+   * Función para verificar si un control de formulario es inválido.
+   */
+  esControlInvalido = ES_CONTROL_INVALIDO;
+
   /**
    * Evento emitido cuando se agrega un residuo peligroso.
    * El payload es un objeto `ResiduoPeligroso`.
@@ -161,6 +176,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   private inicializarFormularioMateriaPrima(): void {
     this.formularioMateriaPrima = this.fb.group({
+      /** Origen de generación de residuos (campo obligatorio) */
+      origenGeneracionResiduos: ['', Validators.required],
       /** Número de la materia prima (campo obligatorio) */
       numero: ['', Validators.required],
 
@@ -207,7 +224,15 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       residuoPeligroso: ['', Validators.required],
 
       /** Cantidad del residuo (obligatorio) */
-      cantidad: ['', Validators.required],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(REGEX_DECIMAL),
+          DatosResiduosPeligrososComponent.noCommaValidator,
+          DatosResiduosPeligrososComponent.maxDigitsValidator,
+        ],
+      ],
 
       /** Cantidad en letra (campo deshabilitado por defecto) */
       cantidadLetra: [{ value: '', disabled: true }],
@@ -452,12 +477,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Realiza limpieza de formularios y estados al final.
    */
   agregarResiduoPeligroso(): void {
-    // Validar que se hayan agregado materias primas
-    if (this.materiasPrimas.length === 0) {
-      // Mostrar mensaje de error si no hay materias primas
-      this.esFormaValido = true;
-      this.alertaErrorFormulario =
-        'Debe agregar al menos una materia prima relacionada';
+    this.validarFormularios();
+    if (!this.esFormaValido) {
       return;
     }
 
@@ -623,16 +644,82 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   };
 
   /**
-   * Convierte una cantidad numérica a su representación en letra y la asigna al control correspondiente.
-   * @param cantidad - Valor numérico en string a convertir.
+   * Valida los formularios y muestra mensajes de error si es necesario.
    */
-  obtenerLetraCantidad(cantidad: string): void {
-    this.formularioResiduo.get('cantidadLetra')?.enable();
-    this.formularioResiduo.patchValue({
-      cantidadLetra: ConvertNumberAmountToStringAmount.convierteNumerosALetra(
-        parseFloat(cantidad)
-      ),
-    });
-    this.formularioResiduo.get('cantidadLetra')?.disable();
+  validarFormularios(): void {
+    const ES_FORM_VALIDO = this.formularioResiduo.valid;
+    if (!ES_FORM_VALIDO) {
+      this.alertaErrorFormulario = 'Faltan campos por capturar.';
+      this.formularioResiduo.markAllAsTouched();
+    }
+    const MATERIAS_VALIDAS = this.materiasPrimas.length > 0;
+    if (!MATERIAS_VALIDAS) {
+      this.esFormaValido = false;
+      this.alertaErrorFormulario =
+        'Debe agregar al menos una materia prima relacionada';
+    }
+
+    if (ES_FORM_VALIDO && MATERIAS_VALIDAS) {
+      this.esFormaValido = true;
+      this.alertaErrorFormulario = '';
+    } else {
+      DatosResiduosPeligrososComponent.scrollModalToTop();
+    }
+  }
+
+  /**
+   * Desplaza el modal hacia arriba para asegurar que los mensajes de error sean visibles.
+   */
+  static scrollModalToTop(): void {
+    const MODAL_ELEMENT = document.getElementById('modalAgregarMercancias');
+    if (MODAL_ELEMENT) {
+      // intenta el body del modal primero, luego modal-content, finalmente el propio elemento
+      const MODAL_BODY = MODAL_ELEMENT.querySelector(
+        '.modal-body'
+      ) as HTMLElement | null;
+      const MODAL_CONTENT = MODAL_ELEMENT.querySelector(
+        '.modal-content'
+      ) as HTMLElement | null;
+      const SCROLL_TARGET =
+        MODAL_BODY ?? MODAL_CONTENT ?? (MODAL_ELEMENT as HTMLElement);
+
+      if (SCROLL_TARGET && typeof SCROLL_TARGET.scrollTo === 'function') {
+        SCROLL_TARGET.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      } else if (SCROLL_TARGET) {
+        (SCROLL_TARGET as HTMLElement).scrollTop = 0;
+        return;
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /**
+   * Validator personalizado para verificar que no se ingrese coma.
+   */
+  private static noCommaValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const VALUE = control.value;
+    if (VALUE && VALUE.includes(',')) {
+      return { noComma: true };
+    }
+    return null;
+  }
+
+  /**
+   * Validator personalizado para verificar el máximo de 6 dígitos significativos.
+   */
+  private static maxDigitsValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const VALUE = control.value;
+    if (VALUE) {
+      const REGEX = MAX_DIGITS_VALIDATOR;
+      if (!REGEX.test(VALUE)) {
+        return { maxDigits: true };
+      }
+    }
+    return null;
   }
 }

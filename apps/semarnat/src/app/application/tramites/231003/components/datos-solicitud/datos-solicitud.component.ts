@@ -34,6 +34,7 @@ import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
+import { ES_CONTROL_INVALIDO } from '../../../../shared/helpers';
 import { Modal } from 'bootstrap';
 import { ResiduoPeligroso } from '../../../231002/models/aviso-catalogo.model';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
@@ -43,6 +44,7 @@ import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
  * Se hace un cast del JSON importado al tipo `SolicitudJson`.
  */
 const RADIO_OPCIONES = rawData as SolicitudJson;
+
 /**
  * Componente que representa la sección de datos de la solicitud.
  */
@@ -62,6 +64,17 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+  /** Mensaje de validación para campos obligatorios. */
+  mensajeCampoObligatorio: string = `<div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>`;
+
+  /** Indica si el formulario es válido. */
+  esFormaValido: boolean = true;
+
+  /** Verifica si algún campo del formulario es inválido. */
+  esControlInvalido = ES_CONTROL_INVALIDO;
+
   /** Indica si el botón de borrar (acciones en tabla) está habilitado. */
   borrarHabilitado: boolean = false;
 
@@ -588,6 +601,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.datoSolicitudStore.actualizarResiduos(this.administrarResiduos);
   }
 
+  /**
+   * Valida todos los formularios del componente.
+   * @returns Un valor booleano que indica si todos los formularios son válidos.
+   */
   validaTodoLosFormularios(): boolean {
     const IS_VALID =
       this.solicitudForm.valid &&
@@ -598,9 +615,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     if (!IS_VALID) {
       this.marcarCamposcomoTocados();
     }
+    this.esFormaValido = IS_VALID;
     return IS_VALID;
   }
 
+  /**
+   * Marca todos los campos de los formularios como tocados para activar las validaciones visuales.
+   */
   marcarCamposcomoTocados(): void {
     this.solicitudForm.markAllAsTouched();
     this.formularioEmpresaTransportista.markAllAsTouched();

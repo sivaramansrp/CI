@@ -21,7 +21,7 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
     // Información de la empresa recicladora
     empresaReciclaje: {
       // Indicador de si se requiere empresa recicladora (valor inicial: "Si")
-      requiereEmpresa: 'Si',
+      requiereEmpresa: '',
 
       // Nombre de la empresa recicladora
       nombreEmpresa: '',
