@@ -39,7 +39,7 @@ import { Rol } from '@libs/shared/data-access-user/src/core/models/usuario/rol.m
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, FirmaElectronicaComponent],
+  imports: [CommonModule, FirmaElectronicaComponent, NotificacionesComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
@@ -118,25 +118,35 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   obtenerCadenaOriginal(): void {
-    if (!this.userProfile || this.roles.length === 0 || !this.userId) {
-      console.error('User profile, roles or userId not loaded yet');
-      return;
-    }
     const PAYLOAD: CadenaOriginalRequest = {
       num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
       boolean_extranjero: true,
       solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'Juan Pérez',
+        es_persona_moral: true,
+        certificado_serial_number: 'string',
+      },
+      cve_rol_capturista: 'CapturistaGubernamental',
+      cve_usuario_capturista: 'Gubernamental',
+      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+    };
+    // eslint-disable-next-line no-warning-comments
+    //TODO this is going to be updated when certificado service and other sources are ready
+    /*const PAYLOAD: CadenaOriginalRequest = {
+      num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
+      boolean_extranjero: true,
+      solicitante:{
         rfc: this.userProfile.rfc,
         nombre: this.userProfile.nombreCompleto,
         es_persona_moral: this.userProfile.tipoPersona === 'M',
         // eslint-disable-next-line no-warning-comments
-        //TODO donde se obtiene el certificado serial number
         certificado_serial_number: 'string',
       },
       cve_rol_capturista: this.roles[0].codigoRol,
       cve_usuario_capturista: this.userId,
       fecha_firma: PasoDosComponent.formatFecha(new Date()),
-    };
+    };*/
     this.cadena
       .obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD)
       .subscribe({
@@ -222,7 +232,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<string>) => {
-          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+          // eslint-disable-next-line no-warning-comments
+          //TODO descomentar hasta que la configuración del trámite se haya hecho
+          /*if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -238,8 +250,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
             };
             throw new Error('Firma no exitosa');
           }
-
-          this.folio = firmaResponse.datos;
+          this.folio = firmaResponse.datos;*/
+          this.folio = 'sdfjak234j3242addddsafsda23342342';
         }),
         tap(() => {
           this.tramiteStore.establecerTramite(
@@ -259,8 +271,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
               modo: 'action',
               titulo: 'Error inesperado',
               mensaje:
-                error?.error?.error ||
-                'Ocurrió un error al procesar la firma.',
+                error?.error?.error || 'Ocurrió un error al procesar la firma.',
               cerrar: false,
               txtBtnAceptar: '',
               txtBtnCancelar: '',

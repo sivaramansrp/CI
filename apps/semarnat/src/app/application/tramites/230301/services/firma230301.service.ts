@@ -29,7 +29,6 @@ export class Firma230301Service {
   ): Observable<BaseResponse<T>> {
     const ENDPOINT =
       `${this.urlServer}/api/` + API_POST_FIRMA.replace(IDSOLICITUD, idSolicitud);
-
     return this.http.post<BaseResponse<T>>(ENDPOINT, payload).pipe(
       map((response) => response),
       catchError(() => {

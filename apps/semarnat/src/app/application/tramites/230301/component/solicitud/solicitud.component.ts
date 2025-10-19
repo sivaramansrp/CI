@@ -6,19 +6,15 @@ import {
   Tramite230301State,
   Tramite230301Store,
 } from '../../estados/tramites/tramites230301.store';
-import {
-  map,
-  takeUntil,
-} from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
 
-import { Solicitud230301Query } from '../../estados/queries/tramites230301.query';
+import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 
 import {
   ConsultaioQuery,
   ConsultaioState,
   SeccionLibQuery,
-  SeccionLibStore,
 } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
 
@@ -68,7 +64,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    * @param {DesistimientoSolicitudService} desistimientoService - Servicio para manejar solicitudes de desistimiento.
    * @param {Tramite230301Store} desistimientoStore - Almacén para gestionar el estado de la solicitud.
-   * @param {Solicitud230301Query} consultaSolicitud230301 - Consulta para obtener el estado de la solicitud.
+   * @param {Tramite230301Query} consultaSolicitud230301 - Consulta para obtener el estado de la solicitud.
    * @param {SeccionLibQuery} seccionQuery - Consulta para obtener el estado de la sección.
    * @param {SeccionLibStore} seccionStore - Almacén para gestionar el estado de la sección.
    */
@@ -76,7 +72,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private desistimientoService: DesistimientoSolicitudService,
     private readonly desistimientoStore: Tramite230301Store,
-    private consultaSolicitud230301: Solicitud230301Query,
+    private consultaSolicitud230301: Tramite230301Query,
     private readonly seccionQuery: SeccionLibQuery,
     private readonly consultaioQuery: ConsultaioQuery
   ) {
@@ -90,7 +86,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Suscripción al estado de la solicitud
-    this.consultaSolicitud230301.estadoSolicitud$
+    this.consultaSolicitud230301.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -145,6 +141,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
     });
+
+    this.formDesistimiento
+      .get('motivoDesistimiento')
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((motivo) => {
+        this.desistimientoStore.setMotivoDesistimiento(motivo);
+      });
   }
 
   /**
@@ -153,11 +156,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private initializeComponent(): void {
     this.desistimientoStore.setInitialState({
+      //T0DO this will come from the parent tramite 230101
       //folioAnterior: this.consultaioState.folioTramite,
       //tipoSolicitud: this.consultaioState.tipoDeTramite,
-      folioAnterior: "23030502300100120255090000031",
-      tipoSolicitud: "Certificado fitosanitario tipo de solicitud anterior etc etc",
-      solicitudAnterior: Number(this.consultaioState.id_solicitud),
+      //solicitudAnterior: Number(this.consultaioState.id_solicitud),
+      folioAnterior: '0200800100220210814000022',
+      tipoSolicitud:
+        'Certificado fitosanitario tipo de solicitud anterior etc etc',
+      solicitudAnterior: 202734928,
     });
     this.crearDesistimientoForm();
     if (this.formularioDeshabilitado) {

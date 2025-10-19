@@ -7,17 +7,16 @@ import {
   LoginState,
   Notificacion,
   PASOS,
+  PASOS2,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import {
-  ERROR_FORMA_ALERT,
-  MSG_REGISTRO_EXITOSO,
-} from '../../enum/constants';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../enum/constants';
 import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 
 import {
-  Tramite230301State, Tramite230301Store
+  Tramite230301State,
+  Tramite230301Store,
 } from '../../estados/tramites/tramites230301.store';
 
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -45,7 +44,7 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
   nuevaNotificacion: Notificacion | null = null;
   alertaNotificacion!: Notificacion;
   folioTemporal = 0;
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -109,11 +108,29 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
 
   private ejecutaGuardado(): Observable<ResultadoSolicitud> {
     const PAYLOAD: Solicitud230301Request = {
-      rfc: this.loginState.rfc,
-      motivoDesistimiento: this.solicitud230301State.motivoDesistimiento,
-      solicitudAnterior: this.solicitud230301State.solicitudAnterior,
-      folioAnterior: this.solicitud230301State.folioAnterior,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'IGNACIO EDUARDO',
+        es_persona_moral: true,
+        certificado_serial_number: '3082054030820428a00302010',
+      },
+      motivo_desistimiento: this.solicitud230301State.motivoDesistimiento,
+      id_solicitud_anterior: this.solicitud230301State.solicitudAnterior,
+      id_folio_anterior: this.solicitud230301State.folioAnterior,
     };
+
+    // eslint-disable-next-line no-warning-comments
+    //TODO usuario state or login state do not have this values and certificado is going to be implemented later, meanwhile we're using fixed values.
+    /**solicitante: {
+     rfc: this.loginState.rfc,
+     nombre: this.usuarioState.perfilUsuario?.nombreCompleto || '',
+     es_persona_moral: this.usuarioState.perfilUsuario?.tipoPersona === 'M',
+     certificado_serial_number: this.loginState.certificadoSerialNumber,
+     },
+     motivoDesistimiento: this.solicitud230301State.motivoDesistimiento,
+     solicitudAnterior: this.solicitud230301State.solicitudAnterior,
+     folioAnterior: this.solicitud230301State.folioAnterior,
+     };*/
 
     return this.desistimientoService.guardarSolicitud(PAYLOAD).pipe(
       map((response) => {
@@ -175,12 +192,6 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
 
   private navigateWizard(e: AccionBoton): void {
     let newIndex = e.valor;
-    if (e.accion === 'cont') {
-      newIndex++;
-    } else if (e.accion === 'ant') {
-      newIndex--;
-    }
-
     if (newIndex > 0 && newIndex <= this.pasos.length) {
       this.indice = newIndex;
       this.actualizarDatosPasos();

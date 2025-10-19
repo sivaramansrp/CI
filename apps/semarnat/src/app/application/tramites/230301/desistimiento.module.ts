@@ -22,7 +22,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 @NgModule({
   declarations: [
     DesistimientoSolicitudComponent,
-    PasoDosComponent,
     PasoUnoComponent,
     SolicitudComponent,
   ],
@@ -39,11 +38,12 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     ToastrModule.forRoot(),
+    PasoDosComponent,
   ],
   providers: [
     ToastrService,
     provideHttpClient(),
-    DesistimientoSolicitudService
+    DesistimientoSolicitudService,
   ],
 })
-export class DesistimientoModule { }
+export class DesistimientoModule {}
