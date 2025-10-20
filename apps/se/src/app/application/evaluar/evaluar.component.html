@@ -41,6 +41,11 @@
                         </div>
                     </ng-container>
                     }
+                @if (banderaObservacionDictamen === false) {
+                    <ng-container>
+                        <app-observacion-dictamen></app-observacion-dictamen>
+                    </ng-container>
+                }
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
