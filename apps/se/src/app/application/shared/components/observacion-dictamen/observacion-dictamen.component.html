@@ -1,0 +1,15 @@
+<ng-titulo [titulo]="'Justificación del dictamen'" />
+
+<div>
+    <textarea id="justificacion" class="form-control justificacion-box" placeholder="Observación para el dictamen" [disabled]="true"> </textarea>
+</div>
+
+<ng-titulo [titulo]="'Observaciones al dictamen'" />
+
+<div class="col-md-12">
+    <app-tabla-dinamica 
+        [configuracionTabla]="tablaObservacionesDictamen" 
+        [datos]="evaluarObservacionesDictamen">
+    </app-tabla-dinamica>
+</div>
+

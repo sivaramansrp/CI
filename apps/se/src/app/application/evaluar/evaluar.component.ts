@@ -64,6 +64,7 @@ import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 import { DocumentosEspecificosRequest } from '../core/models/atender-requerimiento/request/documentos-especificos.model';
+import { ObservacionDictamenComponent } from '../shared/components/observacion-dictamen/observacion-dictamen.component';
 
 /**
  * @component
@@ -100,12 +101,18 @@ import { DocumentosEspecificosRequest } from '../core/models/atender-requerimien
     FirmaElectronicaComponent,
     CapturarRequerimientoComponent,
     SolicitarDocumentosEvaluacionComponent,
-    SolicitarOpinionComponent, NotificacionesComponent],
+    SolicitarOpinionComponent, NotificacionesComponent,
+    ObservacionDictamenComponent],
   templateUrl: './evaluar.component.html',
   styleUrl: './evaluar.component.scss',
 })
 export class EvaluarComponent implements OnInit, OnDestroy {
 
+  /**
+   * @description Indica si se debe mostrar la sección de observación del dictamen.
+   * @property {boolean} banderaObservacionDictamen
+   */
+  public banderaObservacionDictamen: boolean = false;
   /**
    * @property {boolean} sentidoInputTramite110101
    * @description Indica si el input de sentido para el trámite 110101 está habilitado.
