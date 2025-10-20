@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://136.112.181.241:9090",
+    "target": "http://136.112.181.241:80",
     "secure": false,
     "changeOrigin": true,
     "headers": {
