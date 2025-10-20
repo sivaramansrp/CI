@@ -10,16 +10,36 @@
   <div class="row">
     @switch (indice) { @case (1) {
     <app-paso-uno></app-paso-uno>
-    } @case (2) {
-    <app-paso-dos></app-paso-dos>
+    }@case (2) {
+    <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'260203'"
+      [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+      (reenviarCargaRealizada)="cargaRealizada($event)"
+      (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
     } @case (3) {
-    <app-paso-tres></app-paso-tres>
+    <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260203"
+      [procedureUrl]="'medicamentos-registro-sanitario/solicitud'"></paso-firma>
+    }
+    }
 
-    } }
+    <div class="row">
+      <div class="col-md-12">
+        @if (indice !== 2) {
+        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"></btn-continuar>
+        } @else {
+        <div class="mt-5 mb-3 d-flex justify-content-end">
+          <button type="button" class="btn btn-default" (click)="anterior()" *ngIf="seccionCargarDocumentos">
+            Anterior
+          </button>
 
-    <btn-continuar
-      [datos]="datosPasos"
-      (continuarEvento)="getValorIndice($event)"
-    ></btn-continuar>
+          <button class="btn btn-primary ms-3" (click)="
+              seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
+            " [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos">
+            {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+    <ng-alert [CONTENIDO]="TEXTOS.Aviso"></ng-alert>
   </div>
 </div>

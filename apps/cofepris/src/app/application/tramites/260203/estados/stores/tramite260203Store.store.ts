@@ -19,6 +19,8 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * Representa el estado de la aplicación para el trámite 260203.
  */
 export interface Tramite260203State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Lista de destinatarios finales en la tabla de datos.
    */
@@ -106,6 +108,7 @@ export interface Tramite260203State {
  */
 export function createInitialState(): Tramite260203State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -346,6 +349,15 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     this.update((state) => ({
       ...state,
       indice,
+    }));
+  }
+   /**
+   * Actualiza el estado con el nuevo valor de `idSolicitud`.
+   */
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }
