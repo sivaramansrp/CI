@@ -57,7 +57,8 @@
                     [habilitarFechasPorAceptacion]="config.habilitarFechas"
                     [anexo222se]="config.anexo222se"
                     [inputSentidos]="vistasModificacion110101.actualizarVista"
-                    [sentidoInput]="sentidoInputTramite110101">
+                    [sentidoInput]="sentidoInputTramite110101"
+                    (controlDictaminador)="onDictaminador($event)">
                     </app-generar-dictamen>
                     }
                     @case (2) {
@@ -138,6 +139,7 @@
             [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
                 [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
                 [envioDigital]="envioDigital" [opinion]="opinion"
+                [esDictaminador]="calificacionDictaminador"
                 [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
                 (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
                 (tabSeleccionado)="onTabSeleccionado($event)"

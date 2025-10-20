@@ -2,7 +2,7 @@
 import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TabEvaluarTratadosResponse, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { EmpaqueResponse, InsumoResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -56,6 +56,12 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} esCalificacionBandera
+   * @description Indica si se está mostrando boton de calificación con bandera.
+   * Por defecto es false.
+   */
+  @Input() esCalificacionBandera: boolean = false;
 
   /**
    * Evento que se emite cuando los tratados son actualizados.

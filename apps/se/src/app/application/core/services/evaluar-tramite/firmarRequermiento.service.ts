@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_POST_FIRMAR_REQUERIMIENTO, ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { API_POST_FIRMAR_REQUERIMIENTO, API_POST_OFICIO_REQUERIMIENTO, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
@@ -41,4 +41,16 @@ export class FirmarRequermientoService {
     return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
   }
 
+  /**
+   * Guarda el oficio de un requerimiento específico.
+   *
+   * @param tramite - Identificador del trámite asociado al requerimiento.
+   * @param idSolicitud - Identificador de la solicitud a guardar.
+   * @returns Observable que emite la respuesta del servicio, sin datos adicionales (null) en el body.
+   */
+  postGuardarOficioRequerimiento(tramite: number, idSolicitud: string, ):
+    Observable<BaseResponse<null>> {
+    const ENDPOINT = `${this.host}${API_POST_OFICIO_REQUERIMIENTO(tramite.toString(), idSolicitud)}`;
+    return this.http.post<BaseResponse<null>>(ENDPOINT, null);
+  }
 }

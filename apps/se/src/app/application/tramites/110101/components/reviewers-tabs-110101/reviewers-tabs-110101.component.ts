@@ -52,6 +52,12 @@ import { Pantallas110101Module } from '../../pantallas/pantallas.module';
   styleUrl: './reviewers-tabs-110101.component.scss',
 })
 export class ReviewersTabs110101Component implements OnChanges, OnInit {
+  /**
+   * @property {boolean} esDictaminador
+   * @description Indica si aparece el boton dictaminador.
+   * Por defecto es false.
+   */
+  @Input() esDictaminador: boolean = false;
 
   /**
    * Este evento se emite cuando los tratados datos son actualizados.

@@ -107,6 +107,12 @@ import { ObservacionDictamenComponent } from '../shared/components/observacion-d
   styleUrl: './evaluar.component.scss',
 })
 export class EvaluarComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} calificacionDictaminador
+   * @description Indica la calificación actual del dictaminador.
+   * Por defecto es false, lo que significa que no se puede ver el boton dictaminador.
+   */
+  calificacionDictaminador: boolean = false;
 
   /**
    * @description Indica si se debe mostrar la sección de observación del dictamen.
@@ -1199,6 +1205,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     });
   }
+  /**
+   * Establece el estado del calificador dictaminador.
+   * Actualiza el valor que indica si el usuario actúa como dictaminador en el proceso de calificación.
+   */
+  onDictaminador(valor: boolean): void{
+    this.calificacionDictaminador = valor;
+  }
 
   /**
    * @method getSentidosDisponibles
@@ -1823,6 +1836,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
+            if(this.vistasModificacion110101.actualizarVista){
+              this.postDocumentoRequerimiento();
+            }
             this.router.navigate(['bandeja-de-tareas-pendientes']);
           }
 
@@ -1844,6 +1860,60 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Realiza una petición para guardar y generar el oficio de requerimiento.
+   * Maneja la respuesta mostrando notificaciones de éxito o error según corresponda.
+ */
+  postDocumentoRequerimiento(): void {
+    this.firmarRequermientoService.postGuardarOficioRequerimiento(this.tramite, this.guardarDatos.id_solicitud)
+       .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error generar oficio',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Ocurrió un error al generar el oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error generar oficio';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
   }
 
   /**

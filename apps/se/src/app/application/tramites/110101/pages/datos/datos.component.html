@@ -31,7 +31,7 @@
                 <li [ngClass]="indice === 1 ? 'active' : ''">
                     <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
                 </li>
-
+                @if (this.consultaState.parameter !== "AtenderRequerimiento") {
                 <li [ngClass]="indice === 3 ? 'active' : ''">
                  <a data-toggle="tab" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)"
                     [class.disabled]="desactivado">Mercancia</a>
@@ -43,7 +43,7 @@
                 <a data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
                     (keydown.space)="seleccionaTab(6)" role="button" tabindex="3">Protesto de Decir Verdad</a>
                </li>
-
+               }
             }
 
            
@@ -65,7 +65,7 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-            <app-tratados (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
+            <app-tratados [esCalificacionBandera]="esDictaminadorBandera" (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
             }
             @case (3) {
             <app-datos-mercancia></app-datos-mercancia>

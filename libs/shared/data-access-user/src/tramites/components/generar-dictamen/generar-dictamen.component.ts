@@ -38,6 +38,12 @@ import { Subject } from "rxjs";
   styleUrl: './generar-dictamen.component.scss',
 })
 export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * @event controlDictaminador
+   * @description Emite un valor booleano al componente padre indicando el estado del dictaminador.
+   * Si se emite true, el dictaminador está activo; si se emite false, está inactivo.
+   */
+  @Output() controlDictaminador: EventEmitter<boolean> = new EventEmitter();
 
   /**
    * @property {boolean} sentidoInput
@@ -216,6 +222,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
     if(this.inputSentidos){
       this.dictamenForm.removeControl('cumplimiento');
     }
+     this.controlDictaminador.emit(true); 
   }
 
   /**
@@ -384,5 +391,6 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+     this.controlDictaminador.emit(false);
   }
 }

@@ -643,7 +643,13 @@ export const API_POST_DOCUMENTOS_ESPECIFICOS_REQ = (TRAMITE: string) : string =>
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
  */
 export const API_POST_FIRMAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
- 
+
+/**
+ * API para generar el oficio del requerimiento del trámite 110101
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Generar-Requerimiento/guardar-oficio-requerimiento
+ */
+export const API_POST_OFICIO_REQUERIMIENTO = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/${IDSOLICITUD}/requerimiento/oficio`;
+
 /**
  * API para iniciar requerimiento trámite generico
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/in…

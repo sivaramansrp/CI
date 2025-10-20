@@ -16,7 +16,7 @@
         <ng-container>
             @switch (indice) {
             @case (0) {
-            <app-datos (tratadosEmitidos)="onTratadosDesdeDatos($event)"></app-datos>
+            <app-datos (tratadosEmitidos)="onTratadosDesdeDatos($event)" [esDictaminadorBandera]="esDictaminador"></app-datos>
             }
             @case (1) {
             <lib-documentos [documentos]="documentos"></lib-documentos>
