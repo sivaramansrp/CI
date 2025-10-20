@@ -100,8 +100,13 @@ export class ValidacionesFormularioService {
     return DIA_SELECCIONADO > HOY ? null : { minDate: true };
   }
 
+  /**
+   * Valida que el valor no sea menor a uno.
+   * @param control - Control del formulario que contiene el valor a validar.
+   * @returns Un objeto con el error `noMenosUno` si el valor es inválido, o `null` si es válido.
+   */
   static noMenosUnoValor(control: AbstractControl): ValidationErrors | null {
-    return control.value < 1 ? { noMenosUno: true } : null;
+    return control.value < 0 ? { noMenosUno: true } : null;
   }
 
   /**
