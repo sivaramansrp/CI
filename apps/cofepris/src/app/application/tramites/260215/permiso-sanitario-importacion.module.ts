@@ -1,3 +1,7 @@
+import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarFabricanteContenedoraComponent } from './components/agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
+import { AgregarFacturadorContenedoraComponent } from './components/agregar-facturador-contenedora/agregar-facturador-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
 import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component';
@@ -43,7 +47,12 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     DatosDeLaComponent,
     AvisoDePrivacidadComponent,
-    TercerosRelacionadosVistaComponent
+    TercerosRelacionadosVistaComponent,
+    AgregarFacturadorContenedoraComponent,
+    AgregarDestinatarioFinalContenedoraComponent,
+    AgregarProveedorContenedoraComponent,
+    AgregarFabricanteContenedoraComponent
+
   ],
   providers: [
     ServiciosPermisoSanitarioService,
