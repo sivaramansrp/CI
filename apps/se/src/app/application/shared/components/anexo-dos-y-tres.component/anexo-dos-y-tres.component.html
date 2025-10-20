@@ -38,6 +38,9 @@
                 [configuracionTabla]="anexo1y3Configuartion.anexoDosEncabezadoDeTabla" [datos]="anexoDosTablaLista"
                 (listaDeFilaSeleccionada)="setAnexoDosLista($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+            </ul>
         </div>
     </form>
 
@@ -87,7 +90,8 @@
 </div>
 @if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {
 <section>
-    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="confirmarEliminacionDos()">
+    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion"
+        (confirmacionModal)="confirmarEliminacionDos($event)">
     </lib-notificaciones>
 </section>
 }
