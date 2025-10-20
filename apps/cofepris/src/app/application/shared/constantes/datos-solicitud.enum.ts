@@ -257,7 +257,114 @@ export const PRODUCTO_TABLA = [
     orden: 19,
   }
 ];
-
+export const PRODUCTO_TABLA_218 = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.clasificacionProducto, // Reemplaza 'ele.clasificacionProducto' con la clave correcta
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string =>
+      ele.especificarClasificacionProducto, // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específica del producto',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    orden: 3,
+  },
+  {
+    encabezado: 'Denominación distintiva',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
+    orden: 4,
+  },
+  {
+    encabezado: 'Denominación común, nombre común o nombre científico',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
+    orden: 5,
+  },
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado físico',
+    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
+    orden: 7,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: TablaMercanciasDatos): string => ele.fraccionArancelaria, // Reemplaza 'ele.fraccionArancelaria' con la clave correcta
+    orden: 8,
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    orden: 9,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+    orden: 10,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
+    orden: 11,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    orden: 12,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    orden: 13,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
+    orden: 14,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
+    orden: 15,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisOrigen, // Reemplaza 'ele.paisOrigen' con la clave correcta
+    orden: 16,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisProcedencia, // Reemplaza 'ele.paisProcedencia' con la clave correcta
+    orden: 17,
+  },
+  {
+    encabezado: 'Tipo producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    orden: 18,
+  },
+  {
+    encabezado: 'Uso especifico',
+    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
+    orden: 19,
+  },
+    {
+    encabezado: 'Fecha de caducidad',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.caducidad,
+    orden: 20,
+  },
+];
 /**
  * Constante que representa los datos de la tabla de mercancías para productos.
  *
