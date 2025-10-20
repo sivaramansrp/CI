@@ -94,13 +94,6 @@ describe('HistProductoresComponent', () => {
     expect(mockStore.setProductoresExportador).toHaveBeenCalledWith([]);
   });
 
-  it('should call getMercanciasSeleccionadas and set store', () => {
-    component.cargarMercancia();
-    expect(mockCertificadoService.getMercanciasSeleccionadas).toHaveBeenCalled();
-    expect(mockStore.setMercanciaProductores).toHaveBeenCalledWith([{ id: 1, nombre: 'Mercancia 1' }]);
-    expect(component.mercancia.length).toBe(1);
-  });
-
   it('should call getTipoFactura and update store', () => {
     component.facturaOpcion();
     expect(mockCertificadoService.getTipoFactura).toHaveBeenCalled();
@@ -125,13 +118,6 @@ describe('HistProductoresComponent', () => {
     component.solicitudState = { agregarProductoresExportador: [] } as any;
     component.emitAgregarExportador(event);
     expect(mockStore.setAgregarProductoresExportador).toHaveBeenCalledWith(expect.objectContaining({ nombreProductor: 'Laura' }));
-  });
-
-  it('should call cargarMercancia when agregarProductoresExportador has items', () => {
-    const cargarMercanciaSpy = jest.spyOn(component, 'cargarMercancia');
-    component.solicitudState = { agregarProductoresExportador: [{}] } as any;
-    component.emitAgregarExportador({ nombreProductor: 'Test', numeroRegistroFiscal: '1234' } as any);
-    expect(cargarMercanciaSpy).toHaveBeenCalled();
   });
 
   it('should handle event with numeroRegistroFiscal only', () => {

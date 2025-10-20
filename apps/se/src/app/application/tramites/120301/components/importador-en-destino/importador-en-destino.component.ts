@@ -28,6 +28,7 @@ import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enu
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ImportadorDestinoResponse } from '../../models/response/importador-destino-response.model'
 import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
+import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -151,6 +152,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  validarFormulario: boolean = false;
 
   /**
    * @property {TextilesState} importadorState - Estado actual del importador.
@@ -202,6 +204,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
     private importeRecordService: ImporteRecordService,
     private cdr: ChangeDetectorRef,
     private evaluacionSolicitud: DetalleEvaluaconSolicitudService,
+    private tramite120301: Tramite120301Store,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -255,6 +258,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
           }
           this.seccionStore.establecerSeccion([true]);
           this.seccionStore.establecerFormaValida([true]);
+          this.validarFormulario = this.importadorForm.valid;
+          this.tramite120301.setValidarFormularioImportadorDestino(this.validarFormulario);
         })
       )
       .subscribe();
@@ -483,6 +488,30 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
   guardarFilaEditada(): void {
     this.enviada = true;
   }
+
+  /**
+   * @method activarAlertasValidacion
+   * @description Activa las alertas de validación del formulario cuando hay campos requeridos sin completar.
+   * Este método marca todos los campos como touched, actualiza la validez del formulario y muestra
+   * el mensaje de error si el formulario es inválido. Se utiliza principalmente cuando se necesita
+   * mostrar las alertas de validación desde componentes padre.
+   * @returns {void} No retorna ningún valor
+   * @public
+   */
+  public activarAlertasValidacion(): void {
+    this.importadorForm.markAllAsTouched();
+    this.importadorForm.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.importadorForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+    } else {
+      this.esFormaValido = false;
+      this.formularioAlertaError = '';
+    }
+  }
+
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.

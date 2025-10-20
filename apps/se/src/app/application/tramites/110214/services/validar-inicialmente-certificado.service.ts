@@ -1,11 +1,10 @@
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { CatalogoLista, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validar-inicialmente-certificado.model';
 import { Observable, map } from 'rxjs';
+import { PROC_110214, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { PROC_110214 } from '../servers/api-route';
-import { ProductorExportador } from '../models/validar-inicialmente-certificado.model';
 import { Tramite110214Query } from '../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../estados/tramites/tramite110214.store';
 /**
@@ -61,10 +60,10 @@ export class ValidarInicialmenteCertificadoService {
   /**
    * Obtiene la información del productor por exportador.
    * 
-   * @returns {Observable<ProductorExportador>} Un observable con los datos del productor por exportador.
+   * @returns {Observable<Record<string, unknown>>} Un observable con los datos del productor por exportador.
    */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http.get<ProductorExportador>('assets/json/110214/productor-exportador.json');
+  obtenerProductorPorExportador(rfc: string): Observable<Record<string, unknown>> {
+    return this.http.get<Record<string, unknown>>(PRODUCTORS_EXPORTADOR(rfc));
   }
 
   /**
@@ -303,5 +302,9 @@ export class ValidarInicialmenteCertificadoService {
       {},
       false
     );
+  }
+
+  agregarProductores(body: {rfc_solicitante: string}): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110214.AGREGAR_PRODUCTOR, { body: body });
   }
 }

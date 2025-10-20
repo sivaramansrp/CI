@@ -69,6 +69,7 @@ describe('ValidarInicialmenteCertificadoService', () => {
     });
 
     it('should fetch productores/exportadores', () => {
+        const loginRFC = 'AAL0409235E6';
         const mockResponse: ProductorExportador = {
             datos: [
                 {
@@ -83,11 +84,11 @@ describe('ValidarInicialmenteCertificadoService', () => {
             ],
         };
 
-        service.obtenerProductorPorExportador().subscribe((response) => {
+        service.obtenerProductorPorExportador(loginRFC).subscribe((response) => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110214/productor-exportador.json');
+        const req = httpMock.expectOne(`assets/json/110214/productor-exportador.json?loginRFC=${loginRFC}`);
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });

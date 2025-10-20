@@ -38,7 +38,7 @@
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()" (errorValidacion)="alErrorDeValidacion($event)" (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)"></app-paso-uno>
+      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged($event)" (errorValidacion)="alErrorDeValidacion($event)" (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {

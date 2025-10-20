@@ -33,6 +33,8 @@ export interface Mercancia {
   fechaDePago?: string;
   valorDeContenidoRegional?: string;
   numeroDeSerie?: string;
+  rfcProductor1?: string; 
+  rfcProductor?: string;
 }
 
 export interface ConfiguracionColumna<T> {
