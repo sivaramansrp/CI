@@ -8,6 +8,7 @@ import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-pri
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ContenedorDeDatosSolicitudComponent } from './components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { DatosDeLaComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
@@ -51,7 +52,8 @@ import { provideHttpClient } from '@angular/common/http';
     AgregarFacturadorContenedoraComponent,
     AgregarDestinatarioFinalContenedoraComponent,
     AgregarProveedorContenedoraComponent,
-    AgregarFabricanteContenedoraComponent
+    AgregarFabricanteContenedoraComponent,
+    ContenedorDeDatosSolicitudComponent
 
   ],
   providers: [

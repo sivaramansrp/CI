@@ -1,3 +1,4 @@
+import { DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Destinatario ,Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
@@ -7,6 +8,10 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud260215
  */
 export interface Solicitud260215State {
+   /**
+     * Configuración de opciones de la tabla.
+     */
+    opcionConfigDatos: TablaOpcionConfig[];
    /**
    * Lista de proveedores relacionados con el trámite.
    */
@@ -30,6 +35,8 @@ export interface Solicitud260215State {
    * @type {string}
    */
   cadenaDependencia: string;
+    datosSolicitudFormState: DatosSolicitudFormState;
+
 
   /**
    * banco
@@ -227,11 +234,18 @@ destinatarioFinalTablaDatos: Destinatario[];
      * Lista de facturadores relacionados con el trámite.
      */
     facturadorTablaDatos: Facturador[];
+     /**
+       * Configuración de datos de la tabla SCIAN.
+       */
+      scianConfigDatos: TablaScianConfig[];
+        tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+    
     
   /**
    * Lista de destinatarios finales relacionados con el trámite.
    */
   destinatarioFinalTablaModificaDatos: Destinatario[];
+    opcionesColapsableState: boolean;
 
 }
 
@@ -243,6 +257,11 @@ export function createInitialState(): Solicitud260215State {
     /**
    * Lista de facturadores relacionados con el trámite.
    */
+    opcionesColapsableState:false,
+  datosSolicitudFormState: {} as DatosSolicitudFormState,
+    tablaMercanciasConfigDatos: [],
+  scianConfigDatos: [],
+    opcionConfigDatos: [],
   destinatarioFinalTablaModificaDatos:[],
   fabricanteTablaModificaDatos:[],
   facturadorTablaModificaDatos: [],
@@ -1155,4 +1174,34 @@ public updateDestinatarioFinalTablaDatos(
         facturadorTablaModificaDatos: tabSeleccionado,
       }));
     }
+      public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
+    this.update((state) => ({
+      ...state,
+      opcionConfigDatos,
+    }));
+  }
+    public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
+    this.update((state) => ({
+      ...state,
+      scianConfigDatos,
+    }));
+  }
+    public updateTablaMercanciasConfigDatos(
+    tablaMercanciasConfigDatos: TablaMercanciasDatos[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tablaMercanciasConfigDatos: tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos: [],
+    }));
+  }
+   public updateDatosSolicitudFormState(
+      datosSolicitudFormState: DatosSolicitudFormState
+    ): void {
+      this.update((state) => ({
+        ...state,
+        datosSolicitudFormState,
+      }));
+    }
+
 }
