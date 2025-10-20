@@ -374,7 +374,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103, 260213,
+  260207, 260209, 260201, 260219, 260302, 260304, 260103
 ];
 
 /**
@@ -494,7 +494,7 @@ export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
  * @description Arreglo que contiene los identificadores relacionados con el representante legal.
  * @type {number[]}
  */
-export const REPRESENTANTE_LEGAL = [260208, 260213];
+export const REPRESENTANTE_LEGAL = [260208];
 
 /**
  * @const BANCO
@@ -842,3 +842,12 @@ export const CAMPOS_CLAVE = [
  * }
  */
 export const REPRESENTANTE_LEGAL_EN_INIT = [260101];
+
+
+
+/**
+ * @const REPRESENTANTE_LEGAL
+ * @description Arreglo que contiene los identificadores relacionados con el representante legal.
+ * @type {number[]}
+ */
+export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];

@@ -334,6 +334,7 @@
     }
 
     <div class="row">
+@if(fraccionArancelariaCatalog){
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
@@ -359,6 +360,7 @@
             (change)="cambiarFraccionArancelaria()"
             (keydown)="validarFraccionArancelaria()"
           />
+
           <div
             class="mensaje-error"
             *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched"
@@ -381,7 +383,23 @@
           </div>
         </div>
       </div>
+    }
+
+    @else{
+      <div class="col-md-10">
+        <div class="form-group">
+         <app-catalogo-select
+            [catalogo]="fraccionArancelariaDatos"
+            formControlName="fraccionArancelaria"
+            [label]="'Fracción arancelaria'"
+            [required]="true"
+            [markUntouched]="mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched ? true : false"
+            name="fraccionArancelaria"
+          ></app-catalogo-select>
+      </div>
     </div>
+  }
+  </div>
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">

@@ -24,6 +24,7 @@ import {
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  FEACCION_AFRACCION_ARANCELARIA_CATALOG,
   TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
 } from '../../constantes/datos-solicitud.enum';
@@ -92,6 +93,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   @Output() cerrarModal = new EventEmitter<void>();
 
   requiedField:boolean = false;
+
+
+  fraccionArancelariaCatalog:boolean = true;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -199,6 +203,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @description Catalog of commercial unit quantities used to populate the form.
    */
   public cantidadUmcDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} fraccionArancelariaDatos
+   * @description Catalog of tariff fractions used to populate the form.
+   */
+  public fraccionArancelariaDatos!: Catalogo[];
 
   /**
    * @property {boolean} paisDeOriginColapsable
@@ -452,6 +462,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       'cantidadUmcDatos',
       '/cofepris/cantidadUmcDatos.json'
     );
+     this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'fraccionArancelariaDatos',
+      '/cofepris/cantidadUmcDatos.json'
+    );
 
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
       this.idProcedimiento
@@ -476,6 +491,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * `agregar()` o `quitar()` según corresponda.
    */
   ngAfterViewInit(): void {
+    this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
     this.paisDeProcedenciaBotonsUno = [
       {
         btnNombre: 'Agregar todos',
