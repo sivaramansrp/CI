@@ -101,7 +101,7 @@ export class ValidacionesFormularioService {
   }
 
   static noMenosUnoValor(control: AbstractControl): ValidationErrors | null {
-    return control.value < 0 ? { noMenosUno: true } : null;
+    return control.value < 1 ? { noMenosUno: true } : null;
   }
 
   /**
