@@ -2,7 +2,7 @@
   <form [formGroup]="agregarEnlaceOperativoForm">
     <div class="row">
       <div class="col-md-12">
-        <ng-titulo titulo="Representante Legal" />
+        <ng-titulo [titulo]="modoModificar ? 'Modificar' : 'Agregar'" />
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="rfcTercero"
@@ -20,11 +20,8 @@
 
         />
         @if (agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.invalid && (agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.touched || agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.dirty)) {
-          @if (agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.hasError('required')) {
-            <small class="mensaje-error">Este campo es obligatorio</small>
-          }
-          @if (agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.hasError('pattern')) {
-            <small class="mensaje-error">Formato de RFC inválido</small>
+          @if (agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.hasError('maxlength')) {
+            <small class="mensaje-error">Por favor, no escriba más de 15 caracteres.</small>
           }
         }
       </div>
@@ -146,6 +143,13 @@
           [disabled]="esFormularioSoloLectura"
 
         />
+        @if (agregarEnlaceOperativoForm.get('agregarEnlaceCargo')?.invalid && (agregarEnlaceOperativoForm.get('agregarEnlaceCargo')?.dirty || agregarEnlaceOperativoForm.get('agregarEnlaceCargo')?.touched)) {
+          <div class="text-danger">
+            @if (agregarEnlaceOperativoForm.get('agregarEnlaceCargo')?.hasError('maxlength')) {
+              <small>Por favor, no escriba más de 250 caracteres.</small>
+            }
+          </div>
+        }
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="telefono">Teléfono:</label>
@@ -164,8 +168,8 @@
         />
         @if(agregarEnlaceTelefono?.invalid && (agregarEnlaceTelefono?.dirty || agregarEnlaceTelefono?.touched)) {
           <div class="text-danger">
-            @if(agregarEnlaceTelefono?.errors?.['pattern']) {
-              <small>Teléfono debe contener solo dígitos.</small>
+            @if(agregarEnlaceTelefono?.errors?.['maxlength']) {
+              <small>Por favor, no escriba más de 30 caracteres.</small>
             }
           </div>
         }
@@ -188,7 +192,9 @@
         @if(agregarEnlaceCorreoElectronico?.invalid && (agregarEnlaceCorreoElectronico?.dirty || agregarEnlaceCorreoElectronico?.touched)) {
           <div class="text-danger">
             @if(agregarEnlaceCorreoElectronico?.errors?.['email']) {
-              <small>Ingrese un correo electrónico válido.</small>
+              <small>Por favor, escriba una dirección de correo válida.</small>
+            } @else if(agregarEnlaceCorreoElectronico?.errors?.['maxlength']) { 
+              <small>Por favor, no escriba más de 320 caracteres.</small>
             }
           </div>
         }

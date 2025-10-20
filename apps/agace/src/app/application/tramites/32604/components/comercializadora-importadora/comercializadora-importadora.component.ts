@@ -420,7 +420,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'INFORMACION',
         categoria: 'INFORMACION',
         modo: 'action',
-        titulo: '',
+        titulo: 'Mensaje',
         mensaje: `Datos eliminados correctamente`,
         cerrar: false,
         tiempoDeEspera: 2000,
@@ -494,7 +494,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: '',
+          titulo: 'Mensaje',
           mensaje: 'Fecha Inválida. La Fecha actual no puede ser más grande que el día de hoy.',
           cerrar: false,
           tiempoDeEspera: 4000,
@@ -618,7 +618,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'INFORMACION',
       categoria: 'INFORMACION',
       modo: 'action',
-      titulo: '',
+      titulo: 'Mensaje',
       mensaje: 'Datos guardados correctamente.',
       cerrar: false,
       tiempoDeEspera: 2000,
@@ -682,7 +682,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: '',
+      titulo: 'Mensaje',
       mensaje: mensaje,
       cerrar: false,
       tiempoDeEspera: 2000,
@@ -715,7 +715,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'INFORMACION',
         categoria: 'INFORMACION',
         modo: 'action',
-        titulo: '',
+        titulo: 'Mensaje',
         mensaje: 'Debe seleccionar al menos un transportista para eliminar.',
         cerrar: false,
         tiempoDeEspera: 3000,
@@ -750,9 +750,45 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    */
   manejarConfirmacionEliminacion(confirmar: boolean): void {
     if (confirmar) {
+      // Eliminar los datos seleccionados
       this.eliminarDato();
+      setTimeout(() => {
+        // Cerrar el modal de Bootstrap correctamente usando la instancia Modal
+        if (this.transportistaElement) {
+          try {
+            const MODAL_INSTANCE = Modal.getOrCreateInstance(this.transportistaElement.nativeElement);
+            MODAL_INSTANCE.hide();
+          } catch (e) {
+            // fallback: remove backdrop and hide manually if needed
+            document.querySelectorAll('.modal-backdrop').forEach((el) => {
+              el.parentNode?.removeChild(el);
+            });
+            const MODAL_CONTAINER = document.getElementById('transportistas');
+            if (MODAL_CONTAINER) {
+              MODAL_CONTAINER.classList.remove('show');
+              MODAL_CONTAINER.setAttribute('aria-hidden', 'true');
+              MODAL_CONTAINER.setAttribute('style', 'display: none;');
+            }
+          }
+        }
+        // Limpiar la notificación de confirmación para evitar superposición
+        this.nuevaNotificacion = {} as Notificacion;
+        // Mostrar notificación de éxito
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'success',
+          mensaje: 'Datos eliminados correctamente',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          titulo: '',
+          modo: ''
+        };
+        this.mostrarNotificacion = true;
+      }, 300);
+    } else {
+      this.nuevaNotificacion = {} as Notificacion;
     }
-    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**

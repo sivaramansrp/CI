@@ -26,6 +26,15 @@ export interface RecibirNotificaciones {
  */
 export interface EnlaceOperativo {
   /**
+   * Ciudad y estado del enlace operativo (de datos externos).
+   */
+  ciudadestado?: string;
+
+  /**
+   * Cargo del enlace operativo (de datos externos).
+   */
+  agregarEnlaceCargo?: string;
+  /**
    * RFC del enlace operativo.
    * Es un identificador único asignado a la persona a nivel fiscal.
    */
@@ -133,6 +142,15 @@ export interface EnlaceOperativo {
  * Este campo es opcional y sirve como identificador único para la persona que realiza la solicitud.
  */
 export interface RepresentanteLegal {
+  /**
+   * Ciudad y estado del representante legal (de datos externos).
+   */
+  ciudadestado?: string;
+
+  /**
+   * Cargo del representante legal (de datos externos).
+   */
+  agregarEnlaceCargo?: string;
   /**
    * ID de la persona solicitante.
    * Este campo es opcional y sirve como identificador único para la persona que realiza la solicitud.

@@ -1198,7 +1198,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'INFORMACION',
         modo: 'action',
-        titulo: 'Alerta',
+        titulo: '',
         mensaje: 'Datos guardados correctamente',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
@@ -1323,7 +1323,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'INFORMACION',
         modo: 'action',
-        titulo: 'Alerta',
+        titulo: '',
         mensaje: 'Datos guardados correctamente',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
@@ -2370,7 +2370,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
             tipoNotificacion: 'alert',
             categoria: 'INFORMACION',
             modo: 'action',
-            titulo: 'Alerta',
+            titulo: '',
             mensaje: 'Datos guardados correctamente',
             cerrar: true,
             txtBtnAceptar: 'Aceptar',
@@ -2825,18 +2825,31 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   eliminarInventariosDatos(): void {
     if (this.seleccionarInventarios.length > 0) {
-      // Crear una nueva copia del array excluyendo los elementos seleccionados
       const INVENTARIOS_ACTUALIZADOS = this.inventariosDatos.filter(inventario => 
         !this.seleccionarInventarios.some(seleccionado => seleccionado.nombre === inventario.nombre)
       );
-      
       this.inventariosDatos = [...INVENTARIOS_ACTUALIZADOS];
-      
-      // Limpiar la selección después de eliminar
       this.seleccionarInventarios = [];
-      
-      // Mostrar mensaje de confirmación
-      this.abrirModal('Inventarios eliminados correctamente.');
+      setTimeout(() => {
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Inventarios eliminados correctamente.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarNotificacion = true;
+        setTimeout(() => {
+          const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+          BACKDROPS.forEach(backdrop => backdrop.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('padding-right');
+        }, 300);
+      }, 100);
     }
   }
 
@@ -2873,16 +2886,30 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.listaSeccionSociosIC.splice(INDICE_SOCIO, 1);
         }
       });
-      
-      // Limpiar la selección después de eliminar
       this.seleccionarListaSeccionSociosIC = [];
-      
-      // Actualizar el store con los datos modificados
       this.solicitud32604Store.actualizarListaSeccionSociosIC(this.listaSeccionSociosIC);
-      
-      // Forzar la actualización de la vista
       this.listaSeccionSociosIC = [...this.listaSeccionSociosIC];
       this.cdr.detectChanges();
+      setTimeout(() => {
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Socios eliminados correctamente.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarNotificacion = true;
+        setTimeout(() => {
+          const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+          BACKDROPS.forEach(backdrop => backdrop.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('padding-right');
+        }, 300);
+      }, 100);
     }
   }
 
@@ -2911,20 +2938,33 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   eliminarDomiciliosDatos(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
-      // Crear una nueva copia del array excluyendo los elementos seleccionados
       const DOMICILIOS_ACTUALIZADOS = this.domiciliosDatos.filter(domicilio => 
         !this.seleccionarDomiciliosDatos.some(seleccionado => 
           seleccionado.tipoInstalacion === domicilio.tipoInstalacion
         )
       );
-      
       this.domiciliosDatos = [...DOMICILIOS_ACTUALIZADOS];
-      
-      // Limpiar la selección después de eliminar
       this.seleccionarDomiciliosDatos = [];
-      
-      // Mostrar mensaje de confirmación
-      this.abrirModal('Domicilios eliminados correctamente.');
+      setTimeout(() => {
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Domicilios eliminados correctamente.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarNotificacion = true;
+        setTimeout(() => {
+          const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+          BACKDROPS.forEach(backdrop => backdrop.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('padding-right');
+        }, 300);
+      }, 100);
     }
   }
 
@@ -2961,18 +3001,37 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.numeroDeEmpleadosLista.splice(INDICE_EMPLEADO, 1);
         }
       });
-      
-      // Limpiar la selección después de eliminar
       this.seleccionarNumeroDeEmpleadosLista = [];
-      
-      // Actualizar el store con los datos modificados
       this.solicitud32604Store.actualizarNumeroDeEmpleadosLista(this.numeroDeEmpleadosLista);
-      
-      // Forzar la actualización de la vista
       this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista];
       this.cdr.detectChanges();
+      setTimeout(() => {
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Registros de número de empleados eliminados correctamente.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarNotificacion = true;
+        setTimeout(() => {
+          const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+          BACKDROPS.forEach(backdrop => backdrop.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('padding-right');
+        }, 300);
+      }, 100);
     }
   }
+  /**
+   * Maneja la confirmación de eliminación, mostrando una alerta de éxito y limpiando el modal/backdrop.
+   * @param mensaje Mensaje de éxito a mostrar
+   */
+
 
   /**
    * Maneja los datos seleccionados desde el componente agregar.
@@ -3035,8 +3094,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: '¿Está seguro de que desea eliminar este domicilio?',
+      titulo: '',
+      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 0,
       txtBtnAceptar: 'Eliminar',
@@ -3055,7 +3114,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: 'Confirmar eliminación',
+      titulo: '',
       mensaje: '¿Está seguro de que desea eliminar este inventario?',
       cerrar: false,
       tiempoDeEspera: 0,
@@ -3071,12 +3130,27 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   confirmarEliminarSocios(): void {
+    // Se revocará para eliminar los registros múltiples.
+    if (this.seleccionarListaSeccionSociosIC.length !== 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'simple',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: ''
+      };
+      return;
+    }
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: '¿Está seguro de que desea eliminar este socio?',
+      titulo: '',
+      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 0,
       txtBtnAceptar: 'Eliminar',
@@ -3093,6 +3167,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   manejarConfirmacionEliminacion(confirmar: boolean): void {
     if (confirmar) {
+      const MOSTRAR_MENSAJE_ELIMINADO = ['domicilios', 'inventarios', 'socios'].includes(this.accionConfirmarEliminar);
       switch (this.accionConfirmarEliminar) {
         case 'domicilios':
           this.eliminarDomiciliosDatos();
@@ -3105,6 +3180,20 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           break;
         default:
           break;
+      }
+      if (MOSTRAR_MENSAJE_ELIMINADO) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'success',
+          modo: 'simple',
+          titulo: '',
+          mensaje: 'Se han eliminado los datos correctamente.',
+          cerrar: true,
+          tiempoDeEspera: 3000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: ''
+        };
+        this.mostrarNotificacion = true;
       }
     }
     this.accionConfirmarEliminar = '';

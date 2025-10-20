@@ -161,7 +161,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * 
    * @property {EnlaceOperativo[]} enlaceOperativosLista
    */
-  enlaceOperativosLista: EnlaceOperativo[] = [] as EnlaceOperativo[];
+  enlaceOperativosLista: EnlaceOperativo[] = [];
 
   /**
    * Referencia al componente de enlace operativo para abrir el modal.
@@ -264,8 +264,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.conseguirEnlaceOperativoDatos();
-    this.conseguirRecibirNotificaciones();
+  // this.conseguirEnlaceOperativoDatos(); // removed, table is blank by default
+  // Do not fetch notificaciones on load; table remains blank by default.
   }
 
   /**
@@ -329,6 +329,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 eliminarPedimento(borrar: boolean): void {
   if (borrar) {
     this.pedimentos.splice(this.elementoParaEliminar, 1);
+    const MENSAJE_ELIMINADO = 'Se han eliminado los datos correctamente.';
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      mensaje: MENSAJE_ELIMINADO,
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      titulo: '',
+      modo: ''
+    };
+    this.mostrarNotificacion = true;
   }
 }
 
@@ -377,8 +389,7 @@ eliminarPedimento(borrar: boolean): void {
             telefono: this.solicitud32604State.telefono,
             correoElectronico: this.solicitud32604State.correoElectronico,
           });
-          this.enlaceOperativosLista =
-            this.solicitud32604State.enlaceOperativosLista;
+          // Do NOT auto-populate enlaceOperativosLista from state
         })
       )
       .subscribe();
@@ -400,39 +411,8 @@ eliminarPedimento(borrar: boolean): void {
     return this.tercerosRelacionadosForm.get('correoElectronico');
   }
 
-  /**
-   * Método que obtiene la lista de notificaciones que puede recibir el tercero.
-   * 
-   * Se suscribe al servicio para obtener los tipos de notificaciones disponibles
-   * y los asigna a la propiedad correspondiente para su visualización en la tabla.
-   * 
-   * @memberof TercerosRelacionadosComponent
-   */
-  conseguirRecibirNotificaciones(): void {
-    this.empresasComercializadorasService
-      .conseguirRecibirNotificaciones()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((respuesta: RecibirNotificaciones[]) => {
-        this.orecibirNotificacionesLista = respuesta;
-      });
-  }
 
-  /**
-   * Método que obtiene los datos de enlace operativo para ser mostrados en la tabla.
-   * 
-   * Se suscribe al servicio para cargar la información de enlaces operativos
-   * disponibles y los asigna a la lista correspondiente para su visualización.
-   * 
-   * @memberof TercerosRelacionadosComponent
-   */
-  conseguirEnlaceOperativoDatos(): void {
-    this.empresasComercializadorasService
-      .conseguirEnlaceOperativoDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((respuesta: EnlaceOperativo[]) => {
-        this.enlaceOperativosLista = respuesta;
-      });
-  }
+  // conseguirEnlaceOperativoDatos removed: no longer needed, table is blank by default
 
   /**
    * Método que busca los datos de un tercero por su RFC.
@@ -445,56 +425,60 @@ eliminarPedimento(borrar: boolean): void {
    */
   buscarTerceroNacionalIDC(): void {
     const RFC_TERCERO = this.tercerosRelacionadosForm.get('rfcTercero')?.value;
-    
     // Validar que el campo RFC del tercero esté lleno
     if (!RFC_TERCERO?.trim()) {
       this.abrirModal('Debe capturar el RFC del tercero para realizar la búsqueda.');
       return;
     }
-    
     // Validar que el RFC del tercero sea válido
     if (this.tercerosRelacionadosForm.get('rfcTercero')?.invalid) {
       this.abrirModal('El RFC del tercero tiene un formato inválido.');
       return;
     }
-    
-    this.empresasComercializadorasService
-      .conseguirRepresentanteLegalDatos()
+    // Buscar en el JSON de terceros
+    this.empresasComercializadorasService.conseguirRepresentanteLegalDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (respuesta: RepresentanteLegal) => {
-          // Actualizar el store con los datos obtenidos
-          this.solicitud32604Store.actualizarRfc(respuesta.rfc);
-          this.solicitud32604Store.actualizarNombre(respuesta.nombre);
-          this.solicitud32604Store.actualizarApellidoPaterno(respuesta.apellidoPaterno);
-          this.solicitud32604Store.actualizarApellidoMaterno(respuesta.apellidoMaterno);
-          this.solicitud32604Store.actualizarTelefono(respuesta.telefono);
-          this.solicitud32604Store.actualizarCorreoElectronico(respuesta.correoElectronico);
-          
-          // Actualizar también los campos del formulario inmediatamente
-          this.tercerosRelacionadosForm.patchValue({
-            rfc: respuesta.rfc,
-            nombre: respuesta.nombre,
-            apellidoPaterno: respuesta.apellidoPaterno,
-            apellidoMaterno: respuesta.apellidoMaterno,
-            telefono: respuesta.telefono,
-            correoElectronico: respuesta.correoElectronico
-          });
-          
-          // Mostrar mensaje de éxito
-          this.alertaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'INFORMACION',
-            modo: 'action',
-            titulo: 'Alerta',
-            mensaje: 'Datos obtenidos correctamente.',
-            cerrar: true,
-            txtBtnAceptar: 'Aceptar',
-            txtBtnCancelar: '',
-          };
-          setTimeout(() => {
-            this.mostrarNotificacion = true;
-          }, 300);
+        next: (respuesta: RepresentanteLegal[] | RepresentanteLegal) => {
+          // Si el JSON es un array, buscar el RFC
+          let registro: RepresentanteLegal | null = null;
+          if (Array.isArray(respuesta)) {
+            const REGISTRO_ENCONTRADO = respuesta.find((item) => item.rfc?.trim().toUpperCase() === RFC_TERCERO.trim().toUpperCase());
+            registro = REGISTRO_ENCONTRADO ? REGISTRO_ENCONTRADO : null;
+          } else if (respuesta && respuesta.rfc) {
+            registro = respuesta.rfc?.trim().toUpperCase() === RFC_TERCERO.trim().toUpperCase() ? respuesta : null;
+          }
+          if (registro) {
+            this.solicitud32604Store.actualizarRfc(registro.rfc);
+            this.solicitud32604Store.actualizarNombre(registro.nombre);
+            this.solicitud32604Store.actualizarApellidoPaterno(registro.apellidoPaterno);
+            this.solicitud32604Store.actualizarApellidoMaterno(registro.apellidoMaterno);
+            this.solicitud32604Store.actualizarTelefono(registro.telefono);
+            this.solicitud32604Store.actualizarCorreoElectronico(registro.correoElectronico);
+            this.tercerosRelacionadosForm.patchValue({
+              rfc: registro.rfc,
+              nombre: registro.nombre,
+              apellidoPaterno: registro.apellidoPaterno,
+              apellidoMaterno: registro.apellidoMaterno,
+              telefono: registro.telefono,
+              correoElectronico: registro.correoElectronico
+            });
+            this.alertaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'INFORMACION',
+              modo: 'action',
+              titulo: '',
+              mensaje: 'Datos obtenidos correctamente.',
+              cerrar: true,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            setTimeout(() => {
+              this.mostrarNotificacion = true;
+            }, 300);
+          } else {
+            this.abrirModal('Ha proporcionado información con un formato incorrecto.');
+          }
         },
         error: (error) => {
           console.error('Error al buscar representante legal:', error);
@@ -583,6 +567,25 @@ eliminarPedimento(borrar: boolean): void {
       return;
     }
 
+    // Set selected values into agregarEnlaceOperativoForm before opening modal
+    if (this.seleccionEnlaceOperativoDatos.length === 1) {
+      const SELECCIONADO = this.seleccionEnlaceOperativoDatos[0];
+      // Patch the agregarEnlaceOperativoForm in the child component via ViewChild
+      const AGREGAR_ENLACE_OPERATIVO_COMPONENT = (this.modificacionEnlaceOperativoElement?.nativeElement?.querySelector('app-agregar-enlace-operativo')?.__ngContext__?.[8]) || null;
+      if (AGREGAR_ENLACE_OPERATIVO_COMPONENT && AGREGAR_ENLACE_OPERATIVO_COMPONENT.agregarEnlaceOperativoForm) {
+        AGREGAR_ENLACE_OPERATIVO_COMPONENT.agregarEnlaceOperativoForm.patchValue({
+          agregarEnlaceRfc: SELECCIONADO.rfc || '',
+          agregarEnlaceNombre: SELECCIONADO.nombre || '',
+          agregarEnlaceApellidoPaterno: SELECCIONADO.apellidoPaterno || '',
+          agregarEnlaceApellidoMaterno: SELECCIONADO.apellidoMaterno || '',
+          agregarEnlaceCiudadEstado: SELECCIONADO.ciudad || '',
+          agregarEnlaceCargo: SELECCIONADO.cargo || '',
+          agregarEnlaceTelefono: SELECCIONADO.telefono || '',
+          agregarEnlaceCorreoElectronico: SELECCIONADO.correo || '',
+          agregarEnlaceSuplente: SELECCIONADO.suplente || ''
+        });
+      }
+    }
     // Abrir el modal para modificar enlace operativo
     if (this.modificacionEnlaceOperativoElement) {
       const MODAL_INSTANCE = new Modal(
@@ -643,6 +646,15 @@ eliminarPedimento(borrar: boolean): void {
     const RFC_EXISTENTE = this.enlaceOperativosLista.find(enlace => enlace.rfc === evento.rfc);
     if (RFC_EXISTENTE) {
       this.abrirModal('Ya existe un enlace operativo con el RFC especificado.');
+      setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach((el) => {
+          el.parentNode?.removeChild(el);
+        });
+        const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
+        if (MODAL_CONTAINER) {
+          MODAL_CONTAINER.style.display = 'none';
+        }
+      }, 300);
       return;
     }
     
@@ -669,7 +681,7 @@ eliminarPedimento(borrar: boolean): void {
       tipoNotificacion: 'alert',
       categoria: 'INFORMACION',
       modo: 'action',
-      titulo: 'Alerta',
+      titulo: '',
       mensaje: 'Datos guardados correctamente.',
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
@@ -734,8 +746,8 @@ eliminarPedimento(borrar: boolean): void {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: '¿Está seguro de que desea eliminar este enlace operativo?',
+      titulo: '',
+      mensaje: '¿Desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 0,
       txtBtnAceptar: 'Eliminar',
@@ -752,8 +764,31 @@ eliminarPedimento(borrar: boolean): void {
   manejarConfirmacionEliminacion(confirmar: boolean): void {
     if (confirmar) {
       this.cerrarDialogoEnlaceOperativo();
+      setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach((el) => {
+          el.parentNode?.removeChild(el);
+        });
+        const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
+        if (MODAL_CONTAINER) {
+          MODAL_CONTAINER.style.display = 'none';
+        }
+
+        const MENSAJE_ELIMINADO = 'Se han eliminado los datos correctamente.';
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'success',
+          mensaje: MENSAJE_ELIMINADO,
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          titulo: '',
+          modo: ''
+        };
+        this.mostrarNotificacion = true;
+      }, 300);
+    } else {
+      this.nuevaNotificacion = {} as Notificacion;
     }
-    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**

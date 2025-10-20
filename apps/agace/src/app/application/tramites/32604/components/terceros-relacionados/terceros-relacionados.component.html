@@ -146,14 +146,14 @@
           <label>Enlace Operativo</label>
         </div>
         <div class="col-md-12">
-          <app-tabla-dinamica
-            [tipoSeleccionTabla]="enlaceOperativoTabla"
-            [configuracionTabla]="enlaceOperativoConfiguracionColumnas"
-            [datos]="enlaceOperativosLista"
-            (listaDeFilaSeleccionada)="seleccionEnlaceOperativo($event)"
-            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          >
-          </app-tabla-dinamica>
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="enlaceOperativoTabla"
+              [configuracionTabla]="enlaceOperativoConfiguracionColumnas"
+              [datos]="enlaceOperativosLista || []"
+              (listaDeFilaSeleccionada)="seleccionEnlaceOperativo($event)"
+              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            >
+            </app-tabla-dinamica>
         </div>
         <div class="col-12 mt-4 form-group text-end pull-right">
           <button
@@ -174,7 +174,7 @@
             class="btn btn-default me-2"
             data-bs-toggle="modal"
             data-bs-target="#agregarEnlaceOperativo"
-            (click)="guardarModificacionEnlaceOperativo()"
+            (click)="agregarEnlaceOperativoCmp.cargarEnlaceParaModificar(seleccionEnlaceOperativoDatos[0])"
             [disabled]="esFormularioSoloLectura || seleccionEnlaceOperativoDatos.length === 0">            
             Modificar
           </button>
@@ -216,6 +216,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg"  style="max-width: 100%; width: 100%;">
       <div class="modal-content">
         <app-agregar-enlace-operativo
+          #agregarEnlaceOperativoCmp
           (agregarEnlaceOperativo)="agregarEnlaceOperativo($event)"
         ></app-agregar-enlace-operativo>
       </div>

@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Subject, map, takeUntil } from 'rxjs';
@@ -21,6 +21,7 @@ import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+
 /**
  * Componente para agregar y gestionar enlaces operativos en el trámite 32604.
  * 
@@ -44,6 +45,35 @@ import { EmpresasComercializadorasService } from '../../services/empresas-comerc
  * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
  */
 export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
+  /** Estado de carga para el botón Buscar */
+  public cargandoBuscar: boolean = false;
+  /**
+   * Carga los datos de un enlace operativo en el formulario para modificar.
+   * @param enlace El objeto EnlaceOperativo a modificar
+   */
+  public cargarEnlaceParaModificar(enlace: EnlaceOperativo): void {
+    this.modoModificar = true;
+    this.agregarEnlaceOperativoForm.patchValue({
+      // agregarEnlaceRfcTercero is not in EnlaceOperativo, leave as is (user must search if needed)
+      agregarEnlaceRfc: enlace.rfc ?? '',
+      agregarEnlaceNombre: enlace.nombre ?? '',
+      agregarEnlaceApellidoPaterno: enlace.apellidoPaterno ?? '',
+      agregarEnlaceApellidoMaterno: enlace.apellidoMaterno ?? '',
+      agregarEnlaceCiudadEstado: enlace.ciudadestado ?? enlace.ciudad ?? '',
+      agregarEnlaceCargo: enlace.agregarEnlaceCargo ?? enlace.cargo ?? '',
+      agregarEnlaceTelefono: enlace.telefono ?? '',
+      agregarEnlaceCorreoElectronico: enlace.correo ?? '',
+      agregarEnlaceSuplente: enlace.suplente === '1' || enlace.suplente === 'true' || (typeof enlace.suplente === 'boolean' && enlace.suplente)
+    });
+    // Habilitar el formulario para edición si no es solo lectura
+    if (!this.esFormularioSoloLectura) {
+      this.agregarEnlaceOperativoForm.enable();
+    }
+  }
+  /**
+   * Indica si el formulario está en modo modificación
+   */
+  modoModificar: boolean = false;
   /**
    * Formulario reactivo para capturar los datos del enlace operativo.
    * 
@@ -210,7 +240,7 @@ abrirModal(i: number = 0): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
+    mensaje: 'Debe capturar todos los datos marcados como obligatorios',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
@@ -272,7 +302,7 @@ abrirModal(i: number = 0): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
       agregarEnlaceRfcTercero: [
         this.solicitud32604State.rfcTercero,
-        [Validators.required, Validators.pattern(REGEX_RFC)],
+        [Validators.required, Validators.maxLength(15)],
       ],
       agregarEnlaceRfc: [
         { value: this.solicitud32604State.rfc, disabled: true },
@@ -295,14 +325,14 @@ abrirModal(i: number = 0): void {
           disabled: true,
         },
       ],
-      agregarEnlaceCargo: [this.solicitud32604State.agregarEnlaceCargo],
+      agregarEnlaceCargo: [this.solicitud32604State.agregarEnlaceCargo, [Validators.maxLength(250)]],
       agregarEnlaceTelefono: [
         this.solicitud32604State.telefono,
-        [Validators.pattern(REGEX_SOLO_DIGITOS)],
+        [Validators.maxLength(30)],
       ],
       agregarEnlaceCorreoElectronico: [
         this.solicitud32604State.correoElectronico,
-        [Validators.email],
+        [Validators.email, Validators.maxLength(320)],
       ],
       agregarEnlaceSuplente: [this.solicitud32604State.agregarEnlaceSuplente],
     });
@@ -361,26 +391,111 @@ abrirModal(i: number = 0): void {
    * @memberof AgregarEnlaceOperativoComponent
    */
   buscarTerceroNacionalIDC(): void {
-    if (this.agregarEnlaceOperativoForm.get('rfcTercero')?.value) {
-      this.empresasComercializadorasService
-        .conseguirRepresentanteLegalDatos()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((respuesta: RepresentanteLegal) => {
-          this.solicitud32604Store.actualizarEnlaceRfc(respuesta.rfc);
-          this.solicitud32604Store.actualizarEnlaceNombre(respuesta.nombre);
-          this.solicitud32604Store.actualizarEnlaceApellidoPaterno(
-            respuesta.apellidoPaterno
-          );
-          this.solicitud32604Store.actualizarEnlaceApellidoMaterno(
-            respuesta.apellidoMaterno
-          );
-          this.solicitud32604Store.actualizarEnlaceTelefono(respuesta.telefono);
-          this.solicitud32604Store.actualizarEnlaceCorreoElectronico(
-            respuesta.correoElectronico
-          );
-        });
+  this.cargandoBuscar = true;
+  const RFC_INPUT = this.agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero')?.value;
+    // Validar que el campo RFC esté lleno
+    if (!RFC_INPUT?.trim()) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        titulo: '',
+        modo: ''
+      };
+      return;
     }
-    this.abrirModal();
+    // Validar que el RFC sea válido
+    const CONTROL_RFC_TERCERO = this.agregarEnlaceOperativoForm.get('agregarEnlaceRfcTercero');
+    if (CONTROL_RFC_TERCERO?.invalid) {
+      let mensaje = 'El RFC tiene un formato inválido.';
+      if (CONTROL_RFC_TERCERO.errors?.['pattern']) {
+        mensaje = 'El RFC no es de persona física.';
+      }
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        mensaje,
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        titulo: '',
+        modo: ''
+      };
+      return;
+    }
+    this.empresasComercializadorasService.conseguirRepresentanteLegalDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+      next: (respuesta: RepresentanteLegal[] | RepresentanteLegal) => {
+        let registro: RepresentanteLegal | null = null;
+        const RFC_ENTRADA = RFC_INPUT.trim().toUpperCase();
+        if (Array.isArray(respuesta)) {
+        const REGISTRO_ENCONTRADO = respuesta.find((item) => item.rfc?.trim().toUpperCase() === RFC_ENTRADA);
+        registro = REGISTRO_ENCONTRADO ? REGISTRO_ENCONTRADO : null;
+        } else if (respuesta && respuesta.rfc) {
+        registro = respuesta.rfc?.trim().toUpperCase() === RFC_ENTRADA ? respuesta : null;
+        }
+        if (registro) {
+        this.solicitud32604Store.actualizarEnlaceRfc(registro.rfc);
+        this.solicitud32604Store.actualizarEnlaceNombre(registro.nombre);
+        this.solicitud32604Store.actualizarEnlaceApellidoPaterno(registro.apellidoPaterno);
+        this.solicitud32604Store.actualizarEnlaceApellidoMaterno(registro.apellidoMaterno);
+        this.solicitud32604Store.actualizarEnlaceTelefono(registro.telefono);
+        this.solicitud32604Store.actualizarEnlaceCorreoElectronico(registro.correoElectronico);
+        this.agregarEnlaceOperativoForm.patchValue({
+          agregarEnlaceRfc: registro.rfc,
+          agregarEnlaceNombre: registro.nombre,
+          agregarEnlaceApellidoPaterno: registro.apellidoPaterno,
+          agregarEnlaceApellidoMaterno: registro.apellidoMaterno,
+          agregarEnlaceTelefono: registro.telefono,
+          agregarEnlaceCorreoElectronico: registro.correoElectronico,
+          agregarEnlaceCiudadEstado: registro.ciudadestado ?? '',
+          agregarEnlaceCargo: registro.agregarEnlaceCargo ?? ''
+        });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Datos obtenidos correctamente.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        } else {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          mensaje: 'Ha proporcionado información con un formato incorrecto.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          titulo: '',
+          modo: ''
+        };
+        }
+        this.cargandoBuscar = false;
+      },
+      error: (_error) => {
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        mensaje: 'No se encontró información para el RFC especificado o ocurrió un error en la consulta.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        titulo: '',
+        modo: ''
+        };
+        this.cargandoBuscar = false;
+      },
+      complete: () => {
+        this.cargandoBuscar = false;
+      }
+      });
   }
 
   /**
@@ -449,8 +564,9 @@ abrirModal(i: number = 0): void {
    * @memberof AgregarEnlaceOperativoComponent
    */
   actualizarEnlaceSuplente(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).checked;
-    this.solicitud32604Store.actualizarEnlaceSuplente(VALOR);
+  const VALOR = (evento.target as HTMLInputElement).checked;
+  this.agregarEnlaceOperativoForm.patchValue({ agregarEnlaceSuplente: VALOR });
+  this.solicitud32604Store.actualizarEnlaceSuplente(VALOR);
   }
 
   /**
@@ -471,6 +587,37 @@ abrirModal(i: number = 0): void {
    * Si no es válido, muestra los errores y previene el cierre del modal.
    */
   private validarYProcesarEnlaceOperativo(): void {
+  const ES_SUPLENTE = this.agregarEnlaceOperativoForm.get('agregarEnlaceSuplente')?.value === true;
+  if (ES_SUPLENTE) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Se debe registrar por lo menos un enlace operativo que no sea suplente.',
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+      this.agregarEnlaceOperativoForm.reset();
+      this.modoModificar = false;
+      setTimeout(() => {
+        const BTN_CERRAR_MODAL = document.getElementById('btnCancelar');
+        if (BTN_CERRAR_MODAL) {
+          (BTN_CERRAR_MODAL as HTMLButtonElement).click();
+        }
+        document.querySelectorAll('.modal-backdrop').forEach((el) => {
+          el.parentNode?.removeChild(el);
+        });
+        const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
+        if (MODAL_CONTAINER) {
+          MODAL_CONTAINER.style.display = 'none';
+        }
+      }, 300);
+      return;
+    }
     if (this.agregarEnlaceOperativoForm.valid) {
       this.procesarDatosEnlaceOperativo();
     } else {
@@ -529,12 +676,21 @@ abrirModal(i: number = 0): void {
     
     // Emitir los datos al componente padre
     this.agregarEnlaceOperativo.emit(OBJETO_JSON);
-    
+
     // Resetear el formulario después de envío exitoso
     this.agregarEnlaceOperativoForm.reset();
-    
-    // Cerrar el modal solo cuando los datos son válidos
-    AgregarEnlaceOperativoComponent.cerrarModal();
+
+    // Cerrar el modal y eliminar backdrop
+    setTimeout(() => {
+      AgregarEnlaceOperativoComponent.cerrarModal();
+      document.querySelectorAll('.modal-backdrop').forEach((el) => {
+        el.parentNode?.removeChild(el);
+      });
+      const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
+      if (MODAL_CONTAINER) {
+        MODAL_CONTAINER.style.display = 'none';
+      }
+    }, 300);
   }
 
   /**
