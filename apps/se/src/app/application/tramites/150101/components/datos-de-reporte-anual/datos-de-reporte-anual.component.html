@@ -14,8 +14,10 @@
           id="ventasTotales"
           class="form-control"
           formControlName="ventasTotales"
-          (change)="obtenerVentasTotales($event)"         
+          (blur)="obtenerVentasTotales($event)"
           (input)="limitarLongitud($event, 16)"
+          pattern="[0-9]*"
+          maxlength="16"
         />
       </div>
       <div class="col-md-4">
@@ -28,6 +30,8 @@
           class="form-control"
           formControlName="totalExportaciones"
           (input)="limitarLongitud($event, 16)"
+          pattern="[0-9]*"
+          maxlength="16"
         />
       </div>
       <div class="col-md-4">
@@ -67,7 +71,9 @@
       </div>
     </div>
   </form>
+  
+  <!-- Notification component -->
+  @if(nuevaNotificacion) {
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+  }
 </div>
-@if(nuevaNotificacion){
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
-  }  
