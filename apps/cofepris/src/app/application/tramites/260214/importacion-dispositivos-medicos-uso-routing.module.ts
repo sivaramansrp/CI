@@ -14,10 +14,6 @@ const ROUTES: Routes = [
     path: 'contenedor-de-pasos',
     component: ContenedorDePasosComponent,
   },
-  {
-      path: 'scian-selecion',
-      component: ScianTablaContenedoraComponent,
-    },
     {
       path: 'mercancia-datos',
       component: DatosMercanciaContenedoraComponent,
