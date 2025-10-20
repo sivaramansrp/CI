@@ -1,3 +1,4 @@
+import { HABILITAR_CONTROL } from './../../../../shared/helpers';
 import {
   AbstractControl,
   FormBuilder,
@@ -135,12 +136,43 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   fraccionesArancelariasCatalogo: Catalogo[] = [];
 
+  /** Catálogo de NICO para el dropdown */
+  nicosCatalogo: Catalogo[] = [];
+
+  /** Catálogo de CRETI para el dropdown */
+  cretiCatalogo: Catalogo[] = [];
+
+  /** Catálogo de estado físico para el dropdown */
+  estadoFisicoCatalogo: Catalogo[] = [];
+
+  /** Catálogo de tipos de contenedor para el dropdown */
+  tipoContenedorCatalogo: Catalogo[] = [];
+
+  /** Catálogo de unidades de medida para el dropdown */
+  unidadMedidaCatalogo: Catalogo[] = [];
+
+  /** Catálogo de clave de residuo para el dropdown */
+  cveResiducoCatalogo: Catalogo[] = [];
+
+  /** Catalogo de nombre de residuo para el dropdown */
+  nombreResiducoCatalogo: Catalogo[] = [];
+
+  /** Catalogo de descripcion de residuo para el dropdown */
+  descResiducoCatalogo: Catalogo[] = [];
   /**
    * Instancia del modal para gestionar archivos.
    *
    * Se utiliza para abrir o cerrar el modal de archivos.
    */
   modalInstances: Modal | null = null;
+
+  /** Estado de envío del formulario */
+  submitted = false;
+
+  /**
+   * NICO seleccionado actualmente en el formulario.
+   */
+  nicoSeleccionado!: Catalogo | null;
 
   /** Getter para verificar si el botón Agregar debe estar habilitado */
   get agregarHabilitado(): boolean {
@@ -198,67 +230,17 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   configuracionTablaMaterias: ConfiguracionColumna<MateriaResiduo>[] =
     MATERIA_RESIDUO_TABLA;
 
-  /** Datos de fracción arancelaria con sus NICOs relacionados */
-  private readonly fraccionArancelariaData = [
-    {
-      fraccionId: 1, // Corresponde al ID en el JSON de arancelaria
-      fraccionDescripcion: 'Polietileno con densidad superior o igual a 0,94',
-      nicos: [
-        {
-          nicoId: 'NICO001',
-          nicoDescripcion: 'Polietileno alta densidad granulado',
-          acotacion:
-            'Material plástico granulado de alta densidad utilizado para fabricación de envases y productos moldeados',
-        },
-        {
-          nicoId: 'NICO002',
-          nicoDescripcion: 'Polietileno alta densidad en polvo',
-          acotacion:
-            'Material plástico en polvo de alta densidad para procesos de extrusión y moldeo',
-        },
-      ],
-    },
-    {
-      fraccionId: 2,
-      fraccionDescripcion: 'Policarbonatos en formas primarias',
-      nicos: [
-        {
-          nicoId: 'NICO003',
-          nicoDescripcion: 'Policarbonato transparente',
-          acotacion:
-            'Resina de policarbonato transparente de alta resistencia para aplicaciones ópticas y estructurales',
-        },
-        {
-          nicoId: 'NICO004',
-          nicoDescripcion: 'Policarbonato reforzado',
-          acotacion:
-            'Policarbonato con fibra de vidrio para aplicaciones de alta resistencia mecánica',
-        },
-      ],
-    },
-    {
-      fraccionId: 3,
-      fraccionDescripcion:
-        'Los demás copolímeros de acrilonitrilo-butadieno-estireno',
-      nicos: [
-        {
-          nicoId: 'NICO005',
-          nicoDescripcion: 'ABS natural',
-          acotacion:
-            'Copolímero ABS en estado natural para moldeo por inyección y extrusión',
-        },
-        {
-          nicoId: 'NICO006',
-          nicoDescripcion: 'ABS ignífugo',
-          acotacion:
-            'Copolímero ABS con propiedades retardantes al fuego para aplicaciones eléctricas',
-        },
-      ],
-    },
-  ];
-
   /** Datos para la tabla dinámica */
   materiasPrimasTabla: MateriaResiduo[] = [];
+
+  /** Control para mostrar el combo de "Otro" en tipo de contenedor */
+  mostrarComboOtroTipo: boolean = false;
+
+  /** Control para mostrar el combo de "Otro" en estado físico */
+  mostrarOtroEdoFisico: boolean = false;
+
+  /** Control para mostrar el combo de "Otro" en tipo de contenedor */
+  mostrarOtroTipoContenedor: boolean = false;
 
   /**
    * Constructor del componente.
@@ -283,6 +265,14 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     this.crearFormularioResiduo();
     this.recuperarValoresDesdeStore();
+    this.obtenerFraccionesArancelarias();
+    this.obtenerCRETI();
+    this.obtenerEdoFisico();
+    this.obtenerTipoContenedor();
+    this.obtenerUnidadMedida();
+    this.obtenerCveResiduo();
+    this.obtenerNombreResiduo();
+    this.obtenerDescResiduo();
 
     // Inicialmente dropdowns vacíos hasta que se haga búsqueda/selección
     this.etiquetasForm.nombre = [];
@@ -342,6 +332,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       descripcion: [{ value: '', disabled: true }, Validators.required],
       creti: ['', Validators.required],
       estadoFisico: ['', Validators.required],
+      otroTipo: [''],
+      otroEdoFisico: [''],
+      otroContenedor: [''],
       manifiesto: ['', Validators.required],
       tipoContenedor: ['', Validators.required],
       capacidad: ['', Validators.required],
@@ -453,8 +446,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     this.formularioDatos.get('numero')?.markAsTouched();
 
     // Verificar si ya existe una materia prima con el mismo número de bitácora en la tabla
-    const MATERIA_EXISTENTE = this.materiasPrimas.find(
-      (materia) => materia.id_mercancia === NUMERO
+    const MATERIA_EXISTENTE = this.materiasPrimasTabla.find(
+      (materia) => materia.no_bitacora === NUMERO
     );
 
     if (MATERIA_EXISTENTE) {
@@ -482,6 +475,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       descripcion_umc: this.formularioDatos.get('unidadDeMedida')?.value,
       cve_fraccion_arancelaria:
         this.formularioDatos.get('fraccionArancelaria')?.value || '',
+      no_bitacora: this.formularioDatos.get('numero')?.value,
     };
 
     this.materiasPrimas.push(NUEVA_MATERIA);
@@ -492,11 +486,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     this.materiasPrimasCatalogo = this.materiasPrimasCatalogo.filter(
       (m) => m.clave !== NUEVA_MATERIA.id_mercancia.toString()
     );
-    this.fraccionesArancelariasCatalogo.push({
-      id: parseInt(NUEVA_MATERIA.cve_fraccion_arancelaria, 10),
-      clave: NUEVA_MATERIA.cve_fraccion_arancelaria,
-      descripcion: NUEVA_MATERIA.cve_fraccion_arancelaria,
-    });
   }
 
   /**
@@ -506,38 +495,10 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     const FRACCION_SELECCIONADA = this.formularioResiduo.get(
       'fraccionArancelaria'
     )?.value;
-
+    this.resetNico();
+    this.resetAcotacion();
     if (FRACCION_SELECCIONADA) {
-      // Convertir a número si viene como string para asegurar la comparación
-      const FRACCION_ID =
-        typeof FRACCION_SELECCIONADA === 'string'
-          ? parseInt(FRACCION_SELECCIONADA, 10)
-          : FRACCION_SELECCIONADA;
-
-      // Buscar la fracción seleccionada y cargar sus NICOs
-      const FRACCION_DATA = this.fraccionArancelariaData.find(
-        (f) => f.fraccionId === FRACCION_ID
-      );
-
-      if (FRACCION_DATA) {
-        // Actualizar las opciones del dropdown NICO
-        this.etiquetasForm.nico = FRACCION_DATA.nicos.map((nico, index) => ({
-          id: index + 1,
-          descripcion: `${nico.nicoId} - ${nico.nicoDescripcion}`,
-        }));
-      } else {
-        // Limpiar NICO si no se encuentra la fracción
-        this.etiquetasForm.nico = [];
-      }
-
-      // Limpiar los campos dependientes
-      this.formularioResiduo.get('nico')?.setValue('');
-      this.formularioResiduo.get('acotacion')?.setValue('');
-    } else {
-      // Limpiar todo si no hay fracción seleccionada
-      this.etiquetasForm.nico = [];
-      this.formularioResiduo.get('nico')?.setValue('');
-      this.formularioResiduo.get('acotacion')?.setValue('');
+      this.obtenerNicoPorFraccion(FRACCION_SELECCIONADA);
     }
   }
 
@@ -549,35 +510,35 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       'fraccionArancelaria'
     )?.value;
     const NICO_SELECCIONADO = this.formularioResiduo.get('nico')?.value;
+    this.nicoSeleccionado =
+      this.nicosCatalogo.find((nico) => nico.clave === NICO_SELECCIONADO) ??
+      null;
 
     if (FRACCION_SELECCIONADA && NICO_SELECCIONADO) {
-      // Convertir a número si viene como string
-      const FRACCION_ID =
-        typeof FRACCION_SELECCIONADA === 'string'
-          ? parseInt(FRACCION_SELECCIONADA, 10)
-          : FRACCION_SELECCIONADA;
-
-      // Buscar la fracción y el NICO seleccionados
-      const FRACCION_DATA = this.fraccionArancelariaData.find(
-        (f) => f.fraccionId === FRACCION_ID
-      );
-
-      if (FRACCION_DATA) {
-        // El NICO_SELECCIONADO viene como índice del dropdown, así que restamos 1
-        const NICO_INDEX = NICO_SELECCIONADO - 1;
-        const NICO_DATA = FRACCION_DATA.nicos[NICO_INDEX];
-
-        if (NICO_DATA) {
-          // Auto-llenar el campo de acotación
-          this.formularioResiduo
-            .get('acotacion')
-            ?.setValue(NICO_DATA.acotacion);
-        }
-      }
-    } else {
-      // Limpiar acotación si no hay selección completa
-      this.formularioResiduo.get('acotacion')?.setValue('');
+      this.catalogosService
+        .obtenerDescNico(NICO_SELECCIONADO, FRACCION_SELECCIONADA)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((nicosData) => {
+          this.formularioResiduo.get('acotacion')?.setValue(nicosData.datos);
+        });
     }
+  }
+
+  /**
+   * Resetea el campo de NICO y limpia su catálogo asociado.
+   */
+  resetNico(): void {
+    const NICO_CONTROL = this.formularioResiduo.get('nico');
+    NICO_CONTROL?.reset(null);
+    this.nicosCatalogo = [];
+  }
+
+  /**
+   * Resetea el campo de acotación.
+   */
+  resetAcotacion(): void {
+    const ACOTACION_CONTROL = this.formularioResiduo.get('acotacion');
+    ACOTACION_CONTROL?.reset(null);
   }
 
   /**
@@ -707,27 +668,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     });
     // Limpiar selecciones
     this.itemsSeleccionados.clear();
-    this.removerFraccionCombo(this.materiasPrimas);
     // Forzar actualización de la tabla
     this.materiasPrimasTabla = [...this.materiasPrimas];
-  }
-
-  /**
-   * remueve las fracciones que corresponden a las materias borradas
-   */
-  removerFraccionCombo(materiasResiduos: MateriaResiduo[]): void {
-    const CLAVES_FRACCIONES = materiasResiduos.map(
-      (materia) => materia.cve_fraccion_arancelaria
-    );
-    this.fraccionesArancelariasCatalogo =
-      this.fraccionesArancelariasCatalogo.filter((fraccion) =>
-        CLAVES_FRACCIONES.includes(fraccion.id.toString())
-      );
-
-    if (this.fraccionesArancelariasCatalogo.length === 0) {
-      this.formularioResiduo.get('fraccionArancelaria')?.setValue('');
-      this.formularioResiduo.get('fraccionArancelaria')?.reset(null);
-    }
   }
 
   /**
@@ -753,6 +695,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    * Agrega un residuo peligroso y emite el evento al componente padre
    */
   agregarResiduoPeligroso(): void {
+    this.submitted = true;
     if (!this.validarForms()) {
       return;
     }
@@ -764,7 +707,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
         this.formularioResiduo.get('fraccionArancelaria')?.value || '',
       nombreResiduo:
         this.formularioResiduo.get('residuoPeligroso')?.value || '',
-      nico: this.formularioResiduo.get('nico')?.value || '',
+      nico: this.nicoSeleccionado?.clave || '',
+      nicoDescripcion: this.nicoSeleccionado?.descripcion || '',
       acotacion: this.formularioResiduo.get('acotacion')?.value || '',
       nombreResiduoPeligroso:
         this.formularioResiduo.get('residuoPeligroso')?.value || '',
@@ -799,6 +743,43 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     // Emitir el evento con los datos
     this.residuoAgregado.emit(RESIDUO_DATA);
 
+    this.resetFormularios();
+
+    // Cerrar el modal usando Bootstrap's modal API
+    DatosResiduosPeligrososComponent.cerrarModal();
+  }
+
+  /**
+   * Valida el formulario de residuos peligrosos.
+   * @returns Verdadero si el formulario es válido, falso en caso contrario.
+   */
+  validarForms(): boolean {
+    const TIPO_CONTROL = this.formularioDatos.get('origenResiduo');
+    const FORMS_DATOS_VALID =
+      this.validarMateriasPrimas() && TIPO_CONTROL?.valid;
+    if (!FORMS_DATOS_VALID) {
+      this.esFormaValido = false;
+      this.formularioDatos.get('origenResiduo')?.markAsTouched();
+      this.alertaErrorFormulario = this.FALTAN_DATOS;
+    }
+    const FORMULARIO_RESIDUO_VALID = this.formularioResiduo.valid;
+    if (!FORMULARIO_RESIDUO_VALID) {
+      Object.keys(this.formularioResiduo.controls).forEach((key) => {
+        const CONTROL = this.formularioResiduo.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      this.alertaErrorFormulario = this.FALTAN_DATOS;
+    }
+    DatosResiduosPeligrososComponent.scrollModalToTop();
+    return (FORMS_DATOS_VALID && FORMULARIO_RESIDUO_VALID) ?? false;
+  }
+
+  /**
+   * Limpia la pantalla del modal
+   */
+  resetFormularios(): void {
     // Limpiar formularios y datos relacionados
     this.formularioResiduo.reset();
     this.formularioDatos.reset();
@@ -810,40 +791,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     // Limpiar mensaje de error si existe
     this.esFormaValido = true;
     this.alertaErrorFormulario = '';
-
-    // Cerrar el modal usando Bootstrap's modal API
-    DatosResiduosPeligrososComponent.cerrarModal();
-  }
-
-  /**
-   * Valida el formulario de residuos peligrosos.
-   * @returns Verdadero si el formulario es válido, falso en caso contrario.
-   */
-  validarForms(): boolean {
-    const FORMS_DATOS_VALID =
-      this.formularioDatos.invalid && !this.validarMateriasPrimas();
-    if (FORMS_DATOS_VALID) {
-      this.esFormaValido = false;
-      Object.keys(this.formularioDatos.controls).forEach((key) => {
-        const CONTROL = this.formularioDatos.get(key);
-        if (CONTROL) {
-          CONTROL.markAsTouched();
-        }
-      });
-      this.alertaErrorFormulario = this.FALTAN_DATOS;
-    }
-    const FORMULARIO_RESIDUO_VALID = this.formularioResiduo.invalid;
-    if (FORMULARIO_RESIDUO_VALID) {
-      Object.keys(this.formularioResiduo.controls).forEach((key) => {
-        const CONTROL = this.formularioResiduo.get(key);
-        if (CONTROL) {
-          CONTROL.markAsTouched();
-        }
-      });
-      this.alertaErrorFormulario = this.FALTAN_DATOS;
-    }
-    this.scrollModalToTop();
-    return !FORMS_DATOS_VALID || !FORMULARIO_RESIDUO_VALID;
   }
 
   /**
@@ -898,10 +845,10 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     const FRACCION_ID = this.formularioResiduo.get(
       'fraccionArancelaria'
     )?.value;
-    const FRACCION_DATA = this.fraccionArancelariaData.find(
-      (f) => f.fraccionId === Number(FRACCION_ID)
+    const FRACCION_DATA = this.fraccionesArancelariasCatalogo.find(
+      (f) => f.clave === FRACCION_ID
     );
-    return FRACCION_DATA ? FRACCION_DATA.fraccionDescripcion : '';
+    return FRACCION_DATA ? FRACCION_DATA.descripcion : '';
   };
 
   /**
@@ -911,10 +858,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getNicoName = (): string => {
     const NICO_ID = this.formularioResiduo.get('nico')?.value;
-    const FRACCION_DATA = this.fraccionArancelariaData.find(
-      (f) => f.fraccionId === Number(NICO_ID)
-    );
-    return FRACCION_DATA ? FRACCION_DATA.fraccionDescripcion : '';
+    const FRACCION_DATA = this.nicosCatalogo.find((f) => f.clave === NICO_ID);
+    return FRACCION_DATA ? FRACCION_DATA.descripcion : '';
   };
 
   /**
@@ -1092,7 +1037,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   /**
    * Desplaza el modal hacia arriba para asegurar que los mensajes de error sean visibles.
    */
-  private scrollModalToTop(): void {
+  static scrollModalToTop(): void {
     const MODAL_ELEMENT = document.getElementById('modalAgregarMercancias');
     if (MODAL_ELEMENT) {
       // intenta el body del modal primero, luego modal-content, finalmente el propio elemento
@@ -1114,6 +1059,192 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       }
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /**
+   * Obtiene el catálogo de fracciones arancelarias desde el servicio de catálogos.
+   */
+  obtenerFraccionesArancelarias(): void {
+    this.catalogosService
+      .obtenerFraccionesArancelarias()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.fraccionesArancelariasCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene la clave NICO asociada a una fracción arancelaria.
+   * @param fraccionCve - Clave de la fracción arancelaria.
+   */
+  obtenerNicoPorFraccion(fraccionCve: string): void {
+    this.catalogosService
+      .obtenerClaveNico(fraccionCve)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.nicosCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de CRETI desde el servicio de catálogos.
+   */
+  obtenerCRETI(): void {
+    this.catalogosService
+      .obtenerCaracteristicaMateria('ENU_CARACTERISTICAS_PELIGROSA')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.cretiCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de estados físicos desde el servicio de catálogos.
+   */
+  obtenerEdoFisico(): void {
+    this.catalogosService
+      .obtenerCaracteristicaMateria('ENU_ESTADO_FISICO_MERC')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoFisicoCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de tipos de contenedor desde el servicio de catálogos.
+   */
+  obtenerTipoContenedor(): void {
+    this.catalogosService
+      .obtenerTipoContenedor()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tipoContenedorCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de unidades de medida desde el servicio de catálogos.
+   */
+  obtenerUnidadMedida(): void {
+    this.catalogosService
+      .obtenerUnidadMedida()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.unidadMedidaCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de claves de residuo desde el servicio de catálogos.
+   */
+  obtenerCveResiduo(): void {
+    this.catalogosService
+      .obtenerClaveResiduo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.cveResiducoCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de nombres de residuo desde el servicio de catálogos.
+   */
+  obtenerNombreResiduo(): void {
+    this.catalogosService
+      .obtenerNombreResiduo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.nombreResiducoCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de descripciones de residuo desde el servicio de catálogos.
+   */
+  obtenerDescResiduo(): void {
+    this.catalogosService
+      .obtenerDescResiduo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.descResiducoCatalogo = data.datos;
+      });
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de clave de residuo
+   */
+  onCveResiduoChange(): void {
+    const CLAVE_SELECCIONADA =
+      this.formularioResiduo.get('claveResiduo')?.value;
+    this.formularioResiduo.get('nombre')?.setValue(CLAVE_SELECCIONADA);
+    this.formularioResiduo.get('descripcion')?.setValue(CLAVE_SELECCIONADA);
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de clave de residuo
+   */
+  onNombreResiduoChange(): void {
+    const CLAVE_SELECCIONADA = this.formularioResiduo.get('nombre')?.value;
+    this.formularioResiduo.get('claveResiduo')?.setValue(CLAVE_SELECCIONADA);
+    this.formularioResiduo.get('descripcion')?.setValue(CLAVE_SELECCIONADA);
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de clave de residuo
+   */
+  //TODO agregar la clave en la logica cuando se tenga el catalogo actualizado
+  onDescResiduoChange(): void {
+    const CLAVE_SELECCIONADA = this.formularioResiduo.get('descripcion')?.value;
+    const RESIDUO = this.descResiducoCatalogo.find(
+      (residuo) => residuo.clave === CLAVE_SELECCIONADA
+    );
+    this.mostrarComboOtroTipo =
+      CLAVE_SELECCIONADA === 'CVERES.000' ||
+      (RESIDUO?.descripcion.toLowerCase().includes('otro') ?? false);
+    HABILITAR_CONTROL(
+      this.formularioResiduo.get('otroTipo'),
+      this.mostrarComboOtroTipo
+    );
+
+    this.formularioResiduo.get('nombre')?.setValue(CLAVE_SELECCIONADA);
+    this.formularioResiduo.get('claveResiduo')?.setValue(CLAVE_SELECCIONADA);
+  }
+
+  /**
+   * Verifica si un control del formulario ha sido tocado.
+   * @param form
+   * @param control
+   * @returns
+   */
+  controlEsTocado(form: FormGroup, control: string): boolean {
+    return form.get(control)?.touched || false;
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de estado físico
+   */
+  onChangeEdoFisico(): void {
+    const EDO_FISICO_VALOR = this.formularioResiduo.get('estadoFisico')?.value;
+    const CONTROL = this.formularioResiduo.get('otroEdoFisico');
+    this.mostrarOtroEdoFisico = EDO_FISICO_VALOR === 'ESFIM.OTR';
+    HABILITAR_CONTROL(CONTROL, this.mostrarOtroEdoFisico);
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de tipo de contenedor
+   */
+  onChangeTipoContenedor(): void {
+    const CONTROL = this.formularioResiduo.get('otroContenedor');
+    const CLAVE_SELECCIONADA =
+      this.formularioResiduo.get('tipoContenedor')?.value;
+
+    const TIPO_CONTENEDOR = this.tipoContenedorCatalogo.find(
+      (tipo) => tipo.clave === CLAVE_SELECCIONADA
+    );
+    this.mostrarOtroTipoContenedor =
+      CLAVE_SELECCIONADA === 'TPCONT.009' ||
+      (TIPO_CONTENEDOR?.descripcion.toLowerCase().includes('otro') ?? false);
+    HABILITAR_CONTROL(CONTROL, this.mostrarOtroTipoContenedor);
   }
 
   /**

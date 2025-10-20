@@ -1,7 +1,5 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import {
-  MateriaPrima231001
-} from '../../231001/models/datos.model';
+import { MateriaPrima231001 } from '../../231001/models/datos.model';
 import { MateriaResiduo } from './materia-residuo.model';
 
 /**
@@ -171,6 +169,7 @@ export interface ResiduoPeligroso {
   fraccionArancelaria: string;
   nombreResiduo: string;
   nico: string;
+  nicoDescripcion?: string;
   acotacion: string;
   nombreResiduoPeligroso: string;
   cantidad: string;

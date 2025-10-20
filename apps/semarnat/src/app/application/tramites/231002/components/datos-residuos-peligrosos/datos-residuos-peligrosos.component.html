@@ -73,12 +73,8 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select
-          [markTouched]="
-            formularioDatos.get('nombreMateriaPrima')?.touched ?? false
-          "
           [catalogo]="materiasPrimasCatalogo"
           [label]="'Nombre de la materia prima'"
-          [required]="true"
           formControlName="nombreMateriaPrima"
           (change)="
             actualizarCampoFormularioDatos('nombreMateriaPrima');
@@ -127,7 +123,6 @@
             class="form-control"
             id="unidadDeMedida"
             formControlName="unidadDeMedida"
-            (change)="actualizarCampoFormularioDatos('unidadDeMedida')"
             readonly
           />
         </div>
@@ -176,7 +171,7 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <app-tabla-dinamica
-          [isInvalida]="!esFormaValido && materiasPrimasTabla.length === 0"
+          [isInvalida]="submitted && materiasPrimasTabla.length === 0"
           [configuracionTabla]="configuracionTablaMaterias"
           [datos]="materiasPrimasTabla"
           [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
@@ -208,7 +203,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [markTouched]="
-            esControlValido(formularioResiduo, 'fraccionArancelaria') ?? false
+            controlEsTocado(formularioResiduo, 'fraccionArancelaria')
           "
           [catalogo]="fraccionesArancelariasCatalogo"
           [label]="'Fracción arancelaria'"
@@ -222,8 +217,8 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [markTouched]="esControlValido(formularioResiduo, 'nico') ?? false"
-          [catalogo]="etiquetasForm.nico"
+          [markTouched]="formularioDatos.get('nico')?.touched ?? false"
+          [catalogo]="nicosCatalogo"
           [label]="'N I C O'"
           [required]="true"
           formControlName="nico"
@@ -349,10 +344,8 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select
-          [markTouched]="
-            esControlValido(formularioResiduo, 'unidadMedida') ?? false
-          "
-          [catalogo]="etiquetasForm.unidad"
+          [markTouched]="controlEsTocado(formularioResiduo, 'unidadMedida')"
+          [catalogo]="unidadMedidaCatalogo"
           [label]="'Unidad de medida'"
           [required]="true"
           formControlName="unidadMedida"
@@ -383,31 +376,35 @@
         </app-input-radio>
       </div>
     </div>
+
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select
-          [markTouched]="
-            esControlValido(formularioResiduo, 'claveResiduo') ?? false
-          "
-          [catalogo]="etiquetasForm.residuo"
+          [markTouched]="controlEsTocado(formularioResiduo, 'claveResiduo')"
+          [catalogo]="cveResiducoCatalogo"
           [label]="'Clave de residuo'"
           [required]="true"
           [isDisabled]="claveResiduoDisabled"
           formControlName="claveResiduo"
-          (change)="actualizarCampoFormularioResiduo('claveResiduo')"
+          (change)="
+            actualizarCampoFormularioResiduo('claveResiduo');
+            onCveResiduoChange()
+          "
         ></app-catalogo-select>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select
-          [markTouched]="esControlValido(formularioResiduo, 'nombre') ?? false"
-          [catalogo]="etiquetasForm.tipoNombre"
+          [markTouched]="controlEsTocado(formularioResiduo, 'nombre')"
+          [catalogo]="nombreResiducoCatalogo"
           [label]="'Nombre'"
           [required]="true"
           [isDisabled]="nombreDisabled"
           formControlName="nombre"
-          (change)="actualizarCampoFormularioResiduo('nombre')"
+          (change)="
+            actualizarCampoFormularioResiduo('nombre'); onNombreResiduoChange()
+          "
         ></app-catalogo-select>
       </div>
     </div>
@@ -415,24 +412,53 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select
-          [markTouched]="
-            esControlValido(formularioResiduo, 'descripcion') ?? false
-          "
-          [catalogo]="etiquetasForm.descripcion"
+          [markTouched]="controlEsTocado(formularioResiduo, 'descripcion')"
+          [catalogo]="descResiducoCatalogo"
           [label]="'Descripción'"
           [required]="true"
           [isDisabled]="descripcionDisabled"
           formControlName="descripcion"
-          (change)="actualizarCampoFormularioResiduo('descripcion')"
+          (change)="
+            actualizarCampoFormularioResiduo('descripcion');
+            onDescResiduoChange()
+          "
         ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div *ngIf="mostrarComboOtroTipo" class="row mb-3">
+      <div class="col-md-4">
+        <label for="otroTipo"
+          >Otro<span
+            [ngClass]="
+              esControlValido(formularioResiduo, 'otroTipo') ? 'has-error' : ''
+            "
+            >*</span
+          ></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="otroTipo"
+          formControlName="otroTipo"
+          [ngClass]="
+            esControlValido(formularioResiduo, 'otroTipo') ? 'required' : ''
+          "
+        />
+        @if (formularioResiduo.get('otroTipo')?.hasError('required') &&
+        formularioResiduo.get('otroTipo')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-md-8">
         <app-catalogo-select
-          [markTouched]="esControlValido(formularioResiduo, 'creti') ?? false"
-          [catalogo]="etiquetasForm.creti"
+          [markTouched]="controlEsTocado(formularioResiduo, 'creti')"
+          [catalogo]="cretiCatalogo"
           [label]="'CRETI'"
           [required]="true"
           formControlName="creti"
@@ -444,17 +470,51 @@
     <div class="row mb-3">
       <div class="col-md-8">
         <app-catalogo-select
-          [markTouched]="
-            esControlValido(formularioResiduo, 'estadoFisico') ?? false
-          "
-          [catalogo]="etiquetasForm.estadoFisico"
+          [markTouched]="controlEsTocado(formularioResiduo, 'estadoFisico')"
+          [catalogo]="estadoFisicoCatalogo"
           [label]="'Estado físico'"
           [required]="true"
           formControlName="estadoFisico"
-          (change)="actualizarCampoFormularioResiduo('estadoFisico')"
+          (change)="
+            actualizarCampoFormularioResiduo('estadoFisico');
+            onChangeEdoFisico()
+          "
         ></app-catalogo-select>
       </div>
     </div>
+
+    <div *ngIf="mostrarOtroEdoFisico" class="row mb-3">
+      <div class="col-md-4">
+        <label for="otroEdoFisico"
+          >Otro estado físico<span
+            [ngClass]="
+              esControlValido(formularioResiduo, 'otroEdoFisico')
+                ? 'has-error'
+                : ''
+            "
+            >*</span
+          ></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="otroEdoFisico"
+          formControlName="otroEdoFisico"
+          [ngClass]="
+            esControlValido(formularioResiduo, 'otroEdoFisico')
+              ? 'required'
+              : ''
+          "
+        />
+        @if (formularioResiduo.get('otroEdoFisico')?.hasError('required') &&
+        formularioResiduo.get('otroEdoFisico')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
+      </div>
+    </div>
+
     <div class="row mb-3">
       <div class="col-md-8">
         <label for="manifiesto" class="form-label"
@@ -489,18 +549,52 @@
         }
       </div>
     </div>
+
     <div class="row mb-3">
       <div class="col-md-8">
         <app-catalogo-select
-          [markTouched]="
-            esControlValido(formularioResiduo, 'tipoContenedor') ?? false
-          "
-          [catalogo]="etiquetasForm.tipoContenedor"
+          [markTouched]="controlEsTocado(formularioResiduo, 'tipoContenedor')"
+          [catalogo]="tipoContenedorCatalogo"
           [label]="'Tipo de Contenedor'"
           [required]="true"
           formControlName="tipoContenedor"
-          (change)="actualizarCampoFormularioResiduo('tipoContenedor')"
+          (change)="
+            actualizarCampoFormularioResiduo('tipoContenedor');
+            onChangeTipoContenedor()
+          "
         ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div *ngIf="mostrarOtroTipoContenedor" class="row mb-3">
+      <div class="col-md-4">
+        <label for="otroContenedor"
+          >Otro Contenedor<span
+            [ngClass]="
+              esControlValido(formularioResiduo, 'otroContenedor')
+                ? 'has-error'
+                : ''
+            "
+            >*</span
+          ></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="otroContenedor"
+          formControlName="otroContenedor"
+          [ngClass]="
+            esControlValido(formularioResiduo, 'otroContenedor')
+              ? 'required'
+              : ''
+          "
+        />
+        @if (formularioResiduo.get('otroContenedor')?.hasError('required') &&
+        formularioResiduo.get('otroContenedor')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
       </div>
     </div>
     <div class="row mb-3">

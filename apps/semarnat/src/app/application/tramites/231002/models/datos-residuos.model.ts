@@ -1,3 +1,4 @@
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ResiduoPeligroso } from './aviso-catalogo.model';
 
 /**
@@ -170,3 +171,102 @@ export interface EstadoFormularioResiduo {
 
   residuos: ResiduoPeligroso[];
 }
+
+export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
+  {
+    encabezado: 'Orígen del residuo',
+    clave: (item: ResiduoPeligroso): string => item.origenResiduoGeneracion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fracción Arancelaria',
+    clave: (item: ResiduoPeligroso): string => item.fraccionArancelaria,
+    orden: 2,
+  },
+  {
+    encabezado: 'NICO',
+    clave: (item: ResiduoPeligroso): string => item.nicoName,
+    orden: 3,
+  },
+  {
+    encabezado: 'Acotación',
+    clave: (item: ResiduoPeligroso): string => item.acotacion,
+    orden: 4,
+  },
+  {
+    encabezado: 'Nombre Residuo Peligroso',
+    clave: (item: ResiduoPeligroso): string => item.nombreResiduoPeligroso,
+    orden: 5,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (item: ResiduoPeligroso): string => item.cantidad,
+    orden: 6,
+  },
+  {
+    encabezado: 'Cantidad letra',
+    clave: (item: ResiduoPeligroso): string => item.cantidadLetra,
+    orden: 7,
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (item: ResiduoPeligroso): string => item.unidadMedidaName,
+    orden: 8,
+  },
+  {
+    encabezado: 'Clave Clasificación',
+    clave: (item: ResiduoPeligroso): string => item.nombreClasificacion,
+    orden: 9,
+  },
+  {
+    encabezado: 'Nombre Clasificación',
+    clave: (item: ResiduoPeligroso): string => item.claveClasificacionDesc,
+    orden: 10,
+  },
+  {
+    encabezado: 'Descripción clasificación',
+    clave: (item: ResiduoPeligroso): string => item.descripcionClasificacion,
+    orden: 11,
+  },
+  {
+    encabezado: 'Descripción otro Clasificación',
+    clave: (item: ResiduoPeligroso): string =>
+      item.descripcionOtraClasificacion,
+    orden: 12,
+  },
+  {
+    encabezado: 'CRETI',
+    clave: (item: ResiduoPeligroso): string => item.cretiDesc,
+    orden: 13,
+  },
+  {
+    encabezado: 'Estado físico',
+    clave: (item: ResiduoPeligroso): string => item.estadoFisicoDesc,
+    orden: 14,
+  },
+  {
+    encabezado: 'Descripción otro estado físico',
+    clave: (item: ResiduoPeligroso): string => item.descripcionOtroEstadoFisico,
+    orden: 15,
+  },
+  {
+    encabezado: 'No. de manifiesto',
+    clave: (item: ResiduoPeligroso): string => item.numeroManifiesto,
+    orden: 16,
+  },
+  {
+    encabezado: 'Tipo de contenedor',
+    clave: (item: ResiduoPeligroso): string => item.tipoContenedorDesc,
+    orden: 17,
+  },
+  {
+    encabezado: 'Descripción otro contenedor',
+    clave: (item: ResiduoPeligroso): string => item.descripcionOtroContenedor,
+    orden: 18,
+  },
+  {
+    encabezado: 'Capacidad',
+    clave: (item: ResiduoPeligroso): string => item.capacidad,
+    orden: 19,
+  },
+];

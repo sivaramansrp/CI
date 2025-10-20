@@ -5,7 +5,7 @@
 export interface MateriaResiduo {
   /** ID único de la materia prima o residuo */
   id_mercancia: number;
-  /** ID de la solicitud asociada (opcional) */ 
+  /** ID de la solicitud asociada (opcional) */
   id_solicitud?: number;
   /** Descripción o nombre de la materia prima o residuo */
   descripcion_mercancia: string;
@@ -21,6 +21,9 @@ export interface MateriaResiduo {
   cve_fraccion_arancelaria: string;
   /** Cantidad en número */
   cantidad: string;
+
+  /** Número de bitácora */
+  no_bitacora: string;
 }
 
 /** Configuración de columnas para la tabla dinámica */

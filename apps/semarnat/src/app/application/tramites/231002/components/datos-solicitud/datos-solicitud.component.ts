@@ -30,7 +30,11 @@ import {
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoT231002Service } from '../../services/catalogo-t231002.service';
+import { CONFIG_TABLA_RESIDUOS } from '../../models/datos-residuos.model';
+import {
+  CatalogoT231002Service,
+  Domicilio,
+} from '../../services/catalogo-t231002.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
@@ -131,7 +135,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /** Configuración de columnas para la tabla dinámica */
-  configuracionTabla: ConfiguracionColumna<ResiduoPeligroso>[] = [];
+  configuracionTabla: ConfiguracionColumna<ResiduoPeligroso>[] =
+    CONFIG_TABLA_RESIDUOS;
 
   /** Datos para la tabla dinámica */
   datosTabla: ResiduoPeligroso[] = [];
@@ -144,6 +149,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   /** catalogo immex para llenar el combo */
   immexCatalogo: Catalogo[] = [];
+
+  /** Catálogo de direcciones asociadas a IMMEX */
+  direccionesCatalogo: Catalogo[] = [];
+
+  /** Catálogo de aduanas de salida */
+  aduanasSalida: Catalogo[] = [];
+
+  /** Cátalogo de pases de salida */
+  paisesSalidaCatalogo: Catalogo[] = [];
 
   /** Getter para verificar si hay filas seleccionadas */
   get hayFilasSeleccionadas(): boolean {
@@ -184,10 +198,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.inicializarFormularioLugarReciclaje();
     this.inicializarFormularioEmpresaTransportista();
     this.inicializarFormularioPrecaucionesManejo();
-    this.inicializarConfiguracionTabla();
     this.recuperarValoresDesdeStore();
     this.configurarSuscripcionEstadoConsulta();
     this.obtenerDatosImmex();
+    this.obtenerAduanasSalida();
+    this.obtenerPaisesSalida();
     this.validaEsFormularioValido();
   }
 
@@ -319,114 +334,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa la configuración de la tabla dinámica
-   */
-  private inicializarConfiguracionTabla(): void {
-    // Configuración de columnas para la tabla dinámica de residuos peligrosos
-    this.configuracionTabla = [
-      {
-        encabezado: 'Orígen del residuo',
-        clave: (item: ResiduoPeligroso): string => item.origenResiduoGeneracion,
-        orden: 1,
-      },
-      {
-        encabezado: 'Fracción Arancelaria',
-        clave: (item: ResiduoPeligroso): string => item.fraccionName,
-        orden: 2,
-      },
-      {
-        encabezado: 'NICO',
-        clave: (item: ResiduoPeligroso): string => item.nicoName,
-        orden: 3,
-      },
-      {
-        encabezado: 'Acotación',
-        clave: (item: ResiduoPeligroso): string => item.acotacion,
-        orden: 4,
-      },
-      {
-        encabezado: 'Nombre Residuo Peligroso',
-        clave: (item: ResiduoPeligroso): string => item.nombreResiduoPeligroso,
-        orden: 5,
-      },
-      {
-        encabezado: 'Cantidad',
-        clave: (item: ResiduoPeligroso): string => item.cantidad,
-        orden: 6,
-      },
-      {
-        encabezado: 'Cantidad letra',
-        clave: (item: ResiduoPeligroso): string => item.cantidadLetra,
-        orden: 7,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (item: ResiduoPeligroso): string => item.unidadMedidaName,
-        orden: 8,
-      },
-      {
-        encabezado: 'Clave Clasificación',
-        clave: (item: ResiduoPeligroso): string => item.nombreClasificacion,
-        orden: 9,
-      },
-      {
-        encabezado: 'Nombre Clasificación',
-        clave: (item: ResiduoPeligroso): string => item.claveClasificacionDesc,
-        orden: 10,
-      },
-      {
-        encabezado: 'Descripción clasificación',
-        clave: (item: ResiduoPeligroso): string =>
-          item.descripcionClasificacion,
-        orden: 11,
-      },
-      {
-        encabezado: 'Descripción otro Clasificación',
-        clave: (item: ResiduoPeligroso): string =>
-          item.descripcionOtraClasificacion,
-        orden: 12,
-      },
-      {
-        encabezado: 'CRETI',
-        clave: (item: ResiduoPeligroso): string => item.cretiDesc,
-        orden: 13,
-      },
-      {
-        encabezado: 'Estado físico',
-        clave: (item: ResiduoPeligroso): string => item.estadoFisicoDesc,
-        orden: 14,
-      },
-      {
-        encabezado: 'Descripción otro estado físico',
-        clave: (item: ResiduoPeligroso): string =>
-          item.descripcionOtroEstadoFisico,
-        orden: 15,
-      },
-      {
-        encabezado: 'No. de manifiesto',
-        clave: (item: ResiduoPeligroso): string => item.numeroManifiesto,
-        orden: 16,
-      },
-      {
-        encabezado: 'Tipo de contenedor',
-        clave: (item: ResiduoPeligroso): string => item.tipoContenedorDesc,
-        orden: 17,
-      },
-      {
-        encabezado: 'Descripción otro contenedor',
-        clave: (item: ResiduoPeligroso): string =>
-          item.descripcionOtroContenedor,
-        orden: 18,
-      },
-      {
-        encabezado: 'Capacidad',
-        clave: (item: ResiduoPeligroso): string => item.capacidad,
-        orden: 19,
-      },
-    ];
-  }
-
-  /**
    * Maneja cambios en el campo "requiereEmpresa" para habilitar/deshabilitar campos relacionados
    * @param valor Valor seleccionado ('Si' o 'No')
    */
@@ -550,6 +457,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   setTipoDeAviso(evento: string | number): void {
     this.tipoAviso = evento;
+  }
+
+
+  /**
+   * Determina si se debe mostrar el combo de domicilios IMMEX
+   */
+  get mostrarComboDomicilioImmex(): boolean {
+    return this.tipoAviso === 'primera_vez';
   }
 
   /**
@@ -686,6 +601,53 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           id: item.id_prog_autorizado,
           descripcion: item.num_folio_tramite,
         }));
+      });
+  }
+
+  /**
+   *
+   * @param numeroProgramaImmex
+   */
+  obtenerDireccionPortImmex(numeroProgramaImmex: string): void {
+    this.catalogosService
+      .obtenerDirecciones(numeroProgramaImmex)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.direccionesCatalogo = data.datos.map((item: Domicilio) => ({
+          id: Number(item.clave),
+          clave: item.clave?.toString(),
+          descripcion: item.domicilio,
+        }));
+      });
+  }
+
+  /**
+   * Maneja el cambio en la selección de IMMEX para actualizar las direcciones asociadas.
+   */
+  onImmexChange(): void {
+    const NUMERO_PROGRAMA_IMMEX = this.solicitudForm.get('numeroProgramaImmex')
+      ?.value as string;
+    this.obtenerDireccionPortImmex(NUMERO_PROGRAMA_IMMEX);
+  }
+
+  /**
+   * Obtiene las aduanas de salida disponibles y las asigna al catálogo correspondiente.
+   */
+  obtenerAduanasSalida(): void {
+    this.catalogosService
+      .obtenerAduanaSalida()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.aduanasSalida = data.datos;
+      });
+  }
+
+  obtenerPaisesSalida(): void {
+    this.catalogosService
+      .obtenerPaisesDestino()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.paisesSalidaCatalogo = data.datos;
       });
   }
 

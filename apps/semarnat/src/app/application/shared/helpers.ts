@@ -1,5 +1,4 @@
-import { FormGroup } from '@angular/forms';
-
+import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 
 /**
  * Verifica si un control de formulario es válido.
@@ -14,4 +13,28 @@ export const ES_CONTROL_INVALIDO = (
 ): boolean | undefined => {
   const CONTROL = formGroup.get(controlName);
   return Boolean(CONTROL?.invalid && (CONTROL?.dirty || CONTROL?.touched));
+};
+
+/**
+ * habilita o deshabilita un control de formulario basado en la visibilidad.
+ * @param form
+ * @param control
+ * @param esVisible
+ */
+export const HABILITAR_CONTROL = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: AbstractControl<any, any> | null,
+  esVisible: boolean
+): void => {
+  if (control) {
+    control.reset('');
+    if (esVisible) {
+      control.enable();
+      control.setValidators([Validators.required]);
+    } else {
+      control.disable();
+      control.clearValidators();
+    }
+    control.updateValueAndValidity();
+  }
 };
