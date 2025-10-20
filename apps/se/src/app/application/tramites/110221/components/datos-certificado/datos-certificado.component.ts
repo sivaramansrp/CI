@@ -274,42 +274,54 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Obtiene la lista de entidades federativas disponibles.
    */
-  entidadFederativasOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe({
-        next: (data) => {
-          this.entidadFederativas = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.entidadFederativas = [];
-        },
-      });
-  }
-
   /**
-   * @descripcion
-   * Obtiene la lista de representaciones federales disponibles.
-   */
-  representacionFederalOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe({
-        next: (data) => {
-          this.representacionFederal = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
+ * @descripcion
+ * Obtiene la lista de entidades federativas disponibles desde el backend API.
+ */
+entidadFederativasOpcion(): void {
+  this.ValidarInicialmenteCertificadoService.obtenerEntidadFederativa()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
+      next: (response) => {
+        if ((response.codigo === '200' || response.codigo === '00') && response.datos) { 
+          this.entidadFederativas = response.datos; 
+        } else {
+          console.error('Error: Código de respuesta no esperado', response);
+          this.entidadFederativas = [];
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener las entidades federativas:', error);
+        this.entidadFederativas = [];
+      },
+    });
+}
+/**
+ * @descripcion
+ * Obtiene la lista de representaciones federales disponibles desde el backend API.
+ */
+representacionFederalOpcion(): void {
+  this.ValidarInicialmenteCertificadoService.obtenerRepresentacionFederal()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
+      next: (response) => {
+        if ((response.codigo === '200' || response.codigo === '00') && response.datos) { 
+          this.representacionFederal = response.datos;
+        } else {
+          console.error('Error: Código de respuesta no esperado', response);
           this.representacionFederal = [];
-        },
-      });
-  }
-
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener Representación Federal:', error);
+        this.representacionFederal = [];
+      },
+    });
+}
   /**
    * @descripcion
    * Actualiza el almacén con los datos del formulario.

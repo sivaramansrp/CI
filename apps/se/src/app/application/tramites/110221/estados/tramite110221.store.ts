@@ -5,6 +5,10 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 import { Mercancias } from '../models/plantas-consulta.model';
 
+import { GrupoRepresentativo } from '../models/peru-certificado.model';
+
+import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../../110223/models/registro.model';
+
 /**
  * @interface Tramite110221State
  * Interfaz que define el estado global del trámite 110221 para el certificado zoosanitario.
@@ -12,38 +16,12 @@ import { Mercancias } from '../models/plantas-consulta.model';
  * 
  */
 
-export interface DestinatarioForm {
-  nombre: string;
-  numeroFiscal: string;
-}
 
-export interface DomicilioForm {
-  calle: string;
-  numeroLetra: string;
-  paisDestino: string | null;
-  ciudad: string;
-  correoElectronico: string;
-  lada: string;
-  telefono: string;
-}
-
-export interface RepresentanteLegalForm{
-  nombreRepresentante: string;
-  lugar: string;
-  calle: string;
-  numero: string;
-  pais: string;
-  ciudad: string;
-  cargo: string;
-  empresa: string;
-  numeroRegistroFiscal: string;
-  lada?: string;
-  telefono?: string;
-  fax?: string;
-  correoElectronico: string;
-}
 
 export interface Tramite110221State {
+ 
+   grupoRepresentativo: GrupoRepresentativo;
+ 
   /** ID de la solicitud */
   idSolicitud: number | null;
   
@@ -258,7 +236,22 @@ export interface Tramite110221State {
   umcs: Catalogo[];
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
-}
+ /**
+   * @property {Object} formDatosDelDestinatario - Datos del destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como nombres, apellidos, número de registro fiscal y razón social.
+   */
+  formDatosDelDestinatario: { [key: string]: unknown };
+
+  
+   formDestinatario: { [key: string]: unknown };
+  /**
+   * @property {Object} formExportor - Datos del exportador.
+   * @description
+   * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  formExportor: { [key: string]: unknown };}
+  
 
 /**
  * asegurando que el estado comience limpio y sin datos previos.
@@ -370,6 +363,40 @@ export function createInitialState(): Tramite110221State {
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
   representanteLegalForm: {} as RepresentanteLegalForm,
+grupoRepresentativo: {
+  lugar: '',
+  nombre: '',
+  empresa: '',
+  cargo: '',
+  registroFiscal: '',
+  telefono: '',
+  fax: '',
+  correo: '',
+},
+   formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      celle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+    formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+    },
+    formExportor: {
+      lugar: '',
+      nombreEmpresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: ''
+    },
+
    buscarMercancia: [],
    altaPlanta:[],
      mercanciaForm: {
@@ -394,6 +421,9 @@ export function createInitialState(): Tramite110221State {
   umcs:[],
   optionsTipoFactura: []
   };
+  
+
+
 }
 
 /**
@@ -408,6 +438,8 @@ export function createInitialState(): Tramite110221State {
 })
 @StoreConfig({ name: 'Tramite110221Store', resettable: true })
 export class Tramite110221Store extends Store<Tramite110221State> {
+
+ 
   /**
    * @descripcion
    * Constructor que inicializa el almacén con el estado inicial.
@@ -415,6 +447,7 @@ export class Tramite110221Store extends Store<Tramite110221State> {
   constructor() {
     super(createInitialState());
   }
+  selectTramite$ = this._select((state) => state);
 
   /**
    * Guarda el ID de la solicitud en el estado.
@@ -425,6 +458,31 @@ export class Tramite110221Store extends Store<Tramite110221State> {
     this.update((state) => ({
       ...state,
       idSolicitud,
+    }));
+  }
+
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+ public setFormExportor(values: { [key: string]: undefined | string }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
+  public setFormDestinatario(values: { [key: string]: undefined | string }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
     }));
   }
 
@@ -454,7 +512,14 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       },
     }));
   }
-
+  setFormExportador(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
   /**
    * @descripcion
    * Actualiza los datos del formulario de productor.
@@ -856,6 +921,31 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       ...state,
       optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  setformdestinatario(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+  setformDatosDelDestinatario(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+  setformExportor(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
     }));
   }
 }

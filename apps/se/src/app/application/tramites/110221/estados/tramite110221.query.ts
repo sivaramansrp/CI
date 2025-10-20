@@ -16,7 +16,27 @@ export class Tramite110221Query extends Query<Tramite110221State> {
   selectTramite$ = this.select((state) => {
     return state;
   });
+   /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de destinatario.
+   */
+  selectFormDatosDelDestinatario$ = this.select((state) => {
+    return state.formDatosDelDestinatario;
+  });
 
+  selectFormExportador$ = this.select((state) => {
+    return state.formExportor;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona el formulario de destinatario.
+   */
+  selectFormDestinatario$ = this.select((state) => {
+    return state.formDestinatario;
+  });
+/**
+  
   /**
    * Selecciona si todos los valores de la forma son válidos.
    * Verifica si todas las propiedades de `formaValida` son `true`.
@@ -125,3 +145,5 @@ export class Tramite110221Query extends Query<Tramite110221State> {
     super(store);
   }
 }
+
+export { Tramite110221Store };

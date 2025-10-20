@@ -29,6 +29,10 @@ export class ValidarInicialmenteCertificadoService {
    */
   constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store, public httpService: HttpCoreService) { }
 
+    private get apiRoutes(): typeof PROC_110221 {
+    return PROC_110221;
+  }
+
   /**
    * @method obtenerMenuDesplegable
    * @descripcion
@@ -239,4 +243,25 @@ export class ValidarInicialmenteCertificadoService {
       false
     );
   }
+    obtenerEntidadFederativa(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_110221.ENTIDAD_FEDERATIVA,
+      {},
+      false
+    );
+  }
+  /**
+ * @method obtenerRepresentacionFederal
+ * @descripcion
+ * Obtiene el catálogo de representaciones federales desde el servidor.
+ * @returns {Observable<JsonResponseCatalogo>} Observable con la respuesta del catálogo de representaciones federales.
+ */
+obtenerRepresentacionFederal(): Observable<JsonResponseCatalogo> {
+  return this.httpService.get<JsonResponseCatalogo>(
+    PROC_110221.REPRESENTACION_FEDERAL, // Use the route defined in `api-route.ts`
+    {},
+    false
+  );
+}
+
 }
