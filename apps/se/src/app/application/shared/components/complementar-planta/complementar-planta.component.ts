@@ -164,6 +164,15 @@ export class ComplementarPlantaComponent implements OnInit {
     * Notificación para editor de complemento.
    */
   public nuevaNotificacionEditor!: Notificacion;
+
+  /**
+   * Notificación para editor de complemento.
+   */
+  public nuevaNotificacionFirmante!: Notificacion;
+  /**
+   * Notificación para eliminar complemento.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
   /**
   * Índice de la capacidad instalada que se está editando actualmente.
   */
@@ -342,6 +351,7 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   eliminarComplemento(): void {
     if (this.seleccionados.length > 0) {
+      this.mostrarNotificacionEliminar();
       this.complementoDePlantaDatos = this.complementoDePlantaDatos.filter(
         row => !this.seleccionados.some(sel =>
           JSON.stringify(sel) === JSON.stringify(row)
@@ -349,8 +359,26 @@ export class ComplementarPlantaComponent implements OnInit {
       );
       this.seleccionados = [];
     }
+    else {
+      this.mostrarNotificacionEliminar();
+    }
   }
 
+  /**
+   * Muestra una notificación de advertencia al usuario cuando intenta eliminar sin seleccionar un registro.
+   */
+  mostrarNotificacionEliminar(): void {
+    this.nuevaNotificacionEliminar = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.seleccionados.length > 0 ? 'El registro fue eliminado correctamente.' : 'Debe elegir al menos un registro de complemento para eliminar',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
   /**
    * Edita el complemento seleccionado en la lista de datos.
    * Permite modificar los campos del complemento seleccionado.
@@ -409,6 +437,18 @@ export class ComplementarPlantaComponent implements OnInit {
         )
       );
       this.seleccionadosPlanta = [];
+    }
+    else{
+       this.nuevaNotificacionFirmante = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe elegir al menos un firmante para eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 

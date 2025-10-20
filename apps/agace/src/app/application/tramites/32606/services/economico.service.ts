@@ -1,6 +1,6 @@
 import { Domicillio, EntidadFederativa, Querella, RecibirNotificaciones } from '../models/adace.model';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../state/tramite32606.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

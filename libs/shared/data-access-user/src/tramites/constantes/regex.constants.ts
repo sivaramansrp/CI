@@ -887,6 +887,23 @@ export const IMPORTE = /^\d{1,16}$/;
  */
 export const REGEX_DECIMAL_16_TOTAL = /^\d{1,13}\.\d{2}$/;
 
+/**
+ * Expresión regular para validar números con hasta 13 dígitos enteros y opcionalmente hasta 2 decimales.
+ * Total máximo de 16 caracteres (13 enteros + punto + 2 decimales).
+ *
+ * Ejemplos válidos:
+ * - "1234567890123" (13 dígitos enteros)
+ * - "1234567890123.12" (13 enteros + 2 decimales)
+ * - "123.45" (3 enteros + 2 decimales)
+ * - "1.5" (1 entero + 1 decimal)
+ *
+ * Ejemplos no válidos:
+ * - "12345678901234" (más de 13 dígitos enteros)
+ * - "123.456" (más de 2 decimales)
+ * - "123." (punto sin decimales)
+ */
+export const REGEX_DECIMAL_13_2_OPTIONAL = /^\d{1,13}(\.\d{1,2})?$/;
+
 
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
@@ -1141,7 +1158,7 @@ export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
  * - Letras mayúsculas y minúsculas (A-Z, a-z)
  * - Espacios en blanco
  */
-export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s]+$/;
+export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s.]+$/;
 
 /**
  * Expresión regular para detectar caracteres especiales no permitidos.
@@ -1238,3 +1255,9 @@ export const REGEX_NUMERO_PROGRAMA_IMMEX = /^\d{1,6}[/]\d{4}$/;
  * const soloNumeros = input.replace(REGEX_NICO, ''); // Resultado: "123456"
  */
 export const REGEX_NICO = /[^0-9]/g;
+
+/**
+ * Expresión regular para validar un solo carácter numérico o punto decimal.
+ * Utilizada para validación de entrada de teclas en campos numéricos.
+ */
+export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;

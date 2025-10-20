@@ -1,75 +1,95 @@
 import { TestBed } from '@angular/core/testing';
 import { RegistroService } from './registro.service';
-import { Tramite110207Store } from '../state/Tramite110207.store';
 import { HttpClient } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import {
+  Solicitud110207State,
+  Tramite110207Store,
+} from '../state/Tramite110207.store';
+import { Tramite110207Query } from '../state/Tramite110207.query';
+import { HttpCoreService, JSONResponse } from '@ng-mf/data-access-user';
+import { PROC_110207 } from '../servers/api-route';
 
 describe('RegistroService', () => {
   let service: RegistroService;
-  let httpMock: any;
-  let storeMock: any;
+  let httpClientMock: jest.Mocked<HttpClient>;
+  let tramiteQueryMock: jest.Mocked<Tramite110207Query>;
+  let httpCoreServiceMock: jest.Mocked<HttpCoreService>;
+  let tramite110207StoreMock: jest.Mocked<Tramite110207Store>;
 
   beforeEach(() => {
-    httpMock = {
-      get: jest.fn()
-    };
-    storeMock = {
-      setTratado: jest.fn(),
-      setPais: jest.fn(),
-      setFraccionArancelaria: jest.fn(),
-      setNumRegistro: jest.fn(),
-      setNomComercial: jest.fn(),
-      setFechInicioB: jest.fn(),
-      setFechFinB: jest.fn(),
-      setArchivo: jest.fn(),
-      setObservaciones: jest.fn(),
-      setPresica: jest.fn(),
-      setPresenta: jest.fn(),
-      setIdioma: jest.fn(),
-      setEntidad: jest.fn(),
-      setRepresentacion: jest.fn(),
-      setNombre: jest.fn(),
-      setApellidoPrimer: jest.fn(),
-      setApellidoSegundo: jest.fn(),
-      setNumeroFiscal: jest.fn(),
-      setRazonSocial: jest.fn(),
-      setCiudad: jest.fn(),
-      setCalle: jest.fn(),
-      setNumeroLetra: jest.fn(),
-      setLada: jest.fn(),
-      setTelefono: jest.fn(),
-      setFax: jest.fn(),
-      setCorreoElectronico: jest.fn(),
-      setNacion: jest.fn(),
-      setTransporte: jest.fn(),
-      setfraccionMercanArancelaria: jest.fn(),
-      setnombretecnico: jest.fn(),
-      setnomreeningles: jest.fn(),
-      setcriterioparaconferir: jest.fn(),
-      setmarca: jest.fn(),
-      setcantidad: jest.fn(),
-      setUMC: jest.fn(),
-      setvalordelamercancia: jest.fn(),
-      setcomplementodeladescripcion: jest.fn(),
-      setmasabruta: jest.fn(),
-      setnombrecomercialdelamercancia: jest.fn(),
-      setUnidadMedida: jest.fn(),
-      setTipoFactura: jest.fn(),
-      setFecha: jest.fn(),
-      setNFactura: jest.fn(),
-      setJustificacion: jest.fn(),
-      setCheckbox: jest.fn(),
-      setEstablecerSiCasilla: jest.fn(),
-      setRutaCompleta: jest.fn(),
-      setPuertoEmbarque: jest.fn(),
-      setPuertoDesembarque: jest.fn(),
-    };
+    httpClientMock = {
+      get: jest.fn(),
+    } as any;
+
+    tramiteQueryMock = {
+      selectState$: of({}),
+    } as any;
+
+    httpCoreServiceMock = {
+      post: jest.fn(),
+    } as any;
+
+    tramite110207StoreMock = {
+      setTratado: jest.fn(() => of()),
+      setPais: jest.fn(() => of()),
+      setFraccionArancelaria: jest.fn(() => of()),
+      setNumRegistro: jest.fn(() => of()),
+      setNomComercial: jest.fn(() => of()),
+      setFechInicioB: jest.fn(() => of()),
+      setFechFinB: jest.fn(() => of()),
+      setArchivo: jest.fn(() => of()),
+      setObservaciones: jest.fn(() => of()),
+      setPresica: jest.fn(() => of()),
+      setPresenta: jest.fn(() => of()),
+      setIdioma: jest.fn(() => of()),
+      setEntidad: jest.fn(() => of()),
+      setRepresentacion: jest.fn(() => of()),
+      setNombre: jest.fn(() => of()),
+      setApellidoPrimer: jest.fn(() => of()),
+      setApellidoSegundo: jest.fn(() => of()),
+      setNumeroFiscal: jest.fn(() => of()),
+      setRazonSocial: jest.fn(() => of()),
+      setCiudad: jest.fn(() => of()),
+      setCalle: jest.fn(() => of()),
+      setNumeroLetra: jest.fn(() => of()),
+      setLada: jest.fn(() => of()),
+      setTelefono: jest.fn(() => of()),
+      setFax: jest.fn(() => of()),
+      setCorreoElectronico: jest.fn(() => of()),
+      setNacion: jest.fn(() => of()),
+      setTransporte: jest.fn(() => of()),
+      setfraccionMercanArancelaria: jest.fn(() => of()),
+      setnombretecnico: jest.fn(() => of()),
+      setnomreeningles: jest.fn(() => of()),
+      setcriterioparaconferir: jest.fn(() => of()),
+      setmarca: jest.fn(() => of()),
+      setcantidad: jest.fn(() => of()),
+      setUMC: jest.fn(() => of()),
+      setvalordelamercancia: jest.fn(() => of()),
+      setcomplementodeladescripcion: jest.fn(() => of()),
+      setmasabruta: jest.fn(() => of()),
+      setnombrecomercialdelamercancia: jest.fn(() => of()),
+      setUnidadMedida: jest.fn(() => of()),
+      setTipoFactura: jest.fn(() => of()),
+      setFecha: jest.fn(() => of()),
+      setNFactura: jest.fn(() => of()),
+      setJustificacion: jest.fn(() => of()),
+      setCheckbox: jest.fn(() => of()),
+      setEstablecerSiCasilla: jest.fn(() => of()),
+      setRutaCompleta: jest.fn(() => of()),
+      setPuertoEmbarque: jest.fn(() => of()),
+      setPuertoDesembarque: jest.fn(() => of()),
+    } as any;
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: HttpClient, useValue: httpMock },
-        { provide: Tramite110207Store, useValue: storeMock }
-      ]
+        RegistroService,
+        { provide: HttpClient, useValue: httpClientMock },
+        { provide: Tramite110207Query, useValue: tramiteQueryMock },
+        { provide: HttpCoreService, useValue: httpCoreServiceMock },
+        { provide: Tramite110207Store, useValue: tramite110207StoreMock },
+      ],
     });
     service = TestBed.inject(RegistroService);
   });
@@ -78,238 +98,201 @@ describe('RegistroService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call all store setters in actualizarEstadoFormulario', () => {
-    const datos: any = {
-      tratado: [],
-      pais: [],
-      fraccionArancelaria: 'a',
-      numeroRegistro: 'b',
-      nombreComercial: 'c',
-      fechaInicial: 'd',
-      fechaFinal: 'e',
-      archivo: 'f',
-      observaciones: 'g',
-      presica: 'h',
-      presenta: 'i',
-      idioma: [],
-      entidad: [],
-      representacion: [],
-      nombre: 'j',
-      apellidoPrimer: 'k',
-      apellidoSegundo: 'l',
-      numeroFiscal: 'm',
-      razonSocial: 'n',
-      ciudad: 'o',
-      calle: 'p',
-      numeroLetra: 'q',
-      lada: 'r',
-      telefono: 's',
-      fax: 't',
-      correoElectronico: 'u',
-      nacion: [],
-      transporte: [],
-      fraccionMercanciaArancelaria: 'v',
-      nombreTecnico: 'w',
-      nombreEnIngles: 'x',
-      criterioParaConferir: 'y',
-      marca: 'z',
-      cantidad: '1',
-      umc: [],
-      valorDelaMercancia: '2',
-      complementoDelaDescripcion: '3',
-      masaBruta: '4',
-      nombreComercialDelaMercancia: '5',
-      unidadMedida: [],
-      tipoFactura: [],
-      fecha: '6',
-      numeroFactura: '7',
-      justificacion: '8',
-      casillaVerificacion: '9',
-      siCasilla: true,
-      rutaCompleta: '10',
-      puertoEmbarque: '11',
-      puertoDesembarque: '12'
+  it('actualizarEstadoFormulario should call store setters', () => {
+    const datos: Solicitud110207State = {
+      tratado: [
+        {
+          id: 1,
+          descripcion: 'tratado',
+        },
+      ],
+      pais: [
+        {
+          id: 1,
+          descripcion: 'tratado',
+        },
+      ],
+      fraccionArancelaria: 'fraccion',
+      numeroRegistro: 'num',
+      nombreComercial: 'comercial',
+      fechaInicial: '2024-01-01',
+      fechaFinal: '2024-01-02',
+      archivo: 'archivo',
+      observaciones: 'obs',
+      presica: 'presica',
+      presenta: 'presenta',
+      idioma: [
+        {
+          id: 1,
+          descripcion: 'idioma',
+        },
+      ],
+      entidad: [{ id: 1, descripcion: 'entidad' }],
+      representacion: [{ id: 1, descripcion: 'representacion' }],
+      nombre: 'nombre',
+      apellidoPrimer: 'ap1',
+      apellidoSegundo: 'ap2',
+      numeroFiscal: 'fiscal',
+      razonSocial: 'razon',
+      ciudad: 'ciudad',
+      calle: 'calle',
+      numeroLetra: 'numLetra',
+      lada: 'lada',
+      telefono: 'tel',
+      fax: 'fax',
+      correoElectronico: 'correo',
+      nacion: [{ id: 1, descripcion: 'nacion' }],
+      transporte: [{ id: 1, descripcion: 'transporte' }],
+      fraccionMercanciaArancelaria: 'fraccionMercancia',
+      nombreTecnico: 'tecnico',
+      nombreEnIngles: 'ingles',
+      criterioParaConferir: 'criterio',
+      marca: 'marca',
+      cantidad: 'cantidad',
+      umc: [{ id: 1, descripcion: 'umc' }],
+      valorDelaMercancia: 'valor',
+      complementoDelaDescripcion: 'complemento',
+      masaBruta: 'masa',
+      nombreComercialDelaMercancia: 'nombreMercancia',
+      unidadMedida: [{ id: 1, descripcion: 'unidad' }],
+      tipoFactura: [{ id: 1, descripcion: 'tipoFactura' }],
+      fecha: 'fecha',
+      numeroFactura: 'numFactura',
+      justificacion: 'justificacion',
+      casillaVerificacion: '',
+      siCasilla: false,
+      rutaCompleta: 'ruta',
+      puertoEmbarque: 'embarque',
+      puertoDesembarque: 'desembarque',
+      paisBloques: [{ id: 1, descripcion: 'bloque' }],
+      formCertificado: {},
+      estado: { id: 1, descripcion: 'estado' },
+      idSolicitud: 1,
+      formDatosCertificado: {},
+      entidadFederativaDatos: [{ id: 1, descripcion: 'entidadFed' }],
+      representacionFederalDatos: [{ id: 1, descripcion: 'repFed' }],
+      idiomaDatos: [{ id: 1, descripcion: 'idiomaDatos' }],
+      representacionFederalSeleccion: { id: 1, descripcion: 'repFedSel' },
+      formaValida: {},
+      formulario: {},
+      disponiblesDatos: [],
+      mercanciaTabla: [],
+      formDatosDelDestinatario: {},
+      formDestinatario: {},
+      grupoRepresentativo: {
+        lugar: '',
+        nombreExportador: '',
+        empresa: '',
+        cargo: '',
+        telefono: '',
+        correoElectronico: '',
+      },
+      destinatarioForm: {},
+      medioDeTransporte: [{ id: 1, descripcion: 'medio' }],
+      paisDestinSeleccion: { id: 1, descripcion: 'paisDestSel' },
+      paisDestin: [{ id: 1, descripcion: 'paisDest' }],
+      medioDeTransporteSeleccion: { id: 1, descripcion: 'medioSel' },
     };
     service.actualizarEstadoFormulario(datos);
-    expect(storeMock.setTratado).toHaveBeenCalledWith(datos.tratado);
-    expect(storeMock.setPais).toHaveBeenCalledWith(datos.pais);
-    expect(storeMock.setFraccionArancelaria).toHaveBeenCalledWith(datos.fraccionArancelaria);
-    expect(storeMock.setNumRegistro).toHaveBeenCalledWith(datos.numeroRegistro);
-    expect(storeMock.setNomComercial).toHaveBeenCalledWith(datos.nombreComercial);
-    expect(storeMock.setFechInicioB).toHaveBeenCalledWith(datos.fechaInicial);
-    expect(storeMock.setFechFinB).toHaveBeenCalledWith(datos.fechaFinal);
-    expect(storeMock.setArchivo).toHaveBeenCalledWith(datos.archivo);
-    expect(storeMock.setObservaciones).toHaveBeenCalledWith(datos.observaciones);
-    expect(storeMock.setPresica).toHaveBeenCalledWith(datos.presica);
-    expect(storeMock.setPresenta).toHaveBeenCalledWith(datos.presenta);
-    expect(storeMock.setIdioma).toHaveBeenCalledWith(datos.idioma);
-    expect(storeMock.setEntidad).toHaveBeenCalledWith(datos.entidad);
-    expect(storeMock.setRepresentacion).toHaveBeenCalledWith(datos.representacion);
-    expect(storeMock.setNombre).toHaveBeenCalledWith(datos.nombre);
-    expect(storeMock.setApellidoPrimer).toHaveBeenCalledWith(datos.apellidoPrimer);
-    expect(storeMock.setApellidoSegundo).toHaveBeenCalledWith(datos.apellidoSegundo);
-    expect(storeMock.setNumeroFiscal).toHaveBeenCalledWith(datos.numeroFiscal);
-    expect(storeMock.setRazonSocial).toHaveBeenCalledWith(datos.razonSocial);
-    expect(storeMock.setCiudad).toHaveBeenCalledWith(datos.ciudad);
-    expect(storeMock.setCalle).toHaveBeenCalledWith(datos.calle);
-    expect(storeMock.setNumeroLetra).toHaveBeenCalledWith(datos.numeroLetra);
-    expect(storeMock.setLada).toHaveBeenCalledWith(datos.lada);
-    expect(storeMock.setTelefono).toHaveBeenCalledWith(datos.telefono);
-    expect(storeMock.setFax).toHaveBeenCalledWith(datos.fax);
-    expect(storeMock.setCorreoElectronico).toHaveBeenCalledWith(datos.correoElectronico);
-    expect(storeMock.setNacion).toHaveBeenCalledWith(datos.nacion);
-    expect(storeMock.setTransporte).toHaveBeenCalledWith(datos.transporte);
-    expect(storeMock.setfraccionMercanArancelaria).toHaveBeenCalledWith(datos.fraccionMercanciaArancelaria);
-    expect(storeMock.setnombretecnico).toHaveBeenCalledWith(datos.nombreTecnico);
-    expect(storeMock.setnomreeningles).toHaveBeenCalledWith(datos.nombreEnIngles);
-    expect(storeMock.setcriterioparaconferir).toHaveBeenCalledWith(datos.criterioParaConferir);
-    expect(storeMock.setmarca).toHaveBeenCalledWith(datos.marca);
-    expect(storeMock.setcantidad).toHaveBeenCalledWith(datos.cantidad);
-    expect(storeMock.setUMC).toHaveBeenCalledWith(datos.umc);
-    expect(storeMock.setvalordelamercancia).toHaveBeenCalledWith(datos.valorDelaMercancia);
-    expect(storeMock.setcomplementodeladescripcion).toHaveBeenCalledWith(datos.complementoDelaDescripcion);
-    expect(storeMock.setmasabruta).toHaveBeenCalledWith(datos.masaBruta);
-    expect(storeMock.setnombrecomercialdelamercancia).toHaveBeenCalledWith(datos.nombreComercialDelaMercancia);
-    expect(storeMock.setUnidadMedida).toHaveBeenCalledWith(datos.unidadMedida);
-    expect(storeMock.setTipoFactura).toHaveBeenCalledWith(datos.tipoFactura);
-    expect(storeMock.setFecha).toHaveBeenCalledWith(datos.fecha);
-    expect(storeMock.setNFactura).toHaveBeenCalledWith(datos.numeroFactura);
-    expect(storeMock.setJustificacion).toHaveBeenCalledWith(datos.justificacion);
-    expect(storeMock.setCheckbox).toHaveBeenCalledWith(datos.casillaVerificacion);
-    expect(storeMock.setEstablecerSiCasilla).toHaveBeenCalledWith(datos.siCasilla);
-    expect(storeMock.setRutaCompleta).toHaveBeenCalledWith(datos.rutaCompleta);
-    expect(storeMock.setPuertoEmbarque).toHaveBeenCalledWith(datos.puertoEmbarque);
-    expect(storeMock.setPuertoDesembarque).toHaveBeenCalledWith(datos.puertoDesembarque);
+    expect(tramite110207StoreMock.setTratado).toHaveBeenCalledWith([{"descripcion": "tratado", "id": 1}]);
+    expect(tramite110207StoreMock.setFraccionArancelaria).toHaveBeenCalledWith('fraccion');
+    expect(tramite110207StoreMock.setNumRegistro).toHaveBeenCalledWith('num');
+    expect(tramite110207StoreMock.setNomComercial).toHaveBeenCalledWith('comercial');
   });
 
-  it('should call http.get for getRegistroTomaMuestrasMercanciasData', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getRegistroTomaMuestrasMercanciasData().subscribe(res => {
+  it('getRegistroTomaMuestrasMercanciasData should call http.get with correct url', (done) => {
+    const mockResponse = { some: 'data' };
+    httpClientMock.get.mockReturnValue(of(mockResponse));
+    service.getRegistroTomaMuestrasMercanciasData().subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        'assets/json/110207/registro_toma_muestras_mercancias.json'
+      );
+      done();
+    });
+  });
+
+  it('getCatalogoById should call http.get with correct url', (done) => {
+    const mockResponse = { catalogo: 'data' };
+    service.urlServerCatalogos = 'catalogosUrl';
+    httpClientMock.get.mockReturnValue(of(mockResponse));
+    service.getCatalogoById(5).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(httpClientMock.get).toHaveBeenCalledWith('catalogosUrl/5');
+      done();
+    });
+  });
+
+  it('getAllState should return tramiteQuery.selectState$', (done) => {
+    service.getAllState().subscribe((res) => {
       expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/registro_toma_muestras_mercancias.json');
-  });
-
-  it('should call http.get for getTratado', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getTratado().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/tratado.json');
-  });
-
-  it('should call http.get for getPais', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getPais().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/pais.json');
-  });
-
-  it('should call http.get for getIdioma', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getIdioma().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/idioma.json');
-  });
-
-  it('should call http.get for getPaisDestino', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getPaisDestino().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/pais.json');
-  });
-
-  it('should call http.get for getTransporte', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getTransporte().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/pais.json');
-  });
-
-  it('should call http.get for getEntidad', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getEntidad().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/entidad.json');
-  });
-
-  it('should call http.get for getRepresentacion', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getRepresentacion().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/entidad.json');
-  });
-
-  it('should call http.get for getTipoFactura', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getTipoFactura().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/tipofactura.json');
-  });
-
-  it('should call http.get for getUMC', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getUMC().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/umc.json');
-  });
-
-  it('should call http.get for getUnidadMedida', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.getUnidadMedida().subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/umc.json');
-  });
-
-  it('should call http.get for getCatalogoById', () => {
-    httpMock.get.mockReturnValue(of({}));
-    service.urlServerCatalogos = 'url';
-    service.getCatalogoById(5).subscribe(res => {
-      expect(res).toEqual({});
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('url/5');
-  });
-
-  it('should call http.get for getSolicitudesTabla and handle success', () => {
-    httpMock.get.mockReturnValue(of([]));
-    service.getSolicitudesTabla().subscribe(res => {
-      expect(res).toEqual([]);
-    });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/mercancia-disponsible.json');
-  });
-
-  it('should call http.get for getSolicitudesTabla and handle error', () => {
-    httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
-    service.getSolicitudesTabla().subscribe({
-      error: (err) => {
-        expect(err).toBeInstanceOf(Error);
-      }
+      done();
     });
   });
 
-  it('should call http.get for getSolicitudesDataTabla and handle success', () => {
-    httpMock.get.mockReturnValue(of([]));
-    service.getSolicitudesDataTabla().subscribe(res => {
-      expect(res).toEqual([]);
+  it('buscarMercanciasCert should call httpService.post with correct params', (done) => {
+    const mockResponse = { result: 'ok' };
+    httpCoreServiceMock.post.mockReturnValue(of(mockResponse));
+    service.buscarMercanciasCert({ key: 'value' }).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(httpCoreServiceMock.post).toHaveBeenCalledWith(
+        PROC_110207.BUSCAR,
+        { body: { key: 'value' } }
+      );
+      done();
     });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110207/mercancia-seleccionadas.json');
   });
 
-  it('should call http.get for getSolicitudesDataTabla and handle error', () => {
-    httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
-    service.getSolicitudesDataTabla().subscribe({
-      error: (err) => {
-        expect(err).toBeInstanceOf(Error);
-      }
+  it('buildMercanciaSeleccionadas should build correct array', () => {
+    const input = [
+      {
+        id: 1,
+        fraccionArancelaria: 'fa',
+        cantidad: '10',
+        valorMercancia: '100',
+        nombreTecnico: 'tec',
+        nombreComercial: 'com',
+        numeroDeRegistrodeProductos: 'reg',
+        umc: 'kg',
+        fechaExpedicion: '2024-01-01',
+        fechaVencimiento: '2024-12-31',
+        tipoFactura: 'tipo',
+        numeroFactura: 'nf',
+        complementoDescripcion: 'desc',
+        fechaFactura: '2024-01-02',
+      },
+    ];
+    const result = service.buildMercanciaSeleccionadas(input);
+    expect(result).toEqual([
+      {
+        id: 1,
+        fraccion_arancelaria: 'fa',
+        cantidad: '10',
+        unidad_medida: 'kg',
+        valor_mercancia: '100',
+        nombreTecnico: 'tec',
+        nombre_comercial: 'com',
+        registro_producto: 'reg',
+        fechaExpedicion: '2024-01-01',
+        fechaVencimiento: '2024-12-31',
+        tipo_factura: 'tipo',
+        num_factura: 'nf',
+        complemento_descripcion: 'desc',
+        fecha_factura: '2024-01-02',
+      },
+    ]);
+  });
+
+  it('guardarDatosPost should call httpService.post with correct params', (done) => {
+    const mockResponse = { saved: true };
+    httpCoreServiceMock.post.mockReturnValue(of(mockResponse));
+    service.guardarDatosPost({ foo: 'bar' }).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(httpCoreServiceMock.post).toHaveBeenCalledWith(
+        PROC_110207.GUARDAR,
+        { body: { foo: 'bar' } }
+      );
+      done();
     });
   });
 });

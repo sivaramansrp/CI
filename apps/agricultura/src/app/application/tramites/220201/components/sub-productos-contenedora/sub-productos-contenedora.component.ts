@@ -4,7 +4,7 @@
  * Proporciona la lógica para cargar catálogos, manejar el formulario y actualizar el estado.
  */
 
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { Subject,map, takeUntil, } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
@@ -209,6 +209,27 @@ export class SubProductosContenedoraComponent implements OnDestroy {
   @Output() cerrar = new EventEmitter<void>();
 
   /**
+   * @propiedad cantidadRegistros
+   * @tipo {number}
+   * @input
+   * @descripcion
+   * Recibe desde el componente padre la cantidad total de registros de sub-productos.
+   * 
+   * @proposito
+   * - Permite mostrar información de conteo en el template (por ejemplo, número de sub-productos registrados)
+   * - Facilita validaciones o restricciones basadas en el número de registros existentes
+   * 
+   * @uso_en_template
+   * Puede ser utilizado para mostrar mensajes condicionales, habilitar/deshabilitar botones, etc.
+   * 
+   * @valor_predeterminado
+   * Se inicializa en 0 para evitar valores undefined antes de recibir el dato del padre.
+   */
+  @Input() cantidadRegistros: number = 0;
+
+  cuerpoTabla: FilaSolicitud[] = [];
+
+  /**
    * @constructor
    * @descripcion
    * Constructor del componente SubProductosContenedoraComponent que inicializa las dependencias
@@ -340,13 +361,19 @@ export class SubProductosContenedoraComponent implements OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((estado) => {
+          
+          this.cuerpoTabla = estado?.tablaDatos;
           const VALOR = estado?.selectedDatos[0];
-          if (VALOR) {
-            this.formularioSolicitud = SubProductosContenedoraComponent.createFormularioFromValor(VALOR);
-          }
+          const DATA = estado?.selectedDatos.find(v => v.id === VALOR?.id);
+          
+          if (DATA) {
+            DATA.modificado = true; // Establece modificado a true si hay datos seleccionados
+            this.formularioSolicitud = SubProductosContenedoraComponent.createFormularioFromValor(DATA);
+          }    
         })
       )
       .subscribe();
+      console.warn('cantidadRegistros', this.cantidadRegistros);
   }
 
   /**
@@ -433,7 +460,9 @@ export class SubProductosContenedoraComponent implements OnDestroy {
       descripcionFraccion: VALOR.descripcionFraccion || '',
       nico: VALOR.nico || '',
       descripcionNico: VALOR.descripcionNico || '',
-      descripcion: VALOR.descripcion || ''
+      descripcion: VALOR.descripcion || '',
+      detalleProductos: Array.isArray(VALOR.detalleProductos) ? VALOR.detalleProductos : undefined,
+      modificado: VALOR.modificado || false
     };
   }
 
@@ -545,6 +574,17 @@ export class SubProductosContenedoraComponent implements OnDestroy {
    */
   agregarDatosFormulario(valor: ProductoDetallaEventos): void {
     const DATOS = SubProductosContenedoraComponent.createDatosFromFormulario(valor.formulario);
+    // Elimina el valor anterior si existe
+    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+    const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
     this.updateStoreWithDatos(DATOS);
   }
 
@@ -631,18 +671,29 @@ export class SubProductosContenedoraComponent implements OnDestroy {
    * Utiliza operador OR (||) para garantizar que ningún campo
    * sea undefined o null, proporcionando cadenas vacías como fallback.
    */
+  // eslint-disable-next-line complexity
   private static getBasicDataFields(formulario: Partial<FilaSolicitud>): Partial<FilaSolicitud> {
     return {
       id: formulario.id || Math.floor(Math.random() * 1000000),
-      noPartida: '',
+      noPartida: formulario.noPartida || '',
       tipoRequisito: formulario.tipoRequisito || '',
+      descripcionTipoRequisito: formulario.descripcionTipoRequisito || '',
+      descripcionUMT: formulario.descripcionUMT || '',
+      descripcionUMC: formulario.descripcionUMC || '',
+      descripcionEspecie: formulario.descripcionEspecie || '',
+      descripcionPaisDeOrigen: formulario.descripcionPaisDeOrigen || '',
+      descripcionPaisDeProcedencia: formulario.descripcionPaisDeProcedencia || '',
+      descripcionUso: formulario.descripcionUso || '',
       requisito: formulario.requisito || '',
       numeroCertificadoInternacional: formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: formulario.fraccionArancelaria || '',
       descripcionFraccion: formulario.descripcionFraccion || '',
       nico: formulario.nico || '',
       descripcionNico: formulario.descripcionNico || '',
-      descripcion: formulario.descripcion || ''
+      descripcion: formulario.descripcion || '',
+      detalleProductos: Array.isArray(formulario.detalleProductos) ? formulario.detalleProductos : undefined,
+      tipoPresentacionDescripcion: formulario.tipoPresentacionDescripcion || '',
+      modificado: formulario.modificado || false
     };
   }
 
