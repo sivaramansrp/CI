@@ -10,12 +10,26 @@
         <app-catalogo-select [isDisabled]="formularioDeshabilitado" [catalogo]="tipoData" formControlName="tipo"
           [label]="'Tipo I O R(importer of Record)'" [required]="true" name="tipo"
           (change)="setValoresStore(importadorForm, 'tipo', 'setTipo')"></app-catalogo-select>
+        <div
+          *ngIf="importadorForm.get('tipo')?.invalid && (importadorForm.get('tipo')?.touched || importadorForm.get('tipo')?.dirty)"
+          class="text-danger mt-1">
+          <small *ngIf="importadorForm.get('tipo')?.errors?.['required']">
+            El tipo es obligatorio.
+          </small>
+        </div>
       </div>
       }
       @if(!visualizarTipoIOR){
       <div class="col-md-6">
         <label class="form-label" for="tipoIOR">Tipo I O R(importer of Record)*:</label>
-        <input class="form-control" name="tipoIOR" id="tipoIOR" placeholder="" type="text" libUppercase formControlName="tipoIOR" />
+        <input class="form-control" name="tipoIOR" id="tipoIOR" placeholder="" type="text" libUppercase
+          formControlName="tipoIOR" />
+        *<span class="text-danger"
+          *ngIf="importadorForm.get('tipoIOR')?.invalid && (importadorForm.get('tipoIOR')?.touched || importadorForm.get('tipoIOR')?.dirty)">
+          <small *ngIf="importadorForm.get('tipoIOR')?.errors?.['required']">
+            El tipo es obligatorio.
+          </small>
+        </span>
       </div>
       }
       <div class="col-md-6">
@@ -29,7 +43,6 @@
           'setCantidadTotalImportador'
         )
       " />
-
           <!-- 🔹 Mensajes de error -->
           <div *ngIf="
         importadorForm.get('cantidadTotalImportador')?.invalid &&
@@ -74,6 +87,12 @@
                 'setRazonSocialImportador'
               )
             " />
+          <span class="text-danger"
+            *ngIf="importadorForm.get('razonSocialImportador')?.invalid && (importadorForm.get('razonSocialImportador')?.touched || importadorForm.get('razonSocialImportador')?.dirty)">
+            <small *ngIf="importadorForm.get('razonSocialImportador')?.errors?.['required']">
+              La razón social es obligatoria.
+            </small>
+          </span>
         </div>
       </div>
       <div class="col-md-6"></div>
@@ -84,6 +103,12 @@
             libUppercase name="domicilio" formControlName="domicilio" (change)="
               setValoresStore(importadorForm, 'domicilio', 'setDomicilio')
             " />
+          <span class="text-danger"
+            *ngIf="importadorForm.get('domicilio')?.invalid && (importadorForm.get('domicilio')?.touched || importadorForm.get('domicilio')?.dirty)">
+            <small *ngIf="importadorForm.get('domicilio')?.errors?.['required']">
+              El domicilio es obligatorio.
+            </small>
+          </span>
         </div>
       </div>
       <div class="col-md-6">
@@ -97,6 +122,12 @@
                 'setCiudadImportador'
               )
             " />
+          <span class="text-danger"
+            *ngIf="importadorForm.get('ciudadImportador')?.invalid && (importadorForm.get('ciudadImportador')?.touched || importadorForm.get('ciudadImportador')?.dirty)">
+            <small *ngIf="importadorForm.get('ciudadImportador')?.errors?.['required']">
+              La ciudad es obligatoria.
+            </small>
+          </span>
         </div>
       </div>
       <div class="col-md-6">
@@ -106,6 +137,12 @@
             libUppercase name="cpImportador" formControlName="cpImportador" (change)="
               setValoresStore(importadorForm, 'cpImportador', 'setCpImportador')
             " />
+            <span class="text-danger"
+              *ngIf="importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)">
+              <small *ngIf="importadorForm.get('cpImportador')?.errors?.['required']">
+                El C P es obligatorio.
+              </small>
+            </span>
         </div>
       </div>
       <div class="col-md-6">
