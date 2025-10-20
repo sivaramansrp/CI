@@ -17,7 +17,7 @@ import { SanitarioComponent } from './pages/sanitario/sanitario.component';
 import { ServiciosPermisoSanitarioService } from './services/servicios-permiso-sanitario.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
-import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosVistaComponent } from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
@@ -35,7 +35,6 @@ import { provideHttpClient } from '@angular/common/http';
     PermisoSanitarioImportacionRoutingModule,
     BtnContinuarComponent,
     WizardComponent,
-    TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
     SolicitanteComponent,
     FirmaElectronicaComponent,
@@ -44,6 +43,7 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     DatosDeLaComponent,
     AvisoDePrivacidadComponent,
+    TercerosRelacionadosVistaComponent
   ],
   providers: [
     ServiciosPermisoSanitarioService,

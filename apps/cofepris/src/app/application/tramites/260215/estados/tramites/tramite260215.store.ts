@@ -1,3 +1,4 @@
+import { Destinatario ,Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -6,6 +7,18 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud260215
  */
 export interface Solicitud260215State {
+   /**
+   * Lista de proveedores relacionados con el trámite.
+   */
+  proveedorTablaModificaDatos: Proveedor[];
+    /**
+   * Lista de facturadores relacionados con el trámite.
+   */
+  facturadorTablaModificaDatos: Facturador[];
+    /**
+   * Lista de fabricantes relacionados con el trámite.
+   */
+  fabricanteTablaModificaDatos: Fabricante[];
   /**
    * claveDeReferencia
    * @type {string}
@@ -98,6 +111,7 @@ export interface Solicitud260215State {
     * El valor de avisoCheckbox.
    */
    avisoCheckbox: boolean;
+     fabricanteTablaDatos: Fabricante[];
    /**
     * El valor de licenciaSanitaria.
    */
@@ -202,11 +216,39 @@ export interface Solicitud260215State {
     * El valor de especifiqueEstado.
    */
    especifiqueEstado:string;
+        
+destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * Lista de proveedores relacionados con el trámite.
+   */
+  proveedorTablaDatos: Proveedor[];
+    /**
+     * Lista de facturadores relacionados con el trámite.
+     */
+    facturadorTablaDatos: Facturador[];
+    
+  /**
+   * Lista de destinatarios finales relacionados con el trámite.
+   */
+  destinatarioFinalTablaModificaDatos: Destinatario[];
 
 }
 
 export function createInitialState(): Solicitud260215State {
   return {
+     /**
+   * Lista de proveedores relacionados con el trámite.
+   */
+    /**
+   * Lista de facturadores relacionados con el trámite.
+   */
+  destinatarioFinalTablaModificaDatos:[],
+  fabricanteTablaModificaDatos:[],
+  facturadorTablaModificaDatos: [],
+  proveedorTablaModificaDatos: [],
+    fabricanteTablaDatos: [],
+    facturadorTablaDatos: [],
     /**
      * claveDeReferencia
      * @type {string}
@@ -404,6 +446,15 @@ export function createInitialState(): Solicitud260215State {
          * El valor de especifiqueEstado.
          */
         especifiqueEstado: '',
+          /**
+           * Lista de destinatarios finales relacionados con el trámite.
+           */
+          destinatarioFinalTablaDatos: [],
+          
+            /**
+             * Lista de proveedores relacionados con el trámite.
+             */
+            proveedorTablaDatos: []
 
   };
 }
@@ -967,4 +1018,141 @@ public setApellidoPaterno(apellidoPaterno: string): void {
           especifiqueEstado,
       }));
   }
+
+  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.fabricanteTablaDatos];
+
+      newFabricantes.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        fabricanteTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+public updateDestinatarioFinalTablaDatos(
+    newDestinatarios: Destinatario[]
+  ): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.destinatarioFinalTablaDatos];
+
+      newDestinatarios.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+    public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.proveedorTablaDatos];
+
+      newProveedores.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        proveedorTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+    public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.facturadorTablaDatos];
+
+      newFacturadores.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        facturadorTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+    public fabricanteTablaModificaDatos(tabSeleccionado: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+    public destinatarioFinalTablaModificaDatos(
+      tabSeleccionado: Destinatario[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        destinatarioFinalTablaModificaDatos: tabSeleccionado,
+      }));
+    }
+     public proveedorTablaModificaDatos(tabSeleccionado: Proveedor[]): void {
+    this.update((state) => ({
+      ...state,
+      proveedorTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+    public facturadorTablaModificaDatos(tabSeleccionado: Facturador[]): void {
+      this.update((state) => ({
+        ...state,
+        facturadorTablaModificaDatos: tabSeleccionado,
+      }));
+    }
 }
