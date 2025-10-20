@@ -1,4 +1,4 @@
-import { API_GET_CATALOGO_ADUANAS } from '../../../../../core/server/api-router';
+import { API_GET_CATALOGO_ADUANAS, API_GET_CATALOGO_FRACCIONES_ARANCELARIAS } from '../../../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
@@ -35,5 +35,27 @@ export class CatalogosService {
   obtieneCatalogoAduana(tramite: number):Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_ADUANAS(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+      * Obtiene el catálogo de fracciones correspondiente a un trámite específico.
+      *
+      * @param tramite - El identificador numérico del trámite para el cual se requiere obtener el catálogo de fracciones.
+      * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo Catalogo.
+      */
+  obtieneCatalogoFraccionesArancelarias(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES_ARANCELARIAS(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
+      // .pipe(
+      //     // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
+      //     map((response: BaseResponse<Catalogo[]>) => ({
+      //         ...response,
+      //         datos: response.datos?.map(item => ({
+      //             ...item,
+      //             descripcion: `${item.clave}`
+      //         })) ?? []
+      //     }))
+      // )
+      ;
   }
 }
