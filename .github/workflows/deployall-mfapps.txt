@@ -34,7 +34,7 @@ jobs:
         run: npm install
 
       - name: Build microfront app
-        run: npx nx build ${{ matrix.app_name }}
+        run: npx nx build ${{ matrix.app_name }}-microfront
 
       - name: Reset Nx cache
         run: npx nx reset
@@ -57,25 +57,25 @@ jobs:
 
       - name: Update Docker Compose image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ matrix.app_name }}.yml || echo "No compose file for ${{ matrix.app_name }}"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ matrix.app_name }}-microfront.yml || echo "No compose file for ${{ matrix.app_name }}-microfront"
 
       - name: Build Docker image for microfront app
         run: |
-          docker compose -f docker/modulefederation-${{ matrix.app_name }}.yml build --no-cache
+          docker compose -f docker/modulefederation-${{ matrix.app_name }}-microfront.yml build --no-cache
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:${{ steps.get-version.outputs.VERSION }}
+          docker push ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}
 
       - name: List yaml files before copy
         run: |
-          echo "Showing YAML files in k8s/${{ matrix.app_name }}/"
-          ls -l k8s/${{ matrix.app_name }}/ || echo "Directory does not exist"
-          find k8s/${{ matrix.app_name }}/ || echo "Directory does not exist"
+          echo "Showing YAML files in k8s/${{ matrix.app_name }}-microfront/"
+          ls -l k8s/${{ matrix.app_name }}-microfront/ || echo "Directory does not exist"
+          find k8s/${{ matrix.app_name }}-microfront/ || echo "Directory does not exist"
 
       - name: Update deployment YAML image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ matrix.app_name }}/*.yaml || echo "No k8s yaml for ${{ matrix.app_name }}"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ matrix.app_name }}-microfront/*.yaml || echo "No k8s yaml for ${{ matrix.app_name }}-microfront"
 
       - name: Copy deployment files to server
         uses: appleboy/scp-action@v0.1.7
@@ -83,8 +83,8 @@ jobs:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: k8s/${{ matrix.app_name }}/*.yaml
-          target: ~/deployments/${{ matrix.app_name }}/
+          source: k8s/${{ matrix.app_name }}-microfront/*.yaml
+          target: ~/deployments/${{ matrix.app_name }}-microfront/
           strip_components: 2
 
       - name: List files on remote after copy
@@ -94,7 +94,7 @@ jobs:
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
-            ls -l ~/deployments/${{ matrix.app_name }}/
+            ls -l ~/deployments/${{ matrix.app_name }}-microfront/
 
       - name: SSH Deploy and Restart
         uses: appleboy/ssh-action@v1.0.3
@@ -104,7 +104,7 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
             set -e
-            APP_NAME="${{ matrix.app_name }}"
+            APP_NAME="${{ matrix.app_name }}-microfront"
             IMAGE_TAG="${{ steps.get-version.outputs.VERSION }}"
             DEPLOY_DIR=~/deployments/$APP_NAME
             DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
