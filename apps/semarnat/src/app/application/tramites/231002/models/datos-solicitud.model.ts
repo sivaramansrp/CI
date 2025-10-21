@@ -4,6 +4,8 @@ import { ResiduoPeligroso } from './aviso-catalogo.model';
  * Estado que representa los valores del formulario de reciclaje.
  */
 export interface EstadoDatoSolicitud {
+  idSolicitud: number | null;
+
   /**
    * Sección de datos de la solicitud.
    */
@@ -156,5 +158,4 @@ export interface EstadoDatoSolicitud {
   };
 
   residuos?: ResiduoPeligroso[];
-
 }

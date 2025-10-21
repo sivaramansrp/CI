@@ -106,16 +106,7 @@ export class ValidacionesFormularioService {
    * @returns Un objeto con el error `noMenosUno` si el valor es menor a 1, o `null` si es válido.
    */
   static noMenosUnoValor(control: AbstractControl): ValidationErrors | null {
-      const VALUE = control.value;
-
-    // Si es exactamente la cadena "00", es válido
-    if (VALUE === '00') {
-      return null;
-    }
-    // Convierte a número si es necesario
-    const NUMERIC_VALUE = Number(VALUE);
-    // Valida que no sea menor a 1 ni 0 explícito
-    return NUMERIC_VALUE < 1 ? { noMenosUno: true } : null;
+    return control.value < 1 ? { noMenosUno: true } : null;
   }
 
   /**

@@ -171,3 +171,30 @@ export const API_GET_DIRECCIONES = (
  */
 export const API_GET_PAISES_DESTINO = (tramite: string): string =>
   `sat-t${tramite}/catalogo/paises`;
+
+/**
+ * ID de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el ID real de la solicitud.
+ * @constant {string}
+ */
+export const IDSOLICITUD = '{idSolicitud}';
+
+
+/**
+ * API para obtener el estado de la solicitud del tramite 231001.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (
+  tramite: string,
+  idSolicitud: number
+): string => `sat-t${tramite}/solicitud/${idSolicitud}/genera-cadena-original`;
+
+
+/**
+ * Alias para la ruta que guarda la solicitud del trámite 231001.
+ * Equivalente a API_POST_SOLICITUD. Preferir API_POST_SOLICITUD si existe coherencia en el código.
+ * @see API_POST_SOLICITUD
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/guardar
+ * @constant {string}
+ */
+export const API_POST_GUARDAR_SOLICITUD =(tramite:string):string => `sat-t${tramite}/solicitud/guardar`;
