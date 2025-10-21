@@ -89,4 +89,45 @@ describe('SolicitantePageComponent', () => {
     expect(alertElement).toBeTruthy();
   });
 
+  it('validarFormulariosPasoActual should call pasoUnoComponent.validarFormularios when indice is 1', () => {
+    component.indice = 1;
+    component.pasoUnoComponent = { validarFormularios: jest.fn().mockReturnValue(false) } as any;
+    const result = component.validarFormulariosPasoActual();
+    expect(component.pasoUnoComponent.validarFormularios).toHaveBeenCalled();
+    expect(result).toBe(false);
+  });
+
+  it('validarFormulariosPasoActual should return true when pasoUnoComponent is undefined', () => {
+    component.indice = 1;
+    component.pasoUnoComponent = undefined as any;
+    const result = component.validarFormulariosPasoActual();
+    expect(result).toBe(true);
+  });
+
+  it('mostrarNotificacionError should set nuevaNotificacion and btnContinuar', () => {
+    component.mostrarNotificacionError();
+    expect(component.nuevaNotificacion).toEqual(expect.objectContaining({
+      tipoNotificacion: expect.any(String),
+      categoria: expect.any(String),
+      mensaje: expect.any(String),
+    }));
+    expect(component.btnContinuar).toBe(true);
+  });
+
+  it('btnContinuarNotificacion should set btnContinuar to false', () => {
+    component.btnContinuar = true;
+    component.btnContinuarNotificacion();
+    expect(component.btnContinuar).toBe(false);
+  });
+
+  it('getValorIndice should show notificacion error if validarFormulariosPasoActual returns false on cont', () => {
+    component.indice = 1;
+    component.pasoUnoComponent = { validarFormularios: jest.fn().mockReturnValue(false) } as any;
+    const spyShow = jest.spyOn(component, 'mostrarNotificacionError');
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+    expect(component.isPeligro).toBe(true);
+    expect(component.peligroTexto).toContain('¡Error de registro!');
+    expect(spyShow).toHaveBeenCalled();
+  });
+
 });

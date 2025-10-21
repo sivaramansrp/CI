@@ -56,7 +56,15 @@ describe('PasoUnoComponent', () => {
         entidadFederativa: 1,
         representacionFederal: 1
       }),
-      formulario$: of({})
+      formulario$: of({}),
+      getValue: jest.fn().mockReturnValue({
+        formValidity: {
+          certificadoOrigen: false,
+          datosCertificado: false,
+          destinatario: false,
+          histProductores: false
+        }
+      })
     };
 
     tramiteStoreMock = {
@@ -152,5 +160,27 @@ describe('PasoUnoComponent', () => {
     expect(tramiteStoreMock.setProductoresExportador).toHaveBeenCalledWith([{ id: 3, nombre: 'Productor Exportador' }]);
     expect(component.esDatosRespuesta).toBe(true);
   });
+
+    it('validarFormularios should call validarFormulario on all child components and return false when invalid', () => {
+      component.certificadoOrigenComponent = { validarFormulario: jest.fn() } as any;
+      component.datosCertificadoComponent = { validarFormulario: jest.fn() } as any;
+      component.destinatarioComponent = { validarFormulario: jest.fn() } as any;
+      component.histProductoresComponent = { validarFormulario: jest.fn() } as any;
+
+      const result = component.validarFormularios();
+      expect(component.certificadoOrigenComponent.validarFormulario).toHaveBeenCalled();
+      expect(component.datosCertificadoComponent.validarFormulario).toHaveBeenCalled();
+      expect(component.destinatarioComponent.validarFormulario).toHaveBeenCalled();
+      expect(component.histProductoresComponent.validarFormulario).toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
+
+    it('ngOnDestroy should complete the destroyNotifier$', () => {
+      const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
+      const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+      component.ngOnDestroy();
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
+    });
 
 });
