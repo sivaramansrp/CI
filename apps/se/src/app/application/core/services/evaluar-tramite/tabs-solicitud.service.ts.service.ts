@@ -42,8 +42,12 @@ export class TabsSolicitudServiceTsService {
    * @param idSolicitud ID de solicitud
    * @returns Observable con la respuesta del servidor
  */
-  getTabs(tramite: number, idSolicitud: string): Observable<BaseResponse<TabsResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_TABS(tramite.toString(), idSolicitud)}`;
+  getTabs(tramite: number, idSolicitud: string, proceso?: number): Observable<BaseResponse<TabsResponse>> {
+    let ENDPOINT = `${this.host}${API_GET_TABS(tramite.toString(), idSolicitud)}`;
+
+    if (proceso !== undefined && proceso !== null) {
+      ENDPOINT += `?proceso=${proceso}`;
+    }
     return this.http.get<BaseResponse<TabsResponse>>(ENDPOINT);
   }
   /**
