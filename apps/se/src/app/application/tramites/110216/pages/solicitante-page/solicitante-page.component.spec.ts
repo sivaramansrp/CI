@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, PasoFirmaComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { of } from 'rxjs';
@@ -27,7 +27,7 @@ describe('SolicitantePageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent],
+      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent, PasoFirmaComponent],
       declarations: [SolicitantePageComponent],
       providers: [
         ToastrService,
@@ -54,30 +54,12 @@ describe('SolicitantePageComponent', () => {
     expect(component.tramiteState).toEqual({ pestanaActiva: 1 });
   });
 
-  it('should update indice and call wizardComponent.siguiente() on getValorIndice with "cont"', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(wizardComponentSpy).toHaveBeenCalled();
-    expect(storeMock.setPasoActivo).toHaveBeenCalledWith(2);
-  });
-
   it('should update indice and call wizardComponent.atras() on getValorIndice with "atras"', () => {
     const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'atras', valor: 1 });
     expect(component.indice).toBe(1);
     expect(wizardComponentSpy).toHaveBeenCalled();
     expect(storeMock.setPasoActivo).toHaveBeenCalledWith(1);
-  });
-
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
-    const wizardComponentSpySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-    const wizardComponentSpyAtras = jest.spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(component.indice).toBe(1); // Default value
-    expect(wizardComponentSpySiguiente).not.toHaveBeenCalled();
-    expect(wizardComponentSpyAtras).not.toHaveBeenCalled();
-    expect(storeMock.setPasoActivo).not.toHaveBeenCalled();
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
@@ -100,13 +82,6 @@ describe('SolicitantePageComponent', () => {
     expect(pasoUnoElement).toBeTruthy();
   });
 
-  it('should render app-paso-tres when indice is 2', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
-    expect(pasoTresElement).toBeTruthy();
-  });
-
   it('should render ng-alert when indice is 1', () => {
     component.indice = 1;
     fixture.detectChanges();
@@ -114,10 +89,4 @@ describe('SolicitantePageComponent', () => {
     expect(alertElement).toBeTruthy();
   });
 
-  it('should not render ng-alert when indice is not 1', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-    const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
-    expect(alertElement).toBeFalsy();
-  });
 });

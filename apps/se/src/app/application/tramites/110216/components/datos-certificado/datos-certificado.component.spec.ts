@@ -4,59 +4,48 @@ import { of } from 'rxjs';
 import { DatosCertificadoComponent } from './datos-certificado.component';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { provideToastr, ToastrService } from 'ngx-toastr';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { Catalogo } from '../../models/certificado-origen.model';
+
+class MockTramite110216Query {
+  formDatosCertificado$ = of({});
+  selectIdioma$ = of([{ id: 1, descripcion: 'Español' }]);
+  selectEntidadFederativa$ = of([{ id: 1, descripcion: 'Entidad 1' }]);
+  selectrepresentacionFederal$ = of([{ id: 1, descripcion: 'Representación 1' }]);
+}
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let certificadosOrigenServiceMock: any;
-  let tramite110216StoreMock: any;
-  let tramite110216QueryMock: any;
+  let storeMock: any;
+  let serviceMock: any;
 
   beforeEach(async () => {
-    certificadosOrigenServiceMock = {
-      obtenerIdioma: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Español' }] })),
-      obtenerEntidadFederativa: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Entidad 1' }] })),
-      obtenerRepresentacionFederal: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Representación 1' }] }))
+    storeMock = {
+      setFormValida: jest.fn(),
+      setFormValidity: jest.fn(),
+      setIdiomaSeleccion: jest.fn(),
+      setRepresentacionFederalDatosSeleccion: jest.fn(),
+      setFormDatosCertificado: jest.fn()
     };
 
-    tramite110216StoreMock = {
-      setIdioma: jest.fn(),
-      setEntidadFederativa: jest.fn(),
-      setRepresentacionFederal: jest.fn()
-    };
-
-    tramite110216QueryMock = {
-      selectSolicitud$: of({
-        observaciones: 'Observaciones de prueba',
-        idioma: 1,
-        entidadFederativa: 1,
-        representacionFederal: 1
-      })
+    serviceMock = {
+      obtenerIdioma: jest.fn().mockReturnValue(of({ datos: [] })),
+      obtenerEntidadFederativa: jest.fn().mockReturnValue(of({ datos: [] })),
+      obtenerRepresentacionFederal: jest.fn().mockReturnValue(of({ datos: [] }))
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        CommonModule,
-        TituloComponent,
-        CatalogoSelectComponent,
-        DatosCertificadoComponent
-      ],
+      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, DatosCertificadoComponent],
       providers: [
-        ToastrService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
         FormBuilder,
-        { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110216Store, useValue: tramite110216StoreMock },
-        { provide: Tramite110216Query, useValue: tramite110216QueryMock }
+        ToastrService,
+        provideToastr({ positionClass: 'toast-top-right' }),
+        { provide: CertificadosOrigenService, useValue: serviceMock },
+        { provide: Tramite110216Store, useValue: storeMock },
+        { provide: Tramite110216Query, useClass: MockTramite110216Query }
       ]
     }).compileComponents();
 
@@ -65,35 +54,8 @@ describe('DatosCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.formDatosCertificado).toBeDefined();
-    expect(component.formDatosCertificado.get('observaciones')?.value).toBe('Observaciones de prueba');
-    expect(component.formDatosCertificado.get('idioma')?.value).toBe(1);
-    expect(component.formDatosCertificado.get('entidadFederativa')?.value).toBe(1);
-    expect(component.formDatosCertificado.get('representacionFederal')?.value).toBe(1);
-  });
-
-  it('should call setValoresStore when idiomaSeleccion is called', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.idiomaSeleccion();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'idioma', 'setIdioma');
-  });
-
-  it('should call setValoresStore when entidadFederativaSeleccion is called', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.entidadFederativaSeleccion();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
-  });
-
-  it('should call setValoresStore when representacionFederalSeleccion is called', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.representacionFederalSeleccion();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
@@ -104,61 +66,51 @@ describe('DatosCertificadoComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should load idiomas on cargarIdioma', () => {
-    component.cargarIdioma();
-    expect(certificadosOrigenServiceMock.obtenerIdioma).toHaveBeenCalled();
-    expect(component.idiomas).toEqual([{ id: 1, descripcion: 'Español' }]);
+  it('should return false if child component does not exist in isChildFormValid', () => {
+    component.datosCertificadoDeRef = undefined as any;
+    expect(component.isChildFormValid()).toBe(false);
   });
 
-  it('should load entidadFederativas on cargarEntidadFederativa', () => {
-    component.cargarEntidadFederativa();
-    expect(certificadosOrigenServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
-    expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
+  it('should call store methods in setFormValida', () => {
+    component.setFormValida(true);
+    expect(storeMock.setFormValida).toHaveBeenCalledWith({ datos: true });
+    expect(storeMock.setFormValidity).toHaveBeenCalledWith('datosCertificado', true);
   });
 
-  it('should load representacionFederal on cargarRepresentacionFederal', () => {
-    component.cargarRepresentacionFederal();
-    expect(certificadosOrigenServiceMock.obtenerRepresentacionFederal).toHaveBeenCalled();
-    expect(component.representacionFederal).toEqual([{ id: 1, descripcion: 'Representación 1' }]);
-  });
-  it('should call setValoresStore for representacionFederalSeleccion', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.representacionFederalSeleccion();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
+  it('should validate all and update store correctly when child form is valid', () => {
+    component.datosCertificadoDeRef = { validarFormularios: jest.fn().mockReturnValue(true) } as any;
+    const result = component.validateAll();
+    expect(result).toBe(true);
+    expect(storeMock.setFormValida).toHaveBeenCalledWith({ datos: true });
   });
 
-  it('should call setValoresStore for entidadFederativaSeleccion', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.entidadFederativaSeleccion();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
+  it('should validate all and update store correctly when child form is invalid', () => {
+    component.datosCertificadoDeRef = { validarFormularios: jest.fn().mockReturnValue(false) } as any;
+    const result = component.validateAll();
+    expect(result).toBe(false);
+    expect(storeMock.setFormValida).toHaveBeenCalledWith({ datos: false });
   });
 
-  it('should call setValoresStore for idiomaSeleccion', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.idiomaSeleccion();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'idioma', 'setIdioma');
+  it('should return false if formDatosCertificado does not exist in validarFormulario', () => {
+    component.formDatosCertificado = undefined as any;
+    expect(component.validarFormulario()).toBe(false);
   });
 
-  it('should load idiomas on cargarIdioma', () => {
-    component.cargarIdioma();
-    expect(certificadosOrigenServiceMock.obtenerIdioma).toHaveBeenCalled();
-    expect(component.idiomas).toEqual([{ id: 1, descripcion: 'Español' }]);
+  it('should call store.setIdiomaSeleccion in idiomaSeleccion', () => {
+    const idioma: Catalogo = { id: 1, descripcion: 'Español' };
+    component.idiomaSeleccion(idioma);
+    expect(storeMock.setIdiomaSeleccion).toHaveBeenCalledWith(idioma);
   });
 
-  it('should load entidadFederativas on cargarEntidadFederativa', () => {
-    component.cargarEntidadFederativa();
-    expect(certificadosOrigenServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
-    expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
-  });
-  it('should disable the form when soloLectura is true', () => {
-    component.soloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(component.formDatosCertificado.disabled).toBe(true);
+  it('should call store.setRepresentacionFederalDatosSeleccion in representacionFederalSeleccion', () => {
+    const rep: Catalogo = { id: 1, descripcion: 'Representación 1' };
+    component.representacionFederalSeleccion(rep);
+    expect(storeMock.setRepresentacionFederalDatosSeleccion).toHaveBeenCalledWith(rep);
   });
 
-  it('should enable the form when soloLectura is false', () => {
-    component.soloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(component.formDatosCertificado.enabled).toBe(true);
+  it('should call store.setFormDatosCertificado in setValoresStore', () => {
+    const event = { formGroupName: '', campo: 'field', valor: undefined, storeStateName: '' };
+    component.setValoresStore(event);
+    expect(storeMock.setFormDatosCertificado).toHaveBeenCalledWith({ field: undefined });
   });
 });
