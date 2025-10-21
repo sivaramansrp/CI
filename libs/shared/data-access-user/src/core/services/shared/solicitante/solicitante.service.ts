@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
 import { RFC_GENERICO } from '../../../constants/constantes-generales';
 import { SolicitanteEvaluarResponse } from '../../../models/datos-solicitante-evaluar.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 import { BaseResponse } from '../../../models/shared/base-response.model';
 @Injectable({
@@ -20,7 +21,8 @@ export class SolicitanteService {
   }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
-
+  urlServerTest = ENVIRONMENT.API_HOST_TEST;
+  
   /**
    * Obtiene los datos generales de un contribuyente desde la API.
    * @param {string} rfc - RFC del contribuyente para realizar la consulta.
@@ -59,5 +61,16 @@ export class SolicitanteService {
   getSolicitanteEvaluar(tramite: string,idSolicitud: string): Observable<BaseResponse<SolicitanteEvaluarResponse>> {
     const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITANTE(tramite,idSolicitud)}`;
     return this.http.get<BaseResponse<SolicitanteEvaluarResponse>>(ENDPOINT);
+  }
+
+    /**
+   * Inicia el trámite 130118.
+   * @param rfc RFC del contribuyente.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postIniciar(PAYLOAD: any): Observable<BaseResponse<null>> {
+    const ENDPOINT = `${this.urlServerTest}` + '/api/sat-t11201/solicitud/iniciar';
+    return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD)
+    
   }
 }

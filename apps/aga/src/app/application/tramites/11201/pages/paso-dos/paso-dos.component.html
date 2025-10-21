@@ -36,6 +36,13 @@
           <button type="button" class="btn btn-primary btn-space" (click)="validarPago()">
             Agregar
           </button>
+           <button
+                            class="btn btn-danger"
+                            type="button"
+                            (click)="eliminarLineaCaptura()"
+                        >
+                            Eliminar
+                        </button>
         </div>
       </div>
       <div class="row justify-content-center">
@@ -56,18 +63,42 @@
         </div>
       </div>
 
-      <nav aria-label="Page navigation example">
-        <ul class="pagination d-flex justify-content-center">
-        </ul>
-      </nav>
-
+<div class="row mt-3 mb-5">
       <p>
         <strong>
           A través del siguiente vinculo puedes ingresar a la página para
           generar la línea de captura de la constancia que se solicita:
         </strong>
       </p>
-  <a href="#" target="_blank" class="custom-link">Generar línea de captura</a>
+      <a href="#" target="_blank" class="custom-link">Generar línea de captura</a>
+</div>
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
+            [configuracionTabla]="encabezadoDeTablaPagos"
+            [datos]="datosTablaPagos"
+            [itemsPerPage]="10"
+            [tableId]="'tablaPagos'"
+            [showPagination]="true" [mode]="'client'"
+            (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
+            
+          >
+          </app-tabla-dinamica>
+        
+      </div>
+    </div>
     </div>
   </form>
 </div>
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    [forma]="datosServicio"
+    (confirmacionModal)="confirmacionModal($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

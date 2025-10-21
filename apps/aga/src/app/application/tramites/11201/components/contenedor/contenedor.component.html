@@ -206,7 +206,7 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <div class="form-group" [ngClass]="{'has-error': esInvalido('aduanaMenuDesplegable')}">
-                                <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
+                                <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
                                     [placeholder]="aduana.primerOpcion" [required]="true"
                                     formControlName="aduanaMenuDesplegable"
                                     (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"

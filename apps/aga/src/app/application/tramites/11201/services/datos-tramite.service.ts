@@ -188,5 +188,24 @@ export class DatosTramiteService {
     return this.http.post(ENDPOINT, PAYLOAD);
   }
 
+  /**
+   * Retrieves the "monto" (amount) for the ITC constancia.
+   *
+   * Performs an HTTP GET request to the backend endpoint:
+   * /api/sat-t11201/solicitud/constancia-itc/monto (prefixed by this.urlServer).
+   *
+   * @returns Observable<any> An observable that emits the server response containing the amount.
+   * The precise shape of the response is not specified here — replace `any` with a proper interface when known.
+   *
+   * @remarks
+   * - Uses the service's HttpClient to perform a GET request.
+   * - The observable will error if the HTTP request fails.
+   *
+   */
+  getMontoConstanciaITC(): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/constancia-itc/monto`;
+    return this.http.get(ENDPOINT);
+  }
+
 
 }

@@ -1215,16 +1215,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   solicitudGuardar(): void {
-    console.log(this.solicitudForm.valid)
+    const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
+    let contenedores: any[] = [];
+    if( TIPO_BUSQUEDA === 'Contenedor'){
+     contenedores = this.datosDelContenedor
+    }
+    if( TIPO_BUSQUEDA === 'Archivo CSV'){
+     contenedores = this.datosTabla
+    }
+    if( TIPO_BUSQUEDA === 'No. de Manifiesto'){
+      contenedores = this.datosTablaManifest
+    }
+
     const PAYLOAD = {
-          "id_solcitud": null,
+          "id_solcitud": this.solicitud11201State.idSolicitud  || null,
           "solicitante": {
             "rfc": this.rfc_original,
             "nombre": "Juan Pérez",
             "es_persona_moral": true,
             "certificado_serial_number": "string"
           },
-          "contenedores": this.datosDelContenedor
+          "contenedores": contenedores
         }
     this.datosTramiteService
       .solicitudGuardar(PAYLOAD)

@@ -6,16 +6,68 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule, } from '@angular/forms';
 import { Solicitud11201State } from '../../../../core/estados/tramites/tramite11201.store';
-import { Subject, } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { TituloComponent,Notificacion } from '@ng-mf/data-access-user';
 import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
 import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
 import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { 
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  ConfiguracionColumna,  
+  TEXTO_ACEPTAR,
+  TEXTO_CANCELAR,
+  TEXTO_CERRAR,
+  TEXTO_ELIMINAR_SOLICITUD,
+  MSG_ALERTA_ELIMINAR_ELEMENTO,
+  NotificacionesComponent,
+  CAMPO_VACIO,
+  MSG_ELIMINA_ELEMENTO
+} from '@libs/shared/data-access-user/src';
+import { LineaCaptura } from '../../../../core/models/5701/linea-captura.model';
+import {
+  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
+import {
+  CONFIRMAR_ELIMINAR_SOLICITUD,
+  MSG_ADUANA_PEDIMENTO,
+  MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_ERROR_SELECCIONE_REGISTRO,
+  MSG_MONTO_PAGADO_CUBIERTO,
+  MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
+  MSJ_ERROR_FECHA_DIA,
+  MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA,
+  MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA,
+  MSJ_ERROR_FECHA_MES,
+  MSJ_ERROR_FECHA_SEMANA,
+  MSJ_ERROR_FOLIO_DDEX,
+  MSJ_ERROR_HORA_FINAL_MENOR_INICIAL,
+  MSJ_ERROR_ID_SOCIO_COMERCIAL,
+  MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+  MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA,
+  MSJ_LINEA_CAPTURA_DUPLICADA,
+  MSJ_LINEA_CAPTURA_NO_PAGADA,
+  MSJ_LINEA_CAPTURA_USADA,
+  MSJ_NO_RELACION_ENCARGO_CONFERIDO,
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
+import {
+  EMPTY,
+  Observable,
+  Subject,
+  catchError,
+  delay,
+  forkJoin,
+  map,
+  merge,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+  timer,
+} from 'rxjs';
 /**
  * Componente para el paso dos del trámite de contenedores temporales.
  * 
@@ -28,7 +80,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent,NotificacionesComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
   providers: [ToastrService],
@@ -52,6 +104,33 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Subject para notificar la destrucción del componente.
    */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  public tablaSeleccionPagos = TablaSeleccion;
+
+    /**
+   * Datos de la tabla de pagos.
+   */
+  public datosTablaPagos: LineaCaptura[] = [];
+
+   /**
+   *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
+   */
+  lineaCapturaSeleccionados: LineaCaptura[] = [];
+
+  public nuevaNotificacion!: Notificacion | null;
+  /**
+   * GUarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
+   */
+  public procesoModal!: string;
+
+
+
+    /**
+   * Encabezado de la tabla de pagos.
+   */
+  public encabezadoDeTablaPagos: ConfiguracionColumna<LineaCaptura>[] = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
+
+
 
   /**
    * Constructor del componente `PagoDeDerechosComponent`.
@@ -98,7 +177,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     });
 
     // Llama al método para actualizar el campo 'monto'
-    this.campoDeDormularioDeActualizacion();
+    // this.campoDeDormularioDeActualizacion();
+    this.getMontoConstanciaITC();
   }
 
   /**
@@ -113,6 +193,28 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     // Deshabilita el campo 'monto' y asigna el valor '352'
     this.formSolicitud.get('pagoDeDerechos.montoPagar')?.disable();
     this.formSolicitud.get('pagoDeDerechos.montoPagar')?.setValue('352');
+  }
+
+   /**
+   * Obtiene el grupo de formulario 'datosServicio' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormGroup} El grupo de formulario 'datosServicio'.
+   */
+  get datosServicio(): FormGroup {
+    return this.formSolicitud?.get('pagoDeDerechos') as FormGroup;
+  }
+
+  getMontoConstanciaITC(): void {
+    this.datosTramiteService.getMontoConstanciaITC()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta: any) => {
+        if (respuesta?.codigo === '00') {
+          this.formSolicitud.get('pagoDeDerechos.montoPagar')?.disable();
+          this.formSolicitud.get('pagoDeDerechos.montoPagar')?.setValue(respuesta.datos);
+        } else {
+          this.toastrService.error(respuesta.error);
+        }
+      });
   }
 
   /**
@@ -154,6 +256,13 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         .validarPago(PAYLOAD)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta: any) => {
+          if (respuesta?.codigo === '00') {
+           const PAGO = {
+            lineaCaptura: linea_captura,
+            monto: respuesta.datos.pago_model.importe,
+          };
+           this.datosTablaPagos = [...this.datosTablaPagos, PAGO];
+          }
           if (respuesta?.codigo !== '00') {
             this.toastrService.error(respuesta.error);
 
@@ -161,6 +270,100 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         });
     }
   }
+
+   /**
+   * Elimina un elemento de la tabla de lineas de captura
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarLineaCaptura(): void {
+    if (this.lineaCapturaSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_ERROR_SELECCIONE_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ALERTA_ELIMINAR_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: TEXTO_ACEPTAR,
+      txtBtnCancelar: TEXTO_CANCELAR,
+    };
+    this.procesoModal = 'linea_captura';
+  }
+
+  
+  // #Seccion Modal
+  /**
+   * Método que maneja el evento de aceptar o no una accion del componente Notificación cuando este es un modal.
+   */
+  confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'linea_captura':
+        if (confirmar) {
+          this.limpiarNotificacion();
+          this.datosTablaPagos = this.datosTablaPagos.filter(
+            (item) =>
+              !this.lineaCapturaSeleccionados.some(
+                (seleccionado) =>
+                  seleccionado.lineaCaptura === item.lineaCaptura
+              )
+          );
+          this.lineaCapturaSeleccionados = [];
+
+          timer(500)
+            .pipe(
+              tap(() => {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: '',
+                  modo: 'action',
+                  titulo: TITULO_MODAL_AVISO,
+                  mensaje: MSG_ELIMINA_ELEMENTO,
+                  cerrar: false,
+                  txtBtnAceptar: TEXTO_ACEPTAR,
+                  txtBtnCancelar: CAMPO_VACIO,
+                };
+              }),
+              takeUntil(this.destroyNotifier$)
+            )
+            .subscribe();
+
+          // this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+          // this.montoPagadoLineas = this.datosTablaPagos.reduce(
+          //   (total, item) => total + item.monto,
+          //   0
+          // );
+
+          this.procesoModal = '';
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+   /**
+   * Lipia el objeto de notificación y el proceso modal.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarNotificacion(): void {
+    this.nuevaNotificacion = null;
+    this.procesoModal = '';
+  }
+
+
 
   /**
    * Método `ngOnDestroy()`.
