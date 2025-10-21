@@ -638,8 +638,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    console.log("mercanciaFormState", this.mercanciaFormState);
-    
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
