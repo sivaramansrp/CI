@@ -101,24 +101,35 @@ export class ValidacionesFormularioService {
   }
 
   /**
-   * Valida que el valor no sea menor a uno.
+   * Valida que el valor numérico no sea menor a 1, permitiendo "00" como valor válido.
    * @param control - Control del formulario que contiene el valor a validar.
-   * @returns Un objeto con el error `noMenosUno` si el valor es inválido, o `null` si es válido.
+   * @returns Un objeto con el error `noMenosUno` si el valor es menor a 1, o `null` si es válido.
    */
   static noMenosUnoValor(control: AbstractControl): ValidationErrors | null {
-    return control.value < 0 ? { noMenosUno: true } : null;
-  }
+    const VALUE = control.value;
 
+    // Si es exactamente la cadena "00", es válido
+    if (VALUE === '00') {
+      return null;
+    }
+    // Convierte a número si es necesario
+    const NUMERIC_VALUE = Number(VALUE);
+    // Valida que no sea menor a 1 ni 0 explícito
+    return NUMERIC_VALUE < 1 ? { noMenosUno: true } : null;
+  }
+  
   /**
    * Valida que el campo no contenga solo espacios en blanco.
    * @param control - Control del formulario que contiene el valor a validar.
    * @returns Un objeto con el error `whitespace` si el campo contiene solo espacios, o `null` si es válido.
    */
-  static noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
+  static noWhitespaceValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     if (control.value === null || control.value === undefined) {
       return null; // Deja que el validador 'required' maneje valores nulos/indefinidos
     }
-    
+
     const isWhitespace = (control.value || '').toString().trim().length === 0;
     return isWhitespace ? { whitespace: true } : null;
   }
