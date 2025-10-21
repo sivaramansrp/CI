@@ -1,4 +1,4 @@
-import { Catalogo, CertificadoDisponibles, ConsultaioQuery, doDeepCopy, esValidArray, esValidObject,Notificacion, NotificacionesComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CertificadoDisponibles, ConsultaioQuery, Notificacion, NotificacionesComponent,TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -6,10 +6,10 @@ import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certific
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
-import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 /**
  * @descripcion
@@ -151,7 +151,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.buscarCertificadoDeOrigenFrom = this.fb.group({
         paisBloqueClave: [this.seccionState?.paisBloqueClave],
         tratadoAcuerdoClave: [this.seccionState?.tratadoAcuerdoClave],
-        cveRegistroProductor: [this.seccionState?.cveRegistroProductor, [Validators.required, Validators.maxLength(12)]],
+        cveRegistroProductor: [this.seccionState?.cveRegistroProductor, [Validators.required, Validators.maxLength(14)]],
       });
   }
     /**
@@ -182,10 +182,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
             this.paisBloque = RESPONSE.datos;
           }
         }
-      },error => {
-        //console.error('Error al obtener los estados:', error);
-      });
-    
+      });  
   }
 
   /**
@@ -207,8 +204,6 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
             this.tratadoAcuerdo = RESPONSE.datos;
           }
         }
-      },error => {
-        //console.error('Error al obtener los estados:', error);
       });
   }
 
@@ -257,36 +252,177 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Actualiza el estado del grid de comercializadores de productos.
    */
   actualizaGridComercializadoresProductos(): void {
-     this.certificadoService.getData().pipe(
+      const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value;
+      const PAYLOAD = {
+        "solicitud": {
+          "solicitante": {
+            "rfc": "AAL0409235E6",
+            "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+            "correoElectronico": "vucem2021@gmail.com",
+            "telefono": "55-98764532",
+            "cveUsuario": "AAL0409235E6",
+            "domicilio": {
+              "pais": {
+                "clave": "MEX",
+                "nombre": "ESTADOS UNIDOS MEXICANOS"
+              },
+              "entidadFederativa": {
+                "clave": "SIN",
+                "nombre": "SINALOA"
+              },
+              "delegacionMunicipio": {
+                "clave": "25001",
+                "nombre": "AHOME"
+              },
+              "localidad": {
+                "clave": "00181210008",
+                "nombre": "LOS MOCHIS"
+              },
+              "colonia": {
+                "clave": "00181210001",
+                "nombre": "MIGUEL HIDALGO"
+              },
+              "calle": "CAMINO VIEJO",
+              "numeroExterior": "1353",
+              "numeroInterior": "",
+              "codigoPostal": "81210"
+            }
+          },
+          "cveRolCapturista": "PersonaMoral",
+          "cveUsuarioCapturista": "AAL0409235E6",
+          "clavePaisSeleccionado": "",
+          "idTratadoAcuerdoSeleccionado": "",
+          "discriminatorValue": "110210",
+          "tramite": {
+            "numFolioTramite": ""
+          },
+          "idSolicitud": ""
+        },
+        "puedeCapturarRepresentanteLegalCG": false,
+        "datosMercancia": {
+          "numeroCertificado": CVEREGISTROPRODUCTOR
+        },
+        "buscarCertificadosPorNumero": "Buscar Certificado",
+        "buscarListaCertificados": "Buscar Certificado"
+      };
+
+      this.service.getCertificadosDisponibles(PAYLOAD).pipe(
         takeUntil(this.destroyed$)
-      ).subscribe(
-        (data: CertificadoDisponibles[]) => {
-            const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value;
-            const CERTIFICADOS = data.filter(cert => cert.numeroDeCertificado === CVEREGISTROPRODUCTOR);
-            if (CERTIFICADOS.length > 0) {
-            this.tramite110210Store.setCertificadosDisponibles(CERTIFICADOS);
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          if(esValidArray(RESPONSE.datos)) {
+            if(RESPONSE.datos.length > 0){
+              const DATOS: CertificadoDisponibles[] = []
+              RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
+                const DATOSOBJ = {
+                  idCertificado: certificado.idCertificado,
+                  numeroCertificado: certificado.numeroCertificado,
+                  fechaExpedicion: certificado.fechaExpedicion,
+                  fechaVencimiento: certificado.fechaVencimiento,
+                }
+                DATOS.push(DATOSOBJ);
+              });
+              this.tramite110210Store.setCertificadosDisponibles(DATOS);
             }else{
               this.guardarObservacion();
-            }
+            }  
+          }else{
+              this.guardarObservacion();
+            } 
         }
-      );
+      });
   }
   /**
    * Actualiza el estado del grid de comercializadores de catálogos.
    */
   actualizaGridComercializadoresCatalogs(): void {
-     this.certificadoService.getData().pipe(
+    const PAISES = this.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.value;
+    const TRATADOS = this.buscarCertificadoDeOrigenFrom.get('tratadoAcuerdoClave')?.value;
+    if(PAISES){
+
+      const PAYLOAD = {
+        "solicitud": {
+          "solicitante": {
+            "rfc": "AAL0409235E6",
+            "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+            "correoElectronico": "vucem2021@gmail.com",
+            "telefono": "55-98764532",
+            "cveUsuario": "AAL0409235E6",
+            "domicilio": {
+              "pais": {
+                "clave": "MEX",
+                "nombre": "ESTADOS UNIDOS MEXICANOS"
+              },
+              "entidadFederativa": {
+                "clave": "SIN",
+                "nombre": "SINALOA"
+              },
+              "delegacionMunicipio": {
+                "clave": "25001",
+                "nombre": "AHOME"
+              },
+              "localidad": {
+                "clave": "00181210008",
+                "nombre": "LOS MOCHIS"
+              },
+              "colonia": {
+                "clave": "00181210001",
+                "nombre": "MIGUEL HIDALGO"
+              },
+              "calle": "CAMINO VIEJO",
+              "numeroExterior": "1353",
+              "numeroInterior": "",
+              "codigoPostal": "81210"
+            }
+          },
+          "cveRolCapturista": "PersonaMoral",
+          "cveUsuarioCapturista": "AAL0409235E6",
+          "clavePaisSeleccionado": PAISES ? PAISES : "",
+          "idTratadoAcuerdoSeleccionado": TRATADOS ? TRATADOS : "",
+          "discriminatorValue": "110210",
+          "tramite": {
+            "numFolioTramite": ""
+          },
+          "idSolicitud": ""
+        },
+        "puedeCapturarRepresentanteLegalCG": false,
+        "datosMercancia": {
+          "numeroCertificado": ''
+        },
+        "buscarCertificadosPorNumero": "Buscar Certificado",
+        "buscarListaCertificados": "Buscar Certificado"
+      };
+
+      this.service.getCertificadosDisponibles(PAYLOAD).pipe(
         takeUntil(this.destroyed$)
-      ).subscribe(
-        (data: CertificadoDisponibles[]) => {
-            const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.value;
-            if (CVEREGISTROPRODUCTOR && CVEREGISTROPRODUCTOR !== '') {
-            this.tramite110210Store.setCertificadosDisponibles(data);
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          if(esValidArray(RESPONSE.datos)) {
+            if(RESPONSE.datos.length > 0){
+              const DATOS: CertificadoDisponibles[] = []
+              RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
+                const DATOSOBJ = {
+                  idCertificado: certificado.idCertificado,
+                  numeroCertificado: certificado.numeroCertificado,
+                  fechaExpedicion: certificado.fechaExpedicion,
+                  fechaVencimiento: certificado.fechaVencimiento,
+                }
+                DATOS.push(DATOSOBJ);
+              });
+              this.tramite110210Store.setCertificadosDisponibles(DATOS);
             }else{
               this.guardarObservacion();
-            }
+            }  
+          }else{
+              this.guardarObservacion();
+            } 
         }
-      );
+      });
+    }
   }
 
   

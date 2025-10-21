@@ -3,9 +3,14 @@
  */
 
 import { Catalogo, HttpCoreService } from '@libs/shared/data-access-user/src';
+import { CertificadoPayload, GeneraCadenaPayload, GuardarPayload } from '../../models/certificados-disponsible.model';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_ROUTES } from '../../../../shared/servers/api-route';
 import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  JSONResponse
+} from '@ng-mf/data-access-user';
 
 
 @Injectable({
@@ -61,5 +66,53 @@ export class BuscarCertificadoDeOrigenService {
  */
   setProcedureNo(): void {
     this.complimentosService.setProcedureNo('110210');
+  }
+   /**
+   * @method getCertificadosDisponibles
+   * Envía una solicitud para obtener una lista de certificados disponibles según el payload proporcionado.
+   * @param {CertificadoPayload} body - El payload que contiene los datos necesarios para la solicitud.
+   * @returns {Observable<JSONResponse>} Un observable que emite la respuesta de la solicitud.
+   */
+  getCertificadosDisponibles(body: CertificadoPayload): Observable<JSONResponse> {
+    return this.http.post(API_ROUTES('/sat-t110210').certificadoDisponsible, {body}).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES().certificadoDisponsible}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+      /**
+   * @method guardar
+   * Envía una solicitud para guardar un certificado según el payload proporcionado.
+   * @param {CertificadoPayload} body - El payload que contiene los datos necesarios para la solicitud.
+   * @returns {Observable<JSONResponse>} Un observable que emite la respuesta de la solicitud.
+   */
+  guardar(body: GuardarPayload): Observable<JSONResponse> {
+    return this.http.post(API_ROUTES('/sat-t110210').guardarCertificadoDisponsible, {body}).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${API_ROUTES().guardarCertificadoDisponsible}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * @method generaCadena
+   * @description
+   * Genera la cadena original para la solicitud guardada.
+   * @param {GeneraCadenaPayload} body - El payload que contiene los datos necesarios para la solicitud.
+   * @param {number} solicitudId - El ID de la solicitud.
+   * @returns {Observable<JSONResponse>} Un observable que emite la respuesta de la solicitud.
+   */
+  generaCadena(body: GeneraCadenaPayload, solicitudId: number): Observable<JSONResponse> {
+    return this.http.post(API_ROUTES('/sat-t110210').generaCadena(solicitudId), { body }).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al generar la cadena en ${API_ROUTES().generaCadena(solicitudId)}`);
+        return throwError(() => ERROR);
+      })
+    );
   }
 }
