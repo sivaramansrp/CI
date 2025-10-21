@@ -460,6 +460,14 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
+{
+    path: 'autorizar-dictamen',
+    loadComponent: () =>
+      import('./autorizar-dictamen/autorizar-dictamen.component').then((m) => m.AutorizarDictamenComponent
+    ),
+  },
+
+
   {
     path: 'datos-generales-tramite',
     loadComponent: () =>

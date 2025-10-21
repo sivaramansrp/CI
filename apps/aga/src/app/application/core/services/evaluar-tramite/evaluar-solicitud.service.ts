@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_EVALUAR_INICIAR, API_GET_EVALUAR_MOSTRAR } from '@libs/shared/data-access-user/src/core/servers/api-router';
+import { API_GET_EVALUAR_INICIAR, API_GET_EVALUAR_MOSTRAR, API_GET_DESCARGAR_SOLICITUD } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { API_POST_OPCIONES_EVALUACION } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { EvaluacionOpcionResponse } from '../../models/evaluar/response/evaluar-estado-evaluacion-response.model';
 import { OpcionesEvaluacionRequest } from '../../models/evaluar/request/opciones-evaluacion.model';
@@ -63,4 +63,22 @@ export class EvaluarSolicitudService {
     const params = new HttpParams().set('opcion', opcion);
     return this.http.post<BaseResponse<string>>(ENDPOINT,null, { params });
   }
+
+    /**
+     * Descarga un archivo Excel con los datos de una solicitud específica.
+     *
+     * Construye la URL del endpoint usando el número de trámite y el ID de la solicitud, 
+     * y realiza una solicitud GET al servidor.
+     *
+     * Se espera que el servidor devuelva un `Observable` con la respuesta en Base64
+     * envuelta en `BaseResponse<string>`.
+     *
+     * @param tramite - Número del trámite asociado a la solicitud.
+     * @param idSolicitud - Identificador único de la solicitud.
+     * @returns {Observable<BaseResponse<string>>} Observable con el contenido en Base64 del Excel.
+     */
+    getDescargarExcel(tramite: number, idSolicitud: string): Observable<BaseResponse<string>>{
+      const ENDPOINT = `${this.host}` + API_GET_DESCARGAR_SOLICITUD(tramite.toString(), idSolicitud);
+      return this.http.get<BaseResponse<string>>(ENDPOINT);
+    }
 }

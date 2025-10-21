@@ -895,3 +895,9 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS_110214 = (TRAMITE: string) : string =
  * @returns 
  */
 export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;
+
+/**
+ * API para descargar datos solicitud en evaluacion.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Evalua-Solicitud/excel-solicitud
+ */
+export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/excel`;

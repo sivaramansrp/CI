@@ -4,7 +4,7 @@ import { CancelacionDeCertificadosComponent } from './components/cancelacion-de-
 import { CancelacionDeCertificadosDeCupoRoutingModule } from './cancelacion-de-certificados-de-cupo-routing.module';
 import { CommonModule } from '@angular/common';
 import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -45,6 +45,7 @@ import { ToastrModule } from 'ngx-toastr';
     ToastrModule.forRoot(),
     TablaDinamicaComponent,
     TituloComponent
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CancelacionDeCertificadosDeCupoModule { }
