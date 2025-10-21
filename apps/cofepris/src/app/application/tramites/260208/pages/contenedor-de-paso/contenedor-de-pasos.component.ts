@@ -3,9 +3,11 @@ import {
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
 import { PASOS, TITULOMENSAJE } from '../../constants/medicamentos-destinados-uso.enum';
+import { Tramite260208Query } from '../../estados/tramite260208Query.query';
+import { Tramite260208State } from '../../estados/tramite260208Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -13,13 +15,27 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit {
+    /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+    /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
   /**
    * Título del mensaje que se muestra en el componente.
    * Puede ser nulo si no está definido.
    * @type {string | null}
    */
   tituloMensaje: string | null = TITULOMENSAJE;
+
+    /**
+     * Estado del formulario de registro IMMEX.
+     */
+    storeData!: Tramite260208State;
 
   /**
    * Lista de pasos para el componente wizard.
@@ -49,7 +65,24 @@ export class ContenedorDePasosComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+    /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
 
+    /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+    constructor(public tramiteQuery: Tramite260208Query) {
+        // No se necesita lógica de inicialización adicional.
+    }
+ngOnInit(): void {
+    this.tramiteQuery.selectImmexRegistro$.pipe().subscribe((data) => {
+      this.storeData = data;
+    }); 
+}
   /**
    * Selecciona una pestaña específica del wizard.
    * @method
@@ -95,5 +128,35 @@ export class ContenedorDePasosComponent {
       default:
         return TITULOMENSAJE;
     }
+  }
+   /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+  
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+   /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+  
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

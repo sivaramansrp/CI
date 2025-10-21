@@ -1,4 +1,4 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent,PasoCargaDocumentoComponent,PasoFirmaComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -37,6 +37,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     AnexarDocumentosComponent,
     WizardComponent,
     BtnContinuarComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [ToastrService],
 })
