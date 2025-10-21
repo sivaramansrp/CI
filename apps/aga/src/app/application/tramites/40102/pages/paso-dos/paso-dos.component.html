@@ -1,12 +1,18 @@
 <div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
 
-  <ng-alert
+  <!-- <ng-alert
     [CONTENIDO]="TEXTOS.INSTRUCCIONES"
     [CUSTOMECLASS]="infoAlert"
   ></ng-alert>
 
   <anexar-documentos
     [catalogoDocumentos]="catalogoDocumentos"
-  ></anexar-documentos>
+  ></anexar-documentos> -->
+  @if(isSuccessCert){
+  <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  }@else {
+  <firma-electronica [tipo]="'persona_firma_40102'" [cadenaOriginal]="cadenaOriginal"
+    (datosFirma)="getDatosOfFirma($event)"></firma-electronica>
+  }
 </div>

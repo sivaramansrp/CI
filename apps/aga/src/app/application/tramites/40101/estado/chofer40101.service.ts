@@ -158,7 +158,7 @@ export class Chofer40101Service {
    * @returns Un observable con el catálogo de países emisores.
    */
   getPaisEmisor(): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/paises', { headers: Chofer40101Service.getApiHeaders() })
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t40101/catalogo/paises', { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -240,7 +240,7 @@ export class Chofer40101Service {
   * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
   */
   getEstadosPorPaisMex(): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t140101/catalogo/entidades-federativas', { headers: Chofer40101Service.getApiHeaders() })
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t40101/catalogo/entidades-federativas', { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -254,7 +254,7 @@ export class Chofer40101Service {
   getMunicipiosPorEstado(
     claveEstado: string
   ): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101/catalogo/entidad-federativa/${claveEstado}/municipio-o-alcaldia`, { headers: Chofer40101Service.getApiHeaders() })
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t40101/catalogo/entidad-federativa/${claveEstado}/municipio-o-alcaldia`, { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -272,7 +272,7 @@ export class Chofer40101Service {
   getColoniasPorMunicipio(
     clave: string
   ): Observable<Catalogo[]> {
-    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t140101/catalogo/municipio-o-alcaldia/${clave}/colonia`, { headers: Chofer40101Service.getApiHeaders() })
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t40101/catalogo/municipio-o-alcaldia/${clave}/colonia`, { headers: Chofer40101Service.getApiHeaders() })
       .pipe(
         map(response => response.datos),
         catchError(error => {
@@ -330,7 +330,7 @@ export class Chofer40101Service {
    * @returns {Observable<T[]>} Un observable que emite la lista de datos del archivo JSON.
    */
   obtenerDatos(nss: string): Observable<ApiResponseChofer> {
-    const FULL_URL = `/api/sat-t140101/chofer/detalles/nss/${nss}`;
+    const FULL_URL = `/api/sat-t40101/chofer/detalles/nss/${nss}`;
     return this.http.get<ApiResponseChofer>(FULL_URL, { headers: Chofer40101Service.getApiHeaders() });
   }
 

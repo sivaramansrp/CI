@@ -13,6 +13,50 @@
  * @since 1.0.0
  */
 
+
+export interface ApiResponseSolicitante {
+  codigo: string | null;
+  mensaje: string | null;
+  datos: {
+    mostrar_director_general: boolean | null;
+    solicitante: Solicitante | null;
+    director_general: DirectorGeneral | null
+    caat_existe: boolean | null;
+    mensaje: string | null
+  };
+}
+
+interface DirectorGeneral {
+  nombre: string | null;
+  primer_apellido: string | null;
+  segundo_apellido: string | null;
+}
+
+
+export interface Solicitante {
+  id_persona_solicitud: number | null;
+  rfc: string | null;
+  razon_social: string | null;
+  correo_electronico: string | null;
+  descripcion_giro: string | null;
+  domicilio: Domicilio;
+}
+
+export interface Domicilio {
+  pais: string;
+  codigo_postal: string;
+  estado: string;
+  municipio: string | null;
+  localidad: string | null;
+  colonia: string | null;
+  calle: string;
+  numero_exterior: string;
+  numero_interior: string;
+  lada: string | null;
+  telefono: string | null;
+}
+
+
 /**
  * Interfaz que representa un catálogo importante de selección.
  *
@@ -1642,7 +1686,7 @@ export interface DatosVehiculo {
  * };
  * ```
  */
-export interface DatosUnidad{
+export interface DatosUnidad {
   /**
    * @property {string} vinVehiculo
    * Número de identificación vehicular (VIN) de la unidad.
@@ -1834,7 +1878,7 @@ export interface UnidadTabla {
    * Entidad federativa o división administrativa que emitió el registro vehicular.
    */
   estado: string;
-  
+
 }
 
 /**

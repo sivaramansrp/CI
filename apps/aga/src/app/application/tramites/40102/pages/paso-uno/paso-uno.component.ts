@@ -1,10 +1,12 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
+import { ApiResponseSolicitante, ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Chofer40102Service } from '../../estados/chofer40102.service';
+import { Chofer40102Store, Choferesnacionales40102State } from '../../estados/chofer40102.store';
+import { Chofer40102Query } from '../../estados/chofer40102.query';
 
 @Component({
   selector: 'paso-uno',
@@ -29,6 +31,10 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   tipoPersona!: number;
 
+  /**
+   * Booleano para mostrar u ocultar el componente de director general.
+   */
+  isShowDirector: boolean = false;
 
   /**
    * Arreglo que contiene objetos de tipo FormularioDinamico.
@@ -78,6 +84,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 */
   consultaDatos!: ConsultaioState;
 
+
+  /**
+   * Subject para destruir las suscripciones y evitar fugas de memoria de los datos del solicitante.
+   */
+  private destroySolicitante$ = new Subject<void>();
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */
@@ -98,7 +109,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   constructor(
     private chofer40102Service: Chofer40102Service,
-    private consultaQuery: ConsultaioQuery
+    private chofer40102Store: Chofer40102Store,
+    private consultaQuery: ConsultaioQuery,
+    private chofer40102Query: Chofer40102Query
   ) {
 
   }
@@ -110,18 +123,24 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @returns void
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-        })).subscribe();
+    this.chofer40102Query.selectSolicitud$
+      .pipe(takeUntil(this.destroySolicitante$))
+      .subscribe((data: Choferesnacionales40102State) => {
+        this.isShowDirector = data?.isShowDirector;
+      });
+    // this.consultaQuery.selectConsultaioState$
+    //   .pipe(
+    //     takeUntil(this.destroyed$),
+    //     map((seccionState) => {
+    //       this.consultaDatos = seccionState;
+    //     })).subscribe();
 
-    if (this.consultaDatos.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    // if (this.consultaDatos.update) {
+    //   this.guardarDatosFormulario();
+    // }
+    // else {
+    this.esDatosRespuesta = true;
+    // }
   }
 
   /**

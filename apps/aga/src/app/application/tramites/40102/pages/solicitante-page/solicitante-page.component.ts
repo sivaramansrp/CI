@@ -28,6 +28,8 @@ import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
+import { IniciarResponse } from '../../../40101/pages/solicitante-page/solicitante-page.component';
+import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 
 /**
  * Interfaz que define la estructura de un objeto de acción de botón para la navegación del wizard.
@@ -135,6 +137,15 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
+  isExtrajero: boolean = false
+  isBtnShow: string = "yes"
+  catErrorMessage: string = ""
+  isCaat: boolean = false
+
+  /**
+  * Clase CSS para mostrar una alerta de información.
+  */
+  public info = 'alert-info';
   /**
    * Índice actual del paso en el wizard.
    *
@@ -294,8 +305,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   constructor(
     private chofer40102Query: Chofer40102Query,
-    private chofer40102Store: Chofer40102Store
-  ) {}
+    private chofer40102Store: Chofer40102Store,
+    private modificarTerrestreService: modificarTerrestreService,
+  ) { }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -341,6 +353,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.asignarSecciones();
+    this.isCaat = this.chofer40102Query.getValue().isCaat;
+    this.catErrorMessage = this.chofer40102Query.getValue().catErrorMessage;
   }
 
   /**
@@ -438,12 +452,46 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @since 1.0.0
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 6) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (e.accion === 'cont' && e.valor === 2) {
+      const SOLICITUDEID = this.chofer40102Store?.getValue().solicitudeId
+      const PAYLOAD = {
+        id_solicitud: SOLICITUDEID,
+        representacion_federa: {
+          cve_entidad_federativa: "DGO",
+          cve_unidad_administrativa: "1016"
+        },
+        representante_legal: {
+          id_persona_solicitud: SOLICITUDEID,
+          nombre: this.chofer40102Query?.getValue().nombre,
+          ap_paterno: this.chofer40102Query?.getValue().primerApellido,
+          ap_materno: this.chofer40102Query?.getValue().segundoApellido
+        }
+      }
+      this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
+        // this.chofer40101Service.guardarDatosFirma(res.datos);
+        (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res.datos.cadena_original);
+        this.isExtrajero = res?.datos?.is_extranjero
+        if (this.isExtrajero) {
+          this.isBtnShow = 'no'
+          this.pasos = PASOS.slice(0, 1)
+        }
+        if (!this.isExtrajero) {
+          if (e.valor > 0 && e.valor < 6) {
+            this.indice = e.valor;
+            this.wizardComponent.siguiente();
+          }
+        }
+
+      });
+
+    } else {
+      if (e.valor > 0 && e.valor < 6) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }

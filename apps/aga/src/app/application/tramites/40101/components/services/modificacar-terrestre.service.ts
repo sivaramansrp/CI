@@ -34,7 +34,7 @@ export class modificarTerrestreService {
    * @returns Observable con la lista de catálogos de colores de vehículos.
    */
   obtenerColorVehiculo(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>('/api/sat-t140101/vehiculos/colores', { headers: modificarTerrestreService.getApiHeaders() });
+    return this.http.get<CatalogoLista>('/api/sat-t40101/vehiculos/colores', { headers: modificarTerrestreService.getApiHeaders() });
   }
   /**
   * Constructor del servicio.
@@ -49,7 +49,7 @@ export class modificarTerrestreService {
    * @returns Observable con la lista de catálogos de tipos de vehículo.
    */
   obtenerTipoDeVehiculo(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>('/api/sat-t140101/vehiculos/tipos-vehiculo/pariveh', { headers: modificarTerrestreService.getApiHeaders() });
+    return this.http.get<CatalogoLista>('/api/sat-t40101/vehiculos/tipos-vehiculo/pariveh', { headers: modificarTerrestreService.getApiHeaders() });
   }
 
   /**
@@ -57,7 +57,7 @@ export class modificarTerrestreService {
      * @returns Observable con los datos del solicitante.
      */
   obtenerDatosSolicitante(): Observable<ApiResponseSolicitante> {
-    const FULL_URL = '/api/sat-t140101/solicitud/registro/iniciar';
+    const FULL_URL = '/api/sat-t40101/solicitud/registro/iniciar';
     return this.http.get<ApiResponseSolicitante>(FULL_URL, { headers: modificarTerrestreService.getApiHeaders() });
   }
 
@@ -68,7 +68,7 @@ export class modificarTerrestreService {
    * @returns Observable with the driver data
    */
   buscarChoferNacional(curp: string, rfc: string): Observable<ApiResponseChofer> {
-    const FULL_URL = '/api/sat-t140101/chofer/detalles';
+    const FULL_URL = '/api/sat-t40101/chofer/detalles';
     return this.http.post<ApiResponseChofer>(FULL_URL, { curp: curp, rfc: rfc }, { headers: modificarTerrestreService.getApiHeaders() });
   }
 
@@ -78,7 +78,7 @@ export class modificarTerrestreService {
       * @returns Observable con la lista de catálogos de vehículo de arrastre.
       */
   obtenerTipoArrastre(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>('/api/sat-t140101/vehiculos/tipos-vehiculo/arrastre', { headers: modificarTerrestreService.getApiHeaders() });
+    return this.http.get<CatalogoLista>('/api/sat-t40101/vehiculos/tipos-vehiculo/arrastre', { headers: modificarTerrestreService.getApiHeaders() });
   }
   /**
   * Obtiene el catálogo de años.
@@ -93,7 +93,7 @@ export class modificarTerrestreService {
    * @returns Observable con la solicitud del país.
    */
   obtenerPaisEmisor(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>('/api/sat-t140101/catalogo/paises', { headers: modificarTerrestreService.getApiHeaders() });
+    return this.http.get<CatalogoLista>('/api/sat-t40101/catalogo/paises', { headers: modificarTerrestreService.getApiHeaders() });
   }
 
   /**
@@ -105,12 +105,12 @@ export class modificarTerrestreService {
   }
 
   guardarDatosTramite(datos: unknown): Observable<IniciarResponse> {
-    const FULL_URL = '/api/sat-t140101/solicitud/registro/guardar';
+    const FULL_URL = '/api/sat-t40101/solicitud/registro/guardar';
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
 
   firmaDatos(datos: unknown): Observable<IniciarResponse> {
-    const FULL_URL = '/api/sat-t140101/solicitud/registro/202819905/firmar';
+    const FULL_URL = '/api/sat-t40101/solicitud/registro/202819905/firmar';
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
 
