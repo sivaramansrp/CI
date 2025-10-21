@@ -1326,7 +1326,7 @@ eliminarTratado(): void {
       this.abrirModal();
       return;
     }          
-    this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_tratado_acuerdo.toString())
+    this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_criterio_tratado.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
