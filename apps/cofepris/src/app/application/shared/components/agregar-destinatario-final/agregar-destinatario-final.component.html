@@ -64,7 +64,7 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label class="form-label">
-          R.F.C<span>*</span>:<span tooltip="Registro Federal de Contribuyente"><i
+          R.F.C<span [ngClass]="agregarDestinatarioFinal.controls['rfc'].errors?.['required'] && agregarDestinatarioFinal.controls['rfc'].touched ? 'text-danger' : ''">*</span>:<span tooltip="Registro Federal de Contribuyente"><i
               class="bi bi-question-circle-fill"></i></span>
         </label>
 
@@ -116,7 +116,7 @@
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)*:</label>
+        <label class="form-label">Nombre(s)<span [ngClass]="agregarDestinatarioFinal.controls['nombres'].errors?.['required'] && agregarDestinatarioFinal.controls['nombres'].touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" [maxlength]="200" formControlName="nombres"
           [ngClass]="esInvalido('nombres') ? 'required' : ''" />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
@@ -129,7 +129,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido*:</label>
+        <label class="form-label">Primer apellido<span [ngClass]="agregarDestinatarioFinal.controls['primerApellido'].errors?.['required'] && agregarDestinatarioFinal.controls['primerApellido'].touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" formControlName="primerApellido" [maxlength]="200"
           [ngClass]="esInvalido('primerApellido') ? 'required' : ''" />
         <div *ngIf="esInvalido('primerApellido')" class="text-danger">

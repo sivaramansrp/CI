@@ -44,6 +44,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalComponent } from '../agregar-destinatario-final/agregar-destinatario-final.component';
 import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
+import { AgregarFacturadorComponent } from '../agregar-facturador/agregar-facturador.component';
 import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
@@ -66,7 +67,8 @@ import { ToastrService } from 'ngx-toastr';
     NotificacionesComponent,
     AgregarFabricanteComponent,
     AgregarDestinatarioFinalComponent,
-    AgregarProveedorComponent
+    AgregarProveedorComponent,
+    AgregarFacturadorComponent
   ],
   providers: [TercerosRelacionadosFebService, ToastrService],
   templateUrl: './terceros-relacionados.component.html',
@@ -457,10 +459,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   public fabricanteModalAbierto: boolean = false;
 
   public destinatarioModalAbierto: boolean = false;
+
+  public facturadorModalAbierto: boolean = false;
   /**
    * Destinatario data selected for modification
    */
   public destinatarioSeleccionadoParaModificar: Destinatario[] = [];
+
+  public facturadorSeleccionadoParaModificar: Facturador[] = [];
   /**
    * Reference to the Fabricante modal element
    */
@@ -470,6 +476,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Reference to the Destinatario modal element
    */
   @ViewChild('destinatarioModal') destinatarioModal!: ElementRef;
+
+  @ViewChild('facturadorModal') facturadorModal!: ElementRef;
 
   /**
    * @method irAAcciones
@@ -523,6 +531,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.abrirFabricanteModal();
     }
 
+    onFacturadorAgregar(): void {
+      this.facturadorSeleccionadoParaModificar = [];
+      this.abrirFacturadorModal();
+    }
+
   /**
    * Opens the Fabricante selection modal
    */
@@ -537,6 +550,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   abrirDestinatarioModal(): void {
     this.destinatarioModalAbierto = true;
     const MODALELEMENT = document.getElementById('destinatarioModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+  abrirFacturadorModal(): void {
+    this.facturadorModalAbierto = true;
+    const MODALELEMENT = document.getElementById('facturadorModal');
     if (MODALELEMENT) {
       const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
       MODAL.show();
@@ -580,6 +602,13 @@ onDestinatarioUpdated(destinatarios: Destinatario[]): void {
   this.destinatarioSeleccionadoDatos = [];
   this.destinatarioSeleccionadoParaModificar = [];
 }
+
+onFacturadorUpdated(facturadores: Facturador[]): void {
+  this.facturadorTablaDatos = [...facturadores];
+  this.facturadorEliminar.emit([...this.facturadorTablaDatos]);
+  this.facturadorSeleccionadoDatos = [];
+  this.facturadorSeleccionadoParaModificar = [];
+}
 /**
  * Closes the Destinatario selection modal
  */
@@ -588,6 +617,17 @@ cerrarDestinatarioModal(): void {
   this.destinatarioSeleccionadoParaModificar = []; 
   
   const MODAL_ELEMENT = document.getElementById('destinatarioModal');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide();
+    }
+  }
+}
+cerrarFacturadorModal(): void {
+  this.facturadorModalAbierto = false;
+  this.facturadorSeleccionadoParaModificar = [];
+  const MODAL_ELEMENT = document.getElementById('facturadorModal');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
     if (MODAL_INSTANCE) {
@@ -666,6 +706,7 @@ cerrarDestinatarioModal(): void {
   }
 }
 
+
   /**
    * @method modificarProveedor
    * @description Emite el evento con la lista de proveedores seleccionados y navega a la pantalla de edición/agregado de proveedor.
@@ -694,8 +735,15 @@ cerrarDestinatarioModal(): void {
       this.mostrarAlerta = true;
       return;
     }
-    this.facturadorEventoModificar.emit(this.facturadorSeleccionadoDatos);
-    this.irAAcciones('../agregar-facturador',true);
+   
+    this.facturadorSeleccionadoParaModificar=this.facturadorSeleccionadoDatos.map(f => ({ ...f }));
+    this.facturadorModalAbierto=true;
+    
+    const MODALELEMENT = document.getElementById('facturadorModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
   }
 
   /**

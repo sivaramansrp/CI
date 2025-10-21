@@ -953,6 +953,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
         DatosMercanciaComponent.numeroConDecimalesValidator()
+        
       ],
     ],
     cantidadUmt: [
@@ -967,7 +968,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       [
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroUMCDecimalesValidator()
+        DatosMercanciaComponent.numeroUMCDecimalesValidator(),
 
       ],
     ],

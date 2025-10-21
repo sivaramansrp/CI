@@ -88,3 +88,11 @@ export const ID_PROCEDIMIENTO = 260216;
  * this.errorMessage = FALTAN_CAMPOS_POR_CAPTURAR;
  */
 export const FALTAN_CAMPOS_POR_CAPTURAR = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
+
+/**
+ * @const ELEMENTOS_REQUERIDOS
+ * @description Lista de elementos requeridos para el trámite.
+ */
+export const ELEMENTOS_REQUERIDOS = [
+  'fabricante'
+];

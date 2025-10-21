@@ -85,7 +85,7 @@
   idProcedimiento === 260904){
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">R.F.C.*: </label>
+        <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched ? 'text-danger' : ''">*</span>:</label>
         <span tooltip="Registro Federal de Contribuyente"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
@@ -95,7 +95,7 @@
           [maxlength]="15"
           formControlName="rfc"
           (input)="onChangeRfc($event)"
-          [ngClass]="esInvalido('rfc')  && agregarFabricanteForm.controls['rfc'].touched ? 'required' : ''"
+          [ngClass]="esInvalido('rfc') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('rfc')" class="text-danger">
           <small
@@ -117,7 +117,7 @@
   chequeoValidacionAlGuardar
 ) {
   <div class="col-md-4">
-    <label class="form-label">C.U.R.P.*:</label>
+    <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
     <input
       type="text"
       class="form-control"
@@ -138,7 +138,7 @@
 }
       @else if (!estaOculto && !chequeoValidacionAlGuardar ) {
       <div class="col-md-4">
-        <label class="form-label">C.U.R.P.*:</label>
+        <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -246,14 +246,8 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Denominación/razón
-          social@if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
-          <span  [ngClass]="esInvalido('razonSocial')  && agregarFabricanteForm.controls['razonSocial'].touched ? 'required' : ''">*</span>
-          }
-          @else{
-            <span>*</span>
-          }:</label
-        >
+          >Denominación/razón social<span [ngClass]="agregarFabricanteForm.controls['razonSocial'].errors?.['required'] && agregarFabricanteForm.controls['razonSocial'].touched ? 'text-danger' : ''">*</span>:</label>
+        
         <input
           type="text"
           class="form-control"
@@ -298,7 +292,7 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label" for="estado">Estado*:</label>
+        <label class="form-label" for="estado">Estado<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"

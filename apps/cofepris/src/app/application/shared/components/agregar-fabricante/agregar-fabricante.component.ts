@@ -456,6 +456,7 @@ export class AgregarFabricanteComponent
       ],
       rfc: [
         this.obtenerValor('rfc'),
+        [Validators.required]
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -475,7 +476,7 @@ export class AgregarFabricanteComponent
       ],
       razonSocial: [
         this.obtenerValor('razonSocial'),
-        []
+        [Validators.required]
       ],
       pais: [
         {

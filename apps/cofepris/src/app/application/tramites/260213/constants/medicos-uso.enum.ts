@@ -141,3 +141,11 @@ export const TEXTOS_REQUISITOS =
  * ```
  */
 export const ID_PROCEDIMIENTO = 260213;
+
+/**
+ * @const ELEMENTOS_REQUERIDOS
+ * @description Lista de elementos requeridos para el trámite.
+ */
+export const ELEMENTOS_REQUERIDOS= [
+  'fabricante'
+];
