@@ -10,6 +10,7 @@ import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
 import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 
 /**
  * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
@@ -91,7 +92,8 @@ export class AgregarMercanciaComponent implements OnDestroy{
   constructor(public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: FitosanitarioQuery,
     public fitosanitarioStore: FitosanitarioStore,
-    public catalogosService: CatalogosService,
+    public catalogosService: CatalogosService
+
   ) {
     this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
       this.catalogosDatos = resp;
@@ -179,8 +181,8 @@ export class AgregarMercanciaComponent implements OnDestroy{
   }
 
   /**
-   * @description Obtiene la lista de aduanas desde un archivo JSON.
-   * @method getaduanaLista
+   * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+   * @method getFraccionArancelariaLista
    * @returns {void}
    */
   getFraccionArancelariaLista(): void {
@@ -194,8 +196,6 @@ export class AgregarMercanciaComponent implements OnDestroy{
       );
 
   }
-
-
 
   /**
    * Método que se ejecuta al destruir el componente.

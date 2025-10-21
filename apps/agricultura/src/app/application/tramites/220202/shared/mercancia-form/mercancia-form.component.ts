@@ -37,6 +37,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 
 @Component({
   selector: 'app-mercancia-form',
@@ -201,6 +202,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private readonly agriculturaApiService: AgriculturaApiService,
     private readonly fitosanitarioQuery: FitosanitarioQuery,
+    private registroSolicitudService: RegistroSolicitudService,
     private catalogosService: CatalogosService
   ) { }
 
@@ -310,14 +312,18 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param event - El objeto de catálogo seleccionado que contiene la información de la fracción arancelaria
    */
   fraccionArancelariaSeleccionada(event: Catalogo): void {
-    const FRACCION_SELECCIONADA = this.catalogosDatos.fraccionArancelariaList.find((fraccion) => fraccion.id === event.id);
-    if (FRACCION_SELECCIONADA) {
-      this.mercanciaForm.patchValue({
-        descripcionFraccion: FRACCION_SELECCIONADA.descripcion,
-        umt: FRACCION_SELECCIONADA.descripcion
+    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220202, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.mercanciaForm.patchValue({
+            descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción'
       });
-    }
+        }
+    );
   }
+
 
   /**
    * Maneja la selección de un elemento del catálogo NICO.

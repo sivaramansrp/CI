@@ -11,7 +11,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -53,17 +53,16 @@ export class CatalogosService {
   obtieneCatalogoFraccionesArancelarias(tramite: number): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES_ARANCELARIAS(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
-      // .pipe(
-      //     // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
-      //     map((response: BaseResponse<Catalogo[]>) => ({
-      //         ...response,
-      //         datos: response.datos?.map(item => ({
-      //             ...item,
-      //             descripcion: `${item.clave}`
-      //         })) ?? []
-      //     }))
-      // )
-      ;
+      .pipe(
+        // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
+        map((response: BaseResponse<Catalogo[]>) => ({
+          ...response,
+          datos: response.datos?.map(item => ({
+            ...item,
+            descripcion: `${item.clave}`
+          })) ?? []
+        }))
+      );
   }
 
   /**
