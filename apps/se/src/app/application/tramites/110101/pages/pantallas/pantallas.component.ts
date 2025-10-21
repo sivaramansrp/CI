@@ -179,7 +179,7 @@ export class PantallasComponent implements OnInit {
     const PAYLOAD: SolicitudCompletaRequest = {
       id_solicitud: null,
       id_tipo_tramite: null,
-      rfc: "AAL0409235E6",
+      rfc: "LEQI8101314S7",
       cve_unidad_administrativa: this.solicitudeState.representacion,
       //Se tiene duda pienso que es el segundo tab
       costo_total: null,
