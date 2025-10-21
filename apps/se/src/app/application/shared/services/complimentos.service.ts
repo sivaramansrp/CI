@@ -157,9 +157,9 @@ export class ComplimentosService {
    *
    * @returns Observable que emite la respuesta del catálogo de tratados y acuerdos.
    */
-  getTratadoAcuerdo(): Observable<JsonResponseCatalogo> {
+  getTratadoAcuerdo(countryCode: string): Observable<JsonResponseCatalogo> {
     return this.httpService.get<JsonResponseCatalogo>(
-      this.apiRoutes.tratadosAcuerdos,
+      this.apiRoutes.tratadosAcuerdos(countryCode),
       {},
       false
     );
