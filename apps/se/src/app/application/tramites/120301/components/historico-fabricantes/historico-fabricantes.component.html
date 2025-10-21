@@ -7,6 +7,7 @@
         <label for="Tipo_de_Certificado">¿El exportador y el fabricante son la misma persona?</label>
       </div>
     </div>
+
     <app-input-radio [radioOptions]="radioOptions"
       [selectedValue]="historicoFabricantesForm.get('exportadorFabricanteMismo')?.value" [isRequired]="true"
       (valueChange)="onValueChange($event)" [layout]="'vertical'" (change)="
@@ -29,7 +30,7 @@
       <h6>Fabricantes nacionales</h6>
 
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-        [datos]="fabricantesNacionales"
+        [styleCenter]="true" [datos]="fabricantesNacionales"
         (listaDeFilaSeleccionada)="onSeleccionFabricantesNacionales($event)"></app-tabla-dinamica>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2"
@@ -39,7 +40,8 @@
       </div>
       <h6>Fabricante</h6>
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-        [datos]="fabricante" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+        [styleCenter]="true" [datos]="fabricante"
+        (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
       <div class="row mb-3">
         <div class="d-flex justify-content-end mt-5">
           <button type="button" class="btn btn-default" [disabled]="!fabricante || fabricante.length === 0"
@@ -80,6 +82,11 @@
                   </small>
                   <small *ngIf="historicoFabricantesForm.get('numeroRegistroFiscal')?.errors?.['pattern']">
                     El número de registro fiscal no es válido.
+                  </small>
+                  <small *ngIf="historicoFabricantesForm.get('numeroRegistroFiscal')?.errors?.['maxlength']">
+                    El número de registro fiscal no puede exceder los {{
+                    historicoFabricantesForm.get('numeroRegistroFiscal')?.errors?.['maxlength'].requiredLength }}
+                    caracteres.
                   </small>
                 </div>
                 }

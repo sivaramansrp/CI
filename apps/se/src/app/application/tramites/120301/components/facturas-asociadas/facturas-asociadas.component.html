@@ -5,7 +5,7 @@
   }
   <form [formGroup]="formularioAsociacionFactura">
     @if(visualizarEvaluacion){
-    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO" [styleCenter]="true"
       [configuracionTabla]="tableColumns" [datos]="facturasDisponible"
       (filaSeleccionada)="guardadoFila($event)"></app-tabla-dinamica>
     <div class="row col-4 mb-5">
@@ -24,12 +24,12 @@
     }
     @if(!visualizarEvaluacion){
     <h6>Facturas asociadas</h6>
-    <app-tabla-dinamica [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas"
+    <app-tabla-dinamica [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas" [styleCenter]="true"
       (filaSeleccionada)="guardadoFilaAsociada($event)"></app-tabla-dinamica>
     }
     @if(visualizarEvaluacion){
     <h6>Facturas asociadas</h6>
-    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO" [styleCenter]="true"
       [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas"
       (filaSeleccionada)="guardadoFilaAsociada($event)"></app-tabla-dinamica>
     <div class="row mb-5">
@@ -50,7 +50,7 @@
             )" />
       </div>
       <div class="col-6 ">
-        <label for="message" class="form-label">{{labelUnidad +'s'}} equivalentes:</label>
+        <label for="message" class="form-label">Metros cuadrados equivalentes:</label>
         <input type="text" class="form-control" id="message" placeholder=""
           formControlName="metrosCuadradosEquivalentes" (change)="
             setValoresStore(
@@ -67,7 +67,7 @@
 <section>
   <div [config]="{ show: true, backdrop: 'static' }" (onHidden)="onHidden()" bsModal #modal="bs-modal"
     class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 id="dialog-auto-name" class="modal-title pull-left">
@@ -75,17 +75,17 @@
           </h4>
         </div>
         <div class="modal-body">
-          <p>¿Está seguro que desea eliminar las facturas seleccionadas?</p>
+          <p>¿Está seguro que desea eliminar los registros marcados?</p>
         </div>
         <div class="modal-footer custom-footer mt-4 justify-content-end">
           <div class="row">
             <div class="col-md-12">
-              <button class="btn btn-primary me-2" type="button" (click)="aceptarEliminarFacturas()">
-                Aceptar
-              </button>
               <button class="btn btn-default me-2" type="button" data-bs-dismiss="modal"
                 (click)="cerrarEliminarModal()">
                 Cancelar
+              </button>
+              <button class="btn btn-primary me-2" type="button" (click)="aceptarEliminarFacturas()">
+                Aceptar
               </button>
             </div>
           </div>

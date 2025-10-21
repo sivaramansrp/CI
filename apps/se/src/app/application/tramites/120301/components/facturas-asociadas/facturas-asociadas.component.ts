@@ -166,13 +166,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   colapsable: boolean = false;
 
   /**
-   * @property {string} labelUnidad - Unidad de medida obtenida del servicio.
-   * Almacena la unidad de medida (kg, lt, etc.) obtenida al consultar los totales de facturas asociadas.
-   * Se utiliza para mostrar la unidad correcta junto a los valores en el formulario.
-   */
-  labelUnidad: string = '';
-
-  /**
    * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
    * Formulario secundario que maneja información complementaria relacionada con la constancia del registro.
    * Se utiliza en conjunto con el formulario principal para completar la información requerida.
@@ -527,7 +520,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
             if (this.informacionFacturaAsociadas.resultado_equivalencia) {
               this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.setValue(this.informacionFacturaAsociadas.resultado_equivalencia.cantidad_factura);
               this.formularioAsociacionFactura.get('metrosCuadradosEquivalentes')?.setValue(this.informacionFacturaAsociadas.resultado_equivalencia.total_equivalente);
-              this.labelUnidad = this.informacionFacturaAsociadas.resultado_equivalencia.unidad_label;
             }
           }
           else {
@@ -661,7 +653,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'La factura no puede ser asociada, debido a que la unidad de medida es diferente a la asociada a la constancia.',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -747,7 +739,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.codigo === '00' && response.datos) {
-            this.labelUnidad = response.datos.unidad_label;
             this.formularioAsociacionFactura.patchValue({
               cantidadFacturasTotal: response.datos.cantidad_factura,
               metrosCuadradosEquivalentes: response.datos.total_equivalente

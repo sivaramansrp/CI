@@ -9,7 +9,8 @@
       </div>
       <div class="col-md-12">
         <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-          (listaDeFilaSeleccionada)="facturaSeleccionada = $event" [datos]="facturas"></app-tabla-dinamica>
+          [styleCenter]="true" (listaDeFilaSeleccionada)="facturaSeleccionada = $event"
+          [datos]="facturas"></app-tabla-dinamica>
       </div>
     </div>
     <div class="container text-end mt-5">
@@ -44,7 +45,7 @@
                             facturaForm.get('numeroFactura')?.invalid &&
                             (facturaForm.get('numeroFactura')?.touched ||
                               facturaForm.get('numeroFactura')?.dirty)
-                        }">*</span>
+                        }">*</span>:
                     </label>
                     <input class="form-control" value="" id="numeroFactura" placeholder="" type="text" libUppercase
                       name="numeroFactura" formControlName="numeroFactura" (change)="
@@ -174,13 +175,8 @@
                             }">*</span>:
                         </label>
                         <input class="form-control" value="" id="razonSocial" placeholder="" type="text" libUppercase
-                          name="razonSocial" formControlName="razonSocial" (change)="
-                            setValoresStore(
-                              facturaForm,
-                              'razonSocial',
-                              'setRazonSocial'
-                            )
-                          " />
+                          name="razonSocial" formControlName="razonSocial"  (input)="onInputUppercase('razonSocial', $event)"
+                          (change)="setValoresStore(facturaForm,'razonSocial','setRazonSocial')" />
                         @if (facturaForm.get('razonSocial')?.hasError('required') &&
                         (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)) {
                         <small class="mensaje-error">Este campo es obligatorio</small>
@@ -202,7 +198,7 @@
                                   facturaForm.get('calle')?.dirty)
                             }">*</span>:</label>
                         <input class="form-control" value="" id="calle" placeholder="" type="text" libUppercase
-                          name="calle" formControlName="calle" (change)="
+                          name="calle" formControlName="calle" (input)="onInputUppercase('calle', $event)" (change)="
                             setValoresStore(facturaForm, 'calle', 'setCalle')
                           " />
                         @if (facturaForm.get('calle')?.hasError('required') && (facturaForm.get('calle')?.touched ||
@@ -225,7 +221,7 @@
                             }">*</span>:
                         </label>
                         <input class="form-control" value="" class="form-control" id="ciudad" placeholder="" type="text"
-                          libUppercase name="ciudad" formControlName="ciudad" (change)="
+                          libUppercase name="ciudad" formControlName="ciudad" (input)="onInputUppercase('ciudad', $event)" (change)="
                             setValoresStore(facturaForm, 'ciudad', 'setCiudad')
                           " />
                         @if (facturaForm.get('ciudad')?.hasError('required') && (facturaForm.get('ciudad')?.touched ||

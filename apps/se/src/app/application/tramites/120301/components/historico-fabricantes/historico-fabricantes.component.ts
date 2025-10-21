@@ -98,9 +98,9 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
   ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
-/**
- * @property {string} numeroFolio - Número de folio del trámite.
- */
+  /**
+   * @property {string} numeroFolio - Número de folio del trámite.
+   */
   @Input()
   numeroFolio: string = '';
   /**
@@ -699,7 +699,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
               correoElectrónico: DATOS?.correo_electronico ?? '',
               telefono: DATOS?.telefono ?? ''
             }];
-            
+
           } else {
             console.error('Error en la respuesta del servicio:', response.mensaje);
           }
@@ -729,7 +729,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       ],
       numeroRegistroFiscal: [
         this.historicoState.numeroRegistroFiscal,
-        [Validators.required, Validators.minLength(5), Validators.pattern(REGEX_RFC)],
+        [Validators.required, Validators.minLength(5), Validators.maxLength(15), Validators.pattern(REGEX_RFC)],
       ],
       fabricantesNacionales: [[]],
       fabricantesAsociados: [[]],

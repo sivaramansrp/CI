@@ -1,52 +1,49 @@
 <div class="page">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h2>Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados
+          Unidos de América</h2>
+      </div>
+      @if(mostrarOtraPestana) {
+      <div class="alert alert-info alert-dismissible fade show text-center firmar-alert" style="color:#3c763d"
+        role="alert">
+        La solicitud ha quedado registrada con el número temporal <span>202784031</span>. Éste no tiene validez legal y
+        sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al
+        momento en que ésta sea firmada.
+      </div>
+      }
+      <div class="col-12 p-0">
+        @if (esFormaValido) {
+        <div class="text-center">
+          <div>
+            <div class="col-md-12 campos-requeridos p-0">
+              <div class="alert alert-info alert-danger" [innerHTML]="formularioAlertaError"></div>
+            </div>
+          </div>
         </div>
-        @if(mostrarOtraPestana) {
-        <div class="alert alert-info alert-dismissible fade show text-center firmar-alert" role="alert">
-          La solicitud ha quedado registrada con el número temporal <span>202784031</span>. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.
+        } @else if(anoFormValido){
+        <div class="text-center">
+          <div>
+            <div class="col-md-12 campos-requeridos p-0">
+              <div class="alert alert-info alert-danger" [innerHTML]="formularioAlertaAno"></div>
+            </div>
+          </div>
         </div>
         }
-        <div class="col-12 p-0">
-          @if (esFormaValido) {
-            <div class="text-center">
-              <div>
-                <div class="col-md-12 campos-requeridos p-0">
-                  <div
-                    class="alert alert-info alert-danger"
-                    [innerHTML]="formularioAlertaError"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          } @else if(anoFormValido){
-            <div class="text-center">
-              <div>
-                <div class="col-md-12 campos-requeridos p-0">
-                  <div
-                    class="alert alert-info alert-danger"
-                    [innerHTML]="formularioAlertaAno"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-        <app-wizard [listaPasos]="pasos"></app-wizard>
+      </div>
+      <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()" (errorValidacion)="alErrorDeValidacion($event)" (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)"></app-paso-uno>
+      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()" (errorValidacion)="alErrorDeValidacion($event)"
+        (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
-      <app-paso-tres  [procedure]="120301" [procedureUrl]="'elegibilidad-de-textiles/elegibilidad-textiles'"></app-paso-tres>
+      <app-paso-tres [procedure]="120301"
+        [procedureUrl]="'elegibilidad-de-textiles/elegibilidad-textiles'"></app-paso-tres>
       } }
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
