@@ -108,7 +108,6 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.getValoresStore();
     this.obtenerPaisBloque();
-    this.obtenerTratadoAcuerdo();
   }
 
    /**
@@ -196,8 +195,8 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  *
  * @returns {void}
  */
-  obtenerTratadoAcuerdo(): void {
-    this.complimentosService.getTratadoAcuerdo().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+  obtenerTratadoAcuerdo(countryCode: string): void {
+    this.complimentosService.getTratadoAcuerdo(countryCode).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
         if(esValidObject(res)) {
           const RESPONSE = doDeepCopy(res);
           if(esValidArray(RESPONSE.datos)) {
@@ -216,9 +215,10 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110210Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110210Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    if (campo === 'paisBloqueClave' && VALOR && VALOR !== '') {
+      this.obtenerTratadoAcuerdo(VALOR);
+    }
   }
-
-
 
   /**
    * Obtiene los valores del store y los asigna al formulario.
