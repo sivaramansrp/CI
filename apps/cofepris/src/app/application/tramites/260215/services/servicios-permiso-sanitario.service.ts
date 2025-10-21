@@ -2,12 +2,13 @@ import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
 import { Observable, catchError, throwError } from 'rxjs';
-import { PermisoModel, ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
+import { ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
 import { Solicitud260215State, Tramite260215Store } from '../estados/tramites/tramite260215.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -89,14 +90,7 @@ export class ServiciosPermisoSanitarioService {
     );
   }
 
-  /**
-   * Obtiene una lista de permisos sanitarios desde un archivo JSON local.
-   *
-   * @returns Un observable que emite un arreglo de objetos de tipo `PermisoModel`.
-   */
-  getTable(): Observable<PermisoModel[]> {
-    return this.http.get<PermisoModel[]>('assets/json/260215/terceros.json');
-  }
+
 
   /**
    * Obtiene los datos de terceros relacionados desde un archivo JSON local.
@@ -243,4 +237,37 @@ export class ServiciosPermisoSanitarioService {
           })
         );
     }
+      /**
+       * Obtiene los datos de la tabla de fabricantes como destinatarios desde un archivo JSON local.
+       *
+       * @returns {Observable<Destinatario[]>} Observable que emite un arreglo de objetos `Destinatario`.
+       * @description Este método realiza una petición HTTP para obtener los datos de la tabla de fabricantes como destinatarios.
+       */
+      getFabricanteTablaDatos(): Observable<Fabricante[]> {
+        return this.http.get<Fabricante[]>('assets/json/260214/fabricante.json');
+      }
+      
+        /**
+         * @description
+         * Obtiene la lista de proveedores desde un archivo JSON local.
+         *
+         * @returns {Observable<Proveedor[]>} Un observable que emite un arreglo de proveedores.
+         *
+         * @example
+         * this.miServicio.getProveedorTablaDatos().subscribe((data) => {
+         *   console.log(data);
+         * });
+         */
+        getProveedorTablaDatos(): Observable<Proveedor[]> {
+          return this.http.get<Proveedor[]>('assets/json/260214/proveedor.json');
+        }
+          getDestinatarioTablaDatos(): Observable<Destinatario[]> {
+            return this.http.get<Destinatario[]>(
+              'assets/json/260214/destinatario-final.json'
+            );
+          }
+            getFacturadorTablaDatos(): Observable<Facturador[]> {
+              return this.http.get<Facturador[]>('assets/json/260214/facturador.json');
+            }
+      
 }

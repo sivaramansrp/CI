@@ -58,10 +58,11 @@
             class="mensaje-error">
             El RFC no tiene un formato válido.
           </div>
+          @if(idProcedimiento!==260209){
           <div class="mensaje-error"
             *ngIf="datosSolicitudForm.get('rfcSanitario')?.errors?.['required'] && datosSolicitudForm.get('rfcSanitario')?.touched">
             Este campo es obligatorio.
-          </div>
+          </div>}
         </div>
       </div>
       }
@@ -70,7 +71,7 @@
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila">
         <div class="form-group">
           <label class="form-label municipio-label" for="denominacionRazon">Denominación o razón social</label>
-          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')">*</span>
+          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"  [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched ? 'text-danger' : ''" >*</span>
           <span class="form-label municipio-labe">:</span>
           <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
             maxlength="100" [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''" />
@@ -92,12 +93,12 @@
       </div>
     </div>
 
-    <ng-titulo titulo="Domicillio del establecimiento"></ng-titulo>
+    <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
 
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal*:</label>
+          <label class="form-label" for="codigoPostal">Código postal <span [ngClass]="{'text-danger':datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
           <input class="form-control" id="codigoPostal" type="text" maxlength="12" formControlName="codigoPostal"
             [ngClass]="
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
@@ -114,13 +115,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="estadoDatos" formControlName="estado" [label]="'Estado'" [required]="true"
-            name="estado" [placeholder]="'Seleccione una opción'" (selectionChange)="cambioDeEstado($event)"
+            name="estado" [placeholder]="'Selecciona un valor'" (selectionChange)="cambioDeEstado($event)"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}*:</label>
+          <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}<span [ngClass]="{'text-danger':datosSolicitudForm.get('municipioAlcaldia')?.touched }">*</span>:</label>
           <input class="form-control" id="municipioAlcaldia" type="text" maxlength="120"
             formControlName="municipioAlcaldia" [ngClass]="
               isValid(datosSolicitudForm, 'municipioAlcaldia') ? 'required' : ''
@@ -190,7 +191,7 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle*:</label>
+          <label class="form-label" for="calle">Calle <span [ngClass]="{'text-danger':datosSolicitudForm.get('calle')?.touched }">*</span>:</label>
           <span tooltip="Domicilio, calle, número interior, número exterior, lote">
             <i class="bi bi-question-circle-fill"></i>
           </span>
@@ -268,7 +269,7 @@
 
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono*:</label>
+          <label class="form-label" for="telefono">Teléfono <span [ngClass]="{'text-danger':datosSolicitudForm.get('telefono')?.touched }">*</span>:</label>
           <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" [ngClass]="
               isValid(datosSolicitudForm, 'telefono') ? 'required' : ''
             " />
@@ -289,14 +290,16 @@
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono">S.C.I.A.N.
           </label>
-          <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')"[ngClass]="{'mensaje-error':isContinuarButtonClicked && (scianConfig.datos.length === 0)}">*</span>
           <span class="form-label">:</span>
         </div>
       </div>
       <app-tabla-dinamica [tipoSeleccionTabla]="scianConfig.tipoSeleccionTabla"
         [configuracionTabla]="scianConfig.configuracionTabla" [datos]="scianConfig.datos"
         (listaDeFilaSeleccionada)="scianLista = $event"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        [isInvalida]="esCampoRequerido('scian') && isContinuarButtonClicked && (scianConfig.datos.length === 0)"
+        ></app-tabla-dinamica>
     </div>
     @if (!esSinAccionAlIniciar) {
     <div class="row">
@@ -334,7 +337,7 @@
             tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente">
             <i class="bi bi-question-circle-fill"></i>
           </span>
-          <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria"
+          <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" maxlength="20"
             (change)="cambioLicenciaSanitaria($event)" />
         </div>
       </div>
@@ -344,7 +347,7 @@
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
-            [placeholder]="'Seleccione una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
+            [placeholder]="'Selecciona un valor'" [isBold]="true" [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircleText]="
               'Régimen al que se destinará la mercancía'
             " [required]="true" name="regimen" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
@@ -353,7 +356,7 @@
       <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
           <app-catalogo-select [catalogo]="adunasDeEntradasDatos" [isBold]="true" formControlName="adunasDeEntradas"
-            [label]="'Aduanas de entradas'" [placeholder]="'Seleccione una opción'" [required]="true"
+            [label]="'Aduanas de entradas'" [placeholder]="'selecciona un valor'" [required]="true"
             name="adunasDeEntradas" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -403,11 +406,13 @@
     </div>
     } @if (tablaMercanciasConfig) {
     <div class="row mt-5">
-      <h5 class="mt-3">Mercancías*:</h5>
+      <h5 class="mt-3">Mercancías<span class="form-label" *ngIf="!esCampoRequerido('mercancias')" [ngClass]="{'mensaje-error':isContinuarButtonClicked && (tablaMercanciasConfig.datos.length === 0)}">*</span><span class="form-label">:</span>
+      </h5>
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaMercanciasConfig.tipoSeleccionTabla"
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla" [datos]="tablaMercanciasConfig.datos"
-        [isInvalida]="isMercanciasInvalid" (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [isInvalida]="(!esCampoRequerido('mercancias') && isContinuarButtonClicked && (tablaMercanciasConfig.datos.length === 0))||isMercanciasInvalid" (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        ></app-tabla-dinamica>
       <div class="d-flex justify-content-center mt-3" [class.disabled]="formularioDeshabilitado"
         [style.pointerEvents]="formularioDeshabilitado ? 'none' : 'auto'"
         [style.opacity]="formularioDeshabilitado ? '0.5' : '1'">
@@ -588,7 +593,7 @@
         <label class="form-label" for="correoElectronico">Correo electrónico
         </label>
         <span class="form-label municipio-label"
-          [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''"
+          [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') && datosSolicitudForm.get('correoElectronico')?.touched? 'text-danger' : ''"
           *ngIf="esCampoRequerido('correoElectronico')">*</span>
         <span class="form-label mx-1">:</span>
         <span tooltip="ejemplo@dominio.com">
@@ -644,3 +649,47 @@
   </lib-notificaciones>
 </section>
 }
+<!-- SCIAN Selection Modal -->
+<div class="modal fade" id="scianModal" tabindex="-1" aria-labelledby="scianModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="scianModalLabel">Seleccionar S.C.I.A.N.</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-scian-tabla
+         *ngIf="scianModalAbierto"
+         (cerrarModal)="cerrarScianModal()"
+         (scianSeleccionado)="onScianSeleccionado($event)">        
+        </app-scian-tabla>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Merchandise Selection Modal -->
+<div class="modal fade" id="mercanciaModal" tabindex="-1" aria-labelledby="mercanciaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mercanciaModalLabel">
+          {{ mercanciaSeleccionada ? 'Modificar Datos de Mercancía' : 'Agregar Datos de Mercancía' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarMercanciaModal()"></button>
+      </div>
+      <div class="modal-body">
+        <app-datos-mercancia
+          *ngIf="mercanciaModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [mercanciaFormState]="mercanciaFormState || {}"
+          [datoSeleccionado]="mercanciaSeleccionada"
+          (cerrarModal)="cerrarMercanciaModal()"
+          (mercanciaSeleccionado)="onMercanciaSeleccionado($event)">        
+        </app-datos-mercancia>
+      </div>
+    </div>
+  </div>
+</div>
+         
+
