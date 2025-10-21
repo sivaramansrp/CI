@@ -58,4 +58,4 @@ export const API_BUSCAR_TERCIARIZADAS = (TRAMITE: string): string => `sat-t${TRA
  * API para buscar datos de la grid de plantas controladoras de empresas controladas.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t80211/solicitud/empresas-terciarizadas/buscar-datos-grid-plantas
  */
-export const API_BUSCAR_CANCELACIONES_GRID = (TRAMITE: string): string => `sat-t${TRAMITE}/solicitud/empresas-terciarizadas/buscar-datos-grid-plantas`;
+export const API_BUSCAR_CANCELACIONES_GRID = (TRAMITE: string, rfc:string): string => `sat-t${TRAMITE}/solicitud/buscar-programas?rfc=${rfc}`;
