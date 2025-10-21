@@ -791,13 +791,6 @@
     "department": "agace"
   },
   {
-    "id": 114,
-    "tramite": 260202,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "cofepris"
-  },
-  {
     "id": 115,
     "tramite": 110207,
     "linkDashboard": "/se/reportes/solicitud",

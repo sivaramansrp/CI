@@ -11,6 +11,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
 import { Tramite260209Store } from '../../estados/tramite260209Store.store';
+import {ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -59,7 +60,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @default []
    */
   proveedorTablaDatos: Proveedor[] = [];
-
+ /**
+    * @property {string[]} elementosRequeridos
+    * @description
+    * Lista de elementos requeridos para completar el formulario o proceso.
+    */
+   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
+ 
   /**
    * @property {Facturador[]} facturadorTablaDatos
    * @description Almacena la lista de facturadores que se muestran en la tabla correspondiente.

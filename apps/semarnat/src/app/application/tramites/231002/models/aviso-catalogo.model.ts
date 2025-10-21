@@ -1,7 +1,4 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import {
-  MateriaPrima231001
-} from '../../231001/models/datos.model';
 import { MateriaResiduo } from './materia-residuo.model';
 
 /**
@@ -145,28 +142,60 @@ export interface OpcionesDeRadio {
  * Interface para los datos recibidos al agregar un residuo peligroso
  */
 export interface ResiduoAgregadoData {
-  fraccionArancelaria?: string;
-  residuoPeligroso?: string;
-  nico?: string;
   acotacion?: string;
   cantidad?: string;
   cantidadLetra?: string;
-  unidadMedida?: string;
-  claveResiduo?: string;
   nombre?: string;
   descripcion?: string;
-  creti?: string;
-  estadoFisico?: string;
   manifiesto?: string;
-  tipoContenedor?: string;
   capacidad?: string;
 }
 
 /**
  * Interface para los datos de residuo peligroso en la tabla
  */
-export interface ResiduoPeligroso {
+export interface ResiduoPeligroso
+  extends DatosResiduos,
+    CaracteristicasResiduos {
   id?: number;
+  origenResiduoGeneracion: string;
+  nombreResiduo: string;
+  acotacion: string;
+  cantidad: string;
+  cantidadLetra: string;
+  numeroManifiesto: string;
+  capacidad: string;
+  materiasPrimasRelacionadas?: MateriaResiduo[];
+}
+
+export interface DatosResiduos {
+  fraccionCve: string;
+  fraccionDesc: string;
+  nicoCve: string;
+  nicoDesc: string;
+  unidadMedidaCve: string;
+  unidadMedidaDesc: string;
+  residuoCve: string;
+  residuoDesc: string;
+  residuoNombre: string;
+  residuoNombreDesc: string;
+  residuoDescCve: string;
+  residuoDescDesc: string;
+  residuoOtro: string;
+}
+
+export interface CaracteristicasResiduos {
+  cretiCve: string;
+  cretiDesc: string;
+  estadoFisicoCve: string;
+  estadoFisicoDesc: string;
+  estadoFisicoOtro: string;
+  tipoContenedorCve: string;
+  tipoContenedorDesc: string;
+  tipoContenedorOtro: string;
+}
+
+export interface ResiduoPeligrosoFormulario {
   origenResiduoGeneracion: string;
   fraccionArancelaria: string;
   nombreResiduo: string;
@@ -196,6 +225,4 @@ export interface ResiduoPeligroso {
   cretiDesc: string;
   estadoFisicoDesc: string;
   tipoContenedorDesc: string;
-  descripcionOtro?: string;
-  materiasPrimasRelacionadas?: MateriaResiduo[];
 }

@@ -10,6 +10,7 @@ import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
  */
 export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
   return {
+    idSolicitud: null,
     solicitudForm: {
       ideGenerica1: '',
       numeroRegistroAmbiental: '',
@@ -52,6 +53,18 @@ export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
    */
   constructor() {
     super(crearEstadoInicialFormularioReciclaje());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**

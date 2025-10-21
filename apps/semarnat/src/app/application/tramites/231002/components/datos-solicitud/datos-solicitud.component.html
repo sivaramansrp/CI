@@ -111,16 +111,18 @@
           formControlName="numeroProgramaImmex"
           [label]="'Número de autorización IMMEX'"
           [required]="true"
-          (change)="actualizarCampoSolicitudForm('numeroProgramaImmex')"
+          (change)="
+            actualizarCampoSolicitudForm('numeroProgramaImmex'); onImmexChange()
+          "
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
     </div>
-    <div class="row mb-3">
+    <div *ngIf="mostrarComboDomicilioImmex" class="row mb-3">
       <div class="col-md-5 form-group">
         <app-catalogo-select
           [markTouched]="esControlInvalido(solicitudForm, 'domicilio') ?? false"
-          [catalogo]="etiquetasForm.Domicilio"
+          [catalogo]="direccionesCatalogo"
           formControlName="domicilio"
           [label]="'Domicilio'"
           [required]="true"
@@ -468,7 +470,7 @@
         [markTouched]="
           esControlInvalido(formularioPrecaucionesManejo, 'clave') ?? false
         "
-        [catalogo]="etiquetasForm.Aduana"
+        [catalogo]="aduanasSalida"
         formControlName="clave"
         [label]="'Aduana de salida'"
         [required]="true"
@@ -561,7 +563,7 @@
         [markTouched]="
           esControlInvalido(formularioLugarReciclaje, 'pais') ?? false
         "
-        [catalogo]="etiquetasForm.Pais"
+        [catalogo]="paisesSalidaCatalogo"
         [label]="'País destino'"
         [required]="true"
         formControlName="pais"

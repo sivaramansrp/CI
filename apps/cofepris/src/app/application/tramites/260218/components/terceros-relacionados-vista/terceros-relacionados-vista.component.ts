@@ -64,7 +64,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @type {string[]}
    */
   elementosRequeridos = [
-    'destinoFinal'
+    'fabricante'
   ];
 
   /**
