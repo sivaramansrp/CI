@@ -54,7 +54,7 @@
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
             name="aduanaDeIngreso"
-            (change)="setValoresStore(forma, 'aduanaDeIngreso')"
+            (change)="setValoresStore(forma, 'aduanaDeIngreso'); catalogoOficinas(forma);"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -66,7 +66,7 @@
             [required]="true"
                [isDisabled]="esFormularioSoloLectura"
             name="oficinaDeInspeccion"
-            (change)="setValoresStore(forma, 'oficinaDeInspeccion')"
+            (change)="setValoresStore(forma, 'oficinaDeInspeccion'); obtenerPuntoInspeccion(forma)"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -81,8 +81,8 @@
             (change)="setValoresStore(forma, 'puntoDeInspeccion')"
           ></app-catalogo-select>
         </div>
-      
-        
+
+
       </div>
       <div class="row">
         <div class="col-md-6 mt-2">
@@ -125,7 +125,7 @@
               (change)="setValoresStore(forma, 'numeroDeCarro')"
             />
           </div>
-      
+
         </div>
 
         <div class="row">

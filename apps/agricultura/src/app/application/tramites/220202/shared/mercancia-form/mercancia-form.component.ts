@@ -34,6 +34,7 @@ import {
   ListaDeDatosFinal,
 } from '../../models/220202/fitosanitario.model';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
@@ -181,6 +182,11 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   isInspeccionOcularSelected: boolean = false;
 
   /**
+   * Arreglo que almacena el catálogo de tipos de requisito.
+   */
+  tipoRequisitoList: Catalogo[] = [];
+
+  /**
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios reactivos.
@@ -194,7 +200,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     private ubicaccion: Location,
     private route: ActivatedRoute,
     private readonly agriculturaApiService: AgriculturaApiService,
-    private readonly fitosanitarioQuery: FitosanitarioQuery
+    private readonly fitosanitarioQuery: FitosanitarioQuery,
+    private catalogosService: CatalogosService
   ) { }
 
   /**
@@ -202,6 +209,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Aquí se crea el formulario reactivo y se configuran los campos necesarios.
    */
   ngOnInit(): void {
+    this.obtenerCatalogos();
     this.crearFormulario();
 
     this.fitosanitarioQuery
@@ -209,6 +217,31 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: string[]) => {
         this.usoCrossListDatos = datos;
+    });
+  }
+
+  /**
+   * Metodo que englobará todos los catalogos a obtener.
+   * @returns void
+   */
+  obtenerCatalogos(): void {
+    this.obtenerCatalogoRestricciones();
+  }
+
+  /**
+   * Obtiene el catálogo de restricciones del servicio correspondiente.
+   * Realiza una llamada al servicio de catálogos para obtener las restricciones
+   * asociadas al trámite 220202.
+   * Los datos obtenidos se almacenan en la propiedad tipoRequisitoList.
+   * La suscripción se cancela automáticamente cuando el componente se destruye
+   * mediante el uso de takeUntil.
+   * @returns void
+   */
+  obtenerCatalogoRestricciones(): void {
+    this.catalogosService.obtieneCatalogoRestricciones(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.tipoRequisitoList = data.datos ?? [];
     });
   }
 
