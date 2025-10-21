@@ -93,6 +93,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   /** Observable que expone la lista de mercancia al store. */
   public mercanciaProductores!: Mercancia[]; 
 
+  /** RFC del usuario actualmente autenticado utilizado para consultas y servicios. */
   private loginRFC = 'AAL0409235E6';
 
   /**

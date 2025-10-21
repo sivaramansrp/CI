@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, map, of, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 // import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
+import { Tramite110216State, Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
@@ -14,7 +15,6 @@ import { MercanciaComponent } from '../../../../shared/components/mercancia/merc
 import { Modal } from 'bootstrap';                     
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 
 
 /**
@@ -106,12 +106,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Observable<Catalogo[]>}
    */
   estados$!: Observable<Catalogo[]>;
-
-  /**
-   * Observable que emite la lista de países y bloques disponibles.
-   * @type {Observable<Catalogo[]>}
-   */
-  pais$!: Observable<Catalogo[]>;
 
   /**
    * Estado seleccionado del catálogo.
@@ -256,10 +250,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   fromMercanciasDisponibles: boolean = false;
 
   /**
-   * Observable que emite los datos de la mercancia en formato tabla.
-   * @type {Observable<Mercancia[]>}
+   * @descripcion
+   * Observable para los datos de la tabla.
    */
-  datosTabla$: Observable<Mercancia[]> = of([]);
+  datosTabla$: Mercancia[] = [];
+
+   /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTablaUno$: Mercancia[] = [];
 
   /**
    * @property {number} idProcedimiento
@@ -267,7 +267,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Identificador numérico del procedimiento actual para el trámite 110216.
    * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
    */
-  idProcedimiento: number = IDPROCEDIMIENTO
+  idProcedimiento: number = IDPROCEDIMIENTO;
+
+  /**
+     * @descripcion
+     * Estado actual del certificado.
+     */
+    private certificadoState!: Tramite110216State;
 
   /**
    * Constructor del componente CertificadoOrigenComponent.
@@ -322,7 +328,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     /**
      * Asignación de los observables que contienen los catálogos de estados y países.
      */
-    this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>).pipe(
       map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
     );
@@ -334,8 +339,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    this.cargarBloque();
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -345,24 +348,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       )
       .subscribe();
 
-    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
-  }
-
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.certificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
+    this.tramiteQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state: Tramite110216State) => {
+          this.certificadoState = state;
+          this.datosTabla$ = state.mercanciaTabla;
+          this.datosTablaUno$ = state.disponiblesDatos;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -390,21 +385,43 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   }
 
   /**
-   * Busca la mercancia y actualiza los datos en el store.
+   * @descripcion
+   * Obtiene los datos disponibles relacionados con mercancías.
    */
-  buscarrMercancia(): void {
+  conseguirDisponiblesDatos(): void {
+    const PAYLOAD = {
+      rfcExportador: "AAL0409235E6", 
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || 105 },
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] || 'ARG' }
+    };
+  
+    this.certificadoService.obtenerMercanciasDisponibles(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta: unknown) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const DATOS = (respuesta as any).datos ?? [];
 
-      this.certificadoService
-        .obtenerMercancia()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
-          (data: Mercancia[]) => {
-            this.store.setBuscarMercancia(data);
-          },
-          () => {
-            this.toastr.error('Error al buscar Mercancia');
-          }
-        );
+        const MAPPED_DATOS = DATOS.map((item: unknown) => {
+          const TYPED_ITEM = item as {
+            fraccionArancelaria?: string;
+            nombreTecnico?: string;
+            nombreComercial?: string;
+            numeroRegistroProducto?: string;
+            fechaExpedicion?: string;
+            fechaVencimiento?: string;
+          };
+          return {
+            fraccionArancelaria: TYPED_ITEM.fraccionArancelaria ?? '',
+            nombreTecnico: TYPED_ITEM.nombreTecnico ?? '',
+            nombreComercial: TYPED_ITEM.nombreComercial ?? '',
+            numeroDeRegistrodeProductos: TYPED_ITEM.numeroRegistroProducto ?? '',
+            fechaExpedicion: TYPED_ITEM.fechaExpedicion ?? '',
+            fechaVencimiento: TYPED_ITEM.fechaVencimiento ?? '',
+          };
+        });
+
+        this.store.setDisponsiblesDatos(MAPPED_DATOS);
+    });
   }
 
   /**
@@ -442,9 +459,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @param {Mercancia[]} event - Arreglo de mercancías que se asigna al observable de la tabla.
    * @returns {void}
    */
-    guardarClicado(event: Mercancia[]): void {
-    this.datosTabla$ = of(event);
-  }
+    guardarClicado(evento: Mercancia[]): void {
+      this.datosTabla$ = evento;
+    }
 
     /**
      * Cierra el modal de modificación si está abierto.
@@ -466,6 +483,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ certificado: valida });
+    this.store.setFormValidity('certificadoOrigen', valida);
   }
 
   /**

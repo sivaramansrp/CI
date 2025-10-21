@@ -886,7 +886,7 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-
   * API para obtener el catálogo de tratados y acuerdos por país
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
-export const CATALOGO_TRATADO_ACUERDO_PAIS_110214 = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
+export const CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
 
 /**
  * 

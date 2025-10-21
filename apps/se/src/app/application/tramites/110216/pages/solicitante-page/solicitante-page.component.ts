@@ -187,15 +187,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Valida los formularios del paso actual antes de permitir continuar.
-   *
    * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
    */
   validarFormulariosPasoActual(): boolean {
     if (this.indice === 1) {
-      // Validar formularios del paso uno
       return this.pasoUnoComponent?.validarFormularios() ?? true;
     }
-    // Agregar validaciones para otros pasos si es necesario
     return true;
   }
 
@@ -225,79 +222,46 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Método para manejar las acciones de los botones del wizard.
-   *
    * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
    * dependiendo de la acción recibida.
-   *
    * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
+   * Método para manejar las acciones de los botones del wizard.
    */
-  /**
-     * Método para manejar las acciones de los botones del wizard.
-     */
-    // Commented out code block for now
-    // getValorIndice(e: AccionBoton): void {
-    //   // Validar formularios antes de continuar desde el paso uno
-    //   const NEXT_INDEX =
-    //       e.accion === 'cont' ? e.valor + 1 :
-    //       e.accion === 'ant' ? e.valor - 1 :
-    //       e.valor;
-    //   if (this.indice === 1 && e.accion === 'cont') {
-    //     const ES_VALIDO = this.validarFormulariosPasoActual();
-    //     if (!ES_VALIDO) {
-    //       this.isPeligro = true;
-    //       this.peligroTexto = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
-    //       this.mostrarNotificacionError();
-  
-    //       return; // Detener ejecución si los formularios son inválidos
-    //     }
-    //     this.isPeligro = true;
-    //   }
-  
-    //   // Verifica si el valor de la acción está en el rango adecuado
-    //   if (e.valor > 0 && e.valor <= this.pasos.length) {
-    //     // Actualiza el índice del paso basado en el valor de la acción
-  
-    //     // Dependiendo de la acción, avanza o retrocede en el wizard
-    //     if (e.accion === 'cont') {
-    //       this.shouldNavigate$()
-    //       .subscribe((shouldNavigate) => {
-    //         if (shouldNavigate) {
-    //           this.indice = NEXT_INDEX;
-    //           this.datosPasos.indice = NEXT_INDEX;
-    //           this.wizardService.cambio_indice(NEXT_INDEX);
-    //           this.wizardComponent.siguiente();
-    //         } else {
-    //           this.indice = e.valor;
-    //           this.datosPasos.indice = e.valor;
-    //         }
-    //       });
-    //     } else {
-    //       // this.wizardComponent.atras();
-    //       this.indice = NEXT_INDEX;
-    //       this.datosPasos.indice = NEXT_INDEX;
-    //       this.wizardComponent.atras();
-    //     }
-  
-    //     // Actualiza el paso activo en el store
-    //     this.store.setPasoActivo(this.indice);
-    //   }
-    // }
-    getValorIndice(e: AccionBoton): void {
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+  getValorIndice(e: AccionBoton): void {
+    const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        this.peligroTexto = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
+        this.mostrarNotificacionError();
+        return;
+      }
+      this.isPeligro = false;
+    }
 
-      // Dependiendo de la acción, avanza o retrocede en el wizard
+    if (e.valor > 0 && e.valor <= this.pasos.length) {
       if (e.accion === 'cont') {
-        // Si la acción es 'cont', avanza al siguiente paso
-        this.wizardComponent.siguiente();
+        this.shouldNavigate$()
+        .subscribe((shouldNavigate) => {
+          if (shouldNavigate) {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardService.cambio_indice(NEXT_INDEX);
+            this.wizardComponent.siguiente();
+          } else {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+          }
+        });
       } else {
-        // Si la acción es 'atras', retrocede al paso anterior
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
         this.wizardComponent.atras();
       }
-
-      // Actualiza el paso activo en el store
       this.store.setPasoActivo(this.indice);
     }
   }
@@ -347,12 +311,18 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
      * @returns void
      */
     guardar(data: Tramite110216State): Promise<unknown> {
-      
+      const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadosOrigenService.buildProductoresPorExportador(data.agregarProductoresExportador);
+      const PRODUCTORES_POR_EXPORTADOR = this.certificadosOrigenService.buildProductoresPorExportador(data.productoresExportador);
+      const MERCANCIAS_PRODUCDOR = this.certificadosOrigenService.buildMercanciasProductor(data.mercanciaProductores);
+      const CERTIFICADO = this.certificadosOrigenService.buildCertificado(data);
+      const DESTINATARIO = this.certificadosOrigenService.buildDestinatario(data);
+      const DATOS_CERTIFICADO = this.certificadosOrigenService.buildDatosCertificado(data);
+      const TRANSPORTE_DETALLES = this.certificadosOrigenService.buildDestinatarioTransporteDetalles(data);
       const PAYLOAD = {
         "esDeGuardar": true,
         "tipoDeSolicitud": "guardar",
         "idSolicitud": 202781045,
-        "idTipoTramite": 110214,
+        "idTipoTramite": 110216,
         "rfc": "AAL0409235E6",
         "cveUnidadAdministrativa": "8101",
         "costoTotal": 10000.5,
@@ -363,13 +333,42 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         "apPaterno": "Pérez",
         "apMaterno": "López",
         "telefono": "5551234567",
-        "discriminator_value": "110214",
-        "discriminatorValue": "110214",
+        "discriminator_value": "110216",
+        "discriminatorValue": "110216",
         "domicilio": {
         },
         "solicitante": {
-    
+          "rfc": "AAL0409235E6",
+          "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+          "actividad_economica": "Fabricación de productos de hierro y acero",
+          "correo_electronico": "contacto@acerosalvarado.com",
+          "domicilio": {
+            "pais": "México",
+            "codigo_postal": "06700",
+            "estado": "Ciudad de México",
+            "municipio_alcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numero_exterior": "123",
+            "numero_interior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+          }
         },
+        "historico": {
+          "datosConfidencialesProductor": data.formulario['datosConfidencialesProductor'],
+          "productorMismoExportador": data.formulario['productorMismoExportador'],
+          "productoresPorExportador": [...PRODUCTORES_POR_EXPORTADOR],
+          "mercanciasProductor": [...MERCANCIAS_PRODUCDOR],
+          "ProductoresPorExportadorSeleccionados": [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
+        },
+        "solicitud": {
+          "certificadoOrigen": TRANSPORTE_DETALLES,
+        },
+        "certificado": CERTIFICADO,
+        "destinatario": DESTINATARIO,
+        "datos_del_certificado": DATOS_CERTIFICADO,
         
       }
       return new Promise((resolve, reject) => {

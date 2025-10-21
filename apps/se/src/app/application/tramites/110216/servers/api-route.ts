@@ -20,5 +20,14 @@ const PROCEDURE = '/sat-t110216';
  * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
  */
 export const PROC_110216 = {
-    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    AGREGAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/agregar-productor`,
+    BUSCAR_MERCANCIAS: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
 }
+
+/**
+ * Ruta de la API para buscar productores exportador por RFC del solicitante.
+ * @param rfc RFC del solicitante a consultar.
+ * @returns {string} URL para la consulta de productores exportador.
+ */
+export const PRODUCTORS_EXPORTADOR = (rfc: string): string => `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=${rfc}`;
