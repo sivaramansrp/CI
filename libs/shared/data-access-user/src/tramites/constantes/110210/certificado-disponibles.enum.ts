@@ -1,6 +1,7 @@
 
 export interface CertificadoDisponibles {
-    numeroDeCertificado: number;
+    numeroCertificado: string;
+    idCertificado: number;
     fechaExpedicion: string;
     fechaVencimiento: string;
 }
@@ -8,7 +9,7 @@ export interface CertificadoDisponibles {
 export const CERTIFICADO_DISPONIBLES_COLUMNAS = [
     {
         encabezado: 'Numero de certificado',
-        clave: (ele: CertificadoDisponibles ): number => ele.numeroDeCertificado,
+        clave: (ele: CertificadoDisponibles ): string => ele.numeroCertificado,
         orden: 1
     },
     {
