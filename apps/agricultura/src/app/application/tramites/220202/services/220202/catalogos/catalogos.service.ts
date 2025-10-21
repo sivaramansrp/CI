@@ -1,5 +1,6 @@
 import {
   API_GET_CATALOGO_ADUANAS,
+  API_GET_CATALOGO_FRACCION_ARANCELARIA,
   API_GET_CATALOGO_FRACCIONES_ARANCELARIAS,
   API_GET_CATALOGO_OFICINAS_INSPECCION,
   API_GET_CATALOGO_PUNTO_INSPECCION,
@@ -52,6 +53,28 @@ export class CatalogosService {
       */
   obtieneCatalogoFraccionesArancelarias(tramite: number): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES_ARANCELARIAS(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
+      .pipe(
+        // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
+        map((response: BaseResponse<Catalogo[]>) => ({
+          ...response,
+          datos: response.datos?.map(item => ({
+            ...item,
+            descripcion: `${item.clave}`
+          })) ?? []
+        }))
+      );
+  }
+
+  /**
+     * Obtiene el catálogo de nico para un trámite y clave de fracción específicos.
+     *
+     * @param tramite - El identificador numérico del trámite para el cual se solicita el catálogo.
+     * @param cveFraccion - La clave de la fracción arancelaria a consultar.
+     * @returns Un observable que emite la respuesta base con el arreglo de catálogos correspondientes.
+     */
+  obtieneCatalogoNicoFraccionArancelaria(tramite: number, cveFraccion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCION_ARANCELARIA(tramite.toString(), cveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
       .pipe(
         // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.

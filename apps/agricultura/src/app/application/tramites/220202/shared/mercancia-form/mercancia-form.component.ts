@@ -317,13 +317,30 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       ).subscribe(
         (data): void => {
+          this.getNicoFraccionArancelariaLista(event)
           this.mercanciaForm.patchValue({
             descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción'
       });
         }
     );
   }
+  /**
+    * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+    * @method getFraccionArancelariaLista
+    * @returns {void}
+    */
+  getNicoFraccionArancelariaLista(event: Catalogo): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220202, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
 
+          this.catalogosDatos.nicoList = data.datos ?? [];
+        }
+      );
+
+  }
 
   /**
    * Maneja la selección de un elemento del catálogo NICO.
@@ -331,12 +348,16 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param event - El objeto de catálogo seleccionado que contiene la información del NICO
    */
   nicoSeleccionado(event: Catalogo): void {
-    const NICO_SELECCIONADO = this.catalogosDatos.nicoList.find((nico) => nico.id === event.id);
-    if (NICO_SELECCIONADO) {
-      this.mercanciaForm.patchValue({
-        descripcionNico: NICO_SELECCIONADO.descripcion
+    this.registroSolicitudService.obtieneNicoDescripcion(220202, this.mercanciaForm.get('fraccionArancelaria')?.value, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.mercanciaForm.patchValue({
+            descripcionNico: data.datos ?? 'Sin descripción'
       });
-    }
+        }
+    );
   }
 
   /**
