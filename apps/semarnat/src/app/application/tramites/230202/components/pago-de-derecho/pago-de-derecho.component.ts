@@ -1,9 +1,24 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import {
+  Solicitud230202State,
+  Tramite230202Store,
+} from '../../estados/tramite230202.store';
 import { CommonModule } from '@angular/common';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
@@ -18,11 +33,10 @@ import { Tramite230202Query } from '../../estados/tramite230202.query';
     FormsModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    TituloComponent
+    TituloComponent,
   ],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
-
   /**
    * @property {ReplaySubject<boolean>} destroyed$
    * @description Sujeto que emite un valor booleano para indicar la destrucción del componente.
@@ -68,12 +82,12 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
 
   /**
    * @property {CatalogosSelect} bancoCatalogo - Representa la configuración del catálogo de bancos.
-   * 
+   *
    * @description
    * Este objeto define las propiedades necesarias para configurar un catálogo de selección
    * relacionado con los bancos. Incluye el nombre del campo, si es obligatorio, la primera opción
    * que se muestra al usuario y una lista de catálogos disponibles.
-   * 
+   *
    * @property {string} labelNombre - Etiqueta que describe el nombre del campo (en este caso, "Banco").
    * @property {boolean} required - Indica si este campo es obligatorio.
    * @property {string} primerOpcion - Texto que se muestra como la primera opción en el selector.
@@ -101,7 +115,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor de la clase PagoDeDerechoComponent.
-   * 
+   *
    * @param fb - Servicio `FormBuilder` para la creación y gestión de formularios reactivos.
    * @param captuaservice - Servicio `CapturaSolicitudeService` para manejar la captura de solicitudes.
    * @param solicitud230202Store - Almacén `Tramite230202Store` para gestionar el estado de la solicitud 230202.
@@ -124,12 +138,12 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @method fetchBancoData
    * @description Obtiene los datos del catálogo de bancos desde el servicio de medio de transporte
    * y los asigna al catálogo de bancos en el componente.
-   * 
+   *
    * @returns {void}
-   * 
+   *
    * @example
    * this.fetchBancoData();
-   * 
+   *
    * @remarks
    * Este método utiliza el servicio `mediodetransporteService` para obtener los datos
    * y se asegura de limpiar las suscripciones utilizando el operador `takeUntil` con `destroyed$`.
@@ -139,7 +153,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((request): void => {
-        this.bancoCatalogo.catalogos = request?.data ;
+        this.bancoCatalogo.catalogos = request?.data;
       });
   }
 
@@ -199,12 +213,24 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.FormSolicitud = this.fb.group({
       pagodeDerechos: this.fb.group({
-        claveDeReferencia: [{ value: this.derechoState?.claveDeReferencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
-        cadenaPagoDependencia: [{ value: this.derechoState?.cadenaPagoDependencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
+        claveDeReferencia: [
+          { value: this.derechoState?.claveDeReferencia, disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        cadenaPagoDependencia: [
+          { value: this.derechoState?.cadenaPagoDependencia, disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
         banco: [this.derechoState?.banco, Validators.required],
-        llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(10)]],
+        llaveDePago: [
+          this.derechoState?.llaveDePago,
+          [Validators.required, Validators.maxLength(10)],
+        ],
         fecPago: [this.derechoState?.fecPago, Validators.required],
-        impPago: [{ value: this.derechoState?.impPago, disabled: true }, [Validators.required, Validators.maxLength(16)]]
+        impPago: [
+          { value: this.derechoState?.impPago, disabled: true },
+          [Validators.required, Validators.maxLength(16)],
+        ],
       }),
     });
   }
@@ -227,16 +253,24 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite230202Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite230202Store
+  ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud230202Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
+    (
+      this.solicitud230202Store[metodoNombre] as (
+        value: string | number | boolean
+      ) => void
+    )(VALOR);
   }
 
   /**
-  * Obtiene el grupo de formulario 'pagodeDerechos' del formulario principal 'FormSolicitud'.
-  *
-  * @returns {FormGroup} El grupo de formulario 'pagodeDerechos'.
-  */
+   * Obtiene el grupo de formulario 'pagodeDerechos' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormGroup} El grupo de formulario 'pagodeDerechos'.
+   */
   get pagodeDerechos(): FormGroup {
     return this.FormSolicitud.get('pagodeDerechos') as FormGroup;
   }
@@ -245,9 +279,9 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @override
    * @method
    * @name ngOnDestroy
-   * @description Este método se ejecuta automáticamente cuando el componente se destruye. 
+   * @description Este método se ejecuta automáticamente cuando el componente se destruye.
    * Se utiliza para limpiar recursos y evitar fugas de memoria.
-   * 
+   *
    * @example
    * // Ejemplo de uso:
    * ngOnDestroy(): void {
@@ -256,9 +290,9 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    *   this.destroyNotifier$.next();
    *   this.destroyNotifier$.complete();
    * }
-   * 
+   *
    * @remarks
-   * Este método envía notificaciones a los observables `destroyed$` y `destroyNotifier$` 
+   * Este método envía notificaciones a los observables `destroyed$` y `destroyNotifier$`
    * para indicar que el componente está siendo destruido, y luego completa ambos observables.
    */
   ngOnDestroy(): void {
@@ -267,5 +301,4 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

@@ -11,6 +11,11 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
+  CatalogoT231002Service,
+  Domicilio,
+} from '../../services/catalogo-t231002.service';
+
+import {
   Component,
   ElementRef,
   Input,
@@ -31,10 +36,7 @@ import {
 } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIG_TABLA_RESIDUOS } from '../../models/datos-residuos.model';
-import {
-  CatalogoT231002Service,
-  Domicilio,
-} from '../../services/catalogo-t231002.service';
+
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
@@ -459,7 +461,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tipoAviso = evento;
   }
 
-
   /**
    * Determina si se debe mostrar el combo de domicilios IMMEX
    */
@@ -536,8 +537,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     filasSeleccionadas.forEach((filaSeleccionada) => {
       const INDEX = this.datosTabla.findIndex(
         (fila) =>
-          fila.nico === filaSeleccionada.nico &&
-          fila.fraccionArancelaria === filaSeleccionada.fraccionArancelaria &&
+          fila.nicoCve === filaSeleccionada.nicoCve &&
+          fila.fraccionCve === filaSeleccionada.fraccionCve &&
           fila.numeroManifiesto === filaSeleccionada.numeroManifiesto
       );
       if (INDEX !== -1) {

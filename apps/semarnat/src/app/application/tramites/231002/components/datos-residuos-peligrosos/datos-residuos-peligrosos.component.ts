@@ -1,12 +1,30 @@
-import { HABILITAR_CONTROL } from './../../../../shared/helpers';
 import {
-  AbstractControl,
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  MAX_DIGITS_VALIDATOR,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_DECIMAL,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  DatosResiduos,
+  ResiduoPeligroso,
+} from '../../models/aviso-catalogo.model';
+import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators,
 } from '@angular/forms';
+
+import {
+  HABILITAR_CONTROL,
+  NO_COMA_VALIDATOR,
+} from './../../../../shared/helpers';
 
 import {
   ChangeDetectorRef,
@@ -20,23 +38,13 @@ import {
   MATERIA_RESIDUO_TABLA,
   MateriaResiduo,
 } from '../../models/materia-residuo.model';
-import {
-  MAX_DIGITS_VALIDATOR,
-  REGEX_DECIMAL,
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  Notificacion,
-  NotificacionesComponent,
-  TablaDinamicaComponent,
-  TituloComponent,
-  TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+
 import {
   RadioOpcion,
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { Subject, takeUntil } from 'rxjs';
+import { CaracteristicasResiduos } from './../../models/aviso-catalogo.model';
 import { CatalogoT231002Service } from '../../services/catalogo-t231002.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -45,7 +53,7 @@ import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 import { Modal } from 'bootstrap';
-import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
+
 import { SoloNumericaDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numerica/solo-numerica.directive';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
@@ -320,8 +328,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.pattern(REGEX_DECIMAL),
-          DatosResiduosPeligrososComponent.noCommaValidator,
-          DatosResiduosPeligrososComponent.maxDigitsValidator,
+          NO_COMA_VALIDATOR,
+          MAX_DIGITS_VALIDATOR,
         ],
       ],
       cantidadLetra: [{ value: '', disabled: true }],
@@ -376,35 +384,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     this.formularioResiduo.get('claveResiduo')?.disable();
     this.formularioResiduo.get('nombre')?.disable();
     this.formularioResiduo.get('descripcion')?.disable();
-  }
-
-  /**
-   * Validator personalizado para verificar que no se ingrese coma.
-   */
-  private static noCommaValidator(
-    control: AbstractControl
-  ): ValidationErrors | null {
-    const VALUE = control.value;
-    if (VALUE && VALUE.includes(',')) {
-      return { noComma: true };
-    }
-    return null;
-  }
-
-  /**
-   * Validator personalizado para verificar el máximo de 6 dígitos significativos.
-   */
-  private static maxDigitsValidator(
-    control: AbstractControl
-  ): ValidationErrors | null {
-    const VALUE = control.value;
-    if (VALUE) {
-      const REGEX = MAX_DIGITS_VALIDATOR;
-      if (!REGEX.test(VALUE)) {
-        return { maxDigits: true };
-      }
-    }
-    return null;
   }
 
   /**
@@ -482,10 +461,25 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     // Actualizar los datos de la tabla dinámica
     this.materiasPrimasTabla = [...this.materiasPrimas];
     // Limpiar el formulario
-    this.formularioDatos.reset();
+    this.limpiarFormularioMateriasPrimas();
     this.materiasPrimasCatalogo = this.materiasPrimasCatalogo.filter(
       (m) => m.clave !== NUEVA_MATERIA.id_mercancia.toString()
     );
+  }
+
+  /**
+   * Limpia el formulario de materias primas.
+   */
+  limpiarFormularioMateriasPrimas(): void {
+    [
+      'nombreMateriaPrima',
+      'cantidad',
+      'cantidadLetra',
+      'unidadDeMedida',
+      'fraccionArancelaria',
+    ].forEach((field) => {
+      this.formularioDatos.get(field)?.reset();
+    });
   }
 
   /**
@@ -702,42 +696,17 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
 
     // Crear el objeto con todos los datos del residuo según la interface ResiduoPeligroso
     const RESIDUO_DATA: ResiduoPeligroso = {
+      ...this.getDatisResiduos(),
+      ...this.getCaracteristicasResiduos(),
       origenResiduoGeneracion: 'Producción Industrial',
-      fraccionArancelaria:
-        this.formularioResiduo.get('fraccionArancelaria')?.value || '',
       nombreResiduo:
         this.formularioResiduo.get('residuoPeligroso')?.value || '',
-      nico: this.nicoSeleccionado?.clave || '',
-      nicoDescripcion: this.nicoSeleccionado?.descripcion || '',
       acotacion: this.formularioResiduo.get('acotacion')?.value || '',
-      nombreResiduoPeligroso:
-        this.formularioResiduo.get('residuoPeligroso')?.value || '',
       cantidad: this.formularioResiduo.get('cantidad')?.value || '',
       cantidadLetra: this.formularioResiduo.get('cantidadLetra')?.value || '',
-      unidadMedida: this.formularioResiduo.get('unidadMedida')?.value || '',
-      claveClasificacion:
-        this.formularioResiduo.get('claveResiduo')?.value || '',
-      nombreClasificacion: this.formularioResiduo.get('nombre')?.value || '',
-      descripcionClasificacion:
-        this.formularioResiduo.get('descripcion')?.value || '',
-      descripcionOtraClasificacion: '', // Campo opcional
-      creti: this.formularioResiduo.get('creti')?.value || '',
-      estadoFisico: this.formularioResiduo.get('estadoFisico')?.value || '',
-      descripcionOtroEstadoFisico: '', // Campo opcional
       numeroManifiesto: this.formularioResiduo.get('manifiesto')?.value || '',
-      tipoContenedor: this.formularioResiduo.get('tipoContenedor')?.value || '',
-      descripcionOtroContenedor: '', // Campo opcional
       capacidad: this.formularioResiduo.get('capacidad')?.value || '',
-      fraccionName: this.getFraccionName(),
-      nicoName: this.getNicoName(),
-      unidadMedidaName: this.getUnidadMedidaName(),
-      claveClasificacionDesc: this.getClaveClasificacion(),
-      nameClasificacion: this.getNameClasificacion(),
-      descClasificacion: this.getDescClasificacion(),
-      cretiDesc: this.getCreti(),
-      estadoFisicoDesc: this.getEstadoFisico(),
       tipoContenedorDesc: this.getTipoContenedor(),
-      descripcionOtro: '',
       materiasPrimasRelacionadas: this.materiasPrimas,
     };
     // Emitir el evento con los datos
@@ -787,7 +756,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     this.materiasPrimasTabla = [];
     this.itemsSeleccionados.clear();
     this.borrarHabilitado = false;
-
+    this.submitted = false;
     // Limpiar mensaje de error si existe
     this.esFormaValido = true;
     this.alertaErrorFormulario = '';
@@ -867,9 +836,10 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    * @returns Descripción de la unidad de medida o cadena vacía si no se encuentra.
    */
   private getUnidadMedidaName = (): string => {
-    const UNIDAD_ID = this.formularioResiduo.get('unidadMedida')?.value;
-    const UNIDADES = this.etiquetasForm.unidad || [];
-    const UNIDAD_DATA = UNIDADES.find((u) => u.id === Number(UNIDAD_ID));
+    const UNIDAD_CLAVE = this.formularioResiduo.get('unidadMedida')?.value;
+    const UNIDAD_DATA = this.unidadMedidaCatalogo.find(
+      (u) => u.clave === UNIDAD_CLAVE
+    );
     return UNIDAD_DATA ? UNIDAD_DATA.descripcion : '';
   };
 
@@ -880,8 +850,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getClaveClasificacion = (): string => {
     const CLAVE = this.formularioResiduo.get('claveResiduo')?.value;
-    const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.residuo?.find(
-      (c) => c.id === Number(CLAVE)
+    const CLAVE_CLASIFICACION_DESC = this.cveResiducoCatalogo?.find(
+      (c) => c.clave === CLAVE
     )?.descripcion;
     return CLAVE_CLASIFICACION_DESC || '';
   };
@@ -893,8 +863,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getNameClasificacion = (): string => {
     const NOMBRE = this.formularioResiduo.get('nombre')?.value;
-    const CLAVE_CLASIFICACION_NAME = this.etiquetasForm.tipoNombre?.find(
-      (c) => c.id === Number(NOMBRE)
+    const CLAVE_CLASIFICACION_NAME = this.nombreResiducoCatalogo.find(
+      (c) => c.clave === NOMBRE
     )?.descripcion;
     return CLAVE_CLASIFICACION_NAME || '';
   };
@@ -906,8 +876,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getDescClasificacion = (): string => {
     const DESC = this.formularioResiduo.get('descripcion')?.value;
-    const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.descripcion?.find(
-      (c) => c.id === Number(DESC)
+    const CLAVE_CLASIFICACION_DESC = this.descResiducoCatalogo?.find(
+      (c) => c.clave === DESC
     )?.descripcion;
     return CLAVE_CLASIFICACION_DESC || '';
   };
@@ -919,8 +889,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getCreti = (): string => {
     const CRETI = this.formularioResiduo.get('creti')?.value;
-    const CRETI_DESC = this.etiquetasForm.creti?.find(
-      (c) => c.id === Number(CRETI)
+    const CRETI_DESC = this.cretiCatalogo.find(
+      (c) => c.clave === CRETI
     )?.descripcion;
     return CRETI_DESC || '';
   };
@@ -932,8 +902,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getEstadoFisico = (): string => {
     const ESTADO = this.formularioResiduo.get('estadoFisico')?.value;
-    const ESTADO_DESC = this.etiquetasForm.estadoFisico?.find(
-      (e) => e.id === Number(ESTADO)
+    const ESTADO_DESC = this.estadoFisicoCatalogo.find(
+      (e) => e.clave === ESTADO
     )?.descripcion;
     return ESTADO_DESC || '';
   };
@@ -945,8 +915,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private getTipoContenedor = (): string => {
     const TIPO = this.formularioResiduo.get('tipoContenedor')?.value;
-    const TIPO_DESC = this.etiquetasForm.tipoContenedor?.find(
-      (t) => t.id === Number(TIPO)
+    const TIPO_DESC = this.tipoContenedorCatalogo.find(
+      (t) => t.clave === TIPO
     )?.descripcion;
     return TIPO_DESC || '';
   };
@@ -1192,7 +1162,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   /**
    * Maneja el cambio en el dropdown de clave de residuo
    */
-  //TODO agregar la clave en la logica cuando se tenga el catalogo actualizado
   onDescResiduoChange(): void {
     const CLAVE_SELECCIONADA = this.formularioResiduo.get('descripcion')?.value;
     const RESIDUO = this.descResiducoCatalogo.find(
@@ -1247,6 +1216,46 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     HABILITAR_CONTROL(CONTROL, this.mostrarOtroTipoContenedor);
   }
 
+  /**
+   * Datos del residuo peligroso a enviar al componente padre
+   */
+  getDatisResiduos(): DatosResiduos {
+    return {
+      fraccionCve:
+        this.formularioResiduo.get('fraccionArancelaria')?.value || '',
+      fraccionDesc: this.getFraccionName() || '',
+      nicoCve: this.formularioResiduo.get('nico')?.value || '',
+      nicoDesc: this.getNicoName() || '',
+      unidadMedidaCve: this.formularioResiduo.get('unidadMedida')?.value || '',
+      unidadMedidaDesc: this.getUnidadMedidaName() || '',
+      residuoCve: this.formularioResiduo.get('claveResiduo')?.value || '',
+      residuoDesc: this.getClaveClasificacion() || '',
+      residuoNombre: this.formularioResiduo.get('nombre')?.value || '',
+      residuoNombreDesc: this.getNameClasificacion() || '',
+      residuoDescCve: this.formularioResiduo.get('descripcion')?.value || '',
+      residuoDescDesc: this.getDescClasificacion() || '',
+      residuoOtro: this.formularioResiduo.get('otroTipo')?.value || '',
+    };
+  }
+
+  /**
+   * Características del residuo peligroso a enviar al componente padre
+   */
+  getCaracteristicasResiduos(): CaracteristicasResiduos {
+    return {
+      cretiCve: this.formularioResiduo.get('creti')?.value || '',
+      cretiDesc: this.getCreti() || '',
+      estadoFisicoCve: this.formularioResiduo.get('estadoFisico')?.value || '',
+      estadoFisicoDesc: this.getEstadoFisico() || '',
+      estadoFisicoOtro:
+        this.formularioResiduo.get('otroEdoFisico')?.value || '',
+      tipoContenedorCve:
+        this.formularioResiduo.get('tipoContenedor')?.value || '',
+      tipoContenedorDesc: this.getTipoContenedor() || '',
+      tipoContenedorOtro:
+        this.formularioResiduo.get('otroContenedor')?.value || '',
+    };
+  }
   /**
    * Limpieza al destruir el componente:
    * - Completa los subjects de destrucción

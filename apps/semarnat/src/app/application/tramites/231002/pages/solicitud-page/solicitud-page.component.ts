@@ -7,9 +7,12 @@ import {
   NotificacionesComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
+import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
@@ -47,7 +50,18 @@ const PASO_UNO = 1;
   ],
   templateUrl: './solicitud-page.component.html',
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit, OnDestroy {
+  /**
+   * Estado actual de la solicitud.
+   */
+  private destroyed$ = new Subject<void>();
+
+  constructor(private t231002Query: DatoSolicitudQuery) {}
+
+  ngOnInit(): void {
+    this.obtenerEstadoSolicitud();
+  }
+
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
@@ -86,12 +100,15 @@ export class SolicitudPageComponent {
    */
   @ViewChild('wizard', { static: false }) wizardComponent!: WizardComponent;
 
-
   /**
    * Referencia al componente del primer paso para validar formularios.
    */
   @ViewChild(PasoUnoComponent) pasoUno!: PasoUnoComponent;
 
+  /**
+   * Estado local de la solicitud obtenido desde el query/store.
+   */
+  public estadoSolicitud!: EstadoDatoSolicitud;
   /**
    * Clase CSS para estilizar alertas informativas.
    * @type {string}
@@ -121,6 +138,17 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
+  obtenerEstadoSolicitud(): void {
+    this.t231002Query.estadoFormulario$
+      ?.pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.estadoSolicitud = seccionState;
+        })
+      )
+      .subscribe();
+  }
+
   /**
    * Maneja la navegación entre pasos del wizard.
    * @param e Objeto con información de la acción del botón
@@ -132,9 +160,7 @@ export class SolicitudPageComponent {
       if (!FORM_VALIDO) {
         this.datosPasos.indice = this.indice;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        return;
       }
-      console.log('aqui');
     } else {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
@@ -158,5 +184,13 @@ export class SolicitudPageComponent {
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar',
     };
+  }
+
+  /**
+   * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

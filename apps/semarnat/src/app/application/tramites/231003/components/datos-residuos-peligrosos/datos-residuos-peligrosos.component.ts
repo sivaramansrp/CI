@@ -31,7 +31,7 @@ import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
-import { ResiduoPeligroso } from '../../../231002/models/aviso-catalogo.model';
+import { ResiduoPeligrosoFormulario } from '../../../231002/models/aviso-catalogo.model';
 import { SoloNumericaDecimalDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numeros-punto/solo-numero-y-punto.directive';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
@@ -67,7 +67,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Evento emitido cuando se agrega un residuo peligroso.
    * El payload es un objeto `ResiduoPeligroso`.
    */
-  @Output() residuoAgregado = new EventEmitter<ResiduoPeligroso>();
+  @Output() residuoAgregado = new EventEmitter<ResiduoPeligrosoFormulario>();
 
   /** Indica si el formulario está en estado válido (usado para mostrar mensajes). */
   esFormaValido = true;
@@ -462,7 +462,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
 
     // Crear el objeto con todos los datos del residuo según la interface ResiduoPeligroso
-    const RESIDUO_DATA: ResiduoPeligroso = {
+    const RESIDUO_DATA: ResiduoPeligrosoFormulario = {
       origenResiduoGeneracion: 'Producción Industrial', // Se puede obtener del radio seleccionado
       fraccionArancelaria: this.getFraccionName(),
       nombreResiduo:

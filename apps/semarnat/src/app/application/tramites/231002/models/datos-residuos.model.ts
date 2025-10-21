@@ -63,12 +63,16 @@ export interface EstadoFormularioResiduo {
      */
     fraccionArancelaria: string;
 
+    fraccionDesc: string;
+
     /**
      * Número de Identificación Comercial (NICO).
      *
      * @type {string}
      */
     nico: string;
+
+    nicoDesc: string;
 
     /**
      * Acotación específica del residuo.
@@ -105,6 +109,8 @@ export interface EstadoFormularioResiduo {
      */
     unidadMedida: string;
 
+    unidadMedidaDesc: string;
+
     /**
      * Clasificación del residuo.
      *
@@ -112,12 +118,16 @@ export interface EstadoFormularioResiduo {
      */
     clasificacion: string;
 
+    clasificacionDesc: string;
+
     /**
      * Clave identificadora del residuo.
      *
      * @type {string}
      */
     claveResiduo: string;
+
+    claveResiduoDesc: string;
 
     /**
      * Nombre del residuo.
@@ -140,12 +150,18 @@ export interface EstadoFormularioResiduo {
      */
     creti: string;
 
+    cretiDesc: string;
+
     /**
      * Estado físico del residuo (sólido, líquido, etc.).
      *
      * @type {string}
      */
     estadoFisico: string;
+
+    estadoFisicoDesc: string;
+
+    otroEstadoFisicoDesc: string;
 
     /**
      * Manifiesto asociado al residuo.
@@ -160,6 +176,10 @@ export interface EstadoFormularioResiduo {
      * @type {string}
      */
     tipoContenedor: string;
+
+    tipoContenedorDesc: string;
+
+    otroTipoContenedorDesc: string;
 
     /**
      * Capacidad del contenedor.
@@ -180,12 +200,12 @@ export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
   },
   {
     encabezado: 'Fracción Arancelaria',
-    clave: (item: ResiduoPeligroso): string => item.fraccionArancelaria,
+    clave: (item: ResiduoPeligroso): string => item.fraccionCve,
     orden: 2,
   },
   {
     encabezado: 'NICO',
-    clave: (item: ResiduoPeligroso): string => item.nicoName,
+    clave: (item: ResiduoPeligroso): string => item.nicoDesc,
     orden: 3,
   },
   {
@@ -195,7 +215,7 @@ export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
   },
   {
     encabezado: 'Nombre Residuo Peligroso',
-    clave: (item: ResiduoPeligroso): string => item.nombreResiduoPeligroso,
+    clave: (item: ResiduoPeligroso): string => item.nombreResiduo,
     orden: 5,
   },
   {
@@ -210,28 +230,27 @@ export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
   },
   {
     encabezado: 'Unidad de medida',
-    clave: (item: ResiduoPeligroso): string => item.unidadMedidaName,
+    clave: (item: ResiduoPeligroso): string => item.unidadMedidaDesc,
     orden: 8,
   },
   {
     encabezado: 'Clave Clasificación',
-    clave: (item: ResiduoPeligroso): string => item.nombreClasificacion,
+    clave: (item: ResiduoPeligroso): string => item.residuoCve,
     orden: 9,
   },
   {
     encabezado: 'Nombre Clasificación',
-    clave: (item: ResiduoPeligroso): string => item.claveClasificacionDesc,
+    clave: (item: ResiduoPeligroso): string => item.residuoNombreDesc,
     orden: 10,
   },
   {
     encabezado: 'Descripción clasificación',
-    clave: (item: ResiduoPeligroso): string => item.descripcionClasificacion,
+    clave: (item: ResiduoPeligroso): string => item.residuoDescDesc,
     orden: 11,
   },
   {
     encabezado: 'Descripción otro Clasificación',
-    clave: (item: ResiduoPeligroso): string =>
-      item.descripcionOtraClasificacion,
+    clave: (item: ResiduoPeligroso): string => item.residuoOtro,
     orden: 12,
   },
   {
@@ -246,7 +265,7 @@ export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
   },
   {
     encabezado: 'Descripción otro estado físico',
-    clave: (item: ResiduoPeligroso): string => item.descripcionOtroEstadoFisico,
+    clave: (item: ResiduoPeligroso): string => item.estadoFisicoOtro,
     orden: 15,
   },
   {
@@ -261,7 +280,7 @@ export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
   },
   {
     encabezado: 'Descripción otro contenedor',
-    clave: (item: ResiduoPeligroso): string => item.descripcionOtroContenedor,
+    clave: (item: ResiduoPeligroso): string => item.tipoContenedorOtro,
     orden: 18,
   },
   {

@@ -1,4 +1,10 @@
-import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { MAX_DIGITS_VALIDATOR } from '@libs/shared/data-access-user/src';
 
 /**
  * Verifica si un control de formulario es válido.
@@ -37,4 +43,33 @@ export const HABILITAR_CONTROL = (
     }
     control.updateValueAndValidity();
   }
+};
+
+/**
+ * Validator personalizado para verificar que no se ingrese coma.
+ */
+export const NO_COMA_VALIDATOR = (
+  control: AbstractControl
+): ValidationErrors | null => {
+  const VALUE = control.value;
+  if (VALUE && VALUE.includes(',')) {
+    return { noComma: true };
+  }
+  return null;
+};
+
+/**
+ * Validator personalizado para verificar el máximo de 6 dígitos significativos.
+ */
+export const MAX_DIGIT_VALIDATOR = (
+  control: AbstractControl
+): ValidationErrors | null => {
+  const VALUE = control.value;
+  if (VALUE) {
+    const REGEX = MAX_DIGITS_VALIDATOR;
+    if (!REGEX.test(VALUE)) {
+      return { maxDigits: true };
+    }
+  }
+  return null;
 };

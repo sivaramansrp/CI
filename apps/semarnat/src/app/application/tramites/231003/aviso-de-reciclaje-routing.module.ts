@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcuseComponent, AcusePageComponent } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { AvisoReciclajeComponent } from './pages/aviso-reciclaje/aviso-reciclaje.component';
 import { NgModule } from '@angular/core';
 

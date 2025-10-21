@@ -22,8 +22,8 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CONFIGURACION_TABLA_MERCANCIA, ConfiguracionItem } from '../../enum/mercancia.enum';
 import { CROSLISTA_ENTRADA, CROSSLIST_BOTONS, CrosslistBoton } from '../../enum/crossList-botons.enum';
-import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
-import { Solicitud230902State, Tramite230902Store} from '../../estados/tramite230902.store';
+import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs';
 import { ALERTA_MERCANCIA } from '../../enum/mercancia-alert.enum';
