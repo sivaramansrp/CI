@@ -2,7 +2,6 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
-  MAX_DIGITS_VALIDATOR,
   Notificacion,
   NotificacionesComponent,
   REGEX_DECIMAL,
@@ -23,6 +22,7 @@ import {
 
 import {
   HABILITAR_CONTROL,
+  MAX_DIGIT_VALIDATOR,
   NO_COMA_VALIDATOR,
 } from './../../../../shared/helpers';
 
@@ -329,7 +329,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.pattern(REGEX_DECIMAL),
           NO_COMA_VALIDATOR,
-          MAX_DIGITS_VALIDATOR,
+          MAX_DIGIT_VALIDATOR,
         ],
       ],
       cantidadLetra: [{ value: '', disabled: true }],
@@ -969,6 +969,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    * @returns true si el control es válido, false en caso contrario.
    */
   esControlValido(form: FormGroup, control: string): boolean | undefined {
+    if (!form || !control) {
+      return false;
+    }
     const CONTROL = form.get(control);
     return CONTROL?.invalid && (CONTROL?.dirty || CONTROL?.touched);
   }
@@ -1186,6 +1189,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    * @returns
    */
   controlEsTocado(form: FormGroup, control: string): boolean {
+    if (!form || !control) {
+      return false;
+    }
     return form.get(control)?.touched || false;
   }
 
