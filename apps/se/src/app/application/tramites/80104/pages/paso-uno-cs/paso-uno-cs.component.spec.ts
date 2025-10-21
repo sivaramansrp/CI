@@ -1,85 +1,150 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PasoUnoCsComponent } from './paso-uno-cs.component';
-import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { ToastrModule } from 'ngx-toastr';
-import { Solocitud80104Service } from '../../services/service80104.service';
-import { of } from 'rxjs';
+import { PasoUnoCsComponent } from "./paso-uno-cs.component";
 
-describe('PasoUnoCsComponent', () => {
+describe('PasoUnoCsComponent (80104)', () => {
   let component: PasoUnoCsComponent;
-  let fixture: ComponentFixture<PasoUnoCsComponent>;
-  let mockSeccionStore: Partial<SeccionLibStore>;
-  let mockService: Partial<Solocitud80104Service>;
-  let mockQuery: Partial<ConsultaioQuery>;
-  const consultaState: ConsultaioState = { update: true } as any;
-  beforeEach(async () => {
-    mockSeccionStore = {
-      establecerSeccion: jest.fn(),
-      establecerFormaValida: jest.fn()
-    };
+  let seccionStore: any;
+  let Solocitud80104Service: any;
+  let consultaQuery: any;
+  let tramite80101Store: any;
 
-    mockService = {
-      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({ test: true })),
-      getRegistroTomaMuestrasMercanciasDatas: jest.fn().mockReturnValue(of({ test: true })),
-      getRegistroComplementosData: jest.fn().mockReturnValue(of({ test: true })),
-      getRegistroFederatoriosData: jest.fn().mockReturnValue(of({ test: true })),
-      getRegistroComplementarData: jest.fn().mockReturnValue(of({ test: true })),
+  beforeEach(() => {
+    seccionStore = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn(),
+    };
+    Solocitud80104Service = {
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+      getRegistroTomaMuestrasMercanciasDatas: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+      getRegistroComplementosData: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+      getRegistroFederatoriosData: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+      getRegistroComplementarData: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
       actualizarEstadoFormulario: jest.fn(),
       actualizarEstadoFormularios: jest.fn(),
       actualizarComplementos: jest.fn(),
       actualizarFederatorios: jest.fn(),
       actualizarComplementar: jest.fn(),
     };
-
-    mockQuery = {
-      selectConsultaioState$: of(consultaState)
+    consultaQuery = {
+      selectConsultaioState$: {
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: jest.fn(),
+      },
     };
-    await TestBed.configureTestingModule({
-      declarations: [PasoUnoCsComponent],
-      imports: [ SolicitanteComponent, HttpClientTestingModule, ToastrModule.forRoot() ],   
-      providers: [
-        { provide: 'ToastConfig', useValue: {} },
-        { provide: SeccionLibStore, useValue: mockSeccionStore },
-        { provide: Solocitud80104Service, useValue: mockService },
-        { provide: ConsultaioQuery, useValue: mockQuery }
-      ],
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(PasoUnoCsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    tramite80101Store = {};
+    component = new PasoUnoCsComponent(seccionStore, Solocitud80104Service, consultaQuery, tramite80101Store);
   });
 
-  it('debería crear', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería asignar secciones y formas en init (a través del constructor)', () => {
-    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalled();
-    expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalled();
+  it('should initialize properties', () => {
+    expect(component.esDatosRespuesta).toBe(false);
+    expect(component.indice).toBe(1);
+    expect(component.formularioDeshabilitado).toBe(false);
+    expect(Array.isArray(component.configuracionDosDatos)).toBe(true);
   });
 
-  it('debería actualizar el índice cuando se llama a seleccionaTab', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('should select tab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
   });
 
-  it('debería llamar a guardarDatosFormulario si consultaState.update es true', () => {
-    const spy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  describe('private asignarSecciones', () => {
+    it('should call establecerSeccion and establecerFormaValida', () => {
+      // Call private method via prototype for coverage
+      const instance: any = component;
+      instance.asignarSecciones();
+      expect(seccionStore.establecerSeccion).toHaveBeenCalled();
+      expect(seccionStore.establecerFormaValida).toHaveBeenCalled();
+    });
   });
 
-  it('debería llamar a todos los métodos de actualización del servicio en guardarDatosFormulario', () => {
-    component.guardarDatosFormulario();
+  describe('guardarDatosFormulario', () => {
+    beforeEach(() => {
+      Solocitud80104Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn({}),
+      });
+      Solocitud80104Service.getRegistroTomaMuestrasMercanciasDatas.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn({}),
+      });
+      Solocitud80104Service.getRegistroComplementosData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn({}),
+      });
+      Solocitud80104Service.getRegistroFederatoriosData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn({}),
+      });
+      Solocitud80104Service.getRegistroComplementarData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn({}),
+      });
+    });
 
-    expect(mockService.actualizarEstadoFormulario).toHaveBeenCalled();
-    expect(mockService.actualizarEstadoFormularios).toHaveBeenCalled();
-    expect(mockService.actualizarComplementos).toHaveBeenCalled();
-    expect(mockService.actualizarFederatorios).toHaveBeenCalled();
-    expect(mockService.actualizarComplementar).toHaveBeenCalled();
-    expect(component.esDatosRespuesta).toBe(true);
+    it('should call service methods and update esDatosRespuesta', () => {
+      component.esDatosRespuesta = false;
+      component.guardarDatosFormulario();
+      expect(component.esDatosRespuesta).toBe(true);
+      expect(Solocitud80104Service.actualizarEstadoFormulario).toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarEstadoFormularios).toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarComplementos).toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarFederatorios).toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarComplementar).toHaveBeenCalled();
+    });
+
+    it('should not call actualizar methods if resp is falsy', () => {
+      Solocitud80104Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn(null),
+      });
+      Solocitud80104Service.getRegistroTomaMuestrasMercanciasDatas.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn(null),
+      });
+      Solocitud80104Service.getRegistroComplementosData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn(null),
+      });
+      Solocitud80104Service.getRegistroFederatoriosData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn(null),
+      });
+      Solocitud80104Service.getRegistroComplementarData.mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: (fn: any) => fn(null),
+      });
+      component.guardarDatosFormulario();
+      expect(Solocitud80104Service.actualizarEstadoFormulario).not.toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarEstadoFormularios).not.toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarComplementos).not.toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarFederatorios).not.toHaveBeenCalled();
+      expect(Solocitud80104Service.actualizarComplementar).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ngOnInit', () => {
+    it('should subscribe and call guardarDatosFormulario if update is true', () => {
+      const mockState = { update: true };
+      consultaQuery.selectConsultaioState$.pipe = jest.fn().mockReturnThis();
+      consultaQuery.selectConsultaioState$.subscribe = jest.fn((fn: any) => fn(mockState));
+      jest.spyOn(component, 'guardarDatosFormulario');
+      component.ngOnInit();
+      expect(component.consultaState).toEqual(mockState);
+      expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    });
+
+    it('should set esDatosRespuesta to true if update is false', () => {
+      const mockState = { update: false };
+      consultaQuery.selectConsultaioState$.pipe = jest.fn().mockReturnThis();
+      consultaQuery.selectConsultaioState$.subscribe = jest.fn((fn: any) => fn(mockState));
+      jest.spyOn(component, 'guardarDatosFormulario');
+      component.ngOnInit();
+      expect(component.consultaState).toEqual(mockState);
+      expect(component.esDatosRespuesta).toBe(true);
+      expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
+    });
   });
 });
