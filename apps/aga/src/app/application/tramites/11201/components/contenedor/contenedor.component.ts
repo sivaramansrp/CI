@@ -954,7 +954,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .subscribe((respuesta) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (respuesta?.codigo === '00') {
-          respuesta.datos.existe_en_vucem ? respuesta.datos.existe_en_vucem = 'Sí' : respuesta.datos.existe_en_vucem = 'No';
+          // respuesta.datos.existe_en_vucem ? respuesta.datos.existe_en_vucem = 'Sí' : respuesta.datos.existe_en_vucem = 'No';
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           console.log(this.datosDelContenedor);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, } from '@angular/core';
+import { Component,EventEmitter,Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup, } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -7,8 +7,8 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule, } from '@angular/forms';
 import { Solicitud11201State } from '../../../../core/estados/tramites/tramite11201.store';
 import { TituloComponent,Notificacion } from '@ng-mf/data-access-user';
-import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
-import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
+import { Tramite11201Query } from '../../estados/queries/tramite11201.query';
+import { Tramite11201Store } from '../../estados/tramites/tramite11201.store';
 import { Validators } from '@angular/forms';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { ToastrService } from 'ngx-toastr';
@@ -107,6 +107,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   public tablaSeleccionPagos = TablaSeleccion;
 
+  mensajeCamposObligatorios: string = '* Campos obligatorios';
+
+
+
     /**
    * Datos de la tabla de pagos.
    */
@@ -122,6 +126,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * GUarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
    */
   public procesoModal!: string;
+
+  @Output() cancelEvent = new EventEmitter<void>();
+
+  @Output() continuarEvento = new EventEmitter<void>();
+
 
 
 
@@ -142,7 +151,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite11201Store: Tramite11201Store,
-    private tramite301Query: Tramite11201Query,
+    private tramite11201Query: Tramite11201Query,
     private datosTramiteService: DatosTramiteService,
     private toastrService: ToastrService,
     // eslint-disable-next-line no-empty-function
@@ -158,7 +167,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Inicializa el formulario con validaciones requeridas
-    this.tramite301Query.selectSolicitud$
+    this.tramite11201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -175,6 +184,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         lineaCheckbox: [this.solicitudState?.lineaCheckbox],
       }),
     });
+
 
     // Llama al método para actualizar el campo 'monto'
     // this.campoDeDormularioDeActualizacion();
@@ -362,6 +372,37 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     this.nuevaNotificacion = null;
     this.procesoModal = '';
   }
+
+  cancelar(): void {
+    this.cancelEvent.emit();
+  }
+
+  continuar(): void {
+    this.continuarEvento.emit();
+  }
+
+  pagosGuardar(): void {
+    console.log('Guardar pagos',this.datosTablaPagos);
+
+    const PAYLOAD = {
+          "pagos": this.datosTablaPagos.map(pago => ({
+            linea_captura: pago.lineaCaptura,
+            monto: pago.monto
+          }))
+    }
+    const idSolicitud = this.solicitudState.idSolicitud;
+    this.datosTramiteService
+      .guardarPagosSolicitud(PAYLOAD, idSolicitud)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (respuesta) => {
+          // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
+          if (respuesta?.codigo === '00') {
+            this.continuar();
+          }
+        }
+      );
+  } 
 
 
 

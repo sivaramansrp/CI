@@ -208,4 +208,20 @@ export class DatosTramiteService {
   }
 
 
+  /**
+   * Persists payment information for a specific solicitud (request) on the server.
+   *
+   * Performs an HTTP POST to:
+   *  `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/guardar-pagos`
+   *
+   * @param PAYLOAD - The payment payload to be saved. The exact shape is defined by the backend contract (currently typed as `any`).
+   * @param idSolicitud - The identifier of the solicitud whose payments are being stored.
+   * @returns An Observable that emits the server response. HTTP or transport errors are emitted as observable errors.
+   */
+  guardarPagosSolicitud(PAYLOAD:any,idSolicitud:any): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11201/solicitud/${idSolicitud}/constancia-itc/guardar-pagos`
+    return this.http.post(ENDPOINT, PAYLOAD);
+  } 
+
+
 }
