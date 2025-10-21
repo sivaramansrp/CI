@@ -255,10 +255,113 @@ export const PRODUCTO_TABLA = [
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
     orden: 19,
+  }
+];
+export const PRODUCTO_TABLA_218 = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.clasificacionProducto,
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string =>
+      ele.especificarClasificacionProducto,
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específica del producto',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionEspecificaProducto,
+    orden: 3,
+  },
+  {
+    encabezado: 'Denominación distintiva',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionDistintiva,
+    orden: 4,
+  },
+  {
+    encabezado: 'Denominación común, nombre común o nombre científico',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionComun,
+    orden: 5,
+  },
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica,
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado físico',
+    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: TablaMercanciasDatos): string => ele.fraccionArancelaria,
+    orden: 8,
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.descripcionFraccion,
+    orden: 9,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.unidadMedidaComercializacion,
+    orden: 10,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC,
+    orden: 11,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa,
+    orden: 12,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT,
+    orden: 13,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion,
+    orden: 14,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario,
+    orden: 15,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisOrigen,
+    orden: 16,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisProcedencia,
+    orden: 17,
+  },
+  {
+    encabezado: 'Tipo producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto,
+    orden: 18,
+  },
+  {
+    encabezado: 'Uso específico',
+    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico,
+    orden: 19,
   },
   {
     encabezado: 'Fecha de caducidad',
-    clave: (ele: TablaMercanciasDatos): string => ele.fechaCaducidad ?? '', // Reemplaza 'ele.fechaCaducidad' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string => ele.caducidad ?? '',
     orden: 20,
   },
 ];
@@ -379,7 +482,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103, 260213,
+  260207, 260209, 260201, 260219, 260302, 260304, 260103
 ];
 
 /**
@@ -499,7 +602,7 @@ export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
  * @description Arreglo que contiene los identificadores relacionados con el representante legal.
  * @type {number[]}
  */
-export const REPRESENTANTE_LEGAL = [260208, 260213];
+export const REPRESENTANTE_LEGAL = [260208];
 
 /**
  * @const BANCO
@@ -800,7 +903,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260201]
 
 /**
  * Constante que representa el código AIFA.
@@ -847,3 +950,12 @@ export const CAMPOS_CLAVE = [
  * }
  */
 export const REPRESENTANTE_LEGAL_EN_INIT = [260101];
+
+
+
+/**
+ * @const REPRESENTANTE_LEGAL
+ * @description Arreglo que contiene los identificadores relacionados con el representante legal.
+ * @type {number[]}
+ */
+export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];

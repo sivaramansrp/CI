@@ -82,7 +82,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * - Updates the `indice` property with the value of the selected tab.
    */
   ngOnInit(): void {
-    if (this.consultaState && this.consultaState.procedureId === '260209' &&
+    if (this.consultaState &&
       this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {

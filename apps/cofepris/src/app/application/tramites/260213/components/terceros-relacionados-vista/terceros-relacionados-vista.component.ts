@@ -18,6 +18,7 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import {ELEMENTOS_REQUERIDOS} from '../../constants/medicos-uso.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260213Query } from '../../estados/tramite260213Query.query';
 import { Tramite260213Store } from '../../estados/tramite260213Store.store';
@@ -69,6 +70,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * Datos de la tabla de fabricantes.
    */
   fabricanteTablaDatos: Fabricante[] = [];
+
+
+  /**
+       * @property {string[]} elementosRequeridos
+       * @description
+       * Lista de elementos requeridos para completar el formulario o proceso.
+       */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS
 
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos

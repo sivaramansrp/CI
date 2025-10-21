@@ -254,3 +254,5 @@ export interface ReprestantanteData {
     'extranjeroEstado',
     'extranjeroColonia'
   ]
+
+  export const ID_PROCEDIMIENTO = 260215;

@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="mt-4">
   <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.id; else agregarFabricante"
     titulo="Modificar fabricante"
@@ -85,7 +85,7 @@
   idProcedimiento === 260904){
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">R.F.C.*: </label>
+        <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched ? 'text-danger' : ''">*</span>:</label>
         <span tooltip="Registro Federal de Contribuyente"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
@@ -117,7 +117,7 @@
   chequeoValidacionAlGuardar
 ) {
   <div class="col-md-4">
-    <label class="form-label">C.U.R.P.*:</label>
+    <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
     <input
       type="text"
       class="form-control"
@@ -138,7 +138,7 @@
 }
       @else if (!estaOculto && !chequeoValidacionAlGuardar ) {
       <div class="col-md-4">
-        <label class="form-label">C.U.R.P.*:</label>
+        <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -246,14 +246,8 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Denominación/razón
-          social@if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
-          <span class="text-danger">*</span>
-          }
-          @else{
-            <span>*</span>
-          }:</label
-        >
+          >Denominación/razón social<span [ngClass]="agregarFabricanteForm.controls['razonSocial'].errors?.['required'] && agregarFabricanteForm.controls['razonSocial'].touched ? 'text-danger' : ''">*</span>:</label>
+        
         <input
           type="text"
           class="form-control"
@@ -293,11 +287,12 @@
           [required]="true"
           [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [placeholder]="''"
         ></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
-        <label class="form-label" for="estado">Estado*:</label>
+        <label class="form-label" for="estado">Estado<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -326,14 +321,14 @@
 
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
-            @if(idProcedimiento === 260911 && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+            @if((idProcedimiento === 260911 || idProcedimiento === 260201) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
           </span>:</label>
         <input
           type="text"
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
-          [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
+          [ngClass]="esInvalido('codigoPostal') && agregarFabricanteForm.get('codigoPostal')?.touched ? 'required' : ''"
         />
          <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
       <small
@@ -558,7 +553,7 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [placeholder]="''"
-          [required]="!elementosNoRequeridos.includes('localidad')"
+          [required]="!elementosNoRequeridos.includes('localidad') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
         ></app-catalogo-select>
@@ -580,7 +575,7 @@
           formControlName="colonia"
           [label]="'Colonia'"
           [placeholder]="''"
-          [required]="!elementosNoRequeridos.includes('colonia')"
+          [required]="!elementosNoRequeridos.includes('colonia') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"
         ></app-catalogo-select>
