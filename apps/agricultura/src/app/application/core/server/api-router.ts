@@ -194,7 +194,7 @@ export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA:
  * @returns Ruta de la API como string.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-datos-solicitud
  */
-export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;
+export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t220201/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;
 
 /**
  * Genera la ruta de la API para obtener las solicitudes recientes de un trámite específico y RFC dado.
@@ -250,3 +250,4 @@ export const API_GET_SOLICITUDES_UNIDAD_MEDIDA = (TRAMITE: string, cveFraccion: 
  * @returns La ruta de la API como cadena de texto para cargar el archivo masivo de mercancía animal.
  */
 export const API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL = (TRAMITE: string, archivo: File) : string => `sat-t${TRAMITE}/solicitud/detalle-mercancia-animal/cargar-archivo`;
+

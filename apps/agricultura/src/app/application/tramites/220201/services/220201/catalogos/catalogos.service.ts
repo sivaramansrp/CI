@@ -35,8 +35,9 @@ import {
     API_GET_CATALOGO_TIPO_PRESENTACION,
     API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
     API_GET_CATALOGO_USOS_MERCANCIA,    
-    API_GET_DATOS_SOLICITUD
+    API_GET_DATOS_SOLICITUD,
 } from '../../../../../core/server/api-router';
+import { PrellenadoSolicitud } from "../../../models/220201/prellenado-solicitud.model";
 
 @Injectable({
     providedIn: 'root'
@@ -411,5 +412,16 @@ export class CatalogosService {
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 
-    
+    /**
+     * Obtiene una solicitud prellenada basada en los parámetros proporcionados.
+     *
+     * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+     * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+     * @param cveUcon - La clave única asociada al usuario o contexto.
+     * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitud`).
+     */
+    obtenSolicitudPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitud>> {
+        const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITUD(tramite.toString(), esPrellenado, idsolicitud)}`;
+        return this.http.get<BaseResponse<PrellenadoSolicitud>>(ENDPOINT);
+    }
 }

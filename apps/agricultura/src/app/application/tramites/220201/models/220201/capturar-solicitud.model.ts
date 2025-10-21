@@ -420,6 +420,11 @@ export interface FilaSolicitud {
  */
 export interface SolicitudData {
   id?: number;
+
+  /**
+   * Identificador de la solicitud.
+   */
+  id_solicitud?: string;
   /**
    * Fecha en la que se creó la solicitud.
    */

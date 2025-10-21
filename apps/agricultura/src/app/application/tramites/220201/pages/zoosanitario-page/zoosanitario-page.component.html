@@ -26,13 +26,23 @@
       }
       }
 
-        
-          <div style="display:flex; gap:8px; align-items:center;">
-            <button type="button" class="btn btn-default">Guardar</button>
-            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true" [dePadre]="true"></btn-continuar>
-          </div>
-      
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-end">
+        <button type="button" class="btn btn-default">Guardar</button>
+        <button type="button" class="btn btn-primary ms-3">Continuar</button>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <p></p>
           <ng-alert [CONTENIDO]="PRIVACY_NOTICE_CONTENT"></ng-alert>
+          <p></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

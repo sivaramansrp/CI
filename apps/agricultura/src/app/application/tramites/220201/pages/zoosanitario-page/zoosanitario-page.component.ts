@@ -1,5 +1,5 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarProComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
   standalone: true,
-  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarProComponent, AlertComponent],
 })
 export class ZoosanitarioPageComponent {
   /**
@@ -52,6 +52,7 @@ export class ZoosanitarioPageComponent {
  * const isValid = this.pasoUnoComponent.validateForms();
  * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
  */
+  // Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos.
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -82,27 +83,27 @@ export class ZoosanitarioPageComponent {
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
-/**
- * Indica si el formulario actual es válido o no.
- *
- * @property esFormaValido
- * @type {boolean}
- * @default false
- * @example
- * if (this.esFormaValido) {
- *   // Continuar con el envío
- * }
- */
+  /**
+   * Indica si el formulario actual es válido o no.
+   *
+   * @property esFormaValido
+   * @type {boolean}
+   * @default false
+   * @example
+   * if (this.esFormaValido) {
+   *   // Continuar con el envío
+   * }
+   */
   esFormaValido: boolean = false;
-   /**
-     * Contenido del aviso de privacidad utilizado en el componente.
-     * @public
-     * @readonly
-     * @type {string}
-     * @memberof SanidadCertificadoComponent
-     */
-    readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
-  
+  /**
+    * Contenido del aviso de privacidad utilizado en el componente.
+    * @public
+    * @readonly
+    * @type {string}
+    * @memberof SanidadCertificadoComponent
+    */
+  readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
+
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
@@ -192,5 +193,18 @@ export class ZoosanitarioPageComponent {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Suma 10 números introducidos por el usuario.
+   * @method sumarDiezNumeros
+   * @param {number[]} numeros - Array de 10 números a sumar.
+   * @returns {number} - Resultado de la suma de los 10 números.
+   */
+  static sumarDiezNumeros(numeros: number[]): number {
+    if (numeros.length !== 10) {
+      throw new Error('Debe proporcionar exactamente 10 números.');
+    }
+    return numeros.reduce((acumulador, numero) => acumulador + numero, 0);
   }
 }

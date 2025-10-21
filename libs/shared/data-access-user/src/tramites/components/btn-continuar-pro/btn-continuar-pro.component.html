@@ -1,0 +1,20 @@
+<button type="button" class="btn btn-default" (click)="anterior()" [hidden]="ocultabotonAnterior"
+    [style.visibility]="btnAntVisible">
+    {{ datos.txtBtnAnt }}
+</button>
+@if (btnContVisible) {
+<button type="button" class="btn btn-primary ms-3" [disabled]="!habilitarBoton" (click)="continuar()">
+    {{ datos.txtBtnSig }}
+</button>
+}
+@if (btnGuardar) {
+<button type="button" class="btn btn-default" (click)="guardar()" [style.visibility]="btnGuardarVisible">
+    Guardar
+</button>
+}
+<div>
+    @if(moduloEmergente){
+    <lib-notificaciones [notificacionInput]="notificacion"
+        (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+    }
+</div>
