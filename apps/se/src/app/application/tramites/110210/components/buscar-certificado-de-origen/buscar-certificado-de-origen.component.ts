@@ -2,7 +2,7 @@ import { Catalogo, CertificadoDisponibles, ConsultaioQuery, Notificacion, Notifi
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
+import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
 import { CommonModule } from '@angular/common';

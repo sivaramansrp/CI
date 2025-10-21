@@ -12,7 +12,7 @@ import {
   Tramite110210Store,
 } from '../../estados/store/tramite110210.store';
 import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
-import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
+import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
 import { ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
