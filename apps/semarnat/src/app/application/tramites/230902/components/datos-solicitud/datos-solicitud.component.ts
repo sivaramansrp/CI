@@ -1,7 +1,7 @@
 /**
  * Componente para gestionar los datos de la solicitud.
  * Este componente permite la gestión de formularios, tablas y datos relacionados con la solicitud.
- * 
+ *
  * Métodos:
  * - ngOnInit: Inicializa el componente y configura las suscripciones necesarias.
  * - crearFormularioSolicitud: Crea y configura el formulario para los datos de la solicitud.
@@ -18,12 +18,44 @@
  * - enviarFormularioMercancia: Envía el formulario de mercancía y agrega los datos a la tabla.
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CONFIGURACION_TABLA_MERCANCIA, ConfiguracionItem } from '../../enum/mercancia.enum';
-import { CROSLISTA_ENTRADA, CROSSLIST_BOTONS, CrosslistBoton } from '../../enum/crossList-botons.enum';
-import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
-import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  CONFIGURACION_TABLA_MERCANCIA,
+  ConfiguracionItem,
+} from '../../enum/mercancia.enum';
+import {
+  CROSLISTA_ENTRADA,
+  CROSSLIST_BOTONS,
+  CrosslistBoton,
+} from '../../enum/crossList-botons.enum';
+import {
+  Catalogo,
+  CategoriaMensaje,
+  ConfiguracionColumna,
+  CrossListLable,
+  CrosslistComponent,
+  Notificacion,
+  REGEX_SEPARADO_POR_COMAS,
+  TablaSeleccion,
+  TipoNotificacionEnum,
+} from '@libs/shared/data-access-user/src';
+import {
+  Solicitud230902State,
+  Tramite230902Store,
+} from '../../estados/tramite230902.store';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs';
 import { ALERTA_MERCANCIA } from '../../enum/mercancia-alert.enum';
@@ -38,13 +70,17 @@ import { Tramite230902Query } from '../../estados/tramite230902.query';
   templateUrl: './datos-solicitud.component.html',
   styleUrls: ['./datos-solicitud.component.scss'],
 })
-export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DatosSolicitudComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   /**
    * Referencia al componente Crosslist.
    * Se utiliza para interactuar con el componente Crosslist desde este componente.
    */
-  @ViewChild("CrosslistComponentAduanas") crosslistComponent!: CrosslistComponent;
-  @ViewChild("CrosslistComponentFinalidad") crosslistComponentFinalidad!: CrosslistComponent;
+  @ViewChild('CrosslistComponentAduanas')
+  crosslistComponent!: CrosslistComponent;
+  @ViewChild('CrosslistComponentFinalidad')
+  crosslistComponentFinalidad!: CrosslistComponent;
   /** Botones para la lista cruzada. */
   crossListBotons!: CrosslistBoton[];
 
@@ -82,7 +118,8 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
   movimientoLabel: CrossListLable = MOVIMIENTO_LABEL;
 
   /** Configuración de la tabla de mercancías. Define las columnas y configuraciones de la tabla de mercancías. */
-  configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] = CONFIGURACION_TABLA_MERCANCIA;
+  configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] =
+    CONFIGURACION_TABLA_MERCANCIA;
 
   /** Mensaje de alerta relacionado con la mercancía. Se muestra cuando ocurre un error o advertencia relacionada con la mercancía. */
   public alert_message: string = ALERTA_MERCANCIA;
@@ -208,7 +245,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
     private tramite230902Store: Tramite230902Store,
     private tramite230902Query: Tramite230902Query,
     public formBuilder: FormBuilder,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -256,15 +293,18 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
         this.solicitud230902State = state;
-        
+
         // Initialize tablaDatos from store to maintain data across component switches
         if (state.mercanciaTablaDatos) {
           this.tablaDatos = [...state.mercanciaTablaDatos];
         }
-        
+
         // Initialize tipoMovimientoSeleccionada when state is updated
         if (state.tipodeMovimiento) {
-          this.tipoMovimientoSeleccionada = parseInt(state.tipodeMovimiento, 10);
+          this.tipoMovimientoSeleccionada = parseInt(
+            state.tipodeMovimiento,
+            10
+          );
         } else {
           this.tipoMovimientoSeleccionada = 0;
         }
@@ -326,19 +366,26 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
         .subscribe()
     );
     this.formSolicitud = this.formBuilder.group({
-      tipodeMovimiento: [this.solicitud230902State.tipodeMovimiento, Validators.required],
+      tipodeMovimiento: [
+        this.solicitud230902State.tipodeMovimiento,
+        Validators.required,
+      ],
       tipoRegimen: [this.solicitud230902State.tipoRegimen, Validators.required],
     });
 
     // Initialize tipoMovimientoSeleccionada based on stored value
     if (this.solicitud230902State.tipodeMovimiento) {
-      this.tipoMovimientoSeleccionada = parseInt(this.solicitud230902State.tipodeMovimiento, 10);
+      this.tipoMovimientoSeleccionada = parseInt(
+        this.solicitud230902State.tipodeMovimiento,
+        10
+      );
     }
 
     // Subscribe to form changes to update crosslist buttons
     this.subscription.add(
-      this.formSolicitud.get('tipodeMovimiento')?.valueChanges
-        .pipe(takeUntil(this.destroyed$))
+      this.formSolicitud
+        .get('tipodeMovimiento')
+        ?.valueChanges.pipe(takeUntil(this.destroyed$))
         .subscribe(() => {
           this.cambiarTipoDeMovimiento();
         }) || new Subscription()
@@ -371,16 +418,37 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.formMercancia = this.formBuilder.group({
       id: [DEFAULT_DATA.id],
-      fraccionArancelaria: [DEFAULT_DATA.fraccionArancelaria, Validators.required],
+      fraccionArancelaria: [
+        DEFAULT_DATA.fraccionArancelaria,
+        Validators.required,
+      ],
       fraccionDescripcion: [DEFAULT_DATA.fraccionDescripcion],
       otraFraccion: [DEFAULT_DATA.otraFraccion],
-      descripcion: [DEFAULT_DATA.descripcion, [Validators.required, Validators.maxLength(1000)]],
-      rendimientoProducto: [DEFAULT_DATA.rendimientoProducto, [Validators.maxLength(1000)]],
-      clasificacionTaxonomica: [DEFAULT_DATA.clasificacionTaxonomica, Validators.required],
+      descripcion: [
+        DEFAULT_DATA.descripcion,
+        [Validators.required, Validators.maxLength(1000)],
+      ],
+      rendimientoProducto: [
+        DEFAULT_DATA.rendimientoProducto,
+        [Validators.maxLength(1000)],
+      ],
+      clasificacionTaxonomica: [
+        DEFAULT_DATA.clasificacionTaxonomica,
+        Validators.required,
+      ],
       nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
       nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
-      marca: [DEFAULT_DATA.marca, [Validators.required, DatosSolicitudComponent.noSpecialCharactersValidator]],
-      cantidad: [DEFAULT_DATA.cantidad, [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      marca: [
+        DEFAULT_DATA.marca,
+        [
+          Validators.required,
+          DatosSolicitudComponent.noSpecialCharactersValidator,
+        ],
+      ],
+      cantidad: [
+        DEFAULT_DATA.cantidad,
+        [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)],
+      ],
       unidadMedida: [DEFAULT_DATA.unidadMedida, Validators.required],
       paisOrigen: [DEFAULT_DATA.paisOrigen, Validators.required],
       paisProcedencia: [DEFAULT_DATA.paisProcedencia, Validators.required],
@@ -401,7 +469,10 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
   manejarCambioOtraFraccion(): void {
     const CHECKED = this.formMercancia.get('otraFraccion')?.value;
     if (CHECKED) {
-      this.formMercancia.addControl('fraccionVigenteTIGIE', this.formBuilder.control(''));
+      this.formMercancia.addControl(
+        'fraccionVigenteTIGIE',
+        this.formBuilder.control('')
+      );
       this.formMercancia.get('fraccionArancelaria')?.setValue('0');
       this.formMercancia.get('fraccionDescripcion')?.reset();
       this.otraFraccionSeleccionada = true;
@@ -418,11 +489,11 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
   limpiarFormularioMercancia(): void {
     this.formMercancia.reset();
     this.otraFraccionSeleccionada = false;
-    
+
     if (this.formMercancia.contains('fraccionVigenteTIGIE')) {
       this.formMercancia.removeControl('fraccionVigenteTIGIE');
     }
-    
+
     this.formMercancia.patchValue({
       id: 0,
       fraccionArancelaria: '',
@@ -439,9 +510,9 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       paisOrigen: '',
       paisProcedencia: '',
     });
-    
+
     this.formMercancia.get('fraccionDescripcion')?.disable();
-    
+
     this.formMercancia.markAsUntouched();
     this.formMercancia.markAsPristine();
   }
@@ -451,15 +522,18 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Actualiza el estado y los botones relacionados con el movimiento.
    */
   cambiarTipoDeMovimiento(): void {
-    const TIPO_DE_MOVIMIENTO = this.formSolicitud.get('tipodeMovimiento')?.value;
-     
-    this.tramite230902Store.establecerDatos({ tipodeMovimiento: TIPO_DE_MOVIMIENTO });
-    
+    const TIPO_DE_MOVIMIENTO =
+      this.formSolicitud.get('tipodeMovimiento')?.value;
+
+    this.tramite230902Store.establecerDatos({
+      tipodeMovimiento: TIPO_DE_MOVIMIENTO,
+    });
+
     // Recreate crosslist buttons if they are undefined or empty
     if (!this.crossListBotons || this.crossListBotons.length === 0) {
       this.configurarComponentesCrosslist();
     }
-    
+
     // Ensure crosslist components are initialized before using them
     if (this.crossListBotons && this.crossListBotons.length > 0) {
       if (TIPO_DE_MOVIMIENTO === '1' || TIPO_DE_MOVIMIENTO === '3') {
@@ -468,7 +542,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
         this.aduanasBotons = this.crossListBotons;
       }
     }
-    
+
     this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
   }
 
@@ -519,7 +593,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Actualiza los datos del formulario con los valores de la fila seleccionada.
    */
   modficarMercanciaItem(): void {
-    if(this.tablaDatos.length === 0) {
+    if (this.tablaDatos.length === 0) {
       this.sinRegistro = true;
       this.nuevaNotificacionModificar = {
         tipoNotificacion: 'alert',
@@ -531,7 +605,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-      }
+      };
     }
     if (this.listaFilaSeleccionadaMercancia.length < 2) {
       this.sinRegistro = false;
@@ -542,7 +616,9 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       this.esOperacionDeActualizacion = true;
       const FRACCION_DESCRIPCION =
         this.permisoCitesService.fraccionArancelariaDescripcion.find(
-          (item) => Number(item.id) === Number(this.filaSeleccionada.fraccionArancelaria)
+          (item) =>
+            Number(item.id) ===
+            Number(this.filaSeleccionada.fraccionArancelaria)
         )?.descripcion || '';
 
       const MERCANCIA_CONFIGURACION_ITEM: ConfiguracionItem = {
@@ -623,14 +699,16 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Actualiza el estado global con los datos restantes.
    */
   eliminarMercanciaItem(event: boolean): void {
-    if(event === false || this.listaFilaSeleccionadaMercancia.length === 0) {
+    if (event === false || this.listaFilaSeleccionadaMercancia.length === 0) {
       this.cerrarEliminarConfirmationPopup();
       return;
     }
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(item => item.id);
+    const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(
+      (item) => item.id
+    );
 
     this.tablaDatos = this.tablaDatos.filter(
-      item => !IDS_TO_DELETE.includes(item.id)
+      (item) => !IDS_TO_DELETE.includes(item.id)
     );
 
     this.listaFilaSeleccionadaMercancia = [];
@@ -669,7 +747,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Abre el popup de confirmación si hay elementos seleccionados.
    */
   confirmEliminarMercanciaItem(): void {
-    if(this.tablaDatos.length === 0) {
+    if (this.tablaDatos.length === 0) {
       this.sinEliminar = true;
       this.nuevaNotificacionEliminar = {
         tipoNotificacion: 'alert',
@@ -728,10 +806,15 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Valida el formulario antes de agregar los datos.
    */
   enviarFormularioMercancia(): void {
-    if (this.formMercancia.invalid || (!this.otraFraccionSeleccionada && this.formMercancia.get('fraccionArancelaria')?.value === '0')) {
+    if (
+      this.formMercancia.invalid ||
+      (!this.otraFraccionSeleccionada &&
+        this.formMercancia.get('fraccionArancelaria')?.value === '0')
+    ) {
       return;
     }
-    const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
+    const GET_DESCRIPTION = (array: Catalogo[], index: number): string =>
+      array[index - 1]?.descripcion || '';
 
     const TABLA_ROW: ConfiguracionItem = {
       id: this.esOperacionDeActualizacion
@@ -773,7 +856,9 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       ),
     };
 
-    const EXISTING_INDEX = this.tablaDatos.findIndex(item => item.id === TABLA_ROW.id);
+    const EXISTING_INDEX = this.tablaDatos.findIndex(
+      (item) => item.id === TABLA_ROW.id
+    );
 
     if (EXISTING_INDEX > -1) {
       this.tablaDatos[EXISTING_INDEX] = TABLA_ROW;
@@ -788,30 +873,36 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
   /**
    * Actualiza los datos de las listas cruzadas basándose en el estado actual.
-   * 
+   *
    * Sincroniza las listas seleccionadas y originales con el estado de la aplicación.
    * Si las matrices del estado están vacías o indefinidas, utiliza valores predeterminados.
    */
   storeCrosslistaDatos(): void {
     // Función auxiliar para verificar si una matriz es válida y no está vacía
-    const ES_MATRIZ_VALIDA = (array: string[] | undefined | null): boolean => 
+    const ES_MATRIZ_VALIDA = (array: string[] | undefined | null): boolean =>
       Array.isArray(array) && array.length > 0;
 
     // Usar CROSLISTA_ENTRADA si listaOriginalAduanas es indefinida, nula o está vacía
-    this.listaOriginalAduanas = ES_MATRIZ_VALIDA(this.solicitud230902State.listaOriginalAduanas)
-      ? this.solicitud230902State.listaOriginalAduanas as string[]
+    this.listaOriginalAduanas = ES_MATRIZ_VALIDA(
+      this.solicitud230902State.listaOriginalAduanas
+    )
+      ? (this.solicitud230902State.listaOriginalAduanas as string[])
       : CROSLISTA_ENTRADA;
-    
+
     // Usar matriz vacía o la matriz del estado si listaSeleccionadaAduanas existe
-    this.listaSeleccionadaAduanas = this.solicitud230902State.listaSeleccionadaAduanas || [];
+    this.listaSeleccionadaAduanas =
+      this.solicitud230902State.listaSeleccionadaAduanas || [];
 
     // Usar CROSLISTA_ENTRADA si listaOriginalMovimiento es indefinida, nula o está vacía
-    this.listaOriginalMovimiento = ES_MATRIZ_VALIDA(this.solicitud230902State.listaOriginalMovimiento)
-      ? this.solicitud230902State.listaOriginalMovimiento as string[]
+    this.listaOriginalMovimiento = ES_MATRIZ_VALIDA(
+      this.solicitud230902State.listaOriginalMovimiento
+    )
+      ? (this.solicitud230902State.listaOriginalMovimiento as string[])
       : CROSLISTA_ENTRADA;
-    
+
     // Usar matriz vacía o la matriz del estado si listaSeleccionadaMovimiento existe
-    this.listSeleccionadaMovimiento = this.solicitud230902State.listaSeleccionadaMovimiento || [];
+    this.listSeleccionadaMovimiento =
+      this.solicitud230902State.listaSeleccionadaMovimiento || [];
   }
 
   /**
@@ -829,7 +920,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * @description
    * Cierra la notificación de alerta que se muestra cuando no hay registros seleccionados para modificar.
    * Establece la propiedad `sinRegistro` a `false` para ocultar el mensaje de alerta correspondiente.
-   * 
+   *
    * @returns {void}
    */
   cerrarSinRegistro(): void {
@@ -841,7 +932,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * @description
    * Cierra la notificación de alerta que se muestra cuando no hay registros seleccionados para eliminar.
    * Establece la propiedad `sinEliminar` a `false` para ocultar el mensaje de alerta correspondiente.
-   * 
+   *
    * @returns {void}
    */
   cerrarSinEliminar(): void {
@@ -856,21 +947,21 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * - Establece `tablaError` basándose en si existen datos en la tabla
    * - Marca todos los controles como "tocados" para mostrar los errores de validación
    * - Retorna `false` para indicar que la validación falló
-   * 
+   *
    * @returns {boolean} `true` si ambos formularios son válidos, `false` en caso contrario.
    */
   validarFormulario(): boolean {
     if (this.formSolicitud.valid) {
-      if(this.tablaDatos.length > 0) {
+      if (this.tablaDatos.length > 0) {
         return true;
       }
     }
     this.tablaError = this.tablaDatos.length === 0 ? true : false;
     this.formSolicitud.markAllAsTouched();
-    if(this.formMercancia) {
+    if (this.formMercancia) {
       this.formMercancia.markAllAsTouched();
     }
-    return false
+    return false;
   }
   /**
    * @method noSpecialCharactersValidator
@@ -879,16 +970,18 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Utiliza una expresión regular para detectar caracteres como: !"#$%/()=?=)(/&%$#""#$%$#"#$&
    * Si se detectan caracteres especiales, retorna un error de validación que puede ser usado para mostrar
    * el mensaje "Ingresa datos validos." en la interfaz de usuario.
-   * 
+   *
    * @param {AbstractControl} control - El control de formulario que se está validando.
    * @returns {ValidationErrors | null} Objeto con el error 'hasSpecialCharacters' si hay caracteres especiales, null si la validación pasa.
    * @static
    */
-  static noSpecialCharactersValidator(control: AbstractControl): ValidationErrors | null {
+  static noSpecialCharactersValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     if (!control.value) {
       return null;
     }
-    
+
     const SPECIALCHARACTERREGEX = /[!"#$%/()=?=)(/&%$#""#$%$#"#$&]/;
     const HASSPECIALCHAR = SPECIALCHARACTERREGEX.test(control.value);
 
