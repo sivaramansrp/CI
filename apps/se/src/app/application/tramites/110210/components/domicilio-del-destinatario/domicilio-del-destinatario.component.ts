@@ -92,8 +92,7 @@ private inicializarFormulario(): void {
  * y que `solicitudForm` está correctamente inicializado.
  */
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  setFormValues() {
+  public setFormValues():void {
     if (!this.solicitudForm) {
       return;
     }

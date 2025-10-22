@@ -68,32 +68,6 @@ export interface GuardarPayload {
       correoElectronico: string;
       telefono: string;
       cveUsuario: string;
-      domicilio: {
-        pais: {
-          clave: string;
-          nombre: string;
-        };
-        entidadFederativa: {
-          clave: string;
-          nombre: string;
-        };
-        delegacionMunicipio: {
-          clave: string;
-          nombre: string;
-        };
-        colonia: {
-          clave: string;
-          nombre: string;
-        };
-        localidad: {
-          clave: string;
-          nombre: string;
-        };
-        calle: string;
-        numeroExterior: string;
-        numeroInterior?: string;
-        codigoPostal?: string;
-      };
     };
     cveRolCapturista: string;
     cveUsuarioCapturista: string;
@@ -138,32 +112,6 @@ export interface CertificadoOrigenPayload {
       correoElectronico: string;
       telefono: string;
       cveUsuario: string;
-      domicilio: {
-        pais: {
-          clave: string;
-          nombre: string;
-        };
-        entidadFederativa: {
-          clave: string;
-          nombre: string;
-        };
-        delegacionMunicipio: {
-          clave: string;
-          nombre: string;
-        };
-        colonia: {
-          clave: string;
-          nombre: string;
-        };
-        localidad: {
-          clave: string;
-          nombre: string;
-        };
-        calle: string;
-        numeroExterior: string;
-        numeroInterior?: string;
-        codigoPostal?: string;
-      };
     };
     cveRolCapturista: string;
     cveUsuarioCapturista: string;

@@ -41,6 +41,12 @@ export class DomicilioTablaService {
     this.store.actualizarEstado(DATOS);
   }
 
+  /**
+   * Obtiene el estado del formulario del certificado de origen desde la API.
+   * @param {CertificadoOrigenPayload} body - Cuerpo de la solicitud con los datos del certificado de origen.
+   * @param {number} solicitudId - ID de la solicitud.
+   * @returns {Observable<JSONResponse>} - Observable que emite la respuesta de la API.
+   */
   obtenerEstadoFormulario(body: CertificadoOrigenPayload, solicitudId: number): Observable<JSONResponse> {
       return this.http.post(API_ROUTES('/sat-t110210').certificadoOrigen(solicitudId), { body }).pipe(
         map((response) => response as JSONResponse),

@@ -85,7 +85,9 @@ export class DomicilioTablaComponent implements OnInit, OnDestroy, OnChanges {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
-
+/**   * Hook del ciclo de vida que se llama cuando las propiedades enlazadas a datos de una directiva cambian.
+   * Actualiza los datos de la tabla basándose en los nuevos datos del certificado.
+   */
   ngOnChanges(): void {
     this.datosTabla = (this.certificadoDatos?.mercancias ?? []) as DomicilioTabla[];
   }

@@ -171,30 +171,6 @@ constructor(
   const PAYLOAD = {
   "solicitud": {
     "solicitante": {
-      "domicilio": {
-        "pais": {
-          "clave": "MEX",
-          "nombre": "ESTADOS UNIDOS MEXICANOS"
-        },
-        "entidadFederativa": {
-          "clave": "SIN",
-          "nombre": "SINALOA"
-        },
-        "delegacionMunicipio": {
-          "clave": "25001",
-          "nombre": "AHOME"
-        },
-        "colonia": {
-          "clave": "00181210001",
-          "nombre": "MIGUEL HIDALGO"
-        },
-        "localidad": {
-          "clave": "00181210008",
-          "nombre": "LOS MOCHIS"
-        },
-        "calle": "CAMINO VIEJO",
-        "numeroExterior": "1353"
-      },
       "telefono": "55-98764532",
       "rfc": "AAL0409235E6",
       "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",

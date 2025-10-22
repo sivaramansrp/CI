@@ -97,6 +97,11 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+  /**
+   * Maneja el evento de clic en una fila de la tabla.
+   * Emite el evento rowClicked con los datos de la fila seleccionada.
+   * @param {CertificadoDisponibles} event - Datos de la fila que fue clickeada.
+   */
   onFilaClick(event: CertificadoDisponibles): void{
      if (this.esFormularioSoloLectura) {
       return; 

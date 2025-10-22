@@ -224,33 +224,7 @@ export class SolicitudPageComponent implements OnDestroy {
             "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
             "correoElectronico": "vucem2021@gmail.com",
             "telefono": "55-98764532",
-            "cveUsuario": "AAL0409235E6",
-            "domicilio": {
-              "pais": {
-                "clave": "MEX",
-                "nombre": "ESTADOS UNIDOS MEXICANOS"
-              },
-              "entidadFederativa": {
-                "clave": "SIN",
-                "nombre": "SINALOA"
-              },
-              "delegacionMunicipio": {
-                "clave": "25001",
-                "nombre": "AHOME"
-              },
-              "localidad": {
-                "clave": "00181210008",
-                "nombre": "LOS MOCHIS"
-              },
-              "colonia": {
-                "clave": "00181210001",
-                "nombre": "MIGUEL HIDALGO"
-              },
-              "calle": "CAMINO VIEJO",
-              "numeroExterior": "1353",
-              "numeroInterior": "",
-              "codigoPostal": "81210"
-            }
+            "cveUsuario": "AAL0409235E6"
           },
           "cveRolCapturista": "PersonaMoral",
           "cveUsuarioCapturista": "AAL0409235E6",
