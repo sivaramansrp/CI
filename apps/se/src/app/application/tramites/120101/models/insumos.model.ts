@@ -76,3 +76,4 @@ export interface Tramite {
 export interface ParametrosBP {
   idSolicitud: string;
 }
+

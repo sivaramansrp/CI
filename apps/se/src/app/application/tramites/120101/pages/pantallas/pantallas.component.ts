@@ -14,10 +14,10 @@ import {
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, take, takeUntil } from 'rxjs';
-import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
-import { SolicitudDeRegistroTpl120101State } from '../../../../estados/tramites/tramite120101.store';
 import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { SolicitudDeRegistroTpl120101State } from '../../../../estados/tramites/tramite120101.store';
+import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 /**
  * @component PantallasComponent
  * @description
@@ -299,8 +299,14 @@ export class PantallasComponent implements OnInit, OnDestroy {
    * @param {AccionBoton} e - Objeto que contiene el valor del paso y la acción a realizar.
    * @returns {void}
    */
+
+
+
+
+
+  
   public getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
+   // this.obtenerDatosDelStore();
     if (!this.consultaState.readonly) {
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
@@ -367,7 +373,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
  * this.continuar({ valor: 2, accion: 'cont' });
  */
   public continuar(e: AccionBoton): void {
-    if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
+    if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid ) {
       this.mostrarAplicacionRegistradaAlerta = true;
       this.pestanaDosFormularioValido = true;
     } else if (this.esFormaValido) {

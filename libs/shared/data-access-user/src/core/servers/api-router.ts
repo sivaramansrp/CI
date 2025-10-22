@@ -817,7 +817,7 @@ export const PAIS_DESTINO = (TRAMITE: string, PAYLOAD_DATOS: { cveTratado: strin
  * API para obtener el catálogo de tratados y acuerdos
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises-destino
  */
-export const CLASIFICACION_REGIMEN = (TRAMITE: string, PAYLOAD_DATOS: { tramite: string , id: string}): string => `sat-t${TRAMITE}/tramite/${PAYLOAD_DATOS.tramite}/regimenes/${PAYLOAD_DATOS.id}/clasificacion`;
+export const CLASIFICACION_REGIMEN = (TRAMITE: string, PAYLOAD_DATOS: { tramite: string , id: string}): string => `sat-t${TRAMITE}/catalogo/tramite/${PAYLOAD_DATOS.tramite}/regimenes/${PAYLOAD_DATOS.id}/clasificacion`;
 
 /**
  * Genera dinámicamente la ruta para el catálogo de tratados/acuerdos de la UE por bloque.

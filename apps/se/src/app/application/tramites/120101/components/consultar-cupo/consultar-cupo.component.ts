@@ -281,12 +281,6 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
       .paisDestinoCatalogo(this.tramiteId, { cveTratado: "SGPQFB045", cvePais: "TICERM.QFBA" })
         .pipe(takeUntil(this.destroy$))
         .subscribe((resp): void => {
-           const TRATADO_FIELD = this.consultarCupoFormData.find(
-          (datos: ModeloDeFormaDinamica) => datos.campo === 'tratado'
-        ) as ModeloDeFormaDinamica;
-        if (TRATADO_FIELD && !TRATADO_FIELD.opciones) {
-          TRATADO_FIELD.opciones = resp.datos as Catalogo[];
-        }
            const PAIS_FIELD = this.consultarCupoFormData.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'pais'
         ) as ModeloDeFormaDinamica;

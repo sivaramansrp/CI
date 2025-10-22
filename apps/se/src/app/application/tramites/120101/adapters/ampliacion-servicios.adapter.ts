@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { InstrumentoCupoTPL } from '../models/insumos.model';
 import { SolicitudDeRegistroTpl120101State } from '../../../estados/tramites/tramite120101.store';
 
 
@@ -162,7 +163,7 @@ export class AmpliacionServiciosAdapter {
    * - descripcionFraccion: Descripción de la fracción (string).
    * - idFraccionHtsUsa: Identificador de la fracción HTS USA (string).
    */
-  mappedBuscarDatos(data: any): any {
+  mappedBuscarDatos(data: any): InstrumentoCupoTPL {
 
     return {
       idTratadoAcuerdo: data.tratado ?? "",
