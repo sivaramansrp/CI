@@ -954,7 +954,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .subscribe((respuesta) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (respuesta?.codigo === '00') {
-          // respuesta.datos.existe_en_vucem ? respuesta.datos.existe_en_vucem = 'Sí' : respuesta.datos.existe_en_vucem = 'No';
+          respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
+          respuesta.datos.vigencia = respuesta.datos.vigencia.split(' ')[0];
+          respuesta.datos.fecha_inicio = respuesta.datos.fecha_inicio.split(' ')[0];
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           console.log(this.datosDelContenedor);
@@ -1219,7 +1221,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
     let contenedores: any[] = [];
     if( TIPO_BUSQUEDA === 'Contenedor'){
-     contenedores = this.datosDelContenedor
+      contenedores = this.datosDelContenedor.map(item => ({
+        ...item,
+        existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+        vigencia: item.vigencia + ' 00:00:00',
+        fecha_inicio: item.fecha_inicio + ' 00:00:00'
+      }));
     }
     if( TIPO_BUSQUEDA === 'Archivo CSV'){
      contenedores = this.datosTabla
