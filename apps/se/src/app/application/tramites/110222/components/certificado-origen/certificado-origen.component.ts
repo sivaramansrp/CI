@@ -13,7 +13,7 @@ import {
   SeccionLibState,
   SeccionLibStore,
 } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, map, of, take, takeUntil } from 'rxjs';
 import {
   Tramite110222State,
   Tramite110222Store,
@@ -514,29 +514,21 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   emitmercaniasDatos(evento: Mercancia): void {
     this.store.setmercanciaTabla([evento]);
+    this.datosTabla$.pipe(take(1)).subscribe(current => {
+    const updated = [...current, evento];
+    this.datosTabla$ = of(updated);
+    this.store.setmercanciaTabla(updated);
+  });
   }
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-    // const NEW_ROW = {
-    //   fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
-    //   nombreTecnico: FORM_VALUES.nombreTecnico,
-    //   nombreComercial: FORM_VALUES.nombreComercial,
-    //   numeroRegistroProducto: FORM_VALUES.numeroRegistro,
-    //   fechaExpedicion: FORM_VALUES.fechaInicial,
-    //   fechaVencimiento: FORM_VALUES.fechaFinal,
-    // };
-
+    
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6",
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.tratado || '' },
       pais: { cvePais: this.certificadoState.pais || '' }
     };
 
-    // this.ValidarInicialmenteCertificadoService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
-    //   this.mercanciaDisponsiblesTablaDatos = response.datos || [];
-    //   this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
-    // });
-    // this.hayMercanciasDisponibles = true;
   }
 
   /**
