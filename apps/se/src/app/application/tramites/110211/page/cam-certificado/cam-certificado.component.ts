@@ -11,9 +11,10 @@ import {
 } from '../../models/cam-certificado.module';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/cam-certificado.module';
-import { Subject, takeUntil } from 'rxjs';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { Subject, take, takeUntil } from 'rxjs';
+import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
@@ -118,7 +119,8 @@ export class CamCertificadoComponent {
  */
   constructor(
     private store: camCertificadoStore,
-    private query: camCertificadoQuery
+    private query: camCertificadoQuery,
+    public camCertificadoService : CamCertificadoService
   ) {
     this.query.selectCam$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -140,38 +142,191 @@ export class CamCertificadoComponent {
    * getValorIndice({ valor: 2, accion: 'cont' });
    * ```
    */
-  getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = false;
+  // getValorIndice(e: AccionBoton): void {
+  //   this.esFormaValido = false;
 
-    // Validar formularios antes de continuar desde el paso uno
-    if (this.indice === 1 && e.accion === 'cont') {
-      const ISVALID = this.validarTodosFormulariosPasoUno();
-      if (!ISVALID) {
-        this.esFormaValido = true;
-        return; // Detener ejecución si los formularios son inválidos
+  //   // Validar formularios antes de continuar desde el paso uno
+  //   if (this.indice === 1 && e.accion === 'cont') {
+  //     const ISVALID = this.validarTodosFormulariosPasoUno();
+  //     if (!ISVALID) {
+  //       this.esFormaValido = true;
+  //       return; // Detener ejecución si los formularios son inválidos
+  //     }
+  //   }
+  //   // Calcular el nuevo índice basado en la acción
+  //   let indiceActualizado = e.valor;
+  //   if (e.accion === 'cont') {
+  //     indiceActualizado = e.valor + 1;
+  //   } else if (e.accion === 'ant') {
+  //     indiceActualizado = e.valor - 1;
+  //   }
+
+  //   // Validar que el nuevo índice esté dentro de los límites permitidos
+  //   if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+  //     // Actualizar el índice y datosPasos
+  //     this.indice = indiceActualizado;
+  //     this.datosPasos.indice = indiceActualizado;
+
+  //     if (e.accion === 'cont') {
+  //       this.wizardComponent.siguiente();
+  //     } else if (e.accion === 'ant') {
+  //       this.wizardComponent.atras();
+  //     }
+  //   }
+  // }
+  
+  /**
+     * Obtiene el valor del índice de la acción del botón.
+     * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
+     *
+     * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
+     *
+     * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
+     */
+    getValorIndice(e: AccionBoton): void {
+      this.esFormaValido = false;
+      if (this.indice === 1 && e.accion === 'cont') {
+        this.datosPasos.indice = 1;
+        const ISVALID = this.validarTodosFormulariosPasoUno();
+        if (!ISVALID) {
+          this.esFormaValido = true;
+          return;
+        }
+        this.obtenerDatosDelStore();
+      } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+        this.pasoNavegarPor(e);
       }
     }
-    // Calcular el nuevo índice basado en la acción
-    let indiceActualizado = e.valor;
-    if (e.accion === 'cont') {
-      indiceActualizado = e.valor + 1;
-    } else if (e.accion === 'ant') {
-      indiceActualizado = e.valor - 1;
+  
+    /**
+     * Obtiene los datos del store y los guarda utilizando el servicio.
+     */
+    obtenerDatosDelStore(): void {
+      this.camCertificadoService
+        .getAllState()
+        .pipe(take(1))
+        .subscribe((data) => {
+          this.guardar(data);
+        });
     }
-
-    // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-      // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else if (e.accion === 'ant') {
-        this.wizardComponent.atras();
+  
+    /**
+     * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+     * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+     *
+     * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+     *
+     * @remarks
+     * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
+     * La llamada al servicio actualmente está comentada.
+     */
+    guardar(item: CamState): Promise<JSONResponse> {
+      const MERCANCIA_SELECCIONADAS =
+        this.camCertificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+      const PAYLOAD = {
+        rfc_solicitante: 'AAL0409235E6',
+        solicitante: {
+          rfc: 'AAL0409235E6',
+          nombre: 'ACEROS ALVARADO S.A. DE C.V.',
+          actividad_economica: 'Fabricación de productos de hierro y acero',
+          correo_electronico: 'contacto@acerosalvarado.com',
+          domicilio: {
+            pais: item.formCertificado['pais'],
+            codigo_postal: '06700',
+            estado: 'Ciudad de México',
+            municipio_alcaldia: 'Cuauhtémoc',
+            localidad: 'Centro',
+            colonia: 'Roma Norte',
+            calle: 'Av. Insurgentes Sur',
+            numero_exterior: '123',
+            numero_interior: 'Piso 5, Oficina A',
+            lada: '',
+            telefono: '123456',
+          },
+        },
+        certificado: {
+          tratado_acuerdo: item.formCertificado['entidadFederativa'],
+          pais_bloque: item.formCertificado['bloque'],
+          fraccion_arancelaria: item.formCertificado['fraccionArancelariaForm'],
+          nombre_comercial: item.formCertificado['nombreComercialForm'],
+          fecha_inicio: item.formCertificado['fechaInicioInput'],
+          fecha_fin: item.formCertificado['fechaFinalInput'],
+          mercancias_seleccionadas: MERCANCIA_SELECCIONADAS,
+        },
+        destinatario: {
+          nombre: item.formDatosDelDestinatario['nombres'],
+          primer_apellido: item.formDatosDelDestinatario['primerApellido'],
+          segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
+          numero_registro_fiscal:
+            item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+          razon_social: item.formDatosDelDestinatario['razonSocial'],
+          domicilio: {
+            ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
+            calle: item.formDestinatario['calle'],
+            numero_letra: item.formDestinatario['numeroLetra'],
+            lada: item.formDestinatario['lada'],
+            telefono: item.formDestinatario['telefono'],
+            fax: item.formDestinatario['fax'],
+            correo_electronico: item.formDestinatario['correoElectronico'],
+            pais_destino: item.formDestinatario['paisDestin'],
+          },
+          medio_transporte: '',
+        },
+        datos_del_certificado: {
+          observaciones: item.formDatosCertificado['observacionesDates'],
+          precisa: item.formDatosCertificado['precisaDates'],
+          presenta: item.formDatosCertificado['precisaDates'],
+          idioma: item.formDatosCertificado['idiomaDates'],
+          representacion_federal: {
+            entidad_federativa:
+              item.formDatosCertificado['EntidadFederativaDates'],
+            representacion_federal:
+              item.formDatosCertificado['representacionFederalDates'],
+          },
+          desea_obtener_certificado: true,
+          justificacion: 'qwertyui',
+        },
+      };
+      return new Promise((resolve, reject) => {
+        this.camCertificadoService.guardarDatosPost(PAYLOAD).subscribe(
+          (response) => {
+            const API_RESPONSE = doDeepCopy(response);
+            if (
+              esValidObject(API_RESPONSE) &&
+              esValidObject(API_RESPONSE.datos)
+            ) {
+              if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                this.store.setIdSolicitud(
+                  API_RESPONSE.datos.id_solicitud
+                );
+                this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            resolve(response);
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      });
+    }
+  
+    /**
+     * Obtiene el valor del índice de la acción del botón.
+     * @param e Acción del botón.
+     */
+    pasoNavegarPor(e: AccionBoton): void {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
-  }
 
   /**
    * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
