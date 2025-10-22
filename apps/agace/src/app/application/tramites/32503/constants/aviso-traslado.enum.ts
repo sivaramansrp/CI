@@ -20,7 +20,7 @@ export const PASOS = [
     completado: false,
   },
   {
-    indice: 4,
+    indice: 3,
     titulo: 'Firmar solicitud',
     activo: false,
     completado: false,
@@ -108,17 +108,17 @@ export const ENCABEZADAS_TABLA = [
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: AvisoTabla): string => ele.entidadFederativa,
+    clave: (ele: AvisoTabla): string => ele.descripcionEntidadFederativa || ele.claveEntidadFederativa,
     orden: 3,
   },
   {
     encabezado: 'Alcaldía o Municipio',
-    clave: (ele: AvisoTabla): string => ele.alcaldioOMuncipio,
+    clave: (ele: AvisoTabla): string => ele.descripcionDelegacionMunicipio || ele.claveDelegacionMunicipio,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: AvisoTabla): string => ele.colonia,
+    clave: (ele: AvisoTabla): string => ele.descripcionColonia || ele.claveColonia,
     orden: 5,
   },
 ];
@@ -132,7 +132,7 @@ export const ENCABEZADAS_TABLA = [
  * - `orden`: La posición de la columna en la tabla.
  */
 export const TABLA_DE_MERCANCIA = [
-  { encabezado: 'Fracción arancelaria', clave: (ele: MercanciaTabla): string => ele.claveFraccionArancelaria, orden: 1 },
+  { encabezado: 'Fracción arancelaria', clave: (ele: MercanciaTabla): string => ele.descripcionFraccionArancelaria || ele.claveFraccionArancelaria, orden: 1 },
   {
     encabezado: 'NICO',
     clave: (ele: MercanciaTabla): string => ele.nico,
@@ -140,7 +140,7 @@ export const TABLA_DE_MERCANCIA = [
   },
   {
     encabezado: 'Unidad de medida',
-    clave: (ele: MercanciaTabla): string => ele.claveUnidadMedida,
+    clave: (ele: MercanciaTabla): string => ele.descripcionUnidadMedida || ele.claveUnidadMedida,
     orden: 3,
   },
   {

@@ -776,7 +776,7 @@ export const TABLA_PROYECTO_IMMEX = [
 */
 export const ANEXO_FRACION_ANARELARIA = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccion,
     orden: 1,
   },
