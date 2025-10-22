@@ -1,10 +1,10 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
+import { AccionBoton, AlertComponent } from '@ng-mf/data-access-user';
+import { PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -26,6 +26,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    AlertComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
@@ -43,6 +44,8 @@ export class SolicitudPageComponent {
    * Lista de pasos del wizard obtenidos desde una constante externa.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  PRIVACY_NOTICE_CONTENT:string=PRIVACY_NOTICE_CONTENT;
 
   /**
    * @property {number} indice

@@ -922,10 +922,17 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * @param plantasImmex - Un arreglo de objetos de tipo `PlantasImmex` que se agregarán a la tabla.
    */
   setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
-    this.update((state) => ({
-      ...state,
-      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
-    }));
+    if (plantasImmex.length === 0) {
+      this.update((state) => ({
+        ...state,
+        plantasImmexTablaLista: [...plantasImmex],
+      }));
+    }else{
+      this.update((state) => ({
+        ...state,
+        plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+      }));
+    }
   }
     /**
    * Agrega un nuevo conjunto de datos a la tabla de complementos en el estado.

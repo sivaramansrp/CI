@@ -181,14 +181,15 @@ export interface TablaMercanciasDatos {
   paisProcedencia: string;
   tipoProducto: string;
   usoEspecifico: string;
-  detallarUsoEspecifico?:string,
-  numeroDePiezasAFabricar?:string,
-  descripcionNumeroDePiezas?:string,
+  detallarUsoEspecifico?:string;
+  numeroDePiezasAFabricar?:string;
+  descripcionNumeroDePiezas?:string;
   numeroCAS?:string;
-  cantidadDeLotes?:string
-  kgPorLote?:string,
-  paisDeDestino?:string,
+  cantidadDeLotes?:string;
+  kgPorLote?:string;
+  paisDeDestino?:string;
   denominacionCumonInternacional?:string;
+  caducidad?:string;
   marcaComercialDenominacion?:string;
   especifique?: string;
   especifiqueObligatorio?:string;

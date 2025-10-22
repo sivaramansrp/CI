@@ -1,5 +1,5 @@
-import { Catalogo, Solicitud30506State, Tramite30506Store } from '../state/tramite30506.store';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { Solicitud30506State, Tramite30506Store } from '../state/tramite30506.store ';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

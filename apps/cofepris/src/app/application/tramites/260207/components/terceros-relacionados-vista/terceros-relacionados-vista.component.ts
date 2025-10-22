@@ -9,6 +9,7 @@ import {
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ELEMENTOS_REQUERIDOS } from '../../constants/tratamientos-especiales.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
@@ -39,6 +40,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Datos de la tabla de destinatarios finales.
    */
   destinatarioFinalTablaDatos: Destinatario[] = [];
+
+
+  /**
+          * @property {string[]} elementosRequeridos
+          * @description
+          * Lista de elementos requeridos para completar el formulario o proceso.
+          */
+         public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
    * @property {Proveedor[]} proveedorTablaDatos
