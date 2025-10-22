@@ -2,7 +2,6 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
@@ -56,7 +55,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente `CertificadoOrigenComponent`.
    */
-  @ViewChild('certificadoOrigenRef') certificadoOrigenComp!: CertificadoDeOrigenComponent;
+  @ViewChild('certificadoOrigenRef') certificadoOrigenComp!: CertificadoOrigenComponent;
 
   /**
    * Referencia al componente `DestinatarioComponent`.
@@ -211,9 +210,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     let isValid = false;
     
     // Tab 2: Certificado de origen
-    if (tabIndex === 2 && this.certificadoOrigenComp?.formCertificado) {
-      isValid = this.certificadoOrigenComp.formCertificado.valid;
-    }
+    // if (tabIndex === 2 && this.certificadoOrigenComp?.formCertificado) {
+    //   isValid = this.certificadoOrigenComp.formCertificado.valid;
+    // }
     
     // Tab 4: Destinatario  
     if (tabIndex === 4 && this.destinatarioComp?.validateAllForms) {
@@ -257,9 +256,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     // Si no todas están completadas, mostrar errores en la tab actual
     if (!ALL_TABS_COMPLETED) {
       // Validar y mostrar errores en la tab actual
-      if (this.indice === 2 && this.certificadoOrigenComp?.formCertificado) {
-        this.certificadoOrigenComp.formCertificado.markAllAsTouched();
-      }
+      // if (this.indice === 2 && this.certificadoOrigenComp?.formCertificado) {
+      //   this.certificadoOrigenComp.formCertificado.markAllAsTouched();
+      // }
       
       if (this.indice === 4 && this.destinatarioComp?.markAllFormsAsTouched) {
         this.destinatarioComp.markAllFormsAsTouched();
