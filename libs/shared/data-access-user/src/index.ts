@@ -6,7 +6,6 @@ export { ReviewersTabsComponent } from './tramites/components/reviewers-tabs/rev
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { AVISO } from './tramites/constantes/aviso-privacidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
-// eslint-disable-next-line no-warning-comments
 export { ENVIRONMENT } from './enviroments/enviroment';
 export {
   InputConfig,
