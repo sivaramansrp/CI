@@ -889,14 +889,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             formData.append('archivo', FILE);
             formData.append('rfc', this.rfc_original);
             formData.append('aduana', this.solicitudForm.get('aduanaMenuDesplegable')?.value);
-            formData.append('fingreso', formatFecha(this.solicitudForm.get('fechaDeIngreso')?.value));
+            formData.append('fingreso', this.convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
 
             this.datosTramiteService
                 .fileUpload(formData)
                 .pipe(takeUntil(this.destroyNotifier$))
                 .subscribe((respuesta) => {
                     if (respuesta?.codigo === '00') {
-                        this.datosTabla = respuesta?.datos.contenedores
+
+                        this.datosTabla = respuesta?.datos.contenedores.map((item: any) => ({
+                            ...item,
+                            vigencia : item.vigencia.split(' ')[0],
+                            fecha_inicio : item.fecha_inicio.split(' ')[0],
+                            existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
+                        }));
                     }
                 });
         }
@@ -977,7 +983,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.destroyNotifier$))
                 .subscribe((respuesta) => {
                     if (respuesta?.codigo === '00') {
-                        this.datosTablaManifest = respuesta?.datos.contenedores
+                        this.datosTablaManifest = respuesta?.datos.contenedores.map((item: any) => ({
+                            ...item,
+                            vigencia : item.vigencia.split(' ')[0],
+                            fecha_inicio: item.fecha_inicio.split(' ')[0],
+                            existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
+                        }));
                     }
                 });
         }
@@ -1340,10 +1351,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             }));
         }
         if (TIPO_BUSQUEDA === 'Archivo CSV') {
-            contenedores = this.datosTabla
+            contenedores = this.datosTabla.map(item => ({
+                ...item,
+                existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+                vigencia: item.vigencia + ' 00:00:00',
+                fecha_inicio: item.fecha_inicio + ' 00:00:00'
+            }));
         }
         if (TIPO_BUSQUEDA === 'No. de Manifiesto') {
-            contenedores = this.datosTablaManifest
+            contenedores = this.datosTablaManifest.map(item => ({
+                ...item,
+                existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+                vigencia: item.vigencia + ' 00:00:00',
+                fecha_inicio: item.fecha_inicio + ' 00:00:00'
+            }));
         }
 
         const PAYLOAD = {
