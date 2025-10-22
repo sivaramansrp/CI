@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { GrupoRepresentativo } from '../models/cam-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -12,7 +13,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @description Representa el estado de la aplicación relacionado con el certificado CAM.
  * Contiene información sobre formularios, catálogos, mercancías, datos del destinatario,
  * y otros detalles necesarios para la gestión del certificado.
- * 
+ *
  * @property {Object} formCertificado - Objeto que contiene los datos del formulario del certificado.
  * @property {Catalogo} estado - Catálogo que representa el estado actual.
  * @property {Catalogo[]} paisBloques - Lista de catálogos que representan los bloques de países.
@@ -44,21 +45,21 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @property {string} correo - Dirección de correo electrónico.
  * @property {Object} formaValida - Objeto que indica la validez de los formularios.
  * @property {Object} formDestinatario - Objeto que contiene los datos del formulario del destinatario.
- * 
+ *
  * @command Este estado se utiliza para gestionar los datos y formularios relacionados con el certificado CAM.
  */
 export interface CamState {
   idSolicitud: number | null;
-  formCertificado: { [key: string]: unknown};
+  formCertificado: { [key: string]: unknown };
   estado: Catalogo;
   paisBloques: Catalogo[];
-  mercanciaForm: { [key: string]: unknown};
+  mercanciaForm: { [key: string]: unknown };
   mercanciaTabla: Mercancia[];
-  formDatosCertificado: { [key: string]: unknown};
+  formDatosCertificado: { [key: string]: unknown };
   idiomaDatosSeleccion: Catalogo;
   entidadFederativaSeleccion: Catalogo;
   representacionFederalSeleccion: Catalogo;
-  formDatosDelDestinatario: { [key: string]: unknown};
+  formDatosDelDestinatario: { [key: string]: unknown };
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -79,10 +80,11 @@ export interface CamState {
   fax: string;
   correo: string;
   formaValida: { [key: string]: boolean };
-  formDestinatario: { [key: string]: unknown};
-  calle:string;
-  disponiblesDatos:Mercancia[];
+  formDestinatario: { [key: string]: unknown };
+  calle: string;
+  disponiblesDatos: Mercancia[];
   mercanciaSeleccionadasTablaDatos: Mercancia[];
+  grupoRepresentativo: GrupoRepresentativo;
 }
 
 /**
@@ -92,26 +94,26 @@ export interface CamState {
 export function createInitialState(): CamState {
   return {
     idSolicitud: 0,
-    calle:'',
-    disponiblesDatos:[],
+    calle: '',
+    disponiblesDatos: [],
     mercanciaSeleccionadasTablaDatos: [],
-   formCertificado: {
-  si: false,
-  entidadFederativa: '',
-  bloque: '',
-  fraccionArancelariaForm: '',
-  registroProductoForm: '',
-  nombreComercialForm: '',
-  fechaInicioInput: '',
-  fechaFinalInput: '',
-  nombres: '',
-  primerApellido: '',
-  segundoApellido: '',
-  numeroDeRegistroFiscal: '',
-  razonSocial: '',
-  calle: '',
-  numeroLetra: ''
-},
+    formCertificado: {
+      si: false,
+      entidadFederativa: '',
+      bloque: '',
+      fraccionArancelariaForm: '',
+      registroProductoForm: '',
+      nombreComercialForm: '',
+      fechaInicioInput: '',
+      fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+      calle: '',
+      numeroLetra: '',
+    },
 
     estado: {
       id: -1,
@@ -193,6 +195,14 @@ export function createInitialState(): CamState {
       fax: '',
       correoElectronico: '',
     },
+    grupoRepresentativo: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      telefono: '',
+      correoElectronico: '',
+    },
   };
 }
 
@@ -213,7 +223,7 @@ export class camCertificadoStore extends Store<CamState> {
     super(createInitialState());
   }
 
-    /**
+  /**
    * Guarda el ID de la solicitud en el estado.
    *
    * @param idSolicitud - El ID de la solicitud que se va a guardar.
@@ -224,13 +234,13 @@ export class camCertificadoStore extends Store<CamState> {
       idSolicitud,
     }));
   }
-  
+
   /**
    * @descripcion
    * Actualiza los datos del formulario de certificado.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormCertificado(values: { [key: string]: unknown}): void {
+  setFormCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -239,389 +249,391 @@ export class camCertificadoStore extends Store<CamState> {
     }));
   }
 
-      /**
-     * @descripcion
-     * Actualiza el estado seleccionado en el almacén.
-     * @param estado - Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
-     */
-      setEstado(estado: Catalogo): void {
-        this.update((state) => ({
-          ...state,
-          estado,
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza el estado seleccionado en el almacén.
+   * @param estado - Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
+   */
+  setEstado(estado: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      estado,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza los bloques de países en el almacén.
-       * @param paisBloques - Array de objetos `Catalogo` que representa los bloques de países.
-       */
-      setBloque(paisBloques: Catalogo[]): void {
-        this.update((state) => ({
-          ...state,
-          paisBloques,
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza los bloques de países en el almacén.
+   * @param paisBloques - Array de objetos `Catalogo` que representa los bloques de países.
+   */
+  setBloque(paisBloques: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      paisBloques,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza los datos del formulario de mercancía en el almacén.
-       * @param values - Objeto que contiene los valores a actualizar en el formulario de mercancía.
-       */
-      setFormMercancia(values: { [key: string]: unknown}): void {
-        this.update((state) => ({
-          mercanciaForm: {
-            ...state.mercanciaForm,
-            ...values,
-          },
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de mercancía en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de mercancía.
+   */
+  setFormMercancia(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      mercanciaForm: {
+        ...state.mercanciaForm,
+        ...values,
+      },
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza los datos del formulario de certificado en el almacén.
-       * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
-       */
-      setFormDatosCertificado(values: { [key: string]: unknown}): void {
-        this.update((state) => ({
-          formDatosCertificado: {
-            ...state.formDatosCertificado,
-            ...values,
-          },
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormDatosCertificado(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
+        ...values,
+      },
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el idioma seleccionado en el almacén.
-       * @param idiomaDatosSeleccion - Objeto de tipo `Catalogo` que contiene la información del idioma seleccionado.
-       */
-      setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
-        this.update((state) => ({
-          ...state,
-          idiomaDatosSeleccion,
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza el idioma seleccionado en el almacén.
+   * @param idiomaDatosSeleccion - Objeto de tipo `Catalogo` que contiene la información del idioma seleccionado.
+   */
+  setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatosSeleccion,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza la entidad federativa seleccionada en el almacén.
-       * @param entidadFederativaSeleccion - Objeto de tipo `Catalogo` que contiene la información de la entidad federativa seleccionada.
-       */
-      setEntidadFederativaSeleccion(entidadFederativaSeleccion: Catalogo): void {
-        this.update((state) => ({
-          ...state,
-          entidadFederativaSeleccion,
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza la entidad federativa seleccionada en el almacén.
+   * @param entidadFederativaSeleccion - Objeto de tipo `Catalogo` que contiene la información de la entidad federativa seleccionada.
+   */
+  setEntidadFederativaSeleccion(entidadFederativaSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaSeleccion,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza la representación federal seleccionada en el almacén.
-       * @param representacionFederalSeleccion - Objeto de tipo `Catalogo` que contiene la información de la representación federal seleccionada.
-       */
-      setRepresentacionFederalDatosSeleccion(representacionFederalSeleccion: Catalogo): void {
-        this.update((state) => ({
-          ...state,
-          representacionFederalSeleccion,
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza la representación federal seleccionada en el almacén.
+   * @param representacionFederalSeleccion - Objeto de tipo `Catalogo` que contiene la información de la representación federal seleccionada.
+   */
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza los datos del formulario de destinatario en el almacén.
-       * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
-       */
-      setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
-        this.update((state) => ({
-          formDatosDelDestinatario: {
-            ...state.formDatosDelDestinatario,
-            ...values,
-          },
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de fraccionArancelaria en el almacén.
-       * @param telfono - Cadena que representa el número de fraccionArancelaria a actualizar.
-       */
-      setFraccionArancelaria(fraccionArancelaria: string): void {
-        this.update((state) => ({
-            ...state,
-            fraccionArancelaria,
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de fraccionArancelaria en el almacén.
+   * @param telfono - Cadena que representa el número de fraccionArancelaria a actualizar.
+   */
+  setFraccionArancelaria(fraccionArancelaria: string): void {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelaria,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de nombreComercialMercancia en el almacén.
-       * @param telfono - Cadena que representa el número de nombreComercialMercancia a actualizar.
-       */
-      setNombreComercialMercancia(nombreComercialMercancia: string): void {
-        this.update((state) => ({
-            ...state,
-            nombreComercialMercancia
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de nombreComercialMercancia en el almacén.
+   * @param telfono - Cadena que representa el número de nombreComercialMercancia a actualizar.
+   */
+  setNombreComercialMercancia(nombreComercialMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreComercialMercancia,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de nombreTecnico en el almacén.
-       * @param telfono - Cadena que representa el número de nombreTecnico a actualizar.
-       */
-      setNombreTecnico(nombreTecnico: string): void {
-        this.update((state) => ({
-            ...state,
-            nombreTecnico
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de nombreTecnico en el almacén.
+   * @param telfono - Cadena que representa el número de nombreTecnico a actualizar.
+   */
+  setNombreTecnico(nombreTecnico: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreTecnico,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de nombreIngles en el almacén.
-       * @param telfono - Cadena que representa el número de nombreIngles a actualizar.
-       */
-      setNombreIngles(nombreIngles: string): void {
-        this.update((state) => ({
-            ...state,
-            nombreIngles
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de nombreIngles en el almacén.
+   * @param telfono - Cadena que representa el número de nombreIngles a actualizar.
+   */
+  setNombreIngles(nombreIngles: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreIngles,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de criterioClasificacion en el almacén.
-       * @param telfono - Cadena que representa el número de criterioClasificacion a actualizar.
-       */
-      setCriterioClasificacion(criterioClasificacion: string): void {
-        this.update((state) => ({
-            ...state,
-            criterioClasificacion,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de criterioClasificacion en el almacén.
+   * @param telfono - Cadena que representa el número de criterioClasificacion a actualizar.
+   */
+  setCriterioClasificacion(criterioClasificacion: string): void {
+    this.update((state) => ({
+      ...state,
+      criterioClasificacion,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de cantidad en el almacén.
-       * @param telfono - Cadena que representa el número de cantidad a actualizar.
-       */
-      setCantidad(cantidad: string): void {
-        this.update((state) => ({
-            ...state,
-            cantidad,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de cantidad en el almacén.
+   * @param telfono - Cadena que representa el número de cantidad a actualizar.
+   */
+  setCantidad(cantidad: string): void {
+    this.update((state) => ({
+      ...state,
+      cantidad,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de umc en el almacén.
-       * @param telfono - Cadena que representa el número de umc a actualizar.
-       */
-      setUmc(umc: Catalogo[]): void {
-        this.update((state) => ({
-            ...state,
-            umc,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de umc en el almacén.
+   * @param telfono - Cadena que representa el número de umc a actualizar.
+   */
+  setUmc(umc: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      umc,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de valorMercancia en el almacén.
-       * @param telfono - Cadena que representa el número de valorMercancia a actualizar.
-       */
-      setValorMercancia(valorMercancia: string): void {
-        this.update((state) => ({
-            ...state,
-            valorMercancia,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de valorMercancia en el almacén.
+   * @param telfono - Cadena que representa el número de valorMercancia a actualizar.
+   */
+  setValorMercancia(valorMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      valorMercancia,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de complementoClasificacion en el almacén.
-       * @param telfono - Cadena que representa el número de complementoClasificacion a actualizar.
-       */
-      setComplementoClasificacion(complementoClasificacion: string): void {
-        this.update((state) => ({
-            ...state,
-            complementoClasificacion,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de complementoClasificacion en el almacén.
+   * @param telfono - Cadena que representa el número de complementoClasificacion a actualizar.
+   */
+  setComplementoClasificacion(complementoClasificacion: string): void {
+    this.update((state) => ({
+      ...state,
+      complementoClasificacion,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de numeroFactura en el almacén.
-       * @param telfono - Cadena que representa el número de numeroFactura a actualizar.
-       */
-      setNumeroFactura(numeroFactura: string): void {
-        this.update((state) => ({
-            ...state,
-            numeroFactura,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de numeroFactura en el almacén.
+   * @param telfono - Cadena que representa el número de numeroFactura a actualizar.
+   */
+  setNumeroFactura(numeroFactura: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroFactura,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de tipoFactura en el almacén.
-       * @param telfono - Cadena que representa el número de tipoFactura a actualizar.
-       */
-      setTipoFactura(tipoFactura: Catalogo[]): void {
-        this.update((state) => ({
-            ...state,
-            tipoFactura,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de tipoFactura en el almacén.
+   * @param telfono - Cadena que representa el número de tipoFactura a actualizar.
+   */
+  setTipoFactura(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      tipoFactura,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de lugar en el almacén.
-       * @param telfono - Cadena que representa el número de lugar a actualizar.
-       */
-      setLugar(lugar: string): void {
-        this.update((state) => ({
-            ...state,
-            lugar,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de lugar en el almacén.
+   * @param telfono - Cadena que representa el número de lugar a actualizar.
+   */
+  setLugar(lugar: string): void {
+    this.update((state) => ({
+      ...state,
+      lugar,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de exportador en el almacén.
-       * @param telfono - Cadena que representa el número de exportador a actualizar.
-       */
-      setExportador(exportador: string): void {
-        this.update((state) => ({
-            ...state,
-            exportador,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de exportador en el almacén.
+   * @param telfono - Cadena que representa el número de exportador a actualizar.
+   */
+  setExportador(exportador: string): void {
+    this.update((state) => ({
+      ...state,
+      exportador,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de empresa en el almacén.
-       * @param telfono - Cadena que representa el número de empresa a actualizar.
-       */
-      setEmpresa(empresa: string): void {
-        this.update((state) => ({
-            ...state,
-            empresa,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de empresa en el almacén.
+   * @param telfono - Cadena que representa el número de empresa a actualizar.
+   */
+  setEmpresa(empresa: string): void {
+    this.update((state) => ({
+      ...state,
+      empresa,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de cargo en el almacén.
-       * @param telfono - Cadena que representa el número de cargo a actualizar.
-       */
-      setCargo(cargo: string): void {
-        this.update((state) => ({
-            ...state,
-            cargo
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de cargo en el almacén.
+   * @param telfono - Cadena que representa el número de cargo a actualizar.
+   */
+  setCargo(cargo: string): void {
+    this.update((state) => ({
+      ...state,
+      cargo,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de lada en el almacén.
-       * @param telfono - Cadena que representa el número de lada a actualizar.
-       */
-      setLada(lada: string): void {
-        this.update((state) => ({
-            ...state,
-            lada
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de lada en el almacén.
+   * @param telfono - Cadena que representa el número de lada a actualizar.
+   */
+  setLada(lada: string): void {
+    this.update((state) => ({
+      ...state,
+      lada,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de teléfono en el almacén.
-       * @param telfono - Cadena que representa el número de teléfono a actualizar.
-       */
-      setTelfono(telfono: string): void {
-        this.update((state) => ({
-            ...state,
-            telfono,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de teléfono en el almacén.
+   * @param telfono - Cadena que representa el número de teléfono a actualizar.
+   */
+  setTelfono(telfono: string): void {
+    this.update((state) => ({
+      ...state,
+      telfono,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el número de fax en el almacén.
-       * @param fax - Cadena que representa el número de fax a actualizar.
-       */
-      setFax(fax: string): void {
-        this.update((state) => ({
-            ...state,
-            fax,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el número de fax en el almacén.
+   * @param fax - Cadena que representa el número de fax a actualizar.
+   */
+  setFax(fax: string): void {
+    this.update((state) => ({
+      ...state,
+      fax,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el correo electrónico en el almacén.
-       * @param correo - Cadena que representa el correo electrónico a actualizar.
-       */
-      setCorreo(correo: string): void {
-        this.update((state) => ({
-            ...state,
-            correo,
-        }))
-      }
+  /**
+   * @descripcion
+   * Actualiza el correo electrónico en el almacén.
+   * @param correo - Cadena que representa el correo electrónico a actualizar.
+   */
+  setCorreo(correo: string): void {
+    this.update((state) => ({
+      ...state,
+      correo,
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza el estado de validación de los formularios en el almacén.
-       * @param formaValida - Objeto que contiene los valores de validación para los formularios.
-       */
-      setFormValida(formaValida: { [key: string]: boolean }): void {
-        this.update((state) => {
-          const IS_VALID = { ...state.formaValida, ...formaValida };
-          return {
-            ...state,
-            formaValida: IS_VALID,
-          };
-        });
-      }
+  /**
+   * @descripcion
+   * Actualiza el estado de validación de los formularios en el almacén.
+   * @param formaValida - Objeto que contiene los valores de validación para los formularios.
+   */
+  setFormValida(formaValida: { [key: string]: boolean }): void {
+    this.update((state) => {
+      const IS_VALID = { ...state.formaValida, ...formaValida };
+      return {
+        ...state,
+        formaValida: IS_VALID,
+      };
+    });
+  }
 
-      /**
-     * @descripcion
-     * Actualiza los datos del formulario de destinatario en el almacén.
-     * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
-     */
-      setFormDestinatario(values: { [key: string]: unknown}): void {
-        this.update((state) => ({
-          formDestinatario: {
-            ...state.formDestinatario,
-            ...values,
-          },
-        }));
-      }
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
 
-      /**
-       * @descripcion
-       * Actualiza los datos del formulario de certificado en el almacén.
-       * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
-       */
-      setFormCertificadoGenric(values: { [key: string]: unknown}): void {    
-        this.update((state) => ({
-          formCertificado: {
-            ...state.formCertificado,
-            ...values,
-          },
-        }));
-      }
-   /**
- * @descripcion
- * Actualiza completamente el estado con los valores proporcionados.
- * @param values - Objeto que contiene uno o más campos del estado a actualizar.
- */
-setEstadoCompleto(values:CamState): void {
-  this.update((state) => ({
-    ...state,
-    ...values,
-  }));
-}
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormCertificadoGenric(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
+  }
+  /**
+   * @descripcion
+   * Actualiza completamente el estado con los valores proporcionados.
+   * @param values - Objeto que contiene uno o más campos del estado a actualizar.
+   */
+  setEstadoCompleto(values: CamState): void {
+    this.update((state) => ({
+      ...state,
+      ...values,
+    }));
+  }
 
   /**
    * @method setMercanciaTabla
@@ -640,14 +652,14 @@ setEstadoCompleto(values:CamState): void {
       const LISTAEXISTENTE = STATE.mercanciaTabla || [];
       const NUEVOARTICULO = { ...mercanciaTabla[0] };
 
-      if (NUEVOARTICULO.id === 0) {  
+      if (NUEVOARTICULO.id === 0) {
         // Agregar nuevo elemento con una identificación generada
         NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
         const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
         return { ...STATE, mercanciaTabla: UPDATEDLIST };
       }
 
-     // Actualizar el elemento existente cuando id > 0
+      // Actualizar el elemento existente cuando id > 0
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
@@ -678,19 +690,21 @@ setEstadoCompleto(values:CamState): void {
    *
    * @returns {void}
    */
-  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: Mercancia[]): void {
-     this.update((STATE) => {
+  public setMercanciaTablaDatos(
+    mercanciaSeleccionadasTablaDatos: Mercancia[]
+  ): void {
+    this.update((STATE) => {
       const LISTAEXISTENTE = STATE.mercanciaSeleccionadasTablaDatos || [];
       const NUEVOARTICULO = { ...mercanciaSeleccionadasTablaDatos[0] };
 
-      if (NUEVOARTICULO.id === 0) {  
+      if (NUEVOARTICULO.id === 0) {
         // Agregar nuevo elemento con una identificación generada
         NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
         const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
         return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
       }
 
-     // Actualizar el elemento existente cuando id > 0
+      // Actualizar el elemento existente cuando id > 0
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
@@ -698,4 +712,17 @@ setEstadoCompleto(values:CamState): void {
     });
   }
 
+  /**
+   * Actualiza el lugar en el grupo representativo.
+   *
+   * Este método permite establecer el lugar en el grupo representativo del trámite.
+   *
+   * @param {string} lugar - El lugar a establecer.
+   */
+  public setGrupoRepresentativoLugar(lugar: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lugar },
+    }));
+  }
 }

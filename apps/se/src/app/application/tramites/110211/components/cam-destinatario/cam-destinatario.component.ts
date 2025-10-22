@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 /**
@@ -75,15 +76,16 @@ interface FormValues {
     ReactiveFormsModule,
     DatosDelDestinatarioComponent,
     TituloComponent,
-    DestinatarioComponent
+    DestinatarioComponent,
+    RepresentanteLegalExportadorComponent
   ]
 })
-export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CamDestinatarioComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} exportadorForm
    * @description Formulario para capturar los datos del exportador.
    */
-  exportadorForm!: FormGroup;
+  // exportadorForm!: FormGroup;
 
   /**
    * @property {FormValues} formDestinatarioValues
@@ -109,7 +111,7 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    * @description Estado actual del formulario de exportador.
    * @private
    */
-  private exportadoState!: CamState;
+  exportadoState!: CamState;
 
   /**
    * @property {SeccionLibState} seccionState
@@ -187,12 +189,23 @@ async ngOnInit(): Promise<void> {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.exportadoState = state as CamState;
-            this.initActionFormBuild();
+            // this.initActionFormBuild();
         })
       )
       .subscribe();
 
   
+  }
+
+  /**
+  * @description
+  * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+  * @param event Evento con el campo y valor a actualizar.
+  * @returns {void}
+  */
+  setValoresStore1(event: { formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string; }): void {
+    const { VALOR, METODO_NOMBRE } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }
 
   /**
@@ -202,55 +215,55 @@ async ngOnInit(): Promise<void> {
    * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `exportadorForm`.
    * En caso contrario, habilita el formulario para permitir la edición.
    */
-  ngAfterViewInit(): void {
-    if (this.esFormularioSoloLectura) {
-      this.exportadorForm.disable();
-    } else {
-      this.exportadorForm.enable();
-    }
-  }
+  // ngAfterViewInit(): void {
+    // if (this.esFormularioSoloLectura) {
+    //   this.exportadorForm.disable();
+    // } else {
+    //   this.exportadorForm.enable();
+    // }
+  // }
 
   /**
    * @method initActionFormBuild
    * @description
    * Inicializa el formulario de exportador con los valores actuales del estado.
    */
-  initActionFormBuild(): void {
-    this.exportadorForm = this.fb.group({
-      lugar: [
-      this.exportadoState.lugar,
-      [Validators.required] 
-      ],
-      exportador: [
-      this.exportadoState.exportador,
-      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
-      ],
-      empresa: [
-      this.exportadoState.empresa,
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
-      ],
-      cargo: [
-      this.exportadoState.cargo,
-      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
-      ],
-      lada: [
-      this.exportadoState.lada, [Validators.pattern(/^[a-zA-Z0-9]+$/)]
-      ],
-      telfono: [
-      this.exportadoState.telfono,
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
-      ],
-      fax: [
-      this.exportadoState.fax,
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
-      ],
-      correo: [
-      this.exportadoState.correo,
-      [Validators.required, Validators.email, Validators.maxLength(100)]
-      ]
-    });
+  // initActionFormBuild(): void {
+  //   this.exportadorForm = this.fb.group({
+  //     lugar: [
+  //     this.exportadoState.lugar,
+  //     [Validators.required] 
+  //     ],
+  //     exportador: [
+  //     this.exportadoState.exportador,
+  //     [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+  //     ],
+  //     empresa: [
+  //     this.exportadoState.empresa,
+  //     [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
+  //     ],
+  //     cargo: [
+  //     this.exportadoState.cargo,
+  //     [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+  //     ],
+  //     lada: [
+  //     this.exportadoState.lada, [Validators.pattern(/^[a-zA-Z0-9]+$/)]
+  //     ],
+  //     telfono: [
+  //     this.exportadoState.telfono,
+  //     [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
+  //     ],
+  //     fax: [
+  //     this.exportadoState.fax,
+  //     [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
+  //     ],
+  //     correo: [
+  //     this.exportadoState.correo,
+  //     [Validators.required, Validators.email, Validators.maxLength(100)]
+  //     ]
+  //   });
 
-  }
+  // }
 
   /**
    * @method datosDelDestinatarioFunc
@@ -322,10 +335,10 @@ async ngOnInit(): Promise<void> {
   }
     validarFormularios():boolean{
     let isFormInvalid = true;
- if(this.exportadorForm.invalid){
-  this.exportadorForm.markAllAsTouched();
-   isFormInvalid = false;
-  }
+//  if(this.exportadorForm.invalid){
+  // this.exportadorForm.markAllAsTouched();
+  //  isFormInvalid = false;
+  // }
 if(this.destinatarioComponent){
   if(!this.destinatarioComponent.validarFormularios()){
     isFormInvalid =false;

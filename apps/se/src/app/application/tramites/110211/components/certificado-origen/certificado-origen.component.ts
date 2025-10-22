@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, map, of, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,6 @@ import { MercanciaComponent } from '../../../../shared/components/mercancia/merc
 import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
-import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 
 /**
  * @description
