@@ -2292,7 +2292,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     
     // Validar que solo haya un inventario seleccionado
     if (this.seleccionarInventarios.length > 1) {
-      this.abrirModal('Solo puede modificar un inventario a la vez. Seleccione únicamente el inventario que desea modificar.');
+      this.abrirModal('Seleccione sólo un registro a modificar.');
       return;
     }
 
@@ -2836,7 +2836,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           categoria: 'INFORMACION',
           modo: 'action',
           titulo: '',
-          mensaje: 'Inventarios eliminados correctamente.',
+          mensaje: 'Datos eliminados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
@@ -2896,7 +2896,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           categoria: 'INFORMACION',
           modo: 'action',
           titulo: '',
-          mensaje: 'Socios eliminados correctamente.',
+          mensaje: 'Datos eliminados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
@@ -2951,7 +2951,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           categoria: 'INFORMACION',
           modo: 'action',
           titulo: '',
-          mensaje: 'Domicilios eliminados correctamente.',
+          mensaje: 'Datos Eliminados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
@@ -3095,7 +3095,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
+      mensaje: '¿Desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 0,
       txtBtnAceptar: 'Eliminar',
@@ -3110,12 +3110,27 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @memberof DatosComunesComponent
    */
   confirmarEliminarInventarios(): void {
+    // Se revocará para eliminar los registros múltiples.
+    if (this.seleccionarInventarios && this.seleccionarInventarios.length !== 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'simple',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: ''
+      };
+      return;
+    }
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: '¿Está seguro de que desea eliminar este inventario?',
+      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 0,
       txtBtnAceptar: 'Eliminar',
@@ -3150,7 +3165,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
+      mensaje: 'Confirma la eliminación.',
       cerrar: false,
       tiempoDeEspera: 0,
       txtBtnAceptar: 'Eliminar',

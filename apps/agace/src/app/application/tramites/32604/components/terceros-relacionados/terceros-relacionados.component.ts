@@ -358,7 +358,14 @@ eliminarPedimento(borrar: boolean): void {
   inicializarFormulario(): void {
     this.tercerosRelacionadosForm = this.fb.group({
       idPersonaSolicitud: [this.solicitud32604State.idPersonaSolicitud],
-      rfcTercero: [this.solicitud32604State.rfcTercero, [Validators.required, Validators.pattern(REGEX_RFC)]],
+      rfcTercero: [
+        this.solicitud32604State.rfcTercero,
+        [
+          Validators.required,
+          Validators.pattern(REGEX_RFC),
+          Validators.maxLength(15)
+        ]
+      ],
       rfc: [{ value: this.solicitud32604State.rfc, disabled: true }],
       nombre: [{ value: this.solicitud32604State.nombre, disabled: true }],
       apellidoPaterno: [
@@ -367,10 +374,19 @@ eliminarPedimento(borrar: boolean): void {
       apellidoMaterno: [
         { value: this.solicitud32604State.apellidoMaterno, disabled: true },
       ],
-      telefono: [this.solicitud32604State.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: [
+        this.solicitud32604State.telefono,
+        [
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+          Validators.maxLength(30)
+        ]
+      ],
       correoElectronico: [
         this.solicitud32604State.correoElectronico,
-        [Validators.email],
+        [
+          Validators.email,
+          Validators.maxLength(320)
+        ]
       ],
     });
 

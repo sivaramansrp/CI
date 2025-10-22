@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, Pedimento, REGEX_RFC, REG_X, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Subject, map, takeUntil } from 'rxjs';
@@ -302,7 +302,7 @@ abrirModal(i: number = 0): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
       agregarEnlaceRfcTercero: [
         this.solicitud32604State.rfcTercero,
-        [Validators.required, Validators.maxLength(15)],
+        [Validators.required, Validators.pattern(REGEX_RFC), Validators.maxLength(15)],
       ],
       agregarEnlaceRfc: [
         { value: this.solicitud32604State.rfc, disabled: true },
@@ -328,7 +328,7 @@ abrirModal(i: number = 0): void {
       agregarEnlaceCargo: [this.solicitud32604State.agregarEnlaceCargo, [Validators.maxLength(250)]],
       agregarEnlaceTelefono: [
         this.solicitud32604State.telefono,
-        [Validators.maxLength(30)],
+        [Validators.pattern(REG_X.SOLO_NUMEROS), Validators.maxLength(30)],
       ],
       agregarEnlaceCorreoElectronico: [
         this.solicitud32604State.correoElectronico,
@@ -627,7 +627,7 @@ abrirModal(i: number = 0): void {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error de validación',
+        titulo: '',
         mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
         cerrar: false,
         tiempoDeEspera: 3000,

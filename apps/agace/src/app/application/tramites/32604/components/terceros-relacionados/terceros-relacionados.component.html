@@ -18,14 +18,15 @@
             (change)="actualizarRfcTercero($event)"
             [disabled]="esFormularioSoloLectura"
           />
-          @if (tercerosRelacionadosForm.get('rfcTercero')?.invalid && (tercerosRelacionadosForm.get('rfcTercero')?.touched || tercerosRelacionadosForm.get('rfcTercero')?.dirty)) {
-            @if (tercerosRelacionadosForm.get('rfcTercero')?.hasError('required')) {
-              <small class="mensaje-error">Este campo es obligatorio</small>
+            @if (tercerosRelacionadosForm.get('rfcTercero')?.invalid && (tercerosRelacionadosForm.get('rfcTercero')?.touched || tercerosRelacionadosForm.get('rfcTercero')?.dirty)) {
+              @if (tercerosRelacionadosForm.get('rfcTercero')?.hasError('required')) {
+                <small class="mensaje-error">Este campo es obligatorio</small>
+              }  @else if (!tercerosRelacionadosForm.get('rfcTercero')?.hasError('required') && tercerosRelacionadosForm.get('rfcTercero')?.hasError('pattern')) {
+                <small class="mensaje-error">Formato de RFC inválido</small>
+              } @else if (!tercerosRelacionadosForm.get('rfcTercero')?.hasError('required') && !tercerosRelacionadosForm.get('rfcTercero')?.hasError('pattern') && tercerosRelacionadosForm.get('rfcTercero')?.hasError('maxlength')) {
+                <small class="mensaje-error">Por favor, no escriba más de 15 caracteres.</small>
+              }
             }
-            @if (tercerosRelacionadosForm.get('rfcTercero')?.hasError('pattern')) {
-              <small class="mensaje-error">Formato de RFC inválido</small>
-            }
-          }
         </div>
         <div class="col-md-8">
           <div class="form-group mt-5 pull-left">
@@ -102,19 +103,17 @@
             id="telefono"
             name="telefono"
             formControlName="telefono"
-            placeholder="Número de teléfono"
-            maxlength="20"
             [class.is-invalid]="telefono?.invalid && (telefono?.dirty || telefono?.touched)"
             (change)="actualizarTelefono($event)"
             [disabled]="esFormularioSoloLectura"
           />
-          @if(telefono?.invalid && (telefono?.dirty || telefono?.touched)) {
-            <div class="text-danger">
-              @if(telefono?.errors?.['pattern']) {
-                <small>Teléfono debe contener solo dígitos.</small>
-              }
-            </div>
-          }
+            @if(telefono?.invalid && (telefono?.dirty || telefono?.touched)) {
+              <div class="text-danger">
+                @if(!telefono?.errors?.['pattern'] && telefono?.errors?.['maxlength']) {
+                  <small>Por favor, no escriba más de 30 caracteres.</small>
+                }
+              </div>
+            }
         </div>
         <div class="col-md-4">
           <label class="form-label text-start" for="correoElectronico">Correo Electrónico:</label>
@@ -125,19 +124,17 @@
             id="correoElectronico"
             name="correoElectronico"
             formControlName="correoElectronico"
-            placeholder="correo@ejemplo.com"
-            maxlength="100"
             [class.is-invalid]="correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)"
             (change)="actualizarCorreoElectronico($event)"
             [disabled]="esFormularioSoloLectura"
           />
-          @if(correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)) {
-            <div class="text-danger">
-              @if(correoElectronico?.errors?.['email']) {
-                <small>Ingrese un correo electrónico válido.</small>
-              }
-            </div>
-          }
+            @if(correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)) {
+              <div class="text-danger">
+                @if(!correoElectronico?.errors?.['email'] && correoElectronico?.errors?.['maxlength']) {
+                  <small>Por favor, no escriba más de 320 caracteres.</small>
+                }
+              </div>
+            }
         </div>
         <div class="col-md-12">
           <ng-titulo titulo="Enlace Operativo" />

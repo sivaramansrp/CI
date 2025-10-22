@@ -144,6 +144,11 @@
     </div>
 </div>
 
+<!-- Global success notification modal for add/modify actions -->
+@if(mostrarNotificacion && alertaNotificacion && alertaNotificacion.mensaje === 'Datos guardados correctamente.') {
+    <lib-notificaciones [notificacionInput]="alertaNotificacion" (confirmacionModal)="cerrarNotificacionExito()"></lib-notificaciones>
+}
+
 
 
 @if(alertaNotificacion && alertaNotificacion.tipoNotificacion) {

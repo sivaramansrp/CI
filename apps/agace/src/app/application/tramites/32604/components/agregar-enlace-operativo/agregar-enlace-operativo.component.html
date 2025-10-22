@@ -160,15 +160,16 @@
           id="telefono"
           name="telefono"
           formControlName="agregarEnlaceTelefono"
-          placeholder="Número de teléfono"
-          maxlength="20"
           [class.is-invalid]="agregarEnlaceTelefono?.invalid && (agregarEnlaceTelefono?.dirty || agregarEnlaceTelefono?.touched)"
           (change)="actualizarTelefono($event)"
           [disabled]="esFormularioSoloLectura"
         />
         @if(agregarEnlaceTelefono?.invalid && (agregarEnlaceTelefono?.dirty || agregarEnlaceTelefono?.touched)) {
           <div class="text-danger">
-            @if(agregarEnlaceTelefono?.errors?.['maxlength']) {
+            @if(agregarEnlaceTelefono?.errors?.['pattern']) {
+              <small>Teléfono debe contener solo dígitos.</small>
+            }
+            @else if(!agregarEnlaceTelefono?.errors?.['pattern'] && agregarEnlaceTelefono?.errors?.['maxlength']) {
               <small>Por favor, no escriba más de 30 caracteres.</small>
             }
           </div>
@@ -183,8 +184,6 @@
           id="correoElectronico"
           name="correoElectronico"
           formControlName="agregarEnlaceCorreoElectronico"
-          placeholder="correo@ejemplo.com"
-          maxlength="100"
           [class.is-invalid]="agregarEnlaceCorreoElectronico?.invalid && (agregarEnlaceCorreoElectronico?.dirty || agregarEnlaceCorreoElectronico?.touched)"
           (change)="actualizarCorreoElectronico($event)"
           [disabled]="esFormularioSoloLectura"
@@ -193,7 +192,8 @@
           <div class="text-danger">
             @if(agregarEnlaceCorreoElectronico?.errors?.['email']) {
               <small>Por favor, escriba una dirección de correo válida.</small>
-            } @else if(agregarEnlaceCorreoElectronico?.errors?.['maxlength']) { 
+            }
+            @if(!agregarEnlaceCorreoElectronico?.errors?.['email'] && agregarEnlaceCorreoElectronico?.errors?.['maxlength']) {
               <small>Por favor, no escriba más de 320 caracteres.</small>
             }
           </div>

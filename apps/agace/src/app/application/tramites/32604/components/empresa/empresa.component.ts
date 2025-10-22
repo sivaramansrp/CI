@@ -793,11 +793,9 @@ export class EmpresaComponent implements OnInit, OnDestroy, OnChanges {
               nombreCompleto: MIEMBRO_ENCONTRADO.nombreCompleto
             });
             
-            // Actualizar el control de visibilidad ANTES de actualizar validaciones
-            this.instalacionesPrincipalesValue = MIEMBRO_ENCONTRADO.instalacionesPrincipales;
-            
-            // Simular el evento del radio button para asegurar consistencia
+            // Actualizar el control de visibilidad DESPUÉS de patchValue y actualizar290
             this.actualizar290(MIEMBRO_ENCONTRADO.instalacionesPrincipales);
+            this.instalacionesPrincipalesValue = MIEMBRO_ENCONTRADO.instalacionesPrincipales;
             
             // Volver a deshabilitar los campos después de establecer los valores
             this.empresaForm?.get('registroFederalContribuyentes')?.disable();

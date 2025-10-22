@@ -66,6 +66,10 @@ import { AgregarTransportistasComponent } from '../agregar-transportistas/agrega
   styleUrl: './comercializadora-importadora.component.scss',
 })
 export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
+  /**
+   * Contexto de acción para confirmar eliminación (usado en manejarConfirmacionEliminacion)
+   */
+  accionConfirmarEliminar: string = '';
 
   /**
    * Formulario reactivo para el componente modalidad.
@@ -414,22 +418,6 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
 
       // Forzar detección de cambios para actualizar la UI
       this.cdr.detectChanges();
-
-      // Mostrar notificación de éxito
-      this.alertaNotificacion = {
-        tipoNotificacion: 'INFORMACION',
-        categoria: 'INFORMACION',
-        modo: 'action',
-        titulo: 'Mensaje',
-        mensaje: `Datos eliminados correctamente`,
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnCancelar: '',
-        txtBtnAceptar: 'Aceptar',
-      };
-      setTimeout(() => {
-        this.mostrarNotificacion = true;
-      }, 100);
     }
   }
 
@@ -494,7 +482,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: 'Mensaje',
+          titulo: '',
           mensaje: 'Fecha Inválida. La Fecha actual no puede ser más grande que el día de hoy.',
           cerrar: false,
           tiempoDeEspera: 4000,
@@ -590,6 +578,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @memberof ComercializadoraImportadoraComponent
    */
   seccionTransportistasLista(evento: TransportistasTable): void {
+    let registroModificado = false;
     if (this.transportistaAModificar) {
       // Modificar transportista existente
       const INDICE = this.transportistasLista.findIndex(
@@ -597,37 +586,46 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
       );
       if (INDICE !== -1) {
         this.transportistasLista[INDICE] = evento;
+        registroModificado = true;
       }
       this.transportistaAModificar = null; // Limpiar la selección
     } else {
-      // Agregar nuevo transportista
-      this.transportistasLista = [...this.transportistasLista, evento];
-    }
-    
-    this.solicitud32604Store.actualizarTransportistasLista(
-      this.transportistasLista
-    );
-
-    // Limpiar el formulario después de guardar exitosamente para prepararlo para una nueva entrada
-    if (this.agregarTransportistasComponent) {
-      this.agregarTransportistasComponent.limpiar();
+      // Agregar nuevo transportista solo si el RFC no existe ya
+      const EXISTE = this.transportistasLista.some(
+        t => t.transportistaRFCModifTrans === evento.transportistaRFCModifTrans
+      );
+      if (!EXISTE) {
+        this.transportistasLista = [...this.transportistasLista, evento];
+        registroModificado = true;
+      }
     }
 
-    // Mostrar notificación de éxito
-    this.alertaNotificacion = {
-      tipoNotificacion: 'INFORMACION',
-      categoria: 'INFORMACION',
-      modo: 'action',
-      titulo: 'Mensaje',
-      mensaje: 'Datos guardados correctamente.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnCancelar: '',
-      txtBtnAceptar: 'Aceptar',
-    };
-    setTimeout(() => {
-      this.mostrarNotificacion = true;
-    }, 100);
+    if (registroModificado) {
+      this.solicitud32604Store.actualizarTransportistasLista(
+        this.transportistasLista
+      );
+
+      // Limpiar el formulario después de guardar exitosamente para prepararlo para una nueva entrada
+      if (this.agregarTransportistasComponent) {
+        this.agregarTransportistasComponent.limpiar();
+      }
+
+      // Mostrar notificación de éxito
+      this.alertaNotificacion = {
+        tipoNotificacion: 'INFORMACION',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Mensaje',
+        mensaje: 'Datos guardados correctamente.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnCancelar: '',
+        txtBtnAceptar: 'Aceptar',
+      };
+      setTimeout(() => {
+        this.mostrarNotificacion = true;
+      }, 100);
+    }
   }
 
   /**
@@ -653,7 +651,10 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @memberof ComercializadoraImportadoraComponent
    */
   cerrarModal(): void {
-    this.nuevaNotificacion = {} as Notificacion;
+  // Siempre cerrar cualquier notificación y ocultar el modal de éxito
+  this.nuevaNotificacion = {} as Notificacion;
+  this.mostrarNotificacion = false;
+  this.alertaNotificacion = {} as Notificacion;
   }
 
     /**
@@ -683,7 +684,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: 'Mensaje',
-      mensaje: mensaje,
+      mensaje: 'Datos guardados correctamente.',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -750,44 +751,52 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    */
   manejarConfirmacionEliminacion(confirmar: boolean): void {
     if (confirmar) {
-      // Eliminar los datos seleccionados
-      this.eliminarDato();
-      setTimeout(() => {
-        // Cerrar el modal de Bootstrap correctamente usando la instancia Modal
-        if (this.transportistaElement) {
-          try {
-            const MODAL_INSTANCE = Modal.getOrCreateInstance(this.transportistaElement.nativeElement);
-            MODAL_INSTANCE.hide();
-          } catch (e) {
-            // fallback: remove backdrop and hide manually if needed
-            document.querySelectorAll('.modal-backdrop').forEach((el) => {
-              el.parentNode?.removeChild(el);
-            });
-            const MODAL_CONTAINER = document.getElementById('transportistas');
-            if (MODAL_CONTAINER) {
-              MODAL_CONTAINER.classList.remove('show');
-              MODAL_CONTAINER.setAttribute('aria-hidden', 'true');
-              MODAL_CONTAINER.setAttribute('style', 'display: none;');
+      // Solo mostrar éxito si la acción es eliminar
+      if (this.accionConfirmarEliminar === 'transportistas') {
+        this.eliminarDato();
+        setTimeout(() => {
+          // Cerrar el modal de Bootstrap correctamente usando la instancia Modal
+          if (this.transportistaElement) {
+            try {
+              const MODAL_INSTANCE = Modal.getOrCreateInstance(this.transportistaElement.nativeElement);
+              MODAL_INSTANCE.hide();
+            } catch (e) {
+              // fallback: remove backdrop and hide manually if needed
+              document.querySelectorAll('.modal-backdrop').forEach((el) => {
+                el.parentNode?.removeChild(el);
+              });
+              const MODAL_CONTAINER = document.getElementById('transportistas');
+              if (MODAL_CONTAINER) {
+                MODAL_CONTAINER.classList.remove('show');
+                MODAL_CONTAINER.setAttribute('aria-hidden', 'true');
+                MODAL_CONTAINER.setAttribute('style', 'display: none;');
+              }
             }
           }
-        }
-        // Limpiar la notificación de confirmación para evitar superposición
+          // Limpiar la notificación de confirmación para evitar superposición
+          this.nuevaNotificacion = {} as Notificacion;
+          // Mostrar notificación de éxito
+          this.alertaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'success',
+            mensaje: 'Datos eliminados correctamente',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+            titulo: '',
+            modo: ''
+          };
+          this.mostrarNotificacion = true;
+        }, 300);
+      } else {
+        // Solo limpiar la notificación si no es acción de eliminar
         this.nuevaNotificacion = {} as Notificacion;
-        // Mostrar notificación de éxito
-        this.alertaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'success',
-          mensaje: 'Datos eliminados correctamente',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-          titulo: '',
-          modo: ''
-        };
-        this.mostrarNotificacion = true;
-      }, 300);
+      }
+      // Resetear la acción después de confirmar
+      this.accionConfirmarEliminar = '';
     } else {
       this.nuevaNotificacion = {} as Notificacion;
+      this.accionConfirmarEliminar = '';
     }
   }
 
