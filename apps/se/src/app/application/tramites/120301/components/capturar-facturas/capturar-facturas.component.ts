@@ -334,7 +334,11 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       fechaExpedicionFactura: [{ value: this.capturarState.fechaExpedicionFactura }, Validators.required],
     });
   }
-
+  onInputUppercase(fieldName: string, event: Event): void {
+    const TARGET = event.target as HTMLInputElement | null;
+    const VALUE = (TARGET?.value ?? '').toString().toUpperCase();
+    this.facturaForm.get(fieldName)?.setValue(VALUE);
+  }
   /**
    * @method obtenerListasDesplegables
    * @description Obtiene las listas desplegables necesarias para el formulario.
@@ -604,7 +608,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       numeroFactura: FACTURA_SELECCIONADA.num_factura,
       razonSocial: FACTURA_SELECCIONADA.razon_social_consig_emisor,
       calle: FACTURA_SELECCIONADA.direccion_consig_emisor,
-      fechaExpedicionFactura: fechaFormateada,
+      fechaExpedicionFactura: FACTURA_SELECCIONADA.fecha_expedicion ? fechaFormateada : '',
       cantidadTotal: FACTURA_SELECCIONADA.cantidad,
       unidadDeMedida: unidadClave,
       valorDolares: FACTURA_SELECCIONADA.imp_dls,

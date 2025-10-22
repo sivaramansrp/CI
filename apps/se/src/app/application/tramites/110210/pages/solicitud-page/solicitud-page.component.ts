@@ -2,7 +2,7 @@ import {
   AVISO,
   DatosPasos,
   ListaPasosWizard,
-  PASOS,
+  PASOS2,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
@@ -80,7 +80,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Lista de pasos del asistente.
    * @type {ListaPasosWizard[]}
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
 
   /**
    * Índice del paso actual.
@@ -172,7 +172,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Obtiene el valor del índice de la acción del botón.
    * @param {AccionBoton} e - Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
+  async getValorIndice(e: AccionBoton): Promise<void> {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -193,13 +193,15 @@ export class SolicitudPageComponent implements OnDestroy {
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
       // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
+      
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-        this.guardar();
+        await this.guardar();
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
       } else if (e.accion === 'ant') {
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
         this.wizardComponent.atras();
       }
     }
@@ -212,7 +214,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Utiliza el estado actual de la solicitud para construir el payload.
    * Si la respuesta es válida, actualiza los identificadores de solicitud y muestra un mensaje de éxito.
    */
-  public guardar():void{
+  public guardar():Promise<void> {
     const SOLICITUD = this.solicitudState;
     const PAYLOAD = {
         "solicitud": {
@@ -222,33 +224,7 @@ export class SolicitudPageComponent implements OnDestroy {
             "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
             "correoElectronico": "vucem2021@gmail.com",
             "telefono": "55-98764532",
-            "cveUsuario": "AAL0409235E6",
-            "domicilio": {
-              "pais": {
-                "clave": "MEX",
-                "nombre": "ESTADOS UNIDOS MEXICANOS"
-              },
-              "entidadFederativa": {
-                "clave": "SIN",
-                "nombre": "SINALOA"
-              },
-              "delegacionMunicipio": {
-                "clave": "25001",
-                "nombre": "AHOME"
-              },
-              "localidad": {
-                "clave": "00181210008",
-                "nombre": "LOS MOCHIS"
-              },
-              "colonia": {
-                "clave": "00181210001",
-                "nombre": "MIGUEL HIDALGO"
-              },
-              "calle": "CAMINO VIEJO",
-              "numeroExterior": "1353",
-              "numeroInterior": "",
-              "codigoPostal": "81210"
-            }
+            "cveUsuario": "AAL0409235E6"
           },
           "cveRolCapturista": "PersonaMoral",
           "cveUsuarioCapturista": "AAL0409235E6",
@@ -269,43 +245,21 @@ export class SolicitudPageComponent implements OnDestroy {
           "idTramite": 110210
         }
       };
-
-    this.service.guardar(PAYLOAD).pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe((response) => {
-        if(esValidObject(response)) {
-          const RESPONSE = doDeepCopy(response);
-          this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
-          this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
-          this.generaCadena(this.guardarIdSolicitud);
-        }
-      });
-  }
-/**   * @method generaCadena
-   * @description
-   * Genera la cadena original para la solicitud guardada.
-   */
-  public generaCadena(solicitudId:number): void {
-    const PAYLOAD = {
-        "num_folio_tramite": null,
-        "boolean_extranjero": true,
-        "solicitante": {
-            "rfc": "AAL0409235E6",
-            "nombre": "Juan Pérez",
-            "es_persona_moral": true,
-            "certificado_serial_number": "string"
-        },
-        "cve_rol_capturista": "CapturistaGubernamental",
-        "cve_usuario_capturista": "Gubernamental",
-        "fecha_firma": "2025-07-01 20:01:25"
-    };
-    this.service.generaCadena(PAYLOAD, solicitudId).pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe((response) => {
-        if(esValidObject(response)) {
-          const RESPONSE = doDeepCopy(response);
-          console.log('CADENA GENERADA', RESPONSE);
-        }
+      return new Promise((resolve, reject) => {
+        this.service.guardar(PAYLOAD).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe((response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            this.TramiteStore.setIdSolicitud(RESPONSE?.datos?.idSolicitud ?? 0);
+            this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+            this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+            this.wizardComponent.siguiente();
+            resolve();
+          }
+        },error=>{
+          reject(error);
+        });
       });
   }
 
