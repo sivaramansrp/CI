@@ -17,6 +17,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,7 +26,6 @@ import { MercanciaComponent } from '../../../../shared/components/mercancia/merc
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
-
 /**
  * @descripcion
  * El componente `CertificadoOrigenComponent` es responsable de gestionar los datos y las interacciones
@@ -171,7 +171,8 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private store: Tramite110217Store,
     private query: Tramite110217Query,
     private seccionQuery: SeccionLibQuery,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private certificadosOrigenService: CertificadosOrigenService
   ) {}
 
   /**
@@ -231,22 +232,39 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService
-      .obtenerTablaDatos('disponibles-datos.json')
+    const PAYLOAD = {
+      rfcExportador: "AAL0409235E6", 
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || 105 },
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] || 'ARG' }
+    };
+  
+    this.certificadosOrigenService.obtenerMercanciasDisponibles(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-            this.store.setDisponsiblesDatos(this.disponiblesDatos);
-          } else {
-            this.disponiblesDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
-      });
+      .subscribe((respuesta: unknown) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const DATOS = (respuesta as any).datos ?? [];
+
+        const MAPPED_DATOS = DATOS.map((item: unknown) => {
+          const TYPED_ITEM = item as {
+            fraccionArancelaria?: string;
+            nombreTecnico?: string;
+            nombreComercial?: string;
+            numeroRegistroProducto?: string;
+            fechaExpedicion?: string;
+            fechaVencimiento?: string;
+          };
+          return {
+            fraccionArancelaria: TYPED_ITEM.fraccionArancelaria ?? '',
+            nombreTecnico: TYPED_ITEM.nombreTecnico ?? '',
+            nombreComercial: TYPED_ITEM.nombreComercial ?? '',
+            numeroDeRegistrodeProductos: TYPED_ITEM.numeroRegistroProducto ?? '',
+            fechaExpedicion: TYPED_ITEM.fechaExpedicion ?? '',
+            fechaVencimiento: TYPED_ITEM.fechaVencimiento ?? '',
+          };
+        });
+
+        this.store.setDisponsiblesDatos(MAPPED_DATOS);
+    });
   }
 
   /**

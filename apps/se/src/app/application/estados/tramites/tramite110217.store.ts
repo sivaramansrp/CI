@@ -180,6 +180,15 @@ export interface Tramite110217State {
    * Identifica el bloque o sección actual del proceso.
    */
   bloque: string;
+
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
+
+  /** Lista de productores exportador agregados al estado del trámite. */
+  agregarProductoresExportador: HistoricoColumnas[];
 }
 
 /**
@@ -343,6 +352,8 @@ export function createInitialState(): Tramite110217State {
       nalad: '',
     },
     bloque: '',
+    productoresExportador: [],
+    agregarProductoresExportador: [],
   };
 }
 /**
@@ -1595,7 +1606,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
       }
 
       // Actualizar el elemento existente cuando id > 0
-      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+      const UPDATEDLIST = mercanciaTabla.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
@@ -1675,5 +1686,19 @@ export class Tramite110217Store extends Store<Tramite110217State> {
         formaValida: IS_VALID,
       };
     });
+  }
+
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador: [
+        ...state.agregarProductoresExportador,
+        ...productor.map(item => ({ ...item })),
+      ],
+      }));
   }
 }

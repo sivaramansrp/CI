@@ -1,8 +1,10 @@
 import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductorExportador } from '../models/certificado-origen.model';
+import { PROC_110217, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -20,7 +22,7 @@ export class CertificadosOrigenService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public httpService: HttpCoreService,) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.
@@ -59,28 +61,22 @@ export class CertificadosOrigenService {
   }
 
   /**
-   * Obtiene la lista de productores/exportadores disponibles.
+   * Obtiene la información del productor por exportador.
    * 
-   * Este método realiza una solicitud HTTP para obtener los datos de productores/exportadores desde un archivo JSON.
-   * 
-   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+   * @returns {Observable<Record<string, unknown>>} Un observable con los datos del productor por exportador.
    */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http
-      .get<ProductorExportador>('assets/json/110217/productor-exportador.json');
+  obtenerProductorPorExportador(rfc: string): Observable<Record<string, unknown>> {
+    return this.http.get<Record<string, unknown>>(PRODUCTORS_EXPORTADOR(rfc));
   }
 
   /**
-   * Obtiene la lista de mercancías disponibles.
-   * 
-   * Este método realiza una solicitud HTTP para obtener los datos de mercancías disponibles desde un archivo JSON.
-   * 
-   * @returns {Observable<DisponiblesTabla[]>} Un observable que emite la lista de mercancías disponibles.
-   */
-  obtenerMercanciasDisponibles(): Observable<DisponiblesTabla[]> {
-    return this.http
-      .get<DisponiblesTabla[]>('assets/json/110217/mercancia-disponsible.json');
-  }
+     * Obtiene la lista de mercancías disponibles.
+     * 
+     * @returns {Observable<DisponiblesTabla[]>} Un observable con la lista de mercancías disponibles.
+     */
+    obtenerMercanciasDisponibles(body: Record<string, unknown>): Observable<unknown> {
+      return this.httpService.post<unknown>(PROC_110217.BUSCAR_MERCANCIAS, { body: body });
+    }
 
   /**
    * Obtiene la lista de mercancías seleccionadas.
@@ -124,5 +120,14 @@ export class CertificadosOrigenService {
  */
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>('assets/json/110217/consulta_110217.json');
+  }
+
+  /**
+ * Realiza una solicitud POST para agregar productores exportador utilizando el RFC del solicitante.
+ * @param body Objeto con el RFC del solicitante.
+ * @returns Observable con la respuesta de la solicitud.
+ */
+  agregarProductores(body: {rfc_solicitante: string}): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110217.AGREGAR_PRODUCTOR, { body: body });
   }
 }

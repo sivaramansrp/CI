@@ -10,6 +10,12 @@ import { Tramite110217Store } from '../tramites/tramite110217.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110217Query extends Query<Tramite110217State> {
+  /**
+   * Observable que expone la lista de productores exportador agregados al estado del trámite.
+   */
+    selectAgregarProductoresExportador$ = this.select((state) => {
+      return state.agregarProductoresExportador;
+    });
 
   /**
    * Observable que selecciona el estado completo del trámite.
