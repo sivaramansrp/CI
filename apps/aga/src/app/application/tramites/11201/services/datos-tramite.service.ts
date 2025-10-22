@@ -30,7 +30,7 @@ export class DatosTramiteService {
    * @param {HttpClient} http - Cliente HTTP para realizar peticiones a APIs o archivos JSON.
    */
   
-  urlServer = ENVIRONMENT.API_HOST_TEST;
+  urlServer = ENVIRONMENT.API_HOST;
 
   constructor(private http: HttpClient) {}
 

@@ -21,7 +21,7 @@ export class SolicitanteService {
   }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
-  urlServerTest = ENVIRONMENT.API_HOST_TEST;
+  urlServerTest = ENVIRONMENT.API_HOST;
   
   /**
    * Obtiene los datos generales de un contribuyente desde la API.

@@ -15,7 +15,7 @@ export class Firma11201Service {
   /**
      * URL del servidor donde se encuentra la API.
      */
-  urlServer = ENVIRONMENT.API_HOST_TEST;
+  urlServer = ENVIRONMENT.API_HOST;
 
   constructor(private http: HttpClient) { }
 
