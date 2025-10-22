@@ -235,16 +235,19 @@ export class SolicitantePageComponent implements OnDestroy {
       if (this.indice === 1) {
         const FORM_VALIDO = this.datosComponent?.validarFormularios() || false;
         const FORMFIELDVALIDO = this.datosComponent?.formFieldValidado;
-        this.esFormaValido = FORM_VALIDO;
-        if(!FORMFIELDVALIDO) {
+        
+        if (!FORM_VALIDO) {
           this.datosPasos.indice = 1;
           this.formErrorAlert = `<div class="text-center">Faltan campos por capturar.</div>`;
+          this.esFormaValido = false;
           return;
         }
-        if (!this.esFormaValido && FORMFIELDVALIDO) {
+        
+        if (FORM_VALIDO && !FORMFIELDVALIDO) {
           const ERROR_SERVICIO_ALERT = `(Seleccione un programa para realizar la cancelación) es un campo requerido`
-          this.datosPasos.indice = 1;
           this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_SERVICIO_ALERT);
+          this.datosPasos.indice = 1;
+          this.esFormaValido = false;
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
         }
@@ -254,8 +257,7 @@ export class SolicitantePageComponent implements OnDestroy {
         ).subscribe({
           next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
             if (respuesta.codigo !== '00') {
-              const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
-              this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_MESSAGE);
+              this.formErrorAlert = respuesta.error || 'Error desconocido en la solicitud';
               this.esFormaValido = false;
               this.indice = 1;
               this.datosPasos.indice = 1;

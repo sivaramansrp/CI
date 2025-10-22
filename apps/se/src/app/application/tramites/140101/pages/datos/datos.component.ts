@@ -158,7 +158,8 @@ public validarFormularios(): boolean {
     }
     this.formFieldValidado = true;
     if (this.programaACancelarComponent?.radioId === null || this.programaACancelarComponent?.radioId === undefined || this.programaACancelarComponent?.radioId === -1) {
-      allFormsValid = false;
+      allFormsValid = true;
+      this.formFieldValidado = false;
     }
   }
   return allFormsValid;
