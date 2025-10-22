@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { DatosComponent } from './pages/datos/datos.component';
-import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
 import { ProgramaACancelarComponent } from './components/programaACancelar/programaACancelar.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { SolicitudDeCancelacionRoutingModule } from './solicitud-de-cancelacion-routing.module';
@@ -14,7 +13,6 @@ import { SolicitudDeCancelacionRoutingModule } from './solicitud-de-cancelacion-
   // Declaraciones de los componentes que pertenecen a este módulo
   declarations: [
     DatosComponent,
-    FirmarSolicitudComponent,
     SolicitantePageComponent
   ],
   // Importaciones de otros módulos y componentes necesarios para este módulo
