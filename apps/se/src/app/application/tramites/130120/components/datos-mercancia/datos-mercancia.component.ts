@@ -509,7 +509,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   habilitarCampoFactorConversion(): void {
     const TIPO_UMC = this.datosMercanica.get('umc')?.value;
     const TIPO_UMT = this.datosMercanica.get('umt')?.value;
-    const ID_SOL: string = ''; //this.store?.getIdSolicitud?.() || '';
+    const ID_SOL: string = '';
     const CAMPO_CAPACIDAD = this.datosMercanica.get('factor_conversion');
     const VALOR_CAPACIDAD = CAMPO_CAPACIDAD?.value;
     if (TIPO_UMC === TIPO_UMT) {
@@ -572,7 +572,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     }
     const VALOR_TOTAL_FACTURA = parseFloat(VALOR_TOTAL_FACTURA_STR);
     if (isNaN(VALOR_TOTAL_FACTURA) || VALOR_TOTAL_FACTURA <= 0) {
-      console.warn('Valor total de factura inválido:', VALOR_TOTAL_FACTURA_STR);
       return;
     }
     try {
@@ -583,7 +582,16 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       const RESULT_FACT = DatosMercanciaComponent.truncar(RESULT_FACT_AUX);
       this.datosMercanica.get('valor_total_factura_usd')?.setValue(RESULT_FACT);
     } catch (ERROR) {
-      console.error('Error calculando el valor total de la factura en USD:', ERROR);
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error al mostrar la firma.',
+        mensaje: 'Ocurrió un error al mostrar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
     }
   }
 
@@ -605,11 +613,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       console.error('Error calculando el valor de la factura en USD:', ERROR);
     }
   }
-/**
- * Obtiene el monto de conversión para una moneda específica.
- * @param TIPO Tipo de moneda para la conversión.
- * @returns Observable con el monto de conversión.
- */
+  /**
+   * Obtiene el monto de conversión para una moneda específica.
+   * @param TIPO Tipo de moneda para la conversión.
+   * @returns Observable con el monto de conversión.
+   */
   obtenerMonedaConversion(TIPO: string): Observable<number> {
     if (!TIPO?.trim()) {
       return of(1);
@@ -623,7 +631,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         return Number.isFinite(PARSED) ? PARSED : 1;
       }),
       catchError(ERROR => {
-        console.error('Error al obtener el monto de conversión:', ERROR);
         return of(1);
       })
     );

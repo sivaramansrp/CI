@@ -14,9 +14,12 @@ export interface AvisoTabla {
   id: number;
   rfc: string;
   nombreComercial: string;
-  entidadFederativa: string;
-  alcaldioOMuncipio: string;
-  colonia: string;
+  claveEntidadFederativa: string;
+  claveDelegacionMunicipio: string;
+  claveColonia: string;
+  descripcionEntidadFederativa?: string;
+  descripcionDelegacionMunicipio?: string;
+  descripcionColonia?: string;
 }
 /**
  * Representa una lista de elementos de un catálogo.
@@ -48,6 +51,8 @@ export interface Catalogo {
    * Descripción del elemento del catálogo.
    */
   descripcion: string;
+
+  clave: string;
 }
 /**
  * Representa los datos generales del solicitante.
@@ -91,6 +96,9 @@ export interface MercanciaTabla {
   valorUSD: string;
   numPedimentoExportacion: string;
   numPedimentoImportacion: string;
+  // Descripciones para mostrar en la tabla
+  descripcionFraccionArancelaria?: string;
+  descripcionUnidadMedida?: string;
 }
 /**
  * Representa una acción de un botón en el wizard.

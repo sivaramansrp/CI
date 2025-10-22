@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,6 +15,10 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 
+import { ColumnConfig } from '../tabla-dinamica-expandida/tabla-dinamica-exp.component';
+
+import { animate, state, style, transition, trigger } from '@angular/animations';
+
 @Component({
   selector: 'app-tabla-dinamica',
   templateUrl: './tabla-dinamica.component.html',
@@ -23,6 +27,19 @@ import { TablePaginationComponent } from '../table-pagination/table-pagination.c
   imports: [CommonModule, FormsModule, TablePaginationComponent],
   host: {},
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('expandCollapse', [
+      state('void', style({
+        height: '0',
+        opacity: 0
+      })),
+      state('*', style({
+        height: '*',
+        opacity: 1
+      })),
+      transition('void <=> *', animate('200ms ease-in-out'))
+    ])
+  ]
 })
 
 export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
@@ -232,14 +249,14 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   /** Evento que se emite cuando el usuario cambia la cantidad de elementos por página en la tabla. */
-  @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter<number>(); 
+  @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter<number>();
 
   /** Evento que se emite cuando el usuario ordena una columna de la tabla. */
   @Output() sortEvent = new EventEmitter<{ column: ConfiguracionColumna<T>; direction: 'asc' | 'desc' }>();
 
   /** Evento que se emite cuando el usuario realiza una búsqueda en la tabla. */
   @Output() searchChanged = new EventEmitter<string>();
-  
+
   /** Subject utilizado para gestionar y emitir los términos de búsqueda ingresados por el usuario. */
   private searchSubject = new Subject<string>();
 
@@ -256,13 +273,49 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
    * @default false
    */
   @Input() styleCenter: boolean = false;
-  
+
+  /**
+ * Indica si la tabla es expandible o no.
+ * Cuando es `true`, permite expandir filas para mostrar información adicional.
+ * Valor por defecto: `false`.
+ */
+  @Input() expandible: boolean = false;
+
+  /**
+   * Índice de la fila actualmente expandida.
+   * Si no hay ninguna fila expandida, su valor es -1.
+   */
+  expandedIndex: number = -1;
+
+  selectedRows: Set<number> = new Set();
+
+  @Output() selectionChange = new EventEmitter<number[]>();
+
+  @Input() nestedContent: TemplateRef<unknown> | null = null;
+
+  /**
+   * Un arreglo de objetos de configuración de columnas que se utiliza para definir
+   * la estructura y el comportamiento de la tabla dinámica. Cada objeto en el arreglo
+   * debe cumplir con la interfaz `ColumnConfig`, especificando propiedades como el encabezado
+   * de la columna, el mapeo de campos, el formato y otras opciones de visualización.
+   *
+   * @ejemplo
+   * columns = [
+   *   { encabezado: 'Nombre', clave: 'nombre' },
+   *   { encabezado: 'Edad', clave: 'edad', width: '100px' }
+   * ];
+   */
+  @Input() columns: ColumnConfig[] = [];
+
+  @Input() data: T[] = [];
+
   /**
  * Método del ciclo de vida que se ejecuta al inicializar el componente.
  * Suscribe al Subject de búsqueda para manejar los términos ingresados por el usuario,
  * aplicando un debounce y evitando búsquedas repetidas.
  */
   ngOnInit(): void {
+    this.paginatedDatos = [...this.datos];
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -437,7 +490,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
    * Método que se ejecuta cuando se cambia de página en la paginación.
    * @param {number} page - Número de la página seleccionada.
    */
-  onPageChange(page: number):void {
+  onPageChange(page: number): void {
     this.currentPage = page;
     if (this.mode === PAGINATION_MODE.CLIENT) {
       this.getUpdatePagination();
@@ -455,7 +508,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
     this.paginatedDatos = [];
     if (this.showPagination) {
       if (this.mode !== PAGINATION_MODE.CLIENT) {
-      this.paginatedDatos = [...SOURCE];
+        this.paginatedDatos = [...SOURCE];
       } else {
         const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
         this.paginatedDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
@@ -471,7 +524,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
    * Método que se ejecuta cuando cambia el número de elementos por página.
    * @param {number} itemsPerPage - Número de elementos a mostrar por página.
    */
-  onItemsPerPageChange(itemsPerPage: number):void{
+  onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     if (this.mode === PAGINATION_MODE.CLIENT) {
@@ -479,7 +532,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
     } else {
       this.itemsPerPageChange.emit(itemsPerPage)
     }
-    
+
   }
 
   /**
@@ -489,7 +542,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
    * @param cambios - Objeto que contiene los cambios en las propiedades @Input
    */
   ngOnChanges(cambios: SimpleChanges): void {
-    if(cambios['datos']) {
+    if (cambios['datos']) {
       this.filasSeleccionadas = [];
     }
     if (
@@ -566,16 +619,57 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   }
 
   /** Deselect all selected rows and radio */
-public clearSelection(): void {
-  this.idFilaSeleccionada = null;
-  this._inputSelection = null!;
-  this.filasSeleccionadas = [];
-  this.listaDeFilaSeleccionada.emit([]);
+  public clearSelection(): void {
+    this.idFilaSeleccionada = null;
+    this._inputSelection = null!;
+    this.filasSeleccionadas = [];
+    this.listaDeFilaSeleccionada.emit([]);
 
-  if (this.tipoSeleccionTabla === TablaSeleccion.RADIO) {
-    this.filaSeleccionada.emit(null as any);  // Or create a separate deselect output if needed
+    if (this.tipoSeleccionTabla === TablaSeleccion.RADIO) {
+      this.filaSeleccionada.emit(null as T); // Or create a separate deselect output if needed
+    }
   }
-}
+
+  onSelectRow(event: Event, index: number): void {
+    const CHECKBOX = event.target as HTMLInputElement;
+    if (CHECKBOX.checked) {
+      this.selectedRows.add(index);
+    } else {
+      this.selectedRows.delete(index);
+    }
+    this.emitSelection();
+  }
+
+  isSelected(index: number): boolean {
+    return this.selectedRows.has(index);
+  }
+
+  /**
+   * Alterna la expansión de una fila en la tabla dinámica.
+   * 
+   * Si la fila especificada por el índice ya está expandida, la colapsa.
+   * Si no está expandida, la expande y emite el evento `rowExpanded` con los datos de la fila seleccionada.
+   * 
+   * @param index - Índice de la fila a expandir o colapsar.
+   */
+  toggleRow(index: number): void {
+    if (this.expandedIndex === index) {
+      this.expandedIndex = -1;
+    } else {
+      this.expandedIndex = index;
+      this.rowExpanded.emit(this.data[index]);
+    }
+  }
+
+  private emitSelection(): void {
+    this.selectionChange.emit(Array.from(this.selectedRows));
+  }
+
+  /**
+   * Evento que se emite cuando una fila es expandida.
+   * El valor emitido es el objeto de datos correspondiente a la fila expandida.
+   */
+  @Output() rowExpanded = new EventEmitter<T>();
 
   /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.

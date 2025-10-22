@@ -15,8 +15,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MODALIDAD,PLANTAS_DATOS,TEXTO} from '../../constantes/prosec.module';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-import { TEXTO, MODALIDAD } from '../../constantes/prosec.module';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -95,7 +95,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   plantasDatos: FilaPlantas[] = [];
   /** Datos de las plantas obtenidos del servicio */
   plantasDatosPROSEC: FilaPlantas[] = [];
-
+  
   TablaSeleccion = TablaSeleccion;
 
   private destroyNotifier$: Subject<void> = new Subject();
@@ -341,6 +341,10 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.recuperarDatos();
     }
+      if (this.esFormularioActualizacion) {        
+      this.plantasDatos = PLANTAS_DATOS;
+      this.plantasDatosPROSEC = PLANTAS_DATOS;
+    }
   }
 
   
@@ -359,7 +363,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
  *
  * @returns {void}
  */
-recuperarDatos(): void {
+recuperarDatos(): void { 
     this.prosecService.obtenerTablaDatos('plantasDatos.json').subscribe({
       next: (response) => {
         if (response && 'plantasDatos' in response && Array.isArray(response.plantasDatos)) {
@@ -406,10 +410,10 @@ recuperarDatos(): void {
    */
   public eliminarPlantas(): void {
     if(this.seleccionarProsecDisponiblesLista.length > 0) {
-      const plantasAEliminar = this.seleccionarProsecDisponiblesLista.map(planta => planta.registro);
-      this.plantasDatos = this.plantasDatos.filter(planta => !plantasAEliminar.includes(planta.registro));
+      const PLANTASELIMINAR = this.seleccionarProsecDisponiblesLista.map(planta => planta.registro);
+      this.plantasDatos = this.plantasDatos.filter(planta => !PLANTASELIMINAR.includes(planta.registro));
       this.seleccionarProsecDisponiblesLista = [];
-    }
+    } 
   }
 
   /**

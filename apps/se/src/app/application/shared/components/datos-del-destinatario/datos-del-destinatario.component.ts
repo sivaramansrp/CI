@@ -1,5 +1,19 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -35,6 +49,11 @@ export class DatosDelDestinatarioComponent
   @Input() idProcedimiento!: number;
 
   @Input() razonSocialEditable: boolean = false;
+  /**
+   * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
+   * @type {number[]}
+   */
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
