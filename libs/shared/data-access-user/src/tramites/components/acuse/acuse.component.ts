@@ -364,9 +364,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   private descargarDocumentoTramite231001(): void {
     const ID = this.idSolicitud.toString();
 
-    /**
-     * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
-     */
+  /**
+   * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+   */
     const ACUSE_SOLICITUD = this.documentosService231001
       .guardarDocumento(ID, this.procedure, true)
       .pipe(
@@ -376,16 +376,12 @@ export class AcuseComponent implements OnChanges, OnDestroy {
             this.procedure,
             true
           )
-        ),
-        catchError((error) => {
-          console.error('Error en ACUSE_SOLICITUD (231001):', error);
-          return of(null);
-        })
+        )
       );
 
-    /**
-     * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
-     */
+  /**
+   * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
+   */
     const CONSTANCIA_SOLICITUD = this.documentosService231001
       .guardarDocumento(ID, this.procedure, false)
       .pipe(
@@ -395,24 +391,25 @@ export class AcuseComponent implements OnChanges, OnDestroy {
             this.procedure,
             false
           )
-        ),
-        catchError((error) => {
-          console.error('Error en CONSTANCIA_SOLICITUD (231001):', error);
-          return of(null);
-        })
+        )
       );
 
-    /**
-     * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
-     */
+  /**
+   * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
+   */
     forkJoin([ACUSE_SOLICITUD, CONSTANCIA_SOLICITUD])
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$),
+        catchError((error) => {
+          console.error('Error en guardarAcuse o vistaPrevia:', error);
+          return throwError(() => error);
+        })
+      )
       .subscribe({
         next: ([acuseResponse, constanciaResponse]) => {
           const FILAS: BodyTablaAcuse[] = [];
           let contador = 1;
-
-          if (acuseResponse?.datos?.contenido) {
+          if (acuseResponse?.datos) {
             FILAS.push({
               id: contador++,
               documento: acuseResponse.datos.nombre_archivo,
@@ -420,7 +417,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
               idDocumento: 'acuse',
             });
           }
-          if (constanciaResponse?.datos?.contenido) {
+          if (constanciaResponse?.datos) {
             FILAS.push({
               id: contador++,
               documento: constanciaResponse.datos.nombre_archivo,
@@ -432,8 +429,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           }
           this.datosTablaAcuse = FILAS;
         },
-        error: (err) =>
-          console.error('Error inesperado en forkJoin (231001):', err),
+        error: (err) => console.error('Error:', err),
       });
   }
 
