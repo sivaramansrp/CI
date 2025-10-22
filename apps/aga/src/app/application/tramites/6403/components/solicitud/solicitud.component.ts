@@ -5,6 +5,8 @@ import {
   InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_CARACTERES_ESPECIALES,
+  REGEX_NICO,
   REGEX_REEMPLAZAR,
   REG_X,
   TEXTOS,
@@ -627,8 +629,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value: this.tramiteState?.solicitudFormulario?.folioOficialProrroga,
             disabled: true,
-          },
-          [Validators.required],
+          }
         ],
         fechaImportacionTemporal: [this.tramiteState?.solicitudFormulario?.fechaImportacionTemporal,
           [Validators.required],
@@ -1442,6 +1443,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosPedimento.get('checkProrroga')?.enable();
     }
   }
+
+  limpiarSoloNumeros(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_NICO, '');
+      
+      // Actualizar control de formulario
+      this.datosPedimento.get('datosPedimento.aduana')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.patente')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.pedimento')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.folioImportacionTemporal')?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+  limpiarAlfanumerico(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_CARACTERES_ESPECIALES, '');
+      
+      // Actualizar control de formulario
+      this.datosPedimento.get('datosPedimento.folioFormatoOficial')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.folioOficialProrroga')?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+
 
   /**
    * @method ngOnDestroy
