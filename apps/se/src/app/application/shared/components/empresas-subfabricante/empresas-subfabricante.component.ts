@@ -60,7 +60,17 @@ import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
 export class EmpresasSubfabricantesComponent implements OnInit, OnChanges {
-
+/**
+ * Guarda los datos del formulario de detalles de plantas.
+ * Valida el formulario y muestra notificaciones según el resultado.
+ */
+  @ViewChild(DetallesPlantasComponent)
+detallesPlantasComponent!: DetallesPlantasComponent; 
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Referencia al elemento modal para complementar plantas.
    * 
@@ -519,7 +529,7 @@ set formularioDatosSubcontratista(valor: FormGroup) {
  * Cierra el modal de detalles de la planta.
  * Establece showDetallesPlanta en false para ocultar el componente.
  */
-  cerrarDetallesModal(): void {
+  cerrarDetallesModal(): void { 
     this.showDetallesPlanta = false;  
   }
 
@@ -565,4 +575,40 @@ obtenerEstados():void {
       this.servicioDeFormularioService.setArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
     }
   }
+
+/**
+ * Guarda los datos del formulario de detalles de plantas.
+ * Valida el formulario y muestra notificaciones según el resultado.
+ */
+  onGuardarPlantas(): void { 
+  const CHILD_FORM = this.detallesPlantasComponent.formularioDatosPlantas;
+
+  if (CHILD_FORM && CHILD_FORM.invalid) {
+    CHILD_FORM.markAllAsTouched();
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+  }
+  else {
+    this.showDetallesPlanta = false;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'La operación se realizó exitosamente.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  }
 }
+

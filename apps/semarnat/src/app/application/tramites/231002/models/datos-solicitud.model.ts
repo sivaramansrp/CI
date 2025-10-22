@@ -157,5 +157,5 @@ export interface EstadoDatoSolicitud {
     precaucionesManejo: string;
   };
 
-  residuos?: ResiduoPeligroso[];
+  residuos: ResiduoPeligroso[];
 }

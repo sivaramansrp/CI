@@ -14,7 +14,6 @@ import {
   CatalogoT231002Service,
   Domicilio,
 } from '../../services/catalogo-t231002.service';
-
 import {
   Component,
   ElementRef,
@@ -24,6 +23,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  ES_CONTROL_INVALIDO,
+  HABILITAR_CONTROL,
+} from '../../../../shared/helpers';
 import {
   FormBuilder,
   FormGroup,
@@ -42,7 +45,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/mod
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
-import { ES_CONTROL_INVALIDO } from '../../../../shared/helpers';
+
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { ImmexResponse } from '../../../231001/models/catalogo-response';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
@@ -242,7 +245,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       numeroRegistroAmbiental: ['', Validators.required],
       descripcionGenerica1: ['', Validators.required],
       numeroProgramaImmex: ['', Validators.required],
-      domicilio: ['', Validators.required],
+      domicilio: [''],
     });
   }
 
@@ -459,6 +462,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   setTipoDeAviso(evento: string | number): void {
     this.tipoAviso = evento;
+    const MOSTRAR_COMBO_DOMICILIO = this.tipoAviso === 'primera_vez';
+    HABILITAR_CONTROL(
+      this.solicitudForm.get('domicilio'),
+      MOSTRAR_COMBO_DOMICILIO
+    );
   }
 
   /**
