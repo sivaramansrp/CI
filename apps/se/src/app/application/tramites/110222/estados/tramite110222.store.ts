@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { GrupoRepresentativo, HistoricoColumnas } from '../models/peru-certificado.module';
+import { GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -226,6 +226,9 @@ export interface Tramite110222State {
   representacionFederalDatos: Catalogo[];
   
   agregarProductoresExportador: HistoricoColumnas[];
+
+  mercanciaProductores: MercanciaTabla[];
+  disponiblesDatos:Mercancia[];
 }
 
 /**
@@ -375,6 +378,10 @@ export function createInitialState(): Tramite110222State {
   
     /** Lista de representaciones federales disponibles */
     representacionFederalDatos: [],
+
+    mercanciaProductores: [],
+
+    disponiblesDatos: [],
   };
 }
 
@@ -1023,4 +1030,28 @@ export class Tramite110222Store extends Store<Tramite110222State> {
         ],
       }));
     }
+
+     /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+    setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+      this.update((state) => ({
+        ...state,
+        mercanciaProductores: mercancia,
+      }));
+    }
+
+      /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
 }

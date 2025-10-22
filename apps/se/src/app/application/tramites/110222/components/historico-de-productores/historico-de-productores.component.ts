@@ -44,7 +44,7 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   esTipoDeSeleccionado: boolean = true;
 
   /** Indica si el formulario es válido. */
-    public isFormValid: boolean = false;
+  public isFormValid: boolean = false;
   /**
    * @property {Catalogo[]} optionsTipoFactura
    * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
@@ -93,8 +93,8 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Solicitud actual del trámite.
    */
   public solicitudState!: Tramite110222State;
-   /** Observable que expone la lista de productores exportador agregados al store. */
-    public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
+  /** Observable que expone la lista de productores exportador agregados al store. */
+  public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
 
   /**
    * Constructor del componente.
@@ -118,7 +118,8 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
-     this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
+    this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
+    this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
     this.tramiteQuery.selectTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -126,10 +127,7 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe();
-
-    this.cargarProductorPorExportador();
-    this.cargarMercancia();
+      .subscribe();;
 
     if (this.solicitudState.optionsTipoFactura.length === 0) {
       this.facturaOpcion();
@@ -137,17 +135,17 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
       this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
     }
 
-    this.tramiteQuery.formulario$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.tramiteState = seccionState;
-          if (seccionState?.['productorMismoExportador']) {
-            this.cargarProductorPorExportador();
-          }
-        })
-      )
-      .subscribe();
+    // this.tramiteQuery.formulario$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.tramiteState = seccionState;
+    //       if (seccionState?.['productorMismoExportador']) {
+    //         this.cargarProductorPorExportador();
+    //       }
+    //     })
+    //   )
+    //   .subscribe();
     this.tramiteQuery.agregarDatosProductorFormulario$.pipe(
       takeUntil(this.destroyNotifier$), map((seccionState) => {
         this.agregarDatosProductor = seccionState;
@@ -166,14 +164,14 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
-  cargarProductorPorExportador(): void {
-    this.certificadoDeService.obtenerProductorPorExportador()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
-        this.productoresExportador = respuesta.datos;
-      });
-  }
-  
+  // cargarProductorPorExportador(): void {
+  //   this.certificadoDeService.obtenerProductorPorExportador()
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe(respuesta => {
+  //       this.productoresExportador = respuesta.datos;
+  //     });
+  // }
+
   /**
    * @descripcion
    * Obtiene la lista de países disponibles.
@@ -192,11 +190,11 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
-  cargarMercancia(): void {
-    this.certificadoDeService.obtenerMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
-      this.mercancia = respuesta.datos;
-    });
-  }
+  // cargarMercancia(): void {
+  //   this.certificadoDeService.obtenerMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
+  //     this.mercancia = respuesta.datos;
+  //   });
+  // }
 
   /**
    * Establece valores en el estado del store para un formulario histórico.
@@ -255,7 +253,7 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
               fax: item.fax,
             })
           );
-         
+
           this.store.setProductores(MAPPED_DATA);
         },
         error: () => {
@@ -266,38 +264,71 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     // this.mercanciasDisponibles = true;
   }
 
-   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
-    let DATOS: HistoricoColumnas | null = null;
-    if (event && typeof event === 'object' && 'nombreProductor' in event) {
-      DATOS = {
-          id: (event as HistoricoColumnas).id ?? 0,
-          nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
-          numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
-          direccion: String((event as HistoricoColumnas).direccion ?? ''),
-          correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
-          telefono: String((event as HistoricoColumnas).telefono ?? ''),
-          fax: String((event as HistoricoColumnas).fax ?? '')
-      };
-    } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
-      DATOS = {
-          id: 0,
-          nombreProductor: "LAURA CONTRERAS",
-          numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
-          direccion: "SAN GABRIEL 144 DURANGO", 
-          correoElectronico: "laura2992@hotmail.com",
-          telefono: "044-6182999535",
-          fax: String(event['fax'] ?? '') || '6182999535'
-      };
-    }
-    if (DATOS) { 
-      this.store.setAgregarProductoresExportador(DATOS);
-    }
-    if (this.solicitudState.agregarProductoresExportador.length) {
-      this.cargarMercancia();
-    }
+  public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+     const PAYLOAD = {
+      rfc_solicitante: event.numeroRegistroFiscal,
+    };
+    console.log('PAYLOAD', PAYLOAD);
+    console.log(
+      'Event received in emitAgregarExportador:',
+      this.solicitudState.agregarProductoresExportador
+    );
+    this.certificadoDeService
+      .obtenerProductoruNevo(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          console.log('Response from agregar productor nuevo:', response);
+          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.id,
+              nombreProductor: item.nombreCompleto,
+              numeroRegistroFiscal: item.rfc,
+              direccion: item.direccionCompleta,
+              correoElectronico: item.correoElectronico,
+              telefono: item.telefono,
+              fax: item.fax,
+            })
+          );
+          // this.datosTablaUno$ = of(MAPPED_DATA || []);
+          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+          console.log('MAPPED_DATA', MAPPED_DATA);
+          this.store.setProductores(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+    // if (event && typeof event === 'object' && 'nombreProductor' in event) {
+    //   DATOS = {
+    //     id: (event as HistoricoColumnas).id ?? 0,
+    //     nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+    //     numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+    //     direccion: String((event as HistoricoColumnas).direccion ?? ''),
+    //     correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+    //     telefono: String((event as HistoricoColumnas).telefono ?? ''),
+    //     fax: String((event as HistoricoColumnas).fax ?? '')
+    //   };
+    // } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+    //   DATOS = {
+    //     id: 0,
+    //     nombreProductor: "LAURA CONTRERAS",
+    //     numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
+    //     direccion: "SAN GABRIEL 144 DURANGO",
+    //     correoElectronico: "laura2992@hotmail.com",
+    //     telefono: "044-6182999535",
+    //     fax: String(event['fax'] ?? '') || '6182999535'
+    //   };
+    // }
+    // if (DATOS) {
+    //   this.store.setAgregarProductoresExportador(DATOS);
+    // }
+    // if (this.solicitudState.agregarProductoresExportador.length) {
+    //   this.cargarMercancia();
+    // }
   }
 
-      /** Actualiza el estado de validez del formulario según el valor recibido. */
+  /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
     this.isFormValid = event;
   }

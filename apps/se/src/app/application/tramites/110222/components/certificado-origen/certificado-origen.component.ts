@@ -126,7 +126,14 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Observable para los datos de la tabla.
    */
-  datosTabla$: Observable<Mercancia[]> = of([]);
+  datosTablaUno$: Observable<Mercancia[]> = of([]);
+
+  /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTabla$: Mercancia[] = [];
+
 
   /**
    * @descripcion
@@ -225,6 +232,16 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
+      this.query.selectPeru$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state: Tramite110222State) => {
+          this.certificadoState = state;
+          this.datosTabla$ = state.mercanciaTabla;
+        })
+      )
+      .subscribe();
+
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -242,10 +259,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         })
       )
       .subscribe();
-
-    this.estadoOpcion();
-    this.paisOpcion();
-    this.datosTabla$ = this.query.selectmercanciaTabla$;
+     this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
 
    /**
@@ -285,65 +299,9 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable(
-      'estados.json'
-    )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable(
-      'pais.json'
-    )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerTablaDatos(
-      'disponibles-datos.json'
-    )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-          } else {
-            this.disponiblesDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
-      });
      setTimeout(() => {
       this.processBuscarMercancias();
     }, 100);
@@ -384,16 +342,13 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     const SELECTED_BLOQUE = this.certificadoState?.paisBloques; // bloque is stored as an array
 
     const PAYLOAD = {
-      rfcExportador: 'OME940310L37',
-      tratadoAcuerdo: {
-        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
-      },
-      pais: {
-        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
-      },
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {"idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',},
+      pais: {"cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',},
     };
 
     this.ValidarInicialmenteCertificadoService
+
       .buscarMercanciasCert(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -411,10 +366,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
               nombreTecnico: item.nombreTecnico || '',
               nombreComercial: item.nombreComercial || '',
               nombreIngles: item.nombreIngles || '',
-              fraccionNaladi: item.fraccionNaladi || '',
-              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
-              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
-              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
               criterioParaConferirOrigen: item.criterioOrigen || '',
               valorDeContenidoRegional: item.valorDeContenidoRegional || '',
               normaOrigen: item.normaOrigen || '',
@@ -435,8 +386,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
               numeroDeSerie: '',
             })
           );
-          this.datosTabla$ = of(MAPPED_DATA || []);
-          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+          this.datosTablaUno$ = of(MAPPED_DATA || []);
 
           this.store.setbuscarMercancia(
             MAPPED_DATA
@@ -502,9 +452,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
    * @param {Mercancia[]} event - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
    */
-  guardarClicado(event: Mercancia[]): void {
-    this.datosTabla$ = of(event);
+   guardarClicado(evento: Mercancia[]): void {
+    this.datosTabla$ = evento;
   }
+  
 
   /**
    * Emite los datos de una mercancía seleccionada y los guarda en el store.
@@ -514,12 +465,8 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   emitmercaniasDatos(evento: Mercancia): void {
     this.store.setmercanciaTabla([evento]);
-    this.datosTabla$.pipe(take(1)).subscribe(current => {
-    const updated = [...current, evento];
-    this.datosTabla$ = of(updated);
-    this.store.setmercanciaTabla(updated);
-  });
   }
+
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
     

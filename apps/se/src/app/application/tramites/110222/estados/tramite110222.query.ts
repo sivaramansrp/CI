@@ -21,6 +21,26 @@ export class Tramite110222Query extends Query<Tramite110222State> {
     return state.agregarProductoresExportador;
   });
 
+   selectMercanciaProductores$ = this.select((state) => {
+    return state.mercanciaProductores;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona el estado completo del certificado.
+   */
+  selectPeru$ = this.select((state) => {
+    return state;
+  });
+
+   /**
+   * @descripcion
+   * Observable que selecciona la tabla de mercancías del estado.
+   */
+  selectmercanciaTablaUno$ = this.select((state) => {
+    return state.disponiblesDatos;
+  });
+
   /**
    * Selecciona si todos los valores de la forma son válidos.
    * Verifica si todas las propiedades de `formaValida` son `true`.
