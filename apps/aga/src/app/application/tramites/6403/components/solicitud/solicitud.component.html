@@ -81,8 +81,7 @@
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
-          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
-          oficial') {
+          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
           <div>
             <label class="form-label" for="estadoTipoDocumento"
               >Estado del tipo de documento</label
@@ -144,14 +143,14 @@
                   setValoresStore(datosPedimento, 'aduana', 'setAduana')
                 "
               />
-              <span
+              <small
                 class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.aduana')?.invalid
                         || solicitudFormulario.get('datosPedimento.aduana')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.aduana')?.touched"
               >
                 Este campo es obligatorio.
-              </span>
+              </small>
             </div>
           </div>
           <div class="col-md-4">
@@ -182,14 +181,14 @@
                   setValoresStore(datosPedimento, 'patente', 'setPatente')
                 "
               />
-              <span
+              <small
                 class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.patente')?.invalid
                         || solicitudFormulario.get('datosPedimento.patente')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.patente')?.touched"
               >
                 Este campo es obligatorio.
-              </span>
+              </small>
             </div>
           </div>
           <div class="col-md-4">
@@ -222,18 +221,17 @@
                   setValoresStore(datosPedimento, 'pedimento', 'setPedimento')
                 "
               />
-              <span
+              <small
                 class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.pedimento')?.invalid
                         || solicitudFormulario.get('datosPedimento.pedimento')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.pedimento')?.touched"
               >
                 Este campo es obligatorio.
-              </span>
+              </small>
             </div>
           </div>
-          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio
-          VUCEM'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio VUCEM'){
           <div>
             <label class="form-label" for="folioImportacionTemporal"
               >Folio de importación temporal</label
@@ -267,23 +265,22 @@
             @if(solicitudFormulario.get('datosPedimento.folioImportacionTemporal')?.invalid
             &&
             solicitudFormulario.get('datosPedimento.folioImportacionTemporal')?.touched){
-            <span class="text-danger">Este campo es obligatorio.</span>
+            <small class="text-danger">Este campo es obligatorio.</small>
             }@else if(solicitudFormulario.get(
             'datosPedimento.folioImportacionTemporal' )?.errors?.['maxlength']
             && solicitudFormulario.get(
             'datosPedimento.folioImportacionTemporal' )?.touched){
-            <span class="text-danger">El folio debe de ser de 25 dígitos.</span>
+            <small class="text-danger">El folio debe de ser de 25 dígitos.</small>
             }@else if(solicitudFormulario.get(
             'datosPedimento.folioImportacionTemporal' )?.errors?.['pattern'] &&
             solicitudFormulario.get( 'datosPedimento.folioImportacionTemporal'
             )?.touched){
-            <span class="text-danger"
-              >El folio solicitado no cuenta con coincidencias</span
+            <small class="text-danger"
+              >El folio solicitado no cuenta con coincidencias</small
             >
             }
           </div>
-          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato
-          oficial'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato oficial'){
           <div>
             <label class="form-label" for="folioFormatoOficial"
               >Folio de formato oficial</label
@@ -313,14 +310,13 @@
             @if(solicitudFormulario.get('datosPedimento.folioFormatoOficial')?.invalid
             &&
             solicitudFormulario.get('datosPedimento.folioFormatoOficial')?.touched){
-            <span class="text-danger">Este campo es obligatorio.</span>
+            <small class="text-danger">Este campo es obligatorio.</small>
             }
           </div>
           }
         </div>
         <div class="col-md-2">
-          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
-          oficial') {
+          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
           <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">Validar</button>
           }
         </div>
@@ -619,7 +615,7 @@
                 datosMedioTransporte.get('guiaMaster')?.touched
               "
             >
-              <span class="text-danger">Este campo es obligatorio</span>
+              <small class="text-danger">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -697,7 +693,7 @@
                 datosMedioTransporte.get('numeroBl')?.touched
               "
             >
-              <span class="text-danger">Este campo es obligatorio</span>
+              <small class="text-danger">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
