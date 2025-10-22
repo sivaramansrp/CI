@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { BuscarCertificadoDeOrigenComponent } from '../../components/buscar-certificado-de-origen/buscar-certificado-de-origen.component';
+import { CertificadoDisponibles } from '@libs/shared/data-access-user/src';
 
 /**
  * @descripcion
@@ -15,7 +16,7 @@ import { BuscarCertificadoDeOrigenComponent } from '../../components/buscar-cert
   standalone: false, // Indica que este componente no es independiente.
 })
 export class DuplicadoDeCertificadoComponent {
-  @Output() rowClicked = new EventEmitter<void>();
+  @Output() rowClicked = new EventEmitter<CertificadoDisponibles>();
   /**
    * @property {BuscarCertificadoDeOrigenComponent} buscarCertificado
    * @description
