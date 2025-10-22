@@ -33,6 +33,7 @@ import { CommonModule } from '@angular/common';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 
 /**
  * @description Constructor del componente.
@@ -231,6 +232,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Grupo de formularios anidado para los datos de la solicitud.--220202
+   * @property {FormGroup} datos
+   */
+  datos!: FormGroup;
 
   /**
    * @description Configuración de las columnas de la tabla de solicitudes.
@@ -448,6 +455,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public activatedRoute: ActivatedRoute,
     public fitosanitarioStore: FitosanitarioStore,
     public catalogosService: CatalogosService,
+    public fitosanitarioQuery: FitosanitarioQuery
   ) {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -455,7 +463,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
         this.cuerpoTabla = datos.tablaDatos;
-        this.createFromFields();
       });
 
     this.consultaioQuery.selectConsultaioState$
@@ -499,6 +506,42 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     this.obtenerTodosLosDatosDeLaLista();
     this.createFromFields();
+    this.initActionFormBuild();
+  }
+
+  initActionFormBuild(): void {
+    this.datos = this.fb.group({
+      aduanaDeIngreso: ['', Validators.required],
+      oficinaDeInspeccion: ['', Validators.required],
+      puntoDeInspeccion: ['', Validators.required],
+      regimen: ['', Validators.required],
+      numeroDeGuia: [''],
+      numeroDeCarro: ['']
+    });
+    this.forma.setControl('datos', this.datos);
+    this.fitosanitarioQuery.seleccionarDatosForma$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos: DatosForma) => {
+      if (datos) {
+        // carga de catalogos antes de asignar valores
+        const CARGACATALOGOS = async () => {
+          if (datos.aduanaDeIngreso !== undefined && datos.aduanaDeIngreso !== '') {
+            await this.obtenerSanidadAgropecuariaList(datos.aduanaDeIngreso);
+          }
+          if (datos.oficinaDeInspeccion !== undefined && datos.oficinaDeInspeccion !== '') {
+            await this.obtenerPuntoInspeccionList(datos.oficinaDeInspeccion);
+          }
+        }
+        CARGACATALOGOS().then(() => {
+          this.datos.patchValue({
+            aduanaDeIngreso: datos.aduanaDeIngreso || '',
+            oficinaDeInspeccion: datos.oficinaDeInspeccion || '',
+            puntoDeInspeccion: datos.puntoDeInspeccion || '',
+            regimen: datos.regimen || '',
+            numeroDeGuia: datos.numeroDeGuia || '',
+            numeroDeCarro: datos.numeroDeCarro || ''
+          })
+        })
+      }
+    });
   }
 
   /**
@@ -511,7 +554,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.createFromFields();
     }
   }
 
@@ -537,7 +579,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   createFromFields(): void {
-    this.forma = this.fb.group(this.inicializarCamposFormulario());
+    this.forma = this.fb.group({
+      datos: this.fb.group({})
+    });
     if (this.forma) {
       this.notificationCheck = true;
     }
@@ -616,8 +660,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   obtenerTodosLosDatosDeLaLista(): void {
     this.getaduanaLista();
-    this.getagropecuariaLista();
-    this.getPuntoLista();
     this.getRegimenLista();
     this.getArancelariaLista();
     this.getNicoLista();
@@ -650,35 +692,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     );
     
-  }
-
-  /**
-   * @description Obtiene la lista de agropecuarias desde un archivo JSON.
-   * @method getagropecuariaLista
-   * @returns {void}
-   */
-  getagropecuariaLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('aduana_de_ingreso.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.agropecuariaList = data as Catalogo[];
-      });
-
-  }
-
-  /**
-   * @description Obtiene la lista de puntos de verificación desde un archivo JSON.
-   * @method getPuntoLista
-   * @returns {void}
-   */
-  getPuntoLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('punto.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.puntoList = data as Catalogo[];
-      });
   }
 
   /**
@@ -755,12 +768,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Actualiza los datos almacenados en el store.
    * @method setValoresStore
    */
-  setValoresStore(_forma?: FormGroup, _campo?: string): void {
-    const VALOR = this.forma.value;
-    // (
-    //   this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void
-    // )(VALOR);
-    // this.agriculturaApiService.updateDatosForma(VALOR);
+  setValoresStore(): void {
+    const VALOR = this.datos.value;
+    (
+      this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void
+    )(VALOR);
 
   }
 
@@ -770,7 +782,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   catalogoOficinas(_forma?: FormGroup): void {
     const VALOR = this.forma.value;
-    this.obtenerSanidadAgropecuariaList(VALOR.aduanaDeIngreso);
+    this.obtenerSanidadAgropecuariaList(VALOR.datos.aduanaDeIngreso);
   }
 
   /**
@@ -779,7 +791,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   obtenerPuntoInspeccion(_forma?: FormGroup): void {
     const VALOR = this.forma.value;
-    this.obtenerPuntoInspeccionList(VALOR.oficinaDeInspeccion);
+    this.obtenerPuntoInspeccionList(VALOR.datos.oficinaDeInspeccion);
   }
 
   /**
@@ -797,7 +809,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList(valor: string): void {
+  async obtenerPuntoInspeccionList(valor: string): Promise<void> {
     this.catalogosService.obtieneCatalogoPuntoInspeccion(220202, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.puntoList = data.datos ?? [];
     });
@@ -807,7 +819,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de sanidad agropecuaria.
    * @method obtenerSanidadAgropecuariaList
    */
-  obtenerSanidadAgropecuariaList(cveAduana: string): void {
+  async obtenerSanidadAgropecuariaList(cveAduana: string): Promise<void> {
     this.agropecuariaList = [];
     if(cveAduana && cveAduana !== ''){
       this.catalogosService.obtieneCatalogoOficinasInspeccion(220202, cveAduana)
