@@ -193,6 +193,90 @@ export class SolicitudPageComponent {
     }
   }
 
+
+  /**
+   * @method siguiente
+   * @description
+   * Método para navegar programáticamente al siguiente paso del wizard.
+   * Ejecuta la transición forward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_forward
+   * Realiza navegación que:
+   * - Ejecuta validación de documentos cargados (comentario indica validación futura)
+   * - Avanza al siguiente paso usando `wizardComponent.siguiente()`
+   * - Actualiza índice local basado en posición del wizard
+   * - Sincroniza datos de pasos con nueva posición
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component
+   * - Datos de configuración de pasos
+   * - Estado visual de la UI
+   * 
+   * @future_validation
+   * Comentario indica que se implementará:
+   * - Validación de documentos cargados
+   * - Verificación de completitud de adjuntos
+   * - Control de calidad de archivos
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @programmatic_navigation
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * @method anterior
+   * @description
+   * Método para navegar programáticamente al paso anterior del wizard.
+   * Ejecuta la transición backward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_backward
+   * Realiza navegación que:
+   * - Retrocede al paso anterior usando `wizardComponent.atras()`
+   * - Actualiza índice local basado en nueva posición del wizard
+   * - Sincroniza datos de pasos con posición actualizada
+   * - Mantiene consistencia de estado durante retroceso
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component  
+   * - Datos de configuración de pasos
+   * - Estado visual de navegación
+   * 
+   * @state_preservation
+   * Durante retroceso:
+   * - Preserva datos capturados en pasos anteriores
+   * - Mantiene validaciones ya realizadas
+   * - Conserva estado de formularios
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Nueva posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @backward_navigation
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
   /**
    * @method obtenerNombreDelTítulo
    * @description Devuelve el título a mostrar según el número de paso.
