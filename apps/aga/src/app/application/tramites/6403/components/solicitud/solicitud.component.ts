@@ -794,7 +794,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             value: this.tramiteState?.solicitudFormulario?.observaciones,
             disabled: this.soloLectura,
           },
-          [Validators.required],
         ],
       }),
       datosDestinoMercancia: this.fb.group({

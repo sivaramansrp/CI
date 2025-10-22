@@ -11,6 +11,7 @@
             id="cveAduana"
             formControlName="cveAduana"
             [ngClass]="isValid(datosAduana, 'cveAduana') ? 'required' : ''"
+            [isDisabled]="soloLectura"
             (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"
           ></app-catalogo-select>
         </div>
@@ -21,6 +22,7 @@
             [required]="false"
             id="cveSeccionAduanal"
             formControlName="cveSeccionAduanal"
+            [isDisabled]="soloLectura"
             [ngClass]="
               isValid(datosAduana, 'cveSeccionAduanal') ? 'required' : ''
             "
@@ -40,6 +42,7 @@
             [required]="false"
             id="cveRecintoFiscalizado"
             formControlName="cveRecintoFiscalizado"
+            [isDisabled]="soloLectura"
             [ngClass]="
               isValid(datosAduana, 'cveRecintoFiscalizado') ? 'required' : ''
             "
@@ -66,6 +69,7 @@
             [required]="true"
             id="cveTipoDocumento"
             formControlName="cveTipoDocumento"
+            [isDisabled]="soloLectura"
             [ngClass]="
               isValid(datosPedimento, 'cveTipoDocumento') ? 'required' : ''
             "
@@ -568,6 +572,7 @@
             [catalogo]="medioDeTransporte"
             [label]="'Medio de transporte'"
             [required]="true"
+            [isDisabled]="soloLectura"
             id="cveMedioTrasporte"
             formControlName="cveMedioTrasporte"
             [ngClass]="
@@ -808,6 +813,7 @@
           <app-catalogo-select
             [catalogo]="paisDeProcedencia"
             [label]="'País de procedencia'"
+            [isDisabled]="soloLectura"
             [required]="false"
             id="cvePaisProcedencia"
             formControlName="cvePaisProcedencia"
@@ -1029,9 +1035,6 @@
               maxlength="500"
               formControlName="observaciones"
               class="form-control textarea"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'observaciones') ? 'required' : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -1144,6 +1147,12 @@
                       )
                     "
                   ></textarea>
+                  @if (mercanciaFormulario.get('espeMercancia')?.hasError('required') && 
+                       mercanciaFormulario.get('espeMercancia')?.touched) {
+                    <div class="text-danger">
+                      <small>Este campo es obligatorio.</small>
+                    </div>
+                  }
                 </div>
               </div>
             </div>
