@@ -304,6 +304,11 @@ export class ValidarInicialmenteCertificadoService {
     );
   }
 
+  /**
+ * Realiza una solicitud POST para agregar productores exportador utilizando el RFC del solicitante.
+ * @param body Objeto con el RFC del solicitante.
+ * @returns Observable con la respuesta de la solicitud.
+ */
   agregarProductores(body: {rfc_solicitante: string}): Observable<unknown> {
     return this.httpService.post<unknown>(PROC_110214.AGREGAR_PRODUCTOR, { body: body });
   }
