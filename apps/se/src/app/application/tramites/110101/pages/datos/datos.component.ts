@@ -1,6 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TabEvaluarTratadosResponse } from '@ng-mf/data-access-user';
+
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion, TabEvaluarTratadosResponse } from '@ng-mf/data-access-user';
 import { Subject, takeUntil, tap } from 'rxjs';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
@@ -50,6 +53,14 @@ export class DatosComponent implements OnInit, OnDestroy {
   public solicitudeState!: Solicitante110101State;
 
   /**
+  * Notificación actual que se muestra en el componente.
+  *
+  * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+  * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+  */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
   * @property desactivado
   * @type {boolean}
   * @public
@@ -68,6 +79,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     private pantallasSvc: PantallasSvcService,
     private consultaQuery: ConsultaioQuery,
     private solicitanteQuery: Solicitante110101Query,
+    private evaluacionTratadosService: EvaluacionTratadosService
   ) {
 
   }
@@ -104,7 +116,54 @@ export class DatosComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+    if(this.consultaState.parameter === "EvaluarSolicitud"){
+      this.evaluacionTablaTratados();
+    }
   }
+  /**
+     * Obtiene la evaluación de tratados para la solicitud actual y actualiza la tabla de evaluación.
+     *
+     * Este método llama al servicio `evaluacionTratadosService.getEvaluarTratados` pasando el ID de la solicitud.
+     * - Si la respuesta es exitosa (`CodigoRespuesta.EXITO`), actualiza `tratadosEvaluacionTablaDatos`.
+     * - Si ocurre un error o la respuesta es incorrecta, muestra una notificación de error.
+     */
+    evaluacionTablaTratados(): void {
+      this.evaluacionTratadosService.getEvaluarTratados(this.consultaState.id_solicitud)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            if (response.codigo === CodigoRespuesta.EXITO) {
+              this.onTratadosActualizados(response.datos ?? []);
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: response.error || 'Error obtener tratados.',
+                mensaje: response.causa || response.mensaje || 'Error obtener tratados.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            }
+          },
+          error: (err) => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const MENSAJE = err?.error?.error || 'Error obtener tratados.';
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
+        });
+    }
   /**
    * Este método se utiliza para verificar si el parámetro existe y habilitar las pestañas
    * - Si el parámetro existe y no es undefined, habilita las pestañas 3 y 4.

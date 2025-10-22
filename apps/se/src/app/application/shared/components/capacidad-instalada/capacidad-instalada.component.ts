@@ -34,6 +34,11 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Notificación que se muestra al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Notificación que se muestra al usuario al eliminar un registro.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
   /**
    * Índice de la capacidad instalada que se está editando actualmente.
    */
@@ -321,6 +326,7 @@ export class CapacidadInstaladaComponent implements OnInit {
    */
   eliminarCapacidadInstalada(): void {
     if (this.SelectedInstaladaDatos?.length > 0) { 
+      this.mostrarEliminarCapacidadInstalada();
       this.SelectedInstaladaDatos.forEach(planta => {
         const INDEX = this.capacidadInstaladaDatos.findIndex(row => row === planta);
         if (INDEX !== -1) {
@@ -329,6 +335,28 @@ export class CapacidadInstaladaComponent implements OnInit {
       });
       this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];
     }
+    else
+    {
+      this.mostrarEliminarCapacidadInstalada();
+    }
+  }
+
+  /**
+   * Muestra una notificación de advertencia si no se ha seleccionado ningún registro para eliminar.
+   * 
+   * Esta función configura la propiedad `nuevaNotificacionEliminar` con los detalles de la notificación
+   */
+  mostrarEliminarCapacidadInstalada(): void {
+     this.nuevaNotificacionEliminar = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.SelectedInstaladaDatos?.length > 0 ? 'El registro fue eliminado correctamente.':'Debe elegir al menos un registro de Capacidad Instalada para eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
   }
   /**
    * Edita la capacidad instalada seleccionada.

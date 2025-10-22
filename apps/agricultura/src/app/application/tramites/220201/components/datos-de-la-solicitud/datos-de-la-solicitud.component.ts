@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import {CatalogosService} from '../../services/220201/catalogos/catalogos.service'
 import { HttpClient } from '@angular/common/http';
 
@@ -14,14 +14,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { CONFIGURACION_SENSIBLES } from '../../../../shared/constantes/datos-de-la-solicitue.enum';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
+import { Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
+
+
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -47,8 +53,9 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
     CatalogoSelectComponent,
     InputRadioComponent,
     AlertComponent,
-    TablaDinamicaComponent,
     NotificacionesComponent,
+    TablaDinamicaComponent,
+    TablaDinamicaExpandidaComponent,
     ModalComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -202,23 +209,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
-    { encabezado: 'Tipo de requisito', clave: (fila): string => fila.tipoRequisito, orden: 2 },
-    { encabezado: 'Requisito', clave: (fila): string => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
-    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
-    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
-    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
-    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
-    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
-    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
-    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
+    { encabezado: 'Tipo de requisito', clave: (fila): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
+    { encabezado: 'Requisito', clave: (fila): string => fila.requisito ?? '', orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional ?? '', orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria ?? '', orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion ?? '', orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico ?? '', orden: 7 },
+    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico ?? '', orden: 8 },
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion ?? '', orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt ?? '', orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT ?? '', orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc ?? '', orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC ?? '', orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie ?? '', orden: 14 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso ?? '', orden: 15 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen ?? '', orden: 16 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia ?? '', orden: 17 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico ?? '', orden: 18 }
   ];
 
   /**
@@ -245,7 +252,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   seleccionado: string = SELECCIONADO;
 
-
+  /**
+   * Lista de filas seleccionadas para la vista.
+   * Almacena las filas (tipo FilaSolicitud) que el usuario ha seleccionado actualmente.
+   * Se utiliza para mostrar/gestionar la selección en la tabla y sincronizar con el store.
+   */
   listSelectedView: FilaSolicitud[] = [];
 
   /**
@@ -274,6 +285,39 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @property {string} messageDeError
    */
   messageDeError: string = '';
+
+  /**
+   * @description Configuración de las columnas para la tabla de datos sensibles.
+   * Utiliza la constante CONFIGURACION_SENSIBLES para definir las columnas.
+   * @type {ConfiguracionColumna<Sensible>[]}
+   */
+  configuracionSensiblesTabla: ConfiguracionColumna<Sensible>[] = CONFIGURACION_SENSIBLES;
+
+  /** Conjunto de filas seleccionadas en la tabla */
+  filasSeleccionadas: Set<number> = new Set();
+
+
+  /**
+   * Getter para obtener el FormGroup interno llamado 'datosDelaSolicitud'.
+   * Devuelve el control 'datosDelaSolicitud' del formulario principal como FormGroup.
+   * Se utiliza el operador de encadenamiento opcional para evitar errores si aún no está inicializado.
+   * @returns {FormGroup} Grupo de controles 'datosDelaSolicitud'
+   */
+  get datosServicio(): FormGroup {
+    return this.datosDelaSolicitud?.get('datosDelaSolicitud') as FormGroup;
+  }
+
+  /**
+   * Indica el proceso activo asociado al modal.
+   * Ejemplos de valores: 'eliminar_solicitud', '' (sin proceso) u otros identificadores de flujo.
+   * Se utiliza en métodos como `confirmacionModal` para determinar la acción a ejecutar
+   * cuando el usuario confirma o cancela en el modal.
+   */
+  public procesoModal!: string;
+
+  @ViewChild('tablaMercancias') tablaMercancias!: TablaDinamicaComponent<Sensible>;
+
+
 
   /**
    * Constructor del componente.
@@ -318,12 +362,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
+        //Mantiene ordenados los datos por no de partida
+        if (datos.tablaDatos && datos.tablaDatos.length > 0) {
+          datos.tablaDatos.sort((a, b) => {
+            if (a.noPartida < b.noPartida) { return -1; }
+            if (a.noPartida > b.noPartida) { return 1; }
+            return 0;
+          });
+        }
         this.cuerpoTabla = datos.tablaDatos;
+        console.warn('Cuerpo tabla', this.cuerpoTabla);
       });
     this.crearFormulario();
     this.initActionFormBuild();
 
     this.nuevaNotificacion = {} as Notificacion;
+
   }
 
   ngAfterViewInit(): void {
@@ -417,8 +471,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();    
     this.obtenerPuntoInspeccionList();
-    this.obtenerEstablecimientoList();
-    this.obtenerVeterinarioList();
     this.obtenerRegimenList();
     this.obtenerDatosTablaSolicitud();
   }
@@ -462,7 +514,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerPuntoInspeccionList
    */
   obtenerPuntoInspeccionList(): void {
-
     this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, '34013').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.puntoInspeccion = data.datos ?? [];
     });
@@ -525,7 +576,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
-        { encabezado: 'Tipo de requisito', clave: (fila: FilaSolicitud): string => fila.tipoRequisito, orden: 2 },
+        { encabezado: 'Tipo de requisito', clave: (fila: FilaSolicitud): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
         { encabezado: 'Requisito', clave: (fila: FilaSolicitud): string => fila.requisito, orden: 3 },
         { encabezado: 'Número de Certificado Internacional', clave: (fila: FilaSolicitud): string => fila.numeroCertificadoInternacional, orden: 4 },
         { encabezado: 'Fracción arancelaria', clave: (fila: FilaSolicitud): string => fila.fraccionArancelaria, orden: 5 },
@@ -533,37 +584,37 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         { encabezado: 'Nico', clave: (fila: FilaSolicitud): string => fila.nico, orden: 7 },
         { encabezado: 'Descripción Nico', clave: (fila: FilaSolicitud): string => fila.descripcionNico, orden: 8 },
         { encabezado: 'Descripción', clave: (fila: FilaSolicitud): string => fila.descripcion, orden: 9 },
-        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.umt, orden: 10 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.descripcionUMT ?? '', orden: 10 },
         { encabezado: 'Cantidad UMT', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMT), orden: 11 },
-        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.umc, orden: 12 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.descripcionUMC ?? '', orden: 12 },
         { encabezado: 'Cantidad UMC', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMC), orden: 13 },
-        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.especie ?? '', orden: 14 },
-        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.uso, orden: 15 },
-        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.paisDeOrigen, orden: 16 },
-        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.paisDeProcedencia, orden: 17 },
+        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.descripcionEspecie ?? '', orden: 14 },
+        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.descripcionUso ?? '', orden: 15 },
+        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeOrigen ?? '', orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeProcedencia ?? '', orden: 17 },
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 18 }
       ];
     }
     else { 
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
-        { encabezado: 'Tipo de requisito', clave: (fila: FilaSolicitud): string => fila.tipoRequisito, orden: 2 },
-        { encabezado: 'Requisito', clave: (fila: FilaSolicitud): string => fila.requisito, orden: 3 },
+        { encabezado: 'Tipo de requisitos', clave: (fila: FilaSolicitud): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
+        { encabezado: 'Requisito', clave: (fila: FilaSolicitud): string => fila.requisito ?? '', orden: 3 },
         { encabezado: 'Número de Certificado Internacional', clave: (fila: FilaSolicitud): string => fila.numeroCertificadoInternacional, orden: 4 },
         { encabezado: 'Fracción arancelaria', clave: (fila: FilaSolicitud): string => fila.fraccionArancelaria, orden: 5 },
         { encabezado: 'Descripción de la fracción', clave: (fila: FilaSolicitud): string => fila.descripcionFraccion, orden: 6 },
         { encabezado: 'Nico', clave: (fila: FilaSolicitud): string => fila.nico, orden: 7 },
         { encabezado: 'Descripción Nico', clave: (fila: FilaSolicitud): string => fila.descripcionNico, orden: 8 },
         { encabezado: 'Descripción', clave: (fila: FilaSolicitud): string => fila.descripcion, orden: 9 },
-        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.umt, orden: 10 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila: FilaSolicitud): string => fila.descripcionUMT ?? '', orden: 10 },
         { encabezado: 'Cantidad UMT', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMT), orden: 11 },
-        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.umc, orden: 12 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila: FilaSolicitud): string => fila.descripcionUMC ?? '', orden: 12 },
         { encabezado: 'Cantidad UMC', clave: (fila: FilaSolicitud): string => String(fila.cantidadUMC), orden: 13 },
-        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.especie ?? '', orden: 14 },
-        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.uso, orden: 15 },
-        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.paisDeOrigen, orden: 16 },
-        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.paisDeProcedencia, orden: 17 },
-        { encabezado: 'Tipo de presentación', clave: (fila: FilaSolicitud): string => fila.tipoDeProducto ?? '', orden: 18 },
+        { encabezado: 'Especie', clave: (fila: FilaSolicitud): string => fila.descripcionEspecie ?? '', orden: 14 },
+        { encabezado: 'Uso', clave: (fila: FilaSolicitud): string => fila.descripcionUso ?? '', orden: 15 },
+        { encabezado: 'País de origen', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeOrigen ?? '', orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila: FilaSolicitud): string => fila.descripcionPaisDeProcedencia ?? '', orden: 17 },
+        { encabezado: 'Tipo de presentación', clave: (fila: FilaSolicitud): string => fila.tipoPresentacionDescripcion ?? '', orden: 18 },
         { encabezado: 'Tipo planta', clave: (fila: FilaSolicitud): string => fila.tipoPlanta ?? '', orden: 19 },
         { encabezado: 'Planta autorizada de origen', clave: (fila: FilaSolicitud): string => fila.plantaAutorizadaOrigen ?? '', orden: 20 },
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 21 }
@@ -616,12 +667,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   modificarMercancia(): void {
+    console.warn('Filas seleccionadas:', this.filasSeleccionadas);
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+    const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (VALOR === 'yes') {
-      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+      
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
     else if (VALOR === 'no') {
-      this.modalRef.abrir(SubProductosContenedoraComponent);
+      this.modalRef.abrir(SubProductosContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
   }
   /**
@@ -667,11 +721,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {void}
   */
   agregarMercancia(): void {
+    if(this.filasSeleccionadas.size > 0) {
+      this.tablaMercancias.clearSelection();
+      this.filasSeleccionadas.clear();
+      this.fitosanitarioStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: []
+      })
+    );
+    }
+    const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
-      this.modalRef.abrir(SubProductosContenedoraComponent);
+      this.modalRef.abrir(SubProductosContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
     else if (this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
-      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
 
   }
@@ -682,7 +747,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {boolean}
   */
   validarFormulario(): boolean {
-     this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
+    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
     if (this.forma.valid) {
       return this.mensajeErrorTabla;
     }
@@ -706,6 +771,121 @@ onFilaClic(event: SolicitudData): void {
   }
 }
 
+columns: ColumnConfig[] = [
+    { encabezado: 'No. partida', clave: 'noPartida', width: '30%' },
+    { encabezado: 'Tipo de requisito', clave: 'tipoRequisito', width: '20%' },
+    { encabezado: 'Requisito', clave: 'requisito', width: '20%' },
+    { encabezado: 'Número de Certificado Internacional', clave: 'numeroCertificadoInternacional', width: '30%' },
+    { encabezado: 'Fracción arancelaria', clave: 'fraccionArancelaria', width: '30%' },
+    { encabezado: 'Descripción de la fracción', clave: 'descripcionFraccion', width: '30%' },
+    { encabezado: 'Nico', clave: 'nico', width: '30%' },
+    { encabezado: 'Descripción Nico', clave: 'descripcionNico', width: '30%' },
+    { encabezado: 'Descripción', clave: 'descripcion', width: '30%' },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: 'umt', width: '30%' },
+    { encabezado: 'Cantidad UMT', clave: 'cantidadUMT', width: '30%' },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: 'umc', width: '30%' },
+    { encabezado: 'Cantidad UMC', clave: 'cantidadUMC', width: '30%' },
+    { encabezado: 'Especie', clave: 'especie', width: '30%' },
+    { encabezado: 'Uso', clave: 'uso', width: '30%' },
+    { encabezado: 'País de origen', clave: 'paisOrigen', width: '30%' },
+    { encabezado: 'País de procedencia', clave: 'paisProcedencia', width: '30%' },
+    { encabezado: 'Tipo de presentación', clave: 'tipoPresentacion', width: '30%' },
+    { encabezado: 'Tipo planta', clave: 'tipoPlanta', width: '30%' },
+    { encabezado: 'Planta autorizada de origen', clave: 'plantaAutorizadaOrigen', width: '30%' },
+    { encabezado: 'Certificado Internacional Electrónico', clave: 'certificadoInternacionalElectronico', width: '30%' },
+  ];
+
+  nestedColumns: ColumnConfig[] = [
+    { encabezado: 'Número de lote', clave: 'NumeroLote', width: '10%' },
+    { encabezado: 'Color/Pelaje', clave: 'ColorPelaje', width: '10%' },
+    { encabezado: 'Edad del animal', clave: 'EdadAnimal', width: '10%' },
+    { encabezado: 'Fase de desarrollo', clave: 'FaseDesarrollo', width: '10%' },
+    { encabezado: 'Función zootécnica', clave: 'FuncionZootecnica', width: '10%' },
+    { encabezado: 'Nombre de la mercancía', clave: 'NombreMercancia', width: '10%' },
+    { encabezado: 'Numero de identificación', clave: 'NumeroIdentificacion', width: '10%' },                
+    { encabezado: 'Raza', clave: 'Raza', width: '10%' },
+    { encabezado: 'Sexo', clave: 'Sexo', width: '10%' },        
+    { encabezado: 'Nombre cientifico', clave: 'NombreCientifico', width: '25%' },              
+  ];
+
+    nestedColumnsDetalleProductos: ColumnConfig[] = [
+    { encabezado: 'Número de lote', clave: 'numeroDeLote', width: '8%' },
+    { encabezado: 'Fecha de elaboración o empaque o proceso', clave: 'fechaElaboracionEmpaqueProceso', width: '10%' },
+    { encabezado: 'Fecha de producción o sacrificio', clave: 'fechaProduccionSacrificio', width: '10%' },
+    { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave: 'fechaCaducidadProducto', width: '10%' },
+    { encabezado: 'Fecha de fin de elaboración o empaque o proceso', clave: 'fechaFinElaboracionEmpaqueProceso', width: '10%' },
+    { encabezado: 'Fecha de fin de producción o sacrificio', clave: 'fechaFinProduccionSacrificio', width: '10%' },                
+    { encabezado: 'Fecha de fin de caducidad del producto o consumo preferente', clave: 'fechaFinCaducidadProducto', width: '10%' },
+  ];
+
+  /**
+   * Configuración de columnas para datos sensibles.
+   * Cada elemento define el encabezado de la columna, la función para obtener el valor desde la fila
+   * y el orden en la presentación.
+   */
+  configuraColumna: ConfiguracionColumna<Sensible>[] = [
+    // Número de partida o identificador de la fila
+    { encabezado: 'No. partida', clave: (fila: Sensible): string => fila.noPartida, orden: 1 },
+    // Color o pelaje del animal
+    { encabezado: 'ColorPelaje', clave: (fila: Sensible): string => fila.ColorPelaje, orden: 2 },
+    // Fase de desarrollo del animal (ej. juvenil, adulto)
+    { encabezado: 'FaseDesarrollo', clave: (fila: Sensible): string => fila.FaseDesarrollo, orden: 3 },
+    // Función zootécnica (uso productivo del animal)
+    { encabezado: 'FuncionZootecnica', clave: (fila: Sensible): string => fila.FuncionZootecnica, orden: 4 },
+    // Número de identificación del animal (ej. arete, microchip)
+    { encabezado: 'NumeroIdentificacion', clave: (fila: Sensible): string => fila.NumeroIdentificacion, orden: 5 },
+    // Raza del animal
+    { encabezado: 'Raza', clave: (fila: Sensible): string => fila.Raza, orden: 7 },
+    // Nombre científico de la especie
+    { encabezado: 'NombreCientifico', clave: (fila: Sensible): string => fila.NombreCientifico, orden: 8 },
+    // Sexo del animal (M/F u otra representación)
+    { encabezado: 'Sexo', clave: (fila: Sensible): string => fila.Sexo, orden: 9 },
+  ];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  onRowExpanded(row: any): void {
+    // Aquí puedes cargar los datos para la tabla anidada si es necesario
+    console.warn('Fila expandida:', row);
+  }
+
+  /** Método para manejar el cambio de filas seleccionadas. */
+  onfilasSeleccionadasChange(filasSeleccionadas: FilaSolicitud[] ): void {
+    const FS = filasSeleccionadas
+      .map((row) => row.id)
+      .filter((id): id is number => id !== undefined && id !== null);
+    this.filasSeleccionadas = new Set(FS);
+    if( this.filasSeleccionadas.size > 1 ){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      
+  }
+  
+}
+
+confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'validar_formulario':
+        {
+          if (confirmar) {
+            this.procesoModal = '';
+          }
+          break;
+        }
+      default:
+        break;
+    }
+  }
+
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
@@ -716,6 +896,5 @@ onFilaClic(event: SolicitudData): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 
 }

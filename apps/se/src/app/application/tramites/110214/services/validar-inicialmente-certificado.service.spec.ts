@@ -2,6 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from "@angular/common/
 import { ValidarInicialmenteCertificadoService } from "./validar-inicialmente-certificado.service";
 import { TestBed } from "@angular/core/testing";
 import { CatalogoLista, DisponiblesTabla, ProductorExportador, SeleccionadasTabla, RespuestaConsulta } from "../models/validar-inicialmente-certificado.model";
+import { of } from "rxjs";
 
 describe('ValidarInicialmenteCertificadoService', () => {
     let service: ValidarInicialmenteCertificadoService;
@@ -68,6 +69,7 @@ describe('ValidarInicialmenteCertificadoService', () => {
     });
 
     it('should fetch productores/exportadores', () => {
+        const loginRFC = 'AAL0409235E6';
         const mockResponse: ProductorExportador = {
             datos: [
                 {
@@ -82,32 +84,11 @@ describe('ValidarInicialmenteCertificadoService', () => {
             ],
         };
 
-        service.obtenerProductorPorExportador().subscribe((response) => {
+        service.obtenerProductorPorExportador(loginRFC).subscribe((response) => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110214/productor-exportador.json');
-        expect(req.request.method).toBe('GET');
-        req.flush(mockResponse);
-    });
-
-    it('should fetch mercancías disponibles', () => {
-        const mockResponse: DisponiblesTabla[] = [
-            {
-                fraccionArancelaria: '12345678',
-                nombreTecnico: 'Producto Técnico',
-                nombreComercial: 'Producto Comercial',
-                numeroRegistroProductos: 'REG123',
-                fechaExpedicion: '2025-01-01',
-                fechaVencimiento: '2025-12-31',
-            },
-        ];
-
-        service.obtenerMercanciasDisponibles().subscribe((response) => {
-            expect(response).toEqual(mockResponse);
-        });
-
-        const req = httpMock.expectOne('assets/json/110214/mercancia-disponsible.json');
+        const req = httpMock.expectOne(`assets/json/110214/productor-exportador.json?loginRFC=${loginRFC}`);
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -165,7 +146,7 @@ describe('ValidarInicialmenteCertificadoService', () => {
         req.flush(mockResponse);
     });
     it('should fetch getDatosConsulta', () => {
-        const mockResponse: RespuestaConsulta = {
+        const mockResponse: any = {
             "success": true,
             "message": "",
             "datos": {
@@ -275,4 +256,102 @@ describe('ValidarInicialmenteCertificadoService', () => {
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
+
+    it('should build productores por exportador correctly', () => {
+        const input = [
+            {
+            nombreProductor: 'Juan Pérez',
+            numeroRegistroFiscal: 'RFC123',
+            direccion: 'Calle 1',
+            correoElectronico: 'juan@test.com',
+            telefono: '1234567890',
+            fax: '9999999',
+            },
+        ] as any;
+
+        const result = service.buildProductoresPorExportador(input);
+
+        expect(result).toEqual([
+            {
+            nombreCompleto: 'Juan Pérez',
+            rfc: 'RFC123',
+            direccionCompleta: 'Calle 1',
+            correoElectronico: 'juan@test.com',
+            telefono: '1234567890',
+            fax: '9999999',
+            },
+        ]);
+    });
+
+    it('should build mercancias productor correctly', () => {
+        const input = [
+            {
+            fraccionArancelaria: '12345678',
+            cantidad: '100',
+            unidadMedida: 'Caja',
+            valorMercancia: '2000',
+            fetchFactura: '2025-01-01',
+            numeroFactura: 'F001',
+            complementoDescripcion: 'Producto test',
+            rfcProductor1: 'RFC999',
+            },
+        ] as any;
+
+        const result = service.buildMercanciasProductor(input);
+
+        expect(result[0]).toEqual({
+            fraccionArancelaria: '12345678',
+            cantidadComercial: '100',
+            descUnidadMedidaComercial: 'Caja',
+            valorTransaccional: '2000',
+            descFactura: '2025-01-01',
+            fechaFactura: '2025-01-01',
+            numeroFactura: 'F001',
+            complementoDescripcion: 'Producto test',
+            rfcProductor: 'RFC999',
+        });
+    });
+
+    it('should build datos certificado correctly', () => {
+        const mockState: any = {
+            formDatosCertificado: {
+            observacionesDates: 'Observación test',
+            idiomaDates: 'Español',
+            EntidadFederativaDates: 'CDMX',
+            representacionFederalDates: 'SRE',
+            },
+        };
+
+        const result = service.buildDatosCertificado(mockState);
+        expect(result).toEqual({
+            observaciones: 'Observación test',
+            idioma: 'Español',
+            representacion_federal: {
+            entidad_federativa: 'CDMX',
+            representacion_federal: 'SRE',
+            },
+        });
+    });
+
+    it('should fetch and map obtenerPaisBloque correctly', () => {
+        const mockResponse = { data: [{ id: 1, descripcion: 'Bloque 1' }] };
+
+        service.obtenerPaisBloque().subscribe((result) => {
+            expect(result).toEqual([{ id: 1, descripcion: 'Bloque 1' }]);
+        });
+
+        const req = httpMock.expectOne('assets/json/110204/país-bloque.json');
+        expect(req.request.method).toBe('GET');
+        req.flush(mockResponse);
+    });
+
+    it('should get all state from tramite110214Query', () => {
+        const mockQuery = { allStoreData$: of({ formCertificado: {} }) } as any;
+        (service as any).tramite110214Query = mockQuery;
+
+        service.getAllState().subscribe((result) => {
+            expect(result).toEqual({ formCertificado: {} });
+        });
+    });
+
 });

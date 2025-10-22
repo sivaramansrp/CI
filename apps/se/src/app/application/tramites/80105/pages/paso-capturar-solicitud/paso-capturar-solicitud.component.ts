@@ -264,7 +264,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
       false) ||
       (this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistasExtrenjeros') ??
       false)) &&
-      this.isAllArraysFilledIn80101(['anexoUnoTabla1', 'anexoUnoTabla2', 'federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
+      this.isAllArraysFilledIn80101(['federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
     );
   }
 

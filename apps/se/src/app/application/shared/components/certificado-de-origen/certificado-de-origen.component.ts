@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import {
   AlertComponent,
+  CatalogoSelectComponent,
   InputCheckComponent,
   InputFecha,
   InputFechaComponent,
@@ -32,7 +33,7 @@ import {
   REQUIREDA,
   TEXTOS_REQUISITOS,
 } from '../../constantes/modificacion.enum';
-import { Catalogo, CatalogoSelectComponent, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
+import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
 import {
   Component,
   ElementRef,
@@ -251,7 +252,7 @@ export class CertificadoDeOrigenComponent
    * Propiedad de entrada que recibe el tratado seleccionado.
    * @type {any}
    */
-  @Output() tratadoSeleccionado = new EventEmitter<any>();
+  @Output() tratadoSeleccionado = new EventEmitter<Catalogo>();
   /**
    * Propiedad de entrada que recibe los datos de los países bloqueados.
    * @type {Catalogo[]}
@@ -701,7 +702,16 @@ export class CertificadoDeOrigenComponent
     if (this.domicilio) {
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
     }
+
+    if (this.idProcedimiento === 110204) {
+      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];      
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formCertificado.get(key)?.clearValidators();
+        this.formCertificado.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
   }
+
   /* * Aplica las validaciones al campo 'primerApellido', 'calle' y 'numeroLetra' del formulario.
    *
    * @remarks
@@ -871,7 +881,7 @@ export class CertificadoDeOrigenComponent
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.tipoEstadoSeleccionEvent.emit(estado);
-    this.formCertificado.get('bloque')?.setValue('')
+    this.formCertificado.get('bloque')?.setValue('');
     if (estado.clave !== undefined) {
       this.getPaisBloque(estado.clave);
     }
@@ -959,7 +969,9 @@ export class CertificadoDeOrigenComponent
     this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion;
     this.inicializarFormularioArchivo();
-    this.loadComboUnidadMedida();
+    if(this.idProcedimiento === 110222){
+      this.loadComboUnidadMedida();
+    }
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {

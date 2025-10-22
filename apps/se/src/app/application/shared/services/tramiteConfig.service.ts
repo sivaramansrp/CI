@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { ModeloConfig, ServiceConfig } from '../models/service-config.model';
+import { RequerimientoConfig } from '../models/requerimiento-config.model';
 import { TramiteConfig } from '../models/tramite-config.model';
 
 
@@ -24,7 +25,7 @@ export class TramiteConfigService {
   private configs: Record<number, TramiteConfig> = {
     130118: { habilitarFechas: true, isAntecedentes: false, anexo222se: true },
     120301: { habilitarFechas: false, isAntecedentes: false, anexo222se: false },
-    110101: { habilitarFechas: false, isAntecedentes: false, anexo222se: false , descargaSolicitud: true},
+    110101: { habilitarFechas: false, isAntecedentes: false, anexo222se: false, descargaSolicitud: true },
   };
 
   /**
@@ -58,7 +59,7 @@ export class TramiteConfigService {
     return this.serviceConfig[tramiteId];
   }
 
-  
+
   /**
    * Configuración de modelos por trámite.
    * 
@@ -71,13 +72,32 @@ export class TramiteConfigService {
     110101: { actualizarModelo: true, actualizarVista: true },
   }
 
-   /**
-  * Obtiene la configuración de servicios para un trámite.
-  * 
-  * @param tramiteId Identificador del trámite
-  * @returns La configuración del modelo asociada al trámite.
-  */
+  /**
+ * Obtiene la configuración de servicios para un trámite.
+ * 
+ * @param tramiteId Identificador del trámite
+ * @returns La configuración del modelo asociada al trámite.
+ */
   getModeloConfig(tramiteId: number): ModeloConfig {
     return this.actualizarModeloConfig[tramiteId];
+  }
+
+  /**
+   * Configuración de requerimientos por trámite.
+   * 
+   * La clave corresponde al `tramiteId`.
+   */
+  private requerimientoConfig: Record<number, RequerimientoConfig> = {
+    130118: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: false },
+    110101: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: true },
+  };
+
+  /** * Obtiene la configuración de requerimientos para un trámite.
+   * 
+   * @param tramiteId Identificador del trámite
+   * @returns Configuración de requerimientos del trámite correspondiente
+   */
+  getRequerimientoConfig(tramiteId: number): RequerimientoConfig {
+    return this.requerimientoConfig[tramiteId];
   }
 }

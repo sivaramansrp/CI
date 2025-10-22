@@ -558,4 +558,5 @@ export interface DetallasDatos {
    * Este campo es opcional y debe estar en formato de cadena.
    */
   fechaFinCaducidadProducto?: string;
+
 }

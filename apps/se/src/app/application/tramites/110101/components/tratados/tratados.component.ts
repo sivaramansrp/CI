@@ -3,6 +3,7 @@ import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { EmpaqueResponse, InsumoResponse, InsumosEmpaquesResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -185,6 +186,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Referencia al elemento modal para agregar mercancías.
   */
   @ViewChild('modalAgregar', { static: false }) modalElement!: ElementRef;
+
+  /**
+   * Referencia al elemento modal para agregar insumos y empaques de la mercancía.
+  */
+  @ViewChild('modalInsumoEmpaques', { static: false }) modalElementInsumosEmpaques!: ElementRef;
 
    /** Almacena las filas seleccionadas de la tabla */
     public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
@@ -596,6 +602,20 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   public tratadosEvaluacionTablaDatos: EvaluarTratadosResponse[]= []
 
+  /**
+   * Datos de la tabla de insumos.
+   * Este array contiene objetos de tipo `InsumoResponse` que representan
+   * el resultado de los insumos de la mercancía.
+   */
+  public tratadosInsumosTablaDatos: InsumoResponse[]= []
+
+  /**
+   * Datos de la tabla de empaques.
+   * Este array contiene objetos de tipo `EmpaqueResponse` que representan
+   * el resultado de los empaques de la mercancía.
+   */
+  public tratadosEmpaquesTablaDatos: EmpaqueResponse[]= []
+
 /**
    * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
    * @type {TablaSeleccion}
@@ -628,8 +648,42 @@ export class TratadosComponent implements OnInit, OnDestroy {
     { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
     { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
+  /**
+   * Configuración de la tabla que muestra la información detallada de los insumos
+   * utilizados en la evaluación de mercancías.
+   *
+   * Cada columna corresponde a un campo del objeto {@link InsumoResponse}.
+   */  
+  public tablaInsumos: ConfiguracionColumna<InsumoResponse>[] = [
+    { encabezado: 'Descripción de la Fracción Arancelaria', clave: (item) => item.descripcion_fraccion, orden: 1 },
+    { encabezado: "Capitulo", clave: (item) => item.capitulo, orden: 2 },
+    { encabezado: "Descripción Capitulo", clave: (item) => item.nombre_capitulo, orden: 3 },
+    { encabezado: "Partida", clave: (item) => item.partida, orden: 4 },
+    { encabezado: "Descripción Partida", clave: (item) => item.nombre_partida, orden: 5 },
+    { encabezado: "Subpartida", clave: (item) => item.subpartida, orden: 6 },
+    { encabezado: "Descripción Subpartida", clave: (item) => item.nombre_subpartida, orden: 7 },
+    { encabezado: "Valor en Dólares", clave: (item) => item.valor, orden: 8 },
+    { encabezado: "Originario/No originario", clave: (item) => item.es_originario, orden: 9 },
+    { encabezado: "Pais de Origen", clave: (item) => item.pais_origen, orden: 10 },
+    { encabezado: "Peso", clave: (item) => item.peso, orden: 11 },
+    { encabezado: "Volumen", clave: (item) => item.volumen, orden: 12 }];
 
-    /**
+  /**
+   * Configuración de la tabla que presenta la información de los empaques
+   * empleados en la mercancía evaluada.
+   *
+   * Cada columna corresponde a un campo del objeto {@link EmpaqueResponse}.
+   */
+  public tablaEmpaques: ConfiguracionColumna<EmpaqueResponse>[] = [
+    { encabezado: 'Nombre Técnico', clave: (item) => item.nombre, orden: 1 },
+    { encabezado: "Proveedor", clave: (item) => item.proveedor, orden: 2 },
+    { encabezado: "Fabricante y/o Productor", clave: (item) => item.fabricante_productor, orden: 3 },
+    { encabezado: "Fracción Arancelaria", clave: (item) => item.clave_fraccion_arancelaria, orden: 4 },
+    { encabezado: "Valor en Dólares", clave: (item) => item.valor, orden: 5 },
+    { encabezado: "Originario/No originario", clave: (item) => item.es_originario, orden: 6 }];
+
+  
+  /**
    * Agrega un nuevo tratado a la tabla.
    * 
    * Este método verifica si el formulario es válido, y si lo es, agrega el nuevo tratado
@@ -1098,6 +1152,24 @@ eliminarTratado(): void {
   }
 
   /**
+   * Abre el modal de error.
+   */
+  abrirModalGlobalAccion(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'La acción no es permitida para este tipo de criterio',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  }
+    
+
+  /**
    *              
    * @param borrar
    * @description Elimina un pedimento de la lista si el parámetro `borrar` es `true`. 
@@ -1114,13 +1186,41 @@ eliminarTratado(): void {
    * @returns {void}
    */
   insumosEmpaques(): void {
+    if(this.tratadoSeleccionado.length === 0) {
+      this.abrirModal();
+      return;
+    }
+    const TRATADO = this.tratadoSeleccionado[0];
+    const CRITERIO_ORIGEN = TRATADO.criterio_origen?.trim() ?? '';
+    const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
+    const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
+    if (
+      CRITERIO_ORIGEN === 'OTROS' ||
+      CRITERIO_ORIGEN === 'B' ||
+      CRITERIO_ORIGEN === 'OTRASINST' ||
+      (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+    ) {
+      this.abrirModalGlobalAccion();
+      return;
+    }
     this.tratadosSolicitudService.getInsumosEmpaques(this.consultaState.id_solicitud, this.tratadoSeleccionado[0].id_tratado_acuerdo.toString(),
-      this.tratadoSeleccionado[0].id_bloque ?? 0, this.tratadoSeleccionado[0].cve_pais)
+      this.tratadoSeleccionado[0].id_bloque ?? null, this.tratadoSeleccionado[0].cve_pais)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
-            //**TODO: Implementacion */
+            const INSUMOS = response.datos?.insumos ?? [];
+            const EMPAQUES = response.datos?.empaques ?? [];
+
+            if (INSUMOS.length > 0 || EMPAQUES.length > 0){
+              this.tratadosInsumosTablaDatos = INSUMOS;
+              this.tratadosEmpaquesTablaDatos = EMPAQUES;
+
+              this.modalInstance = new Modal(this.modalElementInsumosEmpaques.nativeElement);
+              this.modalInstance?.show();
+            }else{
+              this.abrirModalGlobalAccion();
+            }
         }else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
@@ -1204,6 +1304,10 @@ eliminarTratado(): void {
    * @returns {void}
    */
   criterioTratadoResumen(): void {
+    if(this.tratadoSeleccionado.length === 0) {
+      this.abrirModal();
+      return;
+    }
     this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_tratado_acuerdo.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1293,6 +1397,10 @@ eliminarTratado(): void {
    * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
    */
   abrirModalDictaminador(): void {
+    if(this.tratadoSeleccionado.length === 0) {
+      this.abrirModal();
+      return;
+    }
     if (this.modalElement) {
       this.modalInstance = new Modal(this.modalElement.nativeElement);
       this.modalInstance?.show();

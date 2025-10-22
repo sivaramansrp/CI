@@ -63,7 +63,9 @@
               </div>
       
               <div class="col-md-4">
-                  <label class="form-label" for="fechaDelEventoDelicitacion">Fecha de evento: </label>
+                  <label class="form-label" for="fechaDelEventoDelicitacion">Fecha de evento <span class="bi bi-question-circle-fill fs-4 m-1"
+              title="Fecha de evento de la licitación publica" 
+              ata-bs-toggle="tooltip"></span>: </label>
                   <input type="text" class="form-control" id="fechaDelEventoDelicitacion" formControlName="fechaDelEventoDelicitacion" size="30">
               </div>
               <div class="col-md-4">
@@ -145,7 +147,7 @@
                 (change)="onCambiarMontoAExpedir()">
             </div>
             <div class="col-md-4 text-end">
-            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()" [disabled]="distribucionSaldoForm.valid || esFormularioSoloLectura">
+            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()" [disabled]=" esFormularioSoloLectura">
             Agregar
             </button>
             </div>
@@ -159,7 +161,7 @@
                   </div>
                 </div>
                 <div class="text-end">
-                  <button type="submit" name="" class="mid btn btn-primary custom-agregar-monto" [disabled]="distribucionSaldoForm.valid || esFormularioSoloLectura">
+                  <button type="submit" name="" class="mid btn btn-primary custom-agregar-monto custom-mid-eliminar" [disabled]=" esFormularioSoloLectura">
                     Eliminar seleccionado
                   </button>
               </div>

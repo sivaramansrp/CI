@@ -3,12 +3,12 @@ import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccio
 import { ENLACE_OPERATIVO_TABLA, PERSONAS_TABLA } from '../../constantes/adace32606.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { EconomicoService } from '../../services/economico.service';
 import { RecibirNotificaciones } from '../../models/adace.model';
 import { TercerosLabelEnum } from '../../constantes/labels32606.enum';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 
 
 /** Componente para la sección de terceros relacionados del trámite 32606. */
@@ -17,7 +17,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
   templateUrl: './terceros-relacinados.component.html',
-  styleUrl: './terceros-relacinados.component.css',
+  styleUrl: './terceros-relacinados.component.scss',
 })
 export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de terceros relacionados. */

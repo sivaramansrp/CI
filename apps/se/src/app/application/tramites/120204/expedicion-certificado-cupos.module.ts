@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent,FirmaElectronicaComponent,TablaDinamicaComponent,TituloComponent,WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent,FirmaElectronicaComponent,SolicitanteComponent,TablaDinamicaComponent,TituloComponent,WizardComponent } from '@ng-mf/data-access-user';
 import { CapturarExpedicionCertificadosComponent } from './components/capturar-expedicion-certificados/capturar-expedicion-certificados.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -6,9 +6,10 @@ import { ExpedicionCertificadoRoutingModule } from './expedicion-certificado-cup
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitanteComponent } from '../../tramites/110101/components/solicitante/solicitante.component';
+
 import { SolicitudExpedicionPageComponent } from './pages/solicitud-expedicion-page/solicitud-expedicion-page.component';
 import { ToastrService } from 'ngx-toastr';
+
 
 
 /**
@@ -69,10 +70,10 @@ import { ToastrService } from 'ngx-toastr';
     ExpedicionCertificadoRoutingModule, // Módulo de enrutamiento para este módulo
     FirmaElectronicaComponent, // Componente para la firma electrónica
     ReactiveFormsModule, // Módulo para formularios reactivos
-    SolicitanteComponent, // Componente del solicitante
     TablaDinamicaComponent,// Componente para el asistente de pasos
     TituloComponent, // Componente para mostrar títulos
     WizardComponent,
+    SolicitanteComponent
   ],
   // Proveedores de servicios que estarán disponibles en este módulo
   providers: [

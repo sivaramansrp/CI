@@ -125,20 +125,20 @@ getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
         ...base,
         notario: {
           ...(typeof base['notario'] === 'object' && base['notario'] !== null ? base['notario'] : {}),
-          rfc: DATOS_COMPLIMENTOS.formaModificaciones.rfc,
-          numeroActa: DATOS_COMPLIMENTOS.formaModificaciones.nombreDeActa,
-          numeroNotario: DATOS_COMPLIMENTOS.formaModificaciones.nombreDeNotaria,
-          entidadFederativa: DATOS_COMPLIMENTOS.formaModificaciones.estado,
-          fechaActa: formatearFechaYyyyMmDd(DATOS_COMPLIMENTOS.formaModificaciones.fechaDeActa)
+          rfc: DATOS_COMPLIMENTOS?.formaModificaciones?.rfc ?? '',
+          numeroActa: DATOS_COMPLIMENTOS?.formaModificaciones?.nombreDeActa ?? '',
+          numeroNotario: DATOS_COMPLIMENTOS?.formaModificaciones?.nombreDeNotaria ?? '',
+          entidadFederativa: DATOS_COMPLIMENTOS?.formaModificaciones?.estado ?? '',
+          fechaActa: formatearFechaYyyyMmDd(DATOS_COMPLIMENTOS?.formaModificaciones?.fechaDeActa ?? ''),
         },
-        modalidad: DATOS_COMPLIMENTOS.modalidad,
-        booleanGenerico: DATOS_COMPLIMENTOS.programaPreOperativo ? true : false,
-        descripcionSistemasMedicion: DATOS_COMPLIMENTOS.datosGeneralis.paginaWWeb,
-        descripcionLugarEmbarque: DATOS_COMPLIMENTOS.datosGeneralis.localizacion,
-        capacidadAlmacenaje: DATOS_COMPLIMENTOS.formaModificaciones.nombreDeNotaria,
-        numeroPermiso: DATOS_COMPLIMENTOS.obligacionesFiscales.opinionPositiva === '1' ? 'SI' : '',
-        fechaOperacion: formatearFechaYyyyMmDd(DATOS_COMPLIMENTOS.obligacionesFiscales.fechaExpedicion),
-        nomOficialAutorizado: DATOS_COMPLIMENTOS.formaModificaciones.nombreDelFederatario,
+        modalidad: DATOS_COMPLIMENTOS?.modalidad ?? '',
+        booleanGenerico: DATOS_COMPLIMENTOS?.programaPreOperativo ? true : false,
+        descripcionSistemasMedicion: DATOS_COMPLIMENTOS?.datosGeneralis?.paginaWWeb ?? '',
+        descripcionLugarEmbarque: DATOS_COMPLIMENTOS?.datosGeneralis?.localizacion ?? '',
+        capacidadAlmacenaje: DATOS_COMPLIMENTOS?.formaModificaciones?.nombreDeNotaria ?? '',
+        numeroPermiso: DATOS_COMPLIMENTOS?.obligacionesFiscales?.opinionPositiva === '1' ? 'SI' : '',
+        fechaOperacion: DATOS_COMPLIMENTOS?.obligacionesFiscales?.fechaExpedicion ?? '',
+        nomOficialAutorizado: DATOS_COMPLIMENTOS?.formaModificaciones?.nombreDelFederatario ?? '',
   
       };
     }

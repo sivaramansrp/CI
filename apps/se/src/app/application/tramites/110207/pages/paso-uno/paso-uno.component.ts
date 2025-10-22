@@ -1,9 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  FormularioDinamico,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
+import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from '../../components/destinatario-de/destinatario-de.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroService } from '../../services/registro.service';
 
 /**
@@ -13,17 +20,25 @@ import { RegistroService } from '../../services/registro.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
-  standalone: false,
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    SolicitanteComponent,
+    CertificadoOrigenComponent,
+    DatosCertificadoComponent,
+    DestinatarioDeComponent,
+  ],
+  standalone: true,
 })
-export class PasoUnoComponent implements OnInit,OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
   entidadFederativa!: { data: string } | null;
- /**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
+  /**
+   * Notificador para destruir observables al destruir el componente.
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Estado de la consulta obtenido desde el store.
@@ -34,7 +49,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Indica si existen datos de respuesta del servidor para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
-  
+
   /**
    * Tipo de persona seleccionada.
    */
@@ -57,34 +72,47 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
 
   /**
    * Referencia al componente DestinatarioComponent dentro de la vista.
-   * 
+   *
    * Esta propiedad permite acceder a los métodos y propiedades públicos del componente
    * hijo DestinatarioComponent desde el componente padre, facilitando la interacción
    * y manipulación directa del mismo.
-   * 
-   * @see DestinatarioComponent
+   *
+   * @see DestinatarioDeComponent
    */
-  @ViewChild(DestinatarioComponent) destinatarioComponent!: DestinatarioComponent;
+  @ViewChild('destinatario', { static: true })
+  destinatarioComponent!: DestinatarioDeComponent;
 
-  // Decorador ViewChild para acceder a la instancia del componente CertificadoDeOrigenComponent
-  @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+  /**
+   * Componente padre que gestiona la lógica del certificado.
+   *
+   * @description
+   * Este componente contiene la vista y el control del formulario principal,
+   * además obtiene una referencia al componente hijo `CertificadoOrigenComponent`
+   * mediante `@ViewChild` para invocar métodos y leer propiedades del hijo.
+   */
+  @ViewChild('certificadoOrigen', { static: true })
+  certificadoDeOrigenComponent!: CertificadoOrigenComponent;
 
   /**
    * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
-   * 
+   *
    * Esta propiedad permite acceder a los métodos y propiedades públicas del componente
    * hijo `DatosCertificadoComponent` desde el componente padre, facilitando la interacción
    * y manipulación de sus datos o comportamientos.
-   * 
+   *
    * @see DatosCertificadoComponent
    */
-  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
-  
+  @ViewChild('datosCertificado', { static: true })
+  datosCertificadoComponent!: DatosCertificadoComponent;
+
   /**
    * Constructor del componente.
    * @param registro Servicio para obtener datos de catálogos.
    */
-  constructor(private registro: RegistroService,private consultaQuery: ConsultaioQuery) {
+  constructor(
+    private registro: RegistroService,
+    private consultaQuery: ConsultaioQuery
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -93,33 +121,37 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Obtiene el catálogo de entidades federativas y lo procesa.
    */
   ngOnInit(): void {
- this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
     if (this.consultaState.update) {
       this.guardarDatosFormularios();
     } else {
       this.esDatosRespuesta = true;
     }
 
-    this.registro.getCatalogoById(21).pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      this.entidadFederativa = resp;
-      const DATA = JSON.parse(this.entidadFederativa.data);
-      this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
-    });
+    this.registro
+      .getCatalogoById(21)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.entidadFederativa = resp;
+        const DATA = JSON.parse(this.entidadFederativa.data);
+        this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
+      });
   }
-/**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormularios(): void {
     this.registro
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyed$)
-      )
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
@@ -127,7 +159,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         }
       });
   }
-   /**
+  /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
@@ -135,12 +167,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.indice = i;
   }
 
-   /** Método público para validar todos los formularios del paso uno */
+  /** Método público para validar todos los formularios del paso uno */
   public validateAll(): boolean {
     let isValid = true;
-    if (this.certificadoDeOrigenComponent?.formCertificado) {
-      if (this.certificadoDeOrigenComponent.formCertificado.invalid) {
-        this.certificadoDeOrigenComponent.formCertificado.markAllAsTouched();
+    if (this.certificadoDeOrigenComponent) {
+      if (!this.certificadoDeOrigenComponent.validateAll()) {
         isValid = false;
       }
     } else {
@@ -148,6 +179,13 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     }
     if (this.datosCertificadoComponent) {
       if (!this.datosCertificadoComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validateAll()) {
         isValid = false;
       }
     } else {

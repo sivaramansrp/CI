@@ -3,14 +3,15 @@ import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shar
 import { CriterioConfiguracionRequest } from "../models/request/tratado-configuracion-request.model";
 import { CriterioConfiguracionResponse } from "../models/response/tratado-configuracion-response.model";
 import { CriterioTratadoResponse } from "../models/response/tratado-criterio-response.model";
-import { DatosInsumosEmpaques } from "../models/response/solicitud-insumos-empaques-response.model";
 import { DatosSolicitudCriterio } from "../models/response/tratado-criterio-resumen-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { InsumosEmpaquesResponse } from "../models/response/insumos-empaques-response.model";
 import { Observable } from "rxjs";
 import { TratadoAcuerdoCriterioRequest } from "../models/request/tratado-criterio-request.model";
+
 
 
 @Injectable({
@@ -66,13 +67,22 @@ export class TratadosSolicitudService {
    * @param clavePais - Clave del país al que pertenece la solicitud o donde aplica el tratado.
    * @return Observable con la respuesta de validación del servidor
    */
-  getInsumosEmpaques(idSolicitud: string, idTratadoAcuerdo: string, idBloque: number, clavePais: string): Observable<BaseResponse<DatosInsumosEmpaques>> {
+  getInsumosEmpaques(idSolicitud: string, idTratadoAcuerdo?: string, idBloque?: number | null, clavePais?: string): Observable<BaseResponse<InsumosEmpaquesResponse>> {
     const ENDPOINT = `${this.host}` + API_GET_INSUMOS_EMPAQUES(idSolicitud);
+    let PARAMS = new HttpParams();
 
-    const PARAMS = new HttpParams().set('idTratadoAcuerdo', String(idTratadoAcuerdo))
-      .set('idBloque', String(idBloque))
-      .set('clavePais', String(clavePais));
-    return this.http.get<BaseResponse<DatosInsumosEmpaques>>(ENDPOINT, { params: PARAMS });
+      if (idTratadoAcuerdo !== null && idTratadoAcuerdo !== '') {
+        PARAMS = PARAMS.set('idTratadoAcuerdo', String(idTratadoAcuerdo));
+      }
+
+      if (idBloque !== null) { 
+        PARAMS = PARAMS.set('idBloque', String(idBloque));
+      }
+
+      if (clavePais !== null && clavePais !== '') {
+        PARAMS = PARAMS.set('clavePais', String(clavePais));
+      }
+    return this.http.get<BaseResponse<InsumosEmpaquesResponse>>(ENDPOINT, { params: PARAMS });
   } 
 
   /**
