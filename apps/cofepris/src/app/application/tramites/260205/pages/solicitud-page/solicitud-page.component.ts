@@ -1,14 +1,16 @@
+import { AccionBoton, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter } from '@angular/core';
 import { PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
-import { AccionBoton } from '@ng-mf/data-access-user';
+import { Tramite260205State, Tramite260205Store } from '../../estados/stores/tramite260205.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -29,6 +31,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoTresComponent,
     BtnContinuarComponent,
     PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
@@ -74,6 +77,90 @@ export class SolicitudPageComponent {
    * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
    */
   idSolicitudState: number | null = 0;
+
+   /**
+   * Estado de la solicitud actual.
+   *
+   * @type {Tramite260205State}
+   * @memberof SolicitudPageComponent
+   */
+  idTipoTRamite: string = '260205';
+
+  /**
+   * URL de la página actual.
+   */
+    public solicitudState!: Tramite260205State;
+
+     /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+    /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * @ignore
+   * Este método es ignorado por Compodoc.
+   */
+  cargaEnProgreso: boolean = true;
+
+
+  constructor(
+    private tramiteStore: Tramite260205Store,
+    private tramiteQuery: Tramite260205Query
+  ) {
+    this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+    });
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Maneja el estado de progreso de la carga de documentos.
+   * Actualiza la variable `cargaEnProgreso` según el estado recibido.
+   * @param carga - Indica si la carga está en progreso (`true`) o no (`false`).
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
 
   /**
    * @method seleccionaTab
