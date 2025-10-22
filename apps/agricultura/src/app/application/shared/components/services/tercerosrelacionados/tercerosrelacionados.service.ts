@@ -6,16 +6,23 @@
  * @module TercerosrelacionadosService
  */
 
-import { 
-  API_GET_CATALOGO_CONSULTA_PAISES
- } from '../../../../core/server/api-router';
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { ENVIRONMENT } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  ENVIRONMENT,
+  RespuestaCatalogos,
+} from '@libs/shared/data-access-user/src';
+import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { URL } from '../../../../tramites/220102/constantes/fitosanitario.enum';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { HttpClient } from '@angular/common/http';
+import { URL } from '../../../../tramites/220102/constantes/fitosanitario.enum';
+
+import {
+  API_GET_CATALOGO_COLONIAS,
+  API_GET_CATALOGO_CONSULTA_PAISES,
+  API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL,
+  API_GET_CATALOGO_ENTIDAD_FEDERATIVA_MUNICIPIOS,
+} from '../../../../core/server/api-router';
 
 /**
  * Servicio para la gestión de catálogos y datos relacionados con terceros.
@@ -26,24 +33,21 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shar
  * @providedIn root
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TercerosrelacionadosService {
-
   /**
    * URL base para las peticiones a los catálogos y datos.
    * @type {string}
    */
   url: string = URL;
-  host: string;
+  host: string = `${ENVIRONMENT.API_HOST}/api/`;
 
   /**
-   * Constructor del servicio.
-   * @param http Servicio HttpClient para realizar peticiones HTTP.
+   * http inicializa el HttpClient para realizar solicitudes HTTP
+   * @type HttpClient Instancia de HttpClient para realizar solicitudes HTTP.
    */
-  constructor(public readonly http: HttpClient) { 
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
-  }
+  private http: HttpClient = inject(HttpClient);
 
   /**
    * Obtiene la lista de catálogos a partir de un archivo.
@@ -52,13 +56,76 @@ export class TercerosrelacionadosService {
    */
   obtenerSelectorList(fileName: string): Observable<Catalogo[]> {
     const BASEURL = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(BASEURL).pipe(
-      map(response => response.data)
-    );
+    return this.http
+      .get<RespuestaCatalogos>(BASEURL)
+      .pipe(map((response) => response.data));
   }
 
-  obtenerPaisesList(tramite: number): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${API_GET_CATALOGO_CONSULTA_PAISES(tramite.toString())}`;
+  /**
+   * Obtiene el catálogo de países para consulta, según el trámite especificado.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere el catálogo de países.
+   * @returns Un observable que emite la respuesta base con el arreglo de países del catálogo.
+   */
+  obtieneCatalogoConsultaPaises(
+    tramite: number
+  ): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_CONSULTA_PAISES(
+      tramite.toString()
+    )}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo general de entidades federativas para un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere el catálogo de entidades federativas.
+   * @returns Un observable que emite la respuesta base con el arreglo de entidades federativas (`Catalogo[]`).
+   */
+  obtieneCatalogoEntidadesFederativasGeneral(
+    tramite: number
+  ): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${
+      this.host
+    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de entidades federativas para un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se solicita el catálogo.
+   * @param cveEntidad - La clave de la entidad federativa a consultar.
+   * @returns Un observable que emite la respuesta base con el arreglo de catálogos correspondientes.
+   */
+  obtieneCatalogoEntidadFederativaMunicipios(
+    tramite: number,
+    cveEntidad: string
+  ): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${
+      this.host
+    }${API_GET_CATALOGO_ENTIDAD_FEDERATIVA_MUNICIPIOS(
+      tramite.toString(),
+      cveEntidad
+    )}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de colonias correspondiente a un trámite y clave de delegación específicos.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se solicita el catálogo de colonias.
+   * @param cveDelegNum - La clave de la delegación en formato de cadena.
+   * @returns Un observable que emite la respuesta base con el arreglo de objetos de tipo `Catalogo`.
+   */
+  obtieneCatalogoColonias(
+    tramite: number,
+    cveDelegNum: string
+  ): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_COLONIAS(
+      tramite.toString(),
+      cveDelegNum
+    )}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
