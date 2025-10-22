@@ -317,7 +317,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       ).subscribe(
         (data): void => {
-          this.getNicoFraccionArancelariaLista(event)
+          this.getNicoFraccionArancelariaLista(event);
+          this.getUnidadMedida(event);
           this.mercanciaForm.patchValue({
             descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción'
       });
@@ -338,8 +339,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
 
           this.catalogosDatos.nicoList = data.datos ?? [];
         }
-      );
-
+    );
   }
 
   /**
@@ -358,6 +358,25 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       });
         }
     );
+  }
+
+  /**
+  * @description Obtiene la descripcion de unidad de medida.
+  * @method getUnidadMedida
+  * @returns {void}
+  */
+  getUnidadMedida(event: Catalogo): void {
+    this.registroSolicitudService.obtieneUnidadMedida(220202, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+
+          this.mercanciaForm.patchValue({
+            umt: data.datos?.descripcion ?? 'Sin descripción'
+          });
+        }
+      );
   }
 
   /**
@@ -482,3 +501,4 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
+

@@ -102,6 +102,9 @@ export class AgregarMercanciaComponent implements OnDestroy{
     //ponemos la lista nico vacia por que s¿depende de lo que seleccione fracciona arancelaria
     // vamos por el catalogo de Fraccion arancelaria
     this.getFraccionArancelariaLista();
+    this.getCatalogoUnidadesMedidaComerciales();
+    this.getCatalogoUsosMercancia();
+    this.getCatalogoTiposProducto();
 
     this.fitosanitarioQuery.seleccionarState$
       .pipe(
@@ -193,6 +196,57 @@ export class AgregarMercanciaComponent implements OnDestroy{
       ).subscribe(
         (data): void => {
           this.catalogosDatos.fraccionArancelariaList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+     * @description Obtiene la lista de unidades de medida comerciales.
+     * @method getCatalogoUnidadesMedidaComerciales
+     * @returns {void}
+     */
+  getCatalogoUnidadesMedidaComerciales(): void {
+    this.catalogosService.obtieneCatalogoUnidadesMedidaComerciales(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.umcList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+   * @description Obtiene la lista de catalogo de usos de mercancia.
+   * @method getCatalogoUsosMercancia
+   * @returns {void}
+   */
+  getCatalogoUsosMercancia(): void {
+    this.catalogosService.obtieneCatalogoUsosMercancia(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.usoList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+ * @description Obtiene la lista de catalogo tipos de producto.
+ * @method getCatalogoTiposProducto
+ * @returns {void}
+ */
+  getCatalogoTiposProducto(): void {
+    this.catalogosService.obtieneCatalogoTiposProducto(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.tipoDeProductoList = data.datos ?? [];
         }
       );
 
