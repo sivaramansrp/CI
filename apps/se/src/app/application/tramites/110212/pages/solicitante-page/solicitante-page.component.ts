@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/validacion-posteriori.model';
-import { DatosPasos, JSONResponse } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT } from '../../constants/validacion-posteriori.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/validacion-posteriori.enum';
@@ -202,9 +202,11 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
 * La llamada al servicio actualmente está comentada.
 */
-  guardar(data: Tramite110212State): void {
-    const MERCANCIA_SELECCIONADAS = this.validacionPosterioriService.buildMercanciaSeleccionadas(data.mercanciaSeleccionadasTablaDatos);
-    const PAYLOAD = {
+ guardar(data: Tramite110212State): Promise<JSONResponse> {
+ const CERTIFICADO = this.validacionPosterioriService.buildCertificado(data);
+  const DATOS_CERTIFICADO = this.validacionPosterioriService.buildDatosCertificado(data);   
+  const DESTINATARIO = this.validacionPosterioriService.buildDestinatario(data);
+   const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       idSolicitud: this.solicitudState.idSolicitud || 0,
       solicitante: {
@@ -226,50 +228,27 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
           telefono: "123456"
         }
       },
-      certificado: {
-        tratado_acuerdo: data.formCertificado['entidadFederativa'],
-        pais_bloque: data.formCertificado['bloque'],
-        fraccion_arancelaria: data.formCertificado['fraccionArancelaria'],
-        nombre_comercial: data.formCertificado['nombreComercial'],
-        fecha_inicio: data.formCertificado['fechaInicio'],
-        fecha_fin: data.formCertificado['fechaFin'],
-        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
-      },
-      destinatario: {
-        nombre: data['nombre'],
-        primer_apellido: data.formDatosDelDestinatario['apellidoPrimer'],
-        segundo_apellido: data.formDatosDelDestinatario['apellidoSegundo'],
-        numero_registro_fiscal: data.formDatosDelDestinatario['numeroFiscal'],
-        razon_social: data.formDatosDelDestinatario['razonSocial'],
-        domicilio: {
-          ciudad_poblacion_estado_provincia: data.formDestinatario['ciudad'],
-          calle: data.formDestinatario['calle'],
-          numero_letra: data.formDestinatario['numeroLetra'],
-          lada: data.formDestinatario['lada'],
-          telefono: data.formDestinatario['telefono'],
-          fax: data.formDestinatario['fax'],
-          correo_electronico: data.formDestinatario['correoElectronico'],
-        },
-      },
-
-      datos_del_certificado: {
-        observaciones: data.formDatosCertificado['observacionesDates'],
-        idioma: data.formDatosCertificado['idiomaDates'],
-        representacion_federal: {
-          entidad_federativa: data.formDatosCertificado['EntidadFederativaDates'],
-          representacion_federal: data.formDatosCertificado['representacionFederalDates']
-        }
-      }
+      certificado: CERTIFICADO,
+      destinatario: DESTINATARIO,
+      datos_del_certificado: DATOS_CERTIFICADO
     };
 
-    this.validacionPosterioriService.guardarDatosPost(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-          this.store.setIdSolicitud(response.datos.id_solicitud || 0);
-          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-        }
-      },
-    });
+     return new Promise((resolve, reject) => {
+           this.validacionPosterioriService.guardarDatosPost(PAYLOAD).subscribe(response => {
+             const API_RESPONSE = doDeepCopy(response);
+             if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+               if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                 this.store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+                 this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+               } else {
+                 this.store.setIdSolicitud(0);
+               }
+             }
+             resolve(response);
+           }, error => {
+             reject(error);
+           });
+           });
   }
   /**
    * Navega a través de los pasos del asistente según la acción del botón.
@@ -287,7 +266,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
+ /**
    * @method validarTodosFormulariosPasoUno
    * @description
    * Valida todos los formularios del componente `PasoUnoComponent`.
@@ -301,7 +280,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     if (!this.pasoUnoComponent) {
       return true;
     }
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarTodosLosFormularios();
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
     if (!ISFORM_VALID_TOUCHED) {
       return false;
     }

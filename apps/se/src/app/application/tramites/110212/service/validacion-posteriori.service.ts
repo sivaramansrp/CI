@@ -1,7 +1,7 @@
 import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validacion-posteriori.model';
+import { HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
 import { Tramite110212State, Tramite110212Store } from '../../../estados/tramites/tramite110212.store';
 import { HttpClient } from '@angular/common/http';
-import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PROC_110212 } from '../servers/api-route';
@@ -24,7 +24,7 @@ export class ValidacionPosterioriService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient,private httpService: HttpCoreService, private store: Tramite110212Store,private query:Tramite110212Query) { }
+  constructor(private http: HttpClient, private httpService: HttpCoreService, private store: Tramite110212Store, private query: Tramite110212Query) { }
 
 
   /**
@@ -138,39 +138,34 @@ export class ValidacionPosterioriService {
  * Obtiene todos los datos del estado almacenado en el store.
  * @returns {Observable<Tramite110212State>} Observable con todos los datos del estado.
  */
-getAllState(): Observable<Tramite110212State> {
-  return this.query.selectSolicitud$;
-}
+  getAllState(): Observable<Tramite110212State> {
+    return this.query.selectSolicitud$;
+  }
 
-/**
- * 
- * @param body - Objeto que contiene los datos para buscar mercancías.
- * @returns 
- */
-buscarMercanciasCert(body: any): Observable<any> {
-  // return this.httpService.post<any>(
-  //   'http://localhost:8080/api/sat-t110212/solicitud/buscar-mercancias',
-  //   { body: body }
-  // );
-   return this.httpService.post<any>(PROC_110212.BUSCAR, { body: body });
-}
+  /**
+   * 
+   * @param body - Objeto que contiene los datos para buscar mercancías.
+   * @returns 
+   */
+  buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110212.BUSCAR, { body: body });
+  }
 
-/**
- * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
- * 
- * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
- * @returns Observable con la respuesta de la solicitud POST.
- */
-guardarDatosPost(body: any): Observable<any> {
-  return this.httpService.post<any>(PROC_110212.GUARDAR, { body: body });
-  // return this.httpService.post<any>('http://localhost:8080/api/sat-t110212/solicitud/guardar', { body: body });
-}
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110212.GUARDAR, { body: body });
+  }
 
-/**
-* Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
-* @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
-* @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
-* */
+  /**
+  * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+  * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+  * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+  * */
   buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
     const RESULT: unknown[] = [];
 
@@ -214,4 +209,55 @@ guardarDatosPost(body: any): Observable<any> {
 
     return RESULT;
   }
+
+  /** Construye el objeto datos del certificado a partir del estado del trámite TramiteState. */
+  buildDatosCertificado(data: Tramite110212State): unknown {
+    return {
+      "observaciones": data.formDatosCertificado['observacionesDates'] ?? '',
+      "idioma": data.formDatosCertificado['idiomaDates'] ?? 0,
+      "representacion_federal": {
+        "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
+        "representacion_federal": data.formDatosCertificado['representacionFederalDates'] ?? 0
+      }
+    }
+  }
+  /** Construye el objeto certificado a partir del estado del trámite TramiteState. */
+  buildCertificado(item: Tramite110212State): unknown {
+    return {
+      tratado_acuerdo: item.formCertificado['entidadFederativa'] || '',
+      pais_bloque: item.formCertificado['bloque'] || '',
+      fraccion_arancelaria: item.formCertificado['fraccionArancelaria'] || '',
+      nombre_comercial: item.formCertificado['nombreComercial'] || '',
+      fecha_inicio: item.formCertificado['fechaInicio'] || '',
+      fecha_fin: item.formCertificado['fechaFin'] || '',
+      registro_producto: item.formCertificado['registroProducto'] || '',
+      realizo_tercer_operador: {
+        tercer_operador: item.formCertificado['si'] || false,
+        nombre: item.formCertificado['nombres'] || '',
+        primer_apellido: item.formCertificado['primerApellido'] || '',
+        segundo_apellido: item.formCertificado['segundoApellido'] || '',
+        numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'] || '',
+        razon_social: item.formCertificado['razonSocial'] || '',
+      },
+      mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaDatos),
+    };
+  }
+  buildDestinatario(data: Tramite110212State): unknown {
+    return {
+        nombre: data.formDatosDelDestinatario['nombres'],
+        primer_apellido: data.formDatosDelDestinatario['primerApellido'],
+        segundo_apellido: data.formDatosDelDestinatario['segundoApellido'],
+        numero_registro_fiscal: data.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+        razon_social: data.formDatosDelDestinatario['razonSocial'],
+        domicilio: {
+          ciudad_poblacion_estado_provincia: data.formDestinatario['ciudad'],
+          calle: data.formDestinatario['calle'],
+          numero_letra: data.formDestinatario['numeroLetra'],
+          lada: data.formDestinatario['lada'],
+          telefono: data.formDestinatario['telefono'],
+          fax: data.formDestinatario['fax'],
+          correo_electronico: data.formDestinatario['correoElectronico'],
+        },
+      }
+    }
 }
