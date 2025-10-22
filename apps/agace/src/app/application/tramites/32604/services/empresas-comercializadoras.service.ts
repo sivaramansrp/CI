@@ -130,7 +130,7 @@ export class EmpresasComercializadorasService {
     return this.http.get<Instalaciones[]>(`assets/json/32604/datosTabla.json`);
   }
 
-    /**
+  /**
    * Obtener una lista de Contenedores
    * 
    * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
@@ -138,7 +138,14 @@ export class EmpresasComercializadorasService {
   getContenedores(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipoLista.json`);
   }
-
+  /**
+   * Obtener una lista de obtenerTipoInstalacion
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con respuesta de contenedor para obtenerTipoInstalacion.
+   */
+  obtenerTipoInstalacion(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipoInstalacion.json`);
+  }
   /**
    * Obtener una lista de Contenedores
    * 

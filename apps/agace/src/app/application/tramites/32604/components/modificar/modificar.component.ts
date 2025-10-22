@@ -123,11 +123,13 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
     this.form = this.fb.group({
       instalacionPrincipal: ['No', [Validators.required]],
       tipoInstalacion: ['', [Validators.required]],
-      entidadFederativa: ['', [Validators.required]],
-      municipioDelegacion: ['', [Validators.required]],
-      registroSESAT: ['', [Validators.required]],
-      direccion: ['', [Validators.required]],
-      codigoPostal: ['', [Validators.required]]
+      entidadFederativa: [''],
+      municipioDelegacion: [''],
+      registroSESAT: [''],
+      direccion: [''],
+      codigoPostal: [''],
+      procesoProductivo: ['', [Validators.required]],
+      acreditaInmueble: ['', [Validators.required]]
     });
   }
 
@@ -138,10 +140,11 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
     if (this.domicilioAModificar && this.form) {
       // Buscar el ID del tipo de instalación en el catálogo
       let tipoInstalacionId = '';
-      if (this.domicilioAModificar.tipoInstalacion && this.contenedores.catalogos.length > 0) {
+      if (this.domicilioAModificar.cveTipoInstalacion && this.contenedores.catalogos.length > 0) {
+        tipoInstalacionId = this.domicilioAModificar.cveTipoInstalacion.toString();
+      } else if (this.domicilioAModificar.tipoInstalacion && this.contenedores.catalogos.length > 0) {
         const TIPO_ENCONTRADO = this.contenedores.catalogos.find(
-          item => item.descripcion === this.domicilioAModificar?.tipoInstalacion || 
-                  item.id.toString() === this.domicilioAModificar?.cveTipoInstalacion
+          item => item.descripcion === this.domicilioAModificar?.tipoInstalacion
         );
         tipoInstalacionId = TIPO_ENCONTRADO ? TIPO_ENCONTRADO.id.toString() : '';
       }
@@ -153,7 +156,13 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
         municipioDelegacion: this.domicilioAModificar.municipioDelegacion || '',
         registroSESAT: this.domicilioAModificar.registroSESAT || '',
         direccion: this.domicilioAModificar.direccion || '',
-        codigoPostal: this.domicilioAModificar.codigoPostal || ''
+        codigoPostal: this.domicilioAModificar.codigoPostal || '',
+        procesoProductivo: this.domicilioAModificar.procesoProductivo || '',
+        acreditaInmueble: this.domicilioAModificar.acreditaInmueble || ''
+      });
+      // Deshabilitar campos después de parchear
+      ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+        this.form.get(field)?.disable({ emitEvent: false });
       });
     }
   }
@@ -166,7 +175,23 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
   actualizar290(valor: string | number): void {
     this.solicitud32604Store.actualizar290(valor);
   }
+  /**
+   * Actualiza el campo 'procesoProductivo' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo procesoProductivo.
+   */
+  actualizarProcesoProductivo(valor: string | number): void {
+    this.solicitud32604Store.actualizarProcesoProductivo(valor);
+  }
 
+  /**
+   * Actualiza el campo 'goceDelInmueble' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo goceDelInmueble.
+   */
+  actualizarGoceDelInmueble(valor: string | number): void {
+    this.solicitud32604Store.actualizarGoceDelInmueble(valor);
+  }
   /**
    * Método para obtener la opción de radio (sí/no) desde el servicio.
    * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
@@ -187,7 +212,7 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
  */
   cargarCatalogos(): void {
     this.empresasComercializadorasService
-      .getContenedores()
+      .obtenerTipoInstalacion()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.contenedores.catalogos = data.data;
@@ -200,8 +225,17 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
    * Guarda las modificaciones del domicilio
    */
   guardarModificaciones(): void {
+    // Habilite los campos deshabilitados antes de enviarlos para garantizar que sus valores estén incluidos
+    ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+      this.form.get(field)?.enable({ emitEvent: false });
+    });
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      // Deshabilitar campos nuevamente después de la validación
+      ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+        this.form.get(field)?.disable({ emitEvent: false });
+      });
       return;
     }
 
@@ -214,12 +248,19 @@ export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
       ...this.domicilioAModificar,
       ...this.form.value,
       cveTipoInstalacion: this.form.value.tipoInstalacion,
-      tipoInstalacion: TIPO_INSTALACION_SELECCIONADO ? TIPO_INSTALACION_SELECCIONADO.descripcion : this.form.value.tipoInstalacion
+      tipoInstalacion: TIPO_INSTALACION_SELECCIONADO ? TIPO_INSTALACION_SELECCIONADO.descripcion : this.form.value.tipoInstalacion,
+      procesoProductivo: this.form.value.procesoProductivo,
+      acreditaInmueble: this.form.value.acreditaInmueble
     } as Domicilios;
 
     // Emitir el domicilio modificado al componente padre
     this.domicilioModificado.emit(DOMICILIO_MODIFICADO);
-    
+
+    // Deshabilitar campos nuevamente después de enviar
+    ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+      this.form.get(field)?.disable({ emitEvent: false });
+    });
+
     // Notificar al componente padre para cerrar el modal
     this.cerrarModalEvento.emit();
   }

@@ -984,7 +984,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
         
         // Mostrar mensaje de confirmación
-        this.abrirModal('Domicilio modificado exitosamente');
+        this.abrirModal('Datos guardados correctamente');
       }
     }
   }
