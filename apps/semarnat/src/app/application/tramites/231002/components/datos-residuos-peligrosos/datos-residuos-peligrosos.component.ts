@@ -251,6 +251,11 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   mostrarOtroTipoContenedor: boolean = false;
 
   /**
+   * Materia prima seleccionada en el combo de materias primas
+   */
+  materiaResiduoSeleccionada: MateriaResiduo | null = null;
+
+  /**
    * Constructor del componente.
    *
    * @param fb - Servicio para construir formularios reactivos.
@@ -426,7 +431,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
 
     // Verificar si ya existe una materia prima con el mismo número de bitácora en la tabla
     const MATERIA_EXISTENTE = this.materiasPrimasTabla.find(
-      (materia) => materia.no_bitacora === NUMERO
+      (materia) => materia.numeroBitacora === NUMERO
     );
 
     if (MATERIA_EXISTENTE) {
@@ -454,7 +459,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       descripcion_umc: this.formularioDatos.get('unidadDeMedida')?.value,
       cve_fraccion_arancelaria:
         this.formularioDatos.get('fraccionArancelaria')?.value || '',
-      no_bitacora: this.formularioDatos.get('numero')?.value,
+      numeroBitacora: this.formularioDatos.get('numero')?.value,
+      unidadMedidaComercial: this.formularioDatos.get('unidadDeMedida')?.value,
+      descFraccion: this.formularioDatos.get('fraccionArancelaria')?.value,
     };
 
     this.materiasPrimas.push(NUEVA_MATERIA);
@@ -698,7 +705,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     const RESIDUO_DATA: ResiduoPeligroso = {
       ...this.getDatisResiduos(),
       ...this.getCaracteristicasResiduos(),
-      origenResiduoGeneracion: 'Producción Industrial',
+      origenResiduoGeneracion:
+        this.formularioDatos.get('origenResiduo')?.value || '',
       nombreResiduo:
         this.formularioResiduo.get('residuoPeligroso')?.value || '',
       acotacion: this.formularioResiduo.get('acotacion')?.value || '',
@@ -1172,7 +1180,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     );
     this.mostrarComboOtroTipo =
       CLAVE_SELECCIONADA === 'CVERES.000' ||
-      (RESIDUO?.descripcion.toLowerCase().includes('otro') ?? false);
+      (RESIDUO?.descripcion.toLowerCase().includes('otroTipo') ?? false);
+
     HABILITAR_CONTROL(
       this.formularioResiduo.get('otroTipo'),
       this.mostrarComboOtroTipo

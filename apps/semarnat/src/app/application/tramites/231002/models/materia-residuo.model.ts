@@ -3,27 +3,15 @@
  */
 
 export interface MateriaResiduo {
-  /** ID único de la materia prima o residuo */
   id_mercancia: number;
-  /** ID de la solicitud asociada (opcional) */
-  id_solicitud?: number;
-  /** Descripción o nombre de la materia prima o residuo */
   descripcion_mercancia: string;
-  /** Unidad de medida comercial (opcional) */
-  umc?: string;
-  /** Descripción de la unidad de medida comercial */
-  descripcion_umc: string;
-  /** Cantidad en letra */
-  cantidad_letra: string;
-  /** Número de partida de la mercancía (opcional) */
-  num_partida_mercancia?: string;
-  /** Clave de la fracción arancelaria */
-  cve_fraccion_arancelaria: string;
-  /** Cantidad en número */
   cantidad: string;
-
-  /** Número de bitácora */
-  no_bitacora: string;
+  cantidad_letra: string;
+  descripcion_umc: string;
+  cve_fraccion_arancelaria: string;
+  numeroBitacora: string;
+  unidadMedidaComercial: string;
+  descFraccion: string;
 }
 
 /** Configuración de columnas para la tabla dinámica */

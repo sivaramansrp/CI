@@ -14,7 +14,11 @@ import {
 } from '../../../231001/enum/enum-tramite';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
+import {
+  PAGO_DE_DERECHOS,
+  PASOS,
+  TRAMITE_ID,
+} from '../../constantes/aviso-retorno.enum';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
@@ -319,8 +323,8 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @returns Observable<ResultadoSolicitud> con el resultado del intento de guardado.
    */
   ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
-    const PAYLOAD = SolicitudPageComponent.generarRequestGuardarSolicitud();
-
+    const PAYLOAD = this.generarRequestGuardarSolicitud();
+    console.log(PAYLOAD);
     return this.guardarService.postSolicitud(PAYLOAD).pipe(
       map((response) => {
         if (
@@ -373,18 +377,34 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  static generarRequestGuardarSolicitud(): GuardarSolicitud231002Request {
+  /**
+   *
+   * @returns
+   */
+  generarRequestGuardarSolicitud(): GuardarSolicitud231002Request {
+    const DATOS = this.estadoSolicitud;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {
+      solicitudForm,
+      empresaReciclaje,
+      empresaTransportista,
+      lugarReciclaje,
+      precaucionesManejo,
+      residuos,
+    } = DATOS;
+
     return {
-      id_solicitud: 202786224,
-      numero_programa_immex: 121578,
-      discriminator_value: 231002,
+      id_solicitud: DATOS.idSolicitud,
+      numero_programa_immex: Number(solicitudForm.numeroProgramaImmex),
+      discriminator_value: Number(TRAMITE_ID),
       cve_rol_capturista: 'PersonaMoral',
       cve_usuario_capturista: 'AAL0409235E6',
       boolean_generico: true, // boolean
-      numero_registro_ambiental: 12121285888,
-      descripcion_clob_generica2: 260881744, //Domicilio IMMEX
-      descripcion_clob_generica1: 'Cuidarse de los baches', // precauciones de manejo que se debe dar al residuo peligroso
-      empresa_controladora: 1, // Requiere empresa retorno
+      numero_registro_ambiental: solicitudForm.numeroRegistroAmbiental,
+      descripcion_clob_generica2: Number(solicitudForm.domicilio), //Domicilio IMMEX
+      descripcion_clob_generica1: precaucionesManejo.precaucionesManejo, // precauciones de manejo que se debe dar al residuo peligroso
+      empresa_controladora:
+        empresaReciclaje.requiereEmpresa.toLowerCase() === 'si', // Requiere empresa retorno
       solicitante: {
         rfc: 'AAL0409235E6',
         nombre: 'IGNACIO EDUARDO',
@@ -393,77 +413,62 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
       },
       empresa_reciclaje: {
         id_empresa: null,
-        razon_social: 'Empresa del sur 3',
-        nombre: 'Juan Escutia 3',
-        telefono: '5566565658',
-        correo_electronico: 'juan.escutia3@mail.com',
+        razon_social: empresaReciclaje.representanteLegal,
+        nombre: empresaReciclaje.nombreEmpresa,
+        telefono: empresaReciclaje.telefono,
+        correo_electronico: empresaReciclaje.correoElectronico,
       },
       destinatario: {
-        razon_social: 'CODS821111RS1',
-        pais: 'GTM',
-        domicilio: 'Guatepeor #22',
-        codigo_postal: '01009',
+        razon_social: lugarReciclaje.razonSocial,
+        pais: lugarReciclaje.pais,
+        domicilio: lugarReciclaje.destinoDomicilio,
+        codigo_postal: lugarReciclaje.codigoPostal,
       },
       transporte: {
-        razon_social: 'Trasportes Patito 2',
-        autorizacion_semarnat_transporte: '41231231212',
+        razon_social: empresaTransportista.nombreEmpresaTransportistaResiduos,
+        autorizacion_semarnat_transporte:
+          empresaTransportista.numeroAutorizacionSemarnat,
       },
       aduana_salida: {
-        clave: '070',
+        clave: precaucionesManejo.clave,
       },
-      residuos: [
-        {
-          boolean_generico_1: true, //  Residuo (materia prima residual)
-          desc_boolean_generico_1: 'Residuo (materia prima residual)',
-          fraccion_arancelaria: '26190002',
-          cve_nico: '99',
-          desc_nico: '99-Los demás.',
-          unidad_medida: '14',
-          unidad_medida_name: 'Tonelada',
-          nombre_quimico: 'nombreQuimico',
-          nombre_residuo: 'Chocolatin',
-          acotacion:
-            'Únicamente: residuos peligrosos de los señalados en la Norma Oficial Mexicana NOM-052-SEMARNAT-2005, la Decisión C(2002) 107 (Final) de la OCDE o el Convenio de Basilea sobre el Control de los Movimientos Transfronterizos de Desechos Peligrosos y su Eliminación.',
-          nombre_residuo_peligroso: 'residuo peligroso generado',
-          cantidad: '12',
-          cantidad_letra: 'DOCE',
-          cve_clasificacion: 'CVERES.E63',
-          nombre_clasificacion: 'CVERES.E63',
-          descripcion_clasificacion: 'CVERES.E63',
-          descripcion_otra_clasificacion: '',
-          creti: 'CARP.RE',
-          estado_fisico: 'ESFIM.OTR',
-          descripcion_otro_estado_fisico: '',
-          numero_manifiesto: 'manifiesto numero',
-          tipo_contenedor: 'TPCONT.009',
-          descripcion_otro_contenedor: '',
-          capacidad: '123', //descripcionDenominacionEspecifica
-          fraccion_name: '38256999',
-          nico_name: '00-Los demás.',
-          clave_clasificacion_desc: '',
-          name_clasificacion:
-            'Condensados orgánicos de la columna de recuperación de solventes en la producción de diisocianato de tolueno vía fosgenación de la toluendiamina',
-          desc_clasificacion: '',
-          creti_desc: 'Reactivo',
-          estado_fisico_desc: 'Otro',
-          tipo_contenedor_desc: 'Otro (especifique)',
-          descripcion_otro: '',
-          materias_primas_relacionadas: [
-            {
-              id_mercancia: null,
-              descripcion_mercancia: 'late',
-              cantidad: 3.25,
-              cantidad_letra: 'TRES PUNTO  VEINTICINCO',
-              descripcion_umc: 'Tonelada',
-              cve_fraccion_arancelaria: '19021999',
-              numeroBitacora: 'E5/00000037/10/2025',
-              unidadMedidaComercial: '14',
-              cveFraccion: 18040001,
-              descFraccion: 'Manteca, grasa y aceite de cacao.',
-            },
-          ],
-        },
-      ],
+      residuos: residuos.map((residuo) => ({
+        boolean_generico_1: residuo.origenResiduoGeneracion
+          .toLowerCase()
+          .includes('materia prima residual'), //  Residuo (materia prima residual)
+        desc_boolean_generico_1: residuo.origenResiduoGeneracion, // Descripción genérica del residuo - descripcion del radio buton
+        fraccion_arancelaria: residuo.fraccionCve,
+        cve_nico: residuo.nicoCve,
+        desc_nico: residuo.nicoDesc,
+        unidad_medida: residuo.unidadMedidaCve,
+        desc_unidad_medida: residuo.unidadMedidaDesc,
+        nombre_quimico: residuo.acotacion,
+        nombre_residuo: residuo.residuoDescDesc,
+        acotacion: residuo.acotacion,
+        nombre_residuo_peligroso: residuo.nombreResiduo,
+        cantidad: residuo.cantidad,
+        cantidad_letra: residuo.cantidadLetra,
+        cve_clasificacion: residuo.residuoCve,
+        nombre_clasificacion: residuo.residuoNombre,
+        desc_clasificacion: residuo.residuoDesc,
+        desc_otra_clasificacion: residuo.residuoOtro,
+        creti: residuo.cretiCve,
+        estado_fisico: residuo.estadoFisicoCve,
+        desc_otro_estado_fisico: residuo.estadoFisicoOtro,
+        numero_manifiesto: residuo.numeroManifiesto,
+        tipo_contenedor: residuo.tipoContenedorCve,
+        desc_otro_contenedor: residuo.tipoContenedorOtro,
+        capacidad: residuo.capacidad, //descripcionDenominacionEspecifica
+        fraccion_name: residuo.fraccionDesc,
+        nico_name: residuo.nicoDesc,
+        cve_clasificacion_desc: residuo.residuoDescCve,
+        name_clasificacion: residuo.residuoNombreDesc,
+        desc_creti: residuo.cretiDesc,
+        desc_estado_fisico: residuo.estadoFisicoDesc,
+        desc_tipo_contenedor: residuo.tipoContenedorDesc,
+        desc_otro: residuo.tipoContenedorOtro,
+        materias_primas_relacionadas: residuo.materiasPrimasRelacionadas,
+      })),
     };
   }
 

@@ -140,7 +140,7 @@
   <div class="row mb-3">
     <div class="col-md-12">
       <app-tabla-dinamica
-        [isInvalida]="!esFormValido"
+        [isInvalida]="!esFormValido && datosTabla.length === 0"
         [configuracionTabla]="configuracionTabla"
         [datos]="datosTabla"
         [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"

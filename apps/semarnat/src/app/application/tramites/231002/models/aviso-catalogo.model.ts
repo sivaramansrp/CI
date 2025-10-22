@@ -165,7 +165,7 @@ export interface ResiduoPeligroso
   cantidadLetra: string;
   numeroManifiesto: string;
   capacidad: string;
-  materiasPrimasRelacionadas?: MateriaResiduo[];
+  materiasPrimasRelacionadas: MateriaResiduo[];
 }
 
 export interface DatosResiduos {

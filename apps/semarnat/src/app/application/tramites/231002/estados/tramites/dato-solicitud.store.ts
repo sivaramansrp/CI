@@ -39,6 +39,7 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
       clave: '',
       precaucionesManejo: '',
     },
+    residuos: [],
   };
 }
 
