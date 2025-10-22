@@ -279,6 +279,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+          this.tablaDeDatos.datos = this.tramiteState.tablaPartesReemplazadasDatos || [];
         })
       )
       .subscribe();

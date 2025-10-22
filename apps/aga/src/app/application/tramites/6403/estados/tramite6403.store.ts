@@ -2,6 +2,7 @@ import {
   DatosSolicitante,
   MercanciaFormulario,
   SolicitudFormulario,
+  SolicitudTabla,
 } from '../models/retorno-de-partes.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
@@ -47,6 +48,8 @@ export interface Tramite6403State {
    * marca, modelo, número de serie, número de parte, y tipo de mercancía.
    */
   mercanciaFormulario: MercanciaFormulario;
+
+  tablaPartesReemplazadasDatos: SolicitudTabla[];
 }
 /**
  * Estado inicial del trámite 6403.
@@ -141,6 +144,7 @@ export function createInitialState(): Tramite6403State {
       numParteMercancia: '',
       tipoMercancia: '',
     },
+    tablaPartesReemplazadasDatos: [],
   };
 }
 /**
@@ -933,6 +937,14 @@ export class Tramite6403Store extends Store<Tramite6403State> {
         ...state.mercanciaFormulario,
         mercanciaFormulario,
       },
+    }));
+  }
+
+
+  public setTablaPartesReemplazadasDatos(tablaPartesReemplazadasDatos: SolicitudTabla[]): void {
+    this.update((state) => ({
+      ...state, 
+      tablaPartesReemplazadasDatos,
     }));
   }
 

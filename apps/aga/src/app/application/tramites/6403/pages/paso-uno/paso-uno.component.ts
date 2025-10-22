@@ -169,6 +169,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setNumSerieMercancia(MERCANCIA.numSerieMercancia);
           this.store.setNumParteMercancia(MERCANCIA.numParteMercancia);
           this.store.setTipoMercancia(MERCANCIA.tipoMercancia);
+          this.store.setTablaPartesReemplazadasDatos(respuesta.datos.tablaPartesReemplazadasDatos || []);
         }
       });
   }

@@ -503,4 +503,6 @@ export interface ConsultaDatos {
    * cancelan registros de mercancías dentro del flujo de la aplicación.
    */
   mercanciaFormulario: MercanciaFormulario;
+
+  tablaPartesReemplazadasDatos: SolicitudTabla[];
 }
