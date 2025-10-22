@@ -9,6 +9,7 @@ import { map, take, takeUntil } from 'rxjs/operators';
 import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { DirectorGeneralQuery } from '../../estado/director-general.query';
+import { Chofer40101Store } from '../../estado/chofer40101.store';
 
 interface AccionBoton {
   accion: string;
@@ -22,6 +23,7 @@ export interface IniciarResponse {
     id_solicitud: number;
     cadena_original: string;
     is_extranjero: boolean
+    mensaje: string;
   };
 }
 export interface DriverNacional {
@@ -145,7 +147,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     private modificarTerrestreService: modificarTerrestreService,
     private chofer40101Query: Chofer40101Query,
     private directorQuery: DirectorGeneralQuery,
-    private chofer40101Service: Chofer40101Service
+    private chofer40101Service: Chofer40101Service,
+    private chofer40101Store: Chofer40101Store
   ) { }
 
   ngOnInit(): void {
@@ -327,6 +330,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
         this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
           this.chofer40101Service.guardarDatosFirma(res.datos);
+          this.chofer40101Store.setSolicitudId(res.datos.id_solicitud);
           this.isExtrajero = res?.datos?.is_extranjero
           if (this.isExtrajero) {
             this.isBtnShow = 'no'

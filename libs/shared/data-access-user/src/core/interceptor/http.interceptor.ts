@@ -55,7 +55,7 @@ export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
             const CODIGO = String((RESPONSE_BODY as { codigo?: unknown }).codigo ?? '');
             const IS_OK = (CODIGO === '00' || Number(CODIGO) === 0);
             if (!IS_OK) {
-              const MENSAJE = (RESPONSE_BODY as { mensaje?: unknown }).mensaje as string || '"Ocurrió un error."';
+              const MENSAJE = (RESPONSE_BODY as { mensaje?: unknown, error?: unknown }).error as string || '"Ocurrió un error."';
               NOTIF.showNotification({
                 tipoNotificacion: 'toastr',
                 categoria: 'danger',

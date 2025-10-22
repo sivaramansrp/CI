@@ -78,6 +78,7 @@ export interface Choferesnacionales40102State {
   catErrorMessage: string
   isCaat: boolean
   cadenaOriginal: string
+  IdPersonaSolicitud: string
 
   /**
    * Lista de choferes nacionales para operaciones de alta.
@@ -160,7 +161,7 @@ export function createChoferState(): Choferesnacionales40102State {
     cadenaOriginal: '',
     catErrorMessage: '',
     isCaat: false,
-
+    IdPersonaSolicitud: "",
     datosDelChoferNacionalAlta: [],
     datosDelChoferNacionalModification: [],
     datosDelChoferNacionalRetirada: [],
@@ -286,6 +287,13 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     this.update((state) => ({
       ...state,
       curp,
+    }));
+  }
+
+  public setIdPersonaSolicitud(IdPersonaSolicitud: string): void {
+    this.update((state) => ({
+      ...state,
+      IdPersonaSolicitud,
     }));
   }
 

@@ -453,7 +453,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.accion === 'cont' && e.valor === 2) {
-      const SOLICITUDEID = this.chofer40102Store?.getValue().solicitudeId
+      const IDPERSONASOLICITUD = this.chofer40102Store?.getValue().IdPersonaSolicitud
+      const SOLICITUDEID = 123
       const PAYLOAD = {
         id_solicitud: SOLICITUDEID,
         representacion_federa: {
@@ -461,15 +462,16 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
           cve_unidad_administrativa: "1016"
         },
         representante_legal: {
-          id_persona_solicitud: SOLICITUDEID,
-          nombre: this.chofer40102Query?.getValue().nombre,
-          ap_paterno: this.chofer40102Query?.getValue().primerApellido,
-          ap_materno: this.chofer40102Query?.getValue().segundoApellido
+          id_persona_solicitud: IDPERSONASOLICITUD,
+          nombre: this.chofer40102Query?.getValue().nombre ? this.chofer40102Query?.getValue().nombre : '',
+          ap_paterno: this.chofer40102Query?.getValue().primerApellido ? this.chofer40102Query?.getValue().primerApellido : '',
+          ap_materno: this.chofer40102Query?.getValue().segundoApellido ? this.chofer40102Query?.getValue().segundoApellido : '',
         }
       }
       this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
         // this.chofer40101Service.guardarDatosFirma(res.datos);
-        (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res.datos.cadena_original);
+        (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res?.datos?.cadena_original);
+        (this.chofer40102Store['setSolicitudeId'] as (valor: unknown) => void)(res?.datos?.id_solicitud);
         this.isExtrajero = res?.datos?.is_extranjero
         if (this.isExtrajero) {
           this.isBtnShow = 'no'

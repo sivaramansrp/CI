@@ -12,6 +12,12 @@ import { IniciarResponse } from '../../../40101/pages/solicitante-page/solicitan
  *
  * @providedIn root
  */
+export interface FirmaDatosRequest {
+  cadena_original: string; // CADENAHEX
+  sello: string; // FIRMAHEX
+  certificate_serial_number: string;
+  id_solicitud: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -67,8 +73,9 @@ export class modificarTerrestreService {
   }
 
 
-  firmaDatos(datos: unknown): Observable<IniciarResponse> {
-    const FULL_URL = '/api/sat-t40102/solicitud/renovar/202819905/firmar';
+  firmaDatos(datos: FirmaDatosRequest): Observable<IniciarResponse> {
+    // const FULL_URL = `/api/sat-t40102/solicitud/renovar/${datos.solicitudId}/firmar`;
+    const FULL_URL = `/api/sat-t40102/solicitud/renovar/firmar`;
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
 

@@ -46,6 +46,7 @@ export interface Chofer40101State {
     isNew: boolean;
   };
   selectedDriverType: DriverType;
+  solicitudeId?: number;
 
   // Single arrays with metadata
   driversNacional: ChoferWithMetadata[];
@@ -64,6 +65,7 @@ export function createInitialState(): Chofer40101State {
       isNew: false,
     },
     selectedDriverType: 'nacional',
+    solicitudeId: undefined,
     driversNacional: [],
     driversExtranjero: [],
   };
@@ -97,6 +99,10 @@ export class Chofer40101Store extends Store<Chofer40101State> {
    */
   setSelectedDriverType(type: DriverType): void {
     this.update({ selectedDriverType: type });
+  }
+
+  setSolicitudId(id: number): void {
+    this.update({ id_solicitud: id });
   }
 
   // Add driver

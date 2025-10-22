@@ -14,6 +14,13 @@ import { IniciarResponse } from '../../pages/solicitante-page/solicitante-page.c
  *
  * @providedIn root
  */
+
+export interface FirmaDatosRequest {
+  cadena_original: string; // CADENAHEX
+  sello: string; // FIRMAHEX
+  certificate_serial_number: string;
+  solicitudId: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -109,8 +116,8 @@ export class modificarTerrestreService {
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
 
-  firmaDatos(datos: unknown): Observable<IniciarResponse> {
-    const FULL_URL = '/api/sat-t40101/solicitud/registro/202819905/firmar';
+  firmaDatos(datos: FirmaDatosRequest): Observable<IniciarResponse> {
+    const FULL_URL = `/api/sat-t40101/solicitud/registro/${datos.solicitudId}/firmar`;
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }
 

@@ -62,12 +62,12 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     });
     this.modificarTerrestreService.obtenerDatosSolicitante().pipe(takeUntil(this.destroy$)).subscribe((data: ApiResponseSolicitante) => {
       if (data.datos) {
-        (this.chofer40102Store['setSolicitudeId'] as (valor: unknown) => void)(data?.datos?.solicitante?.id_persona_solicitud);
         (this.chofer40102Store['setNombre'] as (valor: unknown) => void)(data.datos?.director_general?.nombre);
         (this.chofer40102Store['setPrimerApellido'] as (valor: unknown) => void)(data.datos?.director_general?.primer_apellido);
         (this.chofer40102Store['setSegundoApellido'] as (valor: unknown) => void)(data.datos?.director_general?.segundo_apellido);
         (this.chofer40102Store['setIsShowDirector'] as (valor: unknown) => void)(data.datos?.mostrar_director_general);
         (this.chofer40102Store['setIsCaat'] as (valor: unknown) => void)(data.datos?.caat_existe);
+        (this.chofer40102Store['setIdPersonaSolicitud'] as (valor: unknown) => void)(data.datos?.solicitante?.id_persona_solicitud);
       }
       (this.chofer40102Store['setCatErrorMessage'] as (valor: unknown) => void)(data?.mensaje);
       this.solicitudData = data.datos;

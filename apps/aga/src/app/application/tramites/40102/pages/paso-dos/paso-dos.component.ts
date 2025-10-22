@@ -83,14 +83,16 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   getDatosOfFirma(event: Certificado): void {
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(event ? event.firma : '');
+    this.idSolicitud = Number(this.chofer40102Query.getValue().solicitudeId);
     this.modificarTerrestreService.firmaDatos({
       cadena_original: CADENAHEX,
       sello: FIRMAHEX,
-      certificate_serial_number: event ? event.certSerialNumber : ''
+      certificate_serial_number: event ? event.certSerialNumber : '',
+      id_solicitud: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
       if (Number(res.codigo) === 0) {
         this.isSuccessCert = true
-        this.TEXTOS = res.mensaje
+        this.TEXTOS = res.datos.mensaje
       }
     });
   }
