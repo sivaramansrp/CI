@@ -445,9 +445,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     /**
      * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
      */
-
-    // eslint-disable-next-line no-warning-comments
-    //TODO se eliminara fixed value despues de mandar this.procedure desde servicio
     this.procedure = 230301;
     this.acuse230301
       .guardarAcuse(ID, this.procedure)

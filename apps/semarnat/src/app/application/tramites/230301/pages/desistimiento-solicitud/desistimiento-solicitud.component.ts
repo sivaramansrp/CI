@@ -23,9 +23,7 @@ import {
 } from '../../enum/constants';
 import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 
-import {
-  Tramite230301Store,
-} from '../../estados/tramites/tramites230301.store';
+import { Tramite230301Store } from '../../estados/tramites/tramites230301.store';
 
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
@@ -102,11 +100,11 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     this.pasoUnoComponent = componentInstance;
   }
 
-  private configuracionSecciones() {
+  private configuracionSecciones(): void {
     for (const [, SECCIONES_DEL_PASO] of Object.entries(
       SECCIONES_TRAMITE_230301
     )) {
-      for (const [SECCION, VALIDACION] of Object.entries(SECCIONES_DEL_PASO)) {
+      for (const [, VALIDACION] of Object.entries(SECCIONES_DEL_PASO)) {
         this.secciones.push(true);
         this.validaciones.push(VALIDACION);
       }
@@ -132,7 +130,7 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
   private guardarSolicitud(): void {
     this.ejecutaGuardado().subscribe((respuesta) => {
       if (respuesta.exito) {
-        this.handleGuardarSuccess(respuesta);
+        this.handleGuardarSuccess();
         this.router.navigate(['paso-dos'], { relativeTo: this.route });
         this.wizardComponent.siguiente();
         this.actualizarDatosPasos();
@@ -188,7 +186,7 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
-  private handleGuardarSuccess(respuesta: ResultadoSolicitud): void {
+  private handleGuardarSuccess(): void {
     this.alertaNotificacion = {
       tipoNotificacion: 'banner',
       categoria: 'success',

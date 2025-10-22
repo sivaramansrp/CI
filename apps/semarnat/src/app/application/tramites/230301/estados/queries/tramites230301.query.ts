@@ -1,7 +1,10 @@
-import { Tramite230301State, Tramite230301Store } from '../tramites/tramites230301.store';
+import {
+  Tramite230301State,
+  Tramite230301Store,
+} from '../tramites/tramites230301.store';
 import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
 import { Observable } from 'rxjs';
+import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class Tramite230301Query extends Query<Tramite230301State> {

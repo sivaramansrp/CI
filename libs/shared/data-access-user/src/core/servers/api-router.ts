@@ -29,10 +29,10 @@
  * @since 1.0.0
  * @author Sistema VUCEM
  */
-// eslint-disable-next-line no-warning-comments
-//TODO move to environment after moving this into development environment
-import { ENVIRONMENT } from "../../enviroments/environment-local";
+
+import { ENVIRONMENT } from "../../enviroments/enviroment";
 import { RFC_GENERICO } from "../constants/constantes-generales";
+
 
 /**
  * URL base del servidor obtenida de las variables de entorno.

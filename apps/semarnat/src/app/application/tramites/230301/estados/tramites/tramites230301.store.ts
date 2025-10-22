@@ -91,7 +91,7 @@ export class Tramite230301Store extends Store<Tramite230301State> {
     folioAnterior: string;
     tipoSolicitud: string;
     solicitudAnterior: number;
-  }) {
+  }): void {
     this.update((state) => ({
       ...state,
       folioAnterior: param.folioAnterior,

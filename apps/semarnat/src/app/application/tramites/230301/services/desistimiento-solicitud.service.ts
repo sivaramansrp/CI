@@ -1,17 +1,14 @@
-import {
-  Tramite230301State,
-  Tramite230301Store,
-} from '../estados/tramites/tramites230301.store';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { RespuestaDesistimientoSolicitud } from '../models/disponsibles.model';
-import { URL } from '../enum/constants';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { GuardarResponse } from '../../231001/models/guardar-solicitud-response';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { Tramite230301State, Tramite230301Store } from '../estados/tramites/tramites230301.store';
 import { API_POST_GUARDAR_SOLICITUD } from '../../../constantes/230301/api-constants';
-import { Solicitud230301Request } from '../models/solicitud-230301-request';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
+import { GuardarResponse } from '../../231001/models/guardar-solicitud-response';
+import { Injectable } from '@angular/core';
+import { RespuestaDesistimientoSolicitud } from '../models/disponsibles.model';
+import { Solicitud230301Request } from '../models/solicitud-230301-request';
+import { URL } from '../enum/constants';
 
 /**
  * Servicio para el manejo de desistimiento de solicitudes del trámite 230301.
