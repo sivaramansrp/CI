@@ -230,7 +230,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             documentos_requeridos: response.datos?.documentos_requeridos || [],
             rfcSolicitante: 'AAL0409235E6'
           };
-          if (this.procedure === 110216) {
+          if (this.procedure === 110216 || this.procedure === 110210) {
             PAYLOAD = renameKey(PAYLOAD as unknown as Record<string, unknown>, 'rfcSolicitante', 'rfc_solicitante') as unknown as FirmarRequest;
           }
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);

@@ -19,10 +19,7 @@
       <app-paso-uno #pasoUno></app-paso-uno>
       }
       @case (2) {
-      <app-paso-dos></app-paso-dos>
-      }
-      @case (3) {
-      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110210" [procedureUrl]="'tramites-disponibles/solicitud'"></paso-firma>
+      <paso-firma [idSolicitud]="guardarIdSolicitud" [procedure]="110210" [procedureUrl]="'tramites-disponibles/solicitud'"></paso-firma>
       }
     }
 
