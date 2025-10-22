@@ -376,6 +376,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @property {boolean} eliminarFacturaModal - Controla la visibilidad del modal de eliminación de factura.
    */
   eliminarFacturaModal: boolean = false;
+  /** Variable para validar el formulario */
+  validarFormulario: boolean = false;
   /**Variable para mostrar el modal */
   public mostrarModal: boolean = false;
   /** Referencia al modal */
@@ -465,6 +467,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               { id: 1, descripcion: 'Valida' },
             ]);
           }
+          this.validarFormulario = this.formularioAsociacionFactura.valid;
+          this.tramite120301.setValidarFormularioFacturasAsociadas(this.validarFormulario);
         })
       )
       .subscribe();

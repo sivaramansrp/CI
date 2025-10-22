@@ -320,5 +320,20 @@ export function parseToString(value: unknown): string {
   }
   return value.toString();
 }
+
+/**
+ * Renombra una clave de un objeto, manteniendo el resto de las propiedades intactas.
+ * @param obj Objeto al que se le va a renombrar la clave.
+ * @param oldKey Nombre de la clave original.
+ * @param newKey Nuevo nombre para la clave.
+ * @returns El objeto con la clave renombrada.
+ */
+export function renameKey<T extends Record<string, unknown>>(obj: T, oldKey: string, newKey: string): T {
+  if (Object.prototype.hasOwnProperty.call(obj, oldKey)) {
+    const { [oldKey]: OLD, ...REST } = obj;
+    return { ...REST, [newKey]: OLD } as T;
+  }
+  return obj;
+}
     
 
