@@ -2,13 +2,14 @@
  * Este módulo define el componente `DomicilioTablaComponent` que maneja la información de los tratados y acuerdos.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { Subject, takeUntil } from 'rxjs';
 
 import { DomicilioTabla, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
+import { CommonModule } from '@angular/common';
 import { DOMICILIO_TABLA_COLUMNAS } from '@ng-mf/data-access-user';
 import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
 
@@ -22,7 +23,12 @@ import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioT
   templateUrl: './domicilio-tabla.component.html',
   styleUrl: './domicilio-tabla.component.scss',
 })
-export class DomicilioTablaComponent implements OnInit, OnDestroy {
+export class DomicilioTablaComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+     * Datos del certificado de origen.
+     * @type {CertificadoOrigenResponse | null}
+     */
+    @Input() certificadoDatos: CertificadoOrigenResponse | null = null;
 
   /**
    * Configuración de la tabla que se utilizará en el componente.
@@ -79,4 +85,11 @@ export class DomicilioTablaComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+/**   * Hook del ciclo de vida que se llama cuando las propiedades enlazadas a datos de una directiva cambian.
+   * Actualiza los datos de la tabla basándose en los nuevos datos del certificado.
+   */
+  ngOnChanges(): void {
+    this.datosTabla = (this.certificadoDatos?.mercancias ?? []) as DomicilioTabla[];
+  }
+
 }

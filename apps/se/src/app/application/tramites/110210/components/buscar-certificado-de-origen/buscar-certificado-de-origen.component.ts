@@ -317,7 +317,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
               const DATOS: CertificadoDisponibles[] = []
               RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
                 const DATOSOBJ = {
-                  idCertificado: certificado.idCertificado,
+                  idSolicitud: certificado.idSolicitud,
                   numeroCertificado: certificado.numeroCertificado,
                   fechaExpedicion: certificado.fechaExpedicion,
                   fechaVencimiento: certificado.fechaVencimiento,
@@ -406,7 +406,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
               const DATOS: CertificadoDisponibles[] = []
               RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
                 const DATOSOBJ = {
-                  idCertificado: certificado.idCertificado,
+                  idSolicitud: certificado.idSolicitud,
                   numeroCertificado: certificado.numeroCertificado,
                   fechaExpedicion: certificado.fechaExpedicion,
                   fechaVencimiento: certificado.fechaVencimiento,
