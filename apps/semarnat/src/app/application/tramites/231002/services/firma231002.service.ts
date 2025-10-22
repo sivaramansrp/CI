@@ -12,7 +12,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class Firma231001Service {
+export class Firma231002Service {
   /**
    * URL del servidor donde se encuentra la API.
    */

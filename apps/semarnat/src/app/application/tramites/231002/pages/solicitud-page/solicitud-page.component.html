@@ -37,7 +37,10 @@
       @switch (indice) { @case (1) {
       <app-paso-uno [esFormaValido]="esFormaValido" />
       } @case (2) {
-      <app-paso-dos></app-paso-dos>
+      <app-paso-dos
+        [procedureUrl]="'aviso-retorno'"
+        [procedure]="231002"
+      ></app-paso-dos>
       }}
     </div>
     <btn-continuar

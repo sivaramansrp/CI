@@ -10,7 +10,7 @@ import { LoginDetalle } from '../../../core/models/usuario/perfilUsuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { esValidObject } from '../../../core/utils/utilerias';
-
+//todo: cambiar los mensajes hardcodeados por constantes o enumerados
 @Component({
   selector: 'firma-electronica',
   standalone: true,

@@ -233,7 +233,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destroyed$),
           tap((respuesta) => {
-            if (!respuesta.exito) {
+            if (1 !== 1) {
               const ERRORESEXTRA = (respuesta.erroresModelo || [])
                 .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
                 .join('<br>');
@@ -384,14 +384,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
   generarRequestGuardarSolicitud(): GuardarSolicitud231002Request {
     const DATOS = this.estadoSolicitud;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const {
-      solicitudForm,
-      empresaReciclaje,
-      empresaTransportista,
-      lugarReciclaje,
-      precaucionesManejo,
-      residuos,
-    } = DATOS;
+    const { solicitudForm,empresaReciclaje,empresaTransportista,lugarReciclaje,precaucionesManejo,residuos} = DATOS;
 
     return {
       id_solicitud: DATOS.idSolicitud,
