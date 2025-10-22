@@ -84,7 +84,15 @@
             </div>
             }
         </div>
-
+        @if (evaluarObservacionesDictamen.length > 0) {
+            <ng-titulo [titulo]="'Observaciones al dictamen'" />
+            <div class="col-md-12">
+                <app-tabla-dinamica 
+                    [configuracionTabla]="tablaObservacionesDictamen" 
+                    [datos]="evaluarObservacionesDictamen">
+                </app-tabla-dinamica>
+            </div>
+        }
     </div>
 
     <!-- De conformidad con section -->
