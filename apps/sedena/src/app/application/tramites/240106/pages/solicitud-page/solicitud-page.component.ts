@@ -38,10 +38,11 @@ export class SolicitudPageComponent {
    */
   public indice: number = 1;
 
-    /**
-     * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
-     */
-    TEXTOS = AVISO.Aviso;
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  public TEXTOS = AVISO.Aviso;
+
   /**
    * @property wizardComponent
    * @description Referencia al componente `WizardComponent`, utilizada

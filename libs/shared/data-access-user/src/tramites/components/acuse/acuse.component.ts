@@ -9,6 +9,7 @@ import {
   Subject,
   catchError,
   forkJoin,
+  of,
   switchMap,
   takeUntil,
   throwError,
@@ -19,12 +20,13 @@ import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 
 import { AcuseDetalleService } from '../../../core/services/shared/detalleAcuse.service';
-import { AcusesService } from '../../../core/services/120301/acuses.service';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/shared/documentos.service';
 import { DocumentosT231001Service } from '../../../core/services/shared/documentos-t231001.service';
 import { Router } from '@angular/router';
+
+import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -120,8 +122,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private route: ActivatedRoute,
     private documentosService130118: DocumentosService,
     private documentosService231001: DocumentosT231001Service,
+    private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
-    private acusesService: AcusesService
+    private aviso230301: DocumentosT230301Service
   ) {}
 
   /**
@@ -156,8 +159,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
-        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204, 110205,
-        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102
+        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204,
+        110205, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217,
+        110218, 110219, 110221, 110222, 110223, 130102,
       ].includes(this.procedure)
     ) {
       this.documentosService130118
@@ -193,6 +197,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         });
     } else if (this.url === 'aviso-de-materiales') {
       this.descargarDocumentoTramite231001();
+    } else if (this.url === 'desistimiento') {
+      this.descargarDocumentoTramite230301();
     } else {
       const BODY: DocumentosRequest = {
         tipo_dependencia: 'AGA',
@@ -338,8 +344,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     this.base64Archivos(url, 'descargar');
   }
 
-
-
   /**
    * Método que maneja la navegación al salir del componente.
    *
@@ -360,9 +364,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   private descargarDocumentoTramite231001(): void {
     const ID = this.idSolicitud.toString();
 
-  /**
-   * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
-   */
+    /**
+     * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+     */
     const ACUSE_SOLICITUD = this.documentosService231001
       .guardarDocumento(ID, this.procedure, true)
       .pipe(
@@ -372,12 +376,16 @@ export class AcuseComponent implements OnChanges, OnDestroy {
             this.procedure,
             true
           )
-        )
+        ),
+        catchError((error) => {
+          console.error('Error en ACUSE_SOLICITUD (231001):', error);
+          return of(null);
+        })
       );
 
-  /**
-   * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
-   */
+    /**
+     * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
+     */
     const CONSTANCIA_SOLICITUD = this.documentosService231001
       .guardarDocumento(ID, this.procedure, false)
       .pipe(
@@ -387,25 +395,24 @@ export class AcuseComponent implements OnChanges, OnDestroy {
             this.procedure,
             false
           )
-        )
+        ),
+        catchError((error) => {
+          console.error('Error en CONSTANCIA_SOLICITUD (231001):', error);
+          return of(null);
+        })
       );
 
-  /**
-   * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
-   */
+    /**
+     * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
+     */
     forkJoin([ACUSE_SOLICITUD, CONSTANCIA_SOLICITUD])
-      .pipe(
-        takeUntil(this.destroyed$),
-        catchError((error) => {
-          console.error('Error en guardarAcuse o vistaPrevia:', error);
-          return throwError(() => error);
-        })
-      )
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: ([acuseResponse, constanciaResponse]) => {
           const FILAS: BodyTablaAcuse[] = [];
           let contador = 1;
-          if (acuseResponse?.datos) {
+
+          if (acuseResponse?.datos?.contenido) {
             FILAS.push({
               id: contador++,
               documento: acuseResponse.datos.nombre_archivo,
@@ -413,7 +420,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
               idDocumento: 'acuse',
             });
           }
-          if (constanciaResponse?.datos) {
+          if (constanciaResponse?.datos?.contenido) {
             FILAS.push({
               id: contador++,
               documento: constanciaResponse.datos.nombre_archivo,
@@ -425,7 +432,76 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           }
           this.datosTablaAcuse = FILAS;
         },
-        error: (err) => console.error('Error:', err),
+        error: (err) =>
+          console.error('Error inesperado en forkJoin (231001):', err),
+      });
+  }
+
+  /**
+   * Descarga los documentos asociados al trámite 230301 (Aviso de Materiales).
+   */
+  private descargarDocumentoTramite230301(): void {
+    const ID = this.idSolicitud.toString();
+    /**
+     * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+     */
+
+    // eslint-disable-next-line no-warning-comments
+    //TODO se eliminara fixed value despues de mandar this.procedure desde servicio
+    this.procedure = 230301;
+    this.acuse230301
+      .guardarAcuse(ID, this.procedure)
+      .pipe(
+        switchMap(() => this.acuse230301.vistaPrevia(ID, this.procedure)),
+        catchError((err) => {
+          console.error('Error en ACUSE_SOLICITUD (230301):', err);
+          return of(null);
+        }),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe({
+        next: (acuseResponse) => {
+          const FILAS: BodyTablaAcuse[] = [];
+          let contador = 1;
+          if (acuseResponse?.datos?.contenido) {
+            FILAS.push({
+              id: contador++,
+              documento: acuseResponse.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(acuseResponse.datos.contenido),
+              idDocumento: 'acuse',
+            });
+          }
+          this.datosTablaAcuse = FILAS;
+        },
+        error: (err) => console.error('Error inesperado (230301):', err),
+      });
+
+    this.aviso230301
+      .guardarAviso(ID, this.procedure)
+      .pipe(
+        switchMap(() => this.aviso230301.vistaPrevia(ID, this.procedure)),
+        catchError((err) => {
+          console.error('Error en AVISO DESISTIMIENTO (230301):', err);
+          return of(null);
+        }),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe({
+        next: (acuseResponse) => {
+          const FILAS: BodyTablaAcuse[] = [];
+          let contador = 1;
+
+          if (acuseResponse?.datos?.contenido) {
+            FILAS.push({
+              id: contador++,
+              documento: acuseResponse.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(acuseResponse.datos.contenido),
+              idDocumento: 'aviso',
+            });
+          }
+          this.datosTablaAcuse = FILAS;
+        },
+        error: (err) => console.error('Error inesperado (230301):', err),
       });
   }
 

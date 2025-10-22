@@ -1,21 +1,29 @@
 import {
   AccionBoton,
+  AlertComponent,
+  BtnContinuarComponent,
   CategoriaMensaje,
   DatosPasos,
   ListaPasosWizard,
-  LoginQuery,
-  LoginState,
   Notificacion,
-  PASOS,
+  NotificacionesComponent,
   PASOS2,
+  SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../enum/constants';
+
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import {
+  ERROR_FORMA_ALERT,
+  MSG_REGISTRO_EXITOSO,
+  SECCIONES_TRAMITE_230301,
+} from '../../enum/constants';
 import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 
 import {
-  Tramite230301State,
   Tramite230301Store,
 } from '../../estados/tramites/tramites230301.store';
 
@@ -33,17 +41,27 @@ import { ResultadoSolicitud } from '../../models/solicitud-230301-response';
 
 @Component({
   selector: 'app-desistimiento-solicitud',
+  standalone: true,
   templateUrl: './desistimiento-solicitud.component.html',
   styleUrl: './desistimiento-solicitud.component.scss',
+  imports: [
+    CommonModule,
+    AlertComponent,
+    NotificacionesComponent,
+    WizardComponent,
+    BtnContinuarComponent,
+    RouterOutlet,
+  ],
 })
-export class DesistimientoSolicitudComponent implements OnDestroy {
+export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
+  pasoUnoComponent: PasoUnoComponent | undefined;
 
   indice = 1;
   nuevaNotificacion: Notificacion | null = null;
   alertaNotificacion!: Notificacion;
   folioTemporal = 0;
+
   pasos: ListaPasosWizard[] = PASOS2;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -51,28 +69,28 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
   infoAlert = 'alert-info';
-  esFormaValido = false;
+  formWithErrors = false;
   formErrorAlert = ERROR_FORMA_ALERT;
 
-  private loginState!: LoginState;
-  public solicitud230301State!: Tramite230301State;
+  private desistimientoService = inject(DesistimientoSolicitudService);
+  private tramite230301Store = inject(Tramite230301Store);
+  private tramite230301Query = inject(Tramite230301Query);
+  private seccionesStore = inject(SeccionLibStore);
 
   private readonly destroyed$ = new Subject<void>();
 
-  constructor(
-    private readonly desistimientoService: DesistimientoSolicitudService,
-    private readonly tramite230301Store: Tramite230301Store,
-    private readonly tramite230301Query: Tramite230301Query,
-    private readonly loginQuery: LoginQuery
-  ) {
-    this.tramite230301Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((solicitud) => (this.solicitud230301State = solicitud));
+  private secciones: boolean[] = [];
+  private validaciones: boolean[] = [];
 
-    this.loginQuery.selectLoginState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((login) => (this.loginState = login));
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.configuracionSecciones();
   }
 
   ngOnDestroy(): void {
@@ -80,26 +98,44 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
     this.destroyed$.complete();
   }
 
-  getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = false;
-    if (this.indice === 1 && e.accion === 'cont') {
+  onActivate(componentInstance: PasoUnoComponent): void {
+    this.pasoUnoComponent = componentInstance;
+  }
+
+  private configuracionSecciones() {
+    for (const [, SECCIONES_DEL_PASO] of Object.entries(
+      SECCIONES_TRAMITE_230301
+    )) {
+      for (const [SECCION, VALIDACION] of Object.entries(SECCIONES_DEL_PASO)) {
+        this.secciones.push(true);
+        this.validaciones.push(VALIDACION);
+      }
+    }
+    this.seccionesStore.establecerSeccion(this.secciones);
+    this.seccionesStore.establecerFormaValida(this.validaciones);
+  }
+
+  continuarEvent(e: AccionBoton): void {
+    this.formWithErrors = false;
+    if (e.valor === 2 && e.accion === 'cont') {
       const IS_FORM_VALID = this.pasoUnoComponent?.validarFormularios();
       if (!IS_FORM_VALID) {
-        this.esFormaValido = true;
+        this.formWithErrors = true;
+        this.formErrorAlert = ERROR_FORMA_ALERT;
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
+      } else {
+        this.guardarSolicitud();
       }
-      this.guardarSolicitud(e);
-    } else {
-      this.navigateWizard(e);
     }
   }
 
-  private guardarSolicitud(e: AccionBoton): void {
-    this.esFormaValido = false;
+  private guardarSolicitud(): void {
     this.ejecutaGuardado().subscribe((respuesta) => {
       if (respuesta.exito) {
-        this.handleGuardarSuccess(respuesta, e);
+        this.handleGuardarSuccess(respuesta);
+        this.router.navigate(['paso-dos'], { relativeTo: this.route });
+        this.wizardComponent.siguiente();
+        this.actualizarDatosPasos();
       } else {
         this.handleGuardarError(respuesta);
       }
@@ -107,6 +143,7 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
   }
 
   private ejecutaGuardado(): Observable<ResultadoSolicitud> {
+    const STATE = this.tramite230301Query.getValue();
     const PAYLOAD: Solicitud230301Request = {
       solicitante: {
         rfc: 'AAL0409235E6',
@@ -114,9 +151,9 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
         es_persona_moral: true,
         certificado_serial_number: '3082054030820428a00302010',
       },
-      motivo_desistimiento: this.solicitud230301State.motivoDesistimiento,
-      id_solicitud_anterior: this.solicitud230301State.solicitudAnterior,
-      id_folio_anterior: this.solicitud230301State.folioAnterior,
+      motivo_desistimiento: STATE.motivoDesistimiento,
+      id_solicitud_anterior: STATE.solicitudAnterior,
+      id_folio_anterior: STATE.folioAnterior,
     };
 
     // eslint-disable-next-line no-warning-comments
@@ -151,10 +188,7 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
     );
   }
 
-  private handleGuardarSuccess(
-    respuesta: ResultadoSolicitud,
-    e: AccionBoton
-  ): void {
+  private handleGuardarSuccess(respuesta: ResultadoSolicitud): void {
     this.alertaNotificacion = {
       tipoNotificacion: 'banner',
       categoria: 'success',
@@ -165,7 +199,6 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
       txtBtnAceptar: '',
       txtBtnCancelar: '',
     };
-    this.navigateWizard(e);
   }
 
   private handleGuardarError(respuesta: ResultadoSolicitud): void {
@@ -188,19 +221,6 @@ export class DesistimientoSolicitudComponent implements OnDestroy {
     };
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  private navigateWizard(e: AccionBoton): void {
-    let newIndex = e.valor;
-    if (newIndex > 0 && newIndex <= this.pasos.length) {
-      this.indice = newIndex;
-      this.actualizarDatosPasos();
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else if (e.accion === 'ant') {
-        this.wizardComponent.atras();
-      }
-    }
   }
 
   actualizarDatosPasos(): void {

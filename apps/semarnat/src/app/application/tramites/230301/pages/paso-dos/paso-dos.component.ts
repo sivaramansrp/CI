@@ -11,9 +11,7 @@ import {
   CategoriaMensaje,
   FirmaElectronicaComponent,
   Notificacion,
-  NotificacionesComponent,
   SessionQuery,
-  TramiteFolioQueries,
   base64ToHex,
   encodeToISO88591Hex,
 } from '@ng-mf/data-access-user';
@@ -39,7 +37,7 @@ import { Rol } from '@libs/shared/data-access-user/src/core/models/usuario/rol.m
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, FirmaElectronicaComponent, NotificacionesComponent],
+  imports: [CommonModule, FirmaElectronicaComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
@@ -47,7 +45,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   private documentosState!: DocumentosState;
   private destroy$ = new Subject<void>();
   cadenaOriginal?: string;
-  nuevaNotificacion!: Notificacion;
+  alertaNotificacion!: Notificacion;
   url?: string;
   datosFirmaReales!: {
     firma: string;
@@ -110,9 +108,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         this.userId = state.idUsuario;
       });
 
-    const URL_ACTUAL = this.router.url;
-    const URL_SEPARADA = URL_ACTUAL.split('/');
-    this.url = URL_SEPARADA.slice(0, 3).join('/');
+    const URL_SEGMENTS = this.router.url.split('/');
+    URL_SEGMENTS.pop(); // remove paso-dos
+    URL_SEGMENTS.pop(); // remove solicitud
+    this.url = URL_SEGMENTS.join('/');
 
     this.obtenerCadenaOriginal();
   }
@@ -152,7 +151,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.codigo !== '00') {
-            this.nuevaNotificacion = {
+            this.alertaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
               modo: 'action',
@@ -171,7 +170,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
           console.error('Error al iniciar trámite:', error);
           const MENSAJE =
             error?.error?.error || 'Error inesperado al iniciar trámite.';
-          this.nuevaNotificacion = {
+          this.alertaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: 'error',
             modo: 'action',
@@ -198,7 +197,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       console.error('Faltan datos para completar la firma');
-      this.nuevaNotificacion = {
+      this.alertaNotificacion = {
         tipoNotificacion: 'toastr',
         categoria: CategoriaMensaje.ERROR,
         modo: 'action',
@@ -232,10 +231,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<string>) => {
-          // eslint-disable-next-line no-warning-comments
-          //TODO descomentar hasta que la configuración del trámite se haya hecho
-          /*if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
-            this.nuevaNotificacion = {
+          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+            this.alertaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
               modo: 'action',
@@ -250,8 +247,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
             };
             throw new Error('Firma no exitosa');
           }
-          this.folio = firmaResponse.datos;*/
-          this.folio = 'sdfjak234j3242addddsafsda23342342';
+          this.folio = firmaResponse.datos;
         }),
         tap(() => {
           this.tramiteStore.establecerTramite(
@@ -264,8 +260,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
-          if (!this.nuevaNotificacion) {
-            this.nuevaNotificacion = {
+          if (!this.alertaNotificacion) {
+            this.alertaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
               modo: 'action',

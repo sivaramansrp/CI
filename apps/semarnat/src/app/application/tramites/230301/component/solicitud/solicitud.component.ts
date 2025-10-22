@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import {
   Tramite230301State,
@@ -14,14 +13,18 @@ import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 import {
   ConsultaioQuery,
   ConsultaioState,
-  SeccionLibQuery,
+  SeccionLibQuery, TituloComponent
 } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
+
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule],
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -62,17 +65,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Constructor para inicializar dependencias.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
-   * @param {DesistimientoSolicitudService} desistimientoService - Servicio para manejar solicitudes de desistimiento.
-   * @param {Tramite230301Store} desistimientoStore - Almacén para gestionar el estado de la solicitud.
-   * @param {Tramite230301Query} consultaSolicitud230301 - Consulta para obtener el estado de la solicitud.
+   * @param {Tramite230301Store} tramite230301Store - Almacén para gestionar el estado de la solicitud.
+   * @param {Tramite230301Query} tramite230301Query - Consulta para obtener el estado de la solicitud.
    * @param {SeccionLibQuery} seccionQuery - Consulta para obtener el estado de la sección.
-   * @param {SeccionLibStore} seccionStore - Almacén para gestionar el estado de la sección.
+   * @param consultaioQuery
    */
   constructor(
     private fb: FormBuilder,
-    private desistimientoService: DesistimientoSolicitudService,
-    private readonly desistimientoStore: Tramite230301Store,
-    private consultaSolicitud230301: Tramite230301Query,
+    private readonly tramite230301Store: Tramite230301Store,
+    private tramite230301Query: Tramite230301Query,
     private readonly seccionQuery: SeccionLibQuery,
     private readonly consultaioQuery: ConsultaioQuery
   ) {
@@ -86,7 +87,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Suscripción al estado de la solicitud
-    this.consultaSolicitud230301.selectSolicitud$
+    this.tramite230301Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -130,11 +131,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.formDesistimiento = this.fb.group({
       folioAnterior: [
         { value: this.solicitud230301State.folioAnterior, disabled: true },
-        Validators.required,
       ],
       tipoSolicitud: [
         { value: this.solicitud230301State.tipoSolicitud, disabled: true },
-        [Validators.required],
       ],
       motivoDesistimiento: [
         this.solicitud230301State.motivoDesistimiento,
@@ -146,7 +145,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .get('motivoDesistimiento')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
       .subscribe((motivo) => {
-        this.desistimientoStore.setMotivoDesistimiento(motivo);
+        this.tramite230301Store.setMotivoDesistimiento(motivo);
       });
   }
 
@@ -155,7 +154,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   private initializeComponent(): void {
-    this.desistimientoStore.setInitialState({
+    this.tramite230301Store.setInitialState({
       //T0DO this will come from the parent tramite 230101
       //folioAnterior: this.consultaioState.folioTramite,
       //tipoSolicitud: this.consultaioState.tipoDeTramite,

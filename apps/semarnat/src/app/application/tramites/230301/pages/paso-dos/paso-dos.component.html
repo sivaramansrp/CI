@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col-md-4">
       @if (cadenaOriginal) {
-        <firma-electronica 
-          [tipo]="'firma'" 
+        <firma-electronica
+          [tipo]="'firma'"
           [cadenaOriginal]="cadenaOriginal"
           (datosFirma)="datosFirma($event)">
         </firma-electronica>
@@ -11,10 +11,3 @@
     </div>
   </div>
 </div>
-
-@if (nuevaNotificacion) {
-  <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
-    </lib-notificaciones>
-  </section>
-}
