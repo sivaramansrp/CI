@@ -833,6 +833,7 @@ export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERD
  * @param TRAMITE - Identificador del trámite (ej: '110219', '130118') que determina
  *                  el contexto y versión del catálogo a consultar
  *
+ * @param IDETIPOTRATADOACUERDO
  * @returns {string} Ruta formateada del endpoint para consultar tratados/acuerdos UE
  *
  * this.http.get(`${BASE_URL}/${rutaTratados}`)
