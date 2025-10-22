@@ -76,8 +76,8 @@ import { ObservacionRequest } from '../../../../../se/src/app/application/core/m
 import { TramiteConfigService } from '../../../../../se/src/app/application/shared/services/tramiteConfig.service';
 import { ModeloConfig, ServiceConfig } from '../../../../../se/src/app/application/shared/models/service-config.model';
 import { IniciarAutorizacionRequest } from '../core/models/autorizar-requerimiento/request/autorizar-dictamen-request.model';
-
-
+import { Firma } from '../../../../../se/src/app/application/core/models/evaluar/request/firmar-dictamen-request.model';
+import { FirmaAutorizarDictamenRequest } from '../../../../../se/src/app/application/core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
 /**
  * @component
  * @name EvaluarComponent
@@ -343,6 +343,12 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
   */
   cadenaOriginal?: string;
+
+  /**
+   * @property {string} sello
+   * @description Sello digital del documento.
+   */
+  sello!: string;
 
   /**
    * @property {boolean} yaCargoDictamenes
@@ -1411,6 +1417,27 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       this.indiceDictamen = 2;
     }
   }
+  
+  /**
+    * @method obtieneFirma
+    * @description Navega a la bandeja de tareas pendientes tras obtener la firma electrónica.
+    * @param {string} ev - Cadena que representa la firma obtenida.
+    * @returns {void}
+    */
+  /*obtieneFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
+    this.datosFirmaReales = datos;
+    if (this.indice === 1) {
+      this.firmaDictamen(datos.firma);
+    } else if (this.indice === 2) {
+     this.firmarRequerimiento(datos.firma);
+    }
+
+  }*/
   /**
     * @method obtieneFirma
     * @description Navega a la bandeja de tareas pendientes tras obtener la firma electrónica.
@@ -1424,12 +1451,242 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     fechaFin: string;
   }): void {
     this.datosFirmaReales = datos;
-    if (this.indice === 1) {
-      this.firmaDictamen(datos.firma);
-    } else if (this.indice === 2) {
-    //  this.firmarRequerimiento(datos.firma);
+    this.firmaAutorizarDictamen(datos.firma);
+  }
+
+    /**
+     * @method firmaDictamen
+     * @description Firma el dictamen con los datos proporcionados.
+     * 
+     * Convierte la cadena original y la firma a formato hexadecimal, prepara el payload
+     * y envía una solicitud al servicio `FirmarDictamenService` para completar la firma.
+     * Maneja la respuesta y muestra notificaciones según el resultado de la operación.
+     * 
+     * @param {string} firma - Firma en base64 a ser procesada.
+     * @returns {void}
+     */
+
+  firmaAutorizarDictamen(firma: string): void {
+    if (!this.cadenaOriginal || !this.datosFirmaReales) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
     }
 
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+    this.sello = FIRMAHEX;
+
+    const PAYLOAD: FirmaAutorizarDictamenRequest = {
+      id_accion: this.guardarDatos.action_id,
+      firma: {
+        id_solicitud: Number(this.guardarDatos.id_solicitud),
+        cadena_original: CADENAHEX,
+        cert_serial_number: this.datosFirmaReales.certSerialNumber,
+        clave_usuario: this.datosFirmaReales.rfc,
+        fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+        clave_rol: 'Autorizador',
+        sello: FIRMAHEX,
+        fecha_fin_vigencia: AutorizarDictamenComponent.formatFecha(this.datosFirmaReales.fechaFin),
+        documentos_requeridos: []
+      }
+    };
+
+
+    this.autorizarDictamenService.firmarAutorizar(this.tramite, NUMFOLIO, PAYLOAD)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((firmaResponse: BaseResponse<null>) => {
+          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+
+          } else if (firmaResponse.codigo === CodigoRespuesta.EXITO) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Firma exitosa',
+              mensaje: 'La firma del dictamen se ha realizado correctamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+            this.isDictamen = false;
+            this.isFirma = false;
+            this.isDocumento = false;
+            if (this.dataAutorizarDictamen.sentido_dictamen === "Aceptado") {
+              this.postOficioAutorizacion();
+            } else {
+              this.postOficioRechazado();
+            }
+
+          }
+
+        }),
+        catchError((error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+
+    /**
+   * @method postOficioAutorizacion
+   * @description Genera y obtiene el oficio de autorización
+   * 
+   * Realiza una petición al servicio para generar el oficio de autorización
+   * para la solicitud actual. Si la respuesta es exitosa (código '00'), 
+   * actualiza la tabla de resoluciones con el documento generado.
+   * 
+   * @returns {void}
+ */
+  postOficioAutorizacion(): void {
+    const PAYLOAD: Firma = {
+      cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+      clave_rol: 'Autorizador',
+      sello: this.sello
+    }
+    const PAYLOADSEND = this.serviceConfigModelo.actualizarModelo ? PAYLOAD : null;
+    this.autorizarDictamenService.postOficioAutorizacion(this.tramite, Number(this.guardarDatos.id_solicitud), PAYLOADSEND)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === "00" && resp.datos) {
+            this.datosTablaResolucion = [{
+              id: 1,
+              idDocumento: '1',
+              documento: resp.datos.nombre_archivo ?? '',
+              urlPdf: resp.datos.llave_archivo ?? ''
+            }];
+            this.isDocumento = true;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al obtener oficio.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error al obtener oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error inesperado',
+            mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method postOficioRechazado
+   * @description Genera y obtiene el oficio de rechazo
+   * 
+   * Realiza una petición al servicio para generar el oficio de rechazo
+   * para la solicitud actual. Si la respuesta es exitosa (código '00'), 
+   * actualiza la tabla de resoluciones con el documento generado.
+   * 
+   * @returns {void}
+ */
+  postOficioRechazado(): void {
+    const PAYLOAD: Firma = {
+      cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+      clave_rol: 'Autorizador',
+      sello: this.sello
+    } 
+    const PAYLOADSEND = this.serviceConfigModelo.actualizarModelo ? PAYLOAD : null;
+    this.autorizarDictamenService.postOficioRechazado(this.tramite, Number(this.guardarDatos.id_solicitud), PAYLOADSEND)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === "00" && resp.datos) {
+            this.datosTablaResolucion = [{
+              id: 1,
+              idDocumento: '1',
+              documento: resp.datos.nombre_archivo ?? '',
+              urlPdf: resp.datos.llave_archivo ?? ''
+            }];
+            this.isDocumento = true;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al obtener oficio.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error al obtener oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error inesperado',
+            mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
   }
 
   /**
