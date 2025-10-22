@@ -663,7 +663,7 @@
                 datosMedioTransporte.get('guiaBl')?.touched
               "
             >
-              <span class="text-danger">Este campo es obligatorio</span>
+              <small class="text-danger">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -936,15 +936,8 @@
               maxlength="10"
               class="form-control"
               formControlName="tipContenedor"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tipContenedor') ? 'required' : ''
-              "
               (change)="
-                setValoresStore(
-                  datosMedioTransporte,
-                  'tipContenedor',
-                  'setTipContenedor'
-                )
+                setTipContenedorValue($event)
               "
             />
           </div>
@@ -956,7 +949,6 @@
         <div class="col-md-4">
           <div>
             <label class="form-label" for="tranporteMarca">Marca</label>
-            <span class="require form-label" id="tranporteMarca">*</span>
             <label class="form-label" for="tranporteMarca">:</label>
           </div>
           <div>
@@ -967,11 +959,6 @@
               class="form-control"
               maxlength="20"
               formControlName="tranporteMarca"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tranporteMarca')
-                  ? 'required'
-                  : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -985,7 +972,6 @@
         <div class="col-md-4">
           <div>
             <label class="form-label" for="tranporteModelo">Modelo</label>
-            <span class="require form-label" id="tranporteModelo">*</span>
             <label class="form-label" for="tranporteModelo">:</label>
           </div>
           <div>
@@ -996,11 +982,6 @@
               maxlength="20"
               class="form-control"
               formControlName="tranporteModelo"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tranporteModelo')
-                  ? 'required'
-                  : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -1014,7 +995,6 @@
         <div class="col-md-4">
           <div>
             <label class="form-label" for="tranportePlaca">Placa</label>
-            <span class="require form-label" id="tranportePlaca">*</span>
             <label class="form-label" for="tranportePlaca">:</label>
           </div>
           <div>
@@ -1025,11 +1005,6 @@
               class="form-control"
               maxlength="10"
               formControlName="tranportePlaca"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tranportePlaca')
-                  ? 'required'
-                  : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,

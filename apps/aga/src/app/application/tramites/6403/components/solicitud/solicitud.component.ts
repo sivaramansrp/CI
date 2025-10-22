@@ -413,6 +413,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method setTipContenedorValue
+   * @description Handles the tipContenedor field change event and ensures string value is stored.
+   * 
+   * @param {Event} event - The change event from the input field.
+   */
+  setTipContenedorValue(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const VALOR = TARGET.value;
+    
+    // Ensure we store a string value, not an object
+    this.store.setTipContenedor(VALOR);
+  }
+
+  /**
    * @method cargarAduaneras
    * @description Método para cargar la lista de aduaneras desde el servicio `retornoDePartesService`.
    * Los datos obtenidos se asignan a la propiedad `aduaneras`.
@@ -648,15 +662,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value: this.tramiteState?.solicitudFormulario?.marca,
             disabled: this.soloLectura,
-          },
-          [Validators.required],
+          }
         ],
         modelo: [
           {
             value: this.tramiteState?.solicitudFormulario?.modelo,
             disabled: this.soloLectura,
-          },
-          [Validators.required],
+          }
         ],
         numeroSerie: [
           {
@@ -753,10 +765,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         tipContenedor: [
           {
-            value: this.tramiteState?.solicitudFormulario?.tipContenedor,
-            disabled: true,
-          },
-          [Validators.required],
+            value: this.tramiteState?.solicitudFormulario?.tipContenedor || '',
+            disabled: this.soloLectura,
+          }
         ],
         tranporteMarca: [
           {
@@ -776,8 +787,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value: this.tramiteState?.solicitudFormulario?.tranportePlaca,
             disabled: this.soloLectura,
-          },
-          [Validators.required],
+          }
         ],
         observaciones: [
           {
