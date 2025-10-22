@@ -313,7 +313,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: this.seleccionarDosTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el registro que desea eliminar.',
+      mensaje: this.seleccionarDosTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el anexo que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -363,7 +363,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       modo: 'action',
       titulo: '',
       mensaje:
-        this.seleccionarTresTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el anexo que desea eliminar.',
+        this.seleccionarTresTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el registro que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
