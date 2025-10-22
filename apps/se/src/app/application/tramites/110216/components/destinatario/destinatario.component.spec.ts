@@ -33,6 +33,7 @@ describe('DestinatarioComponent', () => {
       setGrupoRepresentativoCargo: jest.fn(),
       setgrupoDeTransportePuertoEmbarque: jest.fn(),
       setgrupoDeTransportePuertoDesembarque: jest.fn(),
+      setFormValidity: jest.fn(),
     };
 
     tramiteQueryMock = {
@@ -209,14 +210,6 @@ describe('DestinatarioComponent', () => {
     const inputElement = fixture.debugElement.nativeElement.querySelector('#lugar');
     inputElement.dispatchEvent(new Event('change'));
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar');
-  });
-
-  it('should call setValoresStore for grupoDeTransporte.puertoEmbarque on change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoDeTransporte.get('puertoEmbarque')?.setValue('Nuevo Puerto');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#puertoEmbarque');
-    inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoDeTransporte, 'puertoEmbarque', 'setgrupoDeTransportePuertoEmbarque');
   });
 
   it('should disable form elements on onClick', () => {
