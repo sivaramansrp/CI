@@ -459,21 +459,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e?.valor && e.valor > 0 && e.valor < 5) {
+    if (e?.valor && e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;
-      if (this.indice !== 2) {
-        this.consultaioStore.establecerConsultaio(
-          this.guardarDatos?.procedureId,
-          this.guardarDatos?.parameter,
-          this.guardarDatos?.department,
-          this.guardarDatos?.folioTramite,
-          this.guardarDatos?.tipoDeTramite,
-          this.guardarDatos?.estadoDeTramite,
-          true, false, false,
-          this.guardarDatos?.action_id,
-          this.guardarDatos.current_user,
-          this.guardarDatos.id_solicitud);
-      } else {
+      if (this.indice === 2) {
         this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
           this.guardarDatos?.parameter,
@@ -484,9 +472,23 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           false, false, true,
           this.guardarDatos?.action_id,
           this.guardarDatos.current_user,
-          this.guardarDatos.id_solicitud);
+          this.guardarDatos.id_solicitud
+        );
+      } else {
+        this.consultaioStore.establecerConsultaio(
+          this.guardarDatos?.procedureId,
+          this.guardarDatos?.parameter,
+          this.guardarDatos?.department,
+          this.guardarDatos?.folioTramite,
+          this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
+          true, false, false,
+          this.guardarDatos?.action_id,
+          this.guardarDatos.current_user,
+          this.guardarDatos.id_solicitud
+        );
       }
-      if (this.indice === 4) {
+      if (this.indice === 3) {
         this.mostrarFirmarAtenderRequerimiento();
       }
       if (e.accion === 'cont') {
