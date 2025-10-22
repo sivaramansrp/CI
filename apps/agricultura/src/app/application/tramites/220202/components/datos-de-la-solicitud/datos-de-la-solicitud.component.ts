@@ -87,7 +87,7 @@ import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
  */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** @description Indica si el panel de detalle está colapsado o no. */
-  colapsable: boolean = false;
+  colapsable: boolean = true;
 
   /**
    * @description Datos para las columnas de la tabla.
