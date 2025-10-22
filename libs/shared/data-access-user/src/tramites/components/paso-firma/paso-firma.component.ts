@@ -219,7 +219,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
-          const PAYLOAD: FirmarRequest = {
+          const PAYLOAD: FirmarRequest = this.procedure === 110210 ? {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
@@ -228,8 +228,17 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
-            rfcSolicitante: 'AAL0409235E6'
-          };
+            rfc_solicitante: 'AAL0409235E6'
+          } : {
+            cadena_original: CADENAHEX,
+            cert_serial_number: this.datosFirmaReales.certSerialNumber,
+            clave_usuario: this.datosFirmaReales.rfc,
+            fecha_firma: formatFecha(new Date()),
+            clave_rol: 'Solicitante',
+            sello: FIRMAHEX,
+            fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
+            documentos_requeridos: response.datos?.documentos_requeridos || [],
+            rfcSolicitante: 'AAL0409235E6'};
 
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);
         }),

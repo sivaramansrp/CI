@@ -51,7 +51,7 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
    * Evento que se emite cuando se hace clic en una fila de la tabla.
    * @type {EventEmitter<void>}
    */
-  @Output() rowClicked = new EventEmitter<void>();
+  @Output() rowClicked = new EventEmitter<CertificadoDisponibles>();
 
   @Input() esFormularioSoloLectura: boolean = false;
 
@@ -97,10 +97,10 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  onFilaClick(): void{
+  onFilaClick(event: CertificadoDisponibles): void{
      if (this.esFormularioSoloLectura) {
       return; 
     }
-    this.rowClicked.emit();
+    this.rowClicked.emit(event);
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';
 import mockData from 'libs/shared/theme/assets/json/110210/domicilio-del-destinatario.json';
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 
 /**
  * Componente para gestionar el formulario del solicitante.
@@ -19,7 +20,12 @@ import mockData from 'libs/shared/theme/assets/json/110210/domicilio-del-destina
   standalone: true,
   imports: [TituloComponent, ReactiveFormsModule]
 })
-export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
+export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+     * Datos del certificado de origen.
+     * @type {CertificadoOrigenResponse | null}
+     */
+    @Input() certificadoDatos: CertificadoOrigenResponse | null = null;
   /**
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
@@ -89,13 +95,16 @@ private inicializarFormulario(): void {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   setFormValues() {
-    this.solicitudForm.get('ciudad')?.setValue(mockData.ciudad);
-    this.solicitudForm.get('calle')?.setValue(mockData.calle);
-    this.solicitudForm.get('numeroLetra')?.setValue(mockData.numeroLetra);
-    this.solicitudForm.get('telefono')?.setValue(mockData.telefono);
-    this.solicitudForm.get('fax')?.setValue(mockData.fax);
-    this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
-    this.solicitudForm.get('observaciones')?.setValue(mockData.observaciones);
+    if (!this.solicitudForm) {
+      return;
+    }
+    this.solicitudForm.get('ciudad')?.setValue(this.certificadoDatos?.ciudad);
+    this.solicitudForm.get('calle')?.setValue(this.certificadoDatos?.calle);
+    this.solicitudForm.get('numeroLetra')?.setValue(this.certificadoDatos?.numeroLetra);
+    this.solicitudForm.get('telefono')?.setValue(this.certificadoDatos?.telefono);
+    this.solicitudForm.get('fax')?.setValue(this.certificadoDatos?.fax);
+    this.solicitudForm.get('correoElectronico')?.setValue(this.certificadoDatos?.correoElectronico);
+    this.solicitudForm.get('observaciones')?.setValue(this.certificadoDatos?.observaciones);
   }
 
   /**
@@ -124,6 +133,14 @@ private inicializarFormulario(): void {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+    /**
+   * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * Actualiza los valores del formulario cuando `certificadoDatos` cambia.
+   */
+  ngOnChanges(): void {
+    this.setFormValues();
   }
 
 

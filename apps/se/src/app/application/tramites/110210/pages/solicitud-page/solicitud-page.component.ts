@@ -2,7 +2,7 @@ import {
   AVISO,
   DatosPasos,
   ListaPasosWizard,
-  PASOS,
+  PASOS2,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
@@ -80,7 +80,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Lista de pasos del asistente.
    * @type {ListaPasosWizard[]}
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
 
   /**
    * Índice del paso actual.
@@ -172,7 +172,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Obtiene el valor del índice de la acción del botón.
    * @param {AccionBoton} e - Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
+  async getValorIndice(e: AccionBoton): Promise<void> {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -193,13 +193,15 @@ export class SolicitudPageComponent implements OnDestroy {
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
       // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
+      
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-        this.guardar();
+        await this.guardar();
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
       } else if (e.accion === 'ant') {
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
         this.wizardComponent.atras();
       }
     }
@@ -212,7 +214,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Utiliza el estado actual de la solicitud para construir el payload.
    * Si la respuesta es válida, actualiza los identificadores de solicitud y muestra un mensaje de éxito.
    */
-  public guardar():void{
+  public guardar():Promise<void> {
     const SOLICITUD = this.solicitudState;
     const PAYLOAD = {
         "solicitud": {
@@ -269,16 +271,23 @@ export class SolicitudPageComponent implements OnDestroy {
           "idTramite": 110210
         }
       };
-
-    this.service.guardar(PAYLOAD).pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe((response) => {
-        if(esValidObject(response)) {
-          const RESPONSE = doDeepCopy(response);
-          this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
-          this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
-          this.generaCadena(this.guardarIdSolicitud);
-        }
+      return new Promise((resolve, reject) => {
+        this.service.guardar(PAYLOAD).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe((response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            this.TramiteStore.setIdSolicitud(RESPONSE?.datos?.idSolicitud ?? 0);
+            this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+            this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+            this.wizardComponent.siguiente();
+            resolve();
+          } else {
+            reject();
+          }
+        },error=>{
+          reject(error);
+        });
       });
   }
 /**   * @method generaCadena

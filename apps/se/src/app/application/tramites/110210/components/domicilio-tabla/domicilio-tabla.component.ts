@@ -2,13 +2,14 @@
  * Este módulo define el componente `DomicilioTablaComponent` que maneja la información de los tratados y acuerdos.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { Subject, takeUntil } from 'rxjs';
 
 import { DomicilioTabla, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
+import { CommonModule } from '@angular/common';
 import { DOMICILIO_TABLA_COLUMNAS } from '@ng-mf/data-access-user';
 import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
 
@@ -23,6 +24,11 @@ import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioT
   styleUrl: './domicilio-tabla.component.scss',
 })
 export class DomicilioTablaComponent implements OnInit, OnDestroy {
+  /**
+     * Datos del certificado de origen.
+     * @type {CertificadoOrigenResponse | null}
+     */
+    @Input() certificadoDatos: CertificadoOrigenResponse | null = null;
 
   /**
    * Configuración de la tabla que se utilizará en el componente.
@@ -79,4 +85,9 @@ export class DomicilioTablaComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+  ngOnChanges(): void {
+    this.datosTabla = (this.certificadoDatos?.mercancias ?? []) as DomicilioTabla[];
+  }
+
 }

@@ -2,10 +2,12 @@
  *  Este servicio proporciona métodos para obtener datos relacionados con tratados y acuerdos.
  */
 
-import { DomicilioTabla, HttpCoreService } from '@libs/shared/data-access-user/src';
+import { DomicilioTabla, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { CertificadoOrigenPayload } from '../../models/certificados-disponsible.model';
+import { API_ROUTES } from '../../../../shared/servers/api-route';
 
 
 @Injectable({
@@ -38,4 +40,14 @@ export class DomicilioTablaService {
   actualizarEstadoFormulario(DATOS: Tramite110210State): void {
     this.store.actualizarEstado(DATOS);
   }
+
+  obtenerEstadoFormulario(body: CertificadoOrigenPayload, solicitudId: number): Observable<JSONResponse> {
+      return this.http.post(API_ROUTES('/sat-t110210').certificadoOrigen(solicitudId), { body }).pipe(
+        map((response) => response as JSONResponse),
+        catchError(() => {
+          const ERROR = new Error(`Error al generar la cadena en ${API_ROUTES().certificadoOrigen(solicitudId)}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
 }

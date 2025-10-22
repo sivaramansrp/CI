@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';
 import mockData from 'libs/shared/theme/assets/json/110210/datos-del-certificado.json';
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 
 /**
  * Componente para gestionar el formulario del solicitante.
@@ -19,7 +20,12 @@ import mockData from 'libs/shared/theme/assets/json/110210/datos-del-certificado
   standalone: true,
   imports: [TituloComponent, ReactiveFormsModule]
 })
-export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
+export class DatosDelCertificadoComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+     * Datos del certificado de origen.
+     * @type {CertificadoOrigenResponse | null}
+     */
+    @Input() certificadoDatos: CertificadoOrigenResponse | null = null;
   /**
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
@@ -85,14 +91,16 @@ private inicializarFormulario(): void {
  * Este método asume que `mockData` contiene los campos necesarios
  * y que `solicitudForm` está correctamente inicializado.
  */
-
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   setFormValues() {
-    this.solicitudForm.get('cveRegistroProductor')?.setValue(mockData.cveRegistroProductor);
-    this.solicitudForm.get('fichaExpedicion')?.setValue(mockData.fichaExpedicion);
-    this.solicitudForm.get('fechaVecimiento')?.setValue(mockData.fechaVecimiento);
-    this.solicitudForm.get('tratadoAcuerdoClave')?.setValue(mockData.tratadoAcuerdoClave);
-    this.solicitudForm.get('paisBloqueClave')?.setValue(mockData.paisBloqueClave);
+    if (!this.solicitudForm) {
+      return;
+    }
+    this.solicitudForm.get('cveRegistroProductor')?.setValue(this.certificadoDatos?.numeroCertificadoOrigen);
+    this.solicitudForm.get('fichaExpedicion')?.setValue(this.certificadoDatos?.fechaExpedicion);
+    this.solicitudForm.get('fechaVecimiento')?.setValue(this.certificadoDatos?.fechaVencimiento);
+    this.solicitudForm.get('tratadoAcuerdoClave')?.setValue(this.certificadoDatos?.tratadoAcuerdo);
+    this.solicitudForm.get('paisBloqueClave')?.setValue(this.certificadoDatos?.paisBloque);
   }
 
   /**
@@ -123,18 +131,29 @@ private inicializarFormulario(): void {
     this.destroy$.complete();
   }
 
-
   /**
    * Método para actualizar el estado del store con los valores actuales del formulario.
    * Se extraen los valores del formulario y se actualizan en el store correspondiente.
    */
   private updateStore(): void {
+    if (!this.solicitudForm) {
+      return;
+    }
+    
     const FORMVALUES = this.solicitudForm.value;
     this.tramite110210Store.setCveRegistroProductor(FORMVALUES.cveRegistroProductor);
     this.tramite110210Store.setFichaExpedicion(FORMVALUES.fichaExpedicion);
     this.tramite110210Store.setFechaVecimiento(FORMVALUES.fechaVecimiento);
     this.tramite110210Store.setTratadoAcuerdoClave(FORMVALUES.tratadoAcuerdoClave);
     this.tramite110210Store.setPaisBloqueClave(FORMVALUES.paisBloqueClave);
+  }
+
+  /**
+   * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * Actualiza los valores del formulario cuando `certificadoDatos` cambia.
+   */
+  ngOnChanges(): void {
+    this.setFormValues();
   }
 
 }
