@@ -429,7 +429,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Puede ser de tipo string o number dependiendo del tipo de opción seleccionada.
    * Se actualiza cuando el usuario cambia la selección en los controles de radio.
    */
-  selectedValue: string | number = '';
+  selectedValue: boolean | number = false;
 
   /**
    * @property {string | number} selectValueNacional - Valor seleccionado del radio button para fabricantes nacionales.
@@ -784,22 +784,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   valorSeleccionado: string | number = '';
 
   /**
-   * @method alValorCambiar
-   * @description Maneja el cambio de valor del radio button.
-   * Se ejecuta cuando el usuario selecciona una nueva opción en los controles de radio button.
-   * Actualiza la propiedad valorSeleccionado con el nuevo valor seleccionado,
-   * lo que puede desencadenar cambios en la interfaz o validaciones adicionales.
-   * Facilita la captura de la interacción del usuario con los controles de selección.
-   * @param {string | number} nuevoValor - El nuevo valor seleccionado en el control de radio.
-   * @returns {void} No retorna ningún valor.
-   */
-  onValueChange(newValue: number | string): void {
-    this.historicoFabricantesForm.get('exportadorFabricanteMismo')?.setValue(newValue)
-    this.selectedValue = newValue;
-    this.isNacional = true;
-  }
-
-  /**
    * @method onSeleccionFabricantesNacionales
    * @description Maneja la selección de fabricantes nacionales desde un componente externo.
    * Almacena la lista de fabricantes nacionales seleccionados en una propiedad de la clase
@@ -1094,5 +1078,24 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
  */
   onHidden(): void {
     this.mostrarModal = false;
+  }
+
+  onCheckboxChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const ISCHECKED = INPUT.checked;
+    this.setValoresStore(
+      this.historicoFabricantesForm,
+      'exportadorFabricanteMismo',
+      'setExportadorFabricanteMismo'
+    );
+    this.historicoFabricantesForm.get('exportadorFabricanteMismo')?.setValue(ISCHECKED);
+    if (!ISCHECKED) {
+      this.isNacional = false;
+      this.isNacionalTabla = false;
+    }
+    else {
+      this.selectedValue = ISCHECKED;
+      this.isNacional = true;
+    }
   }
 }
