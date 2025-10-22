@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
-import { Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
@@ -514,8 +514,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList(): void {
-    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, '34013').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+  obtenerPuntoInspeccionList(oisa: string = '34013'): void {
+    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, oisa).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.puntoInspeccion = data.datos ?? [];
     });
   }
@@ -545,10 +545,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList(): void {
+  obtenerRegimenList(clave_regimen: string=''): void {
 
     this.catalogoService.obtieneCatalogoRegimenes(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimen = data.datos ?? [];
+      this.regimen = clave_regimen 
+        ? (data.datos ?? []).filter((item) => item.clave === clave_regimen) 
+        : data.datos ?? [];
     });
   }
 
@@ -765,23 +767,67 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .subscribe({
           next: (datos) => {
             if (datos?.datos) {
+              this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
+              this.obtenerPuntoInspeccionList(datos.datos.punto_inspeccion || '');
+              //Regimen
+              this.obtenerRegimenList(datos.datos?.clave_regimen || '');
               this.datosDelaSolicitud.patchValue({
                 tipoMercancia: datos.datos.cve_aduana || '',
                 aduanaIngreso: datos.datos.cve_aduana || '',
                 oficinaInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
-                puntoInspeccion: datos.datos.punto_inspeccion || '',
                 claveUCON: datos.datos.clave_UCON || '',
                 establecimientoTIF: datos.datos.establecimiento_TIF || '',
                 nombreVeterinario: datos.datos.nombre_veterinario || '',
+                regimen: datos.datos.clave_regimen || '',
+                numeroGuia: datos.datos.numero_autorizacion || '',
               });
               //this.datosDelaSolicitud.patchValue(datos.datos);
             } else {
               this.datosDelaSolicitud.reset();
             }
             console.warn('Datos de la solicitud prellenada:', datos);
-            const DETALLE_MERCANCIA = datos?.datos?.mercancia || [];
-            if (DETALLE_MERCANCIA.length > 0) {
-              // this.fitosanitarioStore.updateFilaSolicitud(FILAS_SOLICITUD);
+            const DETALLE_MERCANCIA = datos?.datos as PrellenadoSolicitud || [];
+            if (DETALLE_MERCANCIA.mercancia.length > 0) {
+
+              const FILAS_SOLICITUD: FilaSolicitud[] = [];
+              DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
+
+                const LISTADETALLEPRODUCTOS: DetallasDatos[] = [];
+
+                const LISTADETALLESENSIBLES: Sensible[] = [];
+
+
+
+                const FILAS: FilaSolicitud = {
+                  noPartida: mercancia.numero_partida.toString(),
+                  descripcionTipoRequisito: mercancia.descripcion_tipo_requisito || '',
+                  tipoRequisito: mercancia.tipo_requisito || '',
+                  requisito: mercancia.requisitos || '',
+                  numeroCertificadoInternacional: String(mercancia.numero_certificado) || '',
+                  fraccionArancelaria: mercancia.fraccion_arancelaria_corto || '',
+                  descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
+                  nico: mercancia.clave_nico || '',
+                  descripcionNico: mercancia.descripcion_nico || '',
+                  umt: mercancia.clave_unidad_comercial || '',
+                  cantidadUMT: mercancia.cantidad_umt || 0,
+                  umc: mercancia.clave_unidad_medida || '',
+                  descripcionUMT: mercancia.descripcion_umt || '',
+                  cantidadUMC: mercancia.cantidad_umc || 0,
+                  especie: mercancia.descripcion_especie || '',
+                  uso: mercancia.descripcion_uso || '',
+                  paisDeOrigen: mercancia.nombre_pais_origen || '',
+                  paisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
+                  tipoDeProducto: '', // Add appropriate value
+                  numeroDeLote: '', // Add appropriate value
+                  sensibles: LISTADETALLESENSIBLES,
+                  detalleProductos: LISTADETALLEPRODUCTOS,
+                  descripcion: ''
+                };
+                FILAS_SOLICITUD.push(FILAS);
+              });
+
+              this.fitosanitarioStore.updateFilaSolicitud(FILAS_SOLICITUD);
             }
           },
           error: (error) => {
