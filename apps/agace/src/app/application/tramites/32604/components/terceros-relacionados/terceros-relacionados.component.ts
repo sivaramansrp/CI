@@ -264,8 +264,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  // this.conseguirEnlaceOperativoDatos(); // removed, table is blank by default
-  // Do not fetch notificaciones on load; table remains blank by default.
   }
 
   /**
@@ -583,10 +581,10 @@ eliminarPedimento(borrar: boolean): void {
       return;
     }
 
-    // Set selected values into agregarEnlaceOperativoForm before opening modal
+    // Establezca los valores seleccionados en agregarEnlaceOperativoForm antes de abrir modal
     if (this.seleccionEnlaceOperativoDatos.length === 1) {
       const SELECCIONADO = this.seleccionEnlaceOperativoDatos[0];
-      // Patch the agregarEnlaceOperativoForm in the child component via ViewChild
+      // Parchear agregarEnlaceOperativoForm en el componente secundario vía ViewChild
       const AGREGAR_ENLACE_OPERATIVO_COMPONENT = (this.modificacionEnlaceOperativoElement?.nativeElement?.querySelector('app-agregar-enlace-operativo')?.__ngContext__?.[8]) || null;
       if (AGREGAR_ENLACE_OPERATIVO_COMPONENT && AGREGAR_ENLACE_OPERATIVO_COMPONENT.agregarEnlaceOperativoForm) {
         AGREGAR_ENLACE_OPERATIVO_COMPONENT.agregarEnlaceOperativoForm.patchValue({
@@ -639,7 +637,7 @@ eliminarPedimento(borrar: boolean): void {
         (element) => element.rfc !== this.seleccionEnlaceOperativoDatos[0].rfc
       );
       
-      // Actualizar el store
+      // Actualizar la tienda con la lista modificada
       this.solicitud32604Store.actualizarEnlaceOperativosLista(this.enlaceOperativosLista);
       
       // Limpiar la selección para que los botones vuelvan a estar deshabilitados
@@ -677,7 +675,7 @@ eliminarPedimento(borrar: boolean): void {
     // Agregar el nuevo enlace operativo a la lista
     this.enlaceOperativosLista = [...this.enlaceOperativosLista, evento];
     
-    // Actualizar el store
+    // Actualizar la tienda con la lista modificada
     this.solicitud32604Store.actualizarEnlaceOperativosLista(this.enlaceOperativosLista);
     
     // Limpiar la selección para que los botones vuelvan a estar deshabilitados

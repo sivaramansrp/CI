@@ -268,10 +268,10 @@ export class EmpresaComponent implements OnInit, OnDestroy, OnChanges {
           nombreCompleto: this.miembroAModificar.nombreCompleto || ''
         });
         
-        // Set the visibility control property with the ID value
+        // Establecer la propiedad de control de visibilidad con el valor de ID
         this.instalacionesPrincipalesValue = this.convertirRadioDescripcionAId(this.miembroAModificar.tributarMexico || 'No');
         
-        // Update field validations based on the loaded value
+        // Actualizar las validaciones de los campos según el valor cargado
         this.actualizarValidacionesCampos();
         
         // Volver a deshabilitar los campos después de establecer los valores

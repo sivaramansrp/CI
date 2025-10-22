@@ -88,7 +88,7 @@
                         class="btn btn-danger" (click)="confirmarEliminarTransportista()">
                         Eliminar
                     </button>
-                </div>
+                    </div>
             </div>
 
             <div class="col-md-12 mt-4">
@@ -124,8 +124,11 @@
             </div>
 
         </div>
-    </form>
-</div>
+        </form>
+<!-- Success notification modal for add/modify actions -->
+@if(mostrarNotificacion && alertaNotificacion && alertaNotificacion.mensaje === 'Datos guardados correctamente.') {
+    <lib-notificaciones [notificacionInput]="alertaNotificacion" (confirmacionModal)="cerrarNotificacionExito()"></lib-notificaciones>
+}
 @if (nuevaNotificacion) {
   <lib-notificaciones 
     [notificacionInput]="nuevaNotificacion" 
@@ -144,12 +147,9 @@
     </div>
 </div>
 
-<!-- Global success notification modal for add/modify actions -->
 @if(mostrarNotificacion && alertaNotificacion && alertaNotificacion.mensaje === 'Datos guardados correctamente.') {
     <lib-notificaciones [notificacionInput]="alertaNotificacion" (confirmacionModal)="cerrarNotificacionExito()"></lib-notificaciones>
 }
-
-
 
 @if(alertaNotificacion && alertaNotificacion.tipoNotificacion) {
 <section>

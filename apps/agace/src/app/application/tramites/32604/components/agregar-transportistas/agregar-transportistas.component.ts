@@ -26,6 +26,21 @@ import { TransportistasTable } from '../../models/empresas-comercializadoras.mod
  * Incluye configuración de selector, template, estilos y módulos importados.
  */
 export class AgregarTransportistasComponent implements OnInit, OnDestroy {
+  /**
+   * Permite al componente padre actualizar los valores del formulario con un objeto TransportistasTable.
+   * @param {TransportistasTable} transportista - Datos del transportista a cargar en el formulario
+   */
+  public patchForm(transportista: TransportistasTable): void {
+    if (this.transportistaCertificacionForm) {
+        this.transportistaCertificacionForm.patchValue({
+          transportistaRFC: transportista.transportistaRFCModifTrans,
+          transportistaRFCModifTrans: transportista.transportistaRFCModifTrans,
+          transportistaRazonSocial: transportista.transportistaRazonSocial,
+          transportistaDomicilio: transportista.transportistaDomicilio,
+          transportistaCaat: transportista.transportistaCaat
+        });
+    }
+  }
   /** Formulario reactivo para capturar datos del transportista */
   transportistaCertificacionForm!: FormGroup;
 
@@ -206,13 +221,13 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       transportistaIdCaat: [VALORES_FORMULARIO.transportistaIdCaat],
     });
 
-    // Disable specific fields
+    // Deshabilitar campos específicos
     this.transportistaCertificacionForm.get('transportistaRFCModifTrans')?.disable();
     this.transportistaCertificacionForm.get('transportistaRazonSocial')?.disable();
     this.transportistaCertificacionForm.get('transportistaDomicilio')?.disable();
     this.transportistaCertificacionForm.get('transportistaCaat')?.disable();
 
-    // Apply overall disable/enable state if needed
+    // Aplicar estado general deshabilitar/habilitar si es necesario
     if (this.esFormularioSoloLectura) {
       this.transportistaCertificacionForm.disable();
     }
@@ -295,7 +310,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   selectBuscarTransportista(): void {
     const RFC_CONTROL = this.transportistaCertificacionForm.get('transportistaRFC');
     
-    // Mark field as touched to show validation errors
+    // Marcar el campo como tocado para mostrar errores de validación
     RFC_CONTROL?.markAsTouched();
     
     if (RFC_CONTROL?.invalid) {
@@ -304,7 +319,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: 'Mensaje',
-        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
+        mensaje: 'Existen datos incorrectos que no cumplen con el formato esperado.',
         cerrar: false,
         tiempoDeEspera: 4000,
         txtBtnAceptar: 'Aceptar',
@@ -428,6 +443,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   private actualizarFormularioConDatos(transportista: TransportistasTable): void {
     this.transportistaCertificacionForm.patchValue({
+      transportistaRFC: transportista.transportistaRFCModifTrans,
       transportistaRFCModifTrans: transportista.transportistaRFCModifTrans,
       transportistaRazonSocial: transportista.transportistaRazonSocial,
       transportistaDomicilio: transportista.transportistaDomicilio,
@@ -447,7 +463,6 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       transportista.transportistaCaat
     );
 
-    // Force change detection to ensure UI updates
     this.cdr.detectChanges();
   }
 

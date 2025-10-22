@@ -381,6 +381,9 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   modificarTransportistaModal(): void {
     if (this.seleccionDatos.length === 1) {
       this.transportistaAModificar = this.seleccionDatos[0];
+      if (this.agregarTransportistasComponent) {
+        this.agregarTransportistasComponent.patchForm(this.transportistaAModificar);
+      }
       if (this.transportistaElement) {
         const INSTANCIA_MODAL = new Modal(this.transportistaElement.nativeElement);
         INSTANCIA_MODAL.show();
@@ -400,24 +403,27 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    */
   eliminarDato(): void {
     if (this.seleccionDatos.length > 0) {
-
-      // Usar un enfoque más seguro: crear nueva lista sin los elementos seleccionados
-      this.transportistasLista = this.transportistasLista.filter(transportista => {
-        const DEBE_ELIMINAR = this.seleccionDatos.some(
-          seleccionado => seleccionado.transportistaRFCModifTrans === transportista.transportistaRFCModifTrans
-        );
-        
-        return !DEBE_ELIMINAR; // Mantener elementos que NO deben ser eliminados
-      });
-      
-      // Actualizar el store con la lista modificada
+      // Eliminar transportistas seleccionados por RFC
+  const RFC_TO_DELETE_LIST = this.seleccionDatos.map(t => t.transportistaRFCModifTrans);
+  this.transportistasLista = this.transportistasLista.filter(t => !RFC_TO_DELETE_LIST.includes(t.transportistaRFCModifTrans));
+      // Actualiza la lista de transportistas en el estado global
       this.solicitud32604Store.actualizarTransportistasLista(this.transportistasLista);
-      
-      // Limpiar la selección después de la eliminación
       this.seleccionDatos = [];
-
-      // Forzar detección de cambios para actualizar la UI
-      this.cdr.detectChanges();
+      // Mostrar modal de éxito después de la eliminación
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        mensaje: 'Datos eliminados correctamente',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        titulo: '',
+        modo: ''
+      };
+      setTimeout(() => {
+        this.mostrarNotificacion = true;
+        this.cdr.detectChanges();
+      }, 300);
     }
   }
 
@@ -587,8 +593,12 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
       if (INDICE !== -1) {
         this.transportistasLista[INDICE] = evento;
         registroModificado = true;
+        // Formulario de parche con transportista seleccionado.
+        if (this.agregarTransportistasComponent) {
+          this.agregarTransportistasComponent.patchForm(evento);
+        }
       }
-      this.transportistaAModificar = null; // Limpiar la selección
+      this.transportistaAModificar = null;
     } else {
       // Agregar nuevo transportista solo si el RFC no existe ya
       const EXISTE = this.transportistasLista.some(
@@ -601,30 +611,25 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
     }
 
     if (registroModificado) {
-      this.solicitud32604Store.actualizarTransportistasLista(
-        this.transportistasLista
-      );
-
-      // Limpiar el formulario después de guardar exitosamente para prepararlo para una nueva entrada
+      this.solicitud32604Store.actualizarTransportistasLista(this.transportistasLista);
       if (this.agregarTransportistasComponent) {
         this.agregarTransportistasComponent.limpiar();
       }
-
-      // Mostrar notificación de éxito
-      this.alertaNotificacion = {
-        tipoNotificacion: 'INFORMACION',
-        categoria: 'INFORMACION',
-        modo: 'action',
-        titulo: 'Mensaje',
+      // Mostrar notificación de éxito (agregar/modificar)
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
         mensaje: 'Datos guardados correctamente.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnCancelar: '',
+        cerrar: true,
         txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        titulo: '',
+        modo: ''
       };
       setTimeout(() => {
         this.mostrarNotificacion = true;
-      }, 100);
+        this.cdr.detectChanges();
+      }, 300);
     }
   }
 
@@ -640,7 +645,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @memberof ComercializadoraImportadoraComponent
    */
   seleccionarDato(evento: TransportistasTable[]): void {
-    this.seleccionDatos = evento;
+  this.seleccionDatos = evento;
   }
 
   /**
@@ -700,8 +705,8 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @memberof ComercializadoraImportadoraComponent
    */
   cerrarNotificacionExito(): void {
-    this.mostrarNotificacion = false;
-    this.alertaNotificacion = {} as Notificacion;
+  this.alertaNotificacion = {} as Notificacion;
+  this.mostrarNotificacion = false;
   }
 
   /**
@@ -710,7 +715,8 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
    * @memberof ComercializadoraImportadoraComponent
    */
   confirmarEliminarTransportista(): void {
-    if (this.seleccionDatos.length === 0) {
+  this.accionConfirmarEliminar = 'transportistas';
+  if (this.seleccionDatos.length === 0) {
       // Mostrar notificación informando que debe seleccionar al menos un elemento
       this.alertaNotificacion = {
         tipoNotificacion: 'INFORMACION',
@@ -761,7 +767,6 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
               const MODAL_INSTANCE = Modal.getOrCreateInstance(this.transportistaElement.nativeElement);
               MODAL_INSTANCE.hide();
             } catch (e) {
-              // fallback: remove backdrop and hide manually if needed
               document.querySelectorAll('.modal-backdrop').forEach((el) => {
                 el.parentNode?.removeChild(el);
               });
@@ -774,9 +779,7 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
             }
           }
           // Limpiar la notificación de confirmación para evitar superposición
-          this.nuevaNotificacion = {} as Notificacion;
-          // Mostrar notificación de éxito
-          this.alertaNotificacion = {
+          this.nuevaNotificacion = {
             tipoNotificacion: 'alert',
             categoria: 'success',
             mensaje: 'Datos eliminados correctamente',
@@ -786,13 +789,14 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
             titulo: '',
             modo: ''
           };
-          this.mostrarNotificacion = true;
+          setTimeout(() => {
+            this.mostrarNotificacion = true;
+            this.cdr.detectChanges();
+          }, 300);
         }, 300);
       } else {
-        // Solo limpiar la notificación si no es acción de eliminar
         this.nuevaNotificacion = {} as Notificacion;
       }
-      // Resetear la acción después de confirmar
       this.accionConfirmarEliminar = '';
     } else {
       this.nuevaNotificacion = {} as Notificacion;

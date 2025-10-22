@@ -6,14 +6,17 @@
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="trRfc">RFC<span [ngClass]="{'text-danger': transportistaCertificacionForm.get('transportistaRFC')?.invalid && (transportistaCertificacionForm.get('transportistaRFC')?.touched || transportistaCertificacionForm.get('transportistaRFC')?.dirty)}">*</span>:</label>
-        <input type="text" class="form-control" formControlName="transportistaRFC" name="trRfc" id="trRfc"
+        <input type="text" class="form-control" formControlName="transportistaRFC" name="trRfc" id="trRfc" maxlength="13"
           (change)="actualizarTransportistaRFC($event)" />
         @if (transportistaCertificacionForm.get('transportistaRFC')?.invalid && (transportistaCertificacionForm.get('transportistaRFC')?.touched || transportistaCertificacionForm.get('transportistaRFC')?.dirty)) {
           @if (transportistaCertificacionForm.get('transportistaRFC')?.hasError('required')) {
             <small class="mensaje-error">Este campo es obligatorio</small>
           }
-          @if (transportistaCertificacionForm.get('transportistaRFC')?.hasError('pattern')) {
+          @else if (transportistaCertificacionForm.get('transportistaRFC')?.hasError('pattern')) {
             <small class="mensaje-error">Formato de RFC inválido</small>
+          }
+          @else if (transportistaCertificacionForm.get('transportistaRFC')?.hasError('maxlength')) {
+            <small class="mensaje-error">Por favor, no escriba más de 13 caracteres.</small>
           }
         }
       </div>
