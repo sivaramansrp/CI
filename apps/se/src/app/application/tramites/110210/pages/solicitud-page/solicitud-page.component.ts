@@ -282,39 +282,10 @@ export class SolicitudPageComponent implements OnDestroy {
             this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
             this.wizardComponent.siguiente();
             resolve();
-          } else {
-            reject();
           }
         },error=>{
           reject(error);
         });
-      });
-  }
-/**   * @method generaCadena
-   * @description
-   * Genera la cadena original para la solicitud guardada.
-   */
-  public generaCadena(solicitudId:number): void {
-    const PAYLOAD = {
-        "num_folio_tramite": null,
-        "boolean_extranjero": true,
-        "solicitante": {
-            "rfc": "AAL0409235E6",
-            "nombre": "Juan Pérez",
-            "es_persona_moral": true,
-            "certificado_serial_number": "string"
-        },
-        "cve_rol_capturista": "CapturistaGubernamental",
-        "cve_usuario_capturista": "Gubernamental",
-        "fecha_firma": "2025-07-01 20:01:25"
-    };
-    this.service.generaCadena(PAYLOAD, solicitudId).pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe((response) => {
-        if(esValidObject(response)) {
-          const RESPONSE = doDeepCopy(response);
-          console.log('CADENA GENERADA', RESPONSE);
-        }
       });
   }
 

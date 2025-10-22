@@ -3,11 +3,10 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';
-import mockData from 'libs/shared/theme/assets/json/110210/domicilio-del-destinatario.json';
-import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 
 /**
  * Componente para gestionar el formulario del solicitante.

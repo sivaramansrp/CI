@@ -2,7 +2,7 @@
  * Este módulo define el componente `DomicilioTablaComponent` que maneja la información de los tratados y acuerdos.
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { Subject, takeUntil } from 'rxjs';
 
@@ -23,7 +23,7 @@ import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioT
   templateUrl: './domicilio-tabla.component.html',
   styleUrl: './domicilio-tabla.component.scss',
 })
-export class DomicilioTablaComponent implements OnInit, OnDestroy {
+export class DomicilioTablaComponent implements OnInit, OnDestroy, OnChanges {
   /**
      * Datos del certificado de origen.
      * @type {CertificadoOrigenResponse | null}

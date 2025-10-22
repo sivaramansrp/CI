@@ -3,11 +3,11 @@
  */
 
 import { DomicilioTabla, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
-import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { CertificadoOrigenPayload } from '../../models/certificados-disponsible.model';
 import { API_ROUTES } from '../../../../shared/servers/api-route';
+import { CertificadoOrigenPayload } from '../../models/certificados-disponsible.model';
+import { Injectable } from '@angular/core';
 
 
 @Injectable({

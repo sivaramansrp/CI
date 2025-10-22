@@ -3,9 +3,9 @@ import { CertificadoDisponibles, ConsultaioQuery, ConsultaioState, doDeepCopy, e
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
 import { DuplicadoDeCertificadoComponent } from '../duplicado-de-certificado/duplicado-de-certificado.component';
-import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 
 /**
  * @descripcion
