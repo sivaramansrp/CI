@@ -186,6 +186,13 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Arreglo que almacena el catálogo de tipos de requisito.
    */
   tipoRequisitoList: Catalogo[] = [];
+  /**
+   * @description Lista de paises.
+   * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de paises en el formulario.
+   */
+  catalogosDatosPaisOrigenList: Catalogo[] = [];
+  catalogosDatosPaisDestinoList: Catalogo[] = [];
+
 
   /**
    * Constructor del componente.
@@ -228,6 +235,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    */
   obtenerCatalogos(): void {
     this.obtenerCatalogoRestricciones();
+    this.obtenerCtalogosMercancia();
+
+    
   }
 
   /**
@@ -481,4 +491,42 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+      /**
+   * @description Obtiene la lista de paises desde un archivo JSON.
+   * @method getcatalogosDatospaisOrigenLista
+   * @returns {void}
+   */
+
+  obtenerCtalogosMercancia(): void {
+    this.getcatalogosDatospaisOrigenLista();
+    this.getcatalogosDatospaisDestinoLista()
+  }
+
+
+
+  getcatalogosDatospaisOrigenLista(): void {
+    this.catalogosService.obtieneCatalogoPaises(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.catalogosDatos.paisOrigenList = data.datos ?? [];
+      }
+    );
+    
+  }
+
+    getcatalogosDatospaisDestinoLista(): void {
+    this.catalogosService.obtieneCatalogoPaisesD(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
+      }
+    );
+    
+  }
+
 }
