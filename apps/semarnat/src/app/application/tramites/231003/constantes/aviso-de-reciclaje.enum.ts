@@ -1,3 +1,8 @@
+
+export const TRAMITE_ID = '231002';
+
+
+
 /**
  * Lista de pasos del proceso de solicitud.
  * Cada paso contiene su índice, título, y el estado actual (activo y completado).
