@@ -66,7 +66,7 @@ export interface FirmarRequest {
    * Lista de documentos firmados con su respectivo hash y sello.
    */
   documentos_requeridos: DocumentoRequeridoFirmar[];
-  rfc_solicitante?: string;
+  rfcSolicitante?: string;
 }
 
 /**
