@@ -1,5 +1,6 @@
 
 import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TabEvaluarTratadosResponse, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
@@ -76,6 +77,12 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
    */
   public nuevaNotificacion!: Notificacion ;
+
+  /**
+   * Texto que describe el requisito del proceso.
+   */
+  public textoRequisitoProceso!: string;
+  
   /**
    * Evento que se emite para habilitar la pestaña siguiente en el flujo del trámite.
    * Se utiliza para notificar al componente padre que la pestaña puede ser activada,
@@ -211,7 +218,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
 
 
   /** Almacena las filas seleccionadas de la tabla */
-    public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
+  public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
 
   public consultaState!: ConsultaioState;
     /**
@@ -1170,6 +1177,26 @@ eliminarTratado(): void {
   }
 
   /**
+   * Abre el modal de error para tratados en evaluación.
+   * 
+   * Este método configura los datos de la notificación que se mostrará en el modal
+   * cuando no se ha seleccionado un país, bloque-tratado o acuerdo.
+   */
+  abrirModalTratadosEvaluacion(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Debe seleccionar un País/bloque-tratado/acuerdo',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+    };
+  }
+
+  /**
    * Abre el modal de error.
    */
   abrirModalGlobalAccion(): void {
@@ -1204,8 +1231,8 @@ eliminarTratado(): void {
    * @returns {void}
    */
   insumosEmpaques(): void {
-    if(this.tratadoSeleccionado.length === 0) {
-      this.abrirModal();
+    if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
+      this.abrirModalTratadosEvaluacion();
       return;
     }
     const TRATADO = this.tratadoSeleccionado[0];
@@ -1322,8 +1349,8 @@ eliminarTratado(): void {
    * @returns {void}
    */
   criterioTratadoResumen(): void {
-    if(this.tratadoSeleccionado.length === 0) {
-      this.abrirModal();
+    if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
+      this.abrirModalTratadosEvaluacion();
       return;
     }          
     this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_criterio_tratado.toString())
@@ -1363,6 +1390,25 @@ eliminarTratado(): void {
         }
       }
     });
+  }
+
+  /**
+   * @method requisitoProceso
+   * @description Muestra el requisito del proceso asociado al tratado seleccionado.
+   * @returns {void}
+   */
+  requisitoProceso(): void {  
+    if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
+      this.abrirModalTratadosEvaluacion();
+      return;
+    }   
+    if(this.tratadoSeleccionado[0].descripcion_proceso === null || this.tratadoSeleccionado[0].descripcion_proceso === '') {
+      this.abrirModalGlobalAccion();
+    }else{
+      this.textoRequisitoProceso = this.tratadoSeleccionado[0].descripcion_proceso;
+      this.modalInstance = new Modal(this.modalElementResumenValores.nativeElement);
+      this.modalInstance?.show();        
+    }
   }
 
   /**
