@@ -38,19 +38,7 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy
-{
-  /**
-   * @descripcion
-   * Lista de estados disponibles.
-   */
-  estado: Catalogo[] = [];
-
-  /**
-   * @descripcion
-   * Lista de países disponibles.
-   */
-  pais: Catalogo[] = [];
+export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * @descripcion
@@ -221,8 +209,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
-    this.estadoOpcion();
-    this.paisOpcion();
   }
 
   /**
@@ -238,44 +224,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
   }
 
   /**

@@ -1,7 +1,5 @@
 <app-certificado-de-origen 
     [operador]="operador"
-    [tratadoAcuerdo]="estado || []"
-    [paisBloqu]="pais || []"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
@@ -19,8 +17,6 @@
     (formCertificadoEvent)="setValoresStore($event)"
     [tramiteState]="formCertificadoValues"
     [domicilio]="false"
-    [domTercerOperador]="true"
-    [domTercerOperadorRadio]="false"
     [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
     [idProcedimiento]="idProcedimiento">
 </app-certificado-de-origen>
