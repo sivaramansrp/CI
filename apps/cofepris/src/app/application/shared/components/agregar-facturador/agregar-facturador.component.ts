@@ -106,6 +106,8 @@ export class AgregarFacturadorComponent
    */
   facturadores: Facturador[] = [];
 
+  @Input() facturadoresTablaDatos: Facturador[] = [];
+
   /**
    * @property {Facturador | undefined} datoSeleccionado
    * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
@@ -117,6 +119,10 @@ export class AgregarFacturadorComponent
    * @property {EventEmitter<Facturador[]>} updateFacturadorTablaDatos
    */
   @Output() updateFacturadorTablaDatos = new EventEmitter<Facturador[]>();
+
+  @Output() guardarYSalir = new EventEmitter<void>();
+
+  @Output() cancelarDestinario = new EventEmitter<void>();
 
   /**
    * Controla si el desplegable de nacionalidad está deshabilitado.
@@ -335,7 +341,8 @@ export class AgregarFacturadorComponent
     this.facturadores.push(NUEVO_FACTURADOR);
     this.updateFacturadorTablaDatos.emit(this.facturadores);
     this.agregarFacturadorForm.reset();
-    this.ubicaccion.back();
+   // this.ubicaccion.back();
+    this.guardarYSalir.emit();
   }
   /**
    * @method limpiarFormulario
@@ -353,7 +360,9 @@ export class AgregarFacturadorComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+   this.limpiarFormulario();
+    this.datoSeleccionado = [];
+    this.cancelarDestinario.emit();
   }
 
   /**

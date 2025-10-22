@@ -628,13 +628,6 @@ const ROUTES: Routes = [
         ),
 },
 {
-      path: 'importacion-materias-primas',
-      loadChildren: () =>
-        import(
-          './tramites/260202/importacion-materias-primas.module'
-        ).then((m) => m.ImportacionMateriasPrimasModule),
-},
-{
   path: 'importacion-plafest',
   loadChildren: () =>
     import('./tramites/260507/importacion-plafest.module').then(
