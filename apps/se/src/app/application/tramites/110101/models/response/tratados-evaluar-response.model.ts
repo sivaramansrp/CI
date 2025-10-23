@@ -58,4 +58,10 @@ export interface EvaluarTratadosResponse {
 
   /** Clave del tratado o acuerdo (por ejemplo, "TLC URUGUAY") */
   cve_tratado_acuerdo: string;
+
+  /** Tipo de proceso de mercancía (null si no aplica) */
+  ide_tipo_proceso_mercancia: number | null;
+
+  /** Descripción del proceso (null si no aplica) */
+  descripcion_proceso: string | null;
 }
