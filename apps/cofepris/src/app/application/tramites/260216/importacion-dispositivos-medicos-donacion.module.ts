@@ -1,3 +1,4 @@
+import { PasoCargaDocumentoComponent, PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
 import { ImportacionDispositivosMedicosUsoRoutingModule } from './importacion-dispositivos-medicos-donacion-routing.module';
@@ -10,6 +11,8 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     ImportacionDispositivosMedicosUsoRoutingModule,
     ContenedorDePasosComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [
     ToastrService
