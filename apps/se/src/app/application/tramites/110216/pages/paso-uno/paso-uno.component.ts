@@ -168,7 +168,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setIdioma(respuesta.datos.idioma);
           this.store.setEntidadFederativa(respuesta.datos.entidadFederativa);
           this.store.setRepresentacionFederal(respuesta.datos.representacionFederal);
-          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor.toString());
+          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor);
           this.store.setGrupoDeDirecciones(respuesta.datos.grupoDeDirecciones);
           this.store.setGrupoRepresentativo(respuesta.datos.grupoRepresentativo);
           this.store.setGrupoDeTransporte(respuesta.datos.grupoDeTransporte);

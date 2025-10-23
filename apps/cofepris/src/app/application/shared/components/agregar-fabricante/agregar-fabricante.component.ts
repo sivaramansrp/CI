@@ -456,6 +456,7 @@ export class AgregarFabricanteComponent
       ],
       rfc: [
         this.obtenerValor('rfc'),
+        [Validators.required]
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -475,7 +476,7 @@ export class AgregarFabricanteComponent
       ],
       razonSocial: [
         this.obtenerValor('razonSocial'),
-        []
+        [Validators.required]
       ],
       pais: [
         {
@@ -671,7 +672,6 @@ guardarFabricante(): void {
     nombreRazonSocial = '';
   }
 
-  // Helper method to get description from catalog
   const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
     const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
     return ITEM ? ITEM.descripcion : id.toString();

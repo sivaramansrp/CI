@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class=" mt-4">
    <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.tipoPersona || idProcedimiento === 260208; else agregarTitulo"
     titulo="Modificar facturador"
@@ -62,8 +62,9 @@
           <label
             class="form-label mt-3 mover-izquierda fs-2"
             for="denominacionRazon"
-            >Denominación/razón social*:</label
-          >
+            >Denominación/razón social<span 
+            [ngClass]="{'text-danger': agregarFacturadorForm.get('denominacionRazon')?.touched && agregarFacturadorForm.get('denominacionRazon')?.invalid}"
+          >*</span>:</label>
           <input
             class="form-control"
             id="denominacionRazon"
@@ -95,7 +96,9 @@
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)*:</label>
+        <label class="form-label">Nombre(s)<span 
+          [ngClass]="{'text-danger': agregarFacturadorForm.get('nombres')?.touched && agregarFacturadorForm.get('nombres')?.invalid}"
+        >*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -117,7 +120,9 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido*:</label>
+        <label class="form-label">Primer apellido<span 
+          [ngClass]="{'text-danger': agregarFacturadorForm.get('primerApellido')?.touched && agregarFacturadorForm.get('primerApellido')?.invalid}"
+        >*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -300,7 +305,9 @@
         />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Calle*:</label>
+        <label class="form-label">Calle<span 
+          [ngClass]="{'text-danger': agregarFacturadorForm.get('calle')?.touched && agregarFacturadorForm.get('calle')?.invalid}"
+        >*</span>:</label>
         <span tooltip="Domicilio, calle, número interior, número exterior, lote"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
@@ -320,7 +327,9 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior*:</label>
+        <label class="form-label">Número exterior<span 
+          [ngClass]="{'text-danger': agregarFacturadorForm.get('numeroExterior')?.touched && agregarFacturadorForm.get('numeroExterior')?.invalid}"
+        >*</span>:</label>
         <input
           type="text"
           class="form-control"
