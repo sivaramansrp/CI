@@ -1,5 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import {
   Tramite230301State,
@@ -13,7 +18,8 @@ import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 import {
   ConsultaioQuery,
   ConsultaioState,
-  SeccionLibQuery, TituloComponent
+  SeccionLibQuery,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
 
@@ -155,10 +161,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private initializeComponent(): void {
     this.tramite230301Store.setInitialState({
-      //T0DO this will come from the parent tramite 230101
-      //folioAnterior: this.consultaioState.folioTramite,
-      //tipoSolicitud: this.consultaioState.tipoDeTramite,
-      //solicitudAnterior: Number(this.consultaioState.id_solicitud),
+      /**
+       Se tiene que implementar el trámite padre y reemplazar las variables fijas
+       una vez que se pueda navegar entre trámites.
+       */
       folioAnterior: '0200800100220210814000022',
       tipoSolicitud:
         'Certificado fitosanitario tipo de solicitud anterior etc etc',

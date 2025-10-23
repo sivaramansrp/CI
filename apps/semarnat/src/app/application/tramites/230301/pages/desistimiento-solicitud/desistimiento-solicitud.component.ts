@@ -53,14 +53,33 @@ import { ResultadoSolicitud } from '../../models/solicitud-230301-response';
 })
 export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /** Referencia al componente del primer paso para acceder a sus métodos y propiedades. */
   pasoUnoComponent: PasoUnoComponent | undefined;
 
+  /**
+   * Índice actual del paso en el wizard.
+   */
   indice = 1;
+  /**
+ * Notificación para mostrar mensajes al usuario.
+   */
   nuevaNotificacion: Notificacion | null = null;
+  /**
+ * Notificación de alerta para mostrar mensajes importantes al usuario.
+   */
   alertaNotificacion!: Notificacion;
+  /**
+ * Almacena el folio temporal de la solicitud.
+   */
   folioTemporal = 0;
-
+  /**
+ * Lista de pasos para el componente Wizard.
+   */
   pasos: ListaPasosWizard[] = PASOS2;
+  /**
+ * Datos para el componente Wizard.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -68,24 +87,38 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Clase CSS para el tipo de alerta informativa.
+   */
   infoAlert = 'alert-info';
+  /**
+ * Indica si el formulario tiene errores de validación.
+   */
   formWithErrors = false;
+  /**
+ * Mensaje de alerta para errores de formulario.
+   */
   formErrorAlert = ERROR_FORMA_ALERT;
 
   private desistimientoService = inject(DesistimientoSolicitudService);
   private tramite230301Store = inject(Tramite230301Store);
   private tramite230301Query = inject(Tramite230301Query);
   private seccionesStore = inject(SeccionLibStore);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   private readonly destroyed$ = new Subject<void>();
 
+  /**
+   * Almacena el estado de visibilidad de cada sección del formulario.
+   * @private
+   */
   private secciones: boolean[] = [];
+  /**
+   * Almacena el estado de validaciones de cada sección del formulario.
+   * @private
+   */
   private validaciones: boolean[] = [];
-
-  constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute
-  ) {}
 
   ngOnInit(): void {
     this.configuracionSecciones();
@@ -100,6 +133,10 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     this.pasoUnoComponent = componentInstance;
   }
 
+  /**
+   * Configura las secciones y validaciones del formulario.
+   * @private
+   */
   private configuracionSecciones(): void {
     for (const [, SECCIONES_DEL_PASO] of Object.entries(
       SECCIONES_TRAMITE_230301
@@ -113,6 +150,10 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     this.seccionesStore.establecerFormaValida(this.validaciones);
   }
 
+  /**
+   * Maneja el evento de continuar del wizard.
+   * @param e Objeto AccionBoton que contiene la acción y el valor del botón.
+   */
   continuarEvent(e: AccionBoton): void {
     this.formWithErrors = false;
     if (e.valor === 2 && e.accion === 'cont') {
@@ -127,6 +168,10 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Guarda la solicitud de desistimiento.
+   * @private
+   */
   private guardarSolicitud(): void {
     this.ejecutaGuardado().subscribe((respuesta) => {
       if (respuesta.exito) {
@@ -140,8 +185,17 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Ejecuta el guardado de la solicitud de desistimiento.
+   * @returns Un Observable que emite el resultado de la solicitud.
+   * @private
+   */
   private ejecutaGuardado(): Observable<ResultadoSolicitud> {
+
     const STATE = this.tramite230301Query.getValue();
+    /**
+     * Se usan datos fijos, posteriormente se tienen que reemplazar con datos de los diferentes estados
+     */
     const PAYLOAD: Solicitud230301Request = {
       solicitante: {
         rfc: 'AAL0409235E6',
@@ -153,19 +207,6 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
       id_solicitud_anterior: STATE.solicitudAnterior,
       id_folio_anterior: STATE.folioAnterior,
     };
-
-    // eslint-disable-next-line no-warning-comments
-    //TODO usuario state or login state do not have this values and certificado is going to be implemented later, meanwhile we're using fixed values.
-    /**solicitante: {
-     rfc: this.loginState.rfc,
-     nombre: this.usuarioState.perfilUsuario?.nombreCompleto || '',
-     es_persona_moral: this.usuarioState.perfilUsuario?.tipoPersona === 'M',
-     certificado_serial_number: this.loginState.certificadoSerialNumber,
-     },
-     motivoDesistimiento: this.solicitud230301State.motivoDesistimiento,
-     solicitudAnterior: this.solicitud230301State.solicitudAnterior,
-     folioAnterior: this.solicitud230301State.folioAnterior,
-     };*/
 
     return this.desistimientoService.guardarSolicitud(PAYLOAD).pipe(
       map((response) => {
@@ -186,6 +227,10 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Maneja el éxito del guardado de la solicitud.
+   * @private
+   */
   private handleGuardarSuccess(): void {
     this.alertaNotificacion = {
       tipoNotificacion: 'banner',
@@ -199,6 +244,11 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Maneja el error del guardado de la solicitud.
+   * @param respuesta
+   * @private
+   */
   private handleGuardarError(respuesta: ResultadoSolicitud): void {
     const ERROR_DETAILS = (respuesta.erroresModelo || [])
       .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
@@ -221,6 +271,9 @@ export class DesistimientoSolicitudComponent implements OnInit, OnDestroy {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  /**
+   * Actualiza los datos de los pasos del wizard.
+   */
   actualizarDatosPasos(): void {
     this.datosPasos = {
       ...this.datosPasos,
