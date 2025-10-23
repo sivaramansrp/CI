@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Tramite6403State, Tramite6403Store} from '../../estados/tramite6403.store';
 import { CommonModule } from '@angular/common';
 import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
 /**
@@ -18,7 +17,7 @@ import { Tramite6403Query } from '../../estados/tramite6403.query';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, SolicitudComponent]
+  imports: [CommonModule, SolicitudComponent, SolicitanteComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
