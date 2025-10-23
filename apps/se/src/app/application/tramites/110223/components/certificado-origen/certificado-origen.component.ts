@@ -6,6 +6,7 @@ import { CargaPorArchivoComponent } from "../../../../shared/components/carga-po
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
 import { IDPROCEDIMIENTO } from "../../enums/constantes-alertas.enum";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
 import { MercanciasHistorico } from "../../models/certificado-origen.model";
@@ -372,7 +373,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   ngOnInit(): void {
     this.cargarEstados();
-    // this.cargarBloque();
+    this.paisOpcion();
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -409,6 +410,25 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     //   this.catalogoServices.tratadosAcuerdosCatalogo(this.TramitesID, this.tratadoAsociado).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
     //   this.optionsTratado.catalogos = res.datos ?? [];
     // });
+  }
+
+  /**
+   * Carga la lista de países desde el servicio y actualiza el array pais.
+   */
+  paisOpcion(): void {
+    this.certificadoService.obtenerMenuDesplegable('pais.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
+      next: (data) => {
+        this.pais = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los países:', error);
+        this.pais = [];
+      },
+    });
   }
 
   // /**

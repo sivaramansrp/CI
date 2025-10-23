@@ -20,7 +20,7 @@ import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-re
   providedIn: 'root'
 })
 export class CertificadosOrigenService {
-    url: string = '../../../../../assets/json/110221/';
+    url: string = '../../../../../assets/json/110223/';
 
     /**
    * La URL base del servidor al que se realizarán las solicitudes.
@@ -206,7 +206,7 @@ export class CertificadosOrigenService {
            */
           obtenerListaEstado(): Observable<Catalogo[]> {
             return this.http
-              .get<{ data: Catalogo[] }>('./assets/json/110204/estado.json') // Solicita los datos del archivo JSON
+              .get<{ data: Catalogo[] }>('./assets/json/110223/tratado.json') // Solicita los datos del archivo JSON
               .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
           }
          
