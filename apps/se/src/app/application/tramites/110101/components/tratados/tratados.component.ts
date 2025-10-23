@@ -1451,10 +1451,18 @@ eliminarTratado(): void {
 
     // Refresca la tabla
     this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
-
     this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
 
+    this.limpiarSeleccion();
     this.cerrarDialogo();
+  }
+
+  /**
+   * @method limpiarSeleccion
+   * @description Limpia la selección de tratados en la tabla de evaluación.
+   */
+  limpiarSeleccion(): void {
+    this.tratadoSeleccionado = [];
   }
 
   /**
@@ -1463,11 +1471,23 @@ eliminarTratado(): void {
    * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
    */
   abrirModalDictaminador(): void {
-    if(this.tratadoSeleccionado.length === 0) {
+    if(!this.tratadoSeleccionado || this.tratadoSeleccionado.length === 0) {
       this.abrirModal();
       return;
     }
-    if (this.modalElement) {
+    const RADIOSELECCIONADO = this.tratadoSeleccionado && 
+                              this.tratadoSeleccionado.length > 0 &&
+                              this.tratadoSeleccionado.every(item => item.id_criterio_tratado);
+
+    if (!RADIOSELECCIONADO) {
+      this.abrirModal();
+      return;
+    }
+
+    if (this.modalElement && this.modalElement.nativeElement) {
+      if (this.modalInstance) {
+        this.modalInstance?.hide?.(); 
+      }
       this.modalInstance = new Modal(this.modalElement.nativeElement);
       this.modalInstance?.show();
     }
