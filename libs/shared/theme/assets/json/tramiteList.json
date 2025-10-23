@@ -744,8 +744,8 @@
   {
     "id": 107,
     "tramite": 260204,
-    "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos",
-    "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos",
+    "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos/solicitud",
+    "linkDepartment": "/pago/permiso-sanitario-importacion-medicamentos/solicitud",
     "department": "cofepris"
   },
   {

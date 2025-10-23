@@ -1,13 +1,16 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
+import { AVISO, AccionBoton, AlertComponent, PasoCargaDocumentoComponent, PasoFirmaComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
@@ -26,11 +29,14 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent,
+    AlertComponent,
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit, OnDestroy{
   /**
    * @property {string | null} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
@@ -55,7 +61,39 @@ export class SolicitudPageComponent {
    * Referencia al componente Wizard para controlar navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
+   /**
+    * URL de la página actual.
+    */
+    public solicitudState!: Tramite260204State;
+     /**
+     * Evento que se emite para cargar archivos.
+     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+     /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+    activarBotonCargaArchivos: boolean = false;
+  
+    /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+    seccionCargarDocumentos: boolean = true;
+    /*
+    * Indica si hay una carga en progreso.
+    */
+    cargaEnProgreso: boolean = true;
+    /**
+   * Identificador del trámite actual.
+   */
+   tramiteId: string = '260204';
+    
+    /**
+     * Identificador numérico de la solicitud actual.
+     * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+     */
+    idSolicitud: number = 0;
   /**
    * @property {DatosPasos} datosPasos
    * Objeto de configuración utilizado por el componente wizard.
@@ -66,7 +104,30 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+/**
+   * Textos constantes utilizados en el componente.
+   */
+  TEXTOS = AVISO;
+    /**
+   * Notificador para gestionar la destrucción de observables.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
 
+  constructor(private store: Tramite260204Store,
+     private tramite260204Query: Tramite260204Query,
+  ) {
+    // Suscripción al estado de la solicitud en el store
+  }
+
+  ngOnInit(): void {
+       this.tramite260204Query.selectTramiteState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+  }
   /**
    * @method seleccionaTab
    * @description Cambia el índice actual del wizard manualmente.
@@ -76,7 +137,7 @@ export class SolicitudPageComponent {
     this.indice = i;
   }
 
-  /**
+ /**
    * @method getValorIndice
    * @description Controla la navegación del wizard según el botón presionado (anterior o continuar).
    * También actualiza el título correspondiente al paso actual.
@@ -84,18 +145,33 @@ export class SolicitudPageComponent {
    * @param {AccionBoton} e - Objeto que contiene el valor y la acción del botón presionado.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+  if (e.accion === 'cont') {
+    
+    if (this.indice === 1 && e.accion === 'cont') {
+    const SIGUIENTE_PASO = this.indice + 1;
+    
+    this.indice = SIGUIENTE_PASO;
+    this.datosPasos.indice = SIGUIENTE_PASO;
+    
+    if (this.wizardComponent) {
+      this.wizardComponent.siguiente();
+    } else {
+      console.error('El componente wizard no está disponible para navegar al siguiente paso');
     }
+    
+    return;
+  }
+  
+  const PASO_ANTERIOR = this.indice - 1;
+  this.indice = PASO_ANTERIOR;
+  this.datosPasos.indice = PASO_ANTERIOR;
+  
+  if (this.wizardComponent) {
+    this.wizardComponent.atras();
+  } else {
+    console.error('El componente wizard no está disponible para navegar al paso anterior');
+  }
+}
   }
 
   /**
@@ -117,5 +193,69 @@ export class SolicitudPageComponent {
       default:
         return 'Permiso sanitario de importación de medicamentos con registro sanitario';
     }
+  }
+     
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /*
+  * Maneja el evento de carga en progreso.
+  */
+   onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+     /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+   /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+    /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+  /**
+   * Método que se ejecuta cuando se destruye el componente.
+   * Limpia el notifier para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
