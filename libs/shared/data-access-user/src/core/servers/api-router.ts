@@ -1,10 +1,10 @@
 /**
  * @fileoverview Enrutador centralizado de APIs para el sistema VUCEM.
- *
+ * 
  * Este archivo contiene todas las rutas y endpoints de las APIs utilizadas en el sistema VUCEM,
  * organizadas por funcionalidad y trámites. Proporciona una configuración centralizada para
  * el acceso a servicios web, catálogos, autenticación y operaciones de trámites.
- *
+ * 
  * @description
  * El enrutador incluye:
  * - Rutas base y configuración de URLs
@@ -13,18 +13,18 @@
  * - Operaciones de trámites (130118, 231001, etc.)
  * - Servicios de validación y consulta
  * - Manejo de documentos y firmas electrónicas
- *
+ * 
  * @example
  * ```typescript
  * import { API_GET_PAISES, CATALOGO_TRATADO_ACUERDO } from './api-router';
- *
+ * 
  * // Usar endpoint estático
  * const paisesUrl = API_GET_PAISES;
- *
+ * 
  * // Usar función generadora de endpoint
  * const tratadosUrl = CATALOGO_TRATADO_ACUERDO('110219');
  * ```
- *
+ * 
  * @version 1.0.0
  * @since 1.0.0
  * @author Sistema VUCEM
@@ -32,7 +32,6 @@
 
 import { ENVIRONMENT } from "../../enviroments/enviroment";
 import { RFC_GENERICO } from "../constants/constantes-generales";
-
 
 /**
  * URL base del servidor obtenida de las variables de entorno.
@@ -48,16 +47,16 @@ const API_URL = '/auth/api';
 
 /**
  * Configuración centralizada de URLs comunes del sistema.
- *
+ * 
  * Contiene las rutas base y versiones de API utilizadas en todo el sistema VUCEM.
  * Estas constantes se utilizan para construir endpoints completos y mantener
  * consistencia en las rutas de la aplicación.
- *
+ * 
  * @example
  * ```typescript
  * const fullUrl = `${COMUN_URL.BASE_URL}${COMUN_URL.CATALOGO_URL}/paises`;
  * ```
- *
+ * 
  * @since 1.0.0
  */
 export const COMUN_URL = {
@@ -71,19 +70,19 @@ export const COMUN_URL = {
 
 /**
  * Rutas de API para operaciones de usuarios del sistema.
- *
+ * 
  * Contiene los endpoints completos para realizar operaciones CRUD sobre usuarios,
  * incluyendo creación, actualización y eliminación de cuentas de usuario.
- *
+ * 
  * @example
  * ```typescript
  * // Crear un nuevo usuario
  * this.http.post(ROUTE.USER.CREATE, userData).subscribe(...);
- *
+ * 
  * // Actualizar usuario existente
  * this.http.put(ROUTE.USER.UPDATE, updatedData).subscribe(...);
  * ```
- *
+ * 
  * @see BASE_URL
  * @see COMUN_URL.API_VERSION
  * @since 1.0.0
@@ -101,14 +100,14 @@ export const ROUTE = {
     DELETE: `${BASE_URL}${COMUN_URL.API_VERSION}/user/delete`,
   }
 };
-
+ 
 /**
  * Rutas de autenticación del sistema VUCEM.
- *
+ * 
  * Contiene los endpoints utilizados para procesos de autenticación y autorización
  * de usuarios, incluyendo login con FIEL (Firma Electrónica) y otros métodos
  * de autenticación soportados por el sistema.
- *
+ * 
  * @example
  * ```typescript
  * // Autenticarse con FIEL
@@ -117,57 +116,57 @@ export const ROUTE = {
  *     // Manejar respuesta de autenticación
  *   });
  * ```
- *
+ * 
  * @see BASE_URL
  * @see API_URL
  * @see COMUN_URL.API_VERSION
  * @since 1.0.0
  */
 export const AUTH_ROUTE = {
-  /**
+  /** 
    * Endpoint para autenticación mediante FIEL (Firma Electrónica).
-   * Permite a los usuarios autenticarse usando su certificado digital.
+   * Permite a los usuarios autenticarse usando su certificado digital. 
    */
   LOGIN: `${BASE_URL}${API_URL}${COMUN_URL.API_VERSION}/auth/login/fiel`,
 };
-
+ 
 /**
  * Construye dinámicamente el endpoint para inicializar trámites del SAT.
- *
+ * 
  * Esta función helper genera la URL completa para iniciar el proceso de solicitud
  * de cualquier trámite del SAT, utilizando el identificador del procedimiento
  * proporcionado. Es útil para mantener consistencia en la construcción de URLs
  * y facilitar el mantenimiento del código.
- *
+ * 
  * @param procedureId - Identificador único del procedimiento del trámite (ej: '110219', '130118')
- *
+ * 
  * @returns {string} URL completa y formateada para el endpoint de inicialización del trámite
- *
+ * 
  * @example
  * ```typescript
  * // Para trámite 110219
  * const url = CONSTRUIR_ENDPOINT_INICIAR('110219');
  * // Resultado: 'https://api.vucem.com/api/sat-t110219/solicitud/iniciar'
- *
+ * 
  * // Para trámite 130118
  * const url2 = CONSTRUIR_ENDPOINT_INICIAR('130118');
  * // Resultado: 'https://api.vucem.com/api/sat-t130118/solicitud/iniciar'
  * ```
- *
+ * 
  * @see COMUN_URL.BASE_URL
  * @since 1.0.0
  * @author Sistema VUCEM
  */
 export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/solicitud/iniciar` }
-
-
-
+ 
+ 
+ 
 /**
  * Endpoint para recuperar el catálogo completo de aduanas del sistema.
- *
+ * 
  * Este endpoint proporciona información sobre todas las aduanas disponibles
  * en el sistema VUCEM, incluyendo códigos, nombres y datos de contacto.
- *
+ * 
  * @constant {string}
  * @example
  * ```typescript
@@ -176,7 +175,7 @@ export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { ret
  *     this.listaAduanas = aduanas;
  *   });
  * ```
- *
+ * 
  * @see {@link https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas|Documentación API}
  * @since 1.0.0
  */
@@ -184,11 +183,11 @@ export const API_GET_ADUANA = 'catalogo/aduanas';
 
 /**
  * Parámetro de consulta para filtrar información por clave de aduana.
- *
+ * 
  * Esta constante se utiliza como placeholder en URLs que requieren
  * especificar una aduana particular. Debe ser reemplazada por el
  * código real de la aduana antes de realizar la consulta.
- *
+ * 
  * @constant {string}
  * @example
  * ```typescript
@@ -200,11 +199,11 @@ export const CLAVE_ADUANA_QUERY = '{claveAduana}';
 
 /**
  * Endpoint para recuperar las secciones de una aduana específica.
- *
+ * 
  * Permite obtener información detallada sobre las diferentes secciones
  * o departamentos que conforman una aduana particular, utilizando su
  * clave identificadora.
- *
+ * 
  * @constant {string}
  * @example
  * ```typescript
@@ -215,7 +214,7 @@ export const CLAVE_ADUANA_QUERY = '{claveAduana}';
  *     this.seccionesAduana = secciones;
  *   });
  * ```
- *
+ * 
  * @see CLAVE_ADUANA_QUERY
  * @see {@link https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas|Documentación API}
  * @since 1.0.0
@@ -256,7 +255,7 @@ export const RFC_QUERY = '{rfc}';
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
  */
 export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
-
+ 
 /**
  * API que obtiene la información del contribuyente por RFC.
  * @param RFC_QUERY El RFC del contribuyente
@@ -287,7 +286,7 @@ export const LINEA_PAGO_QUERY = '{lineaPago}';
  * @param LINEA_PAGO_QUERY La línea de pago
  */
 export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
-
+ 
 /**
  * API para obtener el monto del trámite
  */
@@ -297,126 +296,126 @@ export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
  */
 export const API_POST_SOLICITUD = 'sat-t5701/guardar';
-
+ 
 /**
  * ID del trámite a eliminar.
  * Este ID se debe reemplazar por el ID del trámite que se desea eliminar.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t5701/swagger-ui/index.html#/Tramite/elimina-tramite-pe…
  */
 export const ID_TRAMITE = '{idTramite}';
-
+ 
 /**
  * API para eliminar un trámite pendiente.
  */
 export const API_ELIMINAR_TRAMITE = `sat-t5701/tramite/pendiente/${ID_TRAMITE}`;
-
+ 
 /**
  * Indica el número de trámite a consultar.
  */
 export const TRAMITE = '{numeroTramite}';
-
+ 
 /**
  * API  para obtener el catálogo de cdocumentos obligatorios, según el trámite.
  * @param TRAMITE el trámite seleccionado por el usuario.
  * @see https://api-v30.cloud-ultrasist.net/api/tramite/5701/documentos?especifico=false
  */
 export const API_GET_DOCUMENTOS_OBLIGATORIOS = `sat-t{numeroTramite}/solicitud/documentos`;
-
+ 
 /**
  * API para recuperar el catálogo de paises
  * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Pa%C3%ADs/consulta-paises-a…
  */
 export const API_GET_PAISES = 'catalogo/paises';
-
+ 
 /**
  * API para generar la cadena original de un trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
  */
 export const API_GENERAR_CADENA_ORIGINAL =
   'api/tramite/solicitud/genera-cadena-original';
-
+ 
 /**
  * API para enviar una firma electrónica.
  * @see https://api-v30.cloud-ultrasist.net/api/firma/swagger-ui/index.html#/Firma/firmar
  */
 export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
-
+ 
 /**
  * API para recuperar las tareas por usuario.
  * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consul…
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
-
+ 
 /**
  * API para recuperar el catálogo de regímenes aduaneros.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-regim…
  */
 export const API_GET_REGIMEN = `sat-t130118/catalogo/regimenes`;
-
+ 
 /**
  * La clave del régimen aduanero por el que se filtrará la información.
  */
 export const CLASIFICACION = '{cveRegimen}';
-
+ 
 /**
  * API para recuperar la clasificación de un régimen aduanero.
  * @param CLASIFICACION La clave del régimen aduanero
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-clasi…
  */
 export const API_GET_REGIMENES_CLASIFICACION = `sat-t130118/catalogo/regimenes/${CLASIFICACION}/clasificacion`;
-
+ 
 /**
  * API para recuperar el catálogo de países para el trámite T130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-paises
  */
 export const API_GET_PAISES_SAT_T130118 = 'sat-t130118/catalogo/paises';
-
+ 
 /**
  * API para recuperar el catálogo de entidades federativas.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-entid…
  */
 export const API_GET_ENTIDADES_FEDERATIVAS = 'sat-t130118/catalogo/entidades-federativas';
-
+ 
 /**
  * La clave de la entidad federativa por la que se filtrará la información.
  */
 export const CVEENTIDAD = '{cveEntidad}';
-
+ 
 /**
  * API para recuperar las unidades administrativas de una entidad federativa.
  * @param CVEENTIDAD La clave de la entidad federativa
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-unida…
  */
 export const API_GET_ENTIDADES_FEDERATIVAS_CLAVE = `sat-t130118/catalogo/entidad-federativa/${CVEENTIDAD}/unidades-administrativas`;
-
+ 
 /**
  * API para recuperar el catálogo de fracciones arancelarias.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-fracc…
  */
 export const API_GET_FRACCION_ARANCELARIA = 'sat-t130118/catalogo/fracciones-arancelarias';
-
+ 
 /**
  * La clave de la fracción arancelaria por la que se filtrará la información.
  */
 export const CVEFRACCION = '{cveFraccion}';
-
+ 
 /**
  * API para recuperar el catálogo de fracciones arancelarias.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-unida…
  */
 export const API_GET_FRACCION_ARANCELARIA_CVE = `sat-t130118/catalogo/fraccion-arancelaria/${CVEFRACCION}/unidades-medida`;
-
+ 
 /**
  * API para recuperar el catálogo de subdivisiones y fracciones arancelarias.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-subdi…
  */
 export const API_GET_NICO = `sat-t130118/catalogo/fraccion-arancelaria/${CVEFRACCION}/subdiviciones`;
-
+ 
 /**
  * ID de la solicitud que se utilizará en las rutas de la API.
  */
 export const IDSOLICITUD = '{idSolicitud}';
-
+ 
 /**
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guard…
@@ -475,163 +474,163 @@ export const API_GET_DOCUMENTOS231001 = 'sat-t231001/solicitud/documentos';
  * @see https://api-v30.cloud-ultrasist.net/api/idc/swagger-ui/index.html#/idc-ws-end-point-controller/info…
  */
 export const API_GET_IDC_CONTRIBUYENTE = `idc/contribuyente/${RFC_GENERICO}/informacion`;
-
+ 
 /**
  * Constante para el número de folio del tramite.
  * Debe ser reemplazada por el número de folio real del tramite.
  */
 export const NUMFOLIOTRAMITE = '{numFolioTramite}';
-
+ 
 /**
  * ID de la solicitud del dictamen que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el ID real de la solicitud del dictamen.
  */
 export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
-
+ 
 /**
  * API para obtener las opciones de evaluación del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opcion…
  */
 export const API_POST_OPCIONES_EVALUACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/${NUMFOLIOTRAMITE}/evaluar/opciones-evaluacion`;
-
+ 
 /**
  * API para generar el dictamen del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/dictame…
  */
 export const API_GET_DICTAMEN = `sat-t${TRAMITE}/solicitud/${IDSOLICITUDDICTAMEN}/dictamen/generar/criterios`;
-
+ 
 /**
  * API para guardar el dictamen del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/generar…
  */
 export const API_POST_GUARDAR_DICTAMEN = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/guardar`;
-
+ 
 /**
  * API para iniciar el dictamen del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/generar…
  */
 export const API_GET_INICAR_DICTAMEN = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/iniciar`;
-
+ 
 /**
  * API para Consultar acuses de resolución del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Acuse/consulta-acuse-res…
  */
 export const API_GET_ACUSES_RESOLUCION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/funcionario/acuses-resoluciones`;
-
+ 
 /**
  * API para Consultar dictamenes del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/con…
  */
 export const API_GET_DICTAMENES = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamenes`;
-
+ 
 /**
  * API para Consultar requerimientos del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get…
  */
 export const API_GET_REQUERIMIENTOS = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimientos`;
-
+ 
 /**
  * API para Consultar documentos de solicitud del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/con…
  */
 export const API_GET_SOLICITUD_DOCUMENTOS = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/documentos`;
-
+ 
 /**
  * API para Consultar tareas de solicitud del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get…
  */
 export const API_GET_TAREAS_DOCUMENTOS = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/bitacora`;
-
+ 
 /**
  * Id opinion que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
 export const IDOPINION= '{idOpinion}';
-
+ 
 /**
  * API para Consultar detalle de opinion del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_OPINION_DETALLE = `sat-t${TRAMITE}/tramite/opinion/${IDOPINION}/detalle`
-
+ 
 /**
  * Id dictamen que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
 export const IDDICTAMEN= '{idDictamen}';
-
+ 
 /**
  * API para Consultar detalle de dictamen del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/busca…
  */
 export const API_GET_DICTAMEN_DETALLE = `sat-t${TRAMITE}/tramite/dictamen/${IDDICTAMEN}`
-
+ 
 /**
  * Id observacion que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
 export const IDOBSERVACION= '{idObservacion}';
-
+ 
 /**
  * API para Consultar detalle de observacion del dictamen del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/get-B…
  */
 export const API_GET_DICTAMEN_DETALLE_OBSERVACION = `sat-t${TRAMITE}/dictamen/observacion/${IDOBSERVACION}`
-
+ 
 /**
  * DOCUMENTOMINIO para descargas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
 export const DOCUMENTOMINIO= '{documentoMinio}';
-
+ 
 /**
  * API para Consultar url de descarga de dictamen.
  * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
-
+ 
 /**
  * IDREQUERIMIENTO para detalle de requerimiento.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
 export const IDREQUERIMIENTO= '{idRequerimiento}';
-
+ 
 /**
  * API para Consultar detalle de un requerimiento del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Consulta-Requerimiento…
  */
 export const API_GET_REQUERIMIENTO_DETALLE = `sat-t${TRAMITE}/tramite/requerimiento/${IDREQUERIMIENTO}/detalle`
-
+ 
 /**
  * API firmar
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/fi…
  */
 export const API_POST_FIRMAR_DICTAMEN = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/firmar`;
-
+ 
 /**
  * API para mostrar y firmar el dictamen
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/mostra-…
  */
 export const API_POST_MOSTRAR_FIRMAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/mostrar-firmar`;
-
+ 
 /**
  * API para generar el dictamen del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/dictame…
  */
 export const API_GET_DICTAMEN_CRITERIOS = (TRAMITE: string, IDSOLICITUDDICTAMEN: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUDDICTAMEN}/dictamen/generar/criterios`;
-
+ 
 /**
  * API para consultar los sentidos disponibles
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-senti…
  */
 export const API_GET_SENTIDOS_DISPONIBLES = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/generar/sentidos-disponibles`;
-
+ 
 /**
  * API para guardar el requerimiento del trámite generico
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/gu…
  */
 export const API_POST_GUARDAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/guardar`;
-
+ 
 /**
  * API para guardar el requerimiento del trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
@@ -644,7 +643,7 @@ export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = (TRAMITE: string, NU
  */
 export const API_POST_DOCUMENTOS_ESPECIFICOS_REQ = (TRAMITE: string) : string => `sat-t${TRAMITE}/requerimiento/generar/documentos-especificos`;
 
-
+ 
 /**
  * API para generar la firma del requerimiento del trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
@@ -652,47 +651,53 @@ export const API_POST_DOCUMENTOS_ESPECIFICOS_REQ = (TRAMITE: string) : string =>
 export const API_POST_FIRMAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
 
 /**
+ * API para generar el oficio del requerimiento del trámite 110101
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Generar-Requerimiento/guardar-oficio-requerimiento
+ */
+export const API_POST_OFICIO_REQUERIMIENTO = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/${IDSOLICITUD}/requerimiento/oficio`;
+
+/**
  * API para iniciar requerimiento trámite generico
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/in…
  */
 export const API_POST_INICIAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/iniciar`;
-
+ 
 /**
  * API para detalle de la opinion tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_OPINION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opiniones`;
-
+ 
 /**
  * API para obtener documento de resolucion generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/guardar…
  */
 export const API_POST_REQUERIMIENTO_GUARDAR = (TRAMITE: string, IDREQUERIMIENTO: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/requerimiento/${IDREQUERIMIENTO}/acuse/guardar`;
-
+ 
 /**
  * API para obtener la notificacion de los acuses recibidos.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/c…
  */
 export const API_GET_ACUSES_RECIBOS_NOTIFICACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos-notificacion`;
-
+ 
 /**
  * API para iniciar la confirmación de notificación del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/i…
  */
 export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = (TRAMITE:string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;
-
+ 
 /**
  * API para obtener documento de resolucion generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/guardar…
  */
 export const API_POST_RESOLUCION_GUARDAR = (TRAMITE: string, IDRESOLUCION: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/resolucion/${IDRESOLUCION}/acuse/guardar`;
-
+ 
 /**
  * API para cargar documentos.
  * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/cargar
  */
 export const API_POST_CARGAR_DOCUMENTOS = `digitalizacion/cargar`
-
+ 
 /**
  *
  * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/documentos/LEQI8101314S7-ba0fedcf-0e76-4165-…
@@ -703,43 +708,43 @@ export const API_POST_DOCUMENTO_REFERENCIA_SOLICITUD = (REFRERENCIASOLICITUD: st
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpc…
  */
 export const API_GET_EVALUAR_INICIAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/iniciar`;
-
+ 
 /**
  * API para prepar evaluacion tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpc…
  */
 export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/mostrar`;
-
+ 
 /**
  * API para consulta de envio digital 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/get-d…
  */
 export const API_GET_ENVIO_DIGITAL = (NUMFOLIOTRAMITE: string) : string => `tramite/${NUMFOLIOTRAMITE}/envio-digital/detalle`;
-
+ 
 /**
  * API para Consultar que tabs mostrar 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estad…
  */
 export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/solicitud/${IDSOLICITUD}/estado`;
-
+ 
 /**
  * API para Consultar los datos del solicitante
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estad…
  */
 export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/${IDSOLICITUD}/solicitud/solicitante`;
-
+ 
 /*
  * API para obtener el catálogo de immex
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/servicios-immex
  */
 export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/servicios-immex`;
-
+ 
 /*
  * API para obtener el catálogo de estados
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/estados
  */
 export const CATALOGO_ESTADOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/estados`;
-
+ 
 /*
  * API para obtener el catálogo de países
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
@@ -762,7 +767,7 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number)
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;
-
+ 
 /** API para guardar la solicitud del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
  */
@@ -820,28 +825,27 @@ export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
  */
 export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
-
+ 
 
 
 /**
  * Genera dinámicamente la ruta para el catálogo de tratados/acuerdos de la UE por bloque.
- *
+ * 
  * Esta función construye el endpoint específico para acceder al catálogo de tratados
  * comerciales y acuerdos internacionales de la Unión Europea organizados por bloques
  * comerciales, adaptado al trámite especificado.
- *
+ * 
  * @param TRAMITE - Identificador del trámite (ej: '110219', '130118') que determina
  *                  el contexto y versión del catálogo a consultar
- *
- * @param IDETIPOTRATADOACUERDO
+ * 
  * @returns {string} Ruta formateada del endpoint para consultar tratados/acuerdos UE
- *
+ * 
  * this.http.get(`${BASE_URL}/${rutaTratados}`)
  *   .subscribe(tratados => {
  *     this.tratadosUE = tratados;
  *   });
  * ```
- *
+ * 
  * @see COMUN_URL.BASE_URL
  * @since 1.0.0
  * @author Sistema VUCEM
@@ -850,23 +854,23 @@ export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string, IDETIPOTRATADOACUERDO:
 
 /**
  * Construye la ruta para el catálogo de medios de transporte disponibles.
- *
+ * 
  * Genera el endpoint para consultar los diferentes medios de transporte
  * (terrestre, marítimo, aéreo, ferroviario) disponibles y válidos para
  * el trámite especificado, incluyendo sus características y restricciones.
- *
+ * 
  * @param TRAMITE - Identificador del trámite que determina los medios de transporte aplicables
- *
+ * 
  * @returns {string} Endpoint para consultar el catálogo de medios de transporte
- *
+ * 
  * @example
- *
+ * 
  * this.transporteService.getMediosTransporte(rutaTransporte)
  *   .subscribe(medios => {
  *     this.mediosDisponibles = medios.filter(m => m.activo);
  *   });
  * ```
- *
+ * 
  * @see COMUN_URL.BASE_URL
  * @since 1.0.0
  * @author Sistema VUCEM
@@ -894,12 +898,19 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-
   * API para obtener el catálogo de tratados y acuerdos por país
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
-export const CATALOGO_TRATADO_ACUERDO_PAIS_110214 = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
+export const CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
+
+/*
+  * API para obtener el catálogo de tratados y acuerdos por país
+  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
+  */
+export const CATALOGO_TRATADO_ACUERDO_PAIS_CON_ID = (TRAMITE: string, ID: string) : string => `sat-t${TRAMITE}/catalogo/${ID}/tratados-acuerdos`;
+
 
 /**
- *
- * @param TRAMITE
- * @param CLAVEBLOQUE
- * @returns
+ * 
+ * @param TRAMITE 
+ * @param CLAVEBLOQUE 
+ * @returns 
  */
 export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;

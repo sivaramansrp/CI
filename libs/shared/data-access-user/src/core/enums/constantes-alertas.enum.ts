@@ -318,18 +318,12 @@ export const PASOS_REQUERIMIENTOS = [
   },
   {
     indice: 2,
-    titulo: 'Requerimiento de datos',
-    activo: false,
-    completado: false,
-  },
-  {
-    indice: 3,
     titulo: 'Anexar documentos',
     activo: false,
     completado: false,
   },
   {
-    indice: 4,
+    indice: 3,
     titulo: 'Firmar promoción',
     activo: false,
     completado: false,
