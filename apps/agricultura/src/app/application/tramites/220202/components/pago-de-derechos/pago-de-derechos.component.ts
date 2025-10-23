@@ -8,6 +8,7 @@ import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.mo
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220202/fitosanitario.model';
 import { ReactiveFormsModule } from '@angular/forms';
+import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -69,11 +70,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fitosanitarioQuery: FitosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
     private readonly cdr: ChangeDetectorRef,
+    public catalogosService: CatalogosService,
     private readonly httpServicios: HttpClient,
   ) {
-    this.obtenerBancoSelectorList();
+     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
   }
+  
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -95,18 +98,31 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    //  this.obtenerCtalogosPago();
   }
 
     /**
    * Realiza una petición para obtener el catálogo de bancos.
    */
-  obtenerBancoSelectorList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.pagoSelect.bancoSelector = DATOS;
-      });
+  // obtenerBancoSelectorList(): void {
+  //   this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe((data): void => {
+  //       const DATOS = data?.data;
+  //       this.pagoSelect.bancoSelector = DATOS;
+  //     });
+  // }
+
+      obtenerBancoSelectorList(): void {
+    this.catalogosService.obtieneCatalogoBanco(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+         this.pagoSelect.bancoSelector = data.datos ?? [];
+      }
+    );
+    
   }
 
   /**

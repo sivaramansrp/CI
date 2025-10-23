@@ -1,5 +1,7 @@
 import {
+  API_GET_CATALOGO_CONSULTA_PAISES,
   API_GET_CATALOGO_ADUANAS,
+  API_GET_CATALOGO_BANCOS,
   API_GET_CATALOGO_FRACCION_ARANCELARIA,
   API_GET_CATALOGO_FRACCIONES_ARANCELARIAS,
   API_GET_CATALOGO_OFICINAS_INSPECCION,
@@ -169,4 +171,35 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_RESTRICCIONES(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+  /**
+       * Obtiene el catálogo de paises.
+     *
+     * @returns Un observable que emite la respuesta base con el arreglo de catálogos de paises.
+     */
+  obtieneCatalogoPaises(tramite: number):Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_CONSULTA_PAISES(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+     /**
+     * Obtiene el catálogo de paises.
+     *
+     * @returns Un observable que emite la respuesta base con el arreglo de catálogos de paises sin Mexico.
+     */
+  obtieneCatalogoPaisesD(tramite: number):Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_CONSULTA_PAISES(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de bancos correspondiente a un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere el catálogo de bancos.
+   * @returns Un observable que emite la respuesta base con el arreglo de catálogos de aduanas.
+   */
+  obtieneCatalogoBanco(tramite: number):Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_BANCOS(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
 }
