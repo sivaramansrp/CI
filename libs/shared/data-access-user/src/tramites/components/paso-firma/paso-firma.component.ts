@@ -1,6 +1,6 @@
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { base64ToHex, encodeToISO88591Hex, formatFecha } from '../../../core/utils/utilerias';
+import { base64ToHex, encodeToISO88591Hex, formatFecha, renameKey } from '../../../core/utils/utilerias';
 import { catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '../../../core/models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../core/models/shared/cadena-original-request.model';
@@ -219,7 +219,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
-          const PAYLOAD: FirmarRequest = {
+          let PAYLOAD: FirmarRequest = {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
@@ -230,7 +230,9 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             documentos_requeridos: response.datos?.documentos_requeridos || [],
             rfc_solicitante: 'AAL0409235E6'
           };
-
+          if (this.procedure === 110216 || this.procedure === 110210) {
+            PAYLOAD = renameKey(PAYLOAD as unknown as Record<string, unknown>, 'rfcSolicitante', 'rfc_solicitante') as unknown as FirmarRequest;
+          }
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);
         }),
         tap((firmaResponse: BaseResponse<string>) => {

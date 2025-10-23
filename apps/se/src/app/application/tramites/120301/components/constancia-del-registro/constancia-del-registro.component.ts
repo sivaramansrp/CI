@@ -875,33 +875,34 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
 
       // Cargar datos de la tabla después de pasar la validación
       // Para modo Específico, use datos basados en archivos con filtrado
-      this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
-        'constancia-del-registro-tabla-asociados.json'
-      )
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((response) =>
-            this.filtrarDatos(response as ConstanciaTramiteConfiguracion[])
-          )
-        )
-        .subscribe({
-          next: (filteredData) => {
-            if (!filteredData || filteredData.length === 0) {
-              // Mostrar el modal si no se encuentra ningún registro
-              const MODAL_ELEMENT = document.getElementById('confirmarBuscar');
-              if (MODAL_ELEMENT) {
-                const BS_MODAL = new (window as unknown as { bootstrap: { Modal: new (el: HTMLElement) => { show: () => void } } }).bootstrap.Modal(MODAL_ELEMENT);
-                BS_MODAL.show();
-              }
-              return;
-            }
-            // Si hay datos, mostrarlos en la tabla
-            this.configuracionTablaDatos = filteredData;
-            this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
-              filteredData
-            );
-          },
-        });
+      // this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
+      //   'constancia-del-registro-tabla-asociados.json'
+      // )
+      //   .pipe(
+      //     takeUntil(this.destroyNotifier$),
+      //     map((response) =>
+      //       this.filtrarDatos(response as ConstanciaTramiteConfiguracion[])
+      //     )
+      //   )
+      //   .subscribe({
+      //     next: (filteredData) => {
+      //       if (!filteredData || filteredData.length === 0) {
+      //         // Mostrar el modal si no se encuentra ningún registro
+      //         const MODAL_ELEMENT = document.getElementById('confirmarBuscar');
+      //         if (MODAL_ELEMENT) {
+      //           const BS_MODAL = new (window as unknown as { bootstrap: { Modal: new (el: HTMLElement) => { show: () => void } } }).bootstrap.Modal(MODAL_ELEMENT);
+      //           BS_MODAL.show();
+      //         }
+      //         return;
+      //       }
+      //       // Si hay datos, mostrarlos en la tabla
+      //       this.configuracionTablaDatos = filteredData;
+      //       this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
+      //         filteredData
+      //       );
+      //     },
+      //   });
+      this.cargaDatosTabla();
     } else {
       // Para la opción 'Todos', use la llamada API
       this.cargaDatosTabla();

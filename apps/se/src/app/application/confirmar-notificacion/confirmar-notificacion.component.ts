@@ -288,12 +288,12 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
           const DOCS = response.datos.documentos_oficiales ?? [];
           if(DOCS.length > 0 ){
-             this.notificacionAcusesData = [{
-              id: 1,
-              idDocumento: response.datos.documentos_oficiales[0]?.id_documento_oficial ?? '',
-              documento: response.datos.documentos_oficiales[0]?.desc_documento ?? '',
-              urlPdf: response.datos.documentos_oficiales[0]?.documento_minio ?? ''
-            }];
+            this.notificacionAcusesData = DOCS.map((doc, index) => ({
+              id: index + 1,
+              idDocumento: doc.id_documento_oficial,
+              documento: doc.desc_documento,
+              urlPdf: doc.documento_minio
+            }));
           }
         } else {
           this.nuevaNotificacion = {

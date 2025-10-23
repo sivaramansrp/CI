@@ -88,7 +88,7 @@ export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
  * API para Consultar que tabs mostrar 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
-export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/solicitud/${IDSOLICITUD}/estado`;
+export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string, PROCESO?: number) : string => `sat-t${TRAMITE}/tramite/solicitud/${IDSOLICITUD}/estado`;
 
 /**
  * API para Consultar solicitud del tramite 130118.
