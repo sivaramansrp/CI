@@ -96,10 +96,6 @@ export class AgregarMercanciaComponent implements OnDestroy{
     public catalogosService: CatalogosService
 
   ) {
-    // this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
-    //   this.catalogosDatos = resp;
-    //   // this.catalogosDatos.nicoList = [];
-    // });
     //ponemos la lista nico vacia por que s¿depende de lo que seleccione fracciona arancelaria
     // vamos por el catalogo de Fraccion arancelaria
     this.getFraccionArancelariaLista();

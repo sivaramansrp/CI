@@ -98,21 +98,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    //  this.obtenerCtalogosPago();
   }
 
     /**
    * Realiza una petición para obtener el catálogo de bancos.
    */
-  // obtenerBancoSelectorList(): void {
-  //   this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe((data): void => {
-  //       const DATOS = data?.data;
-  //       this.pagoSelect.bancoSelector = DATOS;
-  //     });
-  // }
-
       obtenerBancoSelectorList(): void {
     this.catalogosService.obtieneCatalogoBanco(220202)
       .pipe(
