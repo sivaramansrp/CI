@@ -1,5 +1,5 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { AlertComponent, BtnContinuarProComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
   standalone: true,
-  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarProComponent, AlertComponent],
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
 export class ZoosanitarioPageComponent {
   /**
@@ -104,6 +104,8 @@ export class ZoosanitarioPageComponent {
     */
   readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
 
+   /** Indica la visibilidad del botón Guardar. */
+    public btnGuardarVisible: string = 'visible';
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
@@ -207,4 +209,15 @@ export class ZoosanitarioPageComponent {
     }
     return numeros.reduce((acumulador, numero) => acumulador + numero, 0);
   }
+
+    /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  obtenerDatosDelStore(): void {
+    // Lógica para obtener datos del store y guardarlos
+  }
+
+
+
 }

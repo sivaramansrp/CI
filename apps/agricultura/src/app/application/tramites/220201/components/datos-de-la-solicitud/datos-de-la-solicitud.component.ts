@@ -1,33 +1,27 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-
-import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
-import { HttpClient } from '@angular/common/http';
-
-import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
-
 import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CONFIGURACION_SENSIBLES } from '../../../../shared/constantes/datos-de-la-solicitue.enum';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { PrellenadoSolicitud } from '../../models/220201/prellenado-solicitud.model';
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
-import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-
-import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
-import { PrellenadoSolicitud } from '../../models/220201/prellenado-solicitud.model';
-
 
 
 /**
@@ -575,7 +569,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   radioBotonSeleccionado(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia
-
+    console.warn('Valor del radio button seleccionado:', VALOR);
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
@@ -771,17 +765,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
               this.obtenerPuntoInspeccionList(datos.datos.punto_inspeccion || '');
               //Regimen
               this.obtenerRegimenList(datos.datos?.clave_regimen || '');
-              this.datosDelaSolicitud.patchValue({
-                tipoMercancia: datos.datos.cve_aduana || '',
+              this.datosDelaSolicitud.patchValue({                
                 aduanaIngreso: datos.datos.cve_aduana || '',
+                tipoMercancia: datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA' ? 'no' : 'yes', //'yes' para animales vivos, 'no' para subproductos
                 oficinaInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
                 claveUCON: datos.datos.clave_UCON || '',
                 establecimientoTIF: datos.datos.establecimiento_TIF || '',
                 nombreVeterinario: datos.datos.nombre_veterinario || '',
                 regimen: datos.datos.clave_regimen || '',
                 numeroGuia: datos.datos.numero_autorizacion || '',
-              });
-              //this.datosDelaSolicitud.patchValue(datos.datos);
+              });              
             } else {
               this.datosDelaSolicitud.reset();
             }
@@ -790,13 +783,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
             if (DETALLE_MERCANCIA.mercancia.length > 0) {
 
               const FILAS_SOLICITUD: FilaSolicitud[] = [];
+              // eslint-disable-next-line complexity
               DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
 
-                const LISTADETALLEPRODUCTOS: DetallasDatos[] = [];
+                const LISTADETALLEPRODUCTOS: DetallasDatos[] = mercancia.lista_detalle_mercancia ?.map((producto) => ({
+                  numeroDeLote: producto.numero_lote_detalle || '',
+                  fechaElaboracionEmpaqueProceso: producto.fecha_elaboracion || '',
+                  fechaProduccionSacrificio: producto.fecha_sacrificio_str || '',
+                  fechaFinProduccionSacrificio: producto.fecha_sacrificio_fin || '',
+                  fechaCaducidadProducto: producto.fecha_caducidad_str || '',
+                  fechaFinCaducidadProducto: producto.fecha_caducidad_fin || '',
+                  fechaFinElaboracionEmpaqueProceso: producto.fecha_elaboracion_fin || '',
+                  fechhaInicioProduccionSacrificio: producto.fecha_sacrificio_str || '',
+                  fechaInicioCaducidadProducto: producto.fecha_caducidad_str || '',
+                  fechaCaducidad: producto.fecha_caducidad || '',
+                })) as DetallasDatos[] || [];
 
-                const LISTADETALLESENSIBLES: Sensible[] = [];
-
-
+                const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
+                  noPartida: mercancia.numero_partida.toString(),
+                  NumeroLote: animal.numero_lote_detalle || '',
+                  ColorPelaje: animal.color_pelaje_detalle || '',
+                  EdadAnimal: animal.edad_animal_detalle || '',
+                  FaseDesarrollo: animal.fase_desarrollo_detalle || '',
+                  FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
+                  NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
+                  Raza: animal.raza_detalle || '',
+                  Sexo: animal.id_sexo_detalle || '',
+                  NombreCientifico: animal.nombre_cientifico_detalle || '',
+                  NombreMercancia: animal.nombre_mercancia_detalle || '',
+                })) as Sensible[] || [];
 
                 const FILAS: FilaSolicitud = {
                   noPartida: mercancia.numero_partida.toString(),
@@ -808,18 +823,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                   descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
+                  descripcionUso: mercancia.descripcion_uso || '',
                   umt: mercancia.clave_unidad_comercial || '',
                   cantidadUMT: mercancia.cantidad_umt || 0,
                   umc: mercancia.clave_unidad_medida || '',
                   descripcionUMT: mercancia.descripcion_umt || '',
+                  descripcionUMC: mercancia.descripcion_umc || '',
                   cantidadUMC: mercancia.cantidad_umc || 0,
                   especie: mercancia.descripcion_especie || '',
-                  uso: mercancia.descripcion_uso || '',
-                  paisDeOrigen: mercancia.nombre_pais_origen || '',
-                  paisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
+                  paisDeOrigen: mercancia.clave_paises_origen || '',
+                  paisDeDestino: mercancia.nombre_pais_procedencia || '',
+                  paisDeProcedencia: mercancia.clave_paises_procedencia || '',
+                  descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
+                  descripcionPaisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  tipoPresentacionDescripcion: mercancia.id_tipo_presentacion || '',
+                  tipoPlanta: mercancia.descripcion_tipo_planta || '',
+                  plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
                   certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
-                  tipoDeProducto: '', // Add appropriate value
-                  numeroDeLote: '', // Add appropriate value
+                  tipoDeProducto: '',
+                  numeroDeLote: '', 
                   sensibles: LISTADETALLESENSIBLES,
                   detalleProductos: LISTADETALLEPRODUCTOS,
                   descripcion: ''
@@ -829,6 +852,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
               this.fitosanitarioStore.updateFilaSolicitud(FILAS_SOLICITUD);
             }
+            this.radioBotonSeleccionado()
           },
           error: (error) => {
             console.error('Error al obtener los datos de la solicitud prellenada:', error);
