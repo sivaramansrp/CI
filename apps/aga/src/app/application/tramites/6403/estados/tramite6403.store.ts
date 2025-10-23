@@ -49,6 +49,12 @@ export interface Tramite6403State {
    */
   mercanciaFormulario: MercanciaFormulario;
 
+  /**
+   * Datos de la tabla de partes reemplazadas.
+   *
+   * Contiene un arreglo con la información de las partes reemplazadas
+   * asociadas al trámite de solicitud.
+   */
   tablaPartesReemplazadasDatos: SolicitudTabla[];
 }
 /**
@@ -940,7 +946,11 @@ export class Tramite6403Store extends Store<Tramite6403State> {
     }));
   }
 
-
+  /**
+   * Actualiza los datos de la tabla de partes reemplazadas en el estado.
+   *
+   * @param {SolicitudTabla[]} tablaPartesReemplazadasDatos - Arreglo con los datos de partes reemplazadas.
+   */
   public setTablaPartesReemplazadasDatos(tablaPartesReemplazadasDatos: SolicitudTabla[]): void {
     this.update((state) => ({
       ...state, 

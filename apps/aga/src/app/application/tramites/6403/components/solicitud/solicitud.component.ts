@@ -1475,6 +1475,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Limpia el valor del input permitiendo solo números.
+   * utilizando la expresión regular `REGEX_NICO` y actualiza los controles del formulario
+   * `datosPedimento` correspondientes: `aduana`, `patente`, `pedimento` y `folioImportacionTemporal`.
+   */
   limpiarSoloNumeros(event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     if (INPUT) {
@@ -1489,6 +1494,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Limpia el valor del input permitiendo solo caracteres alfanuméricos.
+   * Utiliza la expresión regular `REGEX_CARACTERES_ESPECIALES` y actualiza los controles
+   * @param {Event} event - Evento del input.
+   */
   limpiarAlfanumerico(event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     if (INPUT) {
