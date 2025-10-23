@@ -191,6 +191,11 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de paises en el formulario.
    */
   catalogosDatosPaisOrigenList: Catalogo[] = [];
+
+  /**
+   * @description Lista de pais Destino.
+   * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de pais Destino en el formulario.
+  */
   catalogosDatosPaisDestinoList: Catalogo[] = [];
 
 
@@ -522,8 +527,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.getcatalogosDatospaisDestinoLista()
   }
 
-
-
+/**
+  * Realiza una petición para obtener el catálogo de pais Destino.
+*/
   getcatalogosDatospaisOrigenLista(): void {
     this.catalogosService.obtieneCatalogoPaises(220202)
       .pipe(
@@ -536,6 +542,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     
   }
 
+  /**
+   * Realiza una petición para obtener el catálogo de pais Destino.
+  */
     getcatalogosDatospaisDestinoLista(): void {
     this.catalogosService.obtieneCatalogoPaisesD(220202)
       .pipe(
