@@ -159,4 +159,25 @@ ngOnInit(): void {
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
+   /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+   /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
 }
