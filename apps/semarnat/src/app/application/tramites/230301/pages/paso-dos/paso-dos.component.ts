@@ -8,20 +8,17 @@
  * @since 2025
  */
 import {
-  CadenaOriginalRequest,
-  Solicitante,
-} from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
-import {
   CategoriaMensaje,
   FirmaElectronicaComponent,
   Notificacion,
   SessionQuery,
   base64ToHex,
-  encodeToISO88591Hex,
+  encodeToISO88591Hex
 } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { CadenaOriginal230301Service } from '../../services/cadena-original230301.service';
 import { CommonModule } from '@angular/common';
 import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
 import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store';
@@ -50,6 +47,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   documentosQuery = inject(DocumentosQuery);
   tramite230301Query = inject(Tramite230301Query);
   firmaElectronicaService = inject(FirmaElectronicaService);
+  cadena = inject(CadenaOriginal230301Service);
   tramiteStore = inject(TramiteFolioStore);
   sessionQuery = inject(SessionQuery);
 
@@ -152,39 +150,28 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Obtiene la cadena original necesaria para la firma electrónica.
    */
   obtenerCadenaOriginal(): void {
-    /**
-     Se debe reemplazar la asignación de la variable certificado_serial number
-     con la respuesta del servicio pendiente del SAT.
-     Además, se deben reemplazar los valores fijos por los valores en sesión
-     */
-    const SOLICITANTE: Solicitante = {
-      rfc: 'AAL0409235E6',
-      nombre: 'Juan Pérez',
-      id_domicilio: 261011443,
-      apellido_paterno: 'Pérez',
-      apellido_materno: 'García',
-      razon_social: '',
-      curp: '',
-      cve_usuario: '',
-      descripcion_giro: '',
-      numero_identificacion_fiscal: '',
-      nss: '',
-      correo_electronico: '',
-    };
-
-    const CADENA_REQUEST: CadenaOriginalRequest = {
-      id_solicitud: this.solicitudState.idSolicitud ?? 0,
-      num_folio_tramite: this.folio ?? '',
+    /*
+    Se debe reemplazar la asignación de la variable certificado_serial number
+    con la respuesta del servicio pendiente del SAT.
+    Además, se deben reemplazar los valores fijos por los valores en sesión
+    */
+    const PAYLOAD = {
+      num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
       boolean_extranjero: true,
-      solicitante: SOLICITANTE,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'Juan Pérez',
+        es_persona_moral: true,
+        certificado_serial_number: 'string',
+      },
       cve_rol_capturista: 'CapturistaGubernamental',
       cve_usuario_capturista: 'Gubernamental',
       fecha_firma: Utils(new Date()),
       documento_requerido: [],
     };
 
-    this.firmaElectronicaService
-      .obtenerCadenaOriginal(CADENA_REQUEST)
+    this.cadena
+      .obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo !== '00') {
