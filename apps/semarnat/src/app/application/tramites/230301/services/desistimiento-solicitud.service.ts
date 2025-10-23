@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tramite230301State, Tramite230301Store } from '../estados/tramites/tramites230301.store';
-import { API_POST_GUARDAR_SOLICITUD } from '../../../constantes/230301/api-constants';
+import { API_POST_GUARDAR_SOLICITUD } from '../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { GuardarResponse } from '../../231001/models/guardar-solicitud-response';

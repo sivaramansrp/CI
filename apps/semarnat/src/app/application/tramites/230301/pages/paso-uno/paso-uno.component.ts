@@ -20,16 +20,50 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, RouterOutlet, AlertComponent],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-  TEXTOS = AVISO.Aviso;
-  public consultaState!: ConsultaioState;
-  public esDatosRespuesta: boolean = false;
-  public formularioDeshabilitado: boolean = false;
-  public destroyNotifier$: Subject<void> = new Subject();
-  public isSolicitudActive = false;
-  public isSolicitanteActive = false;
-  private solicitudComponent: SolicitudComponent | undefined;
+
+  /**
+   * Servicio de enrutamiento de Angular.
+   * @private
+   */
   private router = inject(Router);
+
+  /**
+   * Servicio de ruta activada de Angular.
+   * @private
+   */
   private route = inject(ActivatedRoute);
+
+  /**
+   * Objeto que contiene los textos de aviso.
+   */
+  TEXTOS = AVISO.Aviso;
+  /**
+   * Estado actual de la consulta.
+   */
+  public consultaState!: ConsultaioState;
+  /**
+   * Indica si los datos de respuesta están presentes.
+   */
+  public esDatosRespuesta: boolean = false;
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  public formularioDeshabilitado: boolean = false;
+  /**
+   * Emite un evento para notificar la destrucción del componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Indica si el componente de solicitud está activo.
+   */
+  public isSolicitudActive = false;
+  /**
+   * Indica si el componente de solicitante está activo.
+   */
+  public isSolicitanteActive = false;
+
+  /** Referencia al componente de solicitud. */
+  private solicitudComponent: SolicitudComponent | undefined;
 
   constructor(private consultaQuery: ConsultaioQuery) {
     this.consultaQuery.selectConsultaioState$
@@ -47,6 +81,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.router.navigate(['solicitud'], { relativeTo: this.route });
   }
 
+  /**
+   * Maneja la activación de un componente hijo en el router outlet.
+   * @param componentInstance
+   */
   onActivate(
     componentInstance: SolicitudComponent | SolicitanteComponent
   ): void {
@@ -60,6 +98,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Valida los formularios de los componentes hijos.
+   */
   public validarFormularios(): boolean {
     if (this.solicitudComponent) {
       return this.solicitudComponent.validarFormulario();
@@ -68,6 +109,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  /**
+   * Se ejecuta cuando el componente se destruye.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

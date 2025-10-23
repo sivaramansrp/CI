@@ -31,7 +31,7 @@ const ROUTES_SOLICITUDES: Routes = [
   },
   {
     path: 'acuse',
-    component: AcusePageComponent, // Use the page component here
+    component: AcusePageComponent,
   },
   {
     path: '',

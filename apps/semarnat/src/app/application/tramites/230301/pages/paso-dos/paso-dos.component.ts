@@ -8,6 +8,10 @@
  * @since 2025
  */
 import {
+  CadenaOriginalRequest,
+  Solicitante,
+} from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
+import {
   CategoriaMensaje,
   FirmaElectronicaComponent,
   Notificacion,
@@ -15,24 +19,21 @@ import {
   base64ToHex,
   encodeToISO88591Hex,
 } from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { CadenaOriginal230301Service } from '../../services/cadena-original230301.service';
-import { CadenaOriginalRequest } from '../../models/cadena-original-request';
 import { CommonModule } from '@angular/common';
 import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
 import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store';
-import { Firma230301Service } from '../../services/firma230301.service';
+import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
-import { Router } from '@angular/router';
-import { Tramite230301State } from '../../estados/tramites/tramites230301.store';
-
-import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
-import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
-
 import { PerfilUsuario } from '@libs/shared/data-access-user/src/core/models/usuario/perfilUsuario.model';
 import { Rol } from '@libs/shared/data-access-user/src/core/models/usuario/rol.model';
+import { Router } from '@angular/router';
+import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
+import { Tramite230301State } from '../../estados/tramites/tramites230301.store';
+import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
+import { formatFecha as Utils } from '@libs/shared/data-access-user/src/core/utils/utilerias';
 
 @Component({
   selector: 'app-paso-dos',
@@ -42,34 +43,65 @@ import { Rol } from '@libs/shared/data-access-user/src/core/models/usuario/rol.m
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  @Input() procedureUrl: string = '';
+  @Input() procedure: number = 0;
+
+  router = inject(Router);
+  documentosQuery = inject(DocumentosQuery);
+  tramite230301Query = inject(Tramite230301Query);
+  firmaElectronicaService = inject(FirmaElectronicaService);
+  tramiteStore = inject(TramiteFolioStore);
+  sessionQuery = inject(SessionQuery);
+
+  /**
+   Estado de los documentos asociados al trámite.
+   */
   private documentosState!: DocumentosState;
+  /**
+   Subject para manejar la desuscripción de observables y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
+  /**
+   Cadena original que se generará para la firma electrónica.
+   */
   cadenaOriginal?: string;
+  /**
+   * Objeto para gestionar las notificaciones que se muestran al usuario.
+   */
   alertaNotificacion!: Notificacion;
+  /**
+   * URL base para la navegación dentro del trámite.
+   */
   url?: string;
+  /**
+   * Datos de la firma electrónica obtenidos del componente de firma.
+   */
   datosFirmaReales!: {
     firma: string;
     certSerialNumber: string;
     rfc: string;
     fechaFin: string;
   };
+  /**
+   * Estado actual de la solicitud del trámite 230301.
+   */
   public solicitudState!: Tramite230301State;
+  /**
+   * Folio asignado al trámite una vez que ha sido firmado y procesado.
+   */
   folio!: string;
-  @Input() procedureUrl: string = '';
-  @Input() procedure: number = 0;
+  /**
+   * Perfil del usuario autenticado.
+   */
   userProfile: PerfilUsuario | undefined;
+  /**
+   * Roles asociados al usuario autenticado.
+   */
   roles: Rol[] = [];
+  /**
+   * ID del usuario autenticado.
+   */
   userId = '';
-
-  constructor(
-    private router: Router,
-    private documentosQuery: DocumentosQuery,
-    private tramite230301Query: Tramite230301Query,
-    private firma: Firma230301Service,
-    private cadena: CadenaOriginal230301Service,
-    private tramiteStore: TramiteFolioStore,
-    private sessionQuery: SessionQuery
-  ) {}
 
   ngOnInit(): void {
     this.documentosQuery.selectDocumentoState$
@@ -109,45 +141,50 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       });
 
     const URL_SEGMENTS = this.router.url.split('/');
-    URL_SEGMENTS.pop(); // remove paso-dos
-    URL_SEGMENTS.pop(); // remove solicitud
+    URL_SEGMENTS.pop();
+    URL_SEGMENTS.pop();
     this.url = URL_SEGMENTS.join('/');
 
     this.obtenerCadenaOriginal();
   }
 
+  /**
+   * Obtiene la cadena original necesaria para la firma electrónica.
+   */
   obtenerCadenaOriginal(): void {
-    const PAYLOAD: CadenaOriginalRequest = {
-      num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
+    /**
+     Se debe reemplazar la asignación de la variable certificado_serial number
+     con la respuesta del servicio pendiente del SAT.
+     Además, se deben reemplazar los valores fijos por los valores en sesión
+     */
+    const SOLICITANTE: Solicitante = {
+      rfc: 'AAL0409235E6',
+      nombre: 'Juan Pérez',
+      id_domicilio: 261011443,
+      apellido_paterno: 'Pérez',
+      apellido_materno: 'García',
+      razon_social: '',
+      curp: '',
+      cve_usuario: '',
+      descripcion_giro: '',
+      numero_identificacion_fiscal: '',
+      nss: '',
+      correo_electronico: '',
+    };
+
+    const CADENA_REQUEST: CadenaOriginalRequest = {
+      id_solicitud: this.solicitudState.idSolicitud ?? 0,
+      num_folio_tramite: this.folio ?? '',
       boolean_extranjero: true,
-      solicitante: {
-        rfc: 'AAL0409235E6',
-        nombre: 'Juan Pérez',
-        es_persona_moral: true,
-        certificado_serial_number: 'string',
-      },
+      solicitante: SOLICITANTE,
       cve_rol_capturista: 'CapturistaGubernamental',
       cve_usuario_capturista: 'Gubernamental',
-      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+      fecha_firma: Utils(new Date()),
+      documento_requerido: [],
     };
-    // eslint-disable-next-line no-warning-comments
-    //TODO this is going to be updated when certificado service and other sources are ready
-    /*const PAYLOAD: CadenaOriginalRequest = {
-      num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
-      boolean_extranjero: true,
-      solicitante:{
-        rfc: this.userProfile.rfc,
-        nombre: this.userProfile.nombreCompleto,
-        es_persona_moral: this.userProfile.tipoPersona === 'M',
-        // eslint-disable-next-line no-warning-comments
-        certificado_serial_number: 'string',
-      },
-      cve_rol_capturista: this.roles[0].codigoRol,
-      cve_usuario_capturista: this.userId,
-      fecha_firma: PasoDosComponent.formatFecha(new Date()),
-    };*/
-    this.cadena
-      .obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD)
+
+    this.firmaElectronicaService
+      .obtenerCadenaOriginal(CADENA_REQUEST)
       .subscribe({
         next: (resp) => {
           if (resp.codigo !== '00') {
@@ -184,6 +221,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja los datos de la firma electrónica recibidos del componente de firma.
+   * Almacena los datos de la firma y procede a obtener la firma para su procesamiento.
+   * @param datos Objeto que contiene la firma, número de serie del certificado, RFC y fecha de fin de vigencia.
+   */
   datosFirma(datos: {
     firma: string;
     certSerialNumber: string;
@@ -194,6 +236,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     this.obtieneFirma(datos.firma);
   }
 
+  /**
+   * Procesa la firma electrónica recibida.
+   * Construye el payload para enviar la firma al servicio y maneja la respuesta.
+   * @param firma La firma electrónica en formato base64.
+   */
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       console.error('Faltan datos para completar la firma');
@@ -213,21 +260,19 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
 
-    const PAYLOAD: FirmarRequest = {
+    const FIRMA_REQUEST: FirmarRequest = {
       cadena_original: CADENAHEX,
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
-      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+      fecha_firma: Utils(new Date()),
       clave_rol: 'Solicitante',
       sello: FIRMAHEX,
-      fecha_fin_vigencia: PasoDosComponent.formatFecha(
-        this.datosFirmaReales.fechaFin
-      ),
+      fecha_fin_vigencia: Utils(this.datosFirmaReales.fechaFin),
       documentos_requeridos: [],
     };
 
-    this.firma
-      .enviarFirma<string>(String(this.solicitudState.idSolicitud), PAYLOAD)
+    this.firmaElectronicaService
+      .enviarFirma<string>(FIRMA_REQUEST)
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<string>) => {
@@ -277,20 +322,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
   }
 
   ngOnDestroy(): void {

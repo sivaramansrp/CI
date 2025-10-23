@@ -10,3 +10,5 @@ export const COMUN_URL = {
   SOLICITUD_URL: '/solicitud',
   TRAMITE_URL: '/tramite',
 };
+
+export const API_POST_GUARDAR_SOLICITUD = 'sat-t230301/solicitud/guardar';
