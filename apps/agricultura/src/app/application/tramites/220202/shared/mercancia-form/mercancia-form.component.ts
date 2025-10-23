@@ -278,7 +278,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       uso: ['', Validators.required],
       paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
-      tipoProducto: [''],
+      tipoDeProducto: [''],
       numeroDeLote: ['']
     });
 
