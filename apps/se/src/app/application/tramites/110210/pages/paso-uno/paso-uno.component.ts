@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { CertificadoDisponibles, ConsultaioQuery, ConsultaioState, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
 import { DuplicadoDeCertificadoComponent } from '../duplicado-de-certificado/duplicado-de-certificado.component';
 
@@ -42,6 +43,12 @@ public consultaState!: ConsultaioState;
    * @type {number}
    */
   tipoPersona!: number;
+
+  /**
+   * Datos del certificado de origen.
+   * @type {CertificadoOrigenResponse | null}
+   */
+  public certificadoDatos: CertificadoOrigenResponse | null = null;
 
   /**
    * Configuración dinámica para los datos de la persona.
@@ -159,8 +166,49 @@ constructor(
    * Habilita la pestaña de certificado estableciendo la variable `certificadoTabEnabled` en `true`.
    *
    */
-  enableCertificadoTab() :void{
+  enableCertificadoTab(event: CertificadoDisponibles) :void{
   this.certificadoTabEnabled = true;
+  const PAYLOAD = {
+  "solicitud": {
+    "solicitante": {
+      "telefono": "55-98764532",
+      "rfc": "AAL0409235E6",
+      "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+      "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+      "correoElectronico": "vucem2021@gmail.com",
+      "cveUsuario": "AAL0409235E6"
+    },
+    "cveRolCapturista": "PersonaMoral",
+    "cveUsuarioCapturista": "AAL0409235E6",
+    "discriminatorValue": "110210",
+    "idSolicitud": null,
+    "clavePaisSeleccionado": "P-AGO",
+    "idTratadoAcuerdoSeleccionado": "116",
+    "tramite": {
+      "numFolioTramite": ""
+    }
+  },
+  "puedeCapturarRepresentanteLegalCG": false,
+  "numCertificadoSeleccionado": null,
+  "datosMercancia": {
+    "numeroCertificado": event.numeroCertificado,
+  },
+  "parametrosBP": {
+    "idSolicitud": null,
+    "servicio": null,
+    "mensaje": null,
+    "idTramite": "110210"
+  }
+}
+
+  this.service.obtenerEstadoFormulario(PAYLOAD,event.idSolicitud).pipe(
+            takeUntil(this.destroyed$)
+          ).subscribe((response) => {
+            if(esValidObject(response)) {
+              const RESPONSE = doDeepCopy(response);
+              this.certificadoDatos = RESPONSE?.datos;
+            }
+          });
 }
 /**
  * Obtiene los datos vigentes de licitaciones mediante el servicio y actualiza el estado del formulario.

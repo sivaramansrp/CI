@@ -1,12 +1,12 @@
 import { AVISO, AccionBoton, AlertComponent, PasoCargaDocumentoComponent, PasoFirmaComponent } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -31,7 +31,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     BtnContinuarComponent,
     PasoCargaDocumentoComponent,
     PasoFirmaComponent,
-    AlertComponent,
+    AlertComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
@@ -49,6 +49,8 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    * Lista de pasos del wizard obtenidos desde una constante externa.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  PRIVACY_NOTICE_CONTENT:string=PRIVACY_NOTICE_CONTENT;
 
   /**
    * @property {number} indice

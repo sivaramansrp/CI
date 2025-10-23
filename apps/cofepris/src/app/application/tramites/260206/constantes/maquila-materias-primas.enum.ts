@@ -56,3 +56,8 @@ export const SECCIONES_TRAMITE_260206 = {
    * - `scian`: Código SCIAN relacionado con la actividad económica.
    */
   export const DATOS_ELEMENTOS_REQUERIDOS = ['denominacionRazon', 'correoElectronico', 'scian'];
+
+  export const ELEMENTOS_REQUERIDOS = [
+  
+    'fabricante'
+  ];

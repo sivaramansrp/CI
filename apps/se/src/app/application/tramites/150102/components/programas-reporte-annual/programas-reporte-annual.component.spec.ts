@@ -6,10 +6,7 @@ import { ProgramasReporteAnnualComponent } from './programas-reporte-annual.comp
 import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { SolicitudService } from '../../services/solicitud.service';
-import {
-  ProgramasReporte,
-  ReporteFechas,
-} from '../../models/programas-reporte.model';
+import { ProgramasReporte, ReporteFechas } from '../../models/programas-reporte.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';

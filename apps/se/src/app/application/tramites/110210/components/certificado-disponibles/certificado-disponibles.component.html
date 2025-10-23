@@ -2,6 +2,6 @@
     <ng-titulo [titulo]="'Certificados Disponibles'"></ng-titulo>
     <div class="row mt-4">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
-            [tipoSeleccionTabla]="seleccionTabla" (filaClic)="onFilaClick()"></app-tabla-dinamica>
+            [tipoSeleccionTabla]="seleccionTabla" (filaClic)="onFilaClick($event)"></app-tabla-dinamica>
     </div>
 </div>
