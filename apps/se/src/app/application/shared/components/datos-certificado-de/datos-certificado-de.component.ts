@@ -32,12 +32,12 @@
  * ```
  */
 
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-datos-certificado-de',
@@ -231,6 +231,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
 
   constructor(
     private fb: FormBuilder,
+    private catalogoServices: CatalogoServices
   ) {
   }
   /**
@@ -241,6 +242,8 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
  */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.cargarIdioma(this.idProcedimiento.toString());
+    this.cargarEntidadFederativa();
   }
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -364,6 +367,92 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   representacionFederalSeleccion(estado: Catalogo): void {
     this.representacionFederalSeleccionEvent.emit(estado);
+  }
+
+    /**
+   * Método para cargar la lista de idiomas desde el servicio global.
+   */
+  cargarIdioma(tramite: string): void {
+    this.catalogoServices
+      .catalogoIdioma(tramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data) => {
+          this.idiomaDatos = data.datos as Catalogo[];
+        }
+      );
+  }
+
+    /**
+   * Método para cargar la lista de entidades federativas desde el servicio global.
+   */
+  cargarEntidadFederativa(): void {
+    this.catalogoServices
+      .entidadesFederativasCatalogo(this.idProcedimiento.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data) => {
+          this.entidadFederativaDatos = data.datos as Catalogo[];
+        }
+      );
+  }
+
+  /**
+   * Maneja el evento de cambio cuando se selecciona una nueva entidad federativa.
+   * Actualiza la lista de representaciones federales basándose en la entidad seleccionada.
+   * @param event - Objeto Catalogo que representa la entidad seleccionada.
+   */
+  onChangeEntidad(event: Catalogo): void {
+    const ENTIDAD_SELECCIONADA = event;
+    this.getRepresentacionDatos({
+      clave: ENTIDAD_SELECCIONADA.clave ?? '',
+      descripcion: ENTIDAD_SELECCIONADA.descripcion ?? ''
+    });
+    this.entidadFederativaSeleccionEvent.emit(ENTIDAD_SELECCIONADA);
+  }
+
+  /**
+   * Obtiene los datos del catálogo de representaciones federales basado en la clave de entidad proporcionada.
+   * Los datos recuperados se asignan a la propiedad `representacionFederal$`.
+   * La suscripción al observable se cancela automáticamente cuando el componente se destruye.
+   * @param cveEntidad - Clave de la entidad para filtrar las representaciones federales.
+   */
+  getRepresentacionDatos(cveEntidad: { clave: string; descripcion: string }): void {
+    this.catalogoServices
+      .representacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad.clave)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        const DESCRIPCION_ENTIDAD: string = (cveEntidad.descripcion ?? '')
+          .toString()
+          .trim()
+          .toLowerCase();
+
+        const CATALOGOS = res.datos ?? [];
+
+        const MATCHED = CATALOGOS.find(
+          (item) =>
+          ((item.descripcion ?? '').toString().trim().toLowerCase() ===
+            DESCRIPCION_ENTIDAD)
+        );
+
+        const OTHERS = CATALOGOS.filter(
+          (items) =>
+          ((items.descripcion ?? '').toString().trim().toLowerCase() !==
+            DESCRIPCION_ENTIDAD)
+        );
+        this.formDatosCertificado
+          .get('representacionFederalDates')
+          ?.setValue(MATCHED ? MATCHED.clave : null);
+        this.representacionFederal$ = MATCHED ? [MATCHED, ...OTHERS] : OTHERS;
+        this.setValoresStore('', 'representacionFederalDates', '');
+      });
+  }
+
+   /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.formDatosCertificado) {
+      this.formDatosCertificado.markAllAsTouched();
+    }
   }
 
   /**

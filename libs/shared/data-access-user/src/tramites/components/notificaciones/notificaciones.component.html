@@ -48,6 +48,26 @@
             : 'center'
         "
       >
+      <ng-container *ngIf="invertirBotones; else ordenNormal">
+        @if (notificacionInput.txtBtnCancelar !== '') {
+        <button
+          type="button"
+          class="btn btn-default text-right"
+          (click)="declinarAccion()"
+        >
+          {{ notificacionInput.txtBtnCancelar }}
+        </button>
+        }
+        <button
+          type="button"
+          class="btn btn-primary text-left"
+          (click)="confirmarAccion()"
+        >
+          {{ notificacionInput.txtBtnAceptar }}
+        </button>
+      </ng-container>
+
+      <ng-template #ordenNormal>
         <button
           type="button"
           class="btn btn-primary text-left"
@@ -64,6 +84,8 @@
           {{ notificacionInput.txtBtnCancelar }}
         </button>
         }
+      </ng-template>
+        
       </div>
     </div>
   </div>

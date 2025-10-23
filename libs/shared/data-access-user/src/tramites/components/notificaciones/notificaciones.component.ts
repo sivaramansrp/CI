@@ -165,6 +165,12 @@ export class NotificacionesComponent implements OnChanges {
    */
   @ViewChild('modal', { static: false }) modal?: ModalDirective;
 
+  /**
+   * @description Bandera que define si se debe invertir el orden de los botones en el modal.
+   *  false -> Aceptar - Cancelar  true -> Cancelar - Aceptar
+   */
+  @Input() invertirBotones: boolean = false; // bandera que define el orden  de los botones en el modal
+
   constructor(
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,

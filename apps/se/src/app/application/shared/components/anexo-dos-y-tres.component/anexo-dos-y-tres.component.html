@@ -17,7 +17,7 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="descripcion" class="form-label text-start">Descripción:</label>
-                    <textarea id="descripcion" class="form-control" maxlength="1000" style="height: 60%; resize: none;"
+                    <textarea id="descripcion" class="form-control" maxlength="1000" style="height: 60%;"
                         formControlName="descripcion" (input)="convertirAMayusculas($event, 'anexoDos')"></textarea>
                 </div>
             </div>
@@ -38,6 +38,9 @@
                 [configuracionTabla]="anexo1y3Configuartion.anexoDosEncabezadoDeTabla" [datos]="anexoDosTablaLista"
                 (listaDeFilaSeleccionada)="setAnexoDosLista($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item"><a class="page-link">1</a></li>
+            </ul>
         </div>
     </form>
 
@@ -50,7 +53,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
-                    <input class="form-control min-hgt" maxlength="10" id="fraccionArancelaria"
+                    <input class="form-control min-hgt" maxlength="100" id="fraccionArancelaria"
                         formControlName="fraccionArancelaria" type="text">
                 </div>
             </div>
@@ -82,18 +85,20 @@
                 (listaDeFilaSeleccionada)="setAnexoTresLista($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
         </div>
-      
+
     </form>
 </div>
 @if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {
 <section>
-    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="confirmarEliminacionDos()">
+    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion"
+        (confirmacionModal)="confirmarEliminacionDos($event)">
     </lib-notificaciones>
 </section>
 }
 @if (nuevaTresNotificacion && nuevaTresNotificacion.cerrar) {
 <section>
-    <lib-notificaciones [notificacionInput]="nuevaTresNotificacion" (confirmacionModal)="confirmarEliminacionTres()">
+    <lib-notificaciones [notificacionInput]="nuevaTresNotificacion"
+        (confirmacionModal)="confirmarEliminacionTres($event)">
     </lib-notificaciones>
 </section>
 }

@@ -1,7 +1,8 @@
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 import { DeclaracionDatosResponse } from '../../models/response/declaracion-datos-response.model';
-import { FraccionValidarResponse } from '../../models/response/validar-fraccion-response.model';
+
+import { FraccionValidarResponse, ProcesoSolicitado } from '../../models/response/validar-fraccion-response.model';
 
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
 import { Store, StoreConfig } from '@datorama/akita';
@@ -85,6 +86,9 @@ export interface Solicitante110101State {
 
   /** Id solicitud de peticion de guardado */
   id_solcitud: number;
+
+  /** Un array de procesos seleccionados */
+  proceso_seleccionado : ProcesoSolicitado[];
 }
 
 
@@ -172,7 +176,8 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     declaracion_solicitud:[],
     protesto_verdad: false,
     tab_procesos: false,
-    id_solcitud: 0
+    id_solcitud: 0,
+    proceso_seleccionado: []
   };
 }
 
@@ -510,6 +515,27 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       insumoCriteriosDatos: [],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo insumo al estado `ProcesoSolicitado`.
+   * @param insumo - El objeto `ProcesoSolicitado` a insertar en el array.
+  */
+  public addProcesoSolicitado(proceso: ProcesoSolicitado[]): void {
+    this.update((state) => ({
+      ...state,
+      proceso_seleccionado: proceso,
+    }));
+  }
+
+  /**
+   * Limpia la lista de procesos solicitados, dejando el array vacío.
+   */
+  public clearProcesoSolicitado(): void {
+    this.update((state) => ({
+      ...state,
+      proceso_seleccionado: [],
     }));
   }
 

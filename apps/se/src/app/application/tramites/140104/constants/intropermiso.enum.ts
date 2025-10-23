@@ -52,3 +52,19 @@ export const TEXTOS_CANCELACIONS = {
 </div>
   `
 };
+
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">Se debe seleccionar 1 cupo para poder Consultar.</span>
+    </div>
+
+  </div>
+</div>`;
+
+

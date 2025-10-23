@@ -218,3 +218,14 @@ export const ERROR_FORMA_ALERT = `
   </div>
 </div>
 `;
+
+/**
+ * Mensaje de alerta que se muestra cuando faltan campos por capturar.
+ */
+export const ERROR_CAMPOS_FALTANTES = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary">Faltan campos por capturar.</div>
+  </div>
+</div>
+`;

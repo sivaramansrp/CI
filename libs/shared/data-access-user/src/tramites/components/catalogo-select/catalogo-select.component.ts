@@ -327,4 +327,8 @@ export class CatalogoSelectComponent
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
+  // eslint-disable-next-line class-methods-use-this
+  trackByOption(index: number, option: Catalogo): number | string {
+    return option.id || option.clave || index;
+  }
 }

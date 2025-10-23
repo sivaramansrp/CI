@@ -1,11 +1,15 @@
 import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { CommonModule } from '@angular/common';
 import { ERROR_FORMA_ALERT } from '../../../110204/constantes/modificacion.enum';
 import { PASOS } from '../../enums/constantes-alertas.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src/';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite110223Query } from '../../query/tramite110223.query';
 // Ensure PasoDosComponent and PasoUnoComponent are standalone components or declared in an NgModule
 
 /**
@@ -45,6 +49,7 @@ interface AccionBoton {
     PasoUnoComponent, 
     ReactiveFormsModule,
     AlertComponent,
+    PasoFirmaComponent
   ]
 })
 export class SolicitudPageComponent {
@@ -88,6 +93,40 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Estado del trámite.
+   * @type {TramiteState}
+   */
+  solicitudState!: TramiteState;
+
+    /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+  
+  /**
+   * Constructor del componente.
+   * @param store - El store del trámite.
+   * @param query - La consulta del trámite.
+   */
+  constructor( private store: Tramite110223Store,
+        private query: Tramite110223Query){
+  this.query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
+  }
 
   /**
    * Selecciona una pestaña del asistente.

@@ -51,7 +51,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
   templateUrl: './representacion-federal.component.html',
-  styleUrl: './representacion-federal.component.css',
+  styleUrl: './representacion-federal.component.scss',
 })
 export class RepresentacionFederalComponent implements OnInit {
 

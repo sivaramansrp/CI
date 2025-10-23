@@ -8,6 +8,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import {ELEMENTOS_REQUERIDOS} from '../../constants/medicos-sin-registrar.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260217Query } from '../../estados/tramite260217Query.query';
@@ -72,6 +73,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @readonly Este array se actualiza únicamente a través de observables del store
    */
   proveedorTablaDatos: Proveedor[] = [];
+
+
+  /**
+         * @property {string[]} elementosRequeridos
+         * @description
+         * Lista de elementos requeridos para completar el formulario o proceso.
+         */
+     public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
+  
 
   /**
    * @property {Facturador[]} facturadorTablaDatos

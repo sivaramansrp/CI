@@ -257,7 +257,31 @@ export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
  * @descripcion
  * Identificador único del procedimiento.
  */
-export const CAMPO_DE_DESTINATARIO = [110222, 110221]
+export const CAMPO_DE_DESTINATARIO = [110221, 110222, 110223];
+
+/**
+ * Identificadores de procedimientos que requieren campos de destinatarios.
+ * @type {number[]}
+ */
+export const CAMPO_DE_DESTINATARIOS = [110203];
+
+/**
+ * Identificadores de procedimientos que requieren campos de representante.
+ * @type {number[]}
+ */
+export const CAMPO_DE_REPRESENTANTE = [110202, 110223];
+
+/**
+ * Identificadores de procedimientos que requieren campos de transporte.
+ * @type {number[]}
+ */
+export const CAMPO_DE_TRANSPORTE = [110207, 110208];
+
+/**
+ * Identificadores de procedimientos que requieren campos de detalles.
+ * @type {number[]}
+ */
+export const CAMPO_DE_DETALLES = [110216, 110217];
 
 /**
  * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.
@@ -339,7 +363,7 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
  * @type {number[]}
  */
-export const FECHA_ID = [ 110204,110223 ];
+export const FECHA_ID = [110204, 110223];
 /**
  * @constant REQUIREDA
  * @description
@@ -348,7 +372,7 @@ export const FECHA_ID = [ 110204,110223 ];
  * coincide con algún valor de este arreglo.
  * @type {number[]}
  */
-export const REQUIREDA = [110204,110205];
+export const REQUIREDA = [110204, 110205];
 /**
  * @constant BOTON_DE_OPCION_VER
  * @description
@@ -356,4 +380,4 @@ export const REQUIREDA = [110204,110205];
  * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
  * @type {number[]}
  */
-export const BOTON_DE_OPCION_VER =[110221];
+export const BOTON_DE_OPCION_VER = [110221];

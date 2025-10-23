@@ -33,9 +33,13 @@
 <div class="col-md-4">
   <label for="ampliar" class="form-label">Monto a ampliar*:</label>  
   <div class="d-flex align-items-center">
-    <input type="text" class="form-control me-2" id="ampliar" formControlName="ampliar">
+    <input type="text" class="form-control me-2" id="ampliar" formControlName="ampliar"  [ngClass]="isValid(formasignacion, 'ampliar') ? 'required' : ''" >
     <span>(Kilogramo)</span>
   </div>
+      @if (formasignacion.get('ampliar')?.invalid && 
+     (formasignacion.get('ampliar')?.touched || formasignacion.get('ampliar')?.dirty)) {
+  <span class="mensaje-error">Este campo es obligatorio.</span>
+}
 </div>
 </div>
 </form>

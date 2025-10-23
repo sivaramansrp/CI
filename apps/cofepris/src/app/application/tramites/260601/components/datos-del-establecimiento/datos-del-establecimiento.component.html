@@ -28,7 +28,7 @@
         </div>
         <div class="col-md-8">
             <label for="razonSocial" class="form-label">Denominación o razón social<span [ngClass]="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid && datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required'] || razonInvalid ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
+            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68" maxlength="100"
                 [class.is-invalid]="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid || razonInvalid"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
             <div *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.touched">

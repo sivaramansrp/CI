@@ -1,12 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
+
 import { CommonModule } from '@angular/common';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
+
+import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent as DestinatarioSharedComponent } from '../../../../shared/components/destinatario/destinatario.component';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
+
+import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
 
 /**
  * Componente para gestionar los datos del destinatario.
@@ -19,9 +24,11 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
     ReactiveFormsModule,
-    TooltipModule
+    DatosDelDestinatarioComponent,
+    DestinatarioSharedComponent,
+    RepresentanteLegalExportadorComponent,
+    DetallesDelTransporteComponent
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
@@ -29,249 +36,210 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
 export class DestinatarioComponent implements OnInit, OnDestroy {
 
 /**
-   * Subject para destruir notificador.
-   */
-  consultaDatos!: ConsultaioState;
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  soloLectura: boolean = false;
+ * Valores actuales del formulario de datos del destinatario.
+ */
+formDestinatarioValues!: { [key: string]: unknown};
+
+/**
+ * Subject utilizado para gestionar el ciclo de vida del componente y cancelar las suscripciones.
+ */
+destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * Estado de consulta para verificar si está en modo solo lectura.
+ */
+consultaDatos!: ConsultaioState;
+
+/**
+ * Indica si el formulario está en modo solo lectura.
+ */
+soloLectura: boolean = false;
+
+/**
+ * Referencia al componente hijo DatosDelDestinatarioComponent
+ */
+@ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioRef!: DatosDelDestinatarioComponent;
+
+/**
+ * Referencia al componente hijo DestinatarioComponent
+ */
+@ViewChild(DestinatarioSharedComponent) destinatarioRef!: DestinatarioSharedComponent;
+
+/**
+ * Referencia al componente hijo RepresentanteLegalExportadorComponent
+ */
+@ViewChild(RepresentanteLegalExportadorComponent) representanteRef!: RepresentanteLegalExportadorComponent;
+
+/**
+ * Referencia al componente hijo DetallesDelTransporteComponent
+ */
+@ViewChild(DetallesDelTransporteComponent) transporteRef!: DetallesDelTransporteComponent;
 
   /**
-   * Subject para notificar la destrucción del componente.
-   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
-   */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
-
-  /**
-   * Formulario reactivo para gestionar los datos del destinatario.
-   */
-  registroFormulario!: FormGroup;
-
-  /**
-   * Catálogo de opciones de transporte.
-   */
-  transporte!: CatalogosSelect;
+ * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
+ * @param fb Instancia del FormBuilder para la creación del formulario.
+ * @param store Instancia del store para el manejo de datos.
+ * @param tramiteQuery Instancia del query para obtener datos de estado.
+ * @param consultaQuery Consulta para obtener el estado de la consulta.
+ */
+constructor(
+  private fb: FormBuilder,
+  public store: Tramite110217Store,
+  public tramiteQuery: Tramite110217Query,
+  public consultaQuery: ConsultaioQuery
+) {
 
   /**
-   * Estado actual de la solicitud.
+   * Suscripción al estado del formulario para actualizar los valores del formulario al obtener datos.
    */
-  public solicitudState!: Tramite110217State;
+  this.tramiteQuery.selectSolicitud$.pipe(
+    takeUntil(this.destroyNotifier$),
+    map((state) => ({
+      grupoReceptor: state.grupoReceptor,
+      grupoDeDirecciones: state.grupoDeDirecciones,
+      grupoRepresentativo: state.grupoRepresentativo,
+      grupoDeTransporte: state.grupoDeTransporte
+    }))
+  ).subscribe((estado: { [key: string]: unknown }) => {
+      this.formDestinatarioValues = estado;
+  });
+}
 
   /**
-   * Notificador para destruir las suscripciones y evitar fugas de memoria.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
+ * Método que se ejecuta al inicializar el componente.
+ * 
+ * Configura el componente y suscribe al estado de la consulta.
+ */
+ngOnInit(): void {
+  this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+      })
+    )
+    .subscribe();
+}
 
   /**
-   * Indicador para deshabilitar elementos del formulario.
-   */
-  estaDeshabilitado: boolean = false;
+ * Método que se ejecuta al destruir el componente.
+ * 
+ * Libera los recursos y cancela las suscripciones activas.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 
-  /**
-   * Indicador para verificar si el formulario está vacío.
-   */
-  estaVacio: boolean = false;
-
-  /**
-   * Constructor del componente.
-   * 
-   * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-   * @param {Tramite110217Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite110217Query} query - Query para obtener el estado del trámite.
-   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
-   */
-  constructor(
-    public fb: FormBuilder,
-    private store: Tramite110217Store,
-    private query: Tramite110217Query,
-    private validacionesService: ValidacionesFormularioService,
-      private consultaioQuery: ConsultaioQuery
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
+/**
+ * Maneja los valores del store para los datos del destinatario.
+ * @param event Evento del formulario con estructura específica
+ */
+setValoresStoreDatosDestinatario(event: { formGroupName: string; campo: string; valor: unknown; storeStateName: string }): void {
+  const { valor: VALOR } = event;
+  const METODO_STORE = this.store[event.storeStateName as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
   }
+}
 
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * 
-   * Configura el formulario y suscribe al estado de la solicitud.
-   */
-  ngOnInit(): void {
-    this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.donanteDomicilio();
-
-
-     this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.destinatarioFormulario();
-        })
-      )
-      .subscribe();
+/**
+ * Maneja los valores del store para el destinatario.
+ * @param event Evento del formulario con estructura específica
+ */
+setValoresStoreDestinatario(event: { formGroupName: string; campo: string; valor: unknown; storeStateName: string }): void {
+  const { valor: VALOR } = event;
+  const METODO_STORE = this.store[event.storeStateName as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
   }
+}
 
-  /**
-   * Configura el formulario del destinatario según el estado de la solicitud.
-   *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
-   *  @returns {void}
-   */
-    destinatarioFormulario(): void {
-    if (this.soloLectura) {
-      this.registroFormulario.disable();
-    } else {
-      this.registroFormulario.enable();
+/**
+ * Maneja los valores del store para el representante legal.
+ * @param event Evento del formulario con estructura específica del representante
+ */
+setValoresStoreRepresentante(event: { formGroupName: string; campo: string; VALOR: unknown; METODO_NOMBRE: string }): void {
+  const { VALOR } = event;
+  const METODO_STORE = this.store[event.METODO_NOMBRE as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+  }
+}
+
+/**
+ * Maneja los valores del store para los detalles del transporte.
+ * @param event Evento del formulario con estructura específica del transporte
+ */
+setValoresStoreTransporte(event: { formGroupName: string; campo: string; valor: unknown; storeStateName: string }): void {
+  const { valor: VALOR } = event;
+  const METODO_STORE = this.store[event.storeStateName as keyof Tramite110217Store];
+  if (typeof METODO_STORE === 'function') {
+    (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+  }
+}
+
+/**
+ * Valida todos los formularios de los componentes compartidos.
+ * @returns true si todos los formularios son válidos, false en caso contrario
+ */
+validateAllForms(): boolean {
+  let esValido = true;
+  
+  // Validar datos del destinatario si existe
+  if (this.datosDelDestinatarioRef?.formDatosDelDestinatario) {
+    if (this.datosDelDestinatarioRef.formDatosDelDestinatario.invalid) {
+      esValido = false;
     }
   }
-
-  /**
-   * Método que se ejecuta al destruir el componente.
-   * 
-   * Libera los recursos y cancela las suscripciones activas.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
-   * Inicializa el formulario con los datos del estado de la solicitud.
-   */
-  donanteDomicilio(): void {
-    this.registroFormulario = this.fb.group({
-      grupoReceptor: this.fb.group({
-        nombre: [this.solicitudState?.grupoReceptor?.nombre, [Validators.maxLength(250)]],
-        apellidoPrimer: [this.solicitudState?.grupoReceptor?.apellidoPrimer, [Validators.maxLength(20)]],
-        apellidoSegundo: [this.solicitudState?.grupoReceptor?.apellidoSegundo, [Validators.maxLength(20)]],
-        numeroFiscal: [this.solicitudState?.grupoReceptor?.numeroFiscal, [Validators.required, Validators.maxLength(30)]],
-        razonSocial: [this.solicitudState?.grupoReceptor?.razonSocial, [Validators.maxLength(70)]],
-      }),
-
-      grupoDeDirecciones: this.fb.group({
-        ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required,Validators.maxLength(50)]],
-        calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required,Validators.maxLength(90)]],
-        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required,Validators.maxLength(30)]],
-        lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
-        telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(20)]],
-        fax: [this.solicitudState?.grupoDeDirecciones?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO), Validators.maxLength(70)]],
-      }),
-
-      grupoRepresentativo: this.fb.group({
-        lugar: [this.solicitudState?.grupoRepresentativo?.lugar, [Validators.required, Validators.maxLength(70)]],
-        nombreExportador: [this.solicitudState?.grupoRepresentativo?.nombreExportador, [Validators.required, Validators.maxLength(40)]],
-        empresa: [this.solicitudState?.grupoRepresentativo?.empresa, [Validators.required, Validators.maxLength(40)]],
-        cargo: [this.solicitudState?.grupoRepresentativo?.cargo, [Validators.required, Validators.maxLength(40)]],
-        lada: [this.solicitudState?.grupoRepresentativo?.lada, []],
-        telefono: [this.solicitudState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        fax: [this.solicitudState?.grupoRepresentativo?.fax, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
-      }),
-
-      grupoDeTransporte: this.fb.group({
-        puertoEmbarque: [this.solicitudState?.grupoDeTransporte?.puertoEmbarque, [Validators.maxLength(40)]],
-        puertoDesembarque: [this.solicitudState?.grupoDeTransporte?.puertoDesembarque, [Validators.maxLength(40)]],
-        puertoTransito: [this.solicitudState?.grupoDeTransporte?.puertoTransito, [Validators.maxLength(30)]],
-        nombreEmbarcacion: [this.solicitudState?.grupoDeTransporte?.nombreEmbarcacion, [Validators.maxLength(30)]],
-        numeroVuelo: [this.solicitudState?.grupoDeTransporte?.numeroVuelo, [Validators.maxLength(15)]]
-      }),
-    });
-     this.destinatarioFormulario();
-  }
-
-  /**
-   * Valida el formulario del destinatario.
-   * 
-   * Si el formulario es inválido, marca todos los campos como tocados.
-   */
-  validarDestinatarioFormulario(): void {
-    this.registroFormulario.markAllAsTouched();
-    if (this.registroFormulario.invalid) {
-      // formulario válido
+  
+  // Validar destinatario si existe
+  if (this.destinatarioRef?.formDestinatario) {
+    if (this.destinatarioRef.formDestinatario.invalid) {
+      esValido = false;
     }
   }
-
-  /**
-   * Maneja el evento de clic para deshabilitar elementos del formulario.
-   */
-  onClick(): void {
-    this.estaDeshabilitado = true;
+  
+  // Validar representante legal si existe
+  if (this.representanteRef?.form) {
+    if (this.representanteRef.form.invalid) {
+      esValido = false;
+    }
   }
-
- 
-
-  /**
-   * Valida un campo del formulario.
-   * 
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} field - El nombre del campo a validar.
-   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
-   */
-  isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field) || false;
+  
+  // Validar detalles del transporte si existe
+  if (this.transporteRef?.formTransporte) {
+    if (this.transporteRef.formTransporte.invalid) {
+      esValido = false;
+    }
   }
+  
+  return esValido;
+}
 
-  /**
-   * Actualiza el estado del store con el valor seleccionado en el formulario.
-   * 
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} campo - El nombre del campo en el formulario.
-   * @param {keyof Tramite110217Store} metodoNombre - El nombre del método en el store para actualizar el estado.
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110217Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+/**
+ * Marca todos los campos de los formularios como tocados para mostrar errores.
+ */
+markAllFormsAsTouched(): void {
+  // Marcar datos del destinatario como tocado
+  if (this.datosDelDestinatarioRef?.formDatosDelDestinatario) {
+    this.datosDelDestinatarioRef.formDatosDelDestinatario.markAllAsTouched();
   }
-
-  /**
-   * Obtiene el grupo de transporte del formulario.
-   * 
-   * @returns {FormGroup} El grupo de transporte.
-   */
-  get grupoDeTransporte(): FormGroup {
-    return this.registroFormulario.get('grupoDeTransporte') as FormGroup;
+  
+  // Marcar destinatario como tocado
+  if (this.destinatarioRef?.formDestinatario) {
+    this.destinatarioRef.formDestinatario.markAllAsTouched();
   }
-
-  /**
-   * Obtiene el grupo receptor del formulario.
-   * 
-   * @returns {FormGroup} El grupo receptor.
-   */
-  get grupoReceptor(): FormGroup {
-    return this.registroFormulario.get('grupoReceptor') as FormGroup;
+  
+  // Marcar representante legal como tocado
+  if (this.representanteRef?.form) {
+    this.representanteRef.form.markAllAsTouched();
   }
-
-  /**
-   * Obtiene el grupo de direcciones del formulario.
-   * 
-   * @returns {FormGroup} El grupo de direcciones.
-   */
-  get grupoDeDirecciones(): FormGroup {
-    return this.registroFormulario.get('grupoDeDirecciones') as FormGroup;
+  
+  // Marcar detalles del transporte como tocado
+  if (this.transporteRef?.formTransporte) {
+    this.transporteRef.formTransporte.markAllAsTouched();
   }
-
-  /**
-   * Obtiene el grupo representativo del formulario.
-   * 
-   * @returns {FormGroup} El grupo representativo.
-   */
-  get grupoRepresentativo(): FormGroup {
-    return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
-  }
+}
 }
