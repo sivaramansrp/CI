@@ -975,8 +975,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
     presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
     numeroRegistroSanitario: [
-      this.obtenerValor('numeroRegistroSanitario'),
-      [Validators.required],
+      this.obtenerValor('numeroRegistroSanitario')
     ],
     fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
     paisDeOriginDatos: [
@@ -1220,7 +1219,7 @@ public convertToStringArray(value: unknown): string[] {
     
     // Close the modal
     this.cerrarModal.emit();
-  }
+}
 
   /**
    * Restablece el formulario de mercancía a su estado inicial.

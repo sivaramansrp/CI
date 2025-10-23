@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -320,7 +320,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private Tramite260205Query: Tramite260205Query,
     private Tramite260205Store: Tramite260205Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdRef: ChangeDetectorRef,
+    private zone: NgZone
   ) {
     this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -367,7 +369,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            seccionState.tablaMercanciasConfigDatos;
         })
       )
       .subscribe();
@@ -405,7 +407,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.Tramite260205Store.updateTablaMercanciasConfigDatos(event);
+    this.zone.run(() => {
+    this.Tramite260205Store.updateTablaMercanciasConfigDatos([...event]);
+    this.cdRef.markForCheck();
+    });
   }
 
   /**
