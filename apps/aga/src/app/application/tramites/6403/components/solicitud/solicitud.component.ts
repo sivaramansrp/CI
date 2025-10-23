@@ -1031,6 +1031,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         modeloMercancia: this.filaSeleccionadaLista[0].modelo,
         numSerieMercancia: this.filaSeleccionadaLista[0].numeroDeSerie,
         tipoMercancia: this.filaSeleccionadaLista[0].tipo,
+        espeMercancia: this.filaSeleccionadaLista[0].espeMercancia,
+        numParteMercancia: this.filaSeleccionadaLista[0].numParteMercancia
       });
     } else {
       this.abrirModal('Debe seleccionar un registro a modificar');
@@ -1066,6 +1068,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         modeloMercancia: this.filaSeleccionadaLista[0].modelo,
         numSerieMercancia: this.filaSeleccionadaLista[0].numeroDeSerie,
         tipoMercancia: this.filaSeleccionadaLista[0].tipo,
+        espeMercancia: this.filaSeleccionadaLista[0].espeMercancia,
+        numParteMercancia: this.filaSeleccionadaLista[0].numParteMercancia
       });
     } else {
       this.abrirModal('Debe seleccionar un registro a consultar');
@@ -1088,6 +1092,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter(
         (ele) => !this.filaSeleccionadaLista.includes(ele)
       );
+      
+      // Actualizar la tienda con nuevos datos
+      this.store.setTablaPartesReemplazadasDatos(this.tablaDeDatos.datos);
+      
       this.filaSeleccionadaLista = [];
     }
   }
@@ -1145,7 +1153,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   agregarMercancias(): void {
     const FORMS = this.mercanciaFormulario.value;
     if (
-      this.mercanciaFormulario.get('modalDescMercancia')?.invalid &&
+      this.mercanciaFormulario.get('modalDescMercancia')?.invalid ||
       this.mercanciaFormulario.get('espeMercancia')?.invalid
     ) {
       this.mercanciaFormulario?.markAllAsTouched();
@@ -1160,6 +1168,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroDeSerie: FORMS?.numParteMercancia,
       tipo: FORMS?.tipoMercancia,
       descripcionMercancia: FORMS?.modalDescMercancia,
+      espeMercancia: FORMS?.espeMercancia,
+      numParteMercancia: FORMS?.numParteMercancia
+
     };
     if (ID) {
       this.tablaDeDatos.datos = this.tablaDeDatos.datos.map((item) =>
@@ -1169,6 +1180,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, { ...DATOS }];
       this.abrirModal('El registro fue agregado correctamente.');
     }
+
+    // Actualizar la tienda con nuevos datos
+    this.store.setTablaPartesReemplazadasDatos(this.tablaDeDatos.datos);
+    
     this.filaSeleccionadaLista = [];
     this.mercanciaFormulario.reset();
     this.MODAL_INSTANCE.hide();
@@ -1185,7 +1200,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   agregarMercanciaBtn(): void {
     const FORMS = this.mercanciaFormulario.value;
     if (
-      this.mercanciaFormulario.get('modalDescMercancia')?.invalid &&
+      this.mercanciaFormulario.get('modalDescMercancia')?.invalid ||
       this.mercanciaFormulario.get('espeMercancia')?.invalid
     ) {
       this.mercanciaFormulario?.markAllAsTouched();
@@ -1200,6 +1215,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroDeSerie: FORMS?.numParteMercancia,
       tipo: FORMS?.tipoMercancia,
       descripcionMercancia: FORMS?.modalDescMercancia,
+      espeMercancia: FORMS?.espeMercancia,
+      numParteMercancia: FORMS?.numParteMercancia
     };
     if (ID) {
       this.tablaDeDatos.datos = this.tablaDeDatos.datos.map((item) =>
@@ -1208,6 +1225,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, { ...DATOS }];
     }
+
+    // Actualizar la tienda con nuevos datos
+    this.store.setTablaPartesReemplazadasDatos(this.tablaDeDatos.datos);
+    
     this.filaSeleccionadaLista = [];
     this.mercanciaFormulario.reset();
     this.MODAL_INSTANCE.hide();

@@ -41,6 +41,12 @@ export interface SolicitudTabla {
    * Descripción de la mercancía del Solicitud.
    */
   descripcionMercancia: string;
+
+  espeMercancia: string;
+
+  numParteMercancia: string;
+
+  
 }
 
 /**
