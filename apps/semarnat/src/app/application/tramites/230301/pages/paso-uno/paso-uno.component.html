@@ -1,18 +1,15 @@
 <div class="container">
-    <div class="row">
-      <ul class="nav nav-tabs">
-        <li *ngFor="let tab of seccionesDeLaSolicitud" [ngClass]="indice === tab.index ? 'active' : ''">
-                <a data-toggle="tab" (click)="seleccionaTab(tab.index)" (keydown.enter)="seleccionaTab(tab.index)"
-                    tabindex="0">{{ tab.title }}</a>
-            </li>
-      </ul>
-  
-      <ng-container>
-        <solicitante #solicitante [hidden]="indice !== 1"></solicitante>
-          @if(esDatosRespuesta){
-            <app-solicitud #solicitud [hidden]="indice !== 2" [formularioDeshabilitado]="formularioDeshabilitado"></app-solicitud>
-            <ng-alert [CONTENIDO]="TEXTOS" ></ng-alert>
-          }
-      </ng-container>
-    </div>
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li routerLinkActive="active">
+        <a routerLink="solicitante">Solicitante</a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="solicitud">Solicitud</a>
+      </li>
+    </ul>
+
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+    <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
   </div>
+</div>

@@ -63,6 +63,17 @@ export class FormularioRegistroService {
 
     return todosValidos;
   }
+
+  /**
+   * Resetea todos los formularios registrados.
+   * 
+   */
+
+  resetFormularios(): void {
+    this.formularios.forEach(formulario => {
+      formulario.reset();
+    });
+  }
   /**
    * Obtiene un formulario registrado por su clave.
    * 
