@@ -1,7 +1,5 @@
-import {
- 
-  HistoricoColumnas, MercanciaTabla,
-} from '../models/peru-certificado.module';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { GrupoRepresentativo } from '../models/peru-certificado.module';
@@ -92,6 +90,11 @@ export interface Tramite110205State {
   /** Lista de mercancías encontradas o buscadas. */
   buscarMercancia: Mercancia[];
   productores: HistoricoColumnas[];
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
 }
 
 /**
@@ -240,6 +243,7 @@ export function createInitialState(): Tramite110205State {
     serviciosImmxError: false,
     buscarMercancia: [],
     productores: [],
+    productoresExportador: [],
   };
 }
 
@@ -425,6 +429,25 @@ export class Tramite110205Store extends Store<Tramite110205State> {
   setbuscarMercancia(buscarMercancia: Mercancia[]): void {
     this.update((state) => ({ ...state, buscarMercancia }));
   }
+
+    /**
+     * @method setProductoresExportador
+     * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+     *
+     * Este método permite establecer los datos de los productores asociados al exportador.
+     *
+     * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+     *
+     * @returns {void}
+     */
+    public setProductoresExportador(
+      productoresExportador: HistoricoColumnas[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        productoresExportador,
+      }));
+    }
 
   /**
    * Establece los resultados de mercancía obtenidos por búsqueda.
@@ -880,12 +903,12 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
    * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
    */
-    setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+    setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
       this.update((state) => ({
         ...state,
         agregarProductoresExportador: [
           ...state.agregarProductoresExportador,
-          {...productor},
+          ...productor.map(item => ({ ...item })),
         ],
       }));
     }

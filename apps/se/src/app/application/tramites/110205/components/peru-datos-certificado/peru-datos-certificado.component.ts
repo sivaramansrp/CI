@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -105,9 +106,6 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
-    // this.idiomOpcion();
-    // this.entidadFederativasOpcion();
-    // this.representacionFederalOpcion();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -131,63 +129,6 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de idiomas disponibles.
-   */
-  idiomOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('idioma.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.idiomaDatos = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.idiomaDatos = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de entidades federativas disponibles.
-   */
-  entidadFederativasOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('entidadFederativas.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.entidadFederativas = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.entidadFederativas = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de representaciones federales disponibles.
-   */
-  representacionFederalOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('representacionFederal.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.representacionFederal = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.representacionFederal = [];
-        },
-      });
   }
 
   /**

@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * Conjunto de rutas de la API para el procedimiento 80101.
  */
@@ -49,6 +50,13 @@ export const PROC_110205 = {
     `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
   OPINIONES: (numFolioTramite: string | number): string =>
     `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
-  BUSCAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=AAL0409235E6`,
   AGREGAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/agregar-productor`,
 };
+
+/**
+ * Ruta de la API para buscar productores exportador por RFC del solicitante.
+ * @param rfc RFC del solicitante a consultar.
+ * @returns {string} URL para la consulta de productores exportador.
+ */
+export const BUSCAR_PRODUCTOR = (rfc: string): string =>
+  `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=${rfc}`;

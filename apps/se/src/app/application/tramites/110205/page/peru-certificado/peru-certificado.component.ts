@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * @component PeruCertificadoComponent
  * @description
@@ -11,17 +12,18 @@
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ERROR_FORMA_ALERT, SeccionLibStore, esValidObject, getValidDatos} from '@ng-mf/data-access-user';
+import { DatosPasos, ERROR_FORMA_ALERT, JSONResponse, SeccionLibStore, esValidObject, getValidDatos} from '@ng-mf/data-access-user';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { AVISO } from '@ng-mf/data-access-user'
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Payload } from '../../constantes/texto.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
 
 @Component({
   selector: 'app-peru-certificado',
@@ -29,6 +31,12 @@ import { Mercancia } from '../../../../shared/models/modificacion.enum';
   styleUrl: './peru-certificado.component.scss',
 })
 export class PeruCertificadoComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia al componente PasoUnoComponent dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo
+   * desde el componente padre para manipulación o interacción directa.
+   */
   @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
 
   /**
@@ -119,15 +127,11 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
    */
   serviciosImmxError: boolean = false;
 
+  /**
+   * Indica si el formulario es válido.
+   * Se utiliza para habilitar o deshabilitar acciones según el estado de validación del formulario.
+   */
   esFormaValido: boolean = false;
-
-  // /**
-  //  * @property {PasoUnoComponent} pasoUnoComponent
-  //  * @description
-  //  * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
-  //  * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
-  //  */
-  // @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * @constructor
@@ -142,7 +146,8 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private tramiteQuery: Tramite110205Query,
     private tramite110205Store: Tramite110205Store,
-    private peruCertificadoService: PeruCertificadoService
+    private peruCertificadoService: PeruCertificadoService,
+    private toastr: ToastrService
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -165,6 +170,16 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja la lógica de navegación y validación de formularios según la acción recibida.
+   * 
+   * @param e - Objeto de tipo `AccionBoton` que contiene la acción y el valor para determinar el flujo.
+   * 
+   * - Si el índice actual es 1 y la acción es 'cont', valida todos los formularios del primer paso.
+   *   Si la validación falla, marca el formulario como inválido y detiene el flujo.
+   *   Si la validación es exitosa, obtiene los datos del store.
+   * - Si el valor de la acción está dentro del rango de pasos, navega al paso correspondiente.
+   */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
@@ -209,25 +224,6 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
-   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
-   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
-   * */
-  buildMercanciaSeleccionadas(arr: any[]): any[] {
-    return arr.map((item: any) => ({
-      id: item.id,
-      fraccion_arancelaria: item.fraccionArancelaria,
-      tipo_factura: item.tipoFactura,
-      num_factura: item.numeroFactura,
-      complemento_descripcion: item.complementoDescripcion,
-      fecha_factura: item.fechaFactura,
-      cantidad: item.cantidad,
-      umc: item.umc,
-      valor_mercancia: item.valorMercancia,
-    }));
-  }
-
-  /**
    * @method validarTodosFormulariosPasoUno
    * @description
    * Valida todos los formularios del componente `PasoUnoComponent`.
@@ -259,10 +255,7 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
    * La llamada al servicio actualmente está comentada.
    */
   // guardar(item: any): void {
-  guardar(item: Tramite110205State): Promise<Payload> {
-    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(
-      item.mercanciaTabla
-    );
+  guardar(item: Tramite110205State): Promise<JSONResponse> {
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       idSolicitud: this.solicitudState.idSolicitud,
@@ -399,64 +392,31 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
     };
 
     return new Promise((resolve, reject) => {
-      this.peruCertificadoService.postSolicitud(PAYLOAD).subscribe(
+      this.peruCertificadoService.guardarDatosPost(PAYLOAD).subscribe(
         (response) => {
-          if (esValidObject(response) && esValidObject(response.datos)) {
-            if (getValidDatos(response.datos?.id_solicitud)) {
-              this.tramite110205Store.setIdSolicitud(
-                response.datos?.id_solicitud || 0
-              );
+          if (esValidObject(response) && esValidObject(response['datos'])) {
+            const DATOS = response['datos'] as { idSolicitud?: number };
+            if (getValidDatos(DATOS.idSolicitud)) {
+              this.tramite110205Store.setIdSolicitud(DATOS.idSolicitud ?? 0);
               this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             } else {
               this.tramite110205Store.setIdSolicitud(0);
             }
           }
-          resolve(response);
+          resolve({
+            id: response['id'] ?? 0,
+            descripcion: response['descripcion'] ?? '',
+            codigo: response['codigo'] ?? '',
+            data: response['data'] ?? response['datos'] ?? null,
+            ...response,
+          } as JSONResponse);
         },
         (error) => {
           reject(error);
+          this.toastr.error('Error al buscar Mercancia');
         }
       );
     });
-
-    // this.peruCertificadoService.guardarDatosPost(PAYLOAD).subscribe({
-    //   next: (response) => {
-    //     console.log('Response', response.datos);
-    //     if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-    //       this.tramite110205Store.setIdSolicitud(
-    //         response.datos.id_solicitud || 0
-    //       );
-    //       this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-    //     }
-    //   },
-    // });
-
-    // console.log('Payload a enviar:', PAYLOAD);
-
-        //  return new Promise((resolve, reject) => {
-        //     this.peruCertificadoService.guardarDatosPost(PAYLOAD).subscribe(
-        //       (response) => {
-        //         const API_RESPONSE = doDeepCopy(response);
-        //         if (
-        //           esValidObject(API_RESPONSE) &&
-        //           esValidObject(API_RESPONSE.datos)
-        //         ) {
-        //           if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-        //             this.tramite110205Store.setIdSolicitud(
-        //               API_RESPONSE.datos.id_solicitud
-        //             );
-        //             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-        //           } else {
-        //             this.tramite110205Store.setIdSolicitud(0);
-        //           }
-        //         }
-        //         resolve(response);
-        //       },
-        //       (error) => {
-        //         reject(error);
-        //       }
-        //     );
-        //     });
   }
 
   /**

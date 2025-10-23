@@ -1,18 +1,16 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFechaComponent, SeccionLibQuery, SeccionLibState, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Catalogo, ConfiguracionColumna, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
-import { CargaPorArchivoComponent } from '../../../110204/components/carga-por-archivo/carga-por-archivo.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
-import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
-import { ToastrService } from 'ngx-toastr';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 /**
@@ -153,9 +151,12 @@ export class CertificadoOrigenComponent
    * Referencia al componente hijo `CertificadoDeOrigenComponent`.
    * Permite acceder a los métodos y propiedades del componente de certificado de origen desde el componente padre.
    */
-  @ViewChild('certificadoDeOrigen')
-  certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  @ViewChild('certificadoDeOrigen')certificadoDeOrigen!:CertificadoDeOrigenComponent;
 
+  /**
+   * Indica si la tabla de mercancías disponibles está visible.
+   * Cuando es `true`, la tabla se muestra en la interfaz de usuario.
+   */
   mercanciasDisponiblesTabla: boolean = false;
 
   /**
@@ -224,9 +225,6 @@ export class CertificadoOrigenComponent
         })
       )
       .subscribe();
-
-    // this.estadoOpcion();
-    // this.paisOpcion();
     this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
 
@@ -246,66 +244,12 @@ export class CertificadoOrigenComponent
   }
 
   /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene los datos disponibles relacionados con mercancías.
+   * Inicia el proceso para buscar mercancías disponibles después de un breve retraso.
+   *
+   * Utiliza `setTimeout` para ejecutar el método `processBuscarMercancias` después de 100 milisegundos.
+   * Esto puede ser útil para asegurar que ciertas operaciones previas hayan finalizado antes de realizar la búsqueda.
    */
   conseguirDisponiblesDatos(): void {
-    // this.peruCertificadoService
-    //   .obtenerTablaDatos('disponibles-datos.json')
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe({
-    //     next: (response: Mercancia[]) => {
-    //       if (response && Array.isArray(response)) {
-    //         this.disponiblesDatos = response as Mercancia[];
-    //         this.store.setDisponsiblesDatos(this.disponiblesDatos);
-    //       } else {
-    //         this.disponiblesDatos = [];
-    //       }
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error('Error al obtener los datos:', error);
-    //     },
-    //   });
-
-    // Add a small delay to ensure ViewChild is initialized
     setTimeout(() => {
       this.processBuscarMercancias();
     }, 100);
@@ -316,10 +260,8 @@ export class CertificadoOrigenComponent
    * Procesa la búsqueda de mercancías después de asegurar que los componentes estén inicializados.
    */
   private processBuscarMercancias(): void {
-    // Get selected catalog values from the store state
     const SELECTED_ESTADO = this.certificadoState?.estado;
-    const SELECTED_BLOQUE = this.certificadoState?.paisBloques; // bloque is stored as an array
-
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
       tratadoAcuerdo: {
@@ -329,15 +271,6 @@ export class CertificadoOrigenComponent
         "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
       },
     };
-
-    // this.peruCertificadoService
-    //   .buscarMercanciasCert(PAYLOAD)
-    //   .subscribe((response) => {
-    //     console.log('Response from buscarMercanciasCert:', response);
-    //     this.datosTablaUno$ = of(response.datos || []);
-    //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
-    //     console.log(this.datosTablaUno$);
-    //   });
     this.peruCertificadoService
       .buscarMercanciasCert(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -363,7 +296,6 @@ export class CertificadoOrigenComponent
               normaOrigen: item.normaOrigen || '',
               otrasInstancias: item.otrasInstancias || '',
               criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
-              // Fields that typically remain empty for available merchandise
               cantidad: '',
               umc: '',
               tipoFactura: '',
@@ -380,11 +312,7 @@ export class CertificadoOrigenComponent
             })
           );
           this.datosTablaUno$ = of(MAPPED_DATA || []);
-          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
-
-          this.store.setbuscarMercancia(
-            MAPPED_DATA
-          );
+          this.store.setbuscarMercancia(MAPPED_DATA);
         },
         error: () => {
           // this.toastr.error('Error al buscar Mercancia');
@@ -476,10 +404,12 @@ export class CertificadoOrigenComponent
   /**
    * @descripcion
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
+   * También actualiza el store para mantener la sincronización de datos entre componentes.
    * @param {Mercancia[]} evento - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
    */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
+    this.store.setmercanciaTabla(evento);
   }
 
   /**

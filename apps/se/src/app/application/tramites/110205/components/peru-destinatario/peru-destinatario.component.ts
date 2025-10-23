@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-useless-return */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -93,14 +94,13 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
   public idProcedimiento = 110205;
 
   /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
-  @ViewChild(DatosDelDestinatarioComponent)
-  datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+  @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+
   /** Referencia al componente destinatario para marcar campos como tocados */
-  @ViewChild(DestinatarioComponent)
-  destinatarioComponent?: DestinatarioComponent;
+  @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
+
   /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
-  @ViewChild(RepresentanteLegalExportadorComponent)
-  representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
+  @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
 
   /**
    * @constructor
@@ -166,6 +166,7 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   /** Inicializa el formulario reactivo del destinatario */
   iniciarFormulario(): void {
     this.destinatarioForm = this.fb.group({
@@ -174,6 +175,14 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Valida todos los formularios asociados a los componentes destinatario, datos del destinatario y representante legal exportador.
+   * 
+   * Marca todos los campos de los formularios como "tocados" para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
   public validateAllForms(): boolean {
     let valid = true;
     this.destinatarioComponent?.markAllFieldsTouched();
@@ -218,6 +227,7 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
+  
   /**
    * @description
    * Actualiza el store utilizando un método dinámico con el valor de un campo específico.

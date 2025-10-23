@@ -1,67 +1,19 @@
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  InputFecha,
-  InputFechaComponent,
-  InputRadioComponent,
-  Notificacion,
-  SoloLetrasNumerosDirective,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import {
-  BOTON_DE_OPCION_VER,
-  CARGA_MERCANCIA_EXPORT,
-  CARGA_MERCANCIA_SELECCIONADAS,
-  CONFIGURACION_MERCANCIA,
-  CONFIGURACION_MERCANCIA_TABLA,
-  FECHA_ID,
-  MERCANCIA_SELECCIONADAS,
-  REQUIREDA,
-  TEXTOS_REQUISITOS,
-} from '../../constantes/modificacion.enum';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  forwardRef,
-} from '@angular/core';
-import {
-  ConfiguracionColumna,
-  MenusDesplegables,
-} from '../../models/modificacion.enum';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
+import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
+import { Subject, takeUntil } from 'rxjs';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-
-import { Subject, takeUntil } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-
-import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { RADIO_OPTIONS } from '../../../tramites/110214/constants/validar-inicialmente-certificado.enum';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
@@ -233,9 +185,9 @@ export class CertificadoDeOrigenComponent
    */
   tratadoAcuerdoCertificado?: Catalogo[];
 
-  /** 
+  /**
    * Propiedad de entrada que recibe los datos de los países.
-  */
+   */
   pais?:Catalogo[];
 
   /*
@@ -704,7 +656,7 @@ export class CertificadoDeOrigenComponent
     }
 
     if (this.idProcedimiento === 110204) {
-      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];      
+      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formCertificado.get(key)?.clearValidators();
         this.formCertificado.get(key)?.updateValueAndValidity({ emitEvent: false });
@@ -756,6 +708,19 @@ export class CertificadoDeOrigenComponent
    */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
+  }
+  /**
+   * method loadComboUnidadMedida
+   * description Carga la lista de derechos desde el servicio.
+   */
+  loadComboUnidadMedida(): void {
+    this.service
+      .getDatos('110222') // Llama al servicio para obtener los datos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+      .subscribe((data): void => {
+        // Maneja los datos recibidos.
+        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
+      });
   }
 
   /**
@@ -1420,10 +1385,9 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getTratado(): void {
-    this.service.getTratadoCertificado("110212").subscribe((data) => {
+    this.service.getTratadoCertificado(this.idProcedimiento.toString()).subscribe((data) => {
       this.tratadoAcuerdoCertificado = data as Catalogo[];
     });
-
   }
 
   /**
@@ -1432,14 +1396,14 @@ export class CertificadoDeOrigenComponent
    * @returns {void}
    */
   getPaisBloque(clave:string):void{
-    this.service.getPaises("110212",clave).subscribe((data) => {
+    this.service.getPaises(this.idProcedimiento.toString(),clave).subscribe((data) => {
       this.paisBloqueCertificado = data as Catalogo[];
     });
   }
 
-   /**
+  /**
    * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
-   * 
+   *
    * @returns {void}
    */
   getPais():void{
@@ -1475,13 +1439,13 @@ export class CertificadoDeOrigenComponent
   /**
    * Getter para obtener el catálogo de países o bloques.
    * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
-   * 
+   *
    * @returns {Catalogo[]} El catálogo de países o bloques.
    */
   get paisGet(): Catalogo[]{
     return this.circulacion?.length
-      ? this.circulacion
-      : this.paises;
+    ? this.circulacion
+    : this.paises;
   }
 
   /**
@@ -1508,7 +1472,7 @@ export class CertificadoDeOrigenComponent
   public get bloqueValue(): string | null {
     return this.formCertificado?.get('bloque')?.value || null;
   }
-  
+
   /**
    * @description
    * Actualiza el valor del campo `domTercerOperador` dentro del formulario de certificado
