@@ -111,7 +111,6 @@ export class AgregarMercanciaComponent implements OnDestroy{
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((estado) => {
-          console.log('estado', estado);
 
           if (estado.selectedDatos[0]?.fraccionArancelaria !== undefined && estado.selectedDatos[0]?.fraccionArancelaria !== '') {
             this.getNicoFraccionArancelariaLista(estado.selectedDatos[0].fraccionArancelaria);

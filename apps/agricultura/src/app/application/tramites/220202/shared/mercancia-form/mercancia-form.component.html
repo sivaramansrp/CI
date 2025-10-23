@@ -355,12 +355,12 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="catalogosDatos.tipoDeProductoList"
-          formControlName="tipoProducto"
+          formControlName="tipoDeProducto"
           [label]="'Tipo de producto'"
           [required]="true"
-          name="tipoProducto"
+          name="tipoDeProducto"
           [isDisabled]="mercanciaForm.disabled"
-          [markTouched]="mercanciaForm.get('tipoProducto')?.touched || false"
+          [markTouched]="mercanciaForm.get('tipoDeProducto')?.touched || false"
         ></app-catalogo-select>
       </div>
     </div>
