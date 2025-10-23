@@ -318,6 +318,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     txtBtnSig: 'Continuar',
   };
 
+  numeroSolicitud: string = '';
   /**
    * @constructor
    * @description Constructor del componente ElegibilidadTextilesComponent.
@@ -352,6 +353,10 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       campo1: new FormControl(''),
       campo2: new FormControl(''),
     });
+    const CURRENT_STATE = this.tramiteQuery.getValue();
+    if (CURRENT_STATE.idSolicitud) {
+      this.numeroSolicitud = CURRENT_STATE.idSolicitud.toString();
+    }
   }
 
   /**
@@ -540,6 +545,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
         this.solicitudState = state;
+        if (state.idSolicitud) {
+          this.numeroSolicitud = state.idSolicitud.toString() || '';
+        }
       });
 
     this.ElegibilidadDeTextilesQuery.selectTextile$
@@ -631,7 +639,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
           : `${this.solicitante.nombre ?? ''} ${this.solicitante.ap_paterno ?? ''} ${this.solicitante.ap_materno ?? ''}`.trim(),
         es_persona_moral: this.esPersonaMoral,
         certificado_serial_number: '3082054030820428a00302010',
-    },
+      },
 
       representacion_federal: {
         cve_entidad_federativa: STATE_SOLICITUD.cve_entidad,
@@ -718,4 +726,5 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }
