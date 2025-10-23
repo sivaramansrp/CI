@@ -1,5 +1,7 @@
 import {
+  API_GET_CATALOGO_CONSULTA_PAISES,
   API_GET_CATALOGO_ADUANAS,
+  API_GET_CATALOGO_BANCOS,
   API_GET_CATALOGO_FRACCION_ARANCELARIA,
   API_GET_CATALOGO_FRACCIONES_ARANCELARIAS,
   API_GET_CATALOGO_OFICINAS_INSPECCION,
@@ -7,7 +9,10 @@ import {
   API_GET_CATALOGO_REGIMENES_VIGENTES,
   API_GET_CATALOGO_RESTRICCIONES,
   API_GET_CATALOGO_MEDIO_TRANSPORTE,
-  API_GET_CATALOGO_PUNTOS_VERIFICACION
+  API_GET_CATALOGO_PUNTOS_VERIFICACION,
+  API_GET_CATALOGO_TIPOS_PRODUCTO,
+  API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
+  API_GET_CATALOGO_USOS_MERCANCIA
 } from '../../../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -57,7 +62,7 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES_ARANCELARIAS(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
       .pipe(
-        // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
+      // la clave se pasa como descripcion y la descripcion se obtiene de otro endpoint
         map((response: BaseResponse<Catalogo[]>) => ({
           ...response,
           datos: response.datos?.map(item => ({
@@ -79,7 +84,7 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCION_ARANCELARIA(tramite.toString(), cveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
       .pipe(
-        // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
+      // la clave se pasa como descripcion y la descripcion se obtiene de otro endpoint
         map((response: BaseResponse<Catalogo[]>) => ({
           ...response,
           datos: response.datos?.map(item => ({
@@ -88,6 +93,39 @@ export class CatalogosService {
           })) ?? []
         }))
       );
+  }
+
+  /**
+     * Obtiene el catálogo de unidades de medida comerciales para un trámite específico.
+     *
+     * @param tramite - El identificador numérico del trámite para el cual se requiere obtener el catálogo.
+     * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo Catalogo.
+     */
+  obtieneCatalogoUnidadesMedidaComerciales(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de usos de mercancía para un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere el catálogo de usos de mercancía.
+   * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+   */
+  obtieneCatalogoUsosMercancia(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_USOS_MERCANCIA(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+  * Obtiene el catálogo de tipos producto para un trámite específico.
+  *
+  * @param tramite - El identificador numérico del trámite para el cual se requiere el tipo de orducto.
+  * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+  */
+  obtieneCatalogoTiposProducto(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_TIPOS_PRODUCTO(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**
@@ -157,4 +195,35 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_PUNTOS_VERIFICACION(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+  /**
+       * Obtiene el catálogo de paises.
+     *
+     * @returns Un observable que emite la respuesta base con el arreglo de catálogos de paises.
+     */
+  obtieneCatalogoPaises(tramite: number):Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_CONSULTA_PAISES(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+     /**
+     * Obtiene el catálogo de paises.
+     *
+     * @returns Un observable que emite la respuesta base con el arreglo de catálogos de paises sin Mexico.
+     */
+  obtieneCatalogoPaisesD(tramite: number):Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_CONSULTA_PAISES(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de bancos correspondiente a un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere el catálogo de bancos.
+   * @returns Un observable que emite la respuesta base con el arreglo de catálogos de aduanas.
+   */
+  obtieneCatalogoBanco(tramite: number):Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_BANCOS(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
 }
