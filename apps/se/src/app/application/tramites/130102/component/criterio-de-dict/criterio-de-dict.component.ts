@@ -29,7 +29,7 @@ import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
-
+import { distinctUntilChanged } from 'rxjs/operators';
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
  */
@@ -61,6 +61,17 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
    * @type {Catalogo[]} - Las solicitudes de mercancía disponibles.
    */
   solicitudMercanciaLista: Catalogo[] = [];
+
+
+/**
+ * Estado del textarea de criterio de dictamen.
+ */
+  criteroDisabled: boolean = true;
+
+  /*
+  **    * Valor del criterio de dictamen.
+  */
+  dataCriteroDictamen: string = '';
 
   /**
    * Solicitud de mercancía seleccionada.
@@ -114,7 +125,12 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
           fraccionArancelaria: state.fraccionArancelaria,
           regimen: state.regimen,
           clasificacionRegimen: state.clasificacionRegimen
-        }))
+        })),
+        distinctUntilChanged((prev, curr) =>
+          prev.fraccionArancelaria === curr.fraccionArancelaria &&
+          prev.regimen === curr.regimen &&
+          prev.clasificacionRegimen === curr.clasificacionRegimen
+        )
       )
       .subscribe(({ fraccionArancelaria, regimen, clasificacionRegimen }) => {
         if (fraccionArancelaria && regimen && clasificacionRegimen) {
@@ -132,7 +148,9 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
   
   }
 
-
+  /*
+  **    * Obtiene el catálogo de esquema de regla octava.
+  */
   obtenerCatEsquemaRegla(): void {
     this.catOctavaTemporalService.getEsquemaReglaOctava(
       this.solicitudState.fraccionArancelaria || '', 
@@ -144,6 +162,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
         descripcion: item.descripcion,
       }));  
     }); 
+    this.dataCriteroDictamen = '';
   } 
 
   /**
@@ -161,6 +180,26 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite130102Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  setCriterioDictamenText(form: FormGroup): void {
+    const idSolicitud = form.get('solicitudMercancia')?.value;
+ 
+    const solicitudSeleccionada = this.solicitudMercanciaLista.find(
+      (solicitud) => solicitud.clave === idSolicitud 
+    );
+
+    if (solicitudSeleccionada) {
+      this.tramite130102Store.setCriterioDictamen(solicitudSeleccionada.descripcion);
+      this.frmCriterioDictamen.setValue({
+        solicitudMercancia: idSolicitud,
+        criterioDictamen: solicitudSeleccionada.descripcion,
+      });
+      this.dataCriteroDictamen = solicitudSeleccionada.descripcion;
+    }
+  }
+
+
+
 
   /**
    * Obtiene las solicitudes de mercancía.

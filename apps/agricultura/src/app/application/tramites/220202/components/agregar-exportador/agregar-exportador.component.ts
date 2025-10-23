@@ -190,11 +190,12 @@ export class AgregarExportadorComponent implements OnInit, OnDestroy, AfterViewI
    * @method pairsCatalogChange
    */
   pairsCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
+    this.tercerosrelacionadosService.obtieneCatalogoConsultaPaises(220202)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
-        this.pairsCatalog = data;
+        this.pairsCatalog = data.datos ?? [];
       });
+
   }
 
   /**
