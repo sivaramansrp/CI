@@ -196,7 +196,7 @@ export class CertificadosOrigenService {
               .get<{ data: Catalogo[] }>('./assets/json/110204/estado.json') // Solicita los datos del archivo JSON
               .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
           }
-          
+         
             /**
              * Obtiene el catálogo de unidades de medida comercial (UMC).
              * @returns Observable con la respuesta del catálogo de UMC.

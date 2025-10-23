@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Catalogo, ConsultaioQuery, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from "@libs/shared/data-access-user/src";
+import { Catalogo, CatalogoServices, ConsultaioQuery, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from "@libs/shared/data-access-user/src";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import {Observable,Subject,map, of, takeUntil } from "rxjs";
 import { CargaPorArchivoComponent } from "../../../../shared/components/carga-por-archivo/carga-por-archivo.component";
@@ -16,6 +16,7 @@ import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
 import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
+import { OPTIONS_TRATADO } from "../../models/registro.model";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
@@ -271,6 +272,18 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
     fromMercanciasDisponibles: boolean = false;
 
+  /** ID del trámite actual */
+  TramitesID: string = '110223';
+
+   /** Tratado asociado al certificado de origen */
+  tratadoAsociado: string = 'TITRAC.TA';
+
+  /**
+   * @property optionsTratado - Opciones del catálogo de tratados comerciales
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio
+   */
+  public optionsTratado = OPTIONS_TRATADO;
+
   /**
    * Constructor del componente CertificadoOrigenComponent.
    * Inicializa las dependencias necesarias para la gestión de certificados de origen.
@@ -292,7 +305,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices
   ) {
 
     /**
@@ -381,6 +395,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           console.error('Error al cargar los estados:', error);
         }
       );
+
+    //   this.catalogoServices.tratadosAcuerdosCatalogo(this.TramitesID, this.tratadoAsociado).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+    //   this.optionsTratado.catalogos = res.datos ?? [];
+    // });
   }
 
   /**
