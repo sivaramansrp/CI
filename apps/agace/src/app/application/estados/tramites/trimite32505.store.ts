@@ -190,6 +190,16 @@ export interface Solicitud32505State {
    * Datos del solicitante.
    */
   datosSolicitante: DatosSolicitante;
+
+  /**
+   * Identificador de la transacción en VUCEM.
+   */
+  identificadorTransaccionVucem?: string;
+
+  /**
+   * NIV o número de serie del vehículo.
+   */
+  nivNumeroSerie?: string;
 }
 
 /**
@@ -235,6 +245,8 @@ export function createInitialState(): Solicitud32505State {
     folioCFDI: '',
     folioVenta: '',
     valorVenta: '',
+    identificadorTransaccionVucem: '',
+    nivNumeroSerie: '',
     datosSolicitante: {
       rfc: '',
       denominacion: '',
@@ -703,6 +715,30 @@ export class Tramite32505Store extends Store<Solicitud32505State> {
     this.update((state) => ({
       ...state,
       valorVenta
+    }));
+  }
+
+  /**
+   * @method setValorVenta
+   * @description Actualiza el estado del campo `valorVenta`.
+   * @param {string} valorVenta - Valor a actualizar.
+   */
+  public setidentificadorTransaccionVucem(identificadorTransaccionVucem: string): void {
+    this.update((state) => ({
+      ...state,
+      identificadorTransaccionVucem
+    }));
+  }
+
+  /**
+   * @method setValorVenta
+   * @description Actualiza el estado del campo `valorVenta`.
+   * @param {string} valorVenta - Valor a actualizar.
+   */
+  public setnivNumeroSerie(nivNumeroSerie: string): void {
+    this.update((state) => ({
+      ...state,
+      nivNumeroSerie
     }));
   }
 

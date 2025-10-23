@@ -1,4 +1,3 @@
-import { AlertComponent } from "@ng-mf/data-access-user";
 import { Component } from '@angular/core';
 import { TEXTOS } from '../../constants/avios-procesos.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
@@ -12,7 +11,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
   selector: 'app-carga-masiva',
   templateUrl: './carga-masiva.component.html',
   styleUrl: './carga-masiva.component.scss',
-  imports: [TituloComponent, AlertComponent],
+  imports: [TituloComponent],
   standalone: true,
 })
 export class CargaMasivaComponent {

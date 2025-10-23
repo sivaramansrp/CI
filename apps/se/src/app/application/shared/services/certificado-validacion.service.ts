@@ -115,8 +115,8 @@ export class CertificadoValidacionService {
    * @param tramitesID - Identificador del trámite
    * @returns Observable con un arreglo de países bloqueados (o vacío si no hay datos)
    */
-  getPaises(tramitesID: string): Observable<any[]> {
-    return this.catalogoServices.paisesBloqueCatalogo(tramitesID).pipe(
+  getPaises(tramitesID: string, clave: string): Observable<any[]> {
+    return this.catalogoServices.paisCatalogo(tramitesID, clave).pipe(
       map(res => res?.datos ?? [])
     );
   }
@@ -127,9 +127,9 @@ export class CertificadoValidacionService {
    * @param tratadoAsociado - Clave del tratado asociado
    * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
    */
-  getTratadoCertificado(tramitesID: string, tratadoAsociado: string): Observable<any[]> {
+  getTratadoCertificado(tramitesID: string): Observable<any[]> {
     return this.catalogoServices
-      .tratadosAcuerdosCatalogo(tramitesID, tratadoAsociado)
+      .tratadoCatalogoPais(tramitesID)
       .pipe(
         map(res => res?.datos ?? [])
       );

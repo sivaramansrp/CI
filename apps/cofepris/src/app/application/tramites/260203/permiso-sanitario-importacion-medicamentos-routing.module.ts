@@ -26,10 +26,7 @@ const ROUTES: Routes = [
     path: 'mercancia-datos',
     component: DatosMercanciaContenedoraComponent,
   },
-  {
-    path: 'agregar-fabricante',
-    component: AgregarFabricanteContenedoraComponent,
-  },
+  
   {
     path: 'agregar-destinatario-final',
     component: AgregarDestinatarioFinalContenedoraComponent,

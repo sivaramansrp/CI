@@ -3,7 +3,7 @@ import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/dat
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { EconomicoService } from '../../services/economico.service';
 import { FormGroup } from '@angular/forms';
-import { Solicitud32606State } from '../../state/Tramite32606.store';
+import { Solicitud32606State } from '../../state/tramite32606.store';
 
 /** Componente que representa el primer paso del trámite. */
 @Component({

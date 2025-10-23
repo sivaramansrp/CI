@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
 
 /**
  * @interface immexRegistroform
@@ -12,7 +10,7 @@
  * @since 2025
  * @module Tramites.IMMEX
  */
-export interface immexRegistroform {
+export interface ImmexRegistroform {
   /**
    * @description Cantidad de productos que se pueden producir o procesar en un periodo específico.
    * Este campo especifica la capacidad productiva expresada como cantidad por periodo determinado.
@@ -240,7 +238,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número secuencial del registro
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.consecutivo,
+    clave: (ele: PermisoImmexGridDatos): string => ele.consecutivo,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -258,7 +256,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número oficial del permiso otorgado por la Secretaría de Economía
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.numeroPrograma,
+    clave: (ele: PermisoImmexGridDatos): string => ele.numeroPrograma,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -276,7 +274,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Código de fracción arancelaria según la TIGIE
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.fraccion,
+    clave: (ele: PermisoImmexGridDatos): string => ele.fraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -294,7 +292,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.descripcion,
+    clave: (ele: PermisoImmexGridDatos): string => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -312,7 +310,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Unidad de Medida Técnica aplicable al producto
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.umt,
+    clave: (ele: PermisoImmexGridDatos): string => ele.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -330,7 +328,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Cantidad autorizada para el periodo especificado
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.cantidadAutorizada,
+    clave: (ele: PermisoImmexGridDatos): string => ele.cantidadAutorizada,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -348,7 +346,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de inicio de vigencia en formato establecido
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.fechaInicio,
+    clave: (ele: PermisoImmexGridDatos): string => ele.fechaInicio,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -366,7 +364,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de fin de vigencia en formato establecido
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.fechaFin,
+    clave: (ele: PermisoImmexGridDatos): string => ele.fechaFin,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -415,7 +413,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Número secuencial del registro de fracción
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.idFraccion,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.idFraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -433,7 +431,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Código de fracción arancelaria según nomenclatura internacional
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.cveFraccion,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.cveFraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -451,7 +449,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción de la mercancía importada relacionada con esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.fraccionPadre,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.fraccionPadre,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -469,7 +467,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Unidad de Medida Técnica aplicable a esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.umt,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -487,7 +485,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.descripcion,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -505,7 +503,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción comercial específica del producto destinado a exportación
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.descripcionUsuario,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.descripcionUsuario,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -523,7 +521,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Información de solicitud de baja asociada a la fracción
      */
-    clave: (ele: fraccionInfo) => ele.fraccionArancelaria.solicitaBaja,
+    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.solicitaBaja,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -543,11 +541,11 @@ export const FRACCION_EXPORTACION = [
  * @since 2025
  * @module Tramites.IMMEX.Interfaces.Fraccion
  */
-export interface fraccionInfo {
-  fraccionArancelaria: fraccionArancelaria;
+export interface FraccionInfo {
+  fraccionArancelaria: FraccionArancelaria;
 }
 
-export interface fraccionArancelaria {
+export interface FraccionArancelaria {
   unidadMedida: string;
   testado: string;
   subPartida: string;
@@ -559,7 +557,7 @@ export interface fraccionArancelaria {
   capitulo: string;
   activo: boolean;
   cveFraccion: string;
-  nicoDtos: nicoInfo[];
+  nicoDtos: NicoInfo[];
   /**
    * @description Número secuencial o identificador único del registro de fracción en la tabla.
    * Proporciona un identificador numérico para ordenar y referenciar los registros de fracciones arancelarias.
@@ -660,7 +658,7 @@ export const NICO_TABLA = [
      * @param {nicoInfo} ele - Objeto con información del código NICO
      * @returns {string} Código NICO único que identifica el commodity
      */
-    clave: (ele: nicoInfo) => ele.claveNico,
+    clave: (ele: NicoInfo): string => ele.claveNico,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -678,7 +676,7 @@ export const NICO_TABLA = [
      * @param {nicoInfo} ele - Objeto con información del código NICO
      * @returns {string} Descripción completa del commodity asociado al código NICO
      */
-    clave: (ele: nicoInfo) => ele.descripcion,
+    clave: (ele: NicoInfo): string => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -698,7 +696,7 @@ export const NICO_TABLA = [
  * @since 2025
  * @module Tramites.IMMEX.Interfaces.NICO
  */
-export interface nicoInfo {
+export interface NicoInfo {
   /**
    * @description Código NICO único que identifica el tipo de commodity o materia prima.
    * Código alfanumérico estandarizado que clasifica de manera única cada tipo de commodity utilizado en comercio internacional.
@@ -888,7 +886,7 @@ export interface ImmexTablaJson {
    * @example [{ FRACCION_Columna_1: "001", FRACCION_Columna_2: "6205.20.01", ... }]
    * @required
    */
-  fraccionGridDatos: fraccionInfo[];
+  fraccionGridDatos: FraccionInfo[];
 }
 
 /**

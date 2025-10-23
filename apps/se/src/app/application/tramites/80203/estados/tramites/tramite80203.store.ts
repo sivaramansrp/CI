@@ -1,4 +1,3 @@
-/* eslint-disable sort-imports */
 /**
  * @fileoverview Archivo de gestión de estado para el trámite IMMEX 80203 - Registro de Solicitud de Modalidad.
  * Este archivo contiene la definición del estado, la configuración inicial y la clase store para manejar
@@ -16,9 +15,9 @@
  * @requires @datorama/akita
  * @requires @angular/core
  */
+import { FraccionInfo, NicoInfo, PermisoImmexGridDatos } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { fraccionInfo, nicoInfo, PermisoImmexGridDatos } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { ImmexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -28,7 +27,7 @@ import { Injectable } from '@angular/core';
  * Contiene todas las propiedades necesarias para manejar el estado del formulario
  * de cambio de modalidad en el sistema VUCEM 3.0.
  *
- * @property {immexRegistroform} immexRegistro - Objeto que contiene todos los datos del formulario de registro IMMEX,
+ * @property {ImmexRegistroform} immexRegistro - Objeto que contiene todos los datos del formulario de registro IMMEX,
  * incluyendo información sobre productos, fracciones arancelarias, capacidades de producción,
  * datos de importación y exportación, códigos NICO y demás información requerida para el trámite.
  * 
@@ -44,7 +43,7 @@ import { Injectable } from '@angular/core';
  * };
  * ```
  * 
- * @see {@link immexRegistroform} Para la definición completa de la estructura del formulario
+ * @see {@link ImmexRegistroform} Para la definición completa de la estructura del formulario
  */
 export interface ImmexRegistroState {
     /**
@@ -53,10 +52,10 @@ export interface ImmexRegistroState {
      * incluyendo datos del permiso, fracciones arancelarias, productos de importación
      * y exportación, capacidades de producción y códigos de nomenclatura.
      * 
-     * @type {immexRegistroform}
+     * @type {ImmexRegistroform}
      * @memberof ImmexRegistroState
      */
-    immexRegistro: immexRegistroform;
+    immexRegistro: ImmexRegistroform;
   /**
    * @property {PermisoImmexGridDatos[]} immexTableDatos
    * @description
@@ -77,18 +76,18 @@ export interface ImmexRegistroState {
   candiadAnual: string;
   capacidadPeriodo: string;
   candidadPorPeriodo: string;
-  nicoTablaDatosImportacion: Array<nicoInfo>;
-  nicoTablaDatosExportacion: Array<nicoInfo>;
+  nicoTablaDatosImportacion: Array<NicoInfo>;
+  nicoTablaDatosExportacion: Array<NicoInfo>;
 
   /**
-   * @property {fraccionInfo[]} [fraccionTablaDatos]
+   * @property {FraccionInfo[]} [fraccionTablaDatos]
    * @description
    * Arreglo opcional que almacena la información tabular de las fracciones arancelarias.
    * Puede estar ausente si no se han capturado datos de fracciones.
    *
-   * @see {@link fraccionInfo} Para la estructura de cada elemento.
+   * @see {@link FraccionInfo} Para la estructura de cada elemento.
    */
-  fraccionTablaDatos: fraccionInfo[];
+  fraccionTablaDatos: FraccionInfo[];
 }
 
 /**
@@ -319,7 +318,7 @@ export function createInitialState(): ImmexRegistroState {
  * constructor(private immexStore: ImmexRegistroStore) {}
  * 
  * // Actualización del estado
- * const nuevosdatos: immexRegistroform = {
+ * const nuevosdatos: ImmexRegistroform = {
  *   permisoImmexDatos: 12345,
  *   fraccionArancelariaExportacion: '6205.20.01',
  *   // ... más datos
@@ -331,7 +330,7 @@ export function createInitialState(): ImmexRegistroState {
  * @author Sistema VUCEM 3.0
  * @see {@link Store} Clase base de Akita
  * @see {@link ImmexRegistroState} Interfaz del estado
- * @see {@link immexRegistroform} Modelo del formulario
+ * @see {@link ImmexRegistroform} Modelo del formulario
  */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'cambio-modalidad' })
@@ -379,9 +378,9 @@ export class ImmexRegistroStore extends Store<ImmexRegistroState> {
      * La actualización es reactiva, lo que significa que todos los componentes suscritos al estado
      * serán notificados automáticamente de los cambios y podrán actualizar sus vistas en consecuencia.
      * 
-     * @param {immexRegistroform} immexRegistro - Objeto completo con todos los datos del formulario
+     * @param {ImmexRegistroform} immexRegistro - Objeto completo con todos los datos del formulario
      * de cambio de modalidad. Debe incluir todas las propiedades requeridas por la interfaz
-     * immexRegistroform para mantener la consistencia del estado.
+     * ImmexRegistroform para mantener la consistencia del estado.
      * 
      * @returns {void} Este método no retorna ningún valor, pero actualiza el estado interno del store.
      * 
@@ -392,7 +391,7 @@ export class ImmexRegistroStore extends Store<ImmexRegistroState> {
      * @example
      * ```typescript
      * // Ejemplo de uso completo
-     * const datosFormulario: immexRegistroform = {
+     * const datosFormulario: ImmexRegistroform = {
      *   permisoImmexDatos: 12345,
      *   fraccionArancelariaExportacion: '6205.20.01',
      *   productoDescExportacion: 'Camisas de vestir para caballero',
@@ -423,12 +422,12 @@ export class ImmexRegistroStore extends Store<ImmexRegistroState> {
      * ```
      * 
      * @throws {Error} Puede lanzar errores si el objeto proporcionado no cumple con la estructura
-     * requerida por la interfaz immexRegistroform.
+     * requerida por la interfaz ImmexRegistroform.
      * 
-     * @see {@link immexRegistroform} Para la estructura completa del objeto requerido
+     * @see {@link ImmexRegistroform} Para la estructura completa del objeto requerido
      * @see {@link ImmexRegistroState} Para el contexto del estado completo
      */
-    public setImmexRegistro(immexRegistro: immexRegistroform): void {
+    public setImmexRegistro(immexRegistro: ImmexRegistroform): void {
         this.update((state) => ({
             ...state,
             immexRegistro,

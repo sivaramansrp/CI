@@ -4,7 +4,7 @@
  * @selector app-solicitante-detos-tabs
  * @templateUrl ./solicitante-detos-tabs.component.html
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { MateriaprimaformserviceService } from '../../services/materia-prima-formservice.service';
@@ -24,6 +24,11 @@ import { PantallasComponent } from '../../pages/pantallas/pantallas.component';
   templateUrl: './solicitante-datos-tabs.component.html',
 })
 export class SolicitanteDatosTabsComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario es válido.
+   */
+  @Input() esFormValido!: boolean;
+
   /**
    * Índice de la pestaña seleccionada.
    * @type {number}

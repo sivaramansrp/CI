@@ -9,10 +9,12 @@ import {
   SubirDocumentoService,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datosCertificado/datosCertificado.component';
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { MercanciaComponent } from '../../shared/components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -32,12 +34,14 @@ import { provideHttpClient } from '@angular/common/http';
     BtnContinuarComponent,
     WizardComponent,
     SolicitanteComponent,
-    CertificadoOrigenComponent,
     AlertComponent,
     DestinatarioComponent,
     DatosCertificadoComponent,
     FirmaElectronicaComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    MercanciaComponent,
+    CertificadoDeOrigenComponent,
+    CertificadoOrigenComponent
   ],
   providers: [
     ToastrService,

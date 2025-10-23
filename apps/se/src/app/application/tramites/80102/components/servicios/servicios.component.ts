@@ -10,7 +10,6 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
 import {
   FormBuilder,
   FormGroup,
@@ -32,18 +31,17 @@ import {
   ServicioInmex,
   Servicios,
 } from '../../models/autorizacion-programa-nuevo.model';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { Tramite80102Query } from '../../estados/tramite80102.query';
-import { Tramite80102Store } from '../../estados/tramite80102.store';
-
 import { Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
 

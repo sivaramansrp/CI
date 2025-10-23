@@ -5,9 +5,13 @@
     ></ng-titulo>
 
     <div>
-      <h6>Datos de los residuos y/o materia prima a importar*:</h6>
+      <h6>
+        Datos de los residuos y/o materia prima a importar
+        <span [ngClass]="{ 'has-error': !esFormValido }">*</span><span>:</span>
+      </h6>
 
       <app-tabla-dinamica
+        [isInvalida]="!esFormValido && mercancias.length === 0"
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercancias"
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
@@ -56,6 +60,7 @@
         <div class="row">
           <div class="col-md-4">
             <app-catalogo-select
+              [markTouched]="isInvalid('aduana') ?? false"
               [catalogo]="aduanas"
               formControlName="aduana"
               [label]="'Aduana de entrada'"

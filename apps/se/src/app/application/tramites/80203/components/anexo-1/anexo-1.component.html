@@ -57,10 +57,6 @@
     </div>
   </form>
 
-  @if(espectaculoAlertaAgregar) {
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="eliminarFraccion()"></lib-notificaciones>
-  }
   @if(eliminarPlantasAlerta) {
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
     (confirmacionModal)="eliminarPermisoImmex()"></lib-notificaciones>

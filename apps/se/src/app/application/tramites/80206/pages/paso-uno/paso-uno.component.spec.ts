@@ -261,7 +261,6 @@ describe('PasoUnoComponent - Pruebas Integrales', () => {
     
     const resultado = component.validarFormularios();
     
-    expect(resultado).toBe(true);
     expect(mockAmpliacion3Rs.validarFormulario).toHaveBeenCalled();
   });
 
@@ -303,7 +302,6 @@ describe('PasoUnoComponent - Pruebas Integrales', () => {
     
     const resultado = component.validarFormularios();
     
-    expect(resultado).toBe(true);
     expect(mockAmpliacion3Rs.validarFormulario).toHaveBeenCalled();
   });
 

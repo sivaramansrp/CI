@@ -120,7 +120,8 @@
   </div>
   <div class="row">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-      [datos]="nicoTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+      [datos]="nicoTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura"
         (click)="eliminarFila()">Eliminar</button>
@@ -183,7 +184,8 @@
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-      [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+      [datos]="mercanciasTablaDatos"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalMercancias"
         [disabled]="esFormularioSoloLectura">

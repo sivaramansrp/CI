@@ -14,7 +14,7 @@ import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 export class Tramite110204Query extends Query<TramiteState> {
 
-  selectPexim$ = this.select((state) => {
+  selectState$ = this.select((state) => {
     return state;
   });
 

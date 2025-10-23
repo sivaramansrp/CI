@@ -123,6 +123,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
+   /**
+   * Lista de elementos que son obligatorios para completar el formulario.
+   * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
+   * según los requisitos del sistema.
+   */
+   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','scian'];
+
   /**
    * @property idProcedimiento
    * @description Identificador del procedimiento en curso.
@@ -219,6 +226,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   datasolicituActualizar(event: DatosSolicitudFormState): void {
     this.Tramite260213Store.updateDatosSolicitudFormState(event);
   }
+
 
   /**
    * @method datosDeTablaSeleccionados

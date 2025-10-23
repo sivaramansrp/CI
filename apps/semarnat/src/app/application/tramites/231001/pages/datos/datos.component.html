@@ -3,7 +3,12 @@
     <div class="row">
       @if(indice === 1){
       <div class="col-md-12">
-        <h1>Aviso de materiales importados de régimen temporal</h1>
+        <h1 class="titulo titulo-gold">Aviso de materiales importados de régimen temporal</h1>
+      </div>
+      }
+      @if (indice === 2) {
+      <div class="col-md-12">
+        <h1 class="titulo titulo-gold">Firmar</h1>
       </div>
       }
       <div class="col-12">
@@ -28,7 +33,7 @@
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-solicitante-datos-tabs #pasoUnoRef></app-solicitante-datos-tabs>
+      <app-solicitante-datos-tabs [esFormValido]="esFormaValido" #pasoUnoRef></app-solicitante-datos-tabs>
       } @case (2) {
       <app-paso-tres
         [procedureUrl]="'datos'"
