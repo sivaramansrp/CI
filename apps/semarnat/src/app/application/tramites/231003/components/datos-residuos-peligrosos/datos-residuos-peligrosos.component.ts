@@ -35,10 +35,13 @@ import {
   NO_COMA_VALIDATOR,
 } from '../../../../shared/helpers';
 import {
+  MATERIA_RESIDUO_TABLA,
+  MateriaResiduo,
+} from '../../../231002/models/materia-residuo.model';
+import {
   RadioOpcion,
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
-
 import { Subject, takeUntil } from 'rxjs';
 import { CatalogoT231003Service } from '../../service/catalogo-t231003.service';
 import { CommonModule } from '@angular/common';
@@ -46,8 +49,7 @@ import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
-import { MATERIA_RESIDUO_TABLA } from '../../../231002/models/materia-residuo.model';
-import { MateriaResiduo } from '../../models/materia-residuo.model';
+
 import { Modal } from 'bootstrap';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
@@ -421,7 +423,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
 
     // Verificar si ya existe una materia prima con el mismo número de bitácora en la tabla
     const MATERIA_EXISTENTE = this.materiasPrimasTabla.find(
-      (materia) => materia.no_bitacora === NUMERO
+      (materia) => materia.numeroBitacora === NUMERO
     );
 
     if (MATERIA_EXISTENTE) {
@@ -449,7 +451,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       descripcion_umc: this.formularioDatos.get('unidadDeMedida')?.value,
       cve_fraccion_arancelaria:
         this.formularioDatos.get('fraccionArancelaria')?.value || '',
-      no_bitacora: this.formularioDatos.get('numero')?.value,
+      numeroBitacora: this.formularioDatos.get('numero')?.value,
+      unidadMedidaComercial: this.formularioDatos.get('unidadDeMedida')?.value,
+      descFraccion: this.formularioDatos.get('fraccionArancelaria')?.value,
     };
 
     this.materiasPrimas.push(NUEVA_MATERIA);

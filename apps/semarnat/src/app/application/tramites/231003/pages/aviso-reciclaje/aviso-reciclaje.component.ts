@@ -11,6 +11,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoDeReciclajeServiceService } from '../../service/aviso-de-reciclaje-service.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
+import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
 import { PasoUnoT231003Component } from '../paso-uno/paso-uno-t231003.component';
 /**
@@ -81,6 +83,11 @@ export class AvisoReciclajeComponent implements OnInit {
   TEXTOS = PAGO_DE_DERECHOS;
 
   /**
+     * Estado local de la solicitud obtenido desde el query/store.
+     */
+    public estadoSolicitud!: EstadoDatoSolicitud;
+
+  /**
    * @property indice
    * @type {number}
    *  El índice de la pestaña seleccionada.
@@ -112,6 +119,7 @@ export class AvisoReciclajeComponent implements OnInit {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
+      private t231003Query: DatoSolicitudQuery,
     private avisoDeReciclajeServiceService: AvisoDeReciclajeServiceService
   ) {}
 
@@ -121,20 +129,7 @@ export class AvisoReciclajeComponent implements OnInit {
    * Si el estado indica actualización, carga los datos del formulario.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          // Actualiza el estado de la consulta
-          this.consultaState = seccionState;
-        })
-      )
-      .subscribe();
-
-    // Si el estado indica actualización, carga los datos del formulario.
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    }
+  this.obtenerEstadoSolicitud();
   }
 
   /**
@@ -153,6 +148,22 @@ export class AvisoReciclajeComponent implements OnInit {
       });
   }
 
+
+  /**
+   * Método para obtener el estado de la solicitud desde el query.
+   * Se suscribe al observable estadoFormulario$ y actualiza la propiedad estadoSolicitud.
+   */
+   obtenerEstadoSolicitud(): void {
+    this.t231003Query.estadoFormulario$
+      ?.pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.estadoSolicitud = seccionState;
+        })
+      )
+      .subscribe();
+  }
+
   /**
    * Updates the index value based on the action button event.
    * @param e The action button event containing the action and value.
@@ -166,7 +177,7 @@ export class AvisoReciclajeComponent implements OnInit {
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
-      console.log('aqui ira el guardar solicitud');
+      console.log(this.estadoSolicitud);
     } else {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;

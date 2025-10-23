@@ -3,6 +3,7 @@ import {
   EstadoDatoSolicitud,
 } from '../../models/datos-solicitud.model';
 import {
+  Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputRadioComponent,
@@ -30,11 +31,13 @@ import {
 } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoDeReciclajeServiceService } from '../../service/aviso-de-reciclaje-service.service';
+import { CatalogoT231003Service } from '../../service/catalogo-t231003.service';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { ES_CONTROL_INVALIDO } from '../../../../shared/helpers';
+import { ImmexResponse } from '../../../231001/models/catalogo-response';
 import { Modal } from 'bootstrap';
 import { ResiduoPeligroso } from '../../../231002/models/aviso-catalogo.model';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
@@ -148,6 +151,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Indica si actualmente hay una fila seleccionada en la tabla.
    * Se utiliza para controlar el comportamiento de la interfaz según el estado de selección de la fila de la tabla.
    */
+
+  /**
+   * Indica si actualmente hay una fila seleccionada en la tabla.
+   */
+
+  /**
+   * Catálogo de programas IMMEX para el formulario.
+   */
+  immexCatalogo!: Catalogo[];
   public tieneTablaRowSeleccionado: boolean = false;
   /**
    * Constructor del componente. Inyecta el FormBuilder, el store y el query de Akita.
@@ -157,7 +169,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     private datoSolicitudStore: DatoSolicitudStore,
     private datoSolicitudQuery: DatoSolicitudQuery,
     private consultaQuery: ConsultaioQuery,
-    private avisoDeReciclajeSvc: AvisoDeReciclajeServiceService
+    private avisoDeReciclajeSvc: AvisoDeReciclajeServiceService,
+    private catalogoService: CatalogoT231003Service
   ) {
     // Lógica del constructor si se necesita
   }
@@ -202,6 +215,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * Recupera valores almacenados en el store para rellenar los formularios.
      */
     this.recuperarValoresDesdeStore();
+
+    /**
+     * Obtiene los datos de gestión de residuos asociados a la solicitud.
+     */
+    this.obtenerImmex();
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -628,6 +646,22 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.formularioEmpresaReciclaje.markAllAsTouched();
     this.formularioPrecaucionesManejo.markAllAsTouched();
     this.formularioLugarReciclaje.markAllAsTouched();
+  }
+
+  /**
+   * Obtiene los datos del catálogo IMMEX desde el servicio y los asigna a `immexCatalogo`.
+   * Se deja RFC en duro para pruebas, en lo que se integra con autenticación, se debe obtener dinámicamente.
+   */
+  obtenerImmex(): void {
+    this.catalogoService
+      .obtenerDatosImmexByRfc('AAL0409235E6')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.immexCatalogo = data.datos.map((item: ImmexResponse) => ({
+          id: item.id_prog_autorizado,
+          descripcion: item.num_folio_tramite,
+        }));
+      });
   }
 
   /**

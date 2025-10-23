@@ -77,7 +77,7 @@ export const ADMINISTRAR_RESIDUOS = [
   },
   {
     encabezado: 'NICO',
-    clave: (item: ResiduoPeligroso): string => item.nicoCve,
+    clave: (item: ResiduoPeligroso): string => item.nicoDesc,
     orden: 3,
   },
   {

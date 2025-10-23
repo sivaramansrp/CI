@@ -24,7 +24,7 @@ import {
   SimpleCatalogoResponse,
 } from '../../231001/models/catalogo-response';
 import { Injectable } from '@angular/core';
-import { MateriaResiduo } from '../models/materia-residuo.model';
+import { MateriaResiduo } from '../../231002/models/materia-residuo.model';
 import { Observable } from 'rxjs';
 import { TRAMITE_ID } from '../constantes/aviso-de-reciclaje.enum';
 
