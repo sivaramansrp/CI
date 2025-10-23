@@ -9,6 +9,7 @@ import { Programa140101State, Tramite140101Store } from '../../../../estados/tra
 import { ProgramaACancelar,TABLE_ID} from '../../../../shared/models/programa-cancelar.model';
 import { PROGRAMA_TABLA } from '../../../../shared/constantes/programa.enum';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
 import { Tramite140101Query } from '../../../../estados/queries/tramite140101.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
@@ -128,29 +129,62 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   @Input() soloLectura: boolean = false;
 
   /**
+   * Identificador del tipo de trámite que se está procesando.
+   * Este valor se utiliza para determinar el contexto específico del trámite
+   * y realizar las operaciones correspondientes según el tipo.
+   * 
+   * @type {string}
+   * @example
+   * ```html
+   * <app-programa-a-cancelar [idTipoTramite]="'140101'"></app-programa-a-cancelar>
+   * ```
+   */
+  @Input() idTipoTramite!: string;
+
+  /**
    * Constructor del componente ProgramaACancelar.
    * 
-   * @param fb Servicio para la creación y gestión de formularios reactivos.
-   * @param programaACancelarService Servicio encargado de la lógica relacionada con el programa a cancelar.
-   * @param formValidator Servicio para validaciones personalizadas de formularios.
-   * @param tramite140101Store Almacén de estado para el trámite 140101.
-   * @param tramite140101Query Consultas y selectores para el estado del trámite 140101.
+   * Inicializa todas las dependencias necesarias para el funcionamiento del componente,
+   * incluyendo servicios para manejo de formularios, estado, validaciones y comunicación con el servidor.
    * 
-   * El constructor se utiliza para la inyección de dependencias necesarias en el componente.
+   * @param {FormBuilder} fb - Servicio para la creación y gestión de formularios reactivos.
+   * @param {ProgramaACancelarService} programaACancelarService - Servicio encargado de la lógica relacionada con el programa a cancelar.
+   * @param {ValidacionesFormularioService} formValidator - Servicio para validaciones personalizadas de formularios.
+   * @param {Tramite140101Store} tramite140101Store - Almacén de estado para el trámite 140101.
+   * @param {Tramite140101Query} tramite140101Query - Consultas y selectores para el estado del trámite 140101.
+   * @param {ServiciosService} serviciosService - Servicio para operaciones generales y comunicación con APIs.
+   * 
+   * @example
+   * ```typescript
+   * // El constructor se inyecta automáticamente por Angular
+   * constructor(
+   *   private fb: FormBuilder,
+   *   private programaACancelarService: ProgramaACancelarService,
+   *   // ... otros servicios
+   * ) {}
+   * ```
    */
   constructor(
     private fb: FormBuilder,
     private programaACancelarService: ProgramaACancelarService,
     private formValidator: ValidacionesFormularioService,
     private tramite140101Store: Tramite140101Store,
-    private tramite140101Query: Tramite140101Query
+    private tramite140101Query: Tramite140101Query,
+    private serviciosService: ServiciosService,
   ) {
    // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
-   * Hook del ciclo de vida que se llama después de que el componente se inicializa.
-   * Carga los datos e inicializa el formulario.
+   * Hook del ciclo de vida de Angular que se ejecuta después de que el componente se inicializa.
+   * 
+   * Ejecuta las operaciones necesarias para preparar el componente:
+   * - Carga los datos iniciales desde el servidor
+   * - Inicializa el formulario reactivo con validaciones
+   * 
+   * @returns {void}
+   * @lifecycle
+   * @implements {OnInit}
    */
   ngOnInit(): void {
     this.cargarDatos();
@@ -158,15 +192,25 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   }
   
   /**
-   * Inicializa el formulario `ProgramaForm` con los valores actuales del estado `ProgramaState`.
+   * Inicializa el formulario reactivo `ProgramaForm` con los valores actuales del estado.
    * 
-   * - Suscribe al observable `selectSolicitud$` para actualizar el estado local `ProgramaState` cuando cambie.
-   * - Crea el formulario reactivo con los valores correspondientes, algunos de ellos deshabilitados según el contexto.
-   * - Asigna valores auxiliares como `radioId` y `datosTabla` desde el estado.
-   * - Si la propiedad `soloLectura` es verdadera, deshabilita todo el formulario para evitar modificaciones.
+   * Funcionalidades principales:
+   * - Se suscribe al observable `selectSolicitud$` para mantener sincronización con el estado
+   * - Crea controles de formulario con validaciones específicas
+   * - Configura campos como solo lectura según el contexto
+   * - Aplica modo de solo lectura si está habilitado
    * 
-   * @remarks
-   * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario refleje el estado más reciente.
+   * @returns {void}
+   * @private
+   * 
+   * @example
+   * ```typescript
+   * // Se ejecuta automáticamente en ngOnInit
+   * this.inicializarFormulario();
+   * ```
+   * 
+   * @see {@link FormBuilder} - Para la creación del formulario
+   * @see {@link Validators} - Para las validaciones aplicadas
    */
   inicializarFormulario(): void {
       this.tramite140101Query.selectSolicitud$
@@ -185,7 +229,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
       representacionFederal: [{ value: this.programaState?.programaACancelar?.representacionFederal, disabled: true }],
       tipoPrograma: [{ value: this.programaState?.programaACancelar?.tipoPrograma, disabled: true }],
       estatus: [{ value: this.programaState?.programaACancelar?.estatus, disabled: true }],
-      solicitudObservaciones: [this.programaState?.solicitudObservaciones, Validators.required],
+      solicitudObservaciones: [this.programaState?.solicitudObservaciones, [Validators.required, Validators.maxLength(255)]],
       confirmar: [this.programaState?.confirmar, Validators.requiredTrue],
     });
 
@@ -196,22 +240,32 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
-     * Carga los datos utilizando el servicio `programaACancelarService` y actualiza la tabla de datos.
-     * 
-     * - Realiza una suscripción al observable devuelto por `obtenerDatos()`.
-     * - Convierte la respuesta en un arreglo si no lo es.
-     * - Actualiza la propiedad `datosTabla` con los datos obtenidos.
-     * - Almacena los datos en el store `tramite140101Store`.
-     * - La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
-     * 
-     * @returns {void} No retorna ningún valor.
-     */
+  /**
+   * Carga los datos de programas disponibles para cancelar desde el servidor.
+   * 
+   * Proceso de carga:
+   * 1. Construye el payload con RFC y discriminador del tipo de trámite
+   * 2. Realiza llamada al servicio para obtener datos
+   * 3. Actualiza la tabla de datos local
+   * 4. Sincroniza con el store de Akita
+   * 
+   * @returns {void}
+   * @private
+   * 
+   * @example
+   * ```typescript
+   * // Se ejecuta automáticamente en ngOnInit
+   * this.cargarDatos();
+   * ```
+   * 
+   * @throws {Error} Si hay errores en la comunicación con el servidor
+   * @see {@link ServiciosService.obtenerDatos} - Servicio utilizado para la carga
+   */
     cargarDatos(): void {
-    this.programaACancelarService.obtenerDatos()
+      this.serviciosService.obtenerDatos('140101', "AAL0409235E6")
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
-        this.datosTabla = Array.isArray(data) ? data : [data];
+        this.datosTabla = data.datos ?? [];
         this.tramite140101Store.setDatosData(this.datosTabla);
       });
   }
@@ -219,9 +273,23 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el store con el valor de un campo específico del formulario.
    * 
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo a actualizar.
-   * @param metodoNombre - El nombre del método del store a llamar.
+   * Este método facilita la sincronización entre el estado del formulario
+   * y el store de Akita, garantizando que los datos se mantengan actualizados
+   * en la gestión centralizada de estado.
+   * 
+   * @param {FormGroup} form - El grupo de formularios que contiene el campo a actualizar
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener
+   * @param {keyof Tramite140101Store} metodoNombre - El nombre del método del store que se va a invocar para actualizar el estado
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * // Actualizar el campo 'folioPrograma' en el store
+   * this.setValoresStore(this.programaForm, 'folioPrograma', 'setFolioPrograma');
+   * ```
+   * 
+   * @throws {Error} Si el campo no existe en el formulario o el método no está disponible en el store
    */
   setValoresStore(
     form: FormGroup,
@@ -234,23 +302,54 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
 
   /**
    * Verifica si un campo específico del formulario es válido.
+   * 
+   * Utiliza el servicio FormValidator para determinar el estado de validación
+   * de un campo particular dentro del formulario del programa.
    *
-   * @param field - El nombre del campo del formulario a validar.
-   * @returns `true` si el campo es válido, `false` si no lo es, o `null` si no se puede determinar.
+   * @param {string} field - El nombre del campo del formulario a validar
+   * @returns {boolean | null} `true` si el campo es válido, `false` si no lo es, o `null` si no se puede determinar
+   * 
+   * @example
+   * ```typescript
+   * // Verificar si el campo 'folioPrograma' es válido
+   * const esValido = this.isValid('folioPrograma');
+   * if (esValido) {
+   *   console.log('El folio del programa es válido');
+   * }
+   * ```
+   * 
+   * @see {@link FormValidator.isValid} - Método utilizado para la validación
    */
   isValid(field: string): boolean | null {
     return this.formValidator.isValid(this.programaForm, field);
   }
 
   /**
-   * Maneja la selección de una fila en la tabla.
-   * Actualiza el formulario y el store con los datos de la fila seleccionada.
+   * Maneja la selección de una fila en la tabla de programas.
    * 
-   * @param row - Los datos de la fila seleccionada.
+   * Cuando un usuario selecciona una fila en la tabla, este método:
+   * 1. Actualiza el store con el programa seleccionado
+   * 2. Encuentra el índice de la fila en los datos de la tabla
+   * 3. Actualiza el identificador del radio button seleccionado
+   * 4. Sincroniza la selección con el store
+   * 5. Rellena el formulario con los datos del programa seleccionado
+   * 
+   * @param {ProgramaACancelar} row - Los datos del programa seleccionado en la tabla
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * // Se ejecuta automáticamente cuando el usuario hace clic en una fila
+   * onRowSelect(programaSeleccionado) {
+   *   this.valorDeAlternancia(programaSeleccionado);
+   * }
+   * ```
+   * 
+   * @see {@link ProgramaACancelar} - Interfaz del objeto programa
    */
   valorDeAlternancia(row: ProgramaACancelar): void {
     this.tramite140101Store.setPrograma(row);
-    const INDEX = this.datosTabla.findIndex((x) => x.idProgramaSeleccionado === row.idProgramaSeleccionado);
+    const INDEX = this.datosTabla.findIndex((x) => x.idProgramaAutorizado === row.idProgramaAutorizado);
     this.radioId = INDEX;
     this.tramite140101Store.setRadioSelection(INDEX);
     this.programaForm.patchValue({
@@ -263,9 +362,88 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
-   * Hook del ciclo de vida que se llama cuando el componente se destruye.
-   * Limpia las suscripciones y notifica a los observables para que se completen.
+   * Verifica si el formulario completo es válido.
+   * 
+   * Realiza una validación completa del formulario del programa.
+   * Si el formulario no es válido, marca todos los campos como tocados
+   * para mostrar los mensajes de error correspondientes.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario
+   * 
+   * @example
+   * ```typescript
+   * // Validar antes de enviar datos
+   * if (this.isFormValido()) {
+   *   this.enviarDatos();
+   * } else {
+   *   console.log('Formulario contiene errores');
+   * }
+   * ```
+   * 
+   * @see {@link FormGroup.valid} - Propiedad utilizada para verificar validez
+   * @see {@link FormGroup.markAllAsTouched} - Método para marcar campos como tocados
+   */
+
+  public isFormValido(): boolean {
+    if(this.programaForm.valid) {
+      return true;
+    }
+    this.programaForm.markAllAsTouched();
+    return false;
+  }
+
+  /**
+   * Verifica si un control específico del formulario es inválido.
+   * 
+   * Determina si un campo del formulario tiene errores de validación
+   * y además ha sido interactuado por el usuario (tocado o modificado).
+   * Esto es útil para mostrar mensajes de error solo después de que
+   * el usuario haya intentado interactuar con el campo.
+   * 
+   * @param {string} nombreControl - Nombre del control en el formulario a verificar
+   * @returns {boolean} Verdadero si el control es inválido y ha sido tocado/modificado, falso en caso contrario
+   * 
+   * @example
+   * ```typescript
+   * // Verificar si mostrar error en el template
+   * <div *ngIf="esInvalido('folioPrograma')" class="error">
+   *   El folio del programa es requerido
+   * </div>
+   * ```
+   * 
+   * @see {@link FormControl.invalid} - Propiedad para verificar invalidez
+   * @see {@link FormControl.touched} - Propiedad para verificar si fue tocado
+   * @see {@link FormControl.dirty} - Propiedad para verificar si fue modificado
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.programaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta cuando el componente se destruye.
+   * 
+   * Implementa la limpieza necesaria para evitar memory leaks:
+   * - Notifica a todos los observables que el componente se está destruyendo
+   * - Completa el subject destroyNotifier$ para cancelar suscripciones activas
+   * 
+   * Este método es parte del patrón de gestión de suscripciones usando takeUntil()
+   * que garantiza que todas las suscripciones se cancelen automáticamente.
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * // El Angular framework llama automáticamente este método
+   * // cuando el componente es removido del DOM
+   * ```
+   * 
+   * @see {@link OnDestroy} - Interfaz implementada para el lifecycle hook
+   * @see {@link takeUntil} - Operador RxJS utilizado para cancelar suscripciones
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
