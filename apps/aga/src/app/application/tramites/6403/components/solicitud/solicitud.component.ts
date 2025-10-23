@@ -415,15 +415,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method setTipContenedorValue
-   * @description Handles the tipContenedor field change event and ensures string value is stored.
+   * @description Maneja el evento de cambio del campo tipContenedor y asegura que se almacene un valor de tipo string.
    * 
-   * @param {Event} event - The change event from the input field.
+   * @param {Event} event - El evento de cambio del campo de entrada.
    */
   setTipContenedorValue(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
     const VALOR = TARGET.value;
     
-    // Ensure we store a string value, not an object
+    // Asegurar que almacenamos un valor de tipo string, no un objeto
     this.store.setTipContenedor(VALOR);
   }
 
