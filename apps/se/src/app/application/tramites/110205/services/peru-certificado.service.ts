@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110205 } from '../servers/api-route'; 
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -106,9 +105,6 @@ export class PeruCertificadoService {
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
   obtenerProductorPorExportador(rfc: string): Observable<ProductorExportador> {
-    // return this.http.get<ProductorExportador>(
-    //   'assets/json/110205/productor-exportador.json'
-    // );
     return this.httpService.get<ProductorExportador>(BUSCAR_PRODUCTOR(rfc));
   }
 
@@ -191,7 +187,6 @@ export class PeruCertificadoService {
     return this.httpService.post<Record<string, unknown>>(PROC_110205.GUARDAR, {
       body: body,
     });
-    // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
   }
 
   /**
@@ -225,10 +220,6 @@ export class PeruCertificadoService {
   }
 
   buscarMercanciasCert(body: { [key: string]: unknown }): Observable<{ [key: string]: unknown }> {
-    // return this.httpService.post<unknown>(
-    //   'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
-    //   { body: body }
-    // );
     return this.httpService.post<{ [key: string]: unknown }>(PROC_110205.BUSCAR, { body: body });
   }
 }

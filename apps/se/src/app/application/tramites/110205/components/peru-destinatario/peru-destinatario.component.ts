@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable no-useless-return */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
@@ -227,7 +225,7 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
-  
+
   /**
    * @description
    * Actualiza el store utilizando un método dinámico con el valor de un campo específico.

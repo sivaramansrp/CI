@@ -1,14 +1,14 @@
 import { AgregarDatosProductorFormulario, Catalogo, FormularioHistorico, HistoricoColumnas } from '../../models/certificado-origen.model';
 import { CONFIGURACION_MERCANCIA, CONFIGURACION_PRODUCTOR_EXPORTADOR } from '../../constantes/certificado-tabla.enum';
 import { CatalogoSelectComponent, Notificacion } from "@ng-mf/data-access-user";
+import { CatalogoServices,ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, CatalogoServices, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from "@ng-mf/data-access-user";
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 /**
  * @description
@@ -53,15 +53,28 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './historico-productores.component.scss',
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
-
-   /**
-    * Emisor de eventos mercancia datos.
-    * @type {EventEmitter<Mercancia[]>}
-    */
+  /**
+   * Emisor de eventos mercancia datos.
+   * @type {EventEmitter<Mercancia[]>}
+   */
   @Output() emitMercanciaDatos: EventEmitter<Mercancia[]> = new EventEmitter<Mercancia[]>();
 
+  /**
+   * Indica si se deben mostrar las mercancías seleccionadas en la vista.
+   *
+   * @input
+   * @type {boolean}
+   * @default true
+   */
   @Input() mostrarMercanciasSeleccionadas: boolean = true;
 
+  /**
+   * Define si la tabla de mercancías debe mostrarse ordenada.
+   *
+   * @input
+   * @type {boolean}
+   * @default false
+   */
   @Input() sortMercanciasTablaOrder: boolean = false;
 
   /**
@@ -137,7 +150,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Arreglo de objetos de tipo `MercanciaTabla` que contiene los datos de mercancías
    * para ser utilizados en el componente. Este input permite pasar información desde
    * un componente padre.
-   * 
+   *
    * @type {Mercancia[]}
    * @default []
    */
@@ -145,7 +158,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * @property {Mercancia[]} mercanciaDatosSeleccionada
-   * 
+   *
    * @description
    * Arreglo que almacena los datos seleccionados de mercancías.
    *
@@ -273,7 +286,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * @property {ConfiguracionColumna<Mercancia>[]} mercanciaTablaConfiguracion
-   * 
+   *
    * Configuración de las columnas para la tabla de mercancías.
    *
    * @remarks
@@ -325,6 +338,14 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   agregarDatosProductorFormulario!: FormGroup;
 
+  /**
+   * Evento de salida que emite un valor booleano para indicar la acción de búsqueda de mercancía.
+   *
+   * @remarks
+   * Utilice este evento para notificar al componente padre cuando se debe realizar una búsqueda de mercancía.
+   *
+   * @eventProperty
+   */
   @Output() setbuscarMercanciaEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
@@ -336,7 +357,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   @Input() idProcedimiento!: number;
 
-  @Output() emitAgregarExportador: EventEmitter<HistoricoColumnas> = new EventEmitter<HistoricoColumnas>();
+  @Output() emitAgregarExportador: EventEmitter<HistoricoColumnas> =
+    new EventEmitter<HistoricoColumnas>();
 
   /**
    * @description
@@ -481,8 +503,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       const DATOS = [...this.seleccionadoProductoresExportador];
       DATOS.forEach((ele: HistoricoColumnas) => {
         this.emitAgregarExportador.emit(ele);
-      })
-      this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
+      });
+      this.productoresExportador = this.productoresExportador.filter((elementos) => !this.seleccionadoProductoresExportador.some((elementosSecundarios) => elementosSecundarios.id === elementos.id));
       this.seleccionadoProductoresExportador = [];
     } else {
       this.abrirModal("Existen más productores que mercancías");
@@ -519,8 +541,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
-    
- 
   }
 
   /**
@@ -540,7 +560,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
       const DATOS = this.agregarDatosProductorFormulario.value;
-      console.log(DATOS);
       this.emitAgregarExportador.emit(DATOS);
       this.agregarDatosProductorFormulario.reset();
     } else {
@@ -619,7 +638,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     } else if (this.mercanciaDatosSeleccionada.length === 0) {
       this.abrirModal("Debes seleccionar una mercancía");
       return;
-    } 
+    }
     if (this.seleccionadoAgregarProductoresExportador.length && this.mercanciaDatosSeleccionada.length) {
       const RFC = this.seleccionadoAgregarProductoresExportador[0].numeroRegistroFiscal;
       const MERCANCIA_SELECCIONADA = this.mercanciaDatosSeleccionada[0];
@@ -652,7 +671,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    *
    * @command Este método actualiza la propiedad `mercanciaDatosSeleccionada` con la mercancía seleccionada.
    */
-  obtenerSeleccionadoMercancia(evento: Mercancia): void {        
+  obtenerSeleccionadoMercancia(evento: Mercancia): void {
     this.mercanciaDatosSeleccionada = [evento];
   }
   /**

@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * Conjunto de rutas de la API para el procedimiento 80101.
  */

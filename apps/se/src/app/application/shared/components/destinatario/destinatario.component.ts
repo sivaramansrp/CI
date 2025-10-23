@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CAMPO_DE_DESTINATARIO, CAMPO_DE_DESTINATARIOS } from '../../constantes/modificacion.enum';
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TituloComponent, VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DestinatarioService } from '../../services/destinatario.service';
@@ -258,7 +258,7 @@ export class DestinatarioComponent
           Validators.required,
           Validators.email,
           Validators.maxLength(70),
-          Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+          Validators.pattern(VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO),
         ],
       ],
     });

@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * @component PasoUnoComponent
  * @description Este componente es responsable de manejar el primer paso del trámite.

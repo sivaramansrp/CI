@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';

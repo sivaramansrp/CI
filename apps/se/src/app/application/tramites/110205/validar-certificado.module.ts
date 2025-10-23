@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from "@ng-mf/data-access-user";
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';

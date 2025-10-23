@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
