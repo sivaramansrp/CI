@@ -47,3 +47,48 @@ export const DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO = {
  * Default trámite ID for procedures of type 140105
  */
 export const DEFAULT_TRAMITE_ID = "140105";
+
+/**
+ * Default values for solicitud object when no data is available from state.
+ * These values serve as fallbacks to ensure the API payload is always complete and valid.
+ */
+export const DEFAULT_SOLICITUD = {
+  idSolicitud: "",
+  discriminatorValue: "140105",
+  cveRolCapturista: "PersonaMoral",
+  cveUsuarioCapturista: "AAL0409235E6",
+  solicitante: {
+    cveUsuario: "AAL0409235E6",
+    rfc: "AAL0409235E6",
+    razonSocial: "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+    descripcionGiro: "Siembra, cultivo y cosecha de otros cultivos",
+    correoElectronico: "vucem2021@gmail.com",
+    telefono: "55-98764532",
+    domicilio: {
+      pais: {
+        clave: "MEX",
+        nombre: "ESTADOS UNIDOS MEXICANOS"
+      },
+      entidadFederativa: {
+        clave: "SIN",
+        nombre: "SINALOA"
+      },
+      delegacionMunicipio: {
+        clave: "25001",
+        nombre: "AHOME"
+      },
+      colonia: {
+        clave: "00181210001",
+        nombre: "MIGUEL HIDALGO"
+      },
+      localidad: {
+        clave: "00181210008",
+        nombre: "LOS MOCHIS"
+      },
+      codigoPostal: "81210",
+      calle: "CAMINO VIEJO",
+      numeroExterior: "1353",
+      numeroInterior: ""
+    }
+  }
+} as const;

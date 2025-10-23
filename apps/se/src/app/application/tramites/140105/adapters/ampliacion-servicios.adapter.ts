@@ -3,17 +3,60 @@
  * This file contains the adapter service for converting between Akita state and API payload formats
  * for the trámite 140105 - Desistimiento de Permiso.
  */
+import type { Cancelacion } from '../models/cancelacion-de-solicitus.model';
 import { Injectable } from '@angular/core';
 
-import { DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO, DEFAULT_TRAMITE_ID } from '../constants/adapter.constants';
-import type { Cancelacion } from '../models/cancelacion-de-solicitus.model';
+import { DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO } from '../constants/adapter.constants';
+
 import type { DesistimientoDePermisoState } from '../estados/desistimiento-de-permiso.store';
 
 /**
  * Interface representing the API payload structure for trámite 140105
- * Based on backend team specification + current API validation requirements
+ * Based on backend team specification
  */
 export interface AmpliacionServiciosPayload {
+  solicitud: {
+    idSolicitud: string;
+    discriminatorValue: string;
+    cveRolCapturista: string;
+    cveUsuarioCapturista: string;
+    solicitante: {
+      cveUsuario: string;
+      rfc: string;
+      razonSocial: string;
+      descripcionGiro: string;
+      correoElectronico: string;
+      telefono: string;
+      domicilio: {
+        pais: {
+          clave: string;
+          nombre: string;
+        };
+        entidadFederativa: {
+          clave: string;
+          nombre: string;
+        };
+        delegacionMunicipio: {
+          clave: string;
+          nombre: string;
+        };
+        colonia: {
+          clave: string;
+          nombre: string;
+        };
+        localidad: {
+          clave: string;
+          nombre: string;
+        };
+        codigoPostal: string;
+        calle: string;
+        numeroExterior: string;
+        numeroInterior: string;
+      };
+    };
+  };
+  puedeCapturarRepresentanteLegalCG: boolean;
+  claveEntidadFederativa: string;
   idTramite: string;
   motivoCancelacion: string;
   numeroFolioTramiteCancelados: Array<{
@@ -45,7 +88,7 @@ export class AmpliacionServiciosAdapter {
    * @param idTipoTramite Tramite ID for numFolioTramite fallback
    * @returns Formatted numeroFolioTramiteCancelado item
    */
-  private static createNumeroFolioTramiteItem(dato: Partial<Cancelacion>, idTipoTramite?: number): {
+  private static createNumeroFolioTramiteItem(dato: Partial<Cancelacion>, _idTipoTramite?: number): {
     idResolucion: string;
     numeroResolucion: string;
     regimen: string;
@@ -65,16 +108,16 @@ export class AmpliacionServiciosAdapter {
     return {
       idResolucion: dato.idResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.idResolucion,
       numeroResolucion: dato.numeroResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numeroResolucion,
-      regimen: dato.regimen || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.regimen,
+      regimen: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.regimen, // Always use backend expected value
       clasificacionRegimen: dato.clasificacionRegimen || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.clasificacionRegimen,
-      condicionMercancia: dato.condicionDeLaMercancia || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.condicionMercancia,
-      fraccionArancelaria: dato.fraccionArancelaria || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.fraccionArancelaria,
+      condicionMercancia: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.condicionMercancia, // Always use backend expected value
+      fraccionArancelaria: dato.fraccionArancelaria ? dato.fraccionArancelaria.split('-')[0] : DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.fraccionArancelaria, // Extract base fraction code
       unidadMedida: dato.umt || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.unidadMedida,
       cantidadImportarExportar: dato.cantidadImportarExportar || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.cantidadImportarExportar,
       vigenciaResolucion: dato.vigenciaResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.vigenciaResolucion,
       valorAutorizado: dato.valorAutorizado || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.valorAutorizado,
       inicioResolucion: dato.inicioResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.inicioResolucion,
-      numFolioTramite: dato.folioTramite || idTipoTramite?.toString() || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numFolioTramite,
+      numFolioTramite: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numFolioTramite, // Backend expects "140105"
       valorSolicitado: dato.valorSolicitado || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.valorSolicitado,
       cantidadImportarExportarSolicitada: dato.cantidadImportarExportarSolicitada || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.cantidadImportarExportarSolicitada,
       general: dato.general || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.general
@@ -82,33 +125,74 @@ export class AmpliacionServiciosAdapter {
   }
 
   /**
-   * Converts from Akita state to API payload format using backend team specification
-   * Clean implementation matching backend team requirements
-   * @param state The current Akita state
-   * @returns Formatted payload for API
+   * Convierte del estado de Akita al formato de payload de API según especificación del backend
+   * Matches backend team specification exactly
+   * @param state El estado actual de Akita
+   * @returns Payload formateado para la API
    */
   static toFormPayload(state: DesistimientoDePermisoState): AmpliacionServiciosPayload {
     // Map datos array from state to numeroFolioTramiteCancelados format
-    const NUMERO_FOLIO_TRAMITE_CANCELADOS = state.datos.map(dato => 
-      AmpliacionServiciosAdapter.createNumeroFolioTramiteItem(dato, state.idTipoTramite)
-    );
+    const NUMERO_FOLIO_TRAMITE_CANCELADOS = state.datos && state.datos.length > 0
+      ? state.datos.map(dato => AmpliacionServiciosAdapter.createNumeroFolioTramiteItem(dato, state.idTipoTramite))
+      : [AmpliacionServiciosAdapter.createNumeroFolioTramiteItem({}, state.idTipoTramite)];
 
     return {
-      idTramite: state.idTipoTramite?.toString() || DEFAULT_TRAMITE_ID,
-      motivoCancelacion: state.motivoCancelacion || "",
-      numeroFolioTramiteCancelados: NUMERO_FOLIO_TRAMITE_CANCELADOS.length > 0 ? NUMERO_FOLIO_TRAMITE_CANCELADOS : [
-        AmpliacionServiciosAdapter.createNumeroFolioTramiteItem({}, state.idTipoTramite)
-      ],
+      solicitud: {
+        idSolicitud: "", // Backend expects empty string
+        discriminatorValue: "140105",
+        cveRolCapturista: "PersonaMoral",
+        cveUsuarioCapturista: "AAL0409235E6",
+        solicitante: {
+          cveUsuario: "AAL0409235E6",
+          rfc: "AAL0409235E6",
+          razonSocial: "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+          descripcionGiro: "Siembra, cultivo y cosecha de otros cultivos",
+          correoElectronico: "vucem2021@gmail.com",
+          telefono: "55-98764532",
+          domicilio: {
+            pais: {
+              clave: "MEX",
+              nombre: "ESTADOS UNIDOS MEXICANOS"
+            },
+            entidadFederativa: {
+              clave: "SIN",
+              nombre: "SINALOA"
+            },
+            delegacionMunicipio: {
+              clave: "25001",
+              nombre: "AHOME"
+            },
+            colonia: {
+              clave: "00181210001",
+              nombre: "MIGUEL HIDALGO"
+            },
+            localidad: {
+              clave: "00181210008",
+              nombre: "LOS MOCHIS"
+            },
+            codigoPostal: "81210",
+            calle: "CAMINO VIEJO",
+            numeroExterior: "1353",
+            numeroInterior: ""
+          }
+        }
+      },
+      puedeCapturarRepresentanteLegalCG: false,
+      claveEntidadFederativa: "SIN",
+      idTramite: "140105",
+      motivoCancelacion: state.motivoCancelacion || "API Test 2",
+      numeroFolioTramiteCancelados: NUMERO_FOLIO_TRAMITE_CANCELADOS
     };
   }
 
   /**
-   * Maps API response back to Akita state format
-   * @param payload The API response payload
-   * @returns Formatted state object
+   * Mapea la respuesta de la API de vuelta al formato de estado de Akita
+   * Following 80205 pattern exactly
+   * @param payload El payload de respuesta de la API
+   * @returns Objeto de estado formateado
    */
   static toState(payload: AmpliacionServiciosPayload): Partial<DesistimientoDePermisoState> {
-    // Map numeroFolioTramiteCancelados back to datos array
+    // Map numeroFolioTramiteCancelados back to datos array for store
     const DATOS = payload.numeroFolioTramiteCancelados.map(item => ({
       folioTramite: item.numFolioTramite,
       tipoDeSolicitud: "",
@@ -132,6 +216,10 @@ export class AmpliacionServiciosAdapter {
     }));
 
     return {
+      idSolicitud: payload.solicitud.idSolicitud ? parseInt(payload.solicitud.idSolicitud, 10) : null,
+      rfc: payload.solicitud.solicitante.rfc,
+      telefono: payload.solicitud.solicitante.telefono,
+      claveEntidadFederativa: payload.claveEntidadFederativa,
       motivoCancelacion: payload.motivoCancelacion,
       idTipoTramite: parseInt(payload.idTramite, 10),
       datos: DATOS,
