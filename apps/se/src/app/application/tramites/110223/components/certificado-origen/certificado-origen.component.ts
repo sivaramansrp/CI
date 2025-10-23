@@ -13,7 +13,7 @@ import { MercanciasModalComponent } from "../mercancias-modal/mercancias-modal.c
 import { Modal } from "bootstrap";
 import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
-import { Tramite110223Store } from "../../estados/Tramite110223.store";
+import { Tramite110223Store, TramiteState } from "../../estados/Tramite110223.store";
 
 import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
 import { OPTIONS_TRATADO } from "../../models/registro.model";
@@ -116,12 +116,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @tipo {Observable<Catalogo[]>}
    */
   estados$!: Observable<Catalogo[]>;
-
+  
   /**
-   * Observable que emite la lista de países y bloques disponibles.
-   * @type {Observable<Catalogo[]>}
+   * @descripcion
+   * Lista de países disponibles.
    */
-  pais$!: Observable<Catalogo[]>;
+  pais: Catalogo[] = [];
 
   /**
    * Estado seleccionado del catálogo.
@@ -129,11 +129,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   estado!: Catalogo;
 
-  /**
-   * País o bloque seleccionado.
-   * @type {Catalogo}
-   */
-  paisBloque!: Catalogo;
+  // /**
+  //  * País o bloque seleccionado.
+  //  * @type {Catalogo}
+  //  */
+  // paisBloque!: Catalogo;
 
   /**
    * Subject para gestionar el ciclo de vida del componente.
@@ -285,6 +285,18 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   public optionsTratado = OPTIONS_TRATADO;
 
   /**
+   * @descripcion
+   * Estado actual del certificado.
+   */
+  private certificadoState!: TramiteState;
+
+  /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTablaUno$: Observable<Mercancia[]> = of([]);
+
+  /**
    * Constructor del componente CertificadoOrigenComponent.
    * Inicializa las dependencias necesarias para la gestión de certificados de origen.
    * 
@@ -337,13 +349,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           this.seccion = seccionState;
         })
       )
-      .subscribe();
-
-    /**
+      .subscribe();    /**
      * Asignación de los observables que contienen los catálogos de estados y países.
      */
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
-    this.pais$ = this.tramiteQuery.selectPaisBloque$;
+    // this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>).pipe(
       map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
     );
@@ -362,7 +372,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   ngOnInit(): void {
     this.cargarEstados();
-    this.cargarBloque();
+    // this.cargarBloque();
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -401,22 +411,23 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     // });
   }
 
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.certificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
+  // /**
+  //  * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
+  //  */
+  // cargarBloque(): void {
+  //   this.certificadoService
+  //     .obtenerPaisBloque()
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe(
+  //       (data: Catalogo) => {
+  //         this.pais = data;
+  //         this.store.setBloque(data);
+  //       },
+  //       (error) => {
+  //         console.error('Error al cargar los países/bloques:', error);
+  //       }
+  //     );
+  // }
 
   /**
    * Establece el estado seleccionado en el store.
@@ -431,7 +442,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @param {Catalogo} estado El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloque(estado);
   }
 
   /**
@@ -451,43 +462,82 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   }
 
   /**
-   * Busca la mercancia y actualiza los datos en el store.
+   * Inicia el proceso para buscar mercancías disponibles después de un breve retraso.
+   *
+   * Utiliza `setTimeout` para ejecutar el método `processBuscarMercancias` después de 100 milisegundos.
+   * Esto puede ser útil para asegurar que ciertas operaciones previas hayan finalizado antes de realizar la búsqueda.
    */
-  buscarrMercancia(): void {
+  conseguirDisponiblesDatos(): void {
+    setTimeout(() => {
+      this.processBuscarMercancias();
+    }, 100);
+  }
 
+  /**
+   * @descripcion
+   * Procesa la búsqueda de mercancías después de asegurar que los componentes estén inicializados.
+   */
+  private processBuscarMercancias(): void {
+    const SELECTED_ESTADO = this.certificadoState?.estado;
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
-      tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
-      pais: { cvePais: this.formCertificado['bloque'] || '' },
+      tratadoAcuerdo: {
+        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
+      },
+      pais: {
+        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
+      },
     };
-
     this.certificadoService
-    .buscarMercanciasCert(PAYLOAD)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-      interface TratadoAplicable {
-        nombreTratado?: string;
-      }
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.idMercancia,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              nombreIngles: item.nombreIngles || '',
+              fraccionNaladi: item.fraccionNaladi || '',
+              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
+              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
+              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.valorDeContenidoRegional || '',
+              normaOrigen: item.normaOrigen || '',
+              otrasInstancias: item.otrasInstancias || '',
+              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.datosTablaUno$ = of(MAPPED_DATA || []);
+          this.store.setbuscarMercancia(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
 
-        // this.store.setbuscarMercancia(MAPPED_DATA);
-      },
-      error: () => {
-        this.toastr.error('Error al buscar Mercancia');
-      },
-    });
-
-      // this.certificadoService
-      //   .obtenerMercancia()
-      //   .pipe(takeUntil(this.destroyNotifier$))
-      //   .subscribe(
-      //     (data: MercanciasHistorico) => {
-      //       this.store.setbuscarMercancia(data.datos);
-      //     },
-      //     () => {
-      //       this.toastr.error('Error al buscar Mercancia');
-      //     }
-      //   );
+    this.mercanciasDisponibles = true;
   }
 
   /**

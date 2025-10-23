@@ -51,8 +51,11 @@ export const PROC_110223 = {
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
-    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
-    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
+    CONSULTA_SOLICITUDE: (id: string | number) : string => 
+        `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+    OPINIONES: (numFolioTramite: string | number): string => 
+        `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
+    AGREGAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/agregar-productor`,
 };
 
 /*
@@ -60,3 +63,11 @@ export const PROC_110223 = {
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t80208/swagger-ui/index.html#/Solicitud/guardar
  */
 export const API_POST_SOLICITUD = 'sat-t110223/solicitud/guardar';
+
+/**
+ * Ruta de la API para buscar productores exportador por RFC del solicitante.
+ * @param rfc RFC del solicitante a consultar.
+ * @returns {string} URL para la consulta de productores exportador.
+ */
+export const BUSCAR_PRODUCTOR = (rfc: string): string =>
+  `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=${rfc}`;

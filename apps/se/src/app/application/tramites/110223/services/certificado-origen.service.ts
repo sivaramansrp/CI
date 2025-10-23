@@ -4,7 +4,7 @@ import { Observable,catchError,map, throwError } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { API_POST_SOLICITUD, PROC_110223 } from '../servers/api-route';
+import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110223 } from '../servers/api-route';
 import { ProductorExportador } from '../models/certificado-origen.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
@@ -72,15 +72,28 @@ export class CertificadosOrigenService {
   }
 
   /**
-   * Obtiene la lista de productores/exportadores disponibles.
-   * 
-   * Este método realiza una solicitud HTTP para obtener los datos de productores/exportadores desde un archivo JSON.
-   * 
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http
-      .get<ProductorExportador>('assets/json/110223/productor-exportador.json');
+  obtenerProductorPorExportador(rfc: string): Observable<ProductorExportador> {
+    // return this.http.get<ProductorExportador>(
+    //   'assets/json/110223/productor-exportador.json'
+    // );
+    return this.httpService.get<ProductorExportador>(BUSCAR_PRODUCTOR(rfc));
+  }
+
+  /**
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
+   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+   */
+  obtenerProductorNuevo(body: { rfc_solicitante: string }): Observable<any> {
+    return this.httpService.post<any>(PROC_110223.AGREGAR_PRODUCTOR, {
+      body: body,
+    });
   }
 
   /**
@@ -181,9 +194,9 @@ export class CertificadosOrigenService {
          * @method obtenerPaisBloque
          * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
          */
-        obtenerPaisBloque(): Observable<Catalogo[]> {
+        obtenerPaisBloque(): Observable<Catalogo> {
           return this.http
-            .get<{ data: Catalogo[] }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
+            .get<{ data: Catalogo }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
             .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
         }
          /**
@@ -248,8 +261,13 @@ export class CertificadosOrigenService {
     );
   }
 
-  buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
-    return this.httpService.post<JSONResponse>(PROC_110223.BUSCAR, { body: body });
+  /**
+   * Busca mercancías para el certificado de origen.
+   * @param body Objeto que contiene los parámetros de búsqueda.
+   * @returns Observable con la respuesta de la búsqueda de mercancías.
+   */
+  buscarMercanciasCert(body: { [key: string]: unknown }): Observable<{ [key: string]: unknown }> {
+    return this.httpService.post<{ [key: string]: unknown }>(PROC_110223.BUSCAR, { body: body });
   }
   
   /**
