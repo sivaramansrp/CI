@@ -1,3 +1,8 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { HttpCoreService } from '@libs/shared/data-access-user/src/core/services/shared/http/http.service';
+
 import {
   Catalogo,
   RespuestaCatalogos,
@@ -10,8 +15,16 @@ import {
 import { Observable, catchError, throwError } from 'rxjs';
 import { ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
 import { Solicitud260215State, Tramite260215Store } from '../estados/tramites/tramite260215.store';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+
+/**
+ * Interface para la respuesta de la API.
+ */
+export interface JSONResponse {
+  success: boolean;
+  message: string;
+  data?: unknown;
+  error?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +35,13 @@ export class ServiciosPermisoSanitarioService {
    * 
    * @param http - Instancia de HttpClient utilizada para realizar solicitudes HTTP.
    * @param tramite260215Store - Instancia de Tramite260215Store para gestionar el estado relacionado con el trámite 260215.
+   * @param httpService - Instancia de HttpCoreService para operaciones POST/PUT/DELETE.
    */
-  constructor(private http: HttpClient, private tramite260215Store: Tramite260215Store) {
+  constructor(
+    private http: HttpClient, 
+    private tramite260215Store: Tramite260215Store,
+    private httpService: HttpCoreService
+  ) {
     // to be initilized
   }
 
@@ -269,5 +287,17 @@ export class ServiciosPermisoSanitarioService {
             getFacturadorTablaDatos(): Observable<Facturador[]> {
               return this.http.get<Facturador[]>('assets/json/260214/facturador.json');
             }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST para guardar la solicitud.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    // Usando la URL común para guardar solicitudes de COFEPRIS
+    const ENDPOINT = '/api/cofepris-t260215/solicitud/guardar';
+    return this.httpService.post<JSONResponse>(ENDPOINT, { body: body });
+  }
       
 }
