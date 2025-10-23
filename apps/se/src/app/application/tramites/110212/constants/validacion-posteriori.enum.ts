@@ -75,7 +75,11 @@ export const FECHAFACTURA = {
   habilitado: true,
 };
 
-
+/** Constante que define las columnas seleccionadas en la tabla de mercancías.
+ * 
+ * Cada columna está representada por un objeto que contiene el encabezado,
+ * una función para obtener el valor de la columna y el orden de la columna.
+ */
 export const COLUMNAS_SELECCIONADAS =[
      {
        encabezado: 'Fracción arancelaria',
@@ -120,8 +124,12 @@ export const COLUMNAS_SELECCIONADAS =[
    ];
 
   
-
-  export const COLUMNAS_DSPONIBLES =[
+/** Constante que define las columnas disponibles en la tabla de mercancías.
+ * 
+ * Cada columna está representada por un objeto que contiene el encabezado,
+ * una función para obtener el valor de la columna y el orden de la columna.
+ */
+  export const COLUMNAS_DISPONIBLES =[
        {
          encabezado: 'Fracción arancelaria',
          clave: (ele: DisponiblesTabla):string => ele.fraccionArancelaria,
@@ -169,3 +177,25 @@ export const ERROR_FORMA_ALERT = `
   </div>
 </div>
 `;
+
+/** Interfaz que define la estructura de un ítem de mercancía en la respuesta de búsqueda.
+ */
+export interface MercanciaResponseItem {
+  idMercancia: number;
+  fraccionArancelaria?: string;
+  numeroRegistroProducto?: string;
+  fechaExpedicion?: string;
+  fechaVencimiento?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
+  criterioOrigen?: string;
+  valorContenidoRegional?: string;
+  normaOrigen?: string;
+  nombreIngles?: string;
+}
+
+/** Interfaz que define la estructura de la respuesta de búsqueda de mercancías.
+ */
+export interface BuscarMercanciasResponse {
+  datos?: MercanciaResponseItem[];
+}
