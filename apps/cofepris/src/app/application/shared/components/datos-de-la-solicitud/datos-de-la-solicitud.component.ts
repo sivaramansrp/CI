@@ -1702,24 +1702,21 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
  */
 onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
   if (this.mercanciaSeleccionada) {
-    // Update existing merchandise - find by a unique identifier
-    const INDEX = this.tablaMercanciasConfig.datos.findIndex(
-      item => item.clasificacionProducto === this.mercanciaSeleccionada!.clasificacionProducto &&
-              item.denominacionEspecificaProducto === this.mercanciaSeleccionada!.denominacionEspecificaProducto
+    // Busque el índice del objeto existente que coincida con TODAS las propiedades
+    const INDEX = this.tablaMercanciasConfig.datos.findIndex(item =>
+      Object.keys(item).every(
+        key => item[key as keyof TablaMercanciasDatos] ===
+               this.mercanciaSeleccionada![key as keyof TablaMercanciasDatos]
+      )
     );
-    
+
     if (INDEX !== -1) {
-      // Replace the existing item with the modified data
+      // Reemplace ese objeto específico con los nuevos datos
       this.tablaMercanciasConfig.datos[INDEX] = { ...mercanciaData };
-    } else {
-      // If not found, add as new item
-      this.tablaMercanciasConfig.datos = [
-        ...this.tablaMercanciasConfig.datos,
-        mercanciaData
-      ];
     }
+
   } else {
-    // Add new merchandise
+    // Agregar nueva mercancía si no hay nada seleccionado
     this.tablaMercanciasConfig.datos = [
       ...this.tablaMercanciasConfig.datos,
       mercanciaData

@@ -6,12 +6,23 @@ import { ProgramaACancelar} from '../../shared/models/programa-cancelar.model';
  * Interfaz que representa la estructura de un programa.
  */
 export interface Programa {
-  folioPrograma: string;
-  idProgramaSeleccionado: string;
-  modalidad: string;
-  representacionFederal: string;
-  tipoPrograma: string;
+  folioPrograma: string; 
+  idProgramaSeleccionado?: string; 
+  modalidad: string; 
+  representacionFederal: string; 
+  tipoPrograma: string; 
   estatus: string;
+  idProgramaAutorizado: string;
+  movimientoProgramaSE: string | null;
+  rfc: string | null;
+  resolucion: string | null;
+  unidadAdministrativa: string | null;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  actividadProductiva: string | null;
+  fechaSuspension: string | null;
+  contadorGrid: number | null;
+  idProgramaCompuesto: string | null;
 }
 
 /**
@@ -23,6 +34,7 @@ export interface Programa {
  */
 export interface Programa140101State {
 
+  idSolicitud:number,
   /**
    * Observaciones de la solicitud
    */
@@ -56,17 +68,29 @@ export interface Programa140101State {
  */
 export function createInitialState(): Programa140101State {
   return {
+    idSolicitud:0,
     solicitudObservaciones: '', // Valor inicial vacío para las observaciones
     confirmar: false, // Valor inicial para confirmar en falso
     radio: -1, // Valor inicial para la selección de radio
     datos: [], // Array vacío para datos adicionales
     programaACancelar: {
-      folioPrograma: '', // Folio del programa
       idProgramaSeleccionado: '', // ID del programa seleccionado
-      modalidad: '', // Modalidad del programa
-      representacionFederal: '', // Representación federal
-      tipoPrograma: '', // Tipo de programa
-      estatus: '', // Estatus del programa
+      idProgramaAutorizado: "",
+      folioPrograma: "",
+      tipoPrograma: "",
+      movimientoProgramaSE: null,
+      rfc: null,
+      resolucion: null,
+      unidadAdministrativa: null,
+      fechaInicioVigencia: null,
+      fechaFinVigencia: null,
+      actividadProductiva: null,
+      fechaSuspension: null,
+      modalidad: "",
+      representacionFederal: "",
+      estatus: "",
+      contadorGrid: null,
+      idProgramaCompuesto: null
     }
   };
 }
@@ -141,6 +165,17 @@ export class Tramite140101Store extends Store<Programa140101State> {
     this.update((state) => ({
       ...state,
       datos: estado,
+    }));
+  }
+
+  /**
+   * Actualiza el ID de la solicitud.
+   * @param idSolicitud Nuevo ID de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

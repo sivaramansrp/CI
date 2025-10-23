@@ -11,17 +11,14 @@ import {
   ConsultaioState,
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
-import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
+import { Subject,map,takeUntil } from 'rxjs';
+import { Tramite110212State,Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { CertificadoOrigenComponent } from "../../../110212/components/certificado-origen/certificado-origen.component";
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioTramiteComponent } from '../../components/destinatario/destinatario.component';
-import { Subject } from 'rxjs';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
-import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
-import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -35,7 +32,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, CertificadoOrigenComponent, DestinatarioTramiteComponent, DatosCertificadoComponent]
+  imports: [CommonModule, SolicitanteComponent, DestinatarioTramiteComponent, DatosCertificadoComponent, CertificadoOrigenComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
@@ -45,6 +42,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * de solicitante dentro de la plantilla.
    */
   @ViewChild('solicitante') solicitante!: SolicitanteComponent;
+
+    /**
+   * @property {CertificadoOrigenComponent} certificadoOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoOrigenComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de certificado de origen desde el componente padre.
+   */
+  @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoOrigenComponent;
 
    /**
    * Referencia al componente `DestinatarioComponent`.
@@ -233,6 +238,54 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     return allFormsValid;
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso uno: solicitante, certificado de origen y datos del certificado.
+   * Marca los controles como tocados si algún formulario es inválido para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.destinatarioComp) {
+      if (!this.destinatarioComp.validateAllForms()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificadoComp) {
+      if (!this.datosCertificadoComp.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**

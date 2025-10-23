@@ -975,8 +975,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
     presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
     numeroRegistroSanitario: [
-      this.obtenerValor('numeroRegistroSanitario'),
-      [Validators.required],
+      this.obtenerValor('numeroRegistroSanitario')
     ],
     fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
     paisDeOriginDatos: [
@@ -1203,7 +1202,7 @@ public convertToStringArray(value: unknown): string[] {
       return;
     }
      const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
-   // Set additional values
+      // Set additional values
     VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
     VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
@@ -1211,6 +1210,30 @@ public convertToStringArray(value: unknown): string[] {
     VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
     VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
+
+    const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;
+    const CLASIFICACIONOBJ = this.clasificacionProductoDatos?.find(item => item.id === Number(CLASIFICACIONID));
+    VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.descripcion ?? '';
+
+    const ESPECIFICARCLASIFICACIONID = this.mercanciaForm.get('especificarClasificacionProducto')?.value;
+    const ESPECIFICARCLASIFICACIONOBJ = this.especificarClasificacionProductoDatos?.find(item => item.id === Number(ESPECIFICARCLASIFICACIONID));
+    VALORTABLAMERCANCIA.especificarClasificacionProducto = ESPECIFICARCLASIFICACIONOBJ?.descripcion ?? '';
+
+    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
+    const TIPOPRODUCTOOBJ = this.tipoProductoDatos?.find(item => item.id === Number(TIPOPRODUCTOID));
+    VALORTABLAMERCANCIA.tipoProducto = TIPOPRODUCTOOBJ?.descripcion ?? '';
+
+    const FORMAFARMACEUTICAID = this.mercanciaForm.get('formaFarmaceutica')?.value;
+    const FORMAFARMACEUTICAOBJ = this.formaFarmaceuticaDatos?.find(item => item.id === Number(FORMAFARMACEUTICAID));
+    VALORTABLAMERCANCIA.formaFarmaceutica = FORMAFARMACEUTICAOBJ?.descripcion ?? '';
+
+    const ESTADOFISICOID = this.mercanciaForm.get('estadoFisico')?.value;
+    const ESTADOFISICOOBJ = this.estadoFisicoDatos?.find(item => item.id === Number(ESTADOFISICOID));
+    VALORTABLAMERCANCIA.estadoFisico = ESTADOFISICOOBJ?.descripcion ?? '';
+
+    const UMCID = this.mercanciaForm.get('cantidadUmc')?.value;
+    const UMCOBJ = this.cantidadUmcDatos?.find(item => item.id === Number(UMCID));
+    VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.descripcion ?? '';
     
     // Emit the merchandise data
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
@@ -1220,7 +1243,7 @@ public convertToStringArray(value: unknown): string[] {
     
     // Close the modal
     this.cerrarModal.emit();
-  }
+}
 
   /**
    * Restablece el formulario de mercancía a su estado inicial.
@@ -1351,7 +1374,7 @@ public convertToStringArray(value: unknown): string[] {
    */
   fechaDeCaducidadValor(valor: string): void {
     this.mercanciaForm.patchValue({
-      fechaDeCaducidad: valor,
+      fechaCaducidad: valor,
     });
   }
 
