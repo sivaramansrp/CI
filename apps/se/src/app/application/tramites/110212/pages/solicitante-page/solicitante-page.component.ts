@@ -5,13 +5,12 @@ import { AccionBoton } from '../../models/validacion-posteriori.model';
 import { ERROR_FORMA_ALERT } from '../../constants/validacion-posteriori.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/validacion-posteriori.enum';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { TEXTOS } from '../../constants/validacion-posteriori.enum';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
-import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
-import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212State,Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 
 /**

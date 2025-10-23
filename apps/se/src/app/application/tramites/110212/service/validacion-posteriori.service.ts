@@ -215,6 +215,8 @@ export class ValidacionPosterioriService {
     return {
       "observaciones": data.formDatosCertificado['observacionesDates'] ?? '',
       "idioma": data.formDatosCertificado['idiomaDates'] ?? 0,
+      "presenta": data.formDatosCertificado['presentaDates'] ?? '',
+      "precisa": data.formDatosCertificado['precisaDates'] ?? '',
       "representacion_federal": {
         "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
         "representacion_federal": data.formDatosCertificado['representacionFederalDates'] ?? 0
@@ -242,6 +244,7 @@ export class ValidacionPosterioriService {
       mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaDatos),
     };
   }
+  /** Construye el objeto destinatario a partir del estado del trámite TramiteState. */
   buildDestinatario(data: Tramite110212State): unknown {
     return {
         nombre: data.formDatosDelDestinatario['nombres'],

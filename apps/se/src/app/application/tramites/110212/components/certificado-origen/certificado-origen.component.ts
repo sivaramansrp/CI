@@ -68,6 +68,15 @@ export class CertificadoOrigenComponent
    * @type {Mercancia[]}
    */
   disponiblesDatos: Mercancia[] = [];
+  /**
+   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
+   */
+  @ViewChild(CertificadoDeOrigenComponent)
+  certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  /**
+   * Indica si la tabla de mercancías disponibles está visible.
+   */
+  mercanciasDisponiblesTabla: boolean = false;
 
   /**
    * @descripcion
@@ -196,11 +205,6 @@ export class CertificadoOrigenComponent
     private seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery
   ) {
-    this.query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$), delay(100))
-      .subscribe((estado) => {
-        // this.formCertificadoValues = estado;
-      });
   }
 
   /**
@@ -233,6 +237,7 @@ export class CertificadoOrigenComponent
         map((state: Tramite110212State) => {
           this.certificadoState = state;
           this.datosTablaUno$ = state.disponiblesDatos;
+          this.formCertificadoValues = state.formCertificado;
           this.datosTabla$ = state.mercanciaSeleccionadasTablaDatos;
         })
       )
@@ -256,40 +261,40 @@ export class CertificadoOrigenComponent
 
 
 
-    /**
-     * Busca la mercancia y actualiza los datos en el store.
-     */
-  conseguirDisponiblesDatos(): void {    
+  /**
+   * Busca la mercancia y actualiza los datos en el store.
+   */
+  conseguirDisponiblesDatos(): void {
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] },
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] },
     };
-  
-   this.peruCertificadoService
-    .buscarMercanciasCert(PAYLOAD)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response: any) => {
-        const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map((item: any) => ({
-          id: item.idMercancia,
-          fraccionArancelaria: item.fraccionArancelaria || '',
-          numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
-          fechaExpedicion: item.fechaExpedicion || '',
-          fechaVencimiento: item.fechaVencimiento || '',
-          nombreTecnico: item.nombreTecnico || '',
-          nombreComercial: item.nombreComercial || '',
-          criterioParaConferirOrigen: item.fraccionArancelaria || '',
-          valorDeContenidoRegional: item.fraccionArancelaria || '',
-          normaOrigen: item.fraccionArancelaria || '',
-          nombreIngles: item.nombreIngles || '',
 
-        }));
-        this.disponiblesDatos = MAPPED_DATA;
+    this.peruCertificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map((item: any) => ({
+            id: item.idMercancia,
+            fraccionArancelaria: item.fraccionArancelaria || '',
+            numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+            fechaExpedicion: item.fechaExpedicion || '',
+            fechaVencimiento: item.fechaVencimiento || '',
+            nombreTecnico: item.nombreTecnico || '',
+            nombreComercial: item.nombreComercial || '',
+            criterioParaConferirOrigen: item.fraccionArancelaria || '',
+            valorDeContenidoRegional: item.fraccionArancelaria || '',
+            normaOrigen: item.fraccionArancelaria || '',
+            nombreIngles: item.nombreIngles || '',
 
-        this.store.setDisponsiblesDatos(MAPPED_DATA);
-      },
-    });
+          }));
+          this.disponiblesDatos = MAPPED_DATA;
+
+          this.store.setDisponsiblesDatos(MAPPED_DATA);
+     },
+      });
   }
 
   /**
@@ -378,6 +383,26 @@ export class CertificadoOrigenComponent
    */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**

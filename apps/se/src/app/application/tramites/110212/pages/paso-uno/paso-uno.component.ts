@@ -11,7 +11,7 @@ import {
   ConsultaioState,
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
-import { CertificadoOrigenComponent } from "../../../110204/components/certificado-origen/certificado-origen.component";
+import { CertificadoOrigenComponent } from "../../../110212/components/certificado-origen/certificado-origen.component";
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioTramiteComponent } from '../../components/destinatario/destinatario.component';

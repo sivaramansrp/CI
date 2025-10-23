@@ -21,7 +21,7 @@ import { StoreConfig } from '@datorama/akita';
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite110212State {
-  [x: string]: any;
+ id: number | null;
   /** ID de la solicitud */
   idSolicitud: number | null;
 
@@ -171,6 +171,7 @@ export interface Tramite110212State {
  */
 export function createInitialState(): Tramite110212State {
   return {
+    id: null,
     idSolicitud: 0,
     observaciones: '',
     pasoActivo: 1,
@@ -1427,7 +1428,7 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
-      return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+            return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
     });
   }
   /**
@@ -1537,8 +1538,8 @@ export class Tramite110212Store extends Store<Tramite110212State> {
   }): void {
     this.update((state) => ({
       formCertificado: {
-        ...state.formCertificado,
-        ...values,
+      ...state.formCertificado,
+      ...values,
       },
     }));
   }
