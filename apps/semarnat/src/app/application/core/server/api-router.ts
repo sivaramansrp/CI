@@ -1,12 +1,11 @@
-import { ENVIRONMENT } from "../../../environments/environment";
+import { IDSOLICITUD } from "../../constantes/230301/api-constants";
+
 /**
- * URLs de API comunes
+ * URLs de API para guardar la solicitud de desistimiento
  */
-export const COMUN_URL = {
-  BASE_URL: `${ENVIRONMENT.URL_SERVER}`,
-  API: '/api',
-  API_VERSION: '/v3',
-  CATALOGO_URL: '/catalogo',
-  SOLICITUD_URL: '/solicitud',
-  TRAMITE_URL: '/tramite',
-};
+export const API_POST_GUARDAR_SOLICITUD = 'sat-t230301/solicitud/guardar';
+
+/**
+ * URL de API para generar la cadena original del trámite 230301
+ */
+export const API_POST_CADENA_ORIGINAL = `sat-t230301/solicitud/${IDSOLICITUD}/genera-cadena-original`;
