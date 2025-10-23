@@ -31,63 +31,54 @@ describe('ValidacionPosterioriService', () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerIdioma();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerEntidadFederativa()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerEntidadFederativa();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerRepresentacionFederal()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerRepresentacionFederal();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerProductorPorExportador()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerProductorPorExportador();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerMercanciasDisponibles()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerMercanciasDisponibles();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerMercanciasSeleccionadas()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerMercanciasSeleccionadas();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerTratado()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerTratado();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerPais()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerPais();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #getDatosConsulta()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.getDatosConsulta();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #getAllState()', async () => {
@@ -101,14 +92,12 @@ describe('ValidacionPosterioriService', () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.buscarMercanciasCert({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosPost()', async () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.guardarDatosPost({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #buildMercanciaSeleccionadas()', async () => {
@@ -152,7 +141,6 @@ describe('ValidacionPosterioriService', () => {
       },
       mercanciaSeleccionadasTablaDatos: {}
     });
-    // expect(service.buildMercanciaSeleccionadas).toHaveBeenCalled();
   });
 
   it('should run #buildDestinatario()', async () => {
