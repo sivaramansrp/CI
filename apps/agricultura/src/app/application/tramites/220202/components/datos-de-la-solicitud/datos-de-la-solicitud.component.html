@@ -44,6 +44,8 @@
     </div>
   </div>
   <form [formGroup]="forma">
+    <div class="row" formGroupName="datos">
+
       <div class="row">
         <div class="col-md-12">
           <app-catalogo-select
@@ -54,7 +56,7 @@
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
             name="aduanaDeIngreso"
-            (change)="setValoresStore(forma, 'aduanaDeIngreso')"
+            (change)="setValoresStore(); catalogoOficinas(forma);"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -66,7 +68,7 @@
             [required]="true"
                [isDisabled]="esFormularioSoloLectura"
             name="oficinaDeInspeccion"
-            (change)="setValoresStore(forma, 'oficinaDeInspeccion')"
+            (change)="setValoresStore(); obtenerPuntoInspeccion(forma)"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -78,11 +80,11 @@
             [required]="true"
              [isDisabled]="esFormularioSoloLectura"
             name="puntoDeInspeccion"
-            (change)="setValoresStore(forma, 'puntoDeInspeccion')"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
-      
-        
+
+
       </div>
       <div class="row">
         <div class="col-md-6 mt-2">
@@ -94,7 +96,7 @@
             name = "numeroDeGuia"
             formControlName="numeroDeGuia"
             maxlength="50"
-            (change)="setValoresStore(forma, 'numeroDeGuia')"
+            (change)="setValoresStore()"
           />
         </div>
         <div class="col-md-6">
@@ -108,7 +110,7 @@
             name="regimen"
             [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
-            (change)="setValoresStore(forma, 'regimen')"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         </div>
@@ -122,10 +124,10 @@
               formControlName="numeroDeCarro"
               name="numeroDeCarro"
               maxlength="50"
-              (change)="setValoresStore(forma, 'numeroDeCarro')"
+              (change)="setValoresStore()"
             />
           </div>
-      
+
         </div>
 
         <div class="row">
@@ -143,6 +145,7 @@
           </app-tabla-dinamica>
           </div>
         </div>
+      </div>
     </form>
 
     <div class="row mt-5">
