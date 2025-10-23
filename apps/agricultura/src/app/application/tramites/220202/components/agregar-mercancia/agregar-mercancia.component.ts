@@ -11,6 +11,7 @@ import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
 import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
@@ -97,7 +98,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
   ) {
     this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
       this.catalogosDatos = resp;
-      this.catalogosDatos.nicoList = [];
+      // this.catalogosDatos.nicoList = [];
     });
     //ponemos la lista nico vacia por que s¿depende de lo que seleccione fracciona arancelaria
     // vamos por el catalogo de Fraccion arancelaria
@@ -110,6 +111,11 @@ export class AgregarMercanciaComponent implements OnDestroy{
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((estado) => {
+          console.log('estado', estado);
+
+          if (estado.selectedDatos[0]?.fraccionArancelaria !== undefined && estado.selectedDatos[0]?.fraccionArancelaria !== '') {
+            this.getNicoFraccionArancelariaLista(estado.selectedDatos[0].fraccionArancelaria);
+          }
           this.cuerpoTabla = estado.tablaDatos;
           const VALOR = estado.selectedDatos[0];
           if (VALOR) {
@@ -250,6 +256,22 @@ export class AgregarMercanciaComponent implements OnDestroy{
         }
       );
 
+  }
+
+  /**
+    * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+    * @method getFraccionArancelariaLista
+    * @returns {void}
+    */
+  getNicoFraccionArancelariaLista(clave: string): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220202, clave)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.nicoList = data.datos ?? [];
+        }
+      );
   }
 
   /**

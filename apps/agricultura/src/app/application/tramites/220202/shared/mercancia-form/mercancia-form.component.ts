@@ -438,6 +438,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       this.esFormaValido = true;
     }
     else {
+      console.log('formulario', this.mercanciaForm.getRawValue());
+      console.log('tabladatos', this.sensiblesTablaDatos);
+
       this.agregarDatosFormulario.emit(
         {
           formulario: this.mercanciaForm.getRawValue(),
