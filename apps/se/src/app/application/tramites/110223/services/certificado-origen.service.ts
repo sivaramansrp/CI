@@ -270,6 +270,14 @@ export class CertificadosOrigenService {
     return this.httpService.post<{ [key: string]: unknown }>(PROC_110223.BUSCAR, { body: body });
   }
   
+  guardarDatosPost(
+    body: Record<string, unknown>
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110223.GUARDAR, {
+      body: body,
+    });
+  }
+
   /**
    * Guarda la solicitud del trámite 80208.
    * @param solicitud Objeto que contiene los datos de la solicitud a guardar.

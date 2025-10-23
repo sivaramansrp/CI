@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, esValidObject, getValidDatos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -13,6 +13,7 @@ import { Tramite110223Query } from '../../query/tramite110223.query';
 import { Payload } from '../../enums/texto.enum';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
+import { ToastrService } from 'ngx-toastr';
 // Ensure PasoDosComponent and PasoUnoComponent are standalone components or declared in an NgModule
 
 /**
@@ -123,8 +124,10 @@ export class SolicitudPageComponent {
    */
   constructor( private store: Tramite110223Store,
         private query: Tramite110223Query,
-        public certificadoService: CertificadosOrigenService){
-  this.query.selectSolicitud$
+        public certificadoService: CertificadosOrigenService,
+        private certificadoDeService: CertificadosOrigenService,
+        private toastr: ToastrService){
+    this.query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
@@ -162,10 +165,10 @@ export class SolicitudPageComponent {
    * La llamada al servicio actualmente está comentada.
    */
   // guardar(item: any): void {
-  guardar(item: TramiteState): Promise<Payload> {
-    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(
-      item.mercanciaTabla
-    );
+  guardar(item: TramiteState): Promise<JSONResponse> {
+    // const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(
+    //   item.mercanciaTabla
+    // );
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       idSolicitud: this.solicitudState.idSolicitud,
@@ -302,22 +305,28 @@ export class SolicitudPageComponent {
     };
 
     return new Promise((resolve, reject) => {
-      this.certificadoService.postSolicitud(PAYLOAD).subscribe(
+      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe(
         (response) => {
-          if (esValidObject(response) && esValidObject(response.datos)) {
-            if (getValidDatos(response.datos?.id_solicitud)) {
-              this.store.setIdSolicitud(
-                response.datos?.id_solicitud || 0
-              );
+          if (esValidObject(response) && esValidObject(response['datos'])) {
+            const DATOS = response['datos'] as { idSolicitud?: number };
+            if (getValidDatos(DATOS.idSolicitud)) {
+              this.store.setIdSolicitud(DATOS.idSolicitud ?? 0);
               this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             } else {
               this.store.setIdSolicitud(0);
             }
           }
-          resolve(response);
+          resolve({
+            id: response['id'] ?? 0,
+            descripcion: response['descripcion'] ?? '',
+            codigo: response['codigo'] ?? '',
+            data: response['data'] ?? response['datos'] ?? null,
+            ...response,
+          } as JSONResponse);
         },
         (error) => {
           reject(error);
+          this.toastr.error('Error al buscar Mercancia');
         }
       );
     });
