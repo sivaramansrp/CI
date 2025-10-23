@@ -360,6 +360,16 @@ export const ERROR_FORMA_ALERT = `
       <p class="m-0">Corrija los siguientes errores:</p>
       <p class="text-danger m-0">Debe seleccionar una constancia de registro.</p>
 `;
+
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que Faltan campos por capturar
+ * antes de poder continuar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_FALTAN = `
+    <p class="text-danger m-0">Faltan campos por capturar.</p>
+`;
 /**
  * Constante que define el mensaje de error para validación de formularios.
  * 

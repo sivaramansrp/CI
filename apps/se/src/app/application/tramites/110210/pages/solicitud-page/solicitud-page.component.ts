@@ -11,6 +11,8 @@ import {
   Tramite110210State,
   Tramite110210Store,
 } from '../../estados/store/tramite110210.store';
+import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
+import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
 import { ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
@@ -50,6 +52,16 @@ export class SolicitudPageComponent implements OnDestroy {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /** Identificador numérico para guardar la solicitud.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  guardarIdSolicitud: number = 0;
+
+  /** Mensaje de confirmación al guardar la solicitud.
+   * Se inicializa como una cadena vacía y se actualiza cuando se guarda la solicitud.
+   */
+  guardarMensaje: string = '';
 
   /**
    * Identificador numérico de la solicitud actual.
@@ -136,7 +148,8 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   constructor(
     public TramiteStore: Tramite110210Store,
-    public tramiteQuery: Tramite110210Query
+    public tramiteQuery: Tramite110210Query,
+    private service: BuscarCertificadoDeOrigenService,
   ) {
     this.tramiteQuery.selectTramite110210$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -185,10 +198,115 @@ export class SolicitudPageComponent implements OnDestroy {
 
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+        this.guardar();
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * @method guardar
+   * @description
+   * Envía la solicitud de guardar los datos del formulario al servicio correspondiente.
+   * Utiliza el estado actual de la solicitud para construir el payload.
+   * Si la respuesta es válida, actualiza los identificadores de solicitud y muestra un mensaje de éxito.
+   */
+  public guardar():void{
+    const SOLICITUD = this.solicitudState;
+    const PAYLOAD = {
+        "solicitud": {
+          "solicitante": {
+            "rfc": "AAL0409235E6",
+            "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+            "correoElectronico": "vucem2021@gmail.com",
+            "telefono": "55-98764532",
+            "cveUsuario": "AAL0409235E6",
+            "domicilio": {
+              "pais": {
+                "clave": "MEX",
+                "nombre": "ESTADOS UNIDOS MEXICANOS"
+              },
+              "entidadFederativa": {
+                "clave": "SIN",
+                "nombre": "SINALOA"
+              },
+              "delegacionMunicipio": {
+                "clave": "25001",
+                "nombre": "AHOME"
+              },
+              "localidad": {
+                "clave": "00181210008",
+                "nombre": "LOS MOCHIS"
+              },
+              "colonia": {
+                "clave": "00181210001",
+                "nombre": "MIGUEL HIDALGO"
+              },
+              "calle": "CAMINO VIEJO",
+              "numeroExterior": "1353",
+              "numeroInterior": "",
+              "codigoPostal": "81210"
+            }
+          },
+          "cveRolCapturista": "PersonaMoral",
+          "cveUsuarioCapturista": "AAL0409235E6",
+          "clavePaisSeleccionado": SOLICITUD.paisBloqueClave ? SOLICITUD.paisBloqueClave : "",
+          "idTratadoAcuerdoSeleccionado": SOLICITUD.tratadoAcuerdoClave ? SOLICITUD.tratadoAcuerdoClave : "",
+          "discriminatorValue": "110210",
+          "tramite": {
+            "numFolioTramite": ""
+          },
+          "idSolicitud": ""
+        },
+        "puedeCapturarRepresentanteLegalCG": false,
+        "datosMercancia": {
+          "numeroCertificado": SOLICITUD.cveRegistroProductor ? SOLICITUD.cveRegistroProductor : ""
+        },
+        "guardar": "Continuar",
+        "parametrosBP": {
+          "idTramite": 110210
+        }
+      };
+
+    this.service.guardar(PAYLOAD).pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+          this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+          this.generaCadena(this.guardarIdSolicitud);
+        }
+      });
+  }
+/**   * @method generaCadena
+   * @description
+   * Genera la cadena original para la solicitud guardada.
+   */
+  public generaCadena(solicitudId:number): void {
+    const PAYLOAD = {
+        "num_folio_tramite": null,
+        "boolean_extranjero": true,
+        "solicitante": {
+            "rfc": "AAL0409235E6",
+            "nombre": "Juan Pérez",
+            "es_persona_moral": true,
+            "certificado_serial_number": "string"
+        },
+        "cve_rol_capturista": "CapturistaGubernamental",
+        "cve_usuario_capturista": "Gubernamental",
+        "fecha_firma": "2025-07-01 20:01:25"
+    };
+    this.service.generaCadena(PAYLOAD, solicitudId).pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          console.log('CADENA GENERADA', RESPONSE);
+        }
+      });
   }
 
   /**

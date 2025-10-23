@@ -322,7 +322,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     /**
      * Asignación de los observables que contienen los catálogos de estados y países.
      */
-    this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>).pipe(
       map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
@@ -335,7 +334,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    this.cargarEstados();
     this.cargarBloque();
 
     this.consultaQuery.selectConsultaioState$
@@ -348,23 +346,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       .subscribe();
 
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
-  }
-
-  /**
-   * Carga la lista de estados desde el servicio y actualiza el store con los datos.
-   */
-  cargarEstados(): void {
-    this.certificadoService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setAltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
   }
 
   /**

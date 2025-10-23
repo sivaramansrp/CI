@@ -215,6 +215,12 @@ export interface Tramite110214State {
    */
   bloque: string;
 
+  /** Lista de catálogos que representan países bloqueados. */
+  paisBloques: Catalogo[];
+
+  /** Lista de catálogos que representan países bloqueados. */
+  paisBloqu: Catalogo[];
+
   agregarProductoresExportador: HistoricoColumnas[];
 
   mercanciaProductores: MercanciaTabla[];
@@ -388,11 +394,14 @@ export function createInitialState(): Tramite110214State {
     entidadFederativaDatos: [],
     representacionFederalDatos: [],
     formDatosCertificado: {
-      observaciones: '',
-      idioma: '',
-      entidadFederativa: '',
-      representacionFederal: '',
+      observacionesDates: '',
+      idiomaDates: '',
+      EntidadFederativaDates: '',
+      representacionFederalDates: '',
     },
+    /** Lista de catálogos que representan países bloqueados. */
+  paisBloques: [],
+  paisBloqu: []
   };
 }
 /**
@@ -1316,12 +1325,12 @@ export class Tramite110214Store extends Store<Tramite110214State> {
    * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
    * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
    */
-  setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
     this.update((state) => ({
       ...state,
       agregarProductoresExportador: [
         ...state.agregarProductoresExportador,
-        {...productor},
+        ...productor.map(item => ({ ...item })),
       ],
      }));
   } 
@@ -1384,7 +1393,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       }
 
       // Actualizar el elemento existente cuando id > 0
-      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+      const UPDATEDLIST = mercanciaTabla.map((ITEM) => 
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
@@ -1447,6 +1456,22 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       ...state,
       bloque,
     }));
+  }
+
+  /**
+   * Establece los bloques de países disponibles.
+   * @param paisBloques Lista de catálogos de países por bloque.
+   */
+  setPaisBloque(paisBloques: Catalogo[]): void {
+    this.update((state) => ({ ...state, paisBloques }));
+  }
+
+  /**
+   * Establece los bloques de países disponibles.
+   * @param paisBloqu Lista de catálogos de países por bloque.
+   */
+  setPaisBloqu(paisBloqu: Catalogo[]): void {
+    this.update((state) => ({ ...state, paisBloqu }));
   }
 
   /**

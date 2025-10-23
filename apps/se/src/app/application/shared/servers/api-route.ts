@@ -58,4 +58,7 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
     buscarfraccionarancelariaImportacion: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/importacion`,
     buscarSectoresImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/actividad-tres-rs/sectores-immex`,
+    certificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/mostrar/certificados`,
+    guardarCertificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/guardar`,
+    generaCadena:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/genera-cadena-original`,
 });

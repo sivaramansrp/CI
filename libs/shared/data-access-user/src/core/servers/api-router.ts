@@ -630,6 +630,13 @@ export const API_POST_GUARDAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE:
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
  */
 export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/mostrar-firmar`;
+
+/**
+ * API para generar los documentos específicos del requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
+ */
+export const API_POST_DOCUMENTOS_ESPECIFICOS_REQ = (TRAMITE: string) : string => `sat-t${TRAMITE}/requerimiento/generar/documentos-especificos`;
+
  
 /**
  * API para generar la firma del requerimiento del trámite 130118
@@ -874,6 +881,12 @@ export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
 export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdo`;
+
+/*
+  * API para obtener el catálogo de tratados y acuerdos por país
+  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
+  */
+export const CATALOGO_TRATADO_ACUERDO_PAIS_110214 = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
 
 /**
  * 

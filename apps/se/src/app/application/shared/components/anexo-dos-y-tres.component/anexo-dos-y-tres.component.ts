@@ -263,6 +263,10 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
         return;
       }
     }
+    else {
+      this.abrirDosModal();
+      return;
+    }
 
     // Proceder con la eliminación
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
@@ -309,12 +313,11 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje:
-        '¿Está seguro de eliminar el registro de los anexos?',
+      mensaje: this.seleccionarDosTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el anexo que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
-      txtBtnAceptar: ' Cancelar',
-      txtBtnCancelar: 'Aceptar',
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: this.seleccionarDosTablaData.length > 0 ? 'Cancelar' : '',
     };
   }
 

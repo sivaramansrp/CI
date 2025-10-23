@@ -19,7 +19,7 @@ export const PASOS = [
     },
   ];
   export const TITULOMENSAJE =
-  'Permiso sanitario de importación de medicamentos destinados a tratamientos especiales (enfermedades de baja incidencia con repercusión social)';
+  'Permiso sanitario de importación de insumos que no sean o contengan estupefacientes o psicotrópicos, por retorno';
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
@@ -32,5 +32,6 @@ export const ID_PROCEDIMIENTO = 260207;
 export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'scian',
-  'fabricante'
+  'fabricante',
+  'correoElectronico'
 ];

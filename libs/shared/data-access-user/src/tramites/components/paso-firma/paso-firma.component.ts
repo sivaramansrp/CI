@@ -140,7 +140,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
       },
       cve_rol_capturista: "CapturistaGubernamental",
       cve_usuario_capturista: "Gubernamental",
-      fecha_firma: "2025-07-01 20:01:25"
+      fecha_firma: formatFecha(new Date())
     };
     this.documentoService.obtenerCadenaOriginal(String(this.idSolicitud), PAYLOAD, this.procedure).subscribe({
       next: (resp) => {

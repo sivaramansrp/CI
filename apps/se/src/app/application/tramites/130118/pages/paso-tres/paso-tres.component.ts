@@ -153,7 +153,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       },
       cve_rol_capturista: "CapturistaGubernamental",
       cve_usuario_capturista: "Gubernamental",
-      fecha_firma: "2025-07-01 20:01:25"
+      fecha_firma: PasoTresComponent.formatFecha(new Date()),
     };
     this.cadena.obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD).subscribe({
       next: (resp) => {

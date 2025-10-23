@@ -5,8 +5,8 @@ import {
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import {
   AfterViewInit,
@@ -24,6 +24,7 @@ import {
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  FEACCION_AFRACCION_ARANCELARIA_CATALOG,
   TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
 } from '../../constantes/datos-solicitud.enum';
@@ -42,7 +43,6 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
   REGEX_DECIMAL,
   SOLO_REGEX_NUMEROS,
   TablaDinamicaComponent,
@@ -51,12 +51,14 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import {
+  FECHA_DE_CADUCIDAD_MERCANICA,
   FECHA_DE_CADUCIDAD_PAGO,
   FECHA_DE_FABRICACIO_PAGO,
 } from '../../models/terceros-relacionados.model';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
+import { NUMERO_REGISTRO_SANITARIO } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { Observable } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
@@ -84,6 +86,16 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaComponent implements OnInit, AfterViewInit {
+
+   /**
+   * Event emitter to notify parent component to close the modal
+   */
+  @Output() cerrarModal = new EventEmitter<void>();
+
+  requiedField:boolean = false;
+
+
+  fraccionArancelariaCatalog:boolean = true;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -120,14 +132,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @property {TablaMercanciasDatos} datoSeleccionado
    * Dato seleccionado de la tabla de mercancías recibido como entrada desde el componente padre.
    */
-  @Input() public datoSeleccionado!: TablaMercanciasDatos;
+  @Input() public datoSeleccionado!: TablaMercanciasDatos | undefined;
 
   /**
    * @event mercanciaSeleccionado
    * Evento emitido cuando el usuario selecciona o guarda una mercancía.
    */
-  @Output() mercanciaSeleccionado: EventEmitter<TablaMercanciasDatos> =
-    new EventEmitter<TablaMercanciasDatos>();
+  @Output() mercanciaSeleccionado = new EventEmitter<TablaMercanciasDatos>();
 
   /**
    * @event agregarMercanciaDatos
@@ -192,6 +203,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @description Catalog of commercial unit quantities used to populate the form.
    */
   public cantidadUmcDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} fraccionArancelariaDatos
+   * @description Catalog of tariff fractions used to populate the form.
+   */
+  public fraccionArancelariaDatos!: Catalogo[];
 
   /**
    * @property {boolean} paisDeOriginColapsable
@@ -401,6 +418,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
+  
   /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
@@ -444,6 +462,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       'cantidadUmcDatos',
       '/cofepris/cantidadUmcDatos.json'
     );
+     this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'fraccionArancelariaDatos',
+      '/cofepris/cantidadUmcDatos.json'
+    );
 
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
       this.idProcedimiento
@@ -468,6 +491,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * `agregar()` o `quitar()` según corresponda.
    */
   ngAfterViewInit(): void {
+    this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
     this.paisDeProcedenciaBotonsUno = [
       {
         btnNombre: 'Agregar todos',
@@ -542,6 +566,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Llama al método `crearMercanciaForm` para construir el formulario.
    */
   ngOnInit(): void {
+    this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
@@ -601,6 +626,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Objeto con la configuración de la fecha inicial del componente.
    */
   fechaDeFabricacioInput: InputFecha = FECHA_DE_FABRICACIO_PAGO;
+
+  fechaDeCaducidadInputMercanica: InputFecha = FECHA_DE_CADUCIDAD_MERCANICA;
 
   /**
    * @property {InputFecha} fechaDeCaducidadInput
@@ -739,6 +766,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Restablece los valores de los campos clave en el formulario.
    */
   modificarClave(): void {
+    
     if (!this.claveLista.length) {
       return;
     }
@@ -863,162 +891,152 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @returns void
    */
   crearMercanciaForm(): void {
-    const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
-    const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
-    const PAIS_DE_PROCEDENCIA =
-      this.obtenerValor('paisDeProcedenciaDatos') || [];
+  const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
+  const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
+  const PAIS_DE_PROCEDENCIA = this.obtenerValor('paisDeProcedenciaDatos') || [];
 
-    this.seleccionadasPaisDeOriginDatos = Array.isArray(PAIS_DE_ORIGEN)
-      ? PAIS_DE_ORIGEN
-      : typeof PAIS_DE_ORIGEN === 'string'
-      ? [PAIS_DE_ORIGEN]
-      : typeof PAIS_DE_ORIGEN === 'number'
-      ? [PAIS_DE_ORIGEN.toString()]
-      : [];
-    this.paisDeOriginColapsable =
-      this.seleccionadasPaisDeOriginDatos.length > 0;
+  // Convert arrays properly
+  this.seleccionadasPaisDeOriginDatos = this.convertToStringArray(PAIS_DE_ORIGEN);
+  this.paisDeOriginColapsable = this.seleccionadasPaisDeOriginDatos.length > 0;
 
-    this.seleccionadasUsoEspesificoDatos = Array.isArray(USO_ESPECIFICOS)
-      ? USO_ESPECIFICOS
-      : typeof USO_ESPECIFICOS === 'string'
-      ? [USO_ESPECIFICOS]
-      : [];
-    this.usoEspesificoColapsable =
-      this.seleccionadasUsoEspesificoDatos.length > 0;
+  this.seleccionadasUsoEspesificoDatos = this.convertToStringArray(USO_ESPECIFICOS);
+  this.usoEspesificoColapsable = this.seleccionadasUsoEspesificoDatos.length > 0;
 
-    this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(
-      PAIS_DE_PROCEDENCIA
-    )
-      ? PAIS_DE_PROCEDENCIA
-      : typeof PAIS_DE_PROCEDENCIA === 'string'
-      ? [PAIS_DE_PROCEDENCIA]
-      : [];
-    this.paisDeProcedenciaColapsable =
-      this.seleccionadasPaisDeProcedenciaDatos.length > 0;
+  this.seleccionadasPaisDeProcedenciaDatos = this.convertToStringArray(PAIS_DE_PROCEDENCIA);
+  this.paisDeProcedenciaColapsable = this.seleccionadasPaisDeProcedenciaDatos.length > 0;
 
-    this.mercanciaForm = this.fb.group({
-      clasificacionProducto: [
-        this.obtenerValor('clasificacionProducto'),
-        [Validators.required],
+  this.mercanciaForm = this.fb.group({
+    clasificacionProducto: [
+      this.obtenerValor('clasificacionProducto'),
+      [Validators.required],
+    ],
+    especificarClasificacionProducto: [
+      this.obtenerValor('especificarClasificacionProducto'),
+      [Validators.required],
+    ],
+    denominacionEspecificaProducto: [
+      this.obtenerValor('denominacionEspecificaProducto'),
+      [Validators.required],
+    ],
+    denominacionDistintiva: [
+      this.obtenerValor('denominacionDistintiva'),
+      [Validators.required],
+    ],
+    denominacionComun: [
+      this.obtenerValor('denominacionComun'),
+      [Validators.required],
+    ],
+    tipoProducto: [this.obtenerValor('tipoProducto'), [Validators.required]],
+    formaFarmaceutica: [
+      this.obtenerValor('formaFarmaceutica'),
+      [Validators.required],
+    ],
+    estadoFisico: [this.obtenerValor('estadoFisico'), [Validators.required]],
+    fraccionArancelaria: [
+      this.obtenerValor('fraccionArancelaria'),
+      [
+        Validators.required,
+        Validators.maxLength(8),
+        Validators.pattern(SOLO_REGEX_NUMEROS),
       ],
-      especificarClasificacionProducto: [
-        this.obtenerValor('especificarClasificacionProducto'),
-        [Validators.required],
+    ],
+    descripcionFraccion: [
+      {
+        value: this.obtenerValor('descripcionFraccion'),
+        disabled: this.elementosDeshabilitados.includes('descripcionFraccion'),
+      },
+      [Validators.required],
+    ],
+    cantidadUmtValor: [
+      this.obtenerValor('cantidadUmtValor'),
+      [
+        Validators.required,
+        Validators.pattern(REGEX_DECIMAL),
+        DatosMercanciaComponent.numeroConDecimalesValidator()
+        
       ],
-      denominacionEspecificaProducto: [
-        this.obtenerValor('denominacionEspecificaProducto'),
-        [Validators.required],
-      ],
-      denominacionDistintiva: [
-        this.obtenerValor('denominacionDistintiva'),
-        [Validators.required],
-      ],
-      denominacionComun: [
-        this.obtenerValor('denominacionComun'),
-        [Validators.required],
-      ],
-      tipoProducto: [this.obtenerValor('tipoProducto'), [Validators.required]],
-      formaFarmaceutica: [
-        this.obtenerValor('formaFarmaceutica'),
-        [Validators.required],
-      ],
-      estadoFisico: [this.obtenerValor('estadoFisico'), [Validators.required]],
-      fraccionArancelaria: [
-        this.obtenerValor('fraccionArancelaria'),
-        [
-          Validators.required,
-          Validators.maxLength(8),
-          Validators.pattern(SOLO_REGEX_NUMEROS),
-        ],
-      ],
-      descripcionFraccion: [
-        {
-          value: this.obtenerValor('descripcionFraccion'),
-          disabled: true,
-        },
-        [Validators.required],
-      ],
-      cantidadUmtValor: [
-        this.obtenerValor('cantidadUmtValor'),
-        [
-          Validators.required,
-          Validators.pattern(REGEX_DECIMAL),
-          this.numeroConDecimalesValidator() 
- 
-        ],
-      ],
-      cantidadUmt: [
-        {
-          value: this.obtenerValor('cantidadUmt'),
-          disabled: true,
-        },
-        [Validators.required],
-      ],
-      cantidadUmcValor: [
-        this.obtenerValor('cantidadUmcValor'),
-        [
-          Validators.required,
-          Validators.pattern(REGEX_DECIMAL),
-          this.numeroUMCDecimalesValidator()
-        ],
-      ],
-      cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
-      presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
-      numeroRegistroSanitario: [
-        this.obtenerValor('numeroRegistroSanitario'),
-        [Validators.required],
-      ],
-      fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
-      paisDeOriginDatos: [
-        PAIS_DE_ORIGEN,
-        [Validators.required, matrizRequerida],
-      ],
-      paisDeProcedenciaDatos: [
-        PAIS_DE_PROCEDENCIA,
-        [Validators.required, matrizRequerida],
-      ],
-      usoEspecifico: [USO_ESPECIFICOS, [Validators.required, matrizRequerida]],
-    });
+    ],
+    cantidadUmt: [
+      {
+        value: this.obtenerValor('cantidadUmt'),
+        disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
+      },
+      [Validators.required],
+    ],
+    cantidadUmcValor: [
+      this.obtenerValor('cantidadUmcValor'),
+      [
+        Validators.required,
+        Validators.pattern(REGEX_DECIMAL),
+        DatosMercanciaComponent.numeroUMCDecimalesValidator(),
 
-    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
-    if (this.detalleMercancia) {
-      CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
-    }
-    if (this.elementosNoValidos.length) {
-      for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
-        if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-          this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
-            emitEvent: false,
-          });
-        }
-      }
-    }
-    if (this.elementosAnadidos.length) {
-      for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
-        if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-          this.mercanciaForm.addControl(
-            NOMBRE_DEL_CONTROL,
-            new FormControl(
-              this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
-              { validators: [Validators.required] }
-            )
-          );
-        }
-      }
+      ],
+    ],
+    cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
+    presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
+    numeroRegistroSanitario: [
+      this.obtenerValor('numeroRegistroSanitario')
+    ],
+    fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
+    paisDeOriginDatos: [
+      this.seleccionadasPaisDeOriginDatos,
+      [Validators.required, matrizRequerida],
+    ],
+    paisDeProcedenciaDatos: [
+      this.seleccionadasPaisDeProcedenciaDatos,
+      [Validators.required, matrizRequerida],
+    ],
+    usoEspecifico: [
+      this.seleccionadasUsoEspesificoDatos,
+      [Validators.required, matrizRequerida]
+    ],
+  });
+
+  // Remove invalid controls
+  const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
+  if (this.detalleMercancia) {
+    CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
+  }
+  
+  for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
+    if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
+      this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
+        emitEvent: false,
+      });
     }
   }
 
-  numeroConDecimalesValidator(): ValidatorFn {
+  // Add dynamic controls
+  for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
+    if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
+      // Determine if this field is mandatory
+      const IS_MANDATORY = this.elementosMandatorios.includes(NOMBRE_DEL_CONTROL);
+      const VALIDATORS = IS_MANDATORY ? [Validators.required] : [];
+      
+      this.mercanciaForm.addControl(
+        NOMBRE_DEL_CONTROL,
+        new FormControl(
+          this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
+          { validators: VALIDATORS }
+        )
+      );
+    }
+  }
+}
+
+  static numeroConDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
+      const VALUE = control.value;
       
       // Skip validation if empty
-      if (!value) return null;
+      if (!VALUE) {
+        return null;
+      }
       
       // Regex pattern: up to 12 digits before decimal, up to 10 after
-      const pattern = /^\d{1,12}(\.\d{1,5})?$/;
+      const PATTERN = /^\d{1,12}(\.\d{1,5})?$/;
       
-      if (!pattern.test(value)) {
+      if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
       }
       
@@ -1026,36 +1044,56 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     };
   }
 
-  numeroUMCDecimalesValidator(): ValidatorFn {
+  static numeroUMCDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
+      const VALUE = control.value;
       
       // Skip validation if empty
-      if (!value) return null;
+      if (!VALUE) {
+        return null;
+      }
       
       // Regex pattern: up to 12 digits before decimal, up to 10 after
-      const pattern = /^\d{1,12}(\.\d{1,10})?$/;
+      const PATTERN = /^\d{1,12}(\.\d{1,10})?$/;
       
-      if (!pattern.test(value)) {
+      if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
       }
       
       return null;
     };
   }
-  /**
-   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
-   * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
-   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
-   */
-  public obtenerValor(
-    field: keyof TablaMercanciasDatos | keyof MercanciaForm
-  ): string | number | undefined | string[] {
-    return (
-      this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ??
-      this.mercanciaFormState[field as keyof MercanciaForm]
-    );
+  
+ /**
+ * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+ * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+ * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+ */
+public obtenerValor(
+  field: keyof TablaMercanciasDatos | keyof MercanciaForm
+): string | number | undefined | string[] {
+  return (
+    (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
+    (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])
+  );
+}
+
+
+public convertToStringArray(value: unknown): string[] {
+  if (!value){
+    return [];
   }
+  if (Array.isArray(value)){
+   return value;
+  } 
+  if (typeof value === 'string'){
+     return [value];
+  }
+  if (typeof value === 'number'){
+    return [value.toString()];
+  } 
+  return [];
+}
 
   /**
    * Valida si el campo de un formulario no contiene errores
@@ -1163,27 +1201,25 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       this.mercanciaForm.markAllAsTouched();
       return;
     }
-    const VALORTABLAMERCANCIA: TablaMercanciasDatos =
-      this.mercanciaForm.getRawValue();
-    VALORTABLAMERCANCIA.paisOrigen =
-      this.mercanciaForm.get('paisDeOriginDatos')?.value;
-    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get(
-      'paisDeProcedenciaDatos'
-    )?.value;
-    VALORTABLAMERCANCIA.usoEspecifico =
-      this.mercanciaForm.get('usoEspecifico')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaComercializacion =
-      this.mercanciaForm.get('cantidadUmcValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMC =
-      this.mercanciaForm.get('cantidadUmc')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaTarifa =
-      this.mercanciaForm.get('cantidadUmtValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMT =
-      this.mercanciaForm.get('cantidadUmt')?.value;
-    this.mercanciaForm.reset();
+     const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
+   // Set additional values
+    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
+    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
+    VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
+    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
+    VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
+    
+    // Emit the merchandise data
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
-    this.ubicaccion.back();
-  }
+    
+    // Reset form for next use
+    this.mercanciaForm.reset();
+    
+    // Close the modal
+    this.cerrarModal.emit();
+}
 
   /**
    * Restablece el formulario de mercancía a su estado inicial.
@@ -1206,7 +1242,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cerrarModal.emit();
   }
   /**
    * @method agregarMercancia

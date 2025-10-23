@@ -38,6 +38,7 @@ import {
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
@@ -282,6 +283,9 @@ export class AgregarFabricanteComponent
    */
   @Output() fabricanteSaved = new EventEmitter<void>();
 
+
+  public requestedFocus: boolean = true;
+
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
@@ -304,6 +308,7 @@ export class AgregarFabricanteComponent
    * Llama a la función para cargar los datos de los catálogos.
    */
   ngOnInit(): void {
+    this.requestedFocus = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento) ? false : true;
     this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
     this.chequeoValidacionAlGuardar =
@@ -451,6 +456,7 @@ export class AgregarFabricanteComponent
       ],
       rfc: [
         this.obtenerValor('rfc'),
+        [Validators.required]
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -470,7 +476,7 @@ export class AgregarFabricanteComponent
       ],
       razonSocial: [
         this.obtenerValor('razonSocial'),
-        []
+        [Validators.required]
       ],
       pais: [
         {
@@ -586,6 +592,12 @@ export class AgregarFabricanteComponent
    */
 private forzarDeshabilitarPais(): void {
   if (this.chequeoValidacionAlGuardar) {
+    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value ){
+  this.agregarFabricanteForm.patchValue({pais: 1});
+    }
+    else{
+      this.agregarFabricanteForm.patchValue({pais: -1});
+    }
     this.agregarFabricanteForm.get('pais')?.disable();
   }
   if (
@@ -941,6 +953,9 @@ guardarFabricante(): void {
   changeNacionalidad(): void {
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
     const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
+  this.agregarFabricanteForm.patchValue({pais: 1});
+}
     if (RFC_CONTROL) {
       RFC_CONTROL.setValidators([
         Validators.required,
@@ -1036,6 +1051,7 @@ changeTipoPersona(): void {
   if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
+  
   this.forzarDeshabilitarPais();
 }
 

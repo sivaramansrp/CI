@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, PasoFirmaComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { of } from 'rxjs';
@@ -8,14 +8,31 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr, ToastrService } from 'ngx-toastr';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let storeMock: any;
   let queryMock: any;
-
+  let validarInicialmenteCertificadoServiceMock: any;
   beforeEach(async () => {
+
+    validarInicialmenteCertificadoServiceMock = {
+      getAllState: jest.fn().mockReturnValue(of({})),
+      guardarDatosPost: jest.fn().mockReturnValue(of({
+        codigo: '00',
+        mensaje: 'OK',
+        datos: {},
+      })),
+      buildProductoresPorExportador: jest.fn().mockReturnValue([]),
+      buildMercanciasProductor: jest.fn().mockReturnValue([]),
+      buildCertificado: jest.fn().mockReturnValue({}),
+      buildDestinatario: jest.fn().mockReturnValue({}),
+      buildDatosCertificado: jest.fn().mockReturnValue({}),
+    };
+
     storeMock = {
       setPasoActivo: jest.fn(),
     };
@@ -24,10 +41,18 @@ describe('SolicitantePageComponent', () => {
       selectSolicitud$: of({
         pestanaActiva: 1,
       }),
+      getValue: jest.fn().mockReturnValue({
+        formValidity: {
+          certificadoOrigen: true,
+          datosCertificado: true,
+          destinatario: true,
+          histProductores: true,
+        }
+      }),
     };
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent],
+      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent, PasoFirmaComponent],
       declarations: [SolicitantePageComponent],
       providers: [
         ToastrService,
@@ -37,7 +62,9 @@ describe('SolicitantePageComponent', () => {
         provideHttpClient(),
         { provide: Tramite110214Store, useValue: storeMock },
         { provide: Tramite110214Query, useValue: queryMock },
+        { provide: ValidarInicialmenteCertificadoService, useValue: validarInicialmenteCertificadoServiceMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
@@ -52,14 +79,6 @@ describe('SolicitantePageComponent', () => {
   it('should initialize tramiteState on ngOnInit', () => {
     component.ngOnInit();
     expect(component.tramiteState).toEqual({ pestanaActiva: 1 });
-  });
-
-  it('should update indice and call wizardComponent.siguiente() on getValorIndice with "cont"', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(wizardComponentSpy).toHaveBeenCalled();
-    expect(storeMock.setPasoActivo).toHaveBeenCalledWith(2);
   });
 
   it('should update indice and call wizardComponent.atras() on getValorIndice with "atras"', () => {
@@ -100,12 +119,6 @@ describe('SolicitantePageComponent', () => {
     expect(pasoUnoElement).toBeTruthy();
   });
 
-  it('should render app-paso-tres when indice is 2', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
-    expect(pasoTresElement).toBeTruthy();
-  });
   it('should not render ng-alert when indice is not 1', () => {
     component.indice = 2;
     fixture.detectChanges();

@@ -11,6 +11,23 @@ import { Tramite110214Store } from '../tramites/tramite110214.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110214Query extends Query<Tramite110214State> {
+  /**
+   * Selecciona los países bloqueados.
+   * @returns {Observable<any>} - Observable con los países bloqueados.
+   */
+  selectPaisBloque$ = this.select((state) => {
+    return state.paisBloques;
+  });
+
+  /**
+   * Selecciona los países bloqueados.
+   * @returns {Observable<any>} - Observable con los países bloqueados.
+   */
+  selectPaisBloqu$ = this.select((state) => {
+    return state.paisBloqu;
+  });
+
+  
    /**
    * @descripcion
    *  Observable que selecciona los datos del formulario de certificado.
@@ -27,6 +44,14 @@ export class Tramite110214Query extends Query<Tramite110214State> {
     formulario$ = this.select((state) => {
       return state.formulario;
     });
+
+    /**
+   * Selecciona el formulario del certificado.
+   * @returns {Observable<any>} - Observable con el formulario del certificado.
+   */
+  formCertificado$ = this.select((state) => {    
+    return state.formCertificado;
+  });
 
     /**
    * Observable selector for retrieving the entire state.
