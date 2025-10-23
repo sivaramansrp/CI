@@ -12,10 +12,20 @@ import { Observable, catchError, map, throwError } from 'rxjs';
 })
 export class CadenaOriginal11201Service {
 
-/**
-   * URL del servidor donde se encuentra la API.
+
+  /**
+   * Base URL of the API server sourced from the environment configuration (ENVIRONMENT.API_HOST).
+   *
+   * Used as the root for building HTTP request URLs within this service.
+   * Expected to be a fully qualified URL including scheme (e.g. "https://api.example.com").
+   * When appending endpoint paths, take care to handle trailing slashes consistently.
+   *
+   * Example:
+   * const endpoint = `${urlServer}/v1/resource`;
+   *
+   * @readonly
+   * @see ENVIRONMENT.API_HOST
    */
-  // urlServer = ENVIRONMENT.API_HOST;
   urlServer = ENVIRONMENT.API_HOST;
 
   constructor(private http: HttpClient) { }

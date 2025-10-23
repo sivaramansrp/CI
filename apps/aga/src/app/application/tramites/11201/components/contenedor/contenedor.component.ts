@@ -55,14 +55,15 @@ import {
     FormsModule
 } from '@angular/forms';
 import {
-    HEADER_MAP_DATOS
+    HEADER_MAP_DATOS, SearchType
 } from '../../enum/solicitante.enum';
 import {
     Input
 } from '@angular/core';
 import {
     InputFecha,
-    formatFecha
+    formatFecha,
+    convertDate
 } from '@libs/shared/data-access-user/src';
 import {
     InputFechaComponent,
@@ -244,6 +245,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     mostrarMensaje: boolean = false;
 
     mensajeCamposObligatorios: string = '* Campos obligatorios';
+
+    
 
 
 
@@ -667,9 +670,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
      * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
      * cuando el componente se destruye, evitando fugas de memoria.
      *
-     * @example
-     * // Llamar al método para cargar los datos de la tabla
-     * this.loadDatosTablaData();
      */
     loadDatosTablaData(): void {
         this.datosTramiteService
@@ -889,7 +889,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             formData.append('archivo', FILE);
             formData.append('rfc', this.rfc_original);
             formData.append('aduana', this.solicitudForm.get('aduanaMenuDesplegable')?.value);
-            formData.append('fingreso', this.convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
+            formData.append('fingreso', convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
 
             this.datosTramiteService
                 .fileUpload(formData)
@@ -1064,7 +1064,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         const API_PAYLOAD = {
             "rfc": this.rfc_original,
             "aduana": this.solicitudForm.get('aduana')?.value,
-            "fecha_ingreso": this.convertDate(this.solicitudForm.get('fechaIngreso')?.value),
+            "fecha_ingreso": convertDate(this.solicitudForm.get('fechaIngreso')?.value),
             "iniciales_contenedor": this.solicitudForm.get('inicialesContenedor')?.value,
             "numero_contenedor": this.solicitudForm.get('numeroContenedor')?.value,
             "digito_verificador": this.solicitudForm.get('digitoDeControl')?.value,
@@ -1116,22 +1116,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             });
     }
 
-    /**
-     * Converts a date string from the format 'DD/MM/YYYY' to 'YYYY-MM-DD 00:00:00'.
-     *
-     * @param dateString - The date string in 'DD/MM/YYYY' format to be converted.
-     * @returns The formatted date string in 'YYYY-MM-DD 00:00:00' format.
-     */
-    convertDate(dateString: string): string {
-        if (!dateString || typeof dateString !== 'string') {
-            return '';
-        }
-        const parsedDate = moment(dateString, 'DD/MM/YYYY', true);
-        if (!parsedDate.isValid()) {
-            return '';
-        }
-        return parsedDate.format('YYYY-MM-DD 00:00:00');
-    }
+   
 
     /**
      * Clears the validation state of all form controls to remove inline validation errors.
@@ -1338,33 +1323,68 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) :
             false;
     }
+    /**
+     * Guarda la solicitud actual de trámite 11201.
+     *
+     * Selecciona la fuente de datos de contenedores según el valor del campo
+     * "tipoBusqueda" del formulario (puede ser 'Contenedor', 'Archivo CSV' o
+     * 'No. de Manifiesto') y normaliza cada entrada:
+     *  - convierte `existe_en_vucem` de 'Sí'/'No' a booleano,
+     *  - concatena " 00:00:00" a los campos `vigencia` y `fecha_inicio`.
+     *
+     * Construye un payload con:
+     *  - id_solcitud: tomado de `this.solicitud11201State.idSolicitud` o `null`,
+     *  - solicitante: objeto con `rfc` tomado de `this.rfc_original` y demás campos
+     *    de metadatos del solicitante,
+     *  - contenedores: arreglo normalizado según la búsqueda seleccionada.
+     *
+     * Envía el payload a `datosTramiteService.solicitudGuardar(...)` y se suscribe
+     * al observable usando `takeUntil(this.destroyNotifier$)` para manejar el
+     * ciclo de vida del componente. Si la respuesta tiene `codigo === '00'`:
+     *  - actualiza el estado del store con el id de solicitud recibido
+     *    (`this.tramite11201Store.setIdSolicitud(...)`) y
+     *  - invoca `this.continuar()` para avanzar el flujo del trámite.
+     *
+     * Observaciones y efectos secundarios:
+     *  - Modifica el estado del store y puede provocar navegación o cambios en UI
+     *    mediante `continuar()`.
+     *  - No devuelve valor (void). Los errores de la petición deben manejarse
+     *    externamente o ampliando la suscripción para capturar errores.
+     *
+     * @remarks
+     * Este método depende de:
+     *  - `this.solicitudForm` (campo 'tipoBusqueda'),
+     *  - las fuentes de datos `this.datosDelContenedor`, `this.datosTabla`,
+     *    `this.datosTablaManifest`,
+     *  - `this.rfc_original`, `this.solicitud11201State`,
+     *  - `this.datosTramiteService`, `this.tramite11201Store` y `this.continuar()`.
+     *
+     * @returns void
+     */
 
     solicitudGuardar(): void {
-        const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
+        const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value as SearchType;
+        const normalize = (item: any) => ({
+            ...item,
+            existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+            vigencia: item.vigencia ? `${item.vigencia} 00:00:00` : item.vigencia,
+            fecha_inicio: item.fecha_inicio ? `${item.fecha_inicio} 00:00:00` : item.fecha_inicio
+        });
+
         let contenedores: any[] = [];
-        if (TIPO_BUSQUEDA === 'Contenedor') {
-            contenedores = this.datosDelContenedor.map(item => ({
-                ...item,
-                existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
-                vigencia: item.vigencia + ' 00:00:00',
-                fecha_inicio: item.fecha_inicio + ' 00:00:00'
-            }));
-        }
-        if (TIPO_BUSQUEDA === 'Archivo CSV') {
-            contenedores = this.datosTabla.map(item => ({
-                ...item,
-                existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
-                vigencia: item.vigencia + ' 00:00:00',
-                fecha_inicio: item.fecha_inicio + ' 00:00:00'
-            }));
-        }
-        if (TIPO_BUSQUEDA === 'No. de Manifiesto') {
-            contenedores = this.datosTablaManifest.map(item => ({
-                ...item,
-                existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
-                vigencia: item.vigencia + ' 00:00:00',
-                fecha_inicio: item.fecha_inicio + ' 00:00:00'
-            }));
+
+        switch (TIPO_BUSQUEDA) {
+            case SearchType.Contenedor:
+                contenedores = this.datosDelContenedor.map(normalize);
+                break;
+            case SearchType.ArchivoCsv:
+                contenedores = this.datosTabla.map(normalize);
+                break;
+            case SearchType.NoManifiesto:
+                contenedores = this.datosTablaManifest.map(normalize);
+                break;
+            default:
+                contenedores = [];
         }
 
         const PAYLOAD = {

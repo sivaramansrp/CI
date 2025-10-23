@@ -66,3 +66,18 @@ export const HEADER_MAP_DATOS: { [key: string]: string } = {
       'Id solicitud': 'idSolicitud',
       'Fecha inicio': 'fechaInicio',
     };
+
+  /**
+   * Specifies the available search types for solicitantes (requesters) within the tramites flow.
+   *
+   * - Contenedor: Perform a search by container identifier.
+   * - ArchivoCsv: Perform a search using an uploaded CSV file.
+   * - NoManifiesto: Perform a search by manifest number.
+   *
+   * Use this enum to indicate which search mode the UI or service should execute.
+   */
+  export enum SearchType {
+    Contenedor = 'Contenedor',
+    ArchivoCsv = 'Archivo CSV',
+    NoManifiesto = 'No. de Manifiesto'
+  }   

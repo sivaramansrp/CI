@@ -46,11 +46,40 @@ export interface Productor {
     pais: string;
 }
 
+/**
+ * Represents a federal representation using codes for the federative entity and the administrative unit.
+ *
+ * This interface encapsulates the identifiers required to reference a federative entity (state)
+ * and a specific administrative unit within that entity.
+ *
+ * @property cve_entidad_federativa - The code identifying the federative entity (state). Represented as a string.
+ * @property cve_unidad_administrativa - The code identifying the administrative unit within the federative entity. Represented as a string.
+ */
 export interface RepresentacionFederal {
     cve_entidad_federativa: string;
     cve_unidad_administrativa: string;
 }
 
+/**
+ * Describes a "solicitante" (requester) included in a trámite request.
+ *
+ * @remarks
+ * - `rfc` is the RFC (Registro Federal de Contribuyentes) identifier for the requester.
+ * - `nombre` is the full name (for a person) or business name (for a legal entity).
+ * - `es_persona_moral` indicates whether the requester is a legal entity (true) or an individual (false).
+ * - `certificado_serial_number` is the serial number of the digital certificate associated with the requester.
+ *
+ * @example
+ * // Example usage
+ * // const solicitante: Solicitante = {
+ * //   rfc: "ABC123456T78",
+ * //   nombre: "Empresa Ejemplo S.A. de C.V.",
+ * //   es_persona_moral: true,
+ * //   certificado_serial_number: "01AB23CD45EF6789"
+ * // };
+ *
+ * @public
+ */
 export interface Solicitante {
     rfc: string;
     nombre: string;

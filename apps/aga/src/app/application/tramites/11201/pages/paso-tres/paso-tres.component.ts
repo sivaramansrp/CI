@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { FirmaElectronicaComponent ,formatFecha } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { Router } from '@angular/router';
@@ -17,7 +17,6 @@ import { Solicitud11201State } from '../../estados/tramites/tramite11201.store';
 import { Tramite11201Query } from '../../estados/queries/tramite11201.query';
 import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
 import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store';
-
 
 
 /**
@@ -181,7 +180,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
       },
       error: (error) => {
-        console.error('Error al iniciar trámite:', error);
         const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
@@ -221,7 +219,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    */
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
-      console.error('Faltan datos para completar la firma');
       this.nuevaNotificacion = {
         tipoNotificacion: 'toastr',
         categoria: CategoriaMensaje.ERROR,
@@ -247,10 +244,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
-            fecha_firma: PasoTresComponent.formatFecha(new Date()),
+            fecha_firma: formatFecha(new Date()),
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
-            fecha_fin_vigencia: PasoTresComponent.formatFecha(this.datosFirmaReales.fechaFin),
+            fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 
@@ -285,7 +282,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
           if (!this.nuevaNotificacion) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -303,27 +299,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
-
-  /**
-   * Formatea una fecha a un string en el formato 'YYYY-MM-DD HH:mm:ss'.
-   * @param fecha - Fecha a formatear, puede ser un string o un objeto Date.
-   * @returns String formateado de la fecha.
-   */
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
-  }
-
   /**
    * Método para obtener la cadena original del trámite.
    * Este método se encarga de llamar al servicio correspondiente para obtener la cadena original.

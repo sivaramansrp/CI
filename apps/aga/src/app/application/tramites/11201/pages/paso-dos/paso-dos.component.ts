@@ -127,8 +127,39 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   public procesoModal!: string;
 
+  /**
+   * Event emitted when the user cancels the current step of the workflow.
+   *
+   * Listeners should use this to perform cleanup, undo any temporary changes,
+   * or navigate back to the previous screen. The event carries no payload.
+   *
+   * @example
+   * // Parent component
+   * childComponent.cancelEvent.subscribe(() => {
+   *   // handle cancellation (e.g., navigate away or reset state)
+   * });
+   *
+   * @public
+   */
   @Output() cancelEvent = new EventEmitter<void>();
 
+
+
+
+  /**
+   * Evento emitido cuando el usuario solicita continuar al siguiente paso del flujo.
+   *
+   * Emite sin payload (void). El componente padre puede suscribirse a este evento
+   * para ejecutar lógica de navegación, validaciones adicionales o persistencia
+   * antes de avanzar.
+   *
+   * @example
+   * <app-paso-dos (continuarEvento)="onContinuar()"></app-paso-dos>
+   *
+   * @remarks
+   * Se emite típicamente al pulsar el botón "Continuar". No realiza ninguna acción
+   * por sí mismo; la responsabilidad de manejar el avance recae en el componente padre.
+   */
   @Output() continuarEvento = new EventEmitter<void>();
 
 
@@ -185,9 +216,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       }),
     });
 
-
-    // Llama al método para actualizar el campo 'monto'
-    // this.campoDeDormularioDeActualizacion();
     this.getMontoConstanciaITC();
   }
 
@@ -214,6 +242,30 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     return this.formSolicitud?.get('pagoDeDerechos') as FormGroup;
   }
 
+  /**
+   * Fetches the "monto constancia ITC" from the datosTramiteService and updates the form accordingly.
+   *
+   * Subscribes to datosTramiteService.getMontoConstanciaITC() and automatically unsubscribes when
+   * this.destroyNotifier$ emits (uses takeUntil) to prevent memory leaks.
+   *
+   * Behavior:
+   * - If respuesta?.codigo === '00':
+   *   - Disables the form control at 'pagoDeDerechos.montoPagar' (if present).
+   *   - Sets that control's value to respuesta.datos.
+   * - Otherwise:
+   *   - Shows an error toast with respuesta.error.
+   *
+   * Side effects:
+   * - Mutates the form (disables and sets value of a control).
+   * - Emits a toast on failure.
+   *
+   * Expectations:
+   * - The service response is expected to have a shape containing at least 'codigo' and either
+   *   'datos' (on success) or 'error' (on failure).
+   * - The form control access uses optional chaining, so absence of the control is safely ignored.
+   *
+   * @returns void
+   */
   getMontoConstanciaITC(): void {
     this.datosTramiteService.getMontoConstanciaITC()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -349,13 +401,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
               takeUntil(this.destroyNotifier$)
             )
             .subscribe();
-
-          // this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
-          // this.montoPagadoLineas = this.datosTablaPagos.reduce(
-          //   (total, item) => total + item.monto,
-          //   0
-          // );
-
           this.procesoModal = '';
         }
         break;
@@ -373,17 +418,54 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     this.procesoModal = '';
   }
 
+  /**
+   * Emits the component's cancelEvent to notify parent components or listeners that the current
+   * operation should be cancelled.
+   *
+   * @public
+   * @remarks
+   * This method performs no additional logic or state changes; it simply emits the event
+   * synchronously. Listeners should handle any cleanup or navigation resulting from the cancellation.
+   *
+   * @returns void
+   */
   cancelar(): void {
     this.cancelEvent.emit();
   }
 
+  /**
+   * Emite el EventEmitter `continuarEvento` para notificar a los suscriptores
+   * que se debe continuar al siguiente paso.
+   *
+   * Dispara los manejadores registrados en `continuarEvento` y no devuelve valor.
+   *
+   * @remarks
+   * Invocar desde la interfaz (por ejemplo, al pulsar un botón) para delegar en el
+   * componente padre la lógica de navegación o la continuación del flujo.
+   *
+   * @returns void
+   */
   continuar(): void {
     this.continuarEvento.emit();
   }
 
+  /**
+   * Persists the current payments table to the backend and advances the flow on success.
+   *
+   * Constructs a request payload from `this.datosTablaPagos` (mapping each row to
+   * `{ linea_captura, monto }`), obtains the solicitud id from `this.solicitudState.idSolicitud`
+   * and calls `this.datosTramiteService.guardarPagosSolicitud(PAYLOAD, idSolicitud)`.
+   * The subscription is tied to `this.destroyNotifier$` to ensure automatic unsubscription.
+   * If the response contains `codigo === '00'`, the component's `continuar()` method is invoked.
+   *
+   * Remarks:
+   * - No explicit error handling or user feedback is implemented here; consider adding
+   *   error and completion handlers to show messages or refresh UI state as appropriate.
+   * - Side effects: network request, potential navigation/flow continuation via `continuar()`.
+   *
+   * @returns void
+   */
   pagosGuardar(): void {
-    console.log('Guardar pagos',this.datosTablaPagos);
-
     const PAYLOAD = {
           "pagos": this.datosTablaPagos.map(pago => ({
             linea_captura: pago.lineaCaptura,

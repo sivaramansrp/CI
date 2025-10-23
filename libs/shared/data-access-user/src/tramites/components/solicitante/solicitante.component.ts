@@ -141,7 +141,6 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-          // this.location.back();
         }
       },
       error: (error) => {
@@ -155,7 +154,6 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
           txtBtnAceptar: '',
           txtBtnCancelar: '',
         };
-        // this.location.back();
       }
     });
   }
@@ -411,10 +409,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
             if (response) {
               this.datosGenerales = response;
               this.iniciar();
-
-
               const IDENTIFICACION = response.datos.identificacion;
-
               this.solicitanteStore.setRfc(response.datos.rfc_original ?? '');
               this.solicitanteStore.setNombre(IDENTIFICACION.nombre ?? '');
               this.solicitanteStore.setPaterno(IDENTIFICACION.ap_paterno ?? '');
