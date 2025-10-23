@@ -72,8 +72,12 @@
     </div>
   </form>
   
-  <!-- Notification component -->
+  <!-- Notification component with callback handling -->
   @if(nuevaNotificacion) {
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+    <lib-notificaciones 
+      [notificacionInput]="nuevaNotificacion"
+      (onAccept)="cerrarNotificacion()"
+      (onClose)="cerrarNotificacion()">
+    </lib-notificaciones>
   }
 </div>

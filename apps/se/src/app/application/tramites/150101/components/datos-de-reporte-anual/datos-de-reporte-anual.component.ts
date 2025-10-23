@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -49,14 +49,14 @@ export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
    * @descripcion
    * Mensaje de alerta que se muestra al usuario.
    */
-    mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
+  mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
 
   /**
  * @public
  * @property {Notificacion} nuevaNotificacion
  * @description Representa una nueva notificación que se utilizará en el componente.
  */
-public nuevaNotificacion: Notificacion | null = null;
+  public nuevaNotificacion: Notificacion | null = null;
 
   /**
    * @constructor
@@ -134,9 +134,8 @@ public nuevaNotificacion: Notificacion | null = null;
         [Validators.maxLength(16)],
       ],
     });
-    
 
-    this.solicitud150101Query.seleccionarSolicitud$
+this.solicitud150101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud150101State) => {
@@ -147,15 +146,12 @@ public nuevaNotificacion: Notificacion | null = null;
             ventasTotales: this.solicitud150101State.ventasTotales,
             totalExportaciones: this.solicitud150101State.totalExportaciones,
             totalImportaciones: this.solicitud150101State.totalImportaciones,
-        })
+          })
         })
       )
       .subscribe();
 
-   
-
-    
-  }
+}
   /**
    * `
    * @lifecycle
@@ -165,18 +161,18 @@ public nuevaNotificacion: Notificacion | null = null;
    * @return {void}
    * */
   ngOnInit(): void {
-  this.formReporteAnnual.get('ventasTotales')?.valueChanges
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(() => this.calcularReporteAnnual());
+    this.formReporteAnnual.get('ventasTotales')?.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => this.calcularReporteAnnual());
 
-  this.formReporteAnnual.get('totalExportaciones')?.valueChanges
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(() => this.calcularReporteAnnual());
+    this.formReporteAnnual.get('totalExportaciones')?.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => this.calcularReporteAnnual());
 
-  this.formReporteAnnual.get('totalImportaciones')?.valueChanges
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(() => this.calcularReporteAnnual());
-}
+    this.formReporteAnnual.get('totalImportaciones')?.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => this.calcularReporteAnnual());
+  }
 
 
   /**
@@ -204,15 +200,76 @@ public nuevaNotificacion: Notificacion | null = null;
    */
   obtenerVentasTotales(evento: Event): void {
     const VALUE = (evento.target as HTMLInputElement).value;
-    
+
     // Validar que sea un entero antes de procesar
     if (!this.validarEntero(evento, 'Ventas totales')) {
       return;
     }
-    
+
     this.solicitud150101Store.actualizarVentasTotales(VALUE);
     this.calcularReporteAnnual();
-    this.diferenciaTotal();
+    
+    // Show notification that stays until user clicks accept
+    this.mostrarNotificacion({
+      tipoNotificacion: 'info',
+      categoria: 'info',
+      modo: 'action',
+      titulo: 'Información',
+      mensaje: 'Su mensaje de notificación aquí',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+
+  this.verificarDiferenciaTotal();
+  }
+
+  /**
+   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
+   * Si es así, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  diferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    } else {
+      this.nuevaNotificacion = null;
+    }
+  }
+
+  /**
+   * @description Nueva función que verifica la diferencia total sin sobrescribir notificaciones existentes
+   * @returns {void}
+   */
+  private verificarDiferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+if (VENTAS_TOTALES < TOTAL_EXPORTACIONES && !this.nuevaNotificacion) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    }
+   
   }
 
   /**
@@ -233,32 +290,6 @@ public nuevaNotificacion: Notificacion | null = null;
     this.solicitud150101Store.actualizarSaldo(TOTAL_VALUE);
     this.calcularReporteAnnual();
   }
-  
-  /**
-   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
-   * Si es así, muestra una notificación de alerta.
-   * @returns {void}
-   */
-  diferenciaTotal(): void {
-    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
-    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
-    
-    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
-      this.mostrarNotificacion({
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: this.mensajeDeAlerta,
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      });
-    } else {
-      this.nuevaNotificacion = null;
-    }
-  }
 
   /**
    * @description Limita la longitud del valor del input a un máximo especificado.
@@ -271,12 +302,12 @@ public nuevaNotificacion: Notificacion | null = null;
     if (INPUT.value.length > maxLength) {
       INPUT.value = INPUT.value.slice(0, maxLength);
     }
-    
+
     // Validar que sea un entero
     if (!this.validarEntero(event, 'Total exportaciones')) {
       return;
     }
-    
+
     this.obtenerTotalExportaciones(event);
     this.diferenciaTotal();
   }
@@ -312,13 +343,13 @@ public nuevaNotificacion: Notificacion | null = null;
     );
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150101Store.actualizarSaldo(TOTAL_SALDO);
-     
-  this.solicitud150101Store.actualizarSaldo(TOTAL_SALDO);
-  this.solicitud150101Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
-  this.formReporteAnnual.patchValue({
-    saldo: TOTAL_SALDO,
-    porcentajeExportacion: TOTAL_PORCENTAJE_VALUE
-  }, { emitEvent: false }); 
+
+    this.solicitud150101Store.actualizarSaldo(TOTAL_SALDO);
+    this.solicitud150101Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
+    this.formReporteAnnual.patchValue({
+      saldo: TOTAL_SALDO,
+      porcentajeExportacion: TOTAL_PORCENTAJE_VALUE
+    }, { emitEvent: false });
   }
 
   /**
@@ -331,12 +362,12 @@ public nuevaNotificacion: Notificacion | null = null;
   validarEntero(event: Event, fieldName: string): boolean {
     const INPUT = event.target as HTMLInputElement;
     const VALUE = INPUT.value.trim();
-    
+
     // Si está vacío, permitir (será validado por required)
     if (!VALUE) {
       return true;
     }
-    
+
     // Verificar si el valor es un número entero válido
     if (isNaN(Number(VALUE)) || !Number.isInteger(Number(VALUE)) || Number(VALUE) < 0) {
       // Mostrar notificación de error
@@ -344,14 +375,14 @@ public nuevaNotificacion: Notificacion | null = null;
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error de validación',
+        titulo: '',
         mensaje: `El campo ${fieldName} debe contener solo números enteros positivos.`,
         cerrar: false,
-        tiempoDeEspera: 3000,
+        tiempoDeEspera: 7000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       });
-      
+
       // Establecer el valor a 0
       INPUT.value = '0';
       const CONTROL_NAME = this.getFormControlName(fieldName);
@@ -359,15 +390,15 @@ public nuevaNotificacion: Notificacion | null = null;
         this.formReporteAnnual.get(CONTROL_NAME)?.setValue('0');
         this.formReporteAnnual.get(CONTROL_NAME)?.markAsTouched();
       }
-      
+
       // Recalcular el reporte
       setTimeout(() => {
         this.calcularReporteAnnual();
       }, 100);
-      
+
       return false;
     }
-    
+
     return true;
   }
 
@@ -378,9 +409,8 @@ public nuevaNotificacion: Notificacion | null = null;
    */
   private mostrarNotificacion(notificacion: Notificacion): void {
     this.nuevaNotificacion = notificacion;
-    
-    // Limpiar la notificación después del tiempo especificado
-    if (notificacion.tiempoDeEspera) {
+
+ if (notificacion.tiempoDeEspera) {
       setTimeout(() => {
         this.nuevaNotificacion = null;
       }, notificacion.tiempoDeEspera);
@@ -402,6 +432,15 @@ public nuevaNotificacion: Notificacion | null = null;
       default:
         return '';
     }
+  }
+
+  /**
+   * @method cerrarNotificacion
+   * @description Cierra la notificación actual
+   * @returns {void}
+   */
+  cerrarNotificacion(): void {
+    this.nuevaNotificacion = null;
   }
 
   /**

@@ -56,14 +56,14 @@ import { ValidationErrors } from '@angular/forms';
 function integerValidator(control: AbstractControl): ValidationErrors | null {
   const VALUE = control.value;
   if (VALUE === null || VALUE === '' || VALUE === undefined) {
-    return null; 
+    return null;
   }
-  
+
   const NUMVALUE = Number(VALUE);
   if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
     return { 'notInteger': { value: control.value } };
   }
-  
+
   return null;
 }
 
@@ -103,13 +103,13 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
 
   public fechaFin: InputFecha = FECHA_FIN;
-   /**
-       * @public
-       * @property {Notificacion} nuevaNotificacion
-       * @description Representa una nueva notificación que se utilizará en el componente.
-       * @command Este campo debe ser inicializado antes de su uso.
-       */
-    public nuevaNotificacion!: Notificacion;
+  /**
+      * @public
+      * @property {Notificacion} nuevaNotificacion
+      * @description Representa una nueva notificación que se utilizará en el componente.
+      * @command Este campo debe ser inicializado antes de su uso.
+      */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Evento que se emite al seleccionar una fila de la tabla.
@@ -280,7 +280,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
   validateIntegerField(fieldName: string, value: string | number | null | undefined, fieldLabel: string): void {
     const CONTROL = this.periodoReporteAnual.get(fieldName);
-    
+
     if (value !== null && value !== '' && value !== undefined) {
       const NUMVALUE = Number(value);
       if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
