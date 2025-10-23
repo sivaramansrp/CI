@@ -23,25 +23,6 @@ class MockTramite110212Query {
 @Injectable()
 class MockValidacionPosterioriService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('SolicitantePageComponent', () => {
   let fixture;
@@ -51,9 +32,7 @@ describe('SolicitantePageComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        SolicitantePageComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        SolicitantePageComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -90,9 +69,6 @@ describe('SolicitantePageComponent', () => {
       accion: {},
       valor: {}
     });
-    // expect(component.validarTodosFormulariosPasoUno).toHaveBeenCalled();
-    // expect(component.obtenerDatosDelStore).toHaveBeenCalled();
-    // expect(component.pasoNavegarPor).toHaveBeenCalled();
   });
 
   it('should run #obtenerDatosDelStore()', async () => {
@@ -100,8 +76,6 @@ describe('SolicitantePageComponent', () => {
     component.validacionPosterioriService.getAllState = jest.fn().mockReturnValue(observableOf({}));
     component.guardar = jest.fn();
     component.obtenerDatosDelStore();
-    // expect(component.validacionPosterioriService.getAllState).toHaveBeenCalled();
-    // expect(component.guardar).toHaveBeenCalled();
   });
 
   it('should run #guardar()', async () => {
@@ -116,12 +90,6 @@ describe('SolicitantePageComponent', () => {
     component.store.setIdSolicitud = jest.fn();
     component.pasoNavegarPor = jest.fn();
     component.guardar({});
-    // expect(component.validacionPosterioriService.buildCertificado).toHaveBeenCalled();
-    // expect(component.validacionPosterioriService.buildDatosCertificado).toHaveBeenCalled();
-    // expect(component.validacionPosterioriService.buildDestinatario).toHaveBeenCalled();
-    // expect(component.validacionPosterioriService.guardarDatosPost).toHaveBeenCalled();
-    // expect(component.store.setIdSolicitud).toHaveBeenCalled();
-    // expect(component.pasoNavegarPor).toHaveBeenCalled();
   });
 
   it('should run #pasoNavegarPor()', async () => {
@@ -134,15 +102,12 @@ describe('SolicitantePageComponent', () => {
       valor: {},
       accion: {}
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('should run #validarTodosFormulariosPasoUno()', async () => {
     component.pasoUnoComponent = component.pasoUnoComponent || {};
     component.pasoUnoComponent.validarFormularios = jest.fn();
     component.validarTodosFormulariosPasoUno();
-    // expect(component.pasoUnoComponent.validarFormularios).toHaveBeenCalled();
   });
 
   it('should run #alCambiarPestana()', async () => {
@@ -156,8 +121,6 @@ describe('SolicitantePageComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

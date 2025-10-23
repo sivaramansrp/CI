@@ -376,7 +376,7 @@ this.peruCertificadoService
    * @param valida - El estado de validación del formulario.
    */
   setFormValida(valida: boolean): void {
-    // this.store.setFormValida({ certificado: valida });
+    this.store.setFormValida({ certificado: valida });
   }
 
   /**
