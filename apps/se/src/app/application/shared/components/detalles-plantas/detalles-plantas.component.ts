@@ -12,9 +12,10 @@ import {
 } from '@angular/forms';
 
 import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
+import { Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
 import { Location } from '@angular/common';
+import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
 @Component({
   selector: 'app-detalles-plantas',
   standalone: true,
@@ -23,6 +24,7 @@ import { Location } from '@angular/common';
     TituloComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './detalles-plantas.component.html',
   styleUrl: './detalles-plantas.component.scss',
@@ -50,12 +52,15 @@ export class DetallesPlantasComponent {
   @Output() guadarEvent = new EventEmitter();
 
   /**
+   * Notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
    * Formulario para los datos del subcontratista.
    * @property {FormGroup} formularioDatosPlantas
    */
-
   formularioDatosPlantas!: FormGroup;
-
   /**
    * Catálogo de opciones de sí/no.
    * @property {any} catalogoSiNo
@@ -82,7 +87,7 @@ export class DetallesPlantasComponent {
    * Constructor de la clase ComplementarPlantaComponent.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
-  constructor(private fb: FormBuilder,private ubicaccion: Location,) {
+  constructor(private fb: FormBuilder, private ubicaccion: Location,) {
     this.inicializarFormularioDatosPlantas();
   }
 
@@ -92,8 +97,8 @@ export class DetallesPlantasComponent {
    */
   inicializarFormularioDatosPlantas(): void {
     this.formularioDatosPlantas = this.fb.group({
-      permaneceMercancia: [1, Validators.required],
-      tipoContribuyente: [1, Validators.required],
+      permaneceMercancia: [Validators.required],
+      tipoContribuyente: [Validators.required],
       opinionSAT: [{ value: 1, disabled: true }, Validators.required],
       fechaOpinion: ['12/03/2025', Validators.required],
     });
@@ -134,10 +139,10 @@ export class DetallesPlantasComponent {
     }
   }
 
-   /**
-   * Vuelve a la ubicación anterior en el historial del navegador.
-   * @returns {void}
-   */
+  /**
+  * Vuelve a la ubicación anterior en el historial del navegador.
+  * @returns {void}
+  */
   regrasar(): void {
     this.ubicaccion.back();
   }
@@ -147,7 +152,8 @@ export class DetallesPlantasComponent {
    *
    * Typically used to signal that the user has requested to save the current state or data.
    */
-  guardar(): void{
+  guardar(): void {
     this.guadarEvent.emit();
   }
 }
+

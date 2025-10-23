@@ -1,29 +1,9 @@
-import {
-  BsDatepickerConfig,
-  BsDatepickerModule,
-} from 'ngx-bootstrap/datepicker';
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  ConfiguracionColumna,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  ProgramasReporte,
-  ReporteFechas,
-} from '../../models/programas-reporte.model';
-import {
-  Solicitud150102State,
-  Solicitud150102Store,
-} from '../../estados/solicitud150102.store';
+import { ProgramasReporte, ReporteFechas } from '../../models/programas-reporte.model';
+import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from "@ng-mf/data-access-user";

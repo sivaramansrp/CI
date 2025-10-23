@@ -48,6 +48,7 @@ import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 import { ModeloConfig, ServiceConfig } from '../shared/models/service-config.model';
+import { IniciarAutorizarDictamen } from '../core/models/autorizar-dictamen/request/iniciar-autorizar-dictamen.model';
 
 @Component({
   selector: 'app-autorizar-dictamen',
@@ -1332,7 +1333,12 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   iniciarDictamenAutorizar(): void {
 
-    this.autorizarDictamenService.getIniciarDictamen(this.tramite, this.guardarDatos.folioTramite).subscribe({
+    const PAYLOAD: IniciarAutorizarDictamen = {
+      id_accion: this.guardarDatos.action_id,
+      cve_usuario: this.guardarDatos.current_user,
+    };
+
+    this.autorizarDictamenService.postIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
           this.dataAutorizarDictamen = resp.datos ?? {} as IniciarAutorizacionResponse;
