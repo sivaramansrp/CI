@@ -1570,4 +1570,29 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       disponiblesDatos,
     }));
   }
+    /**
+   * @method setBloque
+   * @description
+   * Actualiza los bloques de países en el almacén.
+   * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
+   */
+  setBloque(paisBloques: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      paisBloques,
+    }));
+  }
+    /**
+   * @method setEstado
+   * @description
+   * Actualiza el estado seleccionado en el almacén.
+   * @param estado Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
+   */
+  setEstado(estado: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      estado,
+    }));
+  }
+
 }

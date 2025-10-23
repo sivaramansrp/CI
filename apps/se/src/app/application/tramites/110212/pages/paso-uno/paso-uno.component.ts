@@ -11,17 +11,14 @@ import {
   ConsultaioState,
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
+import { Subject,map,takeUntil } from 'rxjs';
+import { Tramite110212State,Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { CertificadoOrigenComponent } from "../../../110212/components/certificado-origen/certificado-origen.component";
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioTramiteComponent } from '../../components/destinatario/destinatario.component';
-import { Subject } from 'rxjs';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
-import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
-import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el paso uno del trámite.

@@ -1,17 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { DatosPasos, JSONResponse, ListaPasosWizard, doDeepCopy, esValidObject,getValidDatos } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT,PASOS,TEXTOS } from '../../constants/validacion-posteriori.enum';
 import { Subject, map, take, takeUntil } from 'rxjs';
-import { AccionBoton } from '../../models/validacion-posteriori.model';
-import { ERROR_FORMA_ALERT } from '../../constants/validacion-posteriori.enum';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/validacion-posteriori.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TEXTOS } from '../../constants/validacion-posteriori.enum';
-import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State,Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { AccionBoton } from '../../models/validacion-posteriori.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
-
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar la página del solicitante.
@@ -236,8 +232,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
            this.validacionPosterioriService.guardarDatosPost(PAYLOAD).subscribe(response => {
              const API_RESPONSE = doDeepCopy(response);
              if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
-               if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-                 this.store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+               if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
+                 this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
                  this.pasoNavegarPor({ accion: 'cont', valor: 2 });
                } else {
                  this.store.setIdSolicitud(0);

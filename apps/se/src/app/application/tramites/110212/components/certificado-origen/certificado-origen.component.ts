@@ -13,11 +13,12 @@ import {
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Subject, delay, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite110212State,
   Tramite110212Store,
 } from '../../../../estados/tramites/tramite110212.store';
+import { BuscarMercanciasResponse } from '../../constants/validacion-posteriori.enum';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
@@ -271,30 +272,32 @@ export class CertificadoOrigenComponent
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] },
     };
 
-    this.peruCertificadoService
-      .buscarMercanciasCert(PAYLOAD)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: any) => {
-          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map((item: any) => ({
-            id: item.idMercancia,
-            fraccionArancelaria: item.fraccionArancelaria || '',
-            numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
-            fechaExpedicion: item.fechaExpedicion || '',
-            fechaVencimiento: item.fechaVencimiento || '',
-            nombreTecnico: item.nombreTecnico || '',
-            nombreComercial: item.nombreComercial || '',
-            criterioParaConferirOrigen: item.fraccionArancelaria || '',
-            valorDeContenidoRegional: item.fraccionArancelaria || '',
-            normaOrigen: item.fraccionArancelaria || '',
-            nombreIngles: item.nombreIngles || '',
+this.peruCertificadoService
+  .buscarMercanciasCert(PAYLOAD)
+  .pipe(takeUntil(this.destroyNotifier$))
+  .subscribe({
+    next: (res) => {
+      const RESPONSE = res as unknown as BuscarMercanciasResponse;
 
-          }));
-          this.disponiblesDatos = MAPPED_DATA;
+      const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
+        id: item.idMercancia,
+        fraccionArancelaria: item.fraccionArancelaria || '',
+        numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+        fechaExpedicion: item.fechaExpedicion || '',
+        fechaVencimiento: item.fechaVencimiento || '',
+        nombreTecnico: item.nombreTecnico || '',
+        nombreComercial: item.nombreComercial || '',
+        criterioParaConferirOrigen: item.criterioOrigen || '',
+        valorDeContenidoRegional: item.valorContenidoRegional || '',
+        normaOrigen: item.normaOrigen || '',
+        nombreIngles: item.nombreIngles || '',
+      }));
 
-          this.store.setDisponsiblesDatos(MAPPED_DATA);
-     },
-      });
+      this.disponiblesDatos = MAPPED_DATA;
+      this.store.setDisponsiblesDatos(MAPPED_DATA);
+    },
+  });
+
   }
 
   /**
@@ -303,7 +306,7 @@ export class CertificadoOrigenComponent
    * @param estado - El estado seleccionado.
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
-    // this.store.setEstado(estado);
+    this.store.setEstado(estado);
   }
 
   /**
@@ -312,7 +315,7 @@ export class CertificadoOrigenComponent
    * @param estado - El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    // this.store.setBloque([estado]);
+    this.store.setBloque([estado]);
   }
 
   /**
