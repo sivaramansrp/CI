@@ -509,6 +509,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
   }
 
+  /**
+   * Inicializa el grupo de formularios anidado para los datos de la solicitud.
+   * @method initActionFormBuild
+   */
   initActionFormBuild(): void {
     this.datos = this.fb.group({
       aduanaDeIngreso: ['', Validators.required],
