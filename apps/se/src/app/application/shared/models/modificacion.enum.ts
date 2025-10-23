@@ -24,6 +24,17 @@ export interface Mercancia {
   fraccionNaladiSa02: string;
   nalad?: string;
   fechaFactura?: string;
+  marca?: string;
+  nombreIngles?: string;
+  otrasInstancias?: string;
+  criterioParaConferirOrigen?: string;
+  criterioParaTratoPreferencial?: string;
+  criterioParaClasificacion?: string;
+  fechaDePago?: string;
+  valorDeContenidoRegional?: string;
+  numeroDeSerie?: string;
+  rfcProductor1?: string; 
+  rfcProductor?: string;
 }
 
 export interface ConfiguracionColumna<T> {

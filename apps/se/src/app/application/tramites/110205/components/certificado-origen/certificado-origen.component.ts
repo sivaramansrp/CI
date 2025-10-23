@@ -79,7 +79,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Observable para los datos de la tabla.
    */
-  datosTabla$: Observable<Mercancia[]> = of([]);
+  datosTabla$: Mercancia[] = [];
 
   /**
    * @descripcion
@@ -122,6 +122,17 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
   public idProcedimiento = 110205;
+
+  /**
+   * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
+   * 
+   * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
+   * Cuando es `false`, la mercancía fue ingresada manualmente por el usuario.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  fromMercanciasDisponibles: boolean = false;
 
   /**
    * @descripcion
@@ -181,15 +192,15 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.query.selectPeru$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.certificadoState = state as Tramite110205State;
+        map((state: Tramite110205State) => {
+          this.certificadoState = state;
+          this.datosTabla$ = state.mercanciaTabla;
         })
       )
       .subscribe();
 
     this.estadoOpcion();
     this.paisOpcion();
-    this.datosTabla$ = this.query.selectmercanciaTabla$
     this.datosTablaUno$=this.query.selectmercanciaTablaUno$;
   }
 
@@ -291,8 +302,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Abre el modal de modificación con los datos seleccionados.
    * @param disponiblesDatos - Los datos seleccionados para modificación.
    */
-  abrirModificarModal(disponiblesDatos: Mercancia): void {
+  abrirModificarModal(disponiblesDatos: Mercancia,fromMercanciasDisponibles: boolean): void {
     this.datosSeleccionados = disponiblesDatos;
+    this.fromMercanciasDisponibles = fromMercanciasDisponibles;
     this.store.setFormMercancia({ ...disponiblesDatos });
     if (this.modalInstance) {
       this.modalInstance.show();
@@ -308,6 +320,19 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       this.tablaSeleccionEvent = true;
       this.modalInstance.hide();
     }
+  }
+
+  /**
+   * Envía los datos de una mercancía al estado global (store) para su almacenamiento o actualización.
+   * 
+   * Este método recibe un objeto de tipo `Mercancia`, lo encapsula dentro de un arreglo
+   * y lo pasa al método `setmercanciaTabla` del store, con el fin de actualizar la lista
+   * de mercancías en el estado de la aplicación.
+   *
+   * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o editada.
+   */
+  emitmercaniasDatos(evento: Mercancia): void{
+    this.store.setmercanciaTabla([evento]);
   }
 
   /**
@@ -334,10 +359,10 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
   /**
    * @descripcion
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
-   * @param {Mercancia[]} event - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+   * @param {Mercancia[]} evento - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
    */
-  guardarClicado(event: Mercancia[]): void {
-    this.datosTabla$ = of(event);
+  guardarClicado(evento: Mercancia[]): void {
+    this.datosTabla$ = evento;
   }
 
   /**

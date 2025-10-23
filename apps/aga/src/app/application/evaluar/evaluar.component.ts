@@ -1180,9 +1180,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
-      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
-      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen
+      fecha_inicio_vigencia: this.conformidadDictamen?.fecha_inicio ?? null,
+      fecha_fin_vigencia: this.conformidadDictamen?.fecha_fin_vigencia ?? null,
+      texto_dictamen: this.conformidadDictamen?.texto_dictamen ?? null,
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1258,9 +1258,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
-      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
-      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen,
+      fecha_inicio_vigencia: this.conformidadDictamen?.fecha_inicio ?? null,
+      fecha_fin_vigencia: this.conformidadDictamen?.fecha_fin_vigencia ?? null,
+      texto_dictamen: this.conformidadDictamen?.texto_dictamen ?? null,
       solicitante: {
         rfc: this.guardarDatos.current_user,
         nombre: 'PRUEBA',

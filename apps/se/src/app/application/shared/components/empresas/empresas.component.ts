@@ -2,7 +2,7 @@
  * Componente Angular para gestionar la información relacionada al trámite 80104.
  * Importa módulos y dependencias necesarias para formularios reactivos, gestión de estado y suscripciones.
  */
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy,OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
@@ -27,7 +27,8 @@ import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
     AlertComponent,
     FormsModule,
     ReactiveFormsModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './empresas.component.html',
   styleUrl: './empresas.component.scss'
@@ -87,6 +88,27 @@ export class EmpresasComponent implements OnInit, OnDestroy {
     this.disponibles = value || [];
     this.tramite80104Store.setDisponibles(this.disponibles);
   }
+
+
+  /**
+   * Establece el estado de error para el RFC.
+   * 
+   * Cuando el valor es `true`, se muestra un modal indicando que el RFC no es válido.
+   * 
+   * @param value Indica si existe un error en el RFC.
+   */
+  @Input() set rfcError(value: boolean) {
+    if (value) {
+      this.notValidRfcModal();
+    }
+  }
+
+   /**
+* @description
+* Objeto que representa una nueva notificación.
+* Se utiliza para mostrar mensajes de alerta o información al usuario.
+*/
+  public NotValidRfcNotificacion!: Notificacion;
 
   /**
    * Lista de empresas disponibles para ser seleccionadas.
@@ -277,6 +299,29 @@ export class EmpresasComponent implements OnInit, OnDestroy {
       })
     }
     this.seleccionadas = [];
+  }
+
+
+  /**
+   * Muestra una notificación de alerta cuando el RFC consultado no tiene ningún domicilio con tipo de planta válido.
+   * 
+   * La notificación es de tipo "alerta" y categoría "peligro", con modo de acción. 
+   * El mensaje indica la ausencia de domicilios válidos y se muestra durante 2000 ms.
+   * El botón de aceptar está disponible, mientras que el de cancelar no se muestra.
+   */
+  notValidRfcModal(): void {
+    this.NotValidRfcNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'El RFC consultado no tiene ningun domicilio con tipo de planta válido.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**

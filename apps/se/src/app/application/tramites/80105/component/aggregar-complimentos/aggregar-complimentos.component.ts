@@ -1,5 +1,5 @@
-import { Observable, Subject, takeUntil } from 'rxjs';
 import { Component, Input } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
 import { ConsultaioState } from '@ng-mf/data-access-user';

@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="row mt-5">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-5">
           <label class="form-label" for="turnos">Turnos*:</label>
           <input class="form-control min-hgt" id="turnos" formControlName="turnos" type="number" (input)="onInputMaxLength($event, 3, 'turnos')"
             (change)="setValoresStore(capacidadForm, 'turnos', 'setTurnos')" />
@@ -40,7 +40,7 @@
             Este campo es obligatorio.
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-5">
           <label class="form-label" for="horasPorTurno">Horas por turno*:</label>
           <input class="form-control min-hgt" id="horasPorTurno" formControlName="horasPorTurno" type="number"
            (input)="onInputMaxLength($event, 2, 'horasPorTurno')" (change)="setValoresStore(capacidadForm, 'horasPorTurno', 'setHorasPorTurno')" />
@@ -156,7 +156,7 @@
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-danger me-2" (click)="eliminarCapacidadInstalada()">Eliminar</button>
-          <button class="btn btn-primary">Editar</button>
+          <button class="btn btn-primary" (click)="editarCapacidadInstalada()">Editar</button>
         </div>
       </div>
       <div class="row my-5 mt-5">
@@ -169,3 +169,18 @@
     </div>
   </form>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}
+
+@if (nuevaNotificacionEliminar) {
+<section> 
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionEliminar">
+  </lib-notificaciones>
+</section>
+}
+

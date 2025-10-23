@@ -1,0 +1,142 @@
+<form [formGroup]="formResumenValores">
+  <ng-titulo [titulo]="'Resumen de Valores'" />
+
+  <div class="row g-2">
+
+    <!-- Mostrar la cabecera si hay al menos un campo del bloque -->
+    <ng-container *ngIf="camposVisibles.has('imp_insumos_originarios') ||
+                         camposVisibles.has('imp_insumos_no_originarios') ||
+                         camposVisibles.has('imp_envases_originarios') ||
+                         camposVisibles.has('imp_envases_no_originarios') ||
+                         camposVisibles.has('imp_insu_env_originarios') ||
+                         camposVisibles.has('imp_insu_env_no_originarios')">
+      <div class="col-6"></div>
+      <div class="col-3 text-center fw-bold">Originarios</div>
+      <div class="col-3 text-center fw-bold">No Originarios</div>
+    </ng-container>
+
+    <!-- Insumos -->
+    <div *ngIf="camposVisibles.has('imp_insumos_originarios') || camposVisibles.has('imp_insumos_no_originarios')"
+         class="col-6 align-self-center">Insumos</div>
+    <div *ngIf="camposVisibles.has('imp_insumos_originarios')" class="col-3">
+      <input type="text" id="insumosOriginarios" formControlName="impInsumosOriginarios" class="form-control" />
+    </div>
+    <div *ngIf="camposVisibles.has('imp_insumos_no_originarios')" class="col-3">
+      <input type="text" id="insumosNoOriginarios" formControlName="impInsumosNoOriginarios" class="form-control" />
+    </div>
+
+    <!-- Envases y empaques -->
+    <div *ngIf="camposVisibles.has('imp_envases_originarios') || camposVisibles.has('imp_envases_no_originarios')"
+         class="col-6 align-self-center">Envases y empaques</div>
+    <div *ngIf="camposVisibles.has('imp_envases_originarios')" class="col-3">
+      <input type="text" id="impEnvasesOriginarios" formControlName="impEnvasesOriginarios" class="form-control" />
+    </div>
+    <div *ngIf="camposVisibles.has('imp_envases_no_originarios')" class="col-3">
+      <input type="text" id="impEnvaseNoOriginarios" formControlName="impEnvaseNoOriginarios" class="form-control" />
+    </div>
+
+    <!-- Total valor en dólares -->
+    <div *ngIf="camposVisibles.has('imp_insu_env_originarios') || camposVisibles.has('imp_insu_env_no_originarios')"
+         class="col-6 align-self-center">Total valor en dólares</div>
+    <div *ngIf="camposVisibles.has('imp_insu_env_originarios')" class="col-3">
+      <input type="text" id="impInsumosEnvOriginarios" formControlName="impInsumosEnvOriginarios" class="form-control" />
+    </div>
+    <div *ngIf="camposVisibles.has('imp_insu_env_no_originarios')" class="col-3">
+      <input type="text" id="impInsumosEnvNoOriginarios" formControlName="impInsumosEnvNoOriginarios" class="form-control" />
+    </div>
+
+    <!-- Precio franco fábrica -->
+    <div *ngIf="camposVisibles.has('precio_franco_fabrica')" class="col-6 align-self-center">Precio franco fábrica</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('precio_franco_fabrica')" class="col-3">
+      <input type="text" id="precio_franco_fabrica" formControlName="precioFrancoFabrica" class="form-control" />
+    </div>
+
+    <!-- Valor de transacción -->
+    <div *ngIf="camposVisibles.has('valor_transaccion')" class="col-6 align-self-center">Valor de transacción</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('valor_transaccion')" class="col-3">
+      <input type="text" id="valor_transaccion" formControlName="valorTransaccion" class="form-control" />
+    </div>
+
+    <!-- Valor FOB -->
+    <div *ngIf="camposVisibles.has('valor_transaccion_fob')" class="col-6 align-self-center">Valor FOB</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('valor_transaccion_fob')" class="col-3">
+      <input type="text" id="valor_transaccion_FOB" formControlName="valorTransaccionFOB" class="form-control" />
+    </div>
+
+    <!-- Costo neto -->
+    <div *ngIf="camposVisibles.has('costo_neto')" class="col-6 align-self-center">Costo neto</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('costo_neto')" class="col-3">
+      <input type="text" id="costo_neto" formControlName="costoNeto" class="form-control" />
+    </div>
+
+    <!-- Costo neto AP -->
+    <div *ngIf="camposVisibles.has('costo_neto_ap')" class="col-6 align-self-center">Costo neto AP</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('costo_neto_ap')" class="col-3">
+      <input type="text" id="costo_neto_ap" formControlName="costoNetoAP" class="form-control" />
+    </div>
+
+    <!-- % de materiales originarios/no originarios -->
+    <div *ngIf="camposVisibles.has('pct_valor_no_originarios')" class="col-6 align-self-center">
+      % de materiales originarios/no originarios, según corresponda en el Tratado, vs valor de la mercancía
+    </div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('pct_valor_no_originarios')" class="col-3">
+      <input type="text" id="ptc_Valor_No_Originarios" formControlName="ptcValorNoOriginarios" class="form-control" />
+    </div>
+
+    <!-- Peso Textil (mostrar título si hay alguno de sus campos) -->
+    <ng-titulo *ngIf="camposVisibles.has('unidad_medida') || camposVisibles.has('pct_peso_total_fibras') || camposVisibles.has('pct_peso_total_mercancia')"
+               [titulo]="'Peso Textil'"></ng-titulo>
+
+    <div *ngIf="camposVisibles.has('unidad_medida')" class="col-6 align-self-center">Unidad de medida</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('unidad_medida')" class="col-3">
+      <input type="text" id="unidad_medida" formControlName="unidadMedida" class="form-control" />
+    </div>
+
+    <div *ngIf="camposVisibles.has('pct_peso_total_fibras')" class="col-6 align-self-center">Peso fibras</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('pct_peso_total_fibras')" class="col-3">
+      <input type="text" id="ptc_peso_total_fibras" formControlName="ptcPesoTotalFibras" class="form-control" />
+    </div>
+
+    <div *ngIf="camposVisibles.has('pct_peso_total_mercancia')" class="col-6 align-self-center">Peso mercancía</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('pct_peso_total_mercancia')" class="col-3">
+      <input type="text" id="ptc_peso_total_mercancia" formControlName="ptcPesoTotalMercancia" class="form-control" />
+    </div>
+
+    <!-- Peso/Volumen -->
+    <ng-titulo *ngIf="camposVisibles.has('peso_acumulado') || camposVisibles.has('volumen_acumulado')" [titulo]="'Peso/Volumen'"></ng-titulo>
+
+    <div *ngIf="camposVisibles.has('peso_acumulado')" class="col-6 align-self-center">Acumulación de insumos no originarios:</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('peso_acumulado')" class="col-3">
+      <input type="text" id="pesoAcumulado" formControlName="pesoAcumulado" class="form-control" />
+    </div>
+
+    <div *ngIf="camposVisibles.has('volumen_acumulado')" class="col-6 align-self-center">Peso o volumen</div>
+    <div class="col-3" *ngIf="false"></div>
+    <div *ngIf="camposVisibles.has('volumen_acumulado')" class="col-3">
+      <input type="text" id="peso_volumen" formControlName="volumenAcumulado" class="form-control" />
+    </div>
+
+    <!-- Calificación del dictaminador -->
+    <ng-titulo *ngIf="camposVisibles.has('cal_aprobada_dictaminador')" [titulo]="'Calificación del dictaminador'"></ng-titulo>
+
+    <div *ngIf="camposVisibles.has('cal_aprobada_dictaminador')" class="form-check">
+      <input class="form-check-input" type="radio" id="radioAprobada" [value]="true" formControlName="calAprobadaDictaminador" />
+      <label class="form-check-label" for="radioAprobada">Aprobada</label>
+    </div>
+    <div *ngIf="camposVisibles.has('cal_aprobada_dictaminador')" class="form-check">
+      <input class="form-check-input" type="radio" id="radioNoAprobada" [value]="false" formControlName="calAprobadaDictaminador" />
+      <label class="form-check-label" for="radioNoAprobada">No aprobada</label>
+    </div>
+
+  </div>
+</form>

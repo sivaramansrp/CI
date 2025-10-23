@@ -116,6 +116,7 @@ describe('AgregarFabricanteComponent', () => {
     component.elementosDeshabilitados.includes = jest.fn();
     component.elementosNoRequeridos = component.elementosNoRequeridos || {};
     component.elementosNoRequeridos.includes = jest.fn();
+    component.agregarFabricanteForm = component.agregarFabricanteForm || { get: jest.fn() };
     component.crearAgregarFormularioFabricante();
     expect(component.fb.group).toHaveBeenCalled();
     expect(component.obtenerValor).toHaveBeenCalled();

@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input } from '@angular/core';
-
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS_REQUISITOS } from '../../constants/immex-ampliacion-sensibles.enums';
-
-
 /**
  * @component PasoDosComponent
  * @description Componente para el paso dos del trámite IMMEX Ampliación Sensibles. Permite cargar documentos y mostrar requisitos.

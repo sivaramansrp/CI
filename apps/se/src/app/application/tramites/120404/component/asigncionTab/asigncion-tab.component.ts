@@ -37,7 +37,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     /**
      * Emisor de eventos para notificaciones de intentos de búsqueda
      */
-  @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
+  @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean,numTramite: string}>();
 
   /**
    * Indicador para rastrear si el formulario ha sido enviado
@@ -272,16 +272,19 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   buscar(): void {
+    
     this.submitted = true;
     this.asignacionForm.updateValueAndValidity();
     const FORM = this.asignacionForm;
     this.buscarIntento.emit({
       submitted: this.submitted,
-      invalid: FORM.invalid
-    });
+      invalid: this.asignacionForm.invalid,
+      numTramite: this.solicitudState?.numTramite
+          });
 
     if (FORM.valid) {
       this.buscarDatos = true;
+        
     } else {
       this.asignacionForm.markAllAsTouched();
       this.buscarDatos = false;

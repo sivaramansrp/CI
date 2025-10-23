@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import {
   CatalogosSelect,
   ConfiguracionColumna,
+  InputCheckComponent,
   Notificacion,
   NotificacionesComponent,
   REGEX_RFC,
@@ -89,6 +90,7 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
     TituloComponent,
     CommonModule,
     InputRadioComponent,
+    InputCheckComponent,
     TablaDinamicaComponent,
     ModalModule,
     NotificacionesComponent,
@@ -96,9 +98,9 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
   ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
-/**
- * @property {string} numeroFolio - Número de folio del trámite.
- */
+  /**
+   * @property {string} numeroFolio - Número de folio del trámite.
+   */
   @Input()
   numeroFolio: string = '';
   /**
@@ -427,7 +429,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Puede ser de tipo string o number dependiendo del tipo de opción seleccionada.
    * Se actualiza cuando el usuario cambia la selección en los controles de radio.
    */
-  selectedValue: string | number = '';
+  selectedValue: boolean | number = false;
 
   /**
    * @property {string | number} selectValueNacional - Valor seleccionado del radio button para fabricantes nacionales.
@@ -697,7 +699,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
               correoElectrónico: DATOS?.correo_electronico ?? '',
               telefono: DATOS?.telefono ?? ''
             }];
-            
+
           } else {
             console.error('Error en la respuesta del servicio:', response.mensaje);
           }
@@ -727,7 +729,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       ],
       numeroRegistroFiscal: [
         this.historicoState.numeroRegistroFiscal,
-        [Validators.required, Validators.minLength(5), Validators.pattern(REGEX_RFC)],
+        [Validators.required, Validators.minLength(5), Validators.maxLength(15), Validators.pattern(REGEX_RFC)],
       ],
       fabricantesNacionales: [[]],
       fabricantesAsociados: [[]],
@@ -780,22 +782,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Almacena el valor actualmente seleccionado en los controles de radio button del formulario.
    */
   valorSeleccionado: string | number = '';
-
-  /**
-   * @method alValorCambiar
-   * @description Maneja el cambio de valor del radio button.
-   * Se ejecuta cuando el usuario selecciona una nueva opción en los controles de radio button.
-   * Actualiza la propiedad valorSeleccionado con el nuevo valor seleccionado,
-   * lo que puede desencadenar cambios en la interfaz o validaciones adicionales.
-   * Facilita la captura de la interacción del usuario con los controles de selección.
-   * @param {string | number} nuevoValor - El nuevo valor seleccionado en el control de radio.
-   * @returns {void} No retorna ningún valor.
-   */
-  onValueChange(newValue: number | string): void {
-    this.historicoFabricantesForm.get('exportadorFabricanteMismo')?.setValue(newValue)
-    this.selectedValue = newValue;
-    this.isNacional = true;
-  }
 
   /**
    * @method onSeleccionFabricantesNacionales
@@ -1092,5 +1078,24 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
  */
   onHidden(): void {
     this.mostrarModal = false;
+  }
+
+  onCheckboxChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const ISCHECKED = INPUT.checked;
+    this.setValoresStore(
+      this.historicoFabricantesForm,
+      'exportadorFabricanteMismo',
+      'setExportadorFabricanteMismo'
+    );
+    this.historicoFabricantesForm.get('exportadorFabricanteMismo')?.setValue(ISCHECKED);
+    if (!ISCHECKED) {
+      this.isNacional = false;
+      this.isNacionalTabla = false;
+    }
+    else {
+      this.selectedValue = ISCHECKED;
+      this.isNacional = true;
+    }
   }
 }

@@ -4,6 +4,11 @@
         <div class="col-md-12">
           <h1>Validar inicialmente el certificado para el Acuerdo Alianza del Pacífico</h1>
         </div>
+        @if(esFormaValido){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+        }
         <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
@@ -11,7 +16,7 @@
       <app-paso-uno></app-paso-uno>
       }
       @case (2) {
-      <app-paso-dos></app-paso-dos>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110222" [procedureUrl]="'validar-certificado-inicialmente/certificado'"></paso-firma>
       }
      }
       <btn-continuar

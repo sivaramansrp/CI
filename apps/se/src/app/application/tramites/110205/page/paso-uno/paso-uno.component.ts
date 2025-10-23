@@ -6,10 +6,11 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
+import { PeruDestinatarioComponent } from '../../components/peru-destinatario/peru-destinatario.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -36,7 +37,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Se utiliza junto con el operador takeUntil en las suscripciones de RxJS.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * @property {PeruDestinatarioComponent} peruDestinatarioComponent
+   * @description Referencia al componente hijo `PeruDestinatarioComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del destinatario desde el componente padre.
+   */
+  @ViewChild(PeruDestinatarioComponent) peruDestinatarioComponent?: PeruDestinatarioComponent;
   /**
    * @constructor
    * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado del trámite.
@@ -67,6 +73,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.peruDestinatarioComponent?.validateAllForms() ?? true;
+  }
+
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
@@ -91,7 +104,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
+  
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

@@ -2,7 +2,7 @@ import { Catalogo, ConsultaioQuery, InputFecha, Notificacion, SeccionLibQuery, S
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {FORM_ERROR_ALERT_CANTIDAD,FORM_ERROR_ALERT_CANT_VAL,FORM_ERROR_ALERT_VALORES} from '../../constantes/peru-certificado.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, delay, of, skip, take, takeUntil } from 'rxjs';
+import { Subject, delay, of, skip, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { AbstractControl} from '@angular/forms';
 import { FECHA } from '../../constantes/peru-certificado.module';
@@ -75,6 +75,17 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Datos seleccionados para la mercancía.
    */
   @Input() datosSeleccionados!: Mercancia;
+
+  /**
+   * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
+   * 
+   * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
+   * Cuando es `false`, la mercancía fue ingresada manualmente por el usuario.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  @Input() fromMercanciasDisponibles: boolean = true;
 
   /**
    * @descripcion
@@ -187,12 +198,6 @@ ngOnInit(): void {
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(s => (this.seccionState = s));
 
-  this.query.selectPeru$
-    .pipe(take(1))
-    .subscribe(state => {
-      this.mercanciaState = state as Tramite110205State;
-      this.initActionFormBuild();
-    });
 
   this.query.selectPeru$
     .pipe(skip(1), takeUntil(this.destroyNotifier$))
@@ -224,7 +229,26 @@ ngOnInit(): void {
 
   this.umcOpcion();
   this.facturasOpcion();
+  this.initActionFormBuild();
 }
+
+  /**
+   * Detecta los cambios en las propiedades de entrada del componente y actualiza el formulario en consecuencia.
+   * 
+   * Este método se ejecuta automáticamente cuando Angular detecta un cambio en alguna de las propiedades
+   * con decorador `@Input()`. En este caso, si cambia `datosSeleccionados`, se actualiza la propiedad local
+   * y se vuelve a construir el formulario llamando a `initActionFormBuild()`.
+   * 
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+   * 
+   * @returns {void}
+   */
+  ngOnChange(changes: SimpleChanges): void{
+    if (changes['datosSeleccionados'].currentValue) {
+      this.datosSeleccionados = changes['datosSeleccionados'].currentValue;
+      this.initActionFormBuild();
+    }
+  }
 
 /**
  * Formatea un valor a exactamente 4 lugares decimales.
@@ -405,10 +429,58 @@ acceptar(): void {
     of(null).pipe(takeUntil(this.destroyNotifier$), delay(100)).subscribe(() => {
       this.cerrarModal();
       this.tablaSeleccionEvent.emit(true);
+       this.mercanciaForm.reset();
     });
   }
 
 }
+
+  /**
+   * Construye y retorna un objeto de tipo `Mercancia` con valores seguros y predeterminados.
+   * 
+   * Este método se encarga de crear una nueva instancia de `Mercancia` a partir de los datos recibidos,
+   * asegurando que todos los campos tengan un valor válido.  
+   * Si algún campo es `undefined` o `null`, se le asigna el valor `'--'` por defecto.
+   * 
+   * Además, el campo `id` se establece en función de la procedencia de los datos:
+   * - Si `fromMercanciasDisponibles` es `true`, utiliza el `id` de `datosSeleccionados`.
+   * - En caso contrario, asigna `0` (nuevo registro).
+   * 
+   * @private
+   * @param {Mercancia} MERCANIADATO - Objeto de entrada con la información de la mercancía.
+   * 
+   * @returns {Mercancia} - Un nuevo objeto `Mercancia` con todos los campos validados y completados.
+   */
+  private buildMercancia(MERCANIADATO: Mercancia): Mercancia {
+    const FALLBACK = (value?: string): string => value ?? '--';
+
+    return {
+      id: this.fromMercanciasDisponibles ? this.datosSeleccionados?.id : 0,
+      fraccionArancelaria: FALLBACK(MERCANIADATO.fraccionArancelaria),
+      numeroDeRegistrodeProductos: FALLBACK(MERCANIADATO.numeroDeRegistrodeProductos),
+      fechaExpedicion: FALLBACK(MERCANIADATO.fechaExpedicion),
+      fechaVencimiento: FALLBACK(MERCANIADATO.fechaVencimiento),
+      nombreTecnico: FALLBACK(MERCANIADATO.nombreTecnico),
+      nombreComercial: FALLBACK(MERCANIADATO.nombreComercial),
+      normaOrigen: FALLBACK(MERCANIADATO.normaOrigen),
+      cantidad: FALLBACK(MERCANIADATO.cantidad),
+      umc: FALLBACK(MERCANIADATO.umc),
+      tipoFactura: FALLBACK(MERCANIADATO.tipoFactura),
+      valorMercancia: FALLBACK(MERCANIADATO.valorMercancia),
+      fechaFinalInput: FALLBACK(MERCANIADATO.fechaFinalInput),
+      numeroFactura: FALLBACK(MERCANIADATO.numeroFactura),
+      unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
+      complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
+      complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
+      fraccionNaladi: MERCANIADATO.fraccionNaladi,
+      fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
+      fraccionNaladiSa96: MERCANIADATO.fraccionNaladiSa96,
+      fraccionNaladiSa02: MERCANIADATO.fraccionNaladiSa02,
+      nalad: MERCANIADATO.nalad,
+      fechaFactura: MERCANIADATO.fechaFactura,
+    };
+  }
+
 
   /**
    * @descripcion

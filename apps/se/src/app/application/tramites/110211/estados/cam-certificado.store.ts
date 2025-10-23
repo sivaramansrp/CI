@@ -48,6 +48,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @command Este estado se utiliza para gestionar los datos y formularios relacionados con el certificado CAM.
  */
 export interface CamState {
+  idSolicitud: number | null;
   formCertificado: { [key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
@@ -80,6 +81,8 @@ export interface CamState {
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: unknown};
   calle:string;
+  disponiblesDatos:Mercancia[];
+  mercanciaSeleccionadasTablaDatos: Mercancia[];
 }
 
 /**
@@ -88,7 +91,10 @@ export interface CamState {
  */
 export function createInitialState(): CamState {
   return {
+    idSolicitud: 0,
     calle:'',
+    disponiblesDatos:[],
+    mercanciaSeleccionadasTablaDatos: [],
    formCertificado: {
   si: false,
   entidadFederativa: '',
@@ -207,6 +213,18 @@ export class camCertificadoStore extends Store<CamState> {
     super(createInitialState());
   }
 
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
   /**
    * @descripcion
    * Actualiza los datos del formulario de certificado.
@@ -256,18 +274,6 @@ export class camCertificadoStore extends Store<CamState> {
             ...state.mercanciaForm,
             ...values,
           },
-        }));
-      }
-
-      /**
-       * @descripcion
-       * Actualiza la tabla de mercancías en el almacén.
-       * @param mercanciaTabla - Array de objetos `Mercancia` que representa la tabla de mercancías.
-       */
-      setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
-        this.update((state) => ({
-          ...state,
-          mercanciaTabla,
         }));
       }
 
@@ -616,4 +622,80 @@ setEstadoCompleto(values:CamState): void {
     ...values,
   }));
 }
+
+  /**
+   * @method setMercanciaTabla
+   * @description Actualiza la lista de mercancías en la tabla del estado del trámite.
+   *
+   * Este método permite agregar una nueva mercancía o actualizar una existente en la tabla de mercancías.
+   * Si la mercancía tiene un `id` de 0, se considera una nueva entrada y se le asigna un nuevo `id`.
+   * Si la mercancía ya tiene un `id` mayor que 0, se actualiza la entrada existente con los nuevos datos.
+   *
+   * @param {Mercancia[]} mercanciaTabla - Lista de mercancías a actualizar en el estado.
+   *
+   * @returns {void}
+   */
+  public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
+  }
+
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+
+  /**
+   * @method setMercanciaTablaDatos
+   * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
+   *
+   * Este método permite establecer las mercancías seleccionadas por el usuario en la tabla de datos.
+   *
+   * @param {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el estado.
+   *
+   * @returns {void}
+   */
+  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: Mercancia[]): void {
+     this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaSeleccionadasTablaDatos || [];
+      const NUEVOARTICULO = { ...mercanciaSeleccionadasTablaDatos[0] };
+
+      if (NUEVOARTICULO.id === 0) {  
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+      }
+
+     // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+    });
+  }
+
 }

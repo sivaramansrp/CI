@@ -1,8 +1,8 @@
-import { MetaInfo, Respuesta, RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
+import { MetaInfo, PageDeDerechosData, Respuesta, RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
 import { Solicitud230201State, Tramite230201Store } from '../estados/tramite230201.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable} from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 @Injectable({
@@ -145,6 +145,15 @@ export class PhytosanitaryExportacionService {
    */
   getSavedData(): Observable<Solicitud230201State> {
     return this.http.get<Solicitud230201State>('assets/json/230201/savedData.json');
+  }
+
+  /**
+   * @description
+   * Obtiene los puntos de inspección disponibles.
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
+  getPagoDeDatos(): Observable<PageDeDerechosData> {
+    return this.http.get<PageDeDerechosData>(`assets/json/230201/pago-de-derecho.json`);
   }
 
   /**

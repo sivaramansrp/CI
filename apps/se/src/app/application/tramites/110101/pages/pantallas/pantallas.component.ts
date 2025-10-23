@@ -151,7 +151,7 @@ export class PantallasComponent implements OnInit {
    * @param {AccionBoton} e - Objeto con la acción y el valor del nuevo índice.  
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e.valor > 0 && e.valor < 6) {
     this.guardarSolicitudCompleta(() => {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -179,7 +179,7 @@ export class PantallasComponent implements OnInit {
     const PAYLOAD: SolicitudCompletaRequest = {
       id_solicitud: null,
       id_tipo_tramite: null,
-      rfc: "AAL0409235E6",
+      rfc: "LEQI8101314S7",
       cve_unidad_administrativa: this.solicitudeState.representacion,
       //Se tiene duda pienso que es el segundo tab
       costo_total: null,

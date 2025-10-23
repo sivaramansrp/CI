@@ -1,9 +1,12 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
+
+
 
 
 
@@ -30,34 +33,40 @@ import { Tramite260912Store } from '../../estados/tramite-260912.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
-    /**
-     * @constructor
-     * @description
-     * Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
-     *
-     * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
-     */
-  
-    idProcedimiento: number = ID_PROCEDIMIENTO;
-  
+  @Input() idProcedimiento: number = ID_PROCEDIMIENTO;
+  @Input() tramiteState!: Tramites260912State;
+  @Input() datoSeleccionado!: Destinatario[];
+  @Input() destinatarioFinalTablaDatos!: Destinatario[];
 
-    /**
-   * @constructor
-   * @description Constructor que inyecta el store `Tramite260911Store` para gestionar el estado del trámite.
-   * 
-   * @param tramiteStore - Store que administra el estado del trámite 260911.
-   */
+  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<Destinatario[]>();
+  @Output() cancelarDestinario = new EventEmitter<void>();
+  @Output() guardarYSalir = new EventEmitter<void>();
+
   constructor(public tramiteStore: Tramite260912Store) {}
 
-    /**
-   * @method updateDestinatarioFinalTablaDatos
-   * @description Actualiza los datos de la tabla de destinatarios finales en el store del trámite.
-   * 
-   * @param {Destinatario[]} event - Lista de destinatarios finales que se actualizarán en el store.
-   * @returns {void} Este método no retorna ningún valor.
-   */
+  updateDestinatarioFinalTablaDatosHandler(event: Destinatario[]): void {
+    this.updateDestinatarioFinalTablaDatos.emit(event);
+  }
 
-  updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+  cerrarModalAgregarDestinatarioFinal(): void {
+    this.cancelarDestinario.emit();
+  }
+
+  cerrarModalGuardarYSalir(): void {
+    this.guardarYSalir.emit();
+  }
+
+  static openModalAgregarDestinatarioFinal(): void {
+    const MODAL_ELEMENT = document.getElementById('modalAgregarDestinatarioFinal');
+    interface BootstrapWindow extends Window {
+      bootstrap?: {
+        Modal: new (element: HTMLElement) => { show: () => void };
+      };
+    }
+    const WIN = window as BootstrapWindow;
+    if (MODAL_ELEMENT && WIN.bootstrap) {
+      const MODAL = new WIN.bootstrap.Modal(MODAL_ELEMENT);
+      MODAL.show();
+    }
   }
 }

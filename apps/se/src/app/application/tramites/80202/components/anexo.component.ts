@@ -18,10 +18,13 @@ import {
   REG_X,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TituloComponent,
+  TituloComponent
 } from '@libs/shared/data-access-user/src';
 import {
   FRACCION_EXPORTACION,
+  FraccionPayload,
+  FraccionResponse,
+  GuardarFraccionResponse,
   IMMEX_SERVICIO,
   NICO_TABLA,
   NicoInfo,
@@ -279,7 +282,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.firstloadCompleted = false;
     if (
       this.importacionForm &&
-      this.importacionForm.value.fraccionArancelaria
+      this.importacionForm.getRawValue().fraccionArancelaria
     ) {
       const EXISTS = this.immexTableDatos.some(
         (row) =>
@@ -316,71 +319,145 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /** Guarda los datos de mercancía de importación. */
-  guardarMercanciaImportacion(): void {
-    if (this.importacionForm.valid) {
-      if (this.checkCantidadPorPeriodo()) {
-        const NUEVO_REGISTRO: immexInfo = {
-          id:
-            Number(this.importacionForm.get('id')?.value) === 0
-              ? Math.floor(Math.random() * 1000)
-              : Number(this.importacionForm.get('id')?.value),
-          fraccionArancelaria: this.importacionForm.get('fraccionArancelaria')
-            ?.value,
-          umt: this.importacionForm.get('umt')?.value,
-          descripcionTigie: this.importacionForm.get('descripcionTigie')?.value,
+/** Guarda los datos de mercancía de importación. */
+guardarMercanciaImportacion(): void {
+  if (!this.importacionForm.valid) {
+    this.mostrarNotificacion('Los campos marcados con (*) son requeridos.');
+    return;
+  }
+  if (!this.checkCantidadPorPeriodo()) {
+    this.mostrarNotificacion(
+      'La capacidad instalada por periodo debe ser menor o igual a la cantidad anual.'
+    );
+    return;
+  }
+
+const FRACCION = String(this.importacionForm.get('fraccionArancelaria')?.value ?? '').trim();
+ const INDEX = this.immexTableDatos.findIndex(r => r?.id === this.importacionForm.getRawValue()?.id);
+ if(INDEX !== -1 ){
+ const NUEVO_REGISTRO: immexInfo = {
+          id: this.importacionForm.getRawValue().id ? this.importacionForm.getRawValue().id : Math.floor(Math.random() * 1_000_000),
+          idFraccion: this.importacionForm.getRawValue().idFraccion ?? null,
+          fraccionArancelaria: this.importacionForm.getRawValue().cveFraccion || FRACCION,
+          umt: this.importacionForm.getRawValue().umt || 
+               this.importacionForm.get('umt')?.value || 
+               this.selectFraccionArancelaria?.umt || 
+               '',
+          descripcionTigie: this.importacionForm.getRawValue().descripcion || 
+                           this.importacionForm.get('descripcionTigie')?.value || 
+                           '',
+          
           cantidadAnual: this.importacionForm.get('cantidadAnual')?.value,
-          capacidadInstalada:
-            this.importacionForm.get('capacidadInstalada')?.value,
-          cantidadPorPeriodo:
-            this.importacionForm.get('cantidadPorPeriodo')?.value,
+          capacidadInstalada: this.importacionForm.get('capacidadInstalada')?.value,
+          cantidadPorPeriodo: this.importacionForm.get('cantidadPorPeriodo')?.value,
           nicos: this.importacionForm.get('nicos')?.value,
-          productoDescExportacions: this.importacionForm.get(
-            'productoDescExportacions'
-          )?.value,
+          productoDescExportacions: this.importacionForm.get('productoDescExportacions')?.value,
           numero: this.immexTableDatos.length + 1,
           nicosTable: this.nicoTablaDatos,
         };
-        this.pagenuevaNotificacion = false;
-        const INDEX = this.immexTableDatos.findIndex(
-          (row) => row.id === NUEVO_REGISTRO.id
-        );
-        if (INDEX > -1) {
-          this.selectFraccionArancelaria = NUEVO_REGISTRO;
-          this.immexTableDatos[INDEX] = {
-            ...NUEVO_REGISTRO,
-            numero: this.immexTableDatos[INDEX].numero,
+  this.selectFraccionArancelaria = NUEVO_REGISTRO;
+          this.immexTableDatos[INDEX] = { 
+            ...NUEVO_REGISTRO, 
+            numero: this.immexTableDatos[INDEX].numero 
           };
-          this.immexTableDatos = [...this.immexTableDatos];
-          const DEEPCOPY = [...this.immexTableDatos];
-          this.immexTableDatos = [];
-          this.immexTableDatos = DEEPCOPY;
-          this.immexRegistroStore.updateImportacion(this.immexTableDatos);
-        } else {
-          this.immexTableDatos = [...this.immexTableDatos, NUEVO_REGISTRO];
-          this.immexRegistroStore.updateImportacion(this.immexTableDatos);
-        }
+                  this.immexTableDatos = [...this.immexTableDatos];
+        
+        this.immexRegistroStore.updateImportacion(this.immexTableDatos);
 
-        this.modalInstance?.hide();
+        this.cerrarModalImportacion();
+        
         setTimeout(() => {
-          this.importacionForm.get('id')?.setValue(0);
-          this.importacionForm.get('fraccionArancelaria')?.enable();
-          this.importacionForm.get('umt')?.enable();
-          this.importacionForm.reset();
-          this.firstloadCompleted = false;
-          this.eliminarDatosTablaNicoExp = false;
-          this.nuevaNotificacion = {} as Notificacion;
           this.pagemostrarNotificacion('La operación se realizó exitosamente.');
-        }, 100);
-      } else {
-        this.mostrarNotificacion(
-          'La capacidad instalada por periodo debe ser menor o igual a la cantidad anual.'
-        );
+        }, 200);
+        
+ }
+ else{
+ const PAYLOAD = {
+    fraccion: FRACCION,
+    tipoSolicitud: "7",
+    folioPrograma: "121517", 
+    idSolicitud: "202785257"
+  };
+   this.permisoImmexDatosService
+    .guardarFraccion(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response: GuardarFraccionResponse) => {
+   const NUEVO_REGISTRO: immexInfo = {
+          id: response?.datos?.id ? response?.datos?.id : Math.floor(Math.random() * 1_000_000),
+          idFraccion: response?.datos?.idFraccion ?? null,
+          fraccionArancelaria: response?.datos?.cveFraccion || FRACCION,
+          umt: response?.datos?.umt || 
+               this.importacionForm.get('umt')?.value || 
+               this.selectFraccionArancelaria?.umt || 
+               '',
+          descripcionTigie: response?.datos?.descripcion || 
+                           this.importacionForm.get('descripcionTigie')?.value || 
+                           '',
+          
+          cantidadAnual: this.importacionForm.get('cantidadAnual')?.value,
+          capacidadInstalada: this.importacionForm.get('capacidadInstalada')?.value,
+          cantidadPorPeriodo: this.importacionForm.get('cantidadPorPeriodo')?.value,
+          nicos: this.importacionForm.get('nicos')?.value,
+          productoDescExportacions: this.importacionForm.get('productoDescExportacions')?.value,
+          numero: this.immexTableDatos.length + 1,
+          nicosTable: this.nicoTablaDatos,
+        };
+        this.immexTableDatos = [...this.immexTableDatos, NUEVO_REGISTRO];
+        this.immexTableDatos = [...this.immexTableDatos];
+        this.immexRegistroStore.updateImportacion(this.immexTableDatos);
+        this.cerrarModalImportacion();
+        setTimeout(() => {
+          this.pagemostrarNotificacion('La operación se realizó exitosamente.');
+        }, 300);
+      } 
+    });
+
+ }
+}
+
+/** Método auxiliar para cerrar el modal de importación */
+private cerrarModalImportacion(): void {
+  try {
+    this.modalInstance?.hide();
+    this.resetImportacionForm();
+    
+    setTimeout(() => {
+      const MODAL_ELEMENT = document.querySelector('.modal.show');
+      if (MODAL_ELEMENT) {
+        MODAL_ELEMENT.classList.remove('show');
+        MODAL_ELEMENT.setAttribute('aria-hidden', 'true');
+        (MODAL_ELEMENT as HTMLElement).style.display = 'none';
       }
-    } else {
-      this.mostrarNotificacion('Los campos marcados con (*) son requeridos.');
-    }
+      
+      const BACKDROP = document.querySelector('.modal-backdrop');
+      if (BACKDROP) {
+        BACKDROP.remove();
+      }
+      
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+      document.body.style.removeProperty('overflow');
+    }, 150);
+  } catch (error) {
+    console.error('Error closing modal:', error);
   }
+}
+
+/** Método auxiliar para resetear el formulario de importación */
+private resetImportacionForm(): void {
+  this.importacionForm.get('id')?.setValue(0);
+  this.importacionForm.get('fraccionArancelaria')?.enable();
+  this.importacionForm.get('umt')?.enable();
+  this.importacionForm.get('descripcionTigie')?.enable();
+  this.importacionForm.reset();
+  this.firstloadCompleted = false;
+  this.eliminarDatosTablaNicoExp = false;
+  this.nuevaNotificacion = {} as Notificacion;
+  this.nicoTablaDatos = [];
+}
+
+
   /** Cierra el modal de importación y limpia el formulario. */
   cerrarModal(): void {
     this.eliminarDatosTablaNicoExp = false;
@@ -446,79 +523,79 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Agrega una nueva fracción de exportación a la tabla. */
   agregarExportacion(): void {
-    if (
-      this.exportacionForm.getRawValue().descripcionComercialExport.trim() &&
-      this.exportacionForm.getRawValue().fraccionImportacion.trim()
-    ) {
-      if (this.selectFraccionArancelaria) {
-        if (
-          this.selectFraccionArancelaria.fraccionArancelaria ===
-          this.exportacionForm.getRawValue().fraccionImportacion
-        ) {
-          const EXISTS = this.fraccionTablaDatos.some(
-            (row) =>
-              row.descripcionComercialExport ===
-              this.exportacionForm
-                .getRawValue()
-                .descripcionComercialExport?.toUpperCase() &&
-              row.fraccionExportacion ===
-              this.selectFraccionArancelaria.fraccionArancelaria
-          );
-          if (!EXISTS) {
-            this.fraccionTablaDatos = [
-              ...this.fraccionTablaDatos,
-              {
-                id: Math.floor(Math.random() * 1000000) + 1,
-                fraccionExportacion:
-                  this.selectFraccionArancelaria.fraccionArancelaria,
-                fraccionImportacion:
-                  this.selectFraccionArancelaria.fraccionArancelaria,
-                umt: this.selectFraccionArancelaria.umt,
-                descripcionTigie: `Descripción TIGIE ${Math.floor(
-                  Math.random() * 1000
-                )} - ${[
-                  'Maquinaria',
-                  'Textiles',
-                  'Alimentos',
-                  'Químicos',
-                  'Electrónicos',
-                ][Math.floor(Math.random() * 5)]
-                  }`,
-                descripcionComercialExport:
-                  this.exportacionForm.value.descripcionComercialExport.toUpperCase(),
-                nicos: this.exportacionForm.value.nicos,
-                numero: this.fraccionTablaDatos.length + 1,
-                nicosTable: this.nicoTablaDato,
+  const RAW = this.exportacionForm.getRawValue();
+  const DESCCOMERCIAL = (RAW.descripcionComercialExport || '').trim();
+  const FRACCUINIMPORT = (RAW.fraccionImportacion || '').trim();
+ 
+  if (DESCCOMERCIAL && FRACCUINIMPORT) {
+    if (this.selectFraccionArancelaria) {
+     
+      if (this.selectFraccionArancelaria.fraccionArancelaria === FRACCUINIMPORT) {
+        const EXISTS = this.fraccionTablaDatos.some(
+          (row) =>
+            row.descripcionComercialExport === DESCCOMERCIAL.toUpperCase() &&
+            row.fraccionExportacion === this.selectFraccionArancelaria.fraccionArancelaria
+        );
+ 
+        if (!EXISTS) {
+          const FRACCION = this.exportacionForm.get('fraccionImportacion')?.value || FRACCUINIMPORT;
+          const DESC_FRACCION = this.exportacionForm.get('descripcionComercialExport')?.value ||
+            (RAW.descripcionTigie || '').trim() ||
+            (this.selectFraccionArancelaria.descripcionTigie || '');
+          const ID_PRODUCTO_PADRE = String(this.selectFraccionArancelaria?.id ?? 'data');
+          const FRACCION_PADRE = this.importacionForm.get('fraccionImportacion')?.value || FRACCION; // o el padre real si aplica
+ 
+          const PAYLOAD : FraccionPayload = {
+            fraccion: FRACCION,
+            descFraccion: DESC_FRACCION,
+            idProductoPadre: ID_PRODUCTO_PADRE,
+            fraccionPadre: FRACCION_PADRE,
+          };
+ 
+          this.permisoImmexDatosService
+            .guardarFraccionExportacion(PAYLOAD)
+            .pipe(takeUntil(this.destroyNotifier$))
+            .subscribe({
+              next: (resp:FraccionResponse) => {
+                const NUEVO_REGISTRO: fraccionInfo = {
+                  id: Number(resp?.datos?.idFraccion) || Math.floor(Math.random() * 1_000_000) + 1,
+                  fraccionExportacion: resp?.datos?.cveFraccion || FRACCION,
+                  fraccionImportacion: resp?.datos?.fraccionPadre || FRACCION,
+                  umt: resp?.datos?.umt || this.selectFraccionArancelaria.umt,
+                  descripcionTigie:  resp?.datos?.descripcion || `Descripción TIGIE ${Math.floor(Math.random() * 1000)}`,
+                  descripcionComercialExport:resp?.datos?.descripcionUsuario ? resp?.datos?.descripcionUsuario.toUpperCase() : DESCCOMERCIAL.toUpperCase(),
+                  nicos: RAW.nicos,
+                  numero: this.fraccionTablaDatos.length + 1,
+                  nicosTable: this.nicoTablaDato,
+                };
+ 
+                this.fraccionTablaDatos = [...this.fraccionTablaDatos, NUEVO_REGISTRO];
+                const DEEPCOPY = [...this.fraccionTablaDatos];
+                this.fraccionTablaDatos = [];
+                this.fraccionTablaDatos = DEEPCOPY;
+ 
+                this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
+                this.pagemostrarNotificacion('La operación se realizó exitosamente.');
+ 
+                setTimeout(() => this.exportacionForm.reset(), 100);
               },
-            ];
-            const DEEPCOPY = [...this.fraccionTablaDatos];
-            this.fraccionTablaDatos = [];
-            this.fraccionTablaDatos = DEEPCOPY;
-            this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
-            setTimeout(() => {
-              this.exportacionForm.reset();
-            }, 100);
-          } else {
-            this.pagemostrarNotificacion(
-              'La fracción que intenta ingresar ya se encuentra registrada.'
-            );
-          }
+              error: () => {
+                this.exportNotificacion('Ocurrió un error al guardar. Inténtalo nuevamente.');
+              },
+            });
         } else {
-          this.pagemostrarNotificacion(
-            'La fracción arancelaria no es válida o no esta vigente..'
-          );
+          this.pagemostrarNotificacion('La fracción que intenta ingresar ya se encuentra registrada.');
         }
       } else {
-        this.pagemostrarNotificacion(
-          'Debe seleccionar una fracción de importación.'
-        );
+        this.pagemostrarNotificacion('La fracción arancelaria no es válida o no esta vigente..');
       }
     } else {
-      this.pagemostrarNotificacion(
-        'Tiene que introducir la Fracción arancelaria y su descripción.'
-      );
+      this.pagemostrarNotificacion('Debe seleccionar una fracción de importación.');
     }
+  } else {
+    this.pagemostrarNotificacion('Tiene que introducir la Fracción arancelaria y su descripción.');
   }
+}
   /** Selecciona una fila de la tabla de exportación. */
   onFilaSeleccionadaExportacion(event: fraccionInfo): void {
     this.selectExportacion = event;
@@ -700,7 +777,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
           .getRawValue()
           .descripcionComercialExport.toUpperCase(),
         nicos: this.exportacionForm.getRawValue().nicos,
-        numero: this.selectExportacion.numero,
+        numero: this.selectExportacion.numero ,
         nicosTable: this.nicoTablaDato,
       };
       const INDEX = this.fraccionTablaDatos.findIndex(
@@ -709,7 +786,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       if (INDEX > -1) {
         this.fraccionTablaDatos[INDEX] = {
           ...NUEVO_REGISTRO,
-          numero: this.fraccionTablaDatos[INDEX].numero,
+          numero: this.fraccionTablaDatos[INDEX]?.numero,
         };
         this.fraccionTablaDatos = [...this.fraccionTablaDatos];
       } else {

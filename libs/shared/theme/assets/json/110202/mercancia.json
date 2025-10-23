@@ -1,40 +1,50 @@
 {
-  "data": [
+  "tableHeader": ["Error"],
+  "tableBody": [
     {
-      "id": 1,
-      "fraccionArancelaria": "15029099",
-      "nombreTecnico": "Las demás.",
-      "numeroDeRegistrodeProductos": "254021028845",
-      "fechaExpedicion": "2021-11-22",
-      "fechaVencimiento": "2041-11-22",
-      "nombreComercial": "Las demás."
+      "tbodyData": [
+        "Error en Linea1): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
     },
     {
-      "id": 2,
-      "fraccionArancelaria": "73065001",
-      "nombreTecnico": "De hierro o acero, cobrizados, de doble pared soldados por fusión (process brazing) con o sin recubrimiento anticorrosivo.",
-      "numeroDeRegistrodeProductos": "254021028851",
-      "fechaExpedicion": "2021-11-22",
-      "fechaVencimiento": "2041-11-22",
-      "nombreComercial": "prueba ACESS ARG."
+      "tbodyData": [
+        "Error en Linea2): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
     },
     {
-      "id": 3,
-      "fraccionArancelaria": "15029099",
-      "nombreTecnico": "Las demás.",
-      "numeroDeRegistrodeProductos": "254021028850",
-      "fechaExpedicion": "2021-02-23",
-      "fechaVencimiento": "2021-02-23",
-      "nombreComercial": "GRASA ANIMAL"
+      "tbodyData": [
+        "Error en Linea3): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
     },
     {
-      "id": 4,
-      "fraccionArancelaria": "15029099",
-      "nombreTecnico": "Las demás.",
-      "numeroDeRegistrodeProductos": "254021028850",
-      "fechaExpedicion": "2021-02-23",
-      "fechaVencimiento": "2021-02-23",
-      "nombreComercial": "GRASA ANIMAL"
+      "tbodyData": [
+        "Error en Linea4): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
+    },
+    {
+      "tbodyData": [
+        "Error en Linea5): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
+    },
+    {
+      "tbodyData": [
+        "Error en Linea6): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
+    },
+    {
+      "tbodyData": [
+        "Error en Linea7): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
+    },
+    {
+      "tbodyData": [
+        "Error en Linea8): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
+    },
+    {
+      "tbodyData": [
+        "Error en Linea9): El registro no cumple con el formato correspondiente, favor de verificar."
+      ]
     }
   ]
 }

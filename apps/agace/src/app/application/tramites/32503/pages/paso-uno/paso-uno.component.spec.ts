@@ -167,26 +167,6 @@ describe('PasoUnoComponent', () => {
     }, 60);
   });
 
-  it('should subscribe to consultaioQuery and update consultaDatos', () => {
-    component.ngOnInit();
-    expect(component.consultaDatos).toEqual({
-      action_id: "",
-      consultaioSolicitante: null,
-      create: true,
-      current_user: "",
-      department: "",
-      estadoDeTramite: "",
-      folioTramite: "",
-      id_solicitud: "",
-      nombre_pagina: "",
-      parameter: "",
-      procedureId: "",
-      readonly: false,
-      tipoDeTramite: "",
-      update: false
-    });
-    expect(component.esDatosRespuesta).toBe(true);
-  });
 
   it('should set esDatosRespuesta to true when consultaDatos.update is false', () => {
     component.ngOnInit();

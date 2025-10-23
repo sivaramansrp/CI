@@ -1,15 +1,15 @@
-import { Catalogo, CertificadoDisponibles, ConsultaioQuery, doDeepCopy, esValidArray, esValidObject, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CertificadoDisponibles, ConsultaioQuery, Notificacion, NotificacionesComponent,TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
+import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
-import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 /**
  * @descripcion
@@ -23,7 +23,7 @@ import { ComplimentosService } from '../../../../shared/services/complimentos.se
 @Component({
   selector: 'app-buscar-certificado-de-origen',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, NotificacionesComponent],
   templateUrl: './buscar-certificado-de-origen.component.html',
   styleUrl: './buscar-certificado-de-origen.component.scss',
 })
@@ -33,6 +33,11 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   buscarCertificadoDeOrigenFrom!: FormGroup;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  nuevaNotificacion!: Notificacion;
 
   /**
    * Arreglo de objetos `Catalogo` que representa los países o bloques.
@@ -103,7 +108,6 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.getValoresStore();
     this.obtenerPaisBloque();
-    this.obtenerTratadoAcuerdo();
   }
 
    /**
@@ -146,7 +150,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.buscarCertificadoDeOrigenFrom = this.fb.group({
         paisBloqueClave: [this.seccionState?.paisBloqueClave],
         tratadoAcuerdoClave: [this.seccionState?.tratadoAcuerdoClave],
-        cveRegistroProductor: [this.seccionState?.cveRegistroProductor, [Validators.required, Validators.maxLength(12)]],
+        cveRegistroProductor: [this.seccionState?.cveRegistroProductor, [Validators.required, Validators.maxLength(14)]],
       });
   }
     /**
@@ -177,10 +181,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
             this.paisBloque = RESPONSE.datos;
           }
         }
-      },error => {
-        //console.error('Error al obtener los estados:', error);
-      });
-    
+      });  
   }
 
   /**
@@ -194,16 +195,14 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  *
  * @returns {void}
  */
-  obtenerTratadoAcuerdo(): void {
-    this.complimentosService.getTratadoAcuerdo().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+  obtenerTratadoAcuerdo(countryCode: string): void {
+    this.complimentosService.getTratadoAcuerdo(countryCode).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
         if(esValidObject(res)) {
           const RESPONSE = doDeepCopy(res);
           if(esValidArray(RESPONSE.datos)) {
             this.tratadoAcuerdo = RESPONSE.datos;
           }
         }
-      },error => {
-        //console.error('Error al obtener los estados:', error);
       });
   }
 
@@ -216,9 +215,10 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110210Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110210Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    if (campo === 'paisBloqueClave' && VALOR && VALOR !== '') {
+      this.obtenerTratadoAcuerdo(VALOR);
+    }
   }
-
-
 
   /**
    * Obtiene los valores del store y los asigna al formulario.
@@ -252,17 +252,202 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Actualiza el estado del grid de comercializadores de productos.
    */
   actualizaGridComercializadoresProductos(): void {
-     this.certificadoService.getData().pipe(
-        takeUntil(this.destroyed$)
-      ).subscribe(
-        (data: CertificadoDisponibles[]) => {
-            const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value;
-            const CERTIFICADOS = data.filter(cert => cert.numeroDeCertificado === CVEREGISTROPRODUCTOR);
-            if (CERTIFICADOS.length > 0) {
-            this.tramite110210Store.setCertificadosDisponibles(CERTIFICADOS);
+      const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value;
+      const PAYLOAD = {
+        "solicitud": {
+          "solicitante": {
+            "rfc": "AAL0409235E6",
+            "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+            "correoElectronico": "vucem2021@gmail.com",
+            "telefono": "55-98764532",
+            "cveUsuario": "AAL0409235E6",
+            "domicilio": {
+              "pais": {
+                "clave": "MEX",
+                "nombre": "ESTADOS UNIDOS MEXICANOS"
+              },
+              "entidadFederativa": {
+                "clave": "SIN",
+                "nombre": "SINALOA"
+              },
+              "delegacionMunicipio": {
+                "clave": "25001",
+                "nombre": "AHOME"
+              },
+              "localidad": {
+                "clave": "00181210008",
+                "nombre": "LOS MOCHIS"
+              },
+              "colonia": {
+                "clave": "00181210001",
+                "nombre": "MIGUEL HIDALGO"
+              },
+              "calle": "CAMINO VIEJO",
+              "numeroExterior": "1353",
+              "numeroInterior": "",
+              "codigoPostal": "81210"
             }
+          },
+          "cveRolCapturista": "PersonaMoral",
+          "cveUsuarioCapturista": "AAL0409235E6",
+          "clavePaisSeleccionado": "",
+          "idTratadoAcuerdoSeleccionado": "",
+          "discriminatorValue": "110210",
+          "tramite": {
+            "numFolioTramite": ""
+          },
+          "idSolicitud": ""
+        },
+        "puedeCapturarRepresentanteLegalCG": false,
+        "datosMercancia": {
+          "numeroCertificado": CVEREGISTROPRODUCTOR
+        },
+        "buscarCertificadosPorNumero": "Buscar Certificado",
+        "buscarListaCertificados": "Buscar Certificado"
+      };
+
+      this.service.getCertificadosDisponibles(PAYLOAD).pipe(
+        takeUntil(this.destroyed$)
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          if(esValidArray(RESPONSE.datos)) {
+            if(RESPONSE.datos.length > 0){
+              const DATOS: CertificadoDisponibles[] = []
+              RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
+                const DATOSOBJ = {
+                  idSolicitud: certificado.idSolicitud,
+                  numeroCertificado: certificado.numeroCertificado,
+                  fechaExpedicion: certificado.fechaExpedicion,
+                  fechaVencimiento: certificado.fechaVencimiento,
+                }
+                DATOS.push(DATOSOBJ);
+              });
+              this.tramite110210Store.setCertificadosDisponibles(DATOS);
+            }else{
+              this.guardarObservacion();
+            }  
+          }else{
+              this.guardarObservacion();
+            } 
         }
-      );
+      });
+  }
+  /**
+   * Actualiza el estado del grid de comercializadores de catálogos.
+   */
+  actualizaGridComercializadoresCatalogs(): void {
+    const PAISES = this.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.value;
+    const TRATADOS = this.buscarCertificadoDeOrigenFrom.get('tratadoAcuerdoClave')?.value;
+    if(PAISES){
+
+      const PAYLOAD = {
+        "solicitud": {
+          "solicitante": {
+            "rfc": "AAL0409235E6",
+            "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+            "correoElectronico": "vucem2021@gmail.com",
+            "telefono": "55-98764532",
+            "cveUsuario": "AAL0409235E6",
+            "domicilio": {
+              "pais": {
+                "clave": "MEX",
+                "nombre": "ESTADOS UNIDOS MEXICANOS"
+              },
+              "entidadFederativa": {
+                "clave": "SIN",
+                "nombre": "SINALOA"
+              },
+              "delegacionMunicipio": {
+                "clave": "25001",
+                "nombre": "AHOME"
+              },
+              "localidad": {
+                "clave": "00181210008",
+                "nombre": "LOS MOCHIS"
+              },
+              "colonia": {
+                "clave": "00181210001",
+                "nombre": "MIGUEL HIDALGO"
+              },
+              "calle": "CAMINO VIEJO",
+              "numeroExterior": "1353",
+              "numeroInterior": "",
+              "codigoPostal": "81210"
+            }
+          },
+          "cveRolCapturista": "PersonaMoral",
+          "cveUsuarioCapturista": "AAL0409235E6",
+          "clavePaisSeleccionado": PAISES ? PAISES : "",
+          "idTratadoAcuerdoSeleccionado": TRATADOS ? TRATADOS : "",
+          "discriminatorValue": "110210",
+          "tramite": {
+            "numFolioTramite": ""
+          },
+          "idSolicitud": ""
+        },
+        "puedeCapturarRepresentanteLegalCG": false,
+        "datosMercancia": {
+          "numeroCertificado": ''
+        },
+        "buscarCertificadosPorNumero": "Buscar Certificado",
+        "buscarListaCertificados": "Buscar Certificado"
+      };
+
+      this.service.getCertificadosDisponibles(PAYLOAD).pipe(
+        takeUntil(this.destroyed$)
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          if(esValidArray(RESPONSE.datos)) {
+            if(RESPONSE.datos.length > 0){
+              const DATOS: CertificadoDisponibles[] = []
+              RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
+                const DATOSOBJ = {
+                  idSolicitud: certificado.idSolicitud,
+                  numeroCertificado: certificado.numeroCertificado,
+                  fechaExpedicion: certificado.fechaExpedicion,
+                  fechaVencimiento: certificado.fechaVencimiento,
+                }
+                DATOS.push(DATOSOBJ);
+              });
+              this.tramite110210Store.setCertificadosDisponibles(DATOS);
+            }else{
+              this.guardarObservacion();
+            }  
+          }else{
+              this.guardarObservacion();
+            } 
+        }
+      });
+    }
+  }
+
+  
+  /**
+   * El método `guardarObservacion` en la clase `DetalleVDictamenComponent` es responsable de
+   * navegar a la ruta 'bandeja-de-tareas-pendientes' cuando es llamado. Este método se activa cuando
+   * ocurre una acción o evento específico en el componente, como guardar una observación o completar
+   * una tarea. Al llamar a `this.router.navigate(['bandeja-de-tareas-pendientes']);`, el método redirige
+   * al usuario a la ruta 'bandeja-de-tareas-pendientes' dentro de la aplicación.
+   * @method guardarObservacion
+   * @description Navega a la bandeja de tareas pendientes.
+   * @returns {void}
+   * @memberof DetalleVDictamenComponent
+   */
+  guardarObservacion(): void {
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: "Corrija los siguientes errores:",
+        mensaje: "El certificado de origen no existe",
+        cerrar: false,
+        txtBtnAceptar: "Aceptar",
+        txtBtnCancelar: "",
+      };
   }
   /**
    * @method validarFormulario

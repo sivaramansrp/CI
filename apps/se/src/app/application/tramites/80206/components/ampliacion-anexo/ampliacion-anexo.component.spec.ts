@@ -1,377 +1,592 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Directive, Injectable, Input, Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { of, throwError, Subject } from 'rxjs';
 
 import { AmpliacionAnexoComponent } from './ampliacion-anexo.component';
-import { FormBuilder } from '@angular/forms';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { Tramite80206Store } from '../../estados/tramite80206.store';
-import { HttpClient } from '@angular/common/http';
+import { 
+  Arancelaria, 
+  ArancelariaImportacion, 
+  ApiResponse,
+  Sector,
+  Servicios
+} from '../../models/datos-info.model';
+import { AmpliacionServiciosState } from '../../estados/tramite80206.store';
+import { TablaSeleccion, Catalogo } from '@ng-mf/data-access-user';
 
-class TranslatePipe implements PipeTransform {
-  transform(v: any) {
-    return v;
-  }
-}
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-@Injectable()
-class MockAmpliacionServiciosService {
-  getDatos = jest.fn(() =>
-    of({
-      data: {
-        infoServicios: {
-          seleccionaLaModalidad: 'MOD-A',
-          folio: 'F-123',
-          ano: '2025',
-        },
-      },
-    })
-  );
-}
-
-@Injectable()
-class MockAmpliacionServiciosQuery {
-  private _solicitud$ = new Subject<any>();
-  selectSolicitudTramite$ = this._solicitud$.asObservable();
-
-  __emit(value: any) {
-    this._solicitud$.next(value);
-  }
-}
-
-@Injectable()
-class MockTramite80206Store {
-  setInfoRegistro = jest.fn();
-  setFraccionArancelaria = jest.fn();
-  setRfcEmpresa = jest.fn();
-  setCantidad = jest.fn();
-  setValor = jest.fn();
-  setImportacion = jest.fn();
-  setDatosImmex = jest.fn();
-  setDatosImportacion = jest.fn();
-}
-
-@Injectable()
-class MockHttpClient {
-  post() {}
-}
-
-describe('AmpliacionAnexoComponent (Jest)', () => {
-  let fixture: ComponentFixture<AmpliacionAnexoComponent>;
+describe('AmpliacionAnexoComponent', () => {
   let component: AmpliacionAnexoComponent;
-  let mockService: MockAmpliacionServiciosService;
-  let mockQuery: MockAmpliacionServiciosQuery;
-  let mockStore: MockTramite80206Store;
+  let fixture: ComponentFixture<AmpliacionAnexoComponent>;
+  let mockAmpliacionServiciosService: jest.Mocked<AmpliacionServiciosService>;
+  let mockAmpliacionServiciosQuery: jest.Mocked<AmpliacionServiciosQuery>;
+  let mockTramite80206Store: jest.Mocked<Tramite80206Store>;
+
+  const mockApiResponse: ApiResponse = {
+    code: 200,
+    data: {
+      idsubmanufacturer: 'SUB123456',
+      infoServicios: {
+        seleccionaLaModalidad: 'Test Modalidad',
+        folio: '12345',
+        ano: '2023'
+      }
+    },
+    infoServicios: {
+      seleccionaLaModalidad: 'Test Modalidad',
+      folio: '12345',
+      ano: '2023'
+    }
+  };
+
+  const mockTramiteState: AmpliacionServiciosState = {
+    idSolicitud: 202785257,
+    
+    infoRegistro: {
+      seleccionaLaModalidad: 'Test Modalidad',
+      folio: '12345',
+      ano: '2023'
+    },
+
+    datosImmex: [
+      {
+        fraccion: '12345678',
+        fraccionArancelaria: '12345678',
+        descripcionComercial: 'Test Description IMMEX',
+        anexoII: 'Anexo II Test',
+        tipo: 'EXPORTACION',
+        umt: 'KG',
+        categoria: 'A',
+        valorMensual: '1000.00',
+        valorAnual: '12000.00',
+        volumenrMensual: '100.00',
+        volumenAnual: '1200.00'
+      }
+    ],
+
+    datosImportacion: [
+      {
+        fraccion: '87654321',
+        fraccionArancelaria: '12345678',
+        fraccionArancelariaImportacion: '87654321',
+        descripcionComercialImportacion: '',
+        descripcionFraccionPadre: '',
+        anexoII: '',
+        tipo: '',
+        umt: '',
+        categoria: '',
+        valorMensual: '',
+        valorAnual: '',
+        volumenrMensual: '',
+        volumenAnual: ''
+      }
+    ],
+
+    datosSector: [
+      {
+        clave: 'SEC001',
+        descripcion: 'Sector Automotriz'
+      }
+    ],
+
+    datos: [
+      {
+        fraccion: '11111111',
+        fraccionArancelaria: '11111111',
+        descripcionComercial: 'General Data Description',
+        anexoII: 'Anexo II General',
+        tipo: 'GENERAL',
+        umt: 'MT',
+        categoria: 'C',
+        valorMensual: '500.00',
+        valorAnual: '6000.00',
+        volumenrMensual: '50.00',
+        volumenAnual: '600.00'
+      }
+    ],
+
+    aduanaDeIngresoSelecion: 'ADU001',
+    sectorSelecion: 'SEC001',
+    formaValida: {
+      'fraccionArancelaria': true,
+      'importacion': true,
+      'cantidad': false,
+      'valor': true,
+      'modalidad': true
+    },
+    fraccion: '12345678',
+    importacion: '11223344',
+    fraccionArancelaria: '87654321',
+    cantidad: '100',
+    valor: '1000',
+    seleccionaLaModalidad: 'IMMEX',
+    seleccionarRegla: 'REGLA_001',
+    sector: 'Automotriz',
+    isSelectedRegla: true,
+    sectorDesplegable: [],
+    reglaSeleccionada: []
+  };
+
+  const mockArancelaria: Arancelaria = {
+    fraccion: '12345678',
+    fraccionArancelaria: '12345678',
+    descripcionComercial: 'Test Description',
+    anexoII: 'Anexo II Test',
+    tipo: 'EXPORTACION',
+    umt: 'KG',
+    categoria: 'A',
+    valorMensual: '1000.00',
+    valorAnual: '12000.00',
+    volumenrMensual: '100.00',
+    volumenAnual: '1200.00'
+  };
+
+  const mockArancelariaImportacion: ArancelariaImportacion = {
+    fraccion: '87654321',
+    fraccionArancelaria: '12345678',
+    fraccionArancelariaImportacion: '87654321',
+    descripcionComercialImportacion: '',
+    descripcionFraccionPadre: '',
+    anexoII: '',
+    tipo: '',
+    umt: '',
+    categoria: '',
+    valorMensual: '',
+    valorAnual: '',
+    volumenrMensual: '',
+    volumenAnual: ''
+  };
 
   beforeEach(async () => {
+    const mockService = {
+      getDatos: jest.fn().mockReturnValue(of(mockApiResponse)),
+      obtenerInformacionFraccion: jest.fn().mockReturnValue(of({
+        codigo: '00',
+        datos: mockArancelaria
+      })),
+      obtenerFraccionImportacion: jest.fn().mockReturnValue(of({
+        codigo: '00',
+        datos: mockArancelariaImportacion
+      })),
+      mapApiResponseToFraccionArancelaria: jest.fn().mockReturnValue([mockArancelaria]),
+      mapApiResponseToFraccionArancelariaImportacion: jest.fn().mockReturnValue([mockArancelariaImportacion])
+    };
+
+    const mockQuery = {
+      selectSolicitudTramite$: of(mockTramiteState)
+    };
+
+    const mockStore = {
+      setFraccionArancelaria: jest.fn(),
+      setRfcEmpresa: jest.fn(),
+      setCantidad: jest.fn(),
+      setValor: jest.fn(),
+      setImportacion: jest.fn(),
+      setInfoRegistro: jest.fn(),
+      setDatosImmex: jest.fn(),
+      setDatosImportacion: jest.fn(),
+      setAduanaDeIngresoSeleccion: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [AmpliacionAnexoComponent, TranslatePipe, MyCustomDirective],
+      declarations: [AmpliacionAnexoComponent],
+      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: AmpliacionServiciosService, useClass: MockAmpliacionServiciosService },
-        { provide: AmpliacionServiciosQuery, useClass: MockAmpliacionServiciosQuery },
-        { provide: Tramite80206Store, useClass: MockTramite80206Store },
-        { provide: HttpClient, useClass: MockHttpClient },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        { provide: AmpliacionServiciosService, useValue: mockService },
+        { provide: AmpliacionServiciosQuery, useValue: mockQuery },
+        { provide: Tramite80206Store, useValue: mockStore }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AmpliacionAnexoComponent);
     component = fixture.componentInstance;
-
-    mockService = TestBed.inject(AmpliacionServiciosService) as any;
-    mockQuery = TestBed.inject(AmpliacionServiciosQuery) as any;
-    mockStore = TestBed.inject(Tramite80206Store) as any;
-
-    component['destroyNotifier$'] = new Subject<void>();
+    
+    mockAmpliacionServiciosService = TestBed.inject(AmpliacionServiciosService) as jest.Mocked<AmpliacionServiciosService>;
+    mockAmpliacionServiciosQuery = TestBed.inject(AmpliacionServiciosQuery) as jest.Mocked<AmpliacionServiciosQuery>;
+    mockTramite80206Store = TestBed.inject(Tramite80206Store) as jest.Mocked<Tramite80206Store>;
   });
 
-  afterEach(() => {
-    fixture.destroy();
-    jest.clearAllMocks();
-  });
-
-  it('debe crearse el componente (constructor)', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe ejecutar ngOnInit y llamar a métodos de carga/suscripción', () => {
-    const spyGet = jest.spyOn(component, 'getDatos');
-    const spyImmex = jest.spyOn(component, 'suscribirseADatosImmex');
-    const spyFields = jest.spyOn(component, 'suscribirseAFields');
-
-    component.ngOnInit();
-
-    expect(spyGet).toHaveBeenCalled();
-    expect(spyImmex).toHaveBeenCalled();
-    expect(spyFields).toHaveBeenCalled();
-  });
-
-  it('debe activar el modal de alerta', () => {
-    component.mostrarAlerta = false;
-    component.activarModal();
-    expect(component.mostrarAlerta).toBe(true);
-  });
-
-  it('debe aceptar/cerrar el modal usando aceptar()', () => {
-    component.mostrarAlerta = true;
-    component.aceptar();
-    expect(component.mostrarAlerta).toBe(false);
-  });
-
-  it('debe cerrar el modal usando cerrarModal()', () => {
-    component.mostrarAlerta = true;
-    component.cerrarModal();
-    expect(component.mostrarAlerta).toBe(false);
-  });
-
-  it('debe propagar cambios para fraccionArancelaria', () => {
-    component.enCambioDeCampo('fraccionArancelaria', '9999.99.99');
-    expect(mockStore.setFraccionArancelaria).toHaveBeenCalledWith('9999.99.99');
-  });
-
-  it('debe propagar cambios para fraccion (usa setRfcEmpresa)', () => {
-    component.enCambioDeCampo('fraccion', 'X1');
-    expect(mockStore.setRfcEmpresa).toHaveBeenCalledWith('X1');
-  });
-
-  it('debe propagar cambios para cantidad', () => {
-    component.enCambioDeCampo('cantidad', '10');
-    expect(mockStore.setCantidad).toHaveBeenCalledWith('10');
-  });
-
-  it('debe propagar cambios para valor', () => {
-    component.enCambioDeCampo('valor', '5000');
-    expect(mockStore.setValor).toHaveBeenCalledWith('5000');
-  });
-
-  it('debe propagar cambios para importacion', () => {
-    component.enCambioDeCampo('importacion', '8708.40.99');
-    expect(mockStore.setImportacion).toHaveBeenCalledWith('8708.40.99');
-  });
-
-  it('no debe fallar con un campo desconocido', () => {
-    expect(() => component.enCambioDeCampo('otro', 'x')).not.toThrow();
-  });
-
-  it('debe suscribirse a los campos y mapear el estado local', () => {
-    component.suscribirseAFields();
-    const estado = {
-      fraccion: 'ABC',
-      cantidad: '2',
-      fraccionArancelaria: '1111.11.11',
-      importacion: '2222.22.22',
-      valor: '999',
-      datos: [{ fraccionArancelaria: 'x' }],
-    };
-    mockQuery.__emit(estado);
-    expect(component.tramiteState).toEqual(estado);
-    expect(component.fraccion).toBe('ABC');
-    expect(component.cantidad).toBe('2');
-    expect(component.fraccionArancelaria).toBe('1111.11.11');
-    expect(component.importacion).toBe('2222.22.22');
-    expect(component.valor).toBe('999');
-    expect(component.datos).toEqual([{ fraccionArancelaria: 'x' }]);
-  });
-
-  it('debe obtener datos del servicio y setear el formulario desde el store', () => {
-    const spyInitForm = jest.spyOn(component, 'inicializarFormularioDesdeAlmacen');
-    component.getDatos();
-    expect(mockService.getDatos).toHaveBeenCalled();
-    expect(mockStore.setInfoRegistro).toHaveBeenCalledWith({
-      seleccionaLaModalidad: 'MOD-A',
-      folio: 'F-123',
-      ano: '2025',
+  describe('Component initialization', () => {
+    it('should initialize with correct default values', () => {
+      expect(component.mostrarAlerta).toBe(false);
+      expect(component.mensajeDeAlerta).toBe('Debe seleccionar una fracción de exportación');
+      expect(component.tablaSeleccion).toBe(TablaSeleccion.RADIO);
+      expect(component.fraccion).toBe('');
+      expect(component.cantidad).toBe('');
+      expect(component.fraccionArancelaria).toBe('');
+      expect(component.importacion).toBe('');
+      expect(component.valor).toBe('');
+      expect(component.datos).toEqual([]);
+      expect(component.datosImmex).toEqual([]);
+      expect(component.datosImportacion).toEqual([]);
+      expect(component.domiciliosSeleccionados).toEqual([]);
+      expect(component.esFormularioSoloLectura).toBe(false);
     });
-    expect(spyInitForm).toHaveBeenCalled();
+
+    it('should initialize formularioInfoRegistro in constructor', () => {
+      expect(component.formularioInfoRegistro).toBeDefined();
+      expect(component.formularioInfoRegistro.get('seleccionaLaModalidad')).toBeTruthy();
+      expect(component.formularioInfoRegistro.get('folio')).toBeTruthy();
+      expect(component.formularioInfoRegistro.get('ano')).toBeTruthy();
+    });
   });
 
-  it('debe actualizar datosImmex y datosImportacion al suscribirse', () => {
-    component.suscribirseADatosImmex();
-    const payload = {
-      datosImmex: [{ fraccionArancelaria: 'A' }],
-      datosImportacion: [{ fraccionArancelaria: 'B' }],
-    };
-    mockQuery.__emit(payload);
-    expect(component.datosImmex).toEqual(payload.datosImmex);
-    expect(component.datosImportacion).toEqual(payload.datosImportacion);
+  describe('ngOnInit', () => {
+    it('should call required methods on initialization', () => {
+      jest.spyOn(component, 'getDatos');
+      jest.spyOn(component, 'suscribirseADatosImmex');
+      jest.spyOn(component, 'suscribirseAFields');
+
+      component.ngOnInit();
+
+      expect(component.getDatos).toHaveBeenCalled();
+      expect(component.suscribirseADatosImmex).toHaveBeenCalled();
+      expect(component.suscribirseAFields).toHaveBeenCalled();
+    });
   });
 
-  it('debe inicializar el formulario desde el almacén con valores y controles deshabilitados', () => {
-    component.tramiteState = {
-      infoRegistro: {
-        seleccionaLaModalidad: 'M1',
-        folio: 'F-9',
-        ano: '2024',
-      },
-    } as any;
+  describe('Modal functionality', () => {
+    it('should activate modal', () => {
+      component.activarModal();
+      expect(component.mostrarAlerta).toBe(true);
+    });
 
-    component.inicializarFormularioDesdeAlmacen();
-    const fg = component.formularioInfoRegistro;
-    expect(fg.get('seleccionaLaModalidad')?.value).toBe('M1');
-    expect(fg.get('folio')?.value).toBe('F-9');
-    expect(fg.get('ano')?.value).toBe('2024');
-    expect(fg.get('seleccionaLaModalidad')?.disabled).toBe(true);
-    expect(fg.get('folio')?.disabled).toBe(true);
-    expect(fg.get('ano')?.disabled).toBe(true);
+    it('should close modal on aceptar', () => {
+      component.mostrarAlerta = true;
+      component.aceptar();
+      expect(component.mostrarAlerta).toBe(false);
+    });
+
+    it('should close modal on cerrarModal', () => {
+      component.mostrarAlerta = true;
+      component.cerrarModal();
+      expect(component.mostrarAlerta).toBe(false);
+    });
   });
 
-  it('debe inicializar el formulario vacío y deshabilitado', () => {
-    component.inicializarFormularioInfoRegistro();
-    const fg = component.formularioInfoRegistro;
-    expect(fg.get('seleccionaLaModalidad')?.value).toBe('');
-    expect(fg.get('folio')?.value).toBe('');
-    expect(fg.get('ano')?.value).toBe('');
-    expect(fg.get('seleccionaLaModalidad')?.disabled).toBe(true);
-    expect(fg.get('folio')?.disabled).toBe(true);
-    expect(fg.get('ano')?.disabled).toBe(true);
+  describe('Field changes', () => {
+    it('should update fraccionArancelaria in store', () => {
+      component.enCambioDeCampo('fraccionArancelaria', '12345678');
+      expect(mockTramite80206Store.setFraccionArancelaria).toHaveBeenCalledWith('12345678');
+    });
+
+    it('should update fraccion in store', () => {
+      component.enCambioDeCampo('fraccion', '87654321');
+      expect(mockTramite80206Store.setRfcEmpresa).toHaveBeenCalledWith('87654321');
+    });
+
+    it('should update cantidad in store', () => {
+      component.enCambioDeCampo('cantidad', '100');
+      expect(mockTramite80206Store.setCantidad).toHaveBeenCalledWith('100');
+    });
+
+    it('should update valor in store', () => {
+      component.enCambioDeCampo('valor', '1000');
+      expect(mockTramite80206Store.setValor).toHaveBeenCalledWith('1000');
+    });
+
+    it('should update importacion in store', () => {
+      component.enCambioDeCampo('importacion', '11223344');
+      expect(mockTramite80206Store.setImportacion).toHaveBeenCalledWith('11223344');
+    });
+
+    it('should handle unknown field name', () => {
+      component.enCambioDeCampo('unknownField', 'value');
+      // Should not throw error and not call any store method
+      expect(mockTramite80206Store.setFraccionArancelaria).not.toHaveBeenCalled();
+    });
   });
 
-  it('debe eliminar un registro de datosImmex cuando existe el índice', () => {
-    component.datosImmex = [
-      { fraccionArancelaria: 'X' } as any,
-      { fraccionArancelaria: 'Y' } as any,
-    ];
-    component.domiciliosSeleccionados = [{ fraccionArancelaria: 'Y' } as any];
+  describe('API calls', () => {
+    it('should get data successfully', () => {
+      component.getDatos();
 
-    component.eliminarServiciosGrid();
+      expect(mockAmpliacionServiciosService.getDatos).toHaveBeenCalled();
+      expect(mockTramite80206Store.setInfoRegistro).toHaveBeenCalledWith(mockApiResponse.data.infoServicios);
+    });
 
-    expect(mockStore.setDatosImmex).toHaveBeenCalledWith([{ fraccionArancelaria: 'X' }]);
-    expect(component.domiciliosSeleccionados).toEqual([]);
+    it('should handle API error in getDatos', () => {
+      mockAmpliacionServiciosService.getDatos.mockReturnValue(throwError(() => new Error('API Error')));
+      
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      component.getDatos();
+
+      expect(mockAmpliacionServiciosService.getDatos).toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
   });
 
-  it('no debe modificar nada si no se encuentra el índice en eliminarServiciosGrid', () => {
-    component.datosImmex = [{ fraccionArancelaria: 'X' } as any];
-    component.domiciliosSeleccionados = [{ fraccionArancelaria: 'NO' } as any];
+  describe('Form initialization methods', () => {
+    it('should initialize formularioInfoRegistro with empty values', () => {
+      component.inicializarFormularioInfoRegistro();
 
-    component.eliminarServiciosGrid();
+      expect(component.formularioInfoRegistro).toBeDefined();
+      expect(component.formularioInfoRegistro.get('seleccionaLaModalidad')?.value).toBe('');
+      expect(component.formularioInfoRegistro.get('folio')?.value).toBe('');
+      expect(component.formularioInfoRegistro.get('ano')?.value).toBe('');
+    });
 
-    expect(mockStore.setDatosImmex).not.toHaveBeenCalled();
+    it('should initialize form from store data', () => {
+      component.tramiteState = mockTramiteState;
+      component.inicializarFormularioDesdeAlmacen();
+
+      expect(component.formularioInfoRegistro.get('seleccionaLaModalidad')?.value).toBe('Test Modalidad');
+      expect(component.formularioInfoRegistro.get('folio')?.value).toBe('12345');
+      expect(component.formularioInfoRegistro.get('ano')?.value).toBe('2023');
+    });
   });
 
-  it('debe eliminar un registro de datosImportacion cuando existe el índice', () => {
-    component.datosImportacion = [
-      { fraccionArancelaria: 'A' } as any,
-      { fraccionArancelaria: 'B' } as any,
-    ];
-    component.domiciliosSeleccionados = [{ fraccionArancelaria: 'A' } as any];
+  describe('Subscribe methods', () => {
+    it('should subscribe to fields changes', () => {
+      component.suscribirseAFields();
 
-    component.eliminarImportacion();
+      expect(component.tramiteState).toEqual(mockTramiteState);
+      expect(component.fraccion).toBe(mockTramiteState.fraccion);
+      expect(component.cantidad).toBe(mockTramiteState.cantidad);
+      expect(component.fraccionArancelaria).toBe(mockTramiteState.fraccionArancelaria);
+      expect(component.importacion).toBe(mockTramiteState.importacion);
+      expect(component.valor).toBe(mockTramiteState.valor);
+    });
 
-    expect(mockStore.setDatosImportacion).toHaveBeenCalledWith([{ fraccionArancelaria: 'B' }]);
-    expect(component.domiciliosSeleccionados).toEqual([]);
+    it('should subscribe to datos immex', () => {
+      component.suscribirseADatosImmex();
+      
+      expect(component.datosImmex).toEqual(mockTramiteState.datosImmex);
+      expect(component.datosImportacion).toEqual(mockTramiteState.datosImportacion);
+    });
   });
 
-  it('no debe modificar nada si no se encuentra el índice en eliminarImportacion', () => {
-    component.datosImportacion = [{ fraccionArancelaria: 'A' } as any];
-    component.domiciliosSeleccionados = [{ fraccionArancelaria: 'Z' } as any];
+  describe('Grid operations', () => {
+    beforeEach(() => {
+      component.datosImmex = [mockArancelaria];
+      component.datosImportacion = [mockArancelariaImportacion];
+      component.domiciliosSeleccionados = [mockArancelaria];
+    });
 
-    component.eliminarImportacion();
+    it('should eliminate services from grid', () => {
+      component.eliminarServiciosGrid();
 
-    expect(mockStore.setDatosImportacion).not.toHaveBeenCalled();
+      expect(mockTramite80206Store.setDatosImmex).toHaveBeenCalled();
+      expect(component.domiciliosSeleccionados).toEqual([]);
+    });
+
+    it('should eliminate importacion from grid', () => {
+      component.eliminarImportacion();
+
+      expect(mockTramite80206Store.setDatosImportacion).toHaveBeenCalled();
+      expect(component.domiciliosSeleccionados).toEqual([]);
+    });
+
+    it('should return correct condition for delete', () => {
+      expect(component.condicion).toBe(true);
+
+      component.domiciliosSeleccionados = [];
+      expect(component.condicion).toBe(false);
+    });
   });
 
-  it('debe mostrar alerta si la fracción arancelaria ya existe (rama duplicado)', () => {
-    component.datosImmex = [{ fraccionArancelaria: '1111.11.11' } as any];
-    component.fraccionArancelaria = '1111.11.11';
+  describe('Validation methods', () => {
+    it('should validate fraccion format correctly', () => {
+      expect(AmpliacionAnexoComponent.validarFormatoFraccion('12345678')).toBe(true);
+      expect(AmpliacionAnexoComponent.validarFormatoFraccion('123')).toBe(false);
+      expect(AmpliacionAnexoComponent.validarFormatoFraccion('1234567890')).toBe(false);
+      expect(AmpliacionAnexoComponent.validarFormatoFraccion('abcd1234')).toBe(false);
+    });
 
-    const spyActivar = jest.spyOn(component, 'activarModal');
-    component.actualizaGridEmpresasNacionales();
+    it('should validate form correctly when form exists', () => {
+      component.inicializarFormularioInfoRegistro();
+      const result = component.validarFormulario();
 
-    expect(component.mensajeDeAlerta).toContain('ya existe');
-    expect(spyActivar).toHaveBeenCalled();
-    expect(mockStore.setDatosImmex).not.toHaveBeenCalled();
+      expect(result).toBe(true);
+    });
+
+    it('should return false when formulario is null', () => {
+      component.formularioInfoRegistro = null as any;
+      const result = component.validarFormulario();
+
+      expect(result).toBe(false);
+    });
   });
 
-  it('debe agregar una nueva fracción cuando no existe (rama feliz)', () => {
-    component.datosImmex = [{ fraccionArancelaria: 'AAA' } as any];
-    component.fraccionArancelaria = 'BBB';
+  describe('Selection handlers', () => {
+    it('should select domicilios', () => {
+      component.seleccionarDomicilios(mockArancelaria);
+      expect(component.domiciliosSeleccionados).toEqual([mockArancelaria]);
+    });
 
-    component.actualizaGridEmpresasNacionales();
+    it('should process data from child component', () => {
+      const mockCatalogo: Catalogo = { id: 123, nombre: 'Test' } as unknown as Catalogo;
+      component.procesarDatosDelHijo(mockCatalogo);
 
-    expect(mockStore.setDatosImmex).toHaveBeenCalled();
-    expect(component.fraccionArancelaria).toBe('');
+      expect(mockTramite80206Store.setAduanaDeIngresoSeleccion).toHaveBeenCalledWith('123');
+    });
   });
 
-  it('debe alertar cuando no hay selección (domiciliosSeleccionados vacío)', () => {
-    component.domiciliosSeleccionados = [];
-    const spyActivar = jest.spyOn(component, 'activarModal');
+  describe('Grid update methods', () => {
+    it('should show alert if fraccionArancelaria is empty in actualizaGridEmpresasNacionales', () => {
+      component.fraccionArancelaria = '';
+      component.actualizaGridEmpresasNacionales();
 
-    component.agregarImportacion();
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('Tiene que introducir la Fracción arancelaria');
+    });
 
-    expect(component.mensajeDeAlerta).toContain('Debe seleccionar');
-    expect(spyActivar).toHaveBeenCalled();
-    expect(mockStore.setDatosImportacion).not.toHaveBeenCalled();
+    it('should call obtenerInformacionFraccion when fraccionArancelaria is valid', () => {
+      component.fraccionArancelaria = '12345678';
+      jest.spyOn(component, 'obtenerInformacionFraccion');
+      
+      component.actualizaGridEmpresasNacionales();
+
+      expect(component.obtenerInformacionFraccion).toHaveBeenCalled();
+    });
   });
 
-  it('debe alertar cuando la fracción seleccionada coincide con importacion (rama inválida 3R´s)', () => {
-    component.domiciliosSeleccionados = [{ fraccionArancelaria: '3333.33.33', fraccion: 'F', descripcionComercial: 'D' } as any];
-    component.importacion = '3333.33.33';
+  describe('obtenerInformacionFraccion', () => {
+    beforeEach(() => {
+      component.fraccionArancelaria = '12345678';
+      component.datosImmex = [];
+    });
 
-    const spyActivar = jest.spyOn(component, 'activarModal');
-    component.agregarImportacion();
+    it('should show alert if fraccionArancelaria is empty', () => {
+      component.fraccionArancelaria = '';
+      component.obtenerInformacionFraccion();
 
-    expect(component.mensajeDeAlerta).toContain('no es válida');
-    expect(spyActivar).toHaveBeenCalled();
-    expect(component.importacion).toBe('');
-    expect(mockStore.setDatosImportacion).not.toHaveBeenCalled();
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('Debe introducir una fracción arancelaria válida.');
+    });
+
+    it('should show alert if fraccion format is invalid', () => {
+      component.fraccionArancelaria = '123';
+      component.obtenerInformacionFraccion();
+
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('La fracción arancelaria no es válida o no esta vigente.');
+    });
+
+    it('should show alert if fraccion already exists', () => {
+      component.datosImmex = [mockArancelaria];
+      component.fraccionArancelaria = '12345678';
+      component.obtenerInformacionFraccion();
+
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('La fracción arancelaria que desea agregar a la lista ya existe.');
+    });
+
+    it('should successfully add fraccion when valid', () => {
+      component.fraccionArancelaria = '87654321';
+      component.obtenerInformacionFraccion();
+
+      expect(mockAmpliacionServiciosService.obtenerInformacionFraccion).toHaveBeenCalledWith({
+        "fraccion": "87654321",
+        "tipoSolicitud": 471
+      });
+    });
   });
 
-  it('debe agregar importación cuando hay selección y es válida (rama feliz)', () => {
-    component.domiciliosSeleccionados = [
-      {
-        fraccion: 'F1',
-        fraccionArancelaria: '1111.11.11',
-        descripcionComercial: 'Desc',
-        anexoII: 'A2',
-        tipo: 'T',
-        umt: 'U',
-        categoria: 'C',
-        valorMensual: '10',
-        valorAnual: '120',
-        volumenrMensual: '5',
-        volumenAnual: '60',
-      } as any,
-    ];
-    component.importacion = '2222.22.22';
+  describe('agregarImportacion', () => {
+    beforeEach(() => {
+      component.importacion = '87654321';
+      component.domiciliosSeleccionados = [mockArancelaria];
+      component.datosImportacion = [];
+    });
 
-    component.agregarImportacion();
+    it('should show alert if importacion is empty', () => {
+      component.importacion = '';
+      component.agregarImportacion();
 
-    expect(mockStore.setDatosImportacion).toHaveBeenCalled();
-    expect(component.importacion).toBe('');
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('Tiene que introducir la Fracción arancelaria');
+    });
+
+    it('should show alert if no domicilio is selected', () => {
+      component.domiciliosSeleccionados = [];
+      component.agregarImportacion();
+
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('Debe seleccionar una fracción de exportación');
+    });
+
+    it('should show alert if fraccion format is invalid', () => {
+      component.importacion = '123';
+      component.agregarImportacion();
+
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('La fracción arancelaria no es válida o no esta vigente.');
+    });
+
+    it('should call obtenerInformacionFraccionImportacion when valid', () => {
+      jest.spyOn(component, 'obtenerInformacionFraccionImportacion');
+      component.agregarImportacion();
+
+      expect(component.obtenerInformacionFraccionImportacion).toHaveBeenCalled();
+    });
   });
 
-  it('debe actualizar domiciliosSeleccionados correctamente', () => {
-    const fila = { fraccionArancelaria: 'X' } as any;
-    component.seleccionarDomicilios(fila);
-    expect(component.domiciliosSeleccionados).toEqual([fila]);
+  describe('obtenerInformacionFraccionImportacion', () => {
+    beforeEach(() => {
+      component.importacion = '87654321';
+      component.fraccionArancelaria = '12345678';
+      component.datosImmex = [];
+    });
+
+    it('should show alert if importacion is empty', () => {
+      component.importacion = '';
+      component.obtenerInformacionFraccionImportacion();
+
+      expect(component.mostrarAlerta).toBe(true);
+      expect(component.mensajeDeAlerta).toBe('Debe introducir una fracción arancelaria válida.');
+    });
+
+    it('should successfully call service with correct payload', () => {
+      component.obtenerInformacionFraccionImportacion();
+
+      expect(mockAmpliacionServiciosService.obtenerFraccionImportacion).toHaveBeenCalledWith({
+        "fraccion": "87654321",
+        "fraccionPadre": "12345678",
+        "tipoSolicitud": "14",
+        "idPrograma": "121517",
+        "idSolicitud": "202785257",
+        "idProductoPadre": ""
+      });
+    });
   });
 
-  it('debe limpiar las suscripciones en ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  describe('onIntentarEliminar', () => {
+    it('should show alert when trying to delete without selection', () => {
+      component.domiciliosSeleccionados = [];
+      component.onIntentarEliminar();
 
-    component.ngOnDestroy();
+      expect(component.mensajeDeAlerta).toBe('Seleccione la(s) Fracción(es) de Exportación a eliminar.');
+      expect(component.mostrarAlerta).toBe(true);
+    });
 
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    it('should not show alert when condition is met', () => {
+      component.domiciliosSeleccionados = [mockArancelaria];
+      component.datosImmex = [mockArancelaria];
+      component.onIntentarEliminar();
+
+      expect(component.mostrarAlerta).toBe(false);
+    });
   });
 
-  it('debe ejecutar el ciclo de vida con detectChanges sin errores', () => {
-    expect(() => fixture.detectChanges()).not.toThrow();
-  });
+  describe('Component lifecycle', () => {
+    it('should complete destroyNotifier on destroy', () => {
+      const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+      const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-  it('debe procesar datos del hijo y llamar setAduanaDeIngresoSeleccion', () => {
-    (mockStore as any).setAduanaDeIngresoSeleccion = jest.fn();
-    component['tramite80206Store'].setAduanaDeIngresoSeleccion = (mockStore as any).setAduanaDeIngresoSeleccion;
-    component.procesarDatosDelHijo({ id: 77 } as any);
-    expect((mockStore as any).setAduanaDeIngresoSeleccion).toHaveBeenCalledWith('77');
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
   });
 });

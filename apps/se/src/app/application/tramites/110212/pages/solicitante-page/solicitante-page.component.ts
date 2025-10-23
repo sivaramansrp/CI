@@ -26,6 +26,8 @@ import { takeUntil } from 'rxjs';
   styleUrl: './solicitante-page.component.scss',
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
+
+  // @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
@@ -162,6 +164,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
+
+    if (e.accion === 'cont') {
+      if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
+        return;
+      }
+    }
     // Si la acción es continuar, validar formularios del paso actual
     if (e.accion === 'cont') {
       let isValid = true;

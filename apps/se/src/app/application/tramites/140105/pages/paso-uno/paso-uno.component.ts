@@ -2,9 +2,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import {CancelacionDeSolicitudComponent} from '../../components/cancelacion-de-solicitud/cancelacion-de-solicitud.component';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-
+import { ViewChild } from '@angular/core';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -18,6 +19,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
  * @default 1
  */
   indice: number = 1;
+
+  /** Referencia al componente hijo SolicitanteComponent para acceso a sus métodos y propiedades */
+  @ViewChild(CancelacionDeSolicitudComponent) cancelacionComp!: CancelacionDeSolicitudComponent;
 
   /**
    * @description 
@@ -121,6 +125,26 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
     });
+  }
+
+   /**
+   * Valida todos los formularios del paso uno incluyendo solicitante, certificado, datos y destinatario
+   * @returns true si todos los formularios son válidos, false en caso contrario
+   */
+   public validarFormularios(): boolean {
+    let isValid = true;
+    if (this.cancelacionComp?.cancelacionForm) {
+      if (this.cancelacionComp.cancelacionForm.invalid) {
+        this.cancelacionComp.cancelacionForm.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+   
+
+    return isValid;
   }
 
   /**

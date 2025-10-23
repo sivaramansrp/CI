@@ -137,29 +137,35 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
  * @property {number} orden - El orden en el que se debe mostrar la columna.
  * */
 export const CONFIGURACION_EMPRESA_ECTRANJERA = [
+    {
+    encabezado: 'Servicio',
+    clave: (ele: DatosEmpresaExtranjera): string | undefined =>
+      ele.servicioExt,
+    orden: 1,
+  },
   {
     encabezado: 'Tax ID',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.taxIdEmpresaExt,
-    orden: 1,
+    orden: 2,
   },
   {
     encabezado: 'Nombre del empresa',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.nombreEmpresaExt,
-    orden: 2,
+    orden: 3,
   },
   {
     encabezado: 'País',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.entidadFederativaEmpresaExt,
-    orden: 2,
+    orden: 4,
   },
   {
     encabezado: 'Dirección',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
       ele.direccionEmpresaExtranjera,
-    orden: 2,
+    orden: 5,
   },
 ];
 
@@ -191,7 +197,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
   {
     labelNombre: 'Nombre del empresa*',
     campo: 'nombreEmpresaExt',
-    class: 'col-md-4 col-sm-10',
+    class: 'col-md-4 col-sm-10 text-uppercase',
     tipo_input: 'text',
     required: true,
     orden: 2,
@@ -203,7 +209,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-10 col-10',
     tipo_input: 'select',
     required: true,
-    opciones: [], // Use this instead of opciones
+    opciones: [],
     orden: 3,
   },
   {

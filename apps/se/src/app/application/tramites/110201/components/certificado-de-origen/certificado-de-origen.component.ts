@@ -429,8 +429,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['active']?.currentValue) {
-      this.getPaises();
-      this.getTratadoCertificado();
+      // this.getPaises();
+      // this.getTratadoCertificado();
     }
   }
   /**
@@ -440,7 +440,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
   ngOnInit(): void {
     this.mercanciatable();
     this.inicializarEstadoFormulario();
-
+    this.getPaises();
+      this.getTratadoCertificado();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -865,6 +866,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
       complementoDescripcion: articulo['complementoDescripcion'] || '',
       fechaFactura: articulo['fechaFactura'] || ''
     }));
+    this.store.setDatosMercancia(this.mercanciaSeleccionadasTablaData);
 
     if (this.mercanciaSeleccionadasTablaData.length > 0) {
       this.mostrarErrorMercancias = false;

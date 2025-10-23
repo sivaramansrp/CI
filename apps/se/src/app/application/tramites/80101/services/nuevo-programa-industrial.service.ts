@@ -581,7 +581,7 @@ export class NuevoProgramaIndustrialService {
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   buildPlantas(array: unknown[], base: unknown[], data: unknown = {}): unknown {
-    const MAP_CAPACIDAD_INSTALADA = (item: CapacidadInstaladaItem) => ({
+    const MAP_CAPACIDAD_INSTALADA = (item: CapacidadInstaladaItem): unknown => ({
       fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
       umt: item.UMT ?? "",
       descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
@@ -597,7 +597,7 @@ export class NuevoProgramaIndustrialService {
       testado: "1",
     });
 
-    const MAP_MONTOS_INVERSION = (item: MontoInversionItem) => ({
+    const MAP_MONTOS_INVERSION = (item: MontoInversionItem): unknown => ({
       idPlantaM: item.PLANTA ?? "",
       idMonto: (item.MONTO ?? "").toString(),
       tipo: item.TIPO ?? "",
@@ -609,7 +609,7 @@ export class NuevoProgramaIndustrialService {
       descTestado: item.DESC_TESTADO ?? "",
     })
 
-    const MAP_EMPLEADOS = (item: EmpleadoItem) => ({
+    const MAP_EMPLEADOS = (item: EmpleadoItem): unknown => ({
       idPlantaE: item.PLANTA ?? '',
       idEmpleados: item.ID_EMPLEADOS ?? '',
       totalEmpleados: (item.TOTAL ?? '').toString(),
@@ -627,7 +627,7 @@ export class NuevoProgramaIndustrialService {
       descTestado: item.DESC_TESTADO ?? '',
     })
 
-    const MAP_COMPLEMENTAR = (item: ComplementarItem) => ({
+    const MAP_COMPLEMENTAR = (item: ComplementarItem): unknown => ({
       idPlantaC: item.PLANTA ?? '' ,
       idDato: item.DATO ?? '',
       amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
@@ -644,7 +644,7 @@ export class NuevoProgramaIndustrialService {
     })
 
 
-    const MAP_FIRMANTES = (item: FirmanteItem) => ({
+    const MAP_FIRMANTES = (item: FirmanteItem): unknown => ({
       idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
       descTipoFirmante: item.descTipoFirmante ?? '',
@@ -725,7 +725,7 @@ export class NuevoProgramaIndustrialService {
           datosComplementarios: Array.isArray(
             (ITEM as { datosComplementarios?: unknown[] })?.datosComplementarios
           )
-            ? (ITEM as { datosComplementarios?: unknown[] }).datosComplementarios!.map((dc: unknown) => {
+            ? (ITEM as { datosComplementarios?: unknown[] }).datosComplementarios?.map((dc: unknown) => {
                 const COMPLEMENTO = dc as { idPlantaC?: string; idDato?: string; amparoPrograma?: string };
                 return {
                   idPlantaC: COMPLEMENTO.idPlantaC ?? '',
@@ -815,7 +815,7 @@ export class NuevoProgramaIndustrialService {
    * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
    */
   buildAnexo(data: unknown): { anexo: Record<string, unknown> } {
-    const BUILD_ANEXO_ITEM = (item: Anexo1) => ({
+    const BUILD_ANEXO_ITEM = (item: Anexo1): unknown => ({
       descripcion: item.encabezadoFraccion,
       idTipoBien: 0,
       idBienComercial: 0,
@@ -824,7 +824,7 @@ export class NuevoProgramaIndustrialService {
       descripcionTestado: item.encabezadoDescripcion,
     });
  
-    const BUILD_PROVEEDOR_CLIENTE = (item: ProveedorClienteDatosTabla) => ({
+    const BUILD_PROVEEDOR_CLIENTE = (item: ProveedorClienteDatosTabla): unknown => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
@@ -838,7 +838,7 @@ export class NuevoProgramaIndustrialService {
       descTestado: item.descTestado,
     });
 
-    const BUILD_DATOS_PARA_NAVEGAR = (datos: DatosParaNavegar) => ({
+    const BUILD_DATOS_PARA_NAVEGAR = (datos: DatosParaNavegar): unknown => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
       unidadMedida: datos?.encabezadoAnexoII,
@@ -853,7 +853,7 @@ export class NuevoProgramaIndustrialService {
       volumenAnualSolicitado: null,
     });
 
-    const BUILD_ANEXO_DOS = (item: AnexoDosItem) => ({
+    const BUILD_ANEXO_DOS = (item: AnexoDosItem): unknown => ({
       fraccionExportacion: item.encabezadoFraccionExportacion,
       fraccionImportacion: item.encabezadoFraccionImportacion,
       descFraccionImpo: item.encabezadoDescripcionComercial,
@@ -869,7 +869,7 @@ export class NuevoProgramaIndustrialService {
       umt: item.encabezadoUmt,
     });
  
-    const PROYECTO_IMMEX_DATOS = (item: ProyectoImmexEncabezado) => ({
+    const PROYECTO_IMMEX_DATOS = (item: ProyectoImmexEncabezado): unknown => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
       fechaFirma: item.encabezadoFechaFirma,
@@ -886,7 +886,7 @@ export class NuevoProgramaIndustrialService {
      * @param item - Objeto que contiene la información del proveedor y cliente.
      * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
      */
-    const BUILD_PROVEEDOR_CLIENTE_DOS = (item: ProveedorClienteDatosTabla) => ({
+    const BUILD_PROVEEDOR_CLIENTE_DOS = (item: ProveedorClienteDatosTabla): unknown => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
       razonProveedor: item.razonProveedor,

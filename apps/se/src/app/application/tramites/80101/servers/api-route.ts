@@ -13,7 +13,7 @@ const API = ENVIRONMENT.API;
 /**
  * versión de la API
  */
-const API_VERSION = ENVIRONMENT.API_VERSION;
+// const API_VERSION = ENVIRONMENT.API_VERSION;
 /**
  * Catálogo de la API
  */

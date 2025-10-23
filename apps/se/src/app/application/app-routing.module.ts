@@ -494,8 +494,8 @@ const ROUTES: Routes = [
   {
     path: 'registro-expansion',
     loadChildren: () =>
-      import('./tramites/80211/registro-expansion.module').then(
-        (m) => m.RegistroExpansionModule
+      import('./tramites/80211/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
       ),
   },
   {

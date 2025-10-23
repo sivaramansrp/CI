@@ -28,13 +28,14 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
@@ -72,7 +73,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos disponibles para la selección.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  catalogosArray: Catalogo[][] = [];
 
   /**
    * Formulario reactivo del componente.
@@ -119,6 +120,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
+    private catOctavaTemporalService: CatOctavaTemporalService,
     private consultaioQuery: ConsultaioQuery
   ) {
      this.consultaioQuery.selectConsultaioState$
@@ -139,6 +141,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
     
     this.inicializarEstadoFormulario();
     this.fetchSolicitudeOptions();
+    this.fetchRegimenes();
     this.formularioRegistroService.registrarFormulario('formDelTramite', this.formDelTramite);
   }
    inicializarEstadoFormulario(): void {
@@ -169,7 +172,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    * con los valores iniciales obtenidos del store.
    */
   inicializarFormulario():void{
-this.tramite130102Query.selectSolicitud$
+this.tramite130102Query.selectSeccionState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -180,8 +183,10 @@ this.tramite130102Query.selectSolicitud$
 
     this.formDelTramite = this.fb.group({
       solicitud: [this.solicitudState?.solicitud],
-      tipoDocumento: [''],
-      fraccion: [this.solicitudState?.fraccion, [Validators.required]],
+  
+
+      regimen: [this.solicitudState?.regimen, [Validators.required]],
+      clasificacionRegimen: [this.solicitudState?.clasificacionRegimen, [Validators.required]],
     });
      if (this.esFormularioSoloLectura) {
     this.formDelTramite.disable();
@@ -197,7 +202,31 @@ this.tramite130102Query.selectSolicitud$
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
+
   }
+
+  /**
+   *  Clasificación del régimen basado en el régimen seleccionado.
+   * @param {FormGroup} form - Formulario reactivo.
+   * 
+   *  
+   */
+  obtenerClaficacionRegimen(form: FormGroup): void {  
+    const cveRegimen = form.get('regimen')?.value;
+
+    if (cveRegimen) {
+      this.catOctavaTemporalService.getClasificacionRegimenes(cveRegimen).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.catalogosArray[1] = data.datos.map((item, index) => ({
+          id: index,  
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));
+      });
+    }
+  }
+
 
   /**
    * Maneja los cambios en la opción seleccionada.
@@ -231,6 +260,23 @@ this.tramite130102Query.selectSolicitud$
         this.defaultSelect = data.defaultSelect;
       });
   }
+
+  /**
+   * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
+   */
+  fetchRegimenes(): void {
+    this.catOctavaTemporalService.getRegimenes().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+      this.catalogosArray[0] = data.datos.map((item) => ({
+        id: parseInt(item.clave),
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));
+    });
+  }
+
+
 
   
   /**

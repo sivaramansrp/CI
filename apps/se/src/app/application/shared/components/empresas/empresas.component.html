@@ -68,3 +68,11 @@
 
 </form>
 </div>
+
+@if (NotValidRfcNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="NotValidRfcNotificacion"
+    >
+  </lib-notificaciones>
+</section>
+}

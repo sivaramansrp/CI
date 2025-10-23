@@ -22,7 +22,7 @@
         <div class="row">
              <div class="col-md-12">
                 <div class="form-group my-4" >
-                    <label class="form-label" for="desistimientoMotivo">Motivo de desistimiento*:</label>
+                    <label class="form-label" for="desistimientoMotivo">Motivo de desistimiento<span [ngClass]="{'text-danger': formDesistimiento.get('desistimientoMotivo')?.touched && formDesistimiento.get('desistimientoMotivo')?.errors?.['required']}">*</span>:</label>
                     <textarea 
                       (change)="onDescripcionChange()" 
                       rows="6" 

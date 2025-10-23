@@ -1,7 +1,7 @@
 {
     "options": [
       { "label": "Nuevo", "value": "Nuevo" },
-      { "label": "Usado", "value": "Unado" }
+      { "label": "Usado", "value": "Usado" }
     ],
     "defaultSelect": "Nuevo"
   }

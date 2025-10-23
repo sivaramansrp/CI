@@ -3,28 +3,31 @@ import {
   ConfiguracionColumna,
   ConsultaioQuery,
   Notificacion,
-  REGEX_RFC,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormularioDatos,
   Plantas,
-} from '../../modelos/registro-expansion.model';
-import { Subject, map, takeUntil, tap } from 'rxjs';
+} from '../../modelos/registro-solicitud-immex.model';
+import { Subject, Subscription, map, takeUntil, tap } from 'rxjs';
 import {
   Tramite80211Store,
   Tramites80211State,
 } from '../../estados/tramites80211.store';
-import { CONFIGURACION_TABLA_PLANTAS } from '../../enums/registro-expansion.enum';
-import { CatalogoServices } from '@libs/shared/data-access-user/src';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { CONFIGURACION_TABLA_PLANTAS } from '../../enums/registro-solicitud-immex.enum';
+import { CatalogoServices } from '@libs/shared/data-access-user/src/core/services/shared/catalogo.service';
+import { PlantasDisponiblesResponse } from '../../../../shared/models/modelo-interface.model';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
-import { registroSolicitudImmexService } from '../../services/registro-expansion.service';
+import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
 
 /**
  * Componente para gestionar las empresas terciarizadas.
- * 
+ *
  * @remarks
  * Este componente permite la gestión de plantas disponibles y seleccionadas,
  * así como la interacción con el formulario de empresas y el estado global.
@@ -34,7 +37,19 @@ import { registroSolicitudImmexService } from '../../services/registro-expansion
   templateUrl: './empresas-terciarizadas.component.html',
   styleUrl: './empresas-terciarizadas.component.scss',
 })
-export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChanges {
+export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
+  /**
+   * Identificador del trámite.
+   */
+  tramiteID = '80211';
+
+  /**
+   * Lista de estados disponibles para selección.
+   *
+   * @type {Catalogo[]}
+   * @memberof EmpresasTerciarizadasComponent
+   */
+  estado!: Catalogo[];
 
   /**
    * Formulario reactivo para gestionar los datos de las empresas.
@@ -55,11 +70,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
    * Lista de plantas seleccionadas.
    */
   plantasSeleccionadas: Plantas[] = [];
-
-  /**
-   * Lista temporal de filas disponibles seleccionadas en la tabla.
-   */
-  listaFilaDisponibles: Plantas[] = [];
 
   /**
    * Lista temporal de filas seleccionadas en la tabla.
@@ -83,138 +93,83 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
+   * Suscripción para manejar observables.
+   * @property {Subscription} subscription
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
    * Notificación para destruir observables al destruir el componente.
    */
   destoryNotification$: Subject<void> = new Subject<void>();
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {boolean} eliminarPlantasConfirmacion
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar plantas seleccionadas.
+   */
+  eliminarPlantasConfirmacion: boolean = false;
+
+  /**
+   * @property {boolean} eliminarPlantasAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ninguna planta para eliminar.
+   */
+  eliminarPlantasAlerta: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoAlerta
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la selección de entidad federativa o plantas.
+   */
+  espectaculoAlerta: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoAlertaAgregar
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+   */
+  espectaculoAlertaAgregar: boolean = false;
 
   /**
    * @property {Notificacion} nuevaNotificacion
    * @description
-   * Objeto que contiene la configuración de la notificación principal del componente.
-   * Se utiliza para mostrar mensajes de error o información al usuario cuando no se selecciona una entidad federativa.
+   * Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * @property {Notificacion} nuevaNotificacionRFC
+   * @property {FilaPlantas[]} listSelectedView
    * @description
-   * Objeto que contiene la configuración de la notificación específica para errores relacionados con el RFC.
-   * Se muestra cuando el usuario no introduce un RFC válido en el formulario.
+   * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
    */
-  public nuevaNotificacionRFC!: Notificacion;
-
-  /**
-   * @property {boolean} errorBuscar
-   * @description
-   * Bandera que controla la visibilidad del mensaje de error cuando falla la búsqueda de controladoras.
-   * Se establece a true cuando el usuario intenta buscar sin seleccionar una entidad federativa.
-   */
-  errorBuscar: boolean = false;
-
-  /**
-   * @property {boolean} errorRFC
-   * @description
-   * Bandera que controla la visibilidad del mensaje de error específico para el campo RFC.
-   * Se establece a true cuando el RFC no cumple con el formato requerido o está vacío.
-   */
-  errorRFC: boolean = false;
-
-  /**
-   * @property {boolean} errorAgregar
-   * @description
-   * Bandera que controla la visibilidad del mensaje de error al intentar agregar plantas.
-   * Se establece a true cuando el usuario intenta agregar plantas sin haber seleccionado ninguna.
-   */
-  errorAgregar: boolean = false;
-
-  /**
-   * @property {Notificacion} nuevaNotificacionAgregar
-   * @description
-   * Objeto que contiene la configuración de la notificación para errores al agregar plantas.
-   * Se muestra cuando el usuario no selecciona al menos una planta para realizar operaciones IMMEX.
-   */
-  public nuevaNotificacionAgregar!: Notificacion;
-
-  /**
-   * @property {boolean} errorEliminar
-   * @description
-   * Bandera que controla la visibilidad del mensaje de error al intentar eliminar plantas.
-   * Se establece a true cuando el usuario intenta eliminar plantas sin haber seleccionado ninguna.
-   */
-  errorEliminar: boolean = false;
-
-  /**
-   * @property {Notificacion} nuevaNotificacionEliminar
-   * @description
-   * Objeto que contiene la configuración de la notificación para errores al eliminar plantas.
-   * Se muestra cuando el usuario no selecciona ninguna planta para eliminar de la lista.
-   */
-  public nuevaNotificacionEliminar!: Notificacion;
-
-  /**
-   * @property {Notificacion} nuevaNotificacionConfirmarEliminar
-   * @description
-   * Objeto que contiene la configuración de la notificación de confirmación para eliminar plantas.
-   * Se muestra cuando el usuario confirma que desea eliminar plantas seleccionadas,
-   * solicitando una confirmación adicional antes de proceder con la eliminación.
-   */
-  public nuevaNotificacionConfirmarEliminar!: Notificacion;
-
-  /**
-   * @property {boolean} confirmarEliminar
-   * @description
-   * Bandera que controla la visibilidad del diálogo de confirmación para eliminar plantas.
-   * Se establece a true cuando se muestra el modal de confirmación y a false cuando se oculta.
-   */
-  confirmarEliminar: boolean = false;
-
-  /**
-   * Identificador único para el trámite actual que se está procesando.
-   * Se utiliza para distinguir el tipo específico de trámite dentro de la aplicación.
-   */
-  tramiteId: string = '80211';
-
-  /**
-   * Indica si el componente está actualmente activo.
-   * Este input puede usarse para controlar la visibilidad o el estado del componente.
-   */
-  @Input() active: boolean = false;
-  /**
-   * Arreglo de estados disponibles para selección, donde cada estado está representado por un objeto
-   * que contiene una clave única (`clave`) y una etiqueta descriptiva (`descripcion`).
-   */
-  optionsEstado: Catalogo[] = [];
+  listSelectedView: Plantas[] = [];
   /**
    * Constructor del componente.
-   * 
+   *
+   * @param catalogoServices - Servicio para obtener catálogos.
    * @param formBuilder - Constructor de formularios reactivos.
    * @param registroSolicitudService - Servicio para gestionar solicitudes Immex.
    * @param tramite80211Store - Estado global del trámite 80211.
    * @param tramite80211Query - Consulta del estado global del trámite 80211.
    */
   constructor(
+    private catalogoServices: CatalogoServices,
     private formBuilder: FormBuilder,
     @Inject(registroSolicitudImmexService)
     public registroSolicitudService: registroSolicitudImmexService,
     private tramite80211Store: Tramite80211Store,
     private tramite80211Query: Tramite80211Query,
     private consultaQuery: ConsultaioQuery,
-    private catalogoServices: CatalogoServices
+    private serviciosService: ServiciosService
   ) {
-    this.createEmpresasForm();
-    /**
-* Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-   *
-   * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-   * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-   * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-   */
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destoryNotification$),
@@ -225,60 +180,40 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
       )
       .subscribe();
   }
-  /**
-   * Método del ciclo de vida que se ejecuta cuando cambia alguna propiedad enlazada por datos.
-   * Ejecuta lógica cuando la propiedad 'active' cambia, disparando métodos de obtención de datos.
-   *
-   * @param changes - Objeto con pares clave/valor que representan las propiedades cambiadas.
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['active']?.currentValue) {
-      this.getEstado();
-    }
-  }
+
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.getEstado();
     this.inicializarEstadoFormulario();
-    this.nuevaNotificacion = {} as Notificacion;
+    this.obtenerEstadoSelectList(this.tramiteID);
   }
 
   /**
-   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Determina si se debe cargar un formulario nuevo o uno existente.
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.empresasForm.get('rfc')?.enable();
-      this.inicializarFormulario();
+      this.crearFormulario();
     }
   }
+
   /**
-   * Obtiene la lista de estados desde el servicio de catálogo y los asigna a la variable `optionsEstado`.
+   * Inicializa el formulario de empresas terciarizadas.
+   *
+   * - Inicializa el estado global del trámite 80211.
+   * - Asigna el valor de `showPlantas` según el estado actual.
+   * - Solicita los estados disponibles a través del servicio.
+   * - Obtiene los datos del formulario y actualiza los valores del formulario reactivo.
+   * - Si se deben mostrar plantas, segrega los datos de plantas disponibles y seleccionadas.
+   * - Si no, limpia las listas de plantas.
+   * - Finalmente, crea la estructura del formulario reactivo.
+   *
    * @returns {void}
    */
-  getEstado(): void {
-    this.catalogoServices.estadosCatalogo(this.tramiteId).pipe(takeUntil(this.destoryNotification$)).subscribe((res) => {
-      this.optionsEstado = res.datos ?? [];
-    });
-  }
-  /**
- * Inicializa el formulario de empresas terciarizadas.
- *
- * - Inicializa el estado global del trámite 80211.
- * - Asigna el valor de `showPlantas` según el estado actual.
- * - Solicita los estados disponibles a través del servicio.
- * - Obtiene los datos del formulario y actualiza los valores del formulario reactivo.
- * - Si se deben mostrar plantas, segrega los datos de plantas disponibles y seleccionadas.
- * - Si no, limpia las listas de plantas.
- * - Finalmente, crea la estructura del formulario reactivo.
- *
- * @returns {void}
- */
   inicializarFormulario(): void {
     this.initializeTramite80211State();
     this.showPlantas = this.tramites80211State.showPlantas;
@@ -288,56 +223,64 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
       .subscribe((datos) => {
         this.actualizarFormulario(datos);
         if (this.showPlantas) {
-          this.segregatePlantasDatos();
+          this.aegregatePlantasDatos();
         } else {
           this.plantasDisponibles = [];
           this.plantasSeleccionadas = [];
         }
       });
   }
-
   /**
-   * Valida los formularios y las listas de plantas.
+   * Obtiene la lista de estados disponibles para el select.
    *
-   * @returns {boolean} Retorna `true` si ambos formularios son válidos y las listas de plantas no están vacías; de lo contrario, retorna `false`.
-   */ 
-  validarFormularios(): boolean {
-    let isValid = true;
-
-    if (!this.plantasSeleccionadas || this.plantasSeleccionadas.length === 0) {
-      isValid = false;
-    }
-    if (!this.plantasDisponibles || this.plantasDisponibles.length === 0) {
-      isValid = false;
-    }
-    return isValid;
+   * @param tramite - Identificador del trámite para filtrar los estados.
+   * @returns {void}
+   *
+   * @remarks
+   * Utiliza el servicio de catálogo para obtener los estados y los asigna a la propiedad `estado`.
+   */
+  obtenerEstadoSelectList(tramite: string): void {
+    this.subscription.add(
+      this.catalogoServices.estadosCatalogo(tramite).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.estado = DATOS;
+      })
+    );
   }
+
   /**
-  * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-  * Luego reinicializa el formulario con los valores actualizados desde el store.
-  */
+   * Guarda el estado del formulario y ajusta la habilitación de los campos según el modo de solo lectura.
+   *
+   */
   guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    this.empresasForm.disable();
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.empresasForm.disable();
+    } else {
+      this.empresasForm.enable();
+    }
   }
-
 
   /**
    * Crea el formulario reactivo para las empresas.
    */
-  createEmpresasForm(): void {
+  crearFormulario(): void {
+    this.inicializarFormulario();
     this.empresasForm = this.formBuilder.group({
       modalidad: [{ value: '', disabled: true }],
       folio: [{ value: '', disabled: true }],
       ano: [{ value: '', disabled: true }],
-      rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
-      estado: ['', [Validators.required]],
+      rfc: [
+        this.tramites80211State.rfc,
+        [Validators.required, Validators.pattern(REGEX_RFC)],
+      ],
+      estado: [this.tramites80211State.estado, [Validators.required]],
     });
   }
 
   /**
    * Actualiza los valores del formulario con los datos proporcionados.
-   * 
+   *
    * @param datos - Datos del formulario a actualizar.
    */
   actualizarFormulario(datos: FormularioDatos): void {
@@ -350,30 +293,11 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
    * Busca las empresas controladoras y actualiza el estado de las plantas.
    */
   buscarControladoras(): void {
-    if (this.esFormularioValido()) {
-      this.showPlantas = true;
-      this.tramite80211Store.establecerDatos({ plantasDisponibles: [] });
-      this.segregatePlantasDatos();
-      this.tramite80211Store.establecerDatos({ showPlantas: this.showPlantas });
-      this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset();
-    }
-    else if (this.empresasForm.get('estado')?.value && this.empresasForm.get('rfc')?.invalid) {
-      this.errorRFC = true;
-      this.nuevaNotificacionRFC = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Debe introducir el RFC',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    }
-    else {
-      this.errorBuscar = true;
+    const ESTADO_VALUE = this.empresasForm.get('estado')?.value;
+    const RFC_VALUE = this.empresasForm.get('rfc')?.value;
+
+    if (!ESTADO_VALUE || ESTADO_VALUE.length === 0) {
+      this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -385,14 +309,36 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
+    }
+
+    if (!RFC_VALUE) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe introducir el RFC.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (this.esFormularioValido()) {
+      this.obtenerPlantaDisponibles();
+      this.empresasForm.get('rfc')?.reset();
+      this.empresasForm.get('estado')?.reset();
     }
   }
 
   /**
- * Verifica si el formulario de empresas es válido.
- *
- * @returns {boolean} Retorna `true` si el formulario es válido y el campo 'estado' tiene un valor distinto de '-1'; de lo contrario, retorna `false`.
- */
+   * Verifica si el formulario de empresas es válido.
+   *
+   * @returns {boolean} Retorna `true` si el formulario es válido y el campo 'estado' tiene un valor distinto de '-1'; de lo contrario, retorna `false`.
+   */
   esFormularioValido(): boolean {
     return this.empresasForm.valid && this.empresasForm.get('estado')?.value;
   }
@@ -411,23 +357,19 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
   /**
    * Segrega los datos de las plantas en disponibles y seleccionadas.
    */
-  segregatePlantasDatos(): void {
-
+  aegregatePlantasDatos(): void {
     if (this.tramites80211State.plantasDisponibles.length > 0) {
       this.plantasDisponibles = this.tramites80211State.plantasDisponibles;
     } else {
       if (this.empresasForm.valid) {
-        // const payload = {
-        //   "rfcEmpresaSubManufacturera": "PEL000523L12",
-        //   "entidadFederativa": "AGS",
-        //   "idPrograma": "200",
-        //   "modalidad": "80101"
-        // }
-        this.registroSolicitudService.obtenerPlantasDatos()
+        this.registroSolicitudService
+          .obtenerPlantasDatos()
           .pipe(
             takeUntil(this.destoryNotification$),
             tap((plantas) => {
-              this.tramite80211Store.establecerDatos({ plantasDisponibles: plantas?.datos });
+              this.tramite80211Store.establecerDatos({
+                plantasDisponibles: plantas?.datos,
+              });
             })
           )
           .subscribe((plantas) => {
@@ -447,82 +389,37 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
 
   /**
    * Maneja las filas seleccionadas en la tabla de disponibles.
-   * 
+   *
    * @param fila - Lista de filas seleccionadas.
    */
-  manejarFilaDisponibles(fila: Plantas[]): void {    
-    this.listaFilaDisponibles = fila;
-    if (fila.length > 0) {
-      this.listaFilaDisponibles = fila;
-    } else {
-      this.listaFilaDisponibles = [];
-    }
+  manejarFilaDisponibles(fila: Plantas[]): void {
+    this.listaFilaSeleccionada = fila;
+    this.tramite80211Store.update((state) => ({
+      ...state,
+      selectedDatos: fila,
+    }));
   }
 
   /**
    * Maneja las filas seleccionadas en la tabla de seleccionadas.
-   * 
+   *
    * @param fila - Lista de filas seleccionadas.
    */
   manejarFilaSeleccionada(fila: Plantas[]): void {
     this.listaFilaSeleccionada = fila;
+    this.tramite80211Store.update((state) => ({
+      ...state,
+      selectedDatos: event,
+    }));
   }
 
   /**
-* Agrega plantas seleccionadas a la lista de seleccionadas, evitando duplicados.
-*/
+   * Agrega plantas seleccionadas a la lista de seleccionadas, evitando duplicados.
+   */
   agregarPlantas(): void {
-  if (!this.listaFilaDisponibles?.length) {
-    this.errorAgregar = true;
-    this.nuevaNotificacionAgregar = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
-
-  const NUEVAS_PLANTAS = this.listaFilaDisponibles.filter(
-    (planta) => !this.plantasSeleccionadas.some((sel) => sel.id === planta.id)
-  );
-
-  this.plantasSeleccionadas = [...this.plantasSeleccionadas, ...NUEVAS_PLANTAS];
-
-  this.plantasDisponibles = this.plantasDisponibles.filter(
-    (planta) => !this.listaFilaDisponibles.some((sel) => sel.id === planta.id)
-  );
-
-  this.updateStoreForPlantas();
-  this.listaFilaDisponibles = [];
-}
-
-  /**
-   * Actualiza el estado global con las plantas disponibles y seleccionadas.
-   */
-  public updateStoreForPlantas(): void {
-    this.tramite80211Store.establecerDatos({
-      plantasDisponibles: [...this.plantasDisponibles],
-      plantasSeleccionadas: [...this.plantasSeleccionadas]
-    });
-
-    this.plantasDisponibles = [...this.plantasDisponibles];
-    this.plantasSeleccionadas = [...this.plantasSeleccionadas];
-  }
-
-
-  /**
-   * Elimina plantas seleccionadas de la lista de seleccionadas.
-   */
-  eliminarPlantas(): void {
-    if (this.listaFilaSeleccionada?.length === 0) {
-      this.errorEliminar = true;
-      this.nuevaNotificacionEliminar = {
+    if (!this.listaFilaSeleccionada?.length) {
+      this.espectaculoAlertaAgregar = true;
+      this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
@@ -533,10 +430,75 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
     }
-    else {
-      this.confirmarEliminar = true;
-      this.nuevaNotificacionConfirmarEliminar = {
+
+    if (this.listaFilaSeleccionada.length > 1) {
+      // Move all plantasSeleccionadas to plantasDisponibles and empty plantasSeleccionadas
+      this.plantasDisponibles = [
+        ...this.plantasDisponibles,
+        ...this.plantasSeleccionadas,
+      ];
+      this.plantasSeleccionadas = [];
+      this.updateStoreForPlantas();
+      this.listaFilaSeleccionada = [];
+      return;
+    }
+
+    // Default behavior: add selected to plantasSeleccionadas, remove from disponibles
+    const SELECTED_IDS = this.listaFilaSeleccionada.map((p) => p.id);
+    const NUEVAS_SELECCIONADAS = [
+      ...this.plantasSeleccionadas,
+      ...this.listaFilaSeleccionada.filter(
+        (planta) => !this.plantasSeleccionadas.some((p) => p.id === planta.id)
+      ),
+    ];
+    const NUEVAS_DISPONIBLES = this.plantasDisponibles.filter(
+      (planta) => !SELECTED_IDS.includes(planta.id)
+    );
+
+    this.plantasSeleccionadas = NUEVAS_SELECCIONADAS;
+    this.plantasDisponibles = NUEVAS_DISPONIBLES;
+    this.updateStoreForPlantas();
+    this.listaFilaSeleccionada = [];
+  }
+
+  /**
+   * Actualiza el estado global con las plantas disponibles y seleccionadas.
+   */
+  public updateStoreForPlantas(): void {
+    this.tramite80211Store.establecerDatos({
+      plantasDisponibles: [...this.plantasDisponibles],
+      plantasSeleccionadas: [...this.plantasSeleccionadas],
+    });
+
+    this.plantasDisponibles = [...this.plantasDisponibles];
+    this.plantasSeleccionadas = [...this.plantasSeleccionadas];
+  }
+
+  /**
+   * @method eliminarPlantas
+   * @description
+   * Muestra una alerta si no hay plantas seleccionadas para eliminar.
+   * Si hay plantas seleccionadas, muestra una confirmación antes de eliminarlas.
+   */
+  eliminarPlantas(): void {
+    if (this.listaFilaSeleccionada.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la planta que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.eliminarPlantasAlerta = true;
+    } else {
+      this.eliminarPlantasConfirmacion = true;
+      this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
@@ -546,52 +508,185 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChan
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar',
-      }
+      };
+      // Guardar las seleccionadas para eliminar
+      this.listSelectedView = [...this.listaFilaSeleccionada];
     }
   }
+
   /**
- * @method aceptarEliminar
- * @description
- * Maneja la respuesta del usuario al diálogo de confirmación para eliminar plantas seleccionadas.
- * Si el usuario confirma (event === true), procede a:
- * - Mover las plantas seleccionadas de vuelta a la lista de plantas disponibles
- * - Filtrar duplicados para evitar plantas repetidas en la lista disponible
- * - Actualizar el estado global con los cambios realizados
- * - Limpiar las selecciones temporales
- * Si el usuario cancela, simplemente cierra el diálogo de confirmación.
- * 
- * @param {boolean} event - Respuesta del usuario: true para confirmar eliminación, false para cancelar.
- * @returns {void}
- */
-  aceptarEliminar(event: boolean): void {
+   * Procesa los datos enviados desde el componente hijo.
+   * Actualiza el estado global con el valor seleccionado.
+   */
+  procesarDatosDelHijo(): void {
+    const VALUE = this.empresasForm.get('estado')?.value;
+    this.tramite80211Store.establecerDatos({ estado: VALUE });
+  }
+
+  /**
+   * @method eliminarPedimento
+   * @description
+   * Oculta la alerta de eliminación si el evento es verdadero.
+   * @param {boolean} event - Indica si se debe ocultar la alerta.
+   */
+  eliminarPedimento(event: boolean): void {
     if (event === true) {
-      this.confirmarEliminar = false
-
-      // Filtrar las plantas que no están ya en plantasDisponibles
-      const NUEVASPLANTAS = this.listaFilaSeleccionada.filter(
-        (plantaDisponible) =>
-          !this.plantasDisponibles.some(
-            (plantaSeleccionada) => plantaSeleccionada.id === plantaDisponible.id
-          )
-      );
-
-      // Agregar solo las nuevas plantas a plantasDisponibles
-      this.plantasDisponibles.push(...NUEVASPLANTAS);
-
-      // Remover las plantas movidas de plantasDisponibles
-      this.plantasSeleccionadas = this.plantasSeleccionadas.filter(
-        (planta) => !this.listaFilaSeleccionada.includes(planta)
-      );
-
-      // Actualizar el estado global
-      this.updateStoreForPlantas();
-
-      // Limpiar la lista temporal de filas seleccionadas
-      this.listaFilaSeleccionada = [];
+      this.eliminarPlantasAlerta = !event;
     }
-    else {
-      this.confirmarEliminar = false
+  }
+
+  /**
+   * @method eliminarPedimentoDatos
+   * @description
+   * Elimina las plantas seleccionadas del estado y actualiza la lista en el store.
+   * @param {boolean} event - Indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimentoDatos(event: boolean): void {
+    if (event === true) {
+      this.eliminarPlantasConfirmacion = false;
+      // Filtra las plantas seleccionadas para eliminar
+      const PLANTAS_A_ELIMINAR = this.listSelectedView.map(
+        (planta) => planta.id
+      );
+      // Elimina las plantas seleccionadas de la lista de plantasSeleccionadas
+      const PLANTAS_SELECCIONADAS_ACTUALIZADAS =
+        this.plantasSeleccionadas.filter(
+          (planta) => !PLANTAS_A_ELIMINAR.includes(planta.id)
+        );
+      // Actualiza el store y la lista local
+      this.tramite80211Store.establecerDatos({
+        plantasSeleccionadas: PLANTAS_SELECCIONADAS_ACTUALIZADAS,
+      });
+      this.plantasSeleccionadas = PLANTAS_SELECCIONADAS_ACTUALIZADAS;
+      this.listSelectedView = [];
+    } else {
+      this.eliminarPlantasConfirmacion = false;
     }
+  }
+
+  mostrarDomicilios(): void {
+    if (this.empresasForm.get('Estado')?.value.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la Entidad Federativa.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    if (this.empresasForm.get('rfc')?.value.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe introducir el RFC.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.espectaculoAlerta = false;
+    this.recuperarDatos();
+  }
+
+  /**
+   * @method recuperarDatos
+   * @description Recupera los datos de las plantas desde un archivo JSON utilizando el servicio ProsecService.
+   * Llama al método `obtenerTablaDatos` con el nombre del archivo y suscribe a la respuesta.
+   * Si la respuesta es un arreglo, asigna los datos a la propiedad `plantasDatos`.
+   *
+   * @memberof DomiciliosDePlantasComponent
+   * @returns {void}
+   */
+  recuperarDatos(): void {
+    this.registroSolicitudService
+      .obtenerPlantasDatos()
+      .subscribe((response) => {
+        if (response && Array.isArray(response)) {
+          this.plantasDisponibles = response as Plantas[];
+          this.tramite80211Store.establecerDatos({
+            plantasDisponibles: this.plantasDisponibles,
+          });
+        }
+      });
+  }
+
+  /**
+   * @method agregarPlantasconfirmar
+   * @description
+   * Oculta la alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para cerrar el mensaje de advertencia cuando el usuario confirma la acción.
+   */
+  agregarPlantasconfirmar(): void {
+    this.espectaculoAlertaAgregar = false;
+  }
+
+  obtenerPlantaDisponibles(): void {
+    const PAYLOAD = {
+      rfcEmpresaSubManufacturera: this.empresasForm.get('rfc')?.value,
+      entidadFederativa: this.empresasForm.get('estado')?.value,
+      idPrograma: null,
+    };
+
+    this.serviciosService
+      .postPlantasDisponiblesTablaTerciarizadas(this.tramiteID, PAYLOAD)
+      .pipe(
+        map((data: BaseResponse<PlantasDisponiblesResponse[]>) => {
+          const RESPONSE = (data.datos ?? []).map(
+            (item: PlantasDisponiblesResponse) => {
+              const DOMICILIO = item.domicilioDto || {};
+              return {
+                id: String(item.recintoSolicitudPK?.idRecinto ?? ''),
+                calle: DOMICILIO.calle ?? '',
+                numExterior: DOMICILIO.numExterior ?? '',
+                numInterior: DOMICILIO.numInterior ?? '',
+                codigoPostal: DOMICILIO.codigoPostal ?? '',
+                colonia: DOMICILIO.colonia ?? '',
+                municipio: DOMICILIO.municipio ?? '',
+                entidadFederativa: DOMICILIO.entidadFederativa?.nombre ?? '',
+                pais: DOMICILIO.pais?.nombre ?? '',
+                registroFederal: item.empresaDto?.rfc ?? '',
+                domicilio: DOMICILIO.descUbicacion ?? '',
+                razon: item.empresaDto?.razonSocial ?? '',
+              } as Plantas;
+            }
+          );
+          this.tramite80211Store.setPlantasBuscadas(RESPONSE);
+          return RESPONSE;
+        })
+      )
+      .subscribe({
+        next: (plantas: Plantas[]) => {
+          this.plantasDisponibles = plantas;
+          this.tramite80211Store.establecerDatos({
+            plantasDisponibles: plantas,
+          });
+        },
+        error: (err) => {
+          console.error('Error al obtener plantas disponibles:', err);
+        },
+      });
+  }
+
+  /**
+   * @description
+   * Actualiza el valor en el store basado en el formulario.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite80211Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

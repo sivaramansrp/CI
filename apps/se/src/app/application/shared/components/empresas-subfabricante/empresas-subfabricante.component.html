@@ -78,7 +78,23 @@
 <ng-container *ngIf="showDetallesPlanta">
   <div class="tab-modal-overlay">
     <div class="tab-modal-content">
-      <app-detalles-plantas (alRegresarPlantas)="cerrarDetallesModal()"></app-detalles-plantas>
+      <app-detalles-plantas (alRegresarPlantas)="cerrarDetallesModal()" (guadarEvent)="onGuardarPlantas()"></app-detalles-plantas>
     </div>
   </div>
 </ng-container>
+
+
+@if (NotValidRfcNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="NotValidRfcNotificacion"
+    >
+  </lib-notificaciones>
+</section>
+}
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

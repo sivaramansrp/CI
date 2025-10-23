@@ -153,6 +153,66 @@ export class Tramite240123Store extends Store<Tramite240123State> {
       modificarProveedorDatos: null
     }));
   }
+    /**
+   * Agrega nuevos registros a la tabla de mercancías.
+   *
+   * @method updateMercanciaTablaDatos
+   * @param {MercanciaDetalle[]} newMercancia - Nuevas mercancías a agregar.
+   * @returns {void}
+   */
+  public deleteMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
+    this.update((state) => ({
+      ...state,
+      merccancialTablaDatos: [...newMercancia],
+    }));
+  }
+
+  /**
+   * Actualiza la lista de datos de mercancía en la tabla.
+   * 
+   * Este método toma un array de detalles de mercancía y actualiza el estado del store.
+   * Si una mercancía ya existe (basado en el ID), se actualiza con los nuevos datos.
+   * Si no existe, se agrega como un nuevo elemento a la lista.
+   * 
+   * @param newMercancia - Array de objetos MercanciaDetalle que contienen los datos
+   *                       de mercancía a actualizar o agregar
+   * @returns void - No retorna valor, actualiza el estado interno del store
+   * 
+   * @example
+   * ```typescript
+   * const nuevasMercancias: MercanciaDetalle[] = [
+   *   { id: 1, nombre: 'Producto A', cantidad: 10 },
+   *   { id: 2, nombre: 'Producto B', cantidad: 5 }
+   * ];
+   * store.updateListMercanciaTablaDatos(nuevasMercancias);
+   * ```
+   * 
+   * @since 1.0.0
+   * @memberof Tramite240123Store
+   */
+   public updateListMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
+  this.update((state) => {
+    const UPDATED_LIST = [...state.merccancialTablaDatos];
+
+    for (const MERCANCIA of newMercancia) {
+      const INDEX = UPDATED_LIST.findIndex(m => m?.id === MERCANCIA?.id);
+
+      if (INDEX !== -1) {
+        // If found, update existing
+        UPDATED_LIST[INDEX] = { ...UPDATED_LIST[INDEX], ...MERCANCIA };
+      } else {
+        // If not found, add new
+        UPDATED_LIST.push(MERCANCIA);
+      }
+    }
+
+    // Return updated state
+    return {
+      ...state,
+      merccancialTablaDatos: UPDATED_LIST,
+    };
+  });
+}
 
   /**
    * Agrega nuevos registros a la tabla de mercancías.

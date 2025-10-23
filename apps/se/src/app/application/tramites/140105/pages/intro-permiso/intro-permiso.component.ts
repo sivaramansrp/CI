@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import {ERROR_FORMA_ALERT} from '../../constants/intropermiso.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PASOS } from '../../constants/intropermiso.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import {TODOS_PASOS} from '../../constants/intropermiso.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -40,6 +43,20 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @type {boolean}
    */
   mostrarBusqueda: boolean = false;
+
+  /**
+    * @property {boolean} esFormaValido
+    * @description
+    * Indica si el formulario del paso actual es válido.
+    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+    */
+  esFormaValido: boolean = false;
+
+
+  /**
+   * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
+   */
+  infoAlert: string = 'info-alert';
   /**
    * @description Referencia al componente Wizard.
    * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
@@ -48,7 +65,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @type {WizardComponent}
    * @viewChild WizardComponent
    */
-  @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
    * @description Índice actual del paso en el que se encuentra el usuario.
@@ -74,6 +91,26 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+   /**
+    * @property {string} formErrorAlert
+    * @description
+    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+    */
+   public formErrorAlert = ERROR_FORMA_ALERT;
+
+    /**
+   * Variable utilizada para almacenar el tipo de alerta.
+   */
+  alerta = TODOS_PASOS.Importante;
 
   /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
@@ -111,27 +148,40 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
       this.mostrarBusqueda = false;
   }
+ 
   /**
-   * @description Handles the button action and determines navigation (next or previous).
-   * Called when the user clicks on one of the form navigation buttons.
-   *
-   * Receives an `AccionBoton` object containing the action to perform (`cont` or `atras`)
-   * and the index value of the step to navigate to.
-   *
-   * @param {AccionBoton} e - Object containing the action and the index value.
-   *   `valor` represents the step index. `accion` indicates whether to proceed (`cont`)
-   *   or go back (`atras`).
-   *
-   * @returns {void}
+   * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
+   * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.componenteWizard.siguiente();
-      } else {
-        this.componenteWizard.atras();
-      }
-    }
+if (e.accion === 'cont') {
+  let isValid = true;
+
+    if (this.indice === 1 && this.pasoUnoComponent) {
+    isValid = this.pasoUnoComponent.validarFormularios();
   }
+  if (!isValid) {
+    this.esFormaValido = true;
+    this.datosPasos.indice = this.indice;
+    return;
+  }
+
+  this.esFormaValido = false;
+  this.indice = e.valor;
+  this.datosPasos.indice = this.indice;
+
+  this.wizardComponent.siguiente();
+  return;
+}
+
+  this.indice = e.valor;
+this.datosPasos.indice = this.indice;
+this.wizardComponent.atras();
+
+
+
+
+}
+
+
 }

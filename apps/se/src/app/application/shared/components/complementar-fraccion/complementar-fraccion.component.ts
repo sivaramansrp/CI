@@ -20,6 +20,7 @@ import { Location } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RestringirNegativosDirective } from '@libs/shared/data-access-user/src/tramites/directives/restringir-negativos/restringir-negativos.directive';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
@@ -31,6 +32,7 @@ import { Validators } from '@angular/forms';
     TituloComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
+    RestringirNegativosDirective
   ],
   templateUrl: './complementar-fraccion.component.html',
   styleUrl: './complementar-fraccion.component.scss',
@@ -208,5 +210,21 @@ export class ComplementarFraccionComponent implements OnInit {
     this.cerrarPopup.emit();
   }
 
-  
+  /**
+   * Restringe la entrada del usuario a solo números positivos.
+   * 
+   * Este método se ejecuta cuando el usuario ingresa un valor en un campo del formulario.
+   * Elimina cualquier carácter que no sea un dígito (`0-9`) del valor ingresado,
+   * actualiza el campo del formulario correspondiente sin emitir eventos de cambio.
+   * 
+   * @param event Evento de entrada generado por el campo de texto.
+   * @param fieldName Nombre del campo del formulario que se desea actualizar.
+   */
+  onIngreseNumerosPositivos(event: Event, fieldName: string): void {
+  const TARGET = event.target as HTMLInputElement;
+  let value = TARGET.value;
+  value = value.replace(/\D/g, '');
+  TARGET.value = value;
+  this.complimentarForm.get(fieldName)?.setValue(value, { emitEvent: false });
+}
 }

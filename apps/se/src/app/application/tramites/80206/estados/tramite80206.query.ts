@@ -1,10 +1,6 @@
 /**
- * @fileoverview
  * El `AmpliacionServiciosQuery` es una clase de Angular que utiliza Akita para consultar el estado relacionado con la ampliación de servicios.
  * Proporciona selectores para acceder a diferentes partes del estado y verificar la validez de los formularios.
- * 
- * @module AmpliacionServiciosQuery
- * @description
  * Este archivo define los selectores necesarios para acceder a los datos almacenados en el estado de ampliación de servicios.
  */
 
@@ -17,31 +13,26 @@ import { Tramite80206Store } from './tramite80206.store';
 export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
   /**
    * Selector para obtener la información de registro del estado.
-   * @property {Observable<Servicios>} selectInfoRegistro$
    */
   selectInfoRegistro$ = this.select((state) => state.infoRegistro);
 
   /**
    * Selector para obtener los datos IMMEX del estado.
-   * @property {Observable<Arancelaria[]>} selectDatosImmex$
    */
   selectDatosImmex$ = this.select((state) => state.datosImmex);
 
   /**
    * Selector para obtener los datos generales del estado.
-   * @property {Observable<Arancelaria[]>} selectDatos$
    */
   selectDatos$ = this.select((state) => state.datos);
 
   /**
    * Selector para obtener la aduana de ingreso seleccionada del estado.
-   * @property {Observable<Catalogo>} selectAduanaDeIngresoSelecion$
    */
   selectAduanaDeIngresoSelecion$ = this.select((state) => state.aduanaDeIngresoSelecion);
 
   /**
    * Selector para verificar si todos los campos del formulario son válidos.
-   * @property {Observable<boolean>} FormaValida$
    */
   FormaValida$ = this.select((state) => {
     return Object.values(state.formaValida).every(value => value === true);
@@ -49,8 +40,6 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
 
   /**
    * Constructor de la clase `AmpliacionServiciosQuery`.
-   * @constructor
-   * @param {Tramite80206Store} store - Instancia del store de ampliación de servicios.
    */
   constructor(protected override store: Tramite80206Store) {
     super(store);
@@ -58,7 +47,6 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
 
   /**
    * Selector para obtener todo el estado relacionado con el trámite.
-   * @property {Observable<AmpliacionServiciosState>} selectSolicitudTramite$
    */
   selectSolicitudTramite$ = this.select((state) => {
     return state;

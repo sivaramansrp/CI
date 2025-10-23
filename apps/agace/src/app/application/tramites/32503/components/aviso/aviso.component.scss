@@ -56,3 +56,28 @@
         padding-right: 25px
     }
 }
+
+::ng-deep app-catalogo-select.required {
+    border: none !important;
+}
+
+::ng-deep app-catalogo-select.required .form-select {
+    border: #fe4a47 1px solid !important;
+}
+
+::ng-deep app-catalogo-select .form-label {
+    border: none !important;
+}
+
+.text-alignment {
+    margin-top: 8px;
+}
+
+.datos-trasladara-nico {
+    margin-top: 10px;
+}
+
+.datos-trasladara-cantidad {
+    margin-top: 7px;
+}
+

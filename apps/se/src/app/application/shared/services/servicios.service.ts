@@ -1,12 +1,13 @@
+import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_DATOS_GRID, API_BUSCAR_TERCIARIZADAS } from '../../core/server/api-router';
 import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
 import { PlantasDisponiblesPayload, PlantasDisponiblesResponse } from '../models/modelo-interface.model';
 import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_EMPRESAS_NACIONALES, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
-import { API_BUSCAR_DATOS_GRID } from '../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ProgramaACancelar } from '../models/ProgramaACancelar.model';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +65,29 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
     const ENDPOINT = `${this.host}${API_BUSCAR_DATOS_GRID(tramite.toString())}`;
     return this.http.post<BaseResponse<PlantasDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
   }
+
+  postPlantasDisponiblesTablaTerciarizadas(tramite: string, PAYLOAD: PlantasDisponiblesPayload):
+    Observable<BaseResponse<PlantasDisponiblesResponse[]>> {
+      const ENDPOINT = `${this.host}${API_BUSCAR_TERCIARIZADAS(tramite.toString())}`;
+      return this.http.post<BaseResponse<PlantasDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
+  }
   
+  /**
+   * Obtiene los datos del programa a cancelar desde un archivo JSON local.
+   * 
+   * @returns Observable que emite los datos del programa a cancelar.
+   */
+  obtenerDatos(tramite: string, rfc: string): Observable<BaseResponse<ProgramaACancelar[]>> {
+    const ENDPOINT = `${this.host}${API_BUSCAR_CANCELACIONES_GRID(tramite.toString(), rfc)}`;
+    return this.http.get<BaseResponse<ProgramaACancelar[]>>(ENDPOINT);
+
+  }
+
+  /**
+   * Genera una alerta de error con los mensajes proporcionados.
+   * @param mensajes Mensajes de error a mostrar en la alerta.
+   * @returns HTML de la alerta de error.
+   */
 static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `
 <div class="d-flex justify-content-center text-center">
@@ -72,7 +95,6 @@ static generarAlertaDeError(mensajes:string): string {
     <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
 
     <div class="d-flex justify-content-start mb-1">
-      <span class="me-2">1.</span>
       <span class="flex-grow-1 text-center">${mensajes}</span>
     </div>  
   </div>

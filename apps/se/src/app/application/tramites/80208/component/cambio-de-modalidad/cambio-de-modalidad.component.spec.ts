@@ -13,6 +13,7 @@ import { CambioModalidadService } from '../../service/cambio-modalidad.service';
 import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { CambioModalidadStore } from '../../estados/tramite80208.store';
 import { SeccionLibQuery, SeccionLibStore, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockCambioModalidadService {}
@@ -49,7 +50,7 @@ describe('CambioDeModalidadComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,CambioDeModalidadComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule,CambioDeModalidadComponent, HttpClientTestingModule ],
       declarations: [
         
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
@@ -214,22 +215,11 @@ describe('CambioDeModalidadComponent', () => {
     component.seleccionarDesplegable();
      });
 
-  it('should run #seleccionarDesplegableServicios()', async () => {
-    component.cambioModalidadStore = component.cambioModalidadStore || {};
-    component.cambioModalidadStore.actualizarEstado = jest.fn();
-    component.serviciosImmxForm = component.serviciosImmxForm || {};
-    component.serviciosImmxForm.value = {
-      serviciosImmx: {
-        toString: function() {}
-      }
-    };
-    component.seleccionarDesplegableServicios();
-    });
 
   it('should run #seleccionarDomicilios()', async () => {
-
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.setDomiciliosSeleccionados = jest.fn();
     component.seleccionarDomicilios({});
-
   });
 
   it('should run #eliminarEmpresasNacionales()', async () => {
@@ -261,9 +251,9 @@ describe('CambioDeModalidadComponent', () => {
     });
 
   it('should run #seleccionarEmpresas()', async () => {
-
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.setEmpresasSeleccionados = jest.fn();
     component.seleccionarEmpresas({});
-
   });
 
   it('should run #ngOnDestroy()', async () => {

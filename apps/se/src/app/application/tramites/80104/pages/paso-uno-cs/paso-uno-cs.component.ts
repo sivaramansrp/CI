@@ -177,30 +177,4 @@ export class PasoUnoCsComponent implements OnInit {
         }
       });
   }
-
-   /**
-   * Establece la lista de proyectos IMMEX en la tabla correspondiente del store.
-   *
-   * @param event - Arreglo de objetos de tipo ProyectoImmex que representa la nueva lista de proyectos a almacenar.
-   */
-  setProyectoImmex(event: ProyectoImmex[]): void {
-    this.tramite80101Store.setProyectoImmexTablaLista(event);
-  }
-
-  /**
-     * Maneja la obtención de datos de proveedor o cliente según el identificador recibido en el evento.
-     * 
-     * @param event - Objeto que contiene un arreglo de datos de tipo `ProveedorCliente` y un identificador opcional.
-     *   - `data`: Lista de objetos `ProveedorCliente` a procesar.
-     *   - `id`: Identificador opcional que determina si los datos corresponden a un cliente ('cliente') o a un proveedor.
-     * 
-     * Si el identificador es 'cliente', almacena los datos en la tabla uno; en caso contrario, los almacena en la tabla dos.
-     */
-    obtenerProveedorCliente(event: {data:ProveedorCliente[], id?:string}):void{
-      if(event.id ==='cliente'){
-        this.tramite80101Store.setProveedorClienteDatosTablaUno(event.data);
-      }else{
-        this.tramite80101Store.setProveedorClienteDatosTablaDos(event.data);
-      }
-    }
 }

@@ -5,12 +5,18 @@
  * entre los distintos pasos del proceso CAM. Utiliza el componente `WizardComponent` para
  * controlar la transición entre pasos, y presenta un mensaje informativo asociado al proceso.
  */
-import { AccionBoton, ListaPasoWizard } from '../../models/cam-certificado.module';
+import {
+  AccionBoton,
+  ListaPasoWizard,
+} from '../../models/cam-certificado.module';
+import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Component, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/cam-certificado.module';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 @Component({
   selector: 'app-cam-certificado',
@@ -40,12 +46,23 @@ export class CamCertificadoComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-    /**
- * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
- * const isValid = this.pasoUnoComponent.validateForms();
- * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
- */
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   * const isValid = this.pasoUnoComponent.validateForms();
+   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+   */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Contiene el estado actual de la solicitud del trámite CAM.
+   * 
+   * Esta propiedad almacena los datos provenientes del store o del servicio correspondiente,
+   * y representa la información principal asociada al flujo del trámite.
+   * 
+   * @type {CamState}
+   * @public
+   */
+  public solicitudState!: CamState;
 
   /**
    * @property {number} indice
@@ -67,13 +84,48 @@ export class CamCertificadoComponent {
     txtBtnSig: 'Continuar',
   };
 
-    /**
+  /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
-    public formErrorAlert = ERROR_FORMA_ALERT;
+  public formErrorAlert = ERROR_FORMA_ALERT;
 
-      /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esFormaValido: boolean = false;
+
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   *
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+ * Inicializa el componente inyectando las dependencias necesarias y suscribiéndose al estado del certificado CAM.
+ * 
+ * En el constructor se inyectan las instancias del `camCertificadoStore` y del `camCertificadoQuery`,
+ * que permiten gestionar y consultar el estado global del trámite CAM.
+ * 
+ * Además, se realiza una suscripción al observable `selectCam$` del query para
+ * mantener actualizada la propiedad `solicitudState` con los datos más recientes.
+ * 
+ * La suscripción se administra mediante `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria
+ * al destruir el componente.
+ * 
+ * @constructor
+ * @param {camCertificadoStore} store - Servicio encargado de gestionar el estado (store) del certificado CAM.
+ * @param {camCertificadoQuery} query - Servicio encargado de consultar y exponer el estado del certificado CAM.
+ */
+  constructor(
+    private store: camCertificadoStore,
+    private query: camCertificadoQuery
+  ) {
+    this.query.selectCam$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
 
   /**
    * @method getValorIndice
@@ -88,7 +140,7 @@ export class CamCertificadoComponent {
    * getValorIndice({ valor: 2, accion: 'cont' });
    * ```
    */
-    getValorIndice(e: AccionBoton): void {
+  getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
 
     // Validar formularios antes de continuar desde el paso uno
@@ -109,7 +161,6 @@ export class CamCertificadoComponent {
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
@@ -122,18 +173,17 @@ export class CamCertificadoComponent {
     }
   }
 
-    /**
- * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
- */
+  /**
+   * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+   */
   public validarTodosFormulariosPasoUno(): boolean {
-    if(this.pasoUnoComponent){
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
-    if (ISFORM_VALID_TOUCHED) {
-      return true;
-    }
+    if (this.pasoUnoComponent) {
+      const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+      if (ISFORM_VALID_TOUCHED) {
+        return true;
+      }
       return false;
-  } 
+    }
     return false;
   }
-
 }

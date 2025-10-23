@@ -172,7 +172,8 @@
               ) {
               <div class="mensaje-error">Este campo es obligatorio</div>
               } @if
-              (modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['pattern'])
+              (modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['pattern'] && 
+              !modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['maxlength'])
               {
               <div class="mensaje-error">
                 El dato debe de ser conforme el formato indicado

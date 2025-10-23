@@ -15,12 +15,11 @@
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formDestinatarioEvent)="setValoresStoreDe($event)"
   ></app-destinatario>
+  
+  <app-representante-legal-exportador
+    [procedimiento]="'110205'"
+    [datosForm]="exportadoState.grupoRepresentativo"
+    (formDatosDelDestinatarioEvent)="setValoresStore1($event)"
+  ></app-representante-legal-exportador>
 
-  <app-representante-legal
-    (formExportorEvent)="setValoresStoreExportador($event)"
-    (formaValida)="setFormValidaExportador($event)"
-    [datosForm]="formExportadorValues"
-    [esFormularioSoloLectura]="esFormularioSoloLectura"
-    [idProcedimiento]="idProcedimiento"
-  ></app-representante-legal>
 </div>

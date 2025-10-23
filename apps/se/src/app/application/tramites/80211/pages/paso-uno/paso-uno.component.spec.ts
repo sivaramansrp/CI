@@ -64,7 +64,7 @@ it('no debe llamar actualizarEstadoFormulario ni poner esDatosRespuesta en true 
   // Mock getRegistroTomaMuestrasMercanciasData to return observable with null
   mockRegistroSolicitudService.getRegistroTomaMuestrasMercanciasData = jest.fn(() => of(null));
   mockRegistroSolicitudService.actualizarEstadoFormulario = jest.fn();
-  
+
   componente = new PasoUnoComponent(mockRegistroSolicitudService, mockConsultaQuery);
   componente.destroyNotifier$ = { next: jest.fn(), complete: jest.fn() } as any;
 

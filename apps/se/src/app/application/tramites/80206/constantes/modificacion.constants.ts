@@ -1,10 +1,7 @@
 /**
- * @fileoverview
  * Este archivo contiene constantes y configuraciones utilizadas en el módulo de ampliación de servicios.
  * Proporciona configuraciones para tablas, textos, pasos del proceso y alertas que se utilizan en la interfaz de usuario.
  * 
- * @module ModificacionEnum
- * @description
  * Este archivo define configuraciones para sectores, fracciones arancelarias, fracciones de importación, textos de instrucciones,
  * alertas y pasos del proceso de ampliación de servicios.
  */
@@ -17,7 +14,6 @@ import {
 
 /**
  * Pasos del proceso de ampliación de servicios.
- * @constant {Array<Object>} PASOS
  */
 export const PASOS = [
   {
@@ -42,24 +38,18 @@ export const PASOS = [
 
 /**
  * Configuración de la tabla para sectores.
- * @constant {Array<Object>} CONFIGURACION_SECTOR
  */
 export const CONFIGURACION_SECTOR = [
-  {
-    encabezado: '',
-    clave: (ele: Sector): string | undefined => ele.descripcion,
-    orden: 1,
-  },
+  
   {
     encabezado: 'Descripción',
-    clave: (ele: Sector): string | undefined => ele.descripcionSector,
-    orden: 2,
+    clave: (ele: Sector): string | undefined => ele.descripcion,
+    orden: 1,
   },
 ];
 
 /**
  * Configuración de la tabla para fracciones arancelarias.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIAS
  */
 export const CONFIGURACION_ARANCELARIAS = [
   {
@@ -121,7 +111,6 @@ export const CONFIGURACION_ARANCELARIAS = [
 
 /**
  * Configuración de la tabla para fracciones de importación.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIASIMPORTACION
  */
 export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   {
@@ -136,7 +125,7 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.descripcionComercial,
+    clave: (ele: ArancelariaImportacion): string | undefined => ele.descripcionFraccionPadre,
     orden: 3,
   },
   {
@@ -193,7 +182,6 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
 
 /**
  * Textos constantes para el módulo 80206.
- * @constant {Object} TEXTOS_80206
  */
 export const TEXTOS_80206 = {
   ALERTA_TEXTOS:
@@ -202,7 +190,6 @@ export const TEXTOS_80206 = {
 
 /**
  * Mensajes de alerta utilizados en la aplicación.
- * @constant {Object} ALERT
  */
 export const ALERT = {
   ERRORMESSAGE: `<p>Corrija los siguientes errores: </p>
@@ -210,16 +197,35 @@ export const ALERT = {
       <p style="color:#d0021b; display: flex; justify-content: center; position: relative;"><span style="position: absolute; left: 2px;">2</span>(Regla Tres Rs) es un campo requerido </p>`,
 };
 
-/**
- * Valor válido para la fracción arancelaria utilizada en validaciones de formularios o lógica de negocio.
- * @constant
- * @type {string}
- */
-export const FRACCIONARANCELARIAVALIDO = '87033302';
 
 /**
- * Valor válido para la mercancía utilizada en validaciones de formularios o lógica de negocio.
- * @constant
- * @type {string}
+ * Mensaje de alerta que se muestra cuando hay errores de validación en los formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que faltan campos por capturar
+ * antes de poder continuar al siguiente paso del trámite.
  */
-export const MERCANCIAVALIDO = '85044017';
+export const ERROR_FORMA_ALERT = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">(Debe agregar al menos un servicio) es un campo requerido</span>
+    </div>
+
+   
+  </div>
+</div>
+`;
+
+/**
+ * Mensaje de alerta que se muestra cuando faltan campos por capturar.
+ */
+export const ERROR_CAMPOS_FALTANTES = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary">Faltan campos por capturar.</div>
+  </div>
+</div>
+`;

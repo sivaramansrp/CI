@@ -95,3 +95,22 @@ export interface FormularioSi {
   numeroDeRegistroFiscal?: string;
   razonSocial?: string;
 }
+
+/**
+ * Interfaz que define las mercancías seleccionadas en la tabla.
+ * 
+ * Contiene información como RFC del productor, fracción arancelaria, cantidad, unidad de medida,
+ * valor de la mercancía, tipo de factura, número de factura, complemento de descripción y fecha de factura.
+ */
+export interface SeleccionadasTabla {
+  id: number;
+  rfcProductor: string;
+  fraccionArancelaria: string;
+  cantidad: string;
+  unidadMedida: string;
+  valorMercancia: string;
+  tipoFactura: string;
+  numFactura: string;
+  complementoDescripcion: string;
+  fechaFactura: string;
+}
