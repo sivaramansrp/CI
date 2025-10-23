@@ -29,7 +29,6 @@ import { Solocitud80104Service } from '../../services/service80104.service'
 
 
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
-import { ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 /*
