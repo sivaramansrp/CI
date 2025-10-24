@@ -34,6 +34,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
     DatosParaMovilizacionNacionalComponent, PagoDeDerechosComponent, TercerospageComponent, CommonModule]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+    @ViewChild(DatosDeLaSolicitudComponent) hijo!: DatosDeLaSolicitudComponent;
   /**
    * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
    * @property {Subject<void>} destroyNotifier$
@@ -215,8 +216,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-
-
+callChild(): void {
+    this.hijo.sayHello();
+  }
+  
 
 
   /**

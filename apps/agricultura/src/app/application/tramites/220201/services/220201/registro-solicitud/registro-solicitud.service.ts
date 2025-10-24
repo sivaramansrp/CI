@@ -1,6 +1,7 @@
 import { 
     API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL,
     API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION,
+    API_GET_SOLICITUDES_GUARDADO_PARCIAL,
     API_GET_SOLICITUDES_NICO_DESCRIPCION,
     API_GET_SOLICITUDES_RECENTES,
     API_GET_SOLICITUDES_UNIDAD_MEDIDA
@@ -9,6 +10,7 @@ import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../models/220201/capturar-solicitud.model';
 import { Observable, map } from "rxjs";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
+import { GuardaSolicitud } from '../../../models/220201/guardar-solicitud.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -96,6 +98,18 @@ export class RegistroSolicitudService {
     cargaArchivoMasivoMercanciaAnimal(tramite: number, archivo: File): Observable<BaseResponse<Catalogo>> {
         const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL(tramite.toString(), archivo)}`;
         return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
+    }
+
+    /**
+     * Guarda una solicitud parcial para el trámite especificado.
+     *
+     * @param tramite - El identificador del trámite para el cual se guarda la solicitud.
+     * @param solicitud - Los datos de la solicitud que se guardarán.
+     * @returns Un observable que emite la respuesta que contiene los datos de la solicitud guardada.
+     */
+    guardaSolicitudParcial(tramite: number, solicitud: GuardaSolicitud): Observable<BaseResponse<SolicitudData>> {
+        const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_GUARDADO_PARCIAL(tramite.toString())}`;
+        return this.http.post<BaseResponse<SolicitudData>>(ENDPOINT, solicitud);
     }
 
 }

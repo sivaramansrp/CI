@@ -52,7 +52,7 @@
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="sanidadAgropecuaria" formControlName="oficinaInspeccion"
           [label]="'Oficina de inspección de sanidad Agropecuaria'" [required]="true" name="oficinaInspeccion"
-          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"></app-catalogo-select>
+          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(); obtenerPuntoDeInspeccion(forma)"></app-catalogo-select>
         <div
           *ngIf="datosDelaSolicitud.get('oficinaInspeccion')?.invalid && datosDelaSolicitud.get('oficinaInspeccion')?.touched">
           <small class="mensaje-error">Este campo es obligatorio.</small>

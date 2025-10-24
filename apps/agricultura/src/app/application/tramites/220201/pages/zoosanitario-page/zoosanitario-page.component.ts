@@ -7,6 +7,8 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
  * Este componente gestiona el flujo del formulario a través de un asistente (wizard),
@@ -29,6 +31,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
 export class ZoosanitarioPageComponent {
+  @ViewChild(PasoUnoComponent) padre!: PasoUnoComponent;
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -210,14 +213,10 @@ export class ZoosanitarioPageComponent {
     return numeros.reduce((acumulador, numero) => acumulador + numero, 0);
   }
 
-    /**
-   * Obtiene los datos del store y los guarda utilizando el servicio.
-   */
-  // eslint-disable-next-line class-methods-use-this
-  obtenerDatosDelStore(): void {
-    // Lógica para obtener datos del store y guardarlos
+  
+
+  callGrandchild(): void {
+    this.padre.callChild(); // 🔥 Desde el abuelo ejecutas el método del hijo    
   }
-
-
 
 }

@@ -257,3 +257,21 @@ export const API_GET_SOLICITUDES_UNIDAD_MEDIDA = (TRAMITE: string, cveFraccion: 
  */
 export const API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL = (TRAMITE: string, archivo: File) : string => `sat-t${TRAMITE}/solicitud/detalle-mercancia-animal/cargar-archivo`;
 
+/**
+ * Genera la ruta de la API para guardar parcialmente una solicitud para un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite relacionado con la solicitud.
+ * @returns La ruta de la API como cadena de texto para guardar parcialmente la solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/guardar-parcial
+ */
+export const API_GET_SOLICITUDES_GUARDADO_PARCIAL = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar-parcial`;
+
+
+/**
+ * Genera la ruta de la API para enviar una solicitud relacionada con un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_GET_SOLICITUDES_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
+
