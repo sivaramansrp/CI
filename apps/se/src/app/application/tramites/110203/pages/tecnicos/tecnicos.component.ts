@@ -1,16 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
+import { DatosPasos, JSONResponse, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import {
   Solicitud110203State,
   Tramite110203Store,
 } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { DatosPasos, esValidObject, getValidDatos, JSONResponse } from '@libs/shared/data-access-user/src';
+import { DatosComponent } from '../datos/datos.component';
+import {ERROR_FORMA_ALERT} from '../../constant/destinatario.enum';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
+import { Solocitud110203Service } from '../../service/service110203.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { Solocitud110203Service } from '../../service/service110203.service';
+
 @Component({
   selector: 'app-tecnicos',
   templateUrl: './tecnicos.component.html',
@@ -49,6 +53,12 @@ export class TecnicosComponent {
    */
   solicitudState!: Solicitud110203State;
 
+    /**
+     * Referencia al componente `PasoUnoComponent`.
+     */
+    @ViewChild('pasoUnoRef') datosComponent!: DatosComponent;
+
+
   /**
    * Objeto que contiene la información de los pasos del asistente (wizard).
    *
@@ -79,6 +89,25 @@ export class TecnicosComponent {
    */
   idSolicitud: number = 0;
 
+  // wizardService = inject(WizardService);
+
+  // isPeligro: boolean = false;
+
+/**
+ * Indica si el formulario actual es válido (`true`) o no (`false`).
+ */
+  esFormaValido: boolean = false;
+
+/**
+ * Estado que indica si el botón de continuar está habilitado (`true`) o deshabilitado (`false`).
+ */
+  btnContinuar: boolean = false;
+
+/**
+ * Contiene la plantilla HTML para la alerta de error en el formulario.
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * Constructor del componente.
    *
@@ -97,6 +126,7 @@ export class TecnicosComponent {
     private tramite110203Query: Tramite110203Query,
     private tramite110203Store: Tramite110203Store,
     private servicio110203: Solocitud110203Service,
+    private toastrService: ToastrService,
   ) {
     this.tramite110203Query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -113,22 +143,66 @@ export class TecnicosComponent {
    * @param {AccionBoton} e - El objeto del botón de acción que contiene las propiedades `valor` y `accion`.
    * @returns {void}
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+    getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = false;
+    // Validar formularios antes de continuar desde el paso uno
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return; // Detener ejecución si los formularios son inválidos
+      }
+    }
+
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pantallasPasos.length) {
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else {
+      } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
   }
 
-  guardar(data: Solicitud110203State): any {
-    console.log(data);
+/**
+ * Valida todos los formularios del primer paso si el componente de datos está disponible.
+ *
+ * @returns `true` si todos los formularios son válidos o si el componente no está definido; `false` si algún formulario es inválido.
+ */
+    public validarTodosFormulariosPasoUno(): boolean {
+    if (!this.datosComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.datosComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
+  }
+
+/**
+ * Desactiva el botón de continuar estableciendo su estado en falso.
+ */
+  btnContinuarNotificacion(): void {
+    this.btnContinuar = false;
+  }
+
+  guardar(data: Solicitud110203State): Promise<JSONResponse> {
     const TRATADOS = this.servicio110203.buildTratados(data);
     const DESTINATARIO = this.servicio110203.buildDestinatario(data);
     const TRANSPORTE = this.servicio110203.buildTransporte(data);
+    const CERTIFICADO = this.servicio110203.buildCertificado(data);
     const DATOS_CERTIFICADO = this.servicio110203.buildDatosCertificado(data);
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
@@ -166,11 +240,10 @@ export class TecnicosComponent {
     },
       "tratados": TRATADOS,
       "transporte": TRANSPORTE,
-      "certificado": {},
+      "certificado": CERTIFICADO,
      "destinatario": DESTINATARIO,
      "datos_del_cerificado": DATOS_CERTIFICADO
     }
-    console.log(PAYLOAD);
     return new Promise((resolve, reject) => {
         this.servicio110203.guardarDatosPost(PAYLOAD).subscribe({
           next: (response) => {

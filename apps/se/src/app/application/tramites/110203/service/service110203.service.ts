@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Solicitud110203State, Tramite110203Store } from '../../../estados/tramites/tramite110203.store';
-import { Tramite110203Query } from '../../../estados/queries/tramite110203.query';
-import { PROC_110203 } from '../servers/api.route';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { PROC_110203 } from '../servers/api.route';
+import { Tramite110203Query } from '../../../estados/queries/tramite110203.query';
 
 @Injectable({
   providedIn: 'root',
@@ -75,22 +75,26 @@ this.tramite110203Store.setMedida(DATOS.medida);
     return this.httpService.post<Record<string, unknown>>(PROC_110203.GUARDAR, { body: body });
   }
 
+  buscarCertificado(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110203.BUSCAR_CERTIFICADO, { body: body });
+  }
+
   getAllState(): Observable<Solicitud110203State> {
     return this.tramite110203Query.selectSolicitud$;
   }
 
-  buildTratados(data:any): unknown {
+  buildTratados(data:Solicitud110203State): unknown {
   return {
     "tratadoAcuerdo":data.tratado,
     "paisBloque": data.bloque,
     "pais": data.origen,
-    "paisDestino": data.destino,
+    "paisDestino": data.bloque,
     "fechaExpedicion": data.expedicion,
     "fechaVencimiento": data.vencimiento
   };
 }
 
-buildDestinatario(data:any):unknown {
+buildDestinatario(data:Solicitud110203State):unknown {
   return {
     "nombre": data.nombre,
     "primer_apellido": data.primer,
@@ -101,34 +105,52 @@ buildDestinatario(data:any):unknown {
       "ciudad_poblacion_estado_provincia": data.ciudad,
       "calle": data.calle,
       "numero_letra": data.letra,
-      "lada": data.lada ?? '',
+      // "lada": data.lada ?? '',
       "telefono": data.telefono,
       "fax": data.fax,
       "correo_electronico": data.correo,
-      "pais_destino": data.paisDestino ?? ''
   },
     "medio_transporte": data.medio ?? ''
 }
 }
 
-buildTransporte(data:any): unknown {
+buildTransporte(data:Solicitud110203State): unknown {
   return {
     "medio_de_transporte": data.medio
   };
 }
 
-  buildDatosCertificado(data: any): unknown {
+  buildCertificado(data: Solicitud110203State): unknown {
+    return {
+      certificado: {
+        solicitud: {
+          certificadoOrigen: {
+            idCertificado: 1001,
+            folio: 'CO-2025-001',
+            fechaEmision: '2025-10-13',
+            paisDestino: 'MX',
+            precisa: data.precisa ?? '',
+          },
+        },
+        paisAsociado: {
+          cvePais: data.cvePais ?? '',
+        }
+      },
+    };
+  }
+
+  buildDatosCertificado(data: Solicitud110203State): unknown {
     return {
       "observaciones": data.observaciones,
       "precisa": data.precisa,
       "presenta": data.presenta,
       "mercanciasSeleccionadas": {
-           "numero_de_orden":"",
-            "fraccion_arancelaria":"",
-            "nombre_tecnico":"",
-            "nombre_comercial":"",
-            "nombre_ingles":"",
-            "numero_de_registro":""
+        "numero_de_orden":data.orden,
+        "fraccion_arancelaria":data.arancelaria,
+        "nombre_tecnico":data.tecnico,
+        "nombre_comercial":data.comercial,
+        "nombre_ingles":data.ingles,
+        "numero_de_registro":data.registro,
       }
     }
   }

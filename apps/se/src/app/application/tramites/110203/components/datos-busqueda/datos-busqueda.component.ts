@@ -1,7 +1,7 @@
 import { CatalogoServices,InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -11,9 +11,9 @@ import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Solocitud110203Service } from '../../service/service110203.service';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
-import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
@@ -157,6 +157,8 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
   public datosFilasSeleccionadas: TableBodyData[] = [];
 
+  private certificadoState!: Solicitud110203State;
+
   /** 
    * Constructor del componente.
    * Se inyectan las dependencias necesarias para el funcionamiento del componente.
@@ -249,9 +251,19 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      * Si el usuario cambia el valor, este se almacena en la tienda de Akita  
      * llamando al método setTratadoAcuerdo.  
      */
-    this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110203Store.setTratadoAcuerdo(valor));
+  this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
+  .pipe(takeUntil(this.unsubscribe$),
+   distinctUntilChanged(),
+  debounceTime(200))
+  .subscribe(valor => {
+    this.tramite110203Store.setTratadoAcuerdo(valor);
+    
+    this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
+    
+    if (valor) {
+      this.obtenerPaisesPorTratado(valor);
+    } 
+  });
 
     /** 
      * Escucha los cambios en el campo "paisBloque" del formulario.  
@@ -266,14 +278,13 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
 
-    /** 
-    * Llama a la función para obtener los datos del establecimiento.
-    */
-    this.getEstableCimiento();
+    this.tramite110203Query.selectSolicitud$
+  .pipe(takeUntil(this.unsubscribe$))
+  .subscribe((state) => {
+    this.certificadoState = state;
+  });
     
     this.obtenerTratadoAcuerdo();
-
-    this.obtenerPaisesBloque();
   }
   /**
    * Handles radio value changes.
@@ -285,14 +296,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.valorSeleccionado = valor;
     this.validadoresActualización();
     this.tramite110203Store.setValorSeleccionado(valor);
-  }
-
-  /**
-   * Assigns establishment table data, including headers and body, from a JSON file.
-   */
-  private getEstableCimiento(): void {
-    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
-    this.establecimientoBodyData = this.destinatarioTableData?.cuerpoTabla;
   }
 
   /**
@@ -368,6 +371,7 @@ public buscar(): void {
     }
   } else {
     this.verTabla = true;
+    this.buscarDatos();
   }
 }
 
@@ -421,7 +425,7 @@ public buscar(): void {
    * el componente se destruye, evitando fugas de memoria.
    */
   obtenerTratadoAcuerdo(): void {
-    this.catalogoService.tratadosAcuerdosCatalogoDatos(this.tramites,"UE")
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites,"TITRAC.TA")
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -430,21 +434,11 @@ public buscar(): void {
       });
   }
 
-  /**
-   * Obtiene el catálogo de países por bloque relacionado con los trámites actuales.
-   * Realiza una solicitud al servicio de catálogo y actualiza la propiedad `paisBloque` con los datos recibidos.
-   * La suscripción se cancela automáticamente cuando el componente se destruye.
-   */
-  obtenerPaisesBloque(): void {
-    this.catalogoService.paisBloqueCatalogo(this.tramites)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => { 
-            this.paisBloque = response?.datos ?? [];
-        }
-      });
-  }
-
+/**
+ * Actualiza el estado de selección de filas y guarda las filas seleccionadas.
+ *
+ * @param tieneSeleccion - Indica si hay filas seleccionadas (true) o no (false).
+ */
   onRowSelectionChange(tieneSeleccion: boolean): void {
   this.filaSeleccionada = tieneSeleccion;
     if (tieneSeleccion) {
@@ -452,6 +446,139 @@ public buscar(): void {
   } else {
     this.datosFilasSeleccionadas = [];
   }
+}
+
+/**
+ * Obtiene la lista de países asociados a un tratado y, si hay resultados, 
+ * obtiene los tratados y acuerdos relacionados al primer país clave encontrado.
+ *
+ * @param tratadoId - Identificador del tratado para filtrar los países.
+ */
+obtenerPaisesPorTratado(tratadoId: string): void {
+  this.catalogoService.getPaisesPorTratado(this.tramites, tratadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {        
+        if (response?.datos && response.datos.length > 0) {
+          // Extract the first país clave from the response
+          const PAIS_CLAVE = response.datos[0].clave;
+          if (PAIS_CLAVE !== undefined) {
+            this.obtenerTratadosAcuerdosPorPais(PAIS_CLAVE);
+          }
+        } else {
+          this.paisBloque = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error obteniendo países por tratado:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Obtiene los tratados y acuerdos asociados a un país específico.
+ *
+ * @param cvePais - Clave o código del país para filtrar tratados y acuerdos.
+ */
+obtenerTratadosAcuerdosPorPais(cvePais: string): void {
+  this.catalogoService.getTratadosAcuerdosPorPais(this.tramites, cvePais)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        this.paisBloque = response?.datos ?? [];
+      },
+      error: (error) => {
+        console.error('Error obteniendo tratados-acuerdos por país:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
+ */
+buscarDatos(): void {
+
+    const PAYLOAD = {
+      numeroCertificado: "25402500186802", 
+      // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
+      rfcSolicitante: "AAL0409235E6"
+    };
+
+    this.Solocitud110203Service.buscarCertificado(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      // eslint-disable-next-line complexity
+      .subscribe((response: unknown) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const DATOS = (response as any).datos ?? [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const CUERPO_TABLA = DATOS.map((item: any) => ({
+          numeroDeCertificado: item.numeroCertificado,
+          expedicion: item.fechaExpedicion,
+          vencimiento: item.fechaVencimiento,
+        }));
+
+        //tratado
+        this.tramite110203Store.setTratado(DATOS[0].tratadoAsociado.nombre ?? '');
+        this.tramite110203Store.setBloque(DATOS[0].paisAsociado.nombre ?? '');
+        this.tramite110203Store.setOrigen(DATOS[0].cvePaisFabricacion || 'México');
+        this.tramite110203Store.setDestino(DATOS[0].solicitud.paisDestino ?? '');
+        this.tramite110203Store.setExpedicion(DATOS[0].fechaExpedicion ?? '');
+        this.tramite110203Store.setVencimiento(DATOS[0].fechaVencimiento ?? '');
+
+        //destinatario
+        this.tramite110203Store.setNombre(DATOS[0].solicitud.personaSolicitud.nombre ?? '');
+        this.tramite110203Store.setPrimer(DATOS[0].solicitud.personaSolicitud.apellidoMaterno ?? '');
+        this.tramite110203Store.setSegundo(DATOS[0].solicitud.personaSolicitud.apellidoPaterno ?? '');
+        this.tramite110203Store.setFiscal(DATOS[0].solicitud.personaSolicitud.numeroIdentificacionFiscal ?? '')
+        this.tramite110203Store.setRazon(DATOS[0].solicitud.personaSolicitud.razonSocial ?? '');
+
+        this.tramite110203Store.setCalle(DATOS[0].solicitud.personaSolicitud.domicilio.calle ?? '');
+        this.tramite110203Store.setLetra(DATOS[0].solicitud.personaSolicitud.domicilio.letra ?? '');
+        this.tramite110203Store.setCiudad(DATOS[0].solicitud.personaSolicitud.domicilio.ciudad ?? '');
+        this.tramite110203Store.setCorreo(DATOS[0].solicitud.personaSolicitud.correoElectronico ?? '');
+        this.tramite110203Store.setFax(DATOS[0].solicitud.personaSolicitud.domicilio.fax ?? '');
+        this.tramite110203Store.setTelefono(DATOS[0].solicitud.personaSolicitud.domicilio.telefono ?? '');
+
+        //transporte
+        this.tramite110203Store.setMedio(DATOS[0].medioTransporte);
+
+        //Datos Certificado
+        this.tramite110203Store.setPrecisa(DATOS[0].precisa);
+        this.tramite110203Store.setPresenta(DATOS[0].presenta);
+        this.tramite110203Store.setObservaciones(DATOS[0].observaciones);
+
+        //Mercancías seleccionadas
+        this.tramite110203Store.setOrden(DATOS[0].mercanciasAsociadas[0].numeroOrden ?? '');
+        this.tramite110203Store.setArancelaria(DATOS[0].mercanciasAsociadas[0].fraccionArancelaria ?? '');
+        this.tramite110203Store.setNombretecnico(DATOS[0].mercanciasAsociadas[0].nombreTecnico ?? '');
+        this.tramite110203Store.setComercial(DATOS[0].mercanciasAsociadas[0].nombreComercial ?? '')
+        this.tramite110203Store.setIngles(DATOS[0].mercanciasAsociadas[0].nombreIngles ?? '');
+        this.tramite110203Store.setRegistro(DATOS[0].mercanciasAsociadas[0].numeroRegistro ?? '');
+        this.tramite110203Store.setComplemento(DATOS[0].mercanciasAsociadas[0].complementoDescripcion ?? '');
+        this.tramite110203Store.setMarca(DATOS[0].mercanciasAsociadas[0].marca ?? '');
+        this.tramite110203Store.setValor(DATOS[0].mercanciasAsociadas[0].valorMercancia ?? '');
+        this.tramite110203Store.setCantidad(DATOS[0].mercanciasAsociadas[0].cantidad ?? '');
+        this.tramite110203Store.setComercializacion(DATOS[0].mercanciasAsociadas[0].unidadMedidaComercial ?? '');
+        this.tramite110203Store.setBruta(DATOS[0].mercanciasAsociadas[0].masaBruta ?? '');
+        this.tramite110203Store.setMedida(DATOS[0].mercanciasAsociadas[0].unidadMedidaMasaBruta ?? '');
+        this.tramite110203Store.setFactura(DATOS[0].mercanciasAsociadas[0].numeroFactura ?? '');
+        this.tramite110203Store.setTipo(DATOS[0].mercanciasAsociadas[0].tipoFactura ?? '');
+        this.tramite110203Store.setFechaFactura(DATOS[0].mercanciasAsociadas[0].fechaFactura ?? '');
+
+        this.establecimientoBodyData = [];
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        CUERPO_TABLA.forEach((row:any) => {
+          const TABLE_ROW: TableBodyData = { tbodyData: []};
+          TABLE_ROW.tbodyData = [row.numeroDeCertificado, row.expedicion, row.vencimiento];
+          this.establecimientoBodyData.push(TABLE_ROW);
+        });
+      });
+
+        this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
+
 }
 
   /** 

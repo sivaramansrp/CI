@@ -901,3 +901,9 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS_110214 = (TRAMITE: string) : string =
  * @returns 
  */
 export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;
+
+export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+
+export const CATALOGO_ACUERDOS = (TRAMITE: string, IDTRATADO: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${IDTRATADO}/paises`;
+
+export const CATALOGO_ACUERDOS_PAIS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/catalogo/pais/${CVEPAIS}/tratados-acuerdos`;

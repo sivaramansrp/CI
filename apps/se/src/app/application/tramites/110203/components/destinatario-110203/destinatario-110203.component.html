@@ -90,6 +90,13 @@
           <label class="form-label" for="calle">Calle:*</label>
           <input class="form-control" id="calle" formControlName="calle" type="text" [placeholder]="placeholder.calle" (change)="setValoresStore(destinatarioForm,'calle', 'setCalle')">
         </div>
+        @if(destinatarioForm.controls['calle'].invalid && destinatarioForm.controls['calle'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['calle'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
 
       <div class="col-md-4">
@@ -97,6 +104,13 @@
           <label class="form-label" for="letra">Número y/o letra:*</label>
           <input class="form-control" id="letra" formControlName="letra" type="text" [placeholder]="placeholder.letra" (change)="setValoresStore(destinatarioForm,'letra', 'setLetra')">
         </div>
+        @if(destinatarioForm.controls['letra'].invalid && destinatarioForm.controls['letra'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['letra'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
     </div>
 
@@ -106,6 +120,13 @@
           <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
           <input class="form-control" id="ciudad" formControlName="ciudad" type="text" [placeholder]="placeholder.ciudad" (change)="setValoresStore(destinatarioForm,'ciudad', 'setCiudad')">
         </div>
+        @if(destinatarioForm.controls['ciudad'].invalid && destinatarioForm.controls['ciudad'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['ciudad'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
 
       <div class="col-md-4">
@@ -113,6 +134,13 @@
           <label class="form-label" for="correo">Correo electrónico:*</label>
           <input class="form-control" id="correo" formControlName="correo" type="text" [placeholder]="placeholder.correo" (change)="setValoresStore(destinatarioForm,'correo', 'setCorreo')">
         </div>
+        @if(destinatarioForm.controls['correo'].invalid && destinatarioForm.controls['correo'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['correo'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
     </div>
 

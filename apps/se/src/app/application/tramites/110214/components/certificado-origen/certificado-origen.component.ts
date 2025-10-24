@@ -293,7 +293,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   conseguirDisponiblesDatos(): void {
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6", 
-      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || 105 },
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa']},
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] || 'ARG' }
     };
   

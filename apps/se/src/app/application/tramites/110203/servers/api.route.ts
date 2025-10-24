@@ -11,10 +11,6 @@ const BASE_URL = ENVIRONMENT.API_HOST;
  */
 const API = ENVIRONMENT.API;
 /**
- * Catálogo de la API
- */
-const CATALOGO = ENVIRONMENT.CATALOGO_URL;
-/**
  * Procedimiento de la API
  */
 const PROCEDURE = '/sat-t110203';
@@ -25,6 +21,5 @@ const PROCEDURE = '/sat-t110203';
  */
 export const PROC_110203 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar-certificado`,
-    // TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
-    // BUSCAR_MERCANCIAS: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
+    BUSCAR_CERTIFICADO: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-certificado`,
 }

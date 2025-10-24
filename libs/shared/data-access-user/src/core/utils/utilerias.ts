@@ -320,5 +320,9 @@ export function parseToString(value: unknown): string {
   }
   return value.toString();
 }
-    
 
+export function formatDateToYYYYMMDD(dateString: string): string {
+  if (!dateString) {return '';}
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+}
