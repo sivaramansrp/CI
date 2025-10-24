@@ -105,14 +105,14 @@ export interface RequisitosObligatorios {
  */
 export interface AvisoOpcionesDeRadio {
   /**
-   * Título del aviso.
+   * Lista de opciones de radio disponibles.
    *
    * @type {OpcionesDeRadio[]}
    */
   opcionesDeRadio: OpcionesDeRadio[];
 
   /**
-   * Opción seleccionada por el usuario.
+   * Indica si la selección es obligatoria.
    *
    * @type {boolean}
    */
@@ -139,90 +139,171 @@ export interface OpcionesDeRadio {
 }
 
 /**
- * Interface para los datos recibidos al agregar un residuo peligroso
+ * Interface para los datos recibidos al agregar un residuo peligroso.
  */
 export interface ResiduoAgregadoData {
+  /** Acotación o nota adicional sobre el residuo. */
   acotacion?: string;
+  /** Cantidad numérica del residuo. */
   cantidad?: string;
+  /** Cantidad expresada en letra. */
   cantidadLetra?: string;
+  /** Nombre del residuo. */
   nombre?: string;
+  /** Descripción detallada del residuo. */
   descripcion?: string;
+  /** Número de manifiesto asociado. */
   manifiesto?: string;
+  /** Capacidad del contenedor. */
   capacidad?: string;
 }
 
 /**
- * Interface para los datos de residuo peligroso en la tabla
+ * Interface para los datos de residuo peligroso en la tabla.
+ * Combina datos generales y características del residuo.
  */
 export interface ResiduoPeligroso
   extends DatosResiduos,
     CaracteristicasResiduos {
+  /** Identificador único del residuo. */
   id?: number;
+  /** Origen o lugar de generación del residuo. */
   origenResiduoGeneracion: string;
+  /** Nombre del residuo peligroso. */
   nombreResiduo: string;
+  /** Acotación o nota adicional sobre el residuo. */
   acotacion: string;
+  /** Cantidad numérica del residuo. */
   cantidad: string;
+  /** Cantidad expresada en letra. */
   cantidadLetra: string;
+  /** Número de manifiesto de entrega, transporte y recepción. */
   numeroManifiesto: string;
+  /** Capacidad del contenedor o envase. */
   capacidad: string;
+  /** Lista de materias primas relacionadas con el residuo. */
   materiasPrimasRelacionadas: MateriaResiduo[];
 }
 
+
+/**
+ * Interface para los datos generales de residuos.
+ * Contiene información de clasificación arancelaria y nomenclatura.
+ */
 export interface DatosResiduos {
+  /** Clave de la fracción arancelaria. */
   fraccionCve: string;
+  /** Descripción de la fracción arancelaria. */
   fraccionDesc: string;
+  /** Clave NICO del residuo. */
   nicoCve: string;
+  /** Descripción de la clave NICO. */
   nicoDesc: string;
+  /** Clave de la unidad de medida. */
   unidadMedidaCve: string;
+  /** Descripción de la unidad de medida. */
   unidadMedidaDesc: string;
+  /** Clave del residuo. */
   residuoCve: string;
+  /** Descripción del residuo. */
   residuoDesc: string;
+  /** Nombre del residuo. */
   residuoNombre: string;
+  /** Descripción del nombre del residuo. */
   residuoNombreDesc: string;
+  /** Clave de la descripción del residuo. */
   residuoDescCve: string;
+  /** Descripción completa del residuo. */
   residuoDescDesc: string;
+  /** Otra descripción o clasificación del residuo. */
   residuoOtro: string;
 }
 
+/**
+ * Interface para las características de los residuos.
+ * Define propiedades físicas y de clasificación del residuo peligroso.
+ */
 export interface CaracteristicasResiduos {
+  /** Clave CRETI (Corrosivo, Reactivo, Explosivo, Tóxico, Inflamable). */
   cretiCve: string;
+  /** Descripción del código CRETI. */
   cretiDesc: string;
+  /** Clave del estado físico del residuo. */
   estadoFisicoCve: string;
+  /** Descripción del estado físico. */
   estadoFisicoDesc: string;
+  /** Descripción de otro estado físico no catalogado. */
   estadoFisicoOtro: string;
+  /** Clave del tipo de contenedor. */
   tipoContenedorCve: string;
+  /** Descripción del tipo de contenedor. */
   tipoContenedorDesc: string;
+  /** Descripción de otro tipo de contenedor no catalogado. */
   tipoContenedorOtro: string;
 }
 
+
+/**
+ * Interface para el formulario de residuo peligroso.
+ * Contiene todos los campos necesarios para capturar información de un residuo.
+ */
 export interface ResiduoPeligrosoFormulario {
+  /** Origen o lugar de generación del residuo. */
   origenResiduoGeneracion: string;
+  /** Clave de la fracción arancelaria. */
   fraccionArancelaria: string;
+  /** Nombre del residuo. */
   nombreResiduo: string;
+  /** Clave NICO del residuo. */
   nico: string;
+  /** Acotación o nota adicional. */
   acotacion: string;
+  /** Nombre específico del residuo peligroso según normativa. */
   nombreResiduoPeligroso: string;
+  /** Cantidad numérica del residuo. */
   cantidad: string;
+  /** Cantidad expresada en letra. */
   cantidadLetra: string;
+  /** Clave de la unidad de medida. */
   unidadMedida: string;
+  /** Clave de clasificación del residuo. */
   claveClasificacion: string;
+  /** Nombre de la clasificación. */
   nombreClasificacion: string;
+  /** Descripción de la clasificación. */
   descripcionClasificacion: string;
+  /** Descripción de otra clasificación si aplica. */
   descripcionOtraClasificacion: string;
+  /** Código CRETI del residuo. */
   creti: string;
+  /** Clave del estado físico. */
   estadoFisico: string;
+  /** Descripción de otro estado físico si aplica. */
   descripcionOtroEstadoFisico: string;
+  /** Número de manifiesto. */
   numeroManifiesto: string;
+  /** Clave del tipo de contenedor. */
   tipoContenedor: string;
+  /** Descripción de otro tipo de contenedor si aplica. */
   descripcionOtroContenedor: string;
+  /** Capacidad del contenedor. */
   capacidad: string;
+  /** Nombre descriptivo de la fracción arancelaria. */
   fraccionName: string;
+  /** Nombre descriptivo de NICO. */
   nicoName: string;
+  /** Nombre descriptivo de la unidad de medida. */
   unidadMedidaName: string;
+  /** Descripción de la clave de clasificación. */
   claveClasificacionDesc: string;
+  /** Nombre alternativo de la clasificación. */
   nameClasificacion: string;
+  /** Descripción alternativa de la clasificación. */
   descClasificacion: string;
+  /** Descripción del código CRETI. */
   cretiDesc: string;
+  /** Descripción del estado físico. */
   estadoFisicoDesc: string;
+  /** Descripción del tipo de contenedor. */
   tipoContenedorDesc: string;
 }

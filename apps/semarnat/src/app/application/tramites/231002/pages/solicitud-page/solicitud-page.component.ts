@@ -92,6 +92,10 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     private guardarService: GuardarServiceT231002
   ) {}
 
+  /**
+   * Método de inicialización del componente.
+   * Se suscribe al estado de la solicitud para mantener el estado local actualizado.
+   */
   ngOnInit(): void {
     this.obtenerEstadoSolicitud();
   }
@@ -172,6 +176,9 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Obtiene el estado actual de la solicitud desde el query y lo asigna al estado local.
+   */
   obtenerEstadoSolicitud(): void {
     this.t231002Query.estadoFormulario$
       ?.pipe(
@@ -324,7 +331,6 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    */
   ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
     const PAYLOAD = this.generarRequestGuardarSolicitud();
-    console.log(PAYLOAD);
     return this.guardarService.postSolicitud(PAYLOAD).pipe(
       map((response) => {
         if (
@@ -377,9 +383,10 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     );
   }
 
+ 
   /**
-   *
-   * @returns
+   * Genera el payload para guardar la solicitud basado en el estado actual.
+   * @returns GuardarSolicitud231002Request con los datos estructurados para el guardado.
    */
   generarRequestGuardarSolicitud(): GuardarSolicitud231002Request {
     const DATOS = this.estadoSolicitud;

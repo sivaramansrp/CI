@@ -6,6 +6,7 @@ import {
   TramiteFolioStore,
   base64ToHex,
   encodeToISO88591Hex,
+  formatFecha,
 } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
@@ -93,6 +94,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     this.obtenerCadenaOriginal();
   }
 
+  /**
+   * Obtiene la firma electrónica del documento.
+   * @param firma La firma electrónica en formato base64.
+   * @returns void
+   */
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       this.nuevaNotificacion = {
@@ -115,12 +121,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       cadena_original: CADENAHEX,
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
-      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+      fecha_firma: formatFecha(new Date()),
       clave_rol: 'Solicitante',
       sello: FIRMAHEX,
-      fecha_fin_vigencia: PasoDosComponent.formatFecha(
-        this.datosFirmaReales.fechaFin
-      ),
+      fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
       documentos_requeridos: [],
     };
 
@@ -180,7 +184,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-  
+
+  /**
+   * Obtiene la cadena original para el trámite actual.
+   */
   obtenerCadenaOriginal(): void {
     const PAYLOAD: CadenaOriginalRequest = {
       num_folio_tramite: this.estadoSolicitud.idSolicitud?.toString() || null,
@@ -193,7 +200,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       },
       cve_rol_capturista: 'CapturistaGubernamental',
       cve_usuario_capturista: 'Gubernamental',
-      fecha_firma: PasoDosComponent.formatFecha(new Date()),
+      fecha_firma: formatFecha(new Date()),
     };
     this.cadenaService
       .obtenerCadenaOriginal(String(this.estadoSolicitud.idSolicitud), PAYLOAD)
@@ -233,6 +240,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Procesa los datos de firma.
+   * @param datos Los datos de firma a procesar.
+   */
   datosFirma(datos: {
     firma: string;
     certSerialNumber: string;
@@ -241,20 +252,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }): void {
     this.datosFirmaReales = datos;
     this.obtieneFirma(datos.firma);
-  }
-
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
   }
 
   ngOnDestroy(): void {
