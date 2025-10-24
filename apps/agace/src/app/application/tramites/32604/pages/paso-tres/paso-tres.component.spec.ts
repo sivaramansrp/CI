@@ -8,7 +8,9 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent]
+      declarations: [PasoTresComponent],
+      imports: [require('@angular/common').CommonModule, require('@angular/forms').ReactiveFormsModule],
+      schemas: [require('@angular/core').CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 

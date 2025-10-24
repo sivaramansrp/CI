@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { AgregarTransportistasComponent } from './agregar-transportistas.component';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudService } from '../../services/solicitud.service';
-import { TransportistasTable } from '../../models/solicitud.model';
+import { Solicitud32604Query } from '../../estados/solicitud32604.query';
+import { Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+import { TransportistasTable } from '../../models/empresas-comercializadoras.model';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -13,36 +13,36 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('AgregarTransportistasComponent', () => {
   let component: AgregarTransportistasComponent;
   let fixture: ComponentFixture<AgregarTransportistasComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud32605StoreMock: jest.Mocked<Solicitud32605Store>;
-  let solicitud32605QueryMock: jest.Mocked<Solicitud32605Query>;
+  let empresasComercializadorasServiceMock: jest.Mocked<EmpresasComercializadorasService>;
+  let solicitud32604StoreMock: jest.Mocked<Solicitud32604Store>;
+  let solicitud32604QueryMock: jest.Mocked<Solicitud32604Query>;
 
   beforeEach(async () => {
-    solicitudServiceMock = {
+    empresasComercializadorasServiceMock = {
       conseguirTransportistasLista: jest.fn(() =>
         of([
           {
-            rfc: 'AAL0409235E6',
-            razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
-            domicilio:
+            transportistaRFCModifTrans: 'AAL0409235E6',
+            transportistaRazonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+            transportistaDomicilio:
               'CAMINO VIEJO 1353 81210 LOS MOCHIS MIGUEL HIDALGO AHOME SINALOA ESTADOS UNIDOS MEXICANOS',
-            caat: '3CJD',
+            transportistaCaat: '3CJD',
           },
         ])
       ),
-    } as unknown as jest.Mocked<SolicitudService>;
+    } as unknown as jest.Mocked<EmpresasComercializadorasService>;
 
-    solicitud32605StoreMock = {
+    solicitud32604StoreMock = {
       actualizarTransportistaRFC: jest.fn(() => of()),
       actualizarTransportistaRFCModifTrans: jest.fn(() => of()),
       actualizarTransportistaRazonSocial: jest.fn(() => of()),
       actualizarTransportistaDomicilio: jest.fn(() => of()),
       actualizarTransportistaCaat: jest.fn(() => of()),
-    } as unknown as jest.Mocked<Solicitud32605Store>;
+    } as unknown as jest.Mocked<Solicitud32604Store>;
 
-    solicitud32605QueryMock = {
+    solicitud32604QueryMock = {
       selectSolicitud$: of({}) as any,
-    } as unknown as jest.Mocked<Solicitud32605Query>;
+    } as unknown as jest.Mocked<Solicitud32604Query>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -54,9 +54,11 @@ describe('AgregarTransportistasComponent', () => {
       ],
       declarations: [],
       providers: [
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: EmpresasComercializadorasService, useValue: empresasComercializadorasServiceMock },
+        { provide: Solicitud32604Store, useValue: solicitud32604StoreMock },
+        { provide: Solicitud32604Query, useValue: solicitud32604QueryMock },
+        { provide: require('ngx-toastr').ToastrService, useValue: { success: jest.fn(), error: jest.fn(), info: jest.fn(), warning: jest.fn() } },
+        { provide: 'ToastConfig', useValue: {} },
       ],
     }).compileComponents();
   });
@@ -83,15 +85,15 @@ describe('AgregarTransportistasComponent', () => {
     const event = { target: { value: 'RFC123' } } as unknown as Event;
     component.actualizarTransportistaRFC(event);
     expect(
-      solicitud32605StoreMock.actualizarTransportistaRFC
+      solicitud32604StoreMock.actualizarTransportistaRFC
     ).toHaveBeenCalledWith('RFC123');
   });
 
-  it('should emit transportistasDatos on aceptarTransportista', () => {
-    jest.spyOn(component.transportistasDatos, 'emit');
+  it('should emit seccionTransportistasLista on aceptarTransportista', () => {
+    jest.spyOn(component.seccionTransportistasLista, 'emit');
     component.transportistaCertificacionForm.setValue({
-      transportistaRFC: 'RFC123',
-      transportistaRFCModifTrans: 'RFC456',
+      transportistaRFC: 'ZURE5401259D9',
+      transportistaRFCModifTrans: 'ZURE5401259D9',
       transportistaRazonSocial: 'Razon Social',
       transportistaDomicilio: 'Domicilio',
       transportistaCaat: 'CAAT',
@@ -101,11 +103,11 @@ describe('AgregarTransportistasComponent', () => {
       transportistaIdCaat: null,
     });
     component.aceptarTransportista();
-    expect(component.transportistasDatos.emit).toHaveBeenCalledWith({
-      rfc: 'RFC456',
-      razonSocial: 'Razon Social',
-      domicilio: 'Domicilio',
-      caat: 'CAAT',
+    expect(component.seccionTransportistasLista.emit).toHaveBeenCalledWith({
+      transportistaRFCModifTrans: 'ZURE5401259D9',
+      transportistaRazonSocial: 'Razon Social',
+      transportistaDomicilio: 'Domicilio',
+      transportistaCaat: 'CAAT',
     });
   });
 
@@ -119,24 +121,24 @@ describe('AgregarTransportistasComponent', () => {
   it('should update form values on conseguirTransportistasLista response', () => {
     const transportistasMock: TransportistasTable[] = [
       {
-        rfc: 'RFC123',
-        razonSocial: 'Razon Social',
-        domicilio: 'Domicilio',
-        caat: 'CAAT',
+        transportistaRFCModifTrans: 'ZURE5401259D9',
+        transportistaRazonSocial: 'Razon Social',
+        transportistaDomicilio: 'Domicilio',
+        transportistaCaat: 'CAAT',
       },
     ];
-    solicitudServiceMock.conseguirTransportistasLista.mockReturnValue(
+    empresasComercializadorasServiceMock.conseguirTransportistasLista.mockReturnValue(
       of(transportistasMock)
     );
     component.conseguirTransportistasLista();
     expect(
-      solicitud32605StoreMock.actualizarTransportistaRazonSocial
+      solicitud32604StoreMock.actualizarTransportistaRazonSocial
     ).toHaveBeenCalledWith('Razon Social');
     expect(
-      solicitud32605StoreMock.actualizarTransportistaDomicilio
+      solicitud32604StoreMock.actualizarTransportistaDomicilio
     ).toHaveBeenCalledWith('Domicilio');
     expect(
-      solicitud32605StoreMock.actualizarTransportistaCaat
+      solicitud32604StoreMock.actualizarTransportistaCaat
     ).toHaveBeenCalledWith('CAAT');
   });
   
@@ -144,7 +146,7 @@ describe('AgregarTransportistasComponent', () => {
     const event = { target: { value: 'RFCMODIF123' } } as unknown as Event;
     component.actualizarTransportistaRFCModifTrans(event);
     expect(
-      solicitud32605StoreMock.actualizarTransportistaRFCModifTrans
+      solicitud32604StoreMock.actualizarTransportistaRFCModifTrans
     ).toHaveBeenCalledWith('RFCMODIF123');
   });
 
@@ -152,7 +154,7 @@ describe('AgregarTransportistasComponent', () => {
     const event = { target: { value: 'Nueva Razon Social' } } as unknown as Event;
     component.actualizarTransportistaRazonSocial(event);
     expect(
-      solicitud32605StoreMock.actualizarTransportistaRazonSocial
+      solicitud32604StoreMock.actualizarTransportistaRazonSocial
     ).toHaveBeenCalledWith('Nueva Razon Social');
   });
 
@@ -160,7 +162,7 @@ describe('AgregarTransportistasComponent', () => {
     const event = { target: { value: 'Nuevo Domicilio' } } as unknown as Event;
     component.actualizarTransportistaDomicilio(event);
     expect(
-      solicitud32605StoreMock.actualizarTransportistaDomicilio
+      solicitud32604StoreMock.actualizarTransportistaDomicilio
     ).toHaveBeenCalledWith('Nuevo Domicilio');
   });
 
@@ -168,7 +170,7 @@ describe('AgregarTransportistasComponent', () => {
     const event = { target: { value: 'CAAT123' } } as unknown as Event;
     component.actualizarTransportistaCaat(event);
     expect(
-      solicitud32605StoreMock.actualizarTransportistaCaat
+      solicitud32604StoreMock.actualizarTransportistaCaat
     ).toHaveBeenCalledWith('CAAT123');
   });
 
@@ -179,9 +181,11 @@ describe('AgregarTransportistasComponent', () => {
   });
 
   it('noEsValido should return false if control is valid', () => {
-    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue('RFC123');
-    component.transportistaCertificacionForm.get('transportistaRFC')?.markAsTouched();
-    expect(component.noEsValido('transportistaRFC')).toBe(false);
+  const control = component.transportistaCertificacionForm.get('transportistaRFC');
+  control?.setValue('RFC123');
+  control?.setErrors(null);
+  control?.markAsTouched();
+  expect(component.noEsValido('transportistaRFC')).toBe(false);
   });
 
   it('noEsValido should return undefined if control does not exist', () => {

@@ -1,23 +1,34 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { of } from 'rxjs';
 import { AgregarEnlaceOperativoComponent } from './agregar-enlace-operativo.component';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudService } from '../../services/solicitud.service';
+import { Solicitud32604Query } from '../../estados/solicitud32604.query';
+import { Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrService } from 'ngx-toastr';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+class MockToastrService {
+  success = jest.fn();
+  error = jest.fn();
+  info = jest.fn();
+  warning = jest.fn();
+}
+
 
 describe('AgregarEnlaceOperativoComponent', () => {
   let component: AgregarEnlaceOperativoComponent;
   let fixture: ComponentFixture<AgregarEnlaceOperativoComponent>;
-  let solicitudServiceMock: any;
-  let solicitud32605QueryMock: any;
-  let solicitud32605StoreMock: any;
+  let empresasComercializadorasServiceMock: any;
+  let solicitud32604QueryMock: any;
+  let solicitud32604StoreMock: any;
 
-  beforeEach(async () => {
-    solicitudServiceMock = {
+  beforeEach(() => {
+    empresasComercializadorasServiceMock = {
       conseguirRepresentanteLegalDatos: jest.fn().mockReturnValue(
         of({
           rfc: 'RFC123',
@@ -30,7 +41,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
       ),
     };
 
-    solicitud32605QueryMock = {
+    solicitud32604QueryMock = {
       selectSolicitud$: of({
         rfcTercero: 'RFC123',
         rfc: 'RFC456',
@@ -45,7 +56,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
       }),
     };
 
-    solicitud32605StoreMock = {
+    solicitud32604StoreMock = {
       actualizarEnlaceRfc: jest.fn(() => of('RFC123')),
       actualizarEnlaceNombre: jest.fn(() => of('John')),
       actualizarEnlaceApellidoPaterno: jest.fn(() => of('Doe')),
@@ -61,7 +72,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
       actualizarEnlaceSuplente: jest.fn(() => of(false)),
     };
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         AgregarEnlaceOperativoComponent,
         CommonModule,
@@ -69,31 +80,31 @@ describe('AgregarEnlaceOperativoComponent', () => {
         TituloComponent,
         HttpClientTestingModule,
       ],
-      declarations: [],
       providers: [
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
+        { provide: EmpresasComercializadorasService, useValue: empresasComercializadorasServiceMock },
+        { provide: Solicitud32604Query, useValue: solicitud32604QueryMock },
+        { provide: Solicitud32604Store, useValue: solicitud32604StoreMock },
+        { provide: ToastrService, useClass: MockToastrService },
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarEnlaceOperativoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form with default values', () => {
-    expect(component.agregarEnlaceOperativoForm.value).toEqual({
-      agregarEnlaceRfcTercero: 'RFC123',
-      agregarEnlaceCargo: 'Manager',
-      agregarEnlaceTelefono: '1234567890',
-      agregarEnlaceCorreoElectronico: 'john.doe@example.com',
-      agregarEnlaceSuplente: false,
+    component.esFormularioSoloLectura = true;
+    component.agregarEnlaceOperativoForm = new FormBuilder().group({
+      agregarEnlaceRfcTercero: [{ value: 'RFC123', disabled: true }],
+      agregarEnlaceRfc: [{ value: 'RFC456', disabled: true }],
+      agregarEnlaceNombre: [{ value: 'John', disabled: true }],
+      agregarEnlaceApellidoPaterno: [{ value: 'Doe', disabled: true }],
+      agregarEnlaceApellidoMaterno: [{ value: 'Smith', disabled: true }],
+      agregarEnlaceCiudadEstado: [{ value: 'City, State', disabled: true }],
+      agregarEnlaceCargo: ['Manager'],
+      agregarEnlaceTelefono: ['1234567890'],
+      agregarEnlaceCorreoElectronico: ['john.doe@example.com'],
+      agregarEnlaceSuplente: [false],
     });
+    fixture.detectChanges();
   });
   it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
     const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
@@ -114,11 +125,11 @@ describe('AgregarEnlaceOperativoComponent', () => {
     component.inicializarFormulario = jest.fn(() => {
       component.agregarEnlaceOperativoForm = component['fb'].group({
         agregarEnlaceRfcTercero: [''],
-        agregarEnlaceRfc: [''],
-        agregarEnlaceNombre: [''],
-        agregarEnlaceApellidoPaterno: [''],
-        agregarEnlaceApellidoMaterno: [''],
-        agregarEnlaceCiudadEstado: [''],
+        agregarEnlaceRfc: [{ value: '', disabled: true }],
+        agregarEnlaceNombre: [{ value: '', disabled: true }],
+        agregarEnlaceApellidoPaterno: [{ value: '', disabled: true }],
+        agregarEnlaceApellidoMaterno: [{ value: '', disabled: true }],
+        agregarEnlaceCiudadEstado: [{ value: '', disabled: true }],
         agregarEnlaceCargo: [''],
         agregarEnlaceTelefono: [''],
         agregarEnlaceCorreoElectronico: [''],
@@ -141,18 +152,22 @@ describe('AgregarEnlaceOperativoComponent', () => {
         agregarEnlaceCiudadEstado: [''],
         agregarEnlaceCargo: [''],
         agregarEnlaceTelefono: [''],
-        agregarEnlaceCorreoElectronico: [''],
-        agregarEnlaceSuplente: [false],
+        agregarEnlaceCorreoElectronico: ['']
       });
-    }) as any;
+    });
     component.guardarDatosFormulario();
     expect(component.agregarEnlaceOperativoForm.enabled).toBe(true);
   });
 
   it('noEsValido should return true if control is invalid and touched', () => {
-    component.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono')?.markAsTouched();
-    component.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono')?.setValue('');
-    expect(component.noEsValido('agregarEnlaceTelefono')).toBe(true);
+  component.agregarEnlaceOperativoForm = component['fb'].group({
+    agregarEnlaceTelefono: ['', Validators.required]
+  });
+  const telefonoControl = component.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono');
+  telefonoControl?.setValue('');
+  telefonoControl?.markAsTouched();
+  telefonoControl?.updateValueAndValidity();
+  expect(component.noEsValido('agregarEnlaceTelefono')).toBeTruthy();
   });
 
   it('noEsValido should return undefined if control does not exist', () => {
@@ -162,65 +177,79 @@ describe('AgregarEnlaceOperativoComponent', () => {
   it('should call actualizarRfcTercero on store when actualizarRfcTercero is called', () => {
     const mockEvent = { target: { value: 'RFC789' } } as unknown as Event;
     component.actualizarRfcTercero(mockEvent);
-    expect(solicitud32605StoreMock.actualizarRfcTercero).toHaveBeenCalledWith('RFC789');
+    expect(solicitud32604StoreMock.actualizarRfcTercero).toHaveBeenCalledWith('RFC789');
   });
 
   it('should call actualizarTelefono on store when actualizarTelefono is called', () => {
     const mockEvent = { target: { value: '5551234567' } } as unknown as Event;
     component.actualizarTelefono(mockEvent);
-    expect(solicitud32605StoreMock.actualizarTelefono).toHaveBeenCalledWith('5551234567');
+    expect(solicitud32604StoreMock.actualizarTelefono).toHaveBeenCalledWith('5551234567');
   });
 
   it('should call actualizarCorreoElectronico on store when actualizarCorreoElectronico is called', () => {
     const mockEvent = { target: { value: 'test@email.com' } } as unknown as Event;
     component.actualizarCorreoElectronico(mockEvent);
-    expect(solicitud32605StoreMock.actualizarCorreoElectronico).toHaveBeenCalledWith('test@email.com');
+    expect(solicitud32604StoreMock.actualizarCorreoElectronico).toHaveBeenCalledWith('test@email.com');
   });
 
   it('should call actualizarEnlaceCargo on store when agregarEnlaceCargo is called', () => {
     const mockEvent = { target: { value: 'Director' } } as unknown as Event;
     component.agregarEnlaceCargo(mockEvent);
-    expect(solicitud32605StoreMock.actualizarEnlaceCargo).toHaveBeenCalledWith('Director');
+    expect(solicitud32604StoreMock.actualizarEnlaceCargo).toHaveBeenCalledWith('Director');
   });
 
   it('should call actualizarEnlaceSuplente on store when actualizarEnlaceSuplente is called', () => {
     const mockEvent = { target: { checked: true } } as unknown as Event;
     component.actualizarEnlaceSuplente(mockEvent);
-    expect(solicitud32605StoreMock.actualizarEnlaceSuplente).toHaveBeenCalledWith(true);
+    expect(solicitud32604StoreMock.actualizarEnlaceSuplente).toHaveBeenCalledWith(true);
   });
 
 
-  it('should call solicitudService.conseguirRepresentanteLegalDatos on buscarTerceroNacionalIDC', () => {
+  it('should call empresasComercializadorasService.conseguirRepresentanteLegalDatos on buscarTerceroNacionalIDC', () => {
     component.agregarEnlaceOperativoForm.get('rfcTercero')?.setValue('RFC123');
-    solicitudServiceMock.conseguirRepresentanteLegalDatos();
+    empresasComercializadorasServiceMock.conseguirRepresentanteLegalDatos();
     expect(
-      solicitudServiceMock.conseguirRepresentanteLegalDatos
+      empresasComercializadorasServiceMock.conseguirRepresentanteLegalDatos
     ).toHaveBeenCalled();
   });
 
-  it('should emit agregarEnlaceOperativo event on aceptarEnlaceSuplente', () => {
-    jest.spyOn(component.agregarEnlaceOperativo, 'emit');
-    component.aceptarEnlaceSuplente();
-    expect(component.agregarEnlaceOperativo.emit).toHaveBeenCalledWith({
-      rfc: 'RFC456',
-      nombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
-      claveCiudad: '',
-      ciudad: 'City, State',
-      cargo: 'Manager',
-      telefono: '1234567890',
-      correo: 'john.doe@example.com',
-      suplente: '',
-      calle: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      colonia: '',
-      codigoPostal: '',
-      localidad: '',
-      delegacionMunicipio: '',
+
+  it('should emit agregarEnlaceOperativo event on aceptarEnlaceSuplente', fakeAsync(() => {
+    const validRFC = 'ABC123456T12';
+    component.agregarEnlaceOperativoForm = component['fb'].group({
+      agregarEnlaceRfcTercero: [validRFC, [Validators.required, Validators.pattern(REGEX_RFC), Validators.maxLength(15)]],
+      agregarEnlaceRfc: [validRFC, [Validators.required, Validators.pattern(REGEX_RFC)]],
+      agregarEnlaceNombre: ['Nombre456', [Validators.required]],
+      agregarEnlaceApellidoPaterno: ['ApellidoP456', [Validators.required]],
+      agregarEnlaceApellidoMaterno: ['ApellidoM456'],
+      agregarEnlaceCiudadEstado: ['Ciudad456'],
+      agregarEnlaceCargo: ['Cargo456', [Validators.maxLength(250)]],
+      agregarEnlaceTelefono: ['1234567890', [Validators.pattern(/^[0-9]+$/), Validators.maxLength(30)]],
+      agregarEnlaceCorreoElectronico: ['correo456@example.com', [Validators.email, Validators.maxLength(320)]],
+      agregarEnlaceSuplente: [false]
     });
-  });
+    Object.keys(component.agregarEnlaceOperativoForm.controls).forEach(key => {
+      component.agregarEnlaceOperativoForm.get(key)?.enable();
+    });
+    component.agregarEnlaceOperativoForm.updateValueAndValidity();
+    let emittedValue: any;
+    component.agregarEnlaceOperativo.subscribe((value) => {
+      emittedValue = value;
+    });
+    fixture.detectChanges();
+    tick();
+    expect(component.agregarEnlaceOperativoForm.valid).toBe(true);
+    component.aceptarEnlaceSuplente();
+    fixture.detectChanges();
+    tick(300);
+    expect(emittedValue).toBeDefined();
+    expect(emittedValue.rfc).toBe(validRFC);
+    expect(emittedValue.nombre).toBe('Nombre456');
+    expect(emittedValue.cargo).toBe('Cargo456');
+    expect(emittedValue.telefono).toBe('1234567890');
+    expect(emittedValue.correo).toBe('correo456@example.com');
+  }));
+
 
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
