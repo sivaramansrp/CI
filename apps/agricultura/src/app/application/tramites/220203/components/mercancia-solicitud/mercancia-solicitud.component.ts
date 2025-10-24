@@ -7,6 +7,7 @@ import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { CatalogosService } from '../../services/220203/catalogos/catalogos.service';
 
 /**
  * Componente para gestionar la solicitud de mercancías en el trámite de importación de acuicultura 220203.
@@ -139,8 +140,10 @@ export class MercanciaSolicitudComponent implements OnInit {
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, 
     private readonly fb: FormBuilder,
     private readonly acuiculturaStore: AcuiculturaStore,
-    private readonly acuiculturaQuery: AcuiculturaQuery
+    private readonly acuiculturaQuery: AcuiculturaQuery,
+    private catalogosService: CatalogosService
   ) {
+    this.obtenerCatalogoRestricciones();
     this.obtenerCatalogosTransporte();
     this.obtenerNicoCatalogosTransporte();
     this.obtenerUMCCatalogosTransporte();
@@ -159,6 +162,24 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.mercanciaGroup = this.createMercanciaGroup();
     this.detallesGroup = this.createDetallesGroup();
   }
+
+  /**
+ * Obtiene el catálogo de restricciones del servicio correspondiente.
+ * Realiza una llamada al servicio de catálogos para obtener las restricciones
+ * asociadas al trámite 220202.
+ * Los datos obtenidos se almacenan en la propiedad tipoRequisitoList.
+ * La suscripción se cancela automáticamente cuando el componente se destruye
+ * mediante el uso de takeUntil.
+ * @returns void
+ */
+  obtenerCatalogoRestricciones(): void {
+    this.catalogosService.obtieneCatalogoRestricciones(220203)
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((data): void => {
+        this.detallesCatalogo.tipoRequisitoList = data.datos ?? [];
+      });
+  }
+
   /**
    * Obtiene los datos del catálogo de puntos y fracciones arancelarias.
    * Carga los datos necesarios para los selectores de tipo de requisito y fracción arancelaria.
@@ -172,10 +193,10 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.DESTROY_NOTIFIER$))
       .subscribe((data) => {
-        this.detallesCatalogo.tipoRequisitoList = data.data as Catalogo[];
+        // this.detallesCatalogo.tipoRequisitoList = data.data as Catalogo[];
         this.detallesCatalogo.arancelariaList = data.data as Catalogo[];
       }, (_error) => {
-          this.detallesCatalogo.tipoRequisitoList = [];
+        // this.detallesCatalogo.tipoRequisitoList = [];
           this.detallesCatalogo.arancelariaList = [];
       });
   }
