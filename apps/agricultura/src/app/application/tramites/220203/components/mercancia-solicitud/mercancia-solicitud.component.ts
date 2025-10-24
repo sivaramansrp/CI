@@ -8,6 +8,7 @@ import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store
 import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { CatalogosService } from '../../services/220203/catalogos/catalogos.service';
+import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
 
 /**
  * Componente para gestionar la solicitud de mercancías en el trámite de importación de acuicultura 220203.
@@ -141,11 +142,16 @@ export class MercanciaSolicitudComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly acuiculturaStore: AcuiculturaStore,
     private readonly acuiculturaQuery: AcuiculturaQuery,
-    private catalogosService: CatalogosService
+    private catalogosService: CatalogosService,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
     this.obtenerCatalogoRestricciones();
+    this.getFraccionArancelariaLista();
+    this.getCatalogoUnidadesMedidaComerciales();
+    this.getCatalogoUsosMercancia();
+    this.getcatalogosDatospaisOrigenLista()
+
     this.obtenerCatalogosTransporte();
-    this.obtenerNicoCatalogosTransporte();
     this.obtenerUMCCatalogosTransporte();
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
       this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as Fila;
@@ -181,6 +187,132 @@ export class MercanciaSolicitudComponent implements OnInit {
   }
 
   /**
+ * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+ * @method getFraccionArancelariaLista
+ * @returns {void}
+ */
+  getFraccionArancelariaLista(): void {
+    this.catalogosService.obtieneCatalogoFraccionesArancelarias(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.arancelariaList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+  * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+  * @method getNicoFraccionArancelariaLista
+  * @returns {void}
+  */
+  getNicoFraccionArancelariaLista(): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+
+          this.detallesCatalogo.nicoList = data.datos ?? [];
+        }
+      );
+  };
+
+  /**
+ * Maneja la selección de un elemento del catálogo NICO.
+ * Busca el elemento NICO seleccionado en la lista de catálogos y actualiza
+ */
+  nicoSeleccionado(): void {
+    this.registroSolicitudService.obtieneNicoDescripcion(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value, this.mercanciaGroup.get('nico')?.value)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.mercanciaGroup.patchValue({
+            descripcionNico: data.datos ?? 'Sin descripción'
+          });
+        }
+      );
+  };
+
+  /**
+* @description Obtiene la descripcion de unidad de medida.
+* @method getUnidadMedida
+* @returns {void}
+*/
+  getUnidadMedida(): void {
+    this.registroSolicitudService.obtieneUnidadMedida(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+
+          this.mercanciaGroup.patchValue({
+            umt: data.datos?.descripcion ?? 'Sin descripción'
+          });
+        }
+      );
+  };
+
+  /**
+   * @description Obtiene la lista de unidades de medida comerciales.
+   * @method getCatalogoUnidadesMedidaComerciales
+   * @returns {void}
+   */
+  getCatalogoUnidadesMedidaComerciales(): void {
+    this.catalogosService.obtieneCatalogoUnidadesMedidaComerciales(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.umcList = data.datos ?? [];
+        }
+      );
+
+  };
+
+  /**
+ * @description Obtiene la lista de catalogo de usos de mercancia.
+ * @method getCatalogoUsosMercancia
+ * @returns {void}
+ */
+  getCatalogoUsosMercancia(): void {
+    this.catalogosService.obtieneCatalogoUsosMercancia(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.usoList = data.datos ?? [];
+        }
+      );
+
+  };
+
+
+  /**
+ * @description Realiza una petición para obtener el catálogo de pais origen.
+ * @method getcatalogosDatospaisOrigenLista
+ * @returns {void}
+ */
+  getcatalogosDatospaisOrigenLista(): void {
+    this.catalogosService.obtieneCatalogoPaises(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.paisDeOrigenList = data.datos ?? [];
+          this.detallesCatalogo.paisDeProcedenciaList = data.datos ?? [];
+
+        }
+      );
+
+  }
+
+
+
+  /**
    * Obtiene los datos del catálogo de puntos y fracciones arancelarias.
    * Carga los datos necesarios para los selectores de tipo de requisito y fracción arancelaria.
    * 
@@ -200,24 +332,7 @@ export class MercanciaSolicitudComponent implements OnInit {
           this.detallesCatalogo.arancelariaList = [];
       });
   }
-  /**
-   * Obtiene los datos del catálogo NICO (Nomenclatura de Identificación de Comercio Exterior).
-   * Carga los códigos NICO necesarios para la clasificación de mercancías.
-   * 
-   * @public
-   * @method obtenerNicoCatalogosTransporte
-   * @memberof MercanciaSolicitudComponent
-   * @returns {void}
-   */
-  public obtenerNicoCatalogosTransporte(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('nico.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.detallesCatalogo.nicoList = data.data as Catalogo[];
-      }, (_error) => {
-          this.detallesCatalogo.nicoList = [];
-      });
-  }
+
   /**
    * Obtiene los datos del catálogo UMC (Unidad de Medida Comercial) y otros catálogos relacionados.
    * Carga las unidades de medida, usos, países de origen y procedencia necesarios para el formulario.
@@ -258,20 +373,23 @@ export class MercanciaSolicitudComponent implements OnInit {
     campo?: string,
   ): void {
     if (campo === 'fraccionArancelaria') {
-      this.mercanciaGroup.patchValue({
-        descripcionFraccionArancelaria: 'Nuevo valor para descripcion',
-      });
+      this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value)
+        .pipe(
+          takeUntil(this.DESTROY_NOTIFIER$)
+        ).subscribe(
+          (data): void => {
+            this.mercanciaGroup.patchValue({
+              descripcionFraccionArancelaria: data.datos?.descripcion ?? 'Sin descripción'
+            });
+            this.getNicoFraccionArancelariaLista();
+            this.getUnidadMedida();
+          }
+        );      
     }
     else if (campo === 'nico') {
-      this.mercanciaGroup.patchValue({
-        descripcionNico: 'Nuevo valor para descripcionNico',
-      });
+      this.nicoSeleccionado();
     }
-    else if (campo === 'cantidadUMT') {
-      this.mercanciaGroup.patchValue({
-        umt: 'Nuevo valor para cantidadUMT',
-      });
-    }
+
   }
   /**
    * Guarda los valores del formulario de detalles en el store de acuicultura.
