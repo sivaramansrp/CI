@@ -2,7 +2,8 @@ import { Catalogo } from "@libs/shared/data-access-user/src";
 
 export interface Mercancia {
   fraccionArancelaria: string;
-  numeroDeRegistrodeProductos: string;
+  numeroRegistroProducto?: string;
+  numeroDeRegistrodeProductos?: string;
   fechaExpedicion: string;
   fechaVencimiento: string;
   nombreTecnico: string;

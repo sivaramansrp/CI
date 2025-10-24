@@ -260,4 +260,15 @@ export class RepresentanteLegalExportadorComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Valida el formulario y marca los campos como tocados si es inválido
+   */
+   validarFormularios(): boolean {
+     if (this.form.invalid) {
+       this.form.markAllAsTouched();
+       return false;
+     }
+     return true;
+   }
 }
