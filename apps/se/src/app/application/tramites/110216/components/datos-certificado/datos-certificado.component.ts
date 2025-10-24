@@ -1,4 +1,4 @@
-import { Catalogo } from '../../models/certificado-origen.model';
+
 import {
   CatalogoSelectComponent,
   TituloComponent,
@@ -15,10 +15,11 @@ import {
   Tramite110216State,
   Tramite110216Store,
 } from '../../../../estados/tramites/tramite110216.store';
+import { Catalogo } from '../../models/certificado-origen.model';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 
 /**
  * Componente para gestionar los datos del certificado.
@@ -175,6 +176,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ datos: valida });
+    this.store.setFormValidity('datosCertificado', valida);
   }
 
   /**

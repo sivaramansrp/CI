@@ -92,6 +92,16 @@ export class AvisoService {
   }
 
   /**
+   * Obtiene la lista de años modelo.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de años modelo.
+   */
+  obtenerAnoModelo(): Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/ano-modelo.json');
+  }
+
+  /**
    * Obtiene la lista de países emitidos.
    * 
    * @returns {Observable<CatalogoLista>} Un observable con la lista de países emitidos.

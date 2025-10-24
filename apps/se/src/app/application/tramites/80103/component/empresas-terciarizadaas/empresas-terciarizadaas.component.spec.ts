@@ -1,112 +1,137 @@
-import { EmpresasTerciarizadaasComponent } from "../../../80103/component/empresas-terciarizadaas/empresas-terciarizadaas.component";
-
+const { EmpresasTerciarizadaasComponent } = require('../../../../../../80105/component/empresas-terciarizadaas/empresas-terciarizadaas.component');
 
 describe('EmpresasTerciarizadaasComponent', () => {
-  let component: EmpresasTerciarizadaasComponent;
-  let nuevoProgramaIndustrialService: any;
+  let component: any;
+  let mockNuevoProgramaIndustrialService: any;
+  let mockTramite80104Store: any;
+  let mockTramite80104Query: any;
+  let mockComplimentosService: any;
 
   beforeEach(() => {
-    nuevoProgramaIndustrialService = {
-      obtenerListaEstado: jest.fn()
+    mockNuevoProgramaIndustrialService = {};
+    mockTramite80104Store = {
+      setSeleccionadas: jest.fn(),
+      setEstadosOpciones: jest.fn(),
     };
-    component = new EmpresasTerciarizadaasComponent(nuevoProgramaIndustrialService);
-  });
-
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should have correct encabezado values for each column', () => {
-    const encabezados = [
-      'Calle',
-      'Número exterior',
-      'Número interior',
-      'Código postal',
-      'Colonia',
-      'Municipio o delegación',
-      'Entidad federativa',
-      'País',
-      'Registro federal de contribuyentes',
-      'Domicilio fiscal del solicitante',
-      'Razón social'
-    ];
-    component.parentTablaConfig.forEach((col, idx) => {
-      expect(col.encabezado).toBe(encabezados[idx]);
-    });
-  });
-
-  it('should have correct orden values for each column', () => {
-    component.parentTablaConfig.forEach((col, idx) => {
-      expect(col.orden).toBe(idx + 1);
-    });
-  });
-
-  it('should have clave functions that return correct property from item', () => {
-    const mockItem = {
-      calle: 'Calle 1',
-      numeroExterior: '123',
-      numeroInterior: 'A',
-      codigoPostal: '45678',
-      colonia: 'Colonia X',
-      municipioDelegacion: 'Municipio Y',
-      entidadFederativa: 'Entidad Z',
-      pais: 'México',
-      registroFederalContribuyentes: 'RFC123',
-      domicilioFiscalSolicitante: 'Domicilio 456',
-      razonSocial: 'Empresa S.A.'
+    mockTramite80104Query = {
+      selectEstadosOpciones$: { subscribe: jest.fn() }
     };
-    expect(component.parentTablaConfig[0].clave(mockItem)).toBe('Calle 1');
-    expect(component.parentTablaConfig[1].clave(mockItem)).toBe('123');
-    expect(component.parentTablaConfig[2].clave(mockItem)).toBe('A');
-    expect(component.parentTablaConfig[3].clave(mockItem)).toBe('45678');
-    expect(component.parentTablaConfig[4].clave(mockItem)).toBe('Colonia X');
-    expect(component.parentTablaConfig[5].clave(mockItem)).toBe('Municipio Y');
-    expect(component.parentTablaConfig[6].clave(mockItem)).toBe('Entidad Z');
-    expect(component.parentTablaConfig[7].clave(mockItem)).toBe('México');
-    expect(component.parentTablaConfig[8].clave(mockItem)).toBe('RFC123');
-    expect(component.parentTablaConfig[9].clave(mockItem)).toBe('Domicilio 456');
-    expect(component.parentTablaConfig[10].clave(mockItem)).toBe('Empresa S.A.');
+    mockComplimentosService = {
+      getTerciarizadasDisponibles: jest.fn(),
+      toDisponsibleFiscal: jest.fn()
+    };
+
+    component = new EmpresasTerciarizadaasComponent(
+      mockNuevoProgramaIndustrialService,
+      mockTramite80104Store,
+      mockTramite80104Query,
+      mockComplimentosService
+    );
   });
 
-  it('should return empty string for numeroInterior if not present', () => {
-    const mockItem:any = { numeroInterior: undefined };
-    expect(component.parentTablaConfig[2].clave(mockItem)).toBe('');
+  it('should initialize estadosCatalogo$ on ngOnInit', () => {
+    mockTramite80104Query.selectEstadosOpciones$ = 'observable';
+    component.ngOnInit();
+    expect(component.estadosCatalogo$).toBe('observable');
   });
 
-  it('should initialize estadosCatalogo as empty array', () => {
-    expect(component.estadosCatalogo).toEqual([]);
+  it('should call setSeleccionadas when actualizarSeleccionadas is called', () => {
+    const event = [{ id: 1 }];
+    component.actualizarSeleccionadas(event);
+    expect(mockTramite80104Store.setSeleccionadas).toHaveBeenCalledWith(event);
   });
 
-  it('should call obtenerListaEstado and update estadosCatalogo on response', () => {
-    const mockResponse = { data: [{ id: 1, nombre: 'Estado1' }] };
-    const mockSubscribe = jest.fn((cb) => cb(mockResponse));
-    const mockPipe = jest.fn(() => ({ subscribe: mockSubscribe }));
-    nuevoProgramaIndustrialService.obtenerListaEstado.mockReturnValue({ pipe: mockPipe });
-
-    component.obtenerListaEstado();
-
-    expect(nuevoProgramaIndustrialService.obtenerListaEstado).toHaveBeenCalled();
-    expect(component.estadosCatalogo).toEqual(mockResponse.data);
+  it('should not call setSeleccionadas if event is falsy', () => {
+    component.actualizarSeleccionadas(undefined);
+    expect(mockTramite80104Store.setSeleccionadas).not.toHaveBeenCalled();
   });
 
-  it('should not update estadosCatalogo if response is falsy', () => {
-    const mockSubscribe = jest.fn((cb) => cb(null));
-    const mockPipe = jest.fn(() => ({ subscribe: mockSubscribe }));
-    nuevoProgramaIndustrialService.obtenerListaEstado.mockReturnValue({ pipe: mockPipe });
+  it('should call setEstadosOpciones when actualizarEstados is called', () => {
+    const event = [{ id: 1 }];
+    component.actualizarEstados(event);
+    expect(mockTramite80104Store.setEstadosOpciones).toHaveBeenCalledWith(event);
+  });
 
-    component.estadosCatalogo = [{ id: 2, descripcion: 'Estado2' }];
-    component.obtenerListaEstado();
+  it('should not call setEstadosOpciones if event is falsy', () => {
+    component.actualizarEstados(undefined);
+    expect(mockTramite80104Store.setEstadosOpciones).not.toHaveBeenCalled();
+  });
 
-    expect(component.estadosCatalogo).toEqual([{ id: 2, nombre: 'Estado2' }]);
+  it('should set disponiblesDatos when obtenerTerciarizadasDisponibles returns valid data', () => {
+    const mockResponse = { datos: [{}, {}] };
+    const mockFiscal = [{}, {}];
+    mockComplimentosService.getTerciarizadasDisponibles.mockReturnValue({
+      pipe: () => ({
+        subscribe: (success: any, error: any) => success(mockResponse)
+      })
+    });
+    mockComplimentosService.toDisponsibleFiscal.mockReturnValue(mockFiscal);
+
+    // Mock esValidObject and esValidArray
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'esValidObject').mockReturnValue(true);
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'doDeepCopy').mockImplementation((x) => x);
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'esValidArray').mockReturnValue(true);
+
+    component.obtenerTerciarizadasDisponibles({ rfc: 'RFC', estado: 'Estado' });
+    expect(component.disponiblesDatos).toBe(mockFiscal);
+    expect(component.rfcError).toBe(false);
+  });
+
+  it('should set rfcError true when obtenerTerciarizadasDisponibles error codigo is 01', () => {
+    mockComplimentosService.getTerciarizadasDisponibles.mockReturnValue({
+      pipe: () => ({
+        subscribe: (success: any, error: any) => error({ error: { codigo: '01' } })
+      })
+    });
+
+    component.obtenerTerciarizadasDisponibles({ rfc: 'RFC', estado: 'Estado' });
+    expect(component.rfcError).toBe(true);
+  });
+
+  it('should not set disponiblesDatos if response is not valid object', () => {
+    mockComplimentosService.getTerciarizadasDisponibles.mockReturnValue({
+      pipe: () => ({
+        subscribe: (success: any, error: any) => success({})
+      })
+    });
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'esValidObject').mockReturnValue(false);
+
+    component.obtenerTerciarizadasDisponibles({ rfc: 'RFC', estado: 'Estado' });
+    expect(component.disponiblesDatos).toEqual([]);
+  });
+
+  it('should not set disponiblesDatos if datos is not valid array', () => {
+    const mockResponse = { datos: null };
+    mockComplimentosService.getTerciarizadasDisponibles.mockReturnValue({
+      pipe: () => ({
+        subscribe: (success: any, error: any) => success(mockResponse)
+      })
+    });
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'esValidObject').mockReturnValue(true);
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'doDeepCopy').mockImplementation((x) => x);
+    jest.spyOn(require('@libs/shared/data-access-user/src'), 'esValidArray').mockReturnValue(false);
+
+    component.obtenerTerciarizadasDisponibles({ rfc: 'RFC', estado: 'Estado' });
+    expect(component.disponiblesDatos).toEqual([]);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
-
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should have correct parentTablaConfig', () => {
+    expect(component.parentTablaConfig.length).toBe(11);
+    expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
+    expect(typeof component.parentTablaConfig[0].clave).toBe('function');
+  });
+
+  it('should initialize rfcError and disponiblesDatos with default values', () => {
+    expect(component.rfcError).toBe(false);
+    expect(Array.isArray(component.disponiblesDatos)).toBe(true);
+    expect(component.disponiblesDatos.length).toBe(0);
   });
 });

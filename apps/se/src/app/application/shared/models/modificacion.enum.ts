@@ -18,10 +18,10 @@ export interface Mercancia {
   unidadMedidaMasaBruta?: string;
   complementoClasificacion?: string;
   complementoDescripcion?: string;
-  fraccionNaladi: string;
-  fraccionNaladiSa93: string;
-  fraccionNaladiSa96: string;
-  fraccionNaladiSa02: string;
+  fraccionNaladi?: string;
+  fraccionNaladiSa93?: string;
+  fraccionNaladiSa96?: string;
+  fraccionNaladiSa02?: string;
   nalad?: string;
   fechaFactura?: string;
   marca?: string;
@@ -33,6 +33,8 @@ export interface Mercancia {
   fechaDePago?: string;
   valorDeContenidoRegional?: string;
   numeroDeSerie?: string;
+  rfcProductor1?: string; 
+  rfcProductor?: string;
 }
 
 export interface ConfiguracionColumna<T> {

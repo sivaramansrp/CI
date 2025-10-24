@@ -1,9 +1,9 @@
-import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState,ERROR_FORMA_ALERT,JSONResponse,WizardService,doDeepCopy} from '@ng-mf/data-access-user';
-import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
+import { AccionBoton} from '../../models/nuevo-programa-industrial.model';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
@@ -372,7 +372,7 @@ ngOnInit(): void {
  * 
  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
  */
-  private shouldNavigate$(): Observable<boolean> {
+  public shouldNavigate$(): Observable<boolean> {
     return this.nuevoProgramaIndustrialService.getAllState().pipe(
       take(1),
       switchMap(data => this.guardar(data)),

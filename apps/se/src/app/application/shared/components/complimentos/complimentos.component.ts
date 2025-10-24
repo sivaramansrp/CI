@@ -930,6 +930,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       } else if (VALUE.taxId) {
         this.servicioDeFormularioService.pushToArray('datosSocioAccionistasExtrenjeros', VALUE);
       }
+      setTimeout(() => {
+        FORMADATOS_GROUP.reset();
+      }, 0);
+      
     } else {
       this.accionistasExtranjerosNotificacion = {
         tipoNotificacion: 'alert',

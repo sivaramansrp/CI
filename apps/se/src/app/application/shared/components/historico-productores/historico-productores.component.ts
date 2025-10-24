@@ -1,10 +1,11 @@
-import { AgregarDatosProductorFormulario, Catalogo, FormularioHistorico, HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
+import { AgregarDatosProductorFormulario, Catalogo, FormularioHistorico, HistoricoColumnas } from '../../models/certificado-origen.model';
 import { CONFIGURACION_MERCANCIA, CONFIGURACION_PRODUCTOR_EXPORTADOR } from '../../constantes/certificado-tabla.enum';
 import { CatalogoSelectComponent, Notificacion } from "@ng-mf/data-access-user";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from "@ng-mf/data-access-user";
 import { Subject } from 'rxjs';
@@ -43,6 +44,12 @@ import { Subject } from 'rxjs';
   styleUrl: './historico-productores.component.scss',
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
+
+   /**
+    * Emisor de eventos mercancia datos.
+    * @type {EventEmitter<Mercancia[]>}
+    */
+  @Output() emitMercanciaDatos: EventEmitter<Mercancia[]> = new EventEmitter<Mercancia[]>();
 
   @Input() mostrarMercanciasSeleccionadas: boolean = true;
 
@@ -122,13 +129,13 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * para ser utilizados en el componente. Este input permite pasar información desde
    * un componente padre.
    * 
-   * @type {MercanciaTabla[]}
+   * @type {Mercancia[]}
    * @default []
    */
-  @Input() mercanciaDatos: MercanciaTabla[] = [];
+  @Input() mercanciaDatos: Mercancia[] = [];
 
   /**
-   * @property {MercanciaTabla[]} mercanciaDatosSeleccionada
+   * @property {Mercancia[]} mercanciaDatosSeleccionada
    * 
    * @description
    * Arreglo que almacena los datos seleccionados de mercancías.
@@ -136,7 +143,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @command
    * Utilizar este arreglo para gestionar la selección de mercancías en la tabla.
    */
-  mercanciaDatosSeleccionada:MercanciaTabla[] = [];
+  mercanciaDatosSeleccionada: Mercancia[] = [];
   /**
    * @method agregarDatosProductor
    * @description Este decorador de entrada (@Input) se utiliza para recibir un objeto 
@@ -235,7 +242,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   seleccionadoAgregarProductoresExportador: HistoricoColumnas[] = [];
 
   /**
-   * @property {ConfiguracionColumna<MercanciaTabla>[]} mercanciaTablaConfiguracion
+   * @property {ConfiguracionColumna<Mercancia>[]} mercanciaTablaConfiguracion
    * 
    * Configuración de las columnas para la tabla de mercancías.
    * 
@@ -246,7 +253,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @comando
    * Utilice esta propiedad para personalizar o acceder a la configuración de las columnas.
    */
-  mercanciaTablaConfiguracion!: ConfiguracionColumna<MercanciaTabla>[];
+  mercanciaTablaConfiguracion!: ConfiguracionColumna<Mercancia>[];
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -343,7 +350,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.mercanciaTablaConfiguracion = CONFIGURACION_MERCANCIA(this.sortMercanciasTablaOrder);
     this.initFormulario();
     this.inicializarEstadoFormulario();
-    this.inicializarFormularioMercancia()
+    this.inicializarFormularioMercancia();
     this.initAgregarDatosProductorFormulario();
     if (this.tramiteState) {
       this.formulario.patchValue(this.tramiteState);
@@ -536,15 +543,27 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * - Llama a este método para abrir el modal de mercancía.
    */
   agregarMercancia(): void {
-    if (this.esTipoDeSeleccionado && this.mercanciaDatosSeleccionada.length > 0) {
-      if (this.modalElementsMercancia?.nativeElement) {
-        const MODAL_INSTANCE = new Modal(this.modalElementsMercancia.nativeElement);
-        MODAL_INSTANCE.show();
-        this.formularioMercancia.patchValue(this.mercanciaDatosSeleccionada[0])
+    if (this.seleccionadoAgregarProductoresExportador.length === 0) {
+      this.abrirModal("Debe seleccionar un productor para asignarle la mercancía");
+      return;
+    } else if (this.mercanciaDatosSeleccionada.length === 0) {
+      this.abrirModal("Debes seleccionar una mercancía");
+      return;
+    } 
+    if (this.seleccionadoAgregarProductoresExportador.length && this.mercanciaDatosSeleccionada.length) {
+      const RFC = this.seleccionadoAgregarProductoresExportador[0].numeroRegistroFiscal;
+      const MERCANCIA_SELECCIONADA = this.mercanciaDatosSeleccionada[0];
+      const INDEX = this.mercanciaDatos.findIndex(mercancia => mercancia.id === MERCANCIA_SELECCIONADA.id);
+
+      if (INDEX !== -1) {
+        const MAPPED_MERCANCIA = { ...this.mercanciaDatos[INDEX], rfcProductor1: RFC};
+        const UPDATED_ARRAY = [
+          ...this.mercanciaDatos.slice(0, INDEX),
+          MAPPED_MERCANCIA,
+          ...this.mercanciaDatos.slice(INDEX + 1),
+        ];
+        this.emitMercanciaDatos.emit(UPDATED_ARRAY);
       }
-    }
-    else {
-    this.abrirModal("Es necesario agregar al menos un productor por exportador");
     }
   }
   /**
@@ -563,7 +582,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * 
    * @command Este método actualiza la propiedad `mercanciaDatosSeleccionada` con la mercancía seleccionada.
    */
-  obtenerSeleccionadoMercancia(evento: MercanciaTabla): void {        
+  obtenerSeleccionadoMercancia(evento: Mercancia): void {        
     this.mercanciaDatosSeleccionada = [evento];
   }
   /**
