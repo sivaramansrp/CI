@@ -18,7 +18,7 @@
         }
         @case (2) {
            @if(esDatosRespuesta){
-          <app-pantallas #solicitudComponent></app-pantallas>     
+          <app-pantallas [esFormValido]="esFormValido" #solicitudComponent></app-pantallas>     
            }
         }
       }

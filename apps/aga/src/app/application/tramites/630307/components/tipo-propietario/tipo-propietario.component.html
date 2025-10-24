@@ -5,6 +5,7 @@
             <div class="col-md-4">
                 <app-catalogo-select [label]="'Propietario'" [required]="true" [tooltipQuestionCircle]="true"
                     [catalogo]="propietarioOpciones" formControlName="propietario"
+                    [tooltipQuestionCircleText]="'Indicar si la persona es propietario'"
                     (selectionChange)="establecerCambioDeValor({campo:'propietario',valor:$event});cambiarPropietario()"></app-catalogo-select>
             </div>
         </div>

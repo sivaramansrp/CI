@@ -19,26 +19,23 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) {
-      @case (1) {
-      <solicitante #solicitante></solicitante>
-      }
-      @case (2) {
+
+      <solicitante #solicitante [hidden]="indice !== 1"></solicitante>
+      
+
       @if(esDatosRespuesta){
-      <app-certificado-origen #certificadoOrigenComp></app-certificado-origen>
+      <app-certificado-origen #CertificadoOrigen [hidden]="indice !== 2"></app-certificado-origen>
       }
-      }
-      @case (3) {
+      
+
       @if(esDatosRespuesta){
-      <app-destinatario #destinatarioComp></app-destinatario>
+      <app-destinatario-tramite #destinatarioComp [hidden]="indice !== 3"></app-destinatario-tramite>
       }
-      }
-      @case (4) {
+   
       @if(esDatosRespuesta){
-      <app-datos-certificado #datosCertificadoComp></app-datos-certificado>
+      <app-datos-certificado #datosCertificadoComp [hidden]="indice !== 4"></app-datos-certificado>
       }
-      }
-      }
+
     </ng-container>
   </div>
 </div>

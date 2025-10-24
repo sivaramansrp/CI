@@ -1,6 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil, tap } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion, TabEvaluarTratadosResponse } from '@ng-mf/data-access-user';
+import { Subject, takeUntil, tap } from 'rxjs';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
@@ -15,6 +18,24 @@ import { Solicitante110101State } from '../../estados/tramites/solicitante110101
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
+  /**
+ * @property {boolean} esDictaminadorBandera
+ * @description Indica si se está mostrando boton de la calificación con bandera.
+ * Por defecto es false.
+ */
+   @Input() esDictaminadorBandera: boolean = false;
+
+  /**
+   * Esta variable se utiliza para almacenar los tratados datos actualizados.
+   * Es un array de objetos de tipo EvaluarTratadosResponse.
+   */
+  tratadosDatosActualizados: TabEvaluarTratadosResponse[] = [];
+
+  /**
+   * Este evento se emite cuando los tratados datos son actualizados.
+   * Es un EventEmitter que emite un array de objetos de tipo EvaluarTratadosResponse.
+   */
+  @Output() tratadosEmitidos = new EventEmitter<TabEvaluarTratadosResponse[]>();
 
   /**
   * Esta variable se utiliza para almacenar el índice del subtítulo.
@@ -38,6 +59,14 @@ export class DatosComponent implements OnInit, OnDestroy {
   public solicitudeState!: Solicitante110101State;
 
   /**
+  * Notificación actual que se muestra en el componente.
+  *
+  * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+  * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+  */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
   * @property desactivado
   * @type {boolean}
   * @public
@@ -56,6 +85,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     private pantallasSvc: PantallasSvcService,
     private consultaQuery: ConsultaioQuery,
     private solicitanteQuery: Solicitante110101Query,
+    private evaluacionTratadosService: EvaluacionTratadosService
   ) {
 
   }
@@ -92,7 +122,54 @@ export class DatosComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+    if(this.consultaState.parameter === "EvaluarSolicitud"){
+      this.evaluacionTablaTratados();
+    }
   }
+  /**
+     * Obtiene la evaluación de tratados para la solicitud actual y actualiza la tabla de evaluación.
+     *
+     * Este método llama al servicio `evaluacionTratadosService.getEvaluarTratados` pasando el ID de la solicitud.
+     * - Si la respuesta es exitosa (`CodigoRespuesta.EXITO`), actualiza `tratadosEvaluacionTablaDatos`.
+     * - Si ocurre un error o la respuesta es incorrecta, muestra una notificación de error.
+     */
+    evaluacionTablaTratados(): void {
+      this.evaluacionTratadosService.getEvaluarTratados(this.consultaState.id_solicitud)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            if (response.codigo === CodigoRespuesta.EXITO) {
+              this.onTratadosActualizados(response.datos ?? []);
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: response.error || 'Error obtener tratados.',
+                mensaje: response.causa || response.mensaje || 'Error obtener tratados.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            }
+          },
+          error: (err) => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const MENSAJE = err?.error?.error || 'Error obtener tratados.';
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
+        });
+    }
   /**
    * Este método se utiliza para verificar si el parámetro existe y habilitar las pestañas
    * - Si el parámetro existe y no es undefined, habilita las pestañas 3 y 4.
@@ -135,6 +212,29 @@ export class DatosComponent implements OnInit, OnDestroy {
   habilitarPestana(): void {
     if (this.desactivado) {
       this.desactivado = false;
+    }
+  }
+
+  /**
+   * @method onTratadosActualizados
+   * @description Maneja la actualización de los tratados.
+   * @param tratados - Array de objetos de tipo EvaluarTratadosResponse que contiene los tratados actualizados.
+   */
+  onTratadosActualizados(tratados: TabEvaluarTratadosResponse[]): void {
+    this.tratadosDatosActualizados = tratados;
+    this.tratadosEmitidos.emit(tratados);
+  }
+
+  /**
+   * Deshabilita (cierra) la pestaña actual.
+   *
+   * @example
+   * this.cerrarPestana();
+   * // La pestaña pasa de estar habilitada a deshabilitada.
+   */
+  cerrarPestana(): void {
+    if (!this.desactivado) {
+      this.desactivado = true;
     }
   }
 

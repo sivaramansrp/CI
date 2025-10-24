@@ -87,6 +87,30 @@ export class Tramite110222Query extends Query<Tramite110222State> {
   });
 
   /**
+   * Selecciona el idioma de los datos.
+   * @returns {Observable<any>} - Observable con los datos del idioma seleccionado.
+   */
+  selectIdioma$ = this.select((state) => {
+    return state.idiomaDatos;
+  });
+
+  /**
+   * Selecciona los datos de la entidad federativa.
+   * @returns {Observable<any>} - Observable con los datos de la entidad federativa.
+   */
+  selectEntidadFederativa$ = this.select((state) => {
+    return state.entidadFederativaDatos;
+  });
+
+  /**
+   * Selecciona los datos de la representación federal.
+   * @returns {Observable<any>} - Observable con los datos de la representación federal.
+   */
+  selectrepresentacionFederal$ = this.select((state) => {
+    return state.representacionFederalDatos;
+  });
+
+  /**
    * @descripcion
    * Constructor que inyecta el almacén `camCertificadoStore`.
    * @param store - Instancia de `camCertificadoStore`.

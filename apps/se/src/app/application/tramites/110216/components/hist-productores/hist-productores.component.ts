@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110216State, Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 
 @Component({
   selector: 'app-hist-productores',
@@ -20,6 +21,11 @@ import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.s
 })
 
 export class HistProductoresComponent implements OnInit, OnDestroy {
+
+  /** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
+   * Permite gestionar sus métodos y propiedades.
+   */
+  @ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
 
   /**
    * Estado actual del trámite.
@@ -65,15 +71,25 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   */
   public esFormularioSoloLectura: boolean = false;
 
-  /** Indica si el formulario es válido. */
-  public isFormValid: boolean = false;
+  /** Observable que expone la lista de productores exportador agregados al store. */
+  public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
+
+  /**
+   * Solicitud actual del trámite.
+   */
+  public solicitudState!: Tramite110216State;
+
+  /** Observable que expone la lista de mercancia al store. */
+  public mercanciaProductores!: Mercancia[]; 
+
+  /** RFC del usuario actualmente autenticado utilizado para consultas y servicios. */
+  private loginRFC = 'AAL0409235E6';
 
   /**
    * Constructor del componente.
    * 
-   * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-   * @param {Tramite110214Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite110214Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {Tramite110216Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite110216Query} tramiteQuery - Query para obtener el estado del trámite.
   */
   constructor(
     public store: Tramite110216Store,
@@ -89,19 +105,30 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+    this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
+    this.tramiteQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          this.productoresExportador = seccionState.productoresExportador || [];
+          this.mercanciaProductores = seccionState.mercanciaTabla;
+        })
+      )
+      .subscribe();
 
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.tramiteState = seccionState;
+          this.tramiteState = seccionState as { [key: string]: unknown };
         })
       )
       .subscribe();
 
     this.tramiteQuery.datosProductorFormulario$.pipe(
       takeUntil(this.destroyNotifier$), map((seccionState) => {
-        this.agregarDatosProductor = seccionState;
+        this.agregarDatosProductor = seccionState as { [key: string]: unknown };
       })
     ).subscribe();
 
@@ -155,26 +182,117 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-    this.certificadoDeService.obtenerProductorPorExportador()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
-        this.productoresExportador = respuesta.datos;
-      });
+    this.certificadoDeService.obtenerProductorPorExportador(this.loginRFC)
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe({
+            next: (response) => {
+              const DATOS = (response as { datos: unknown[] }).datos;
+              const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+                const PRODUCTOR = item as {
+                  nombreCompleto?: string;
+                  rfc?: string;
+                  direccionCompleta?: string;
+                  correoElectronico?: string;
+                  telefono?: string;
+                  fax?: string;
+                };
+                return {
+                  id: index + 1,
+                  nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+                  numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+                  direccion: PRODUCTOR.direccionCompleta ?? '',
+                  correoElectronico: PRODUCTOR.correoElectronico ?? '',
+                  telefono: PRODUCTOR.telefono ?? '',
+                  fax: PRODUCTOR.fax ?? '',
+                };
+              });
+    
+              this.store.setProductoresExportador(RESULT);
+            },
+            error: () => {
+              //
+            },
+        });
   }
 
   /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
-    this.isFormValid = event;
+    this.store.setFormValidity('histProductores', event);
   }
 
-  /**
+ /**
    * Valida el formulario del componente.
    * 
    * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
    */
-public validarFormulario(): boolean {
-  return this.isFormValid;
-}
+  public validarFormulario(): void {
+    this.historicoProductoresComponent.validarFormulario();
+  }
+
+  /**
+   * Agrega un productor exportador al estado del store a partir del evento recibido.
+   * Si el evento contiene los datos completos del productor, los utiliza; de lo contrario, asigna valores por defecto.
+   * Si ya existen productores agregados, carga la mercancía relacionada.
+   * @param event Objeto con los datos del productor exportador o con el número de registro fiscal.
+   */
+    public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+        let DATOS: HistoricoColumnas | null = null;
+        if (event && typeof event === 'object' && 'nombreProductor' in event) {
+          DATOS = {
+              id: (event as HistoricoColumnas).id ?? 0,
+              nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+              numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+              direccion: String((event as HistoricoColumnas).direccion ?? ''),
+              correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+              telefono: String((event as HistoricoColumnas).telefono ?? ''),
+              fax: String((event as HistoricoColumnas).fax ?? '')
+          };
+          this.store.setAgregarProductoresExportador([DATOS]);
+        } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+          const PAYLOAD = {
+              rfc_solicitante: String(event['numeroRegistroFiscal'] ?? ''),
+          };
+          this.certificadoDeService
+          .agregarProductores(PAYLOAD)
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe({
+            next: (response: unknown) => {
+              const DATOS = (response as { datos: unknown[] }).datos;
+              const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+                const PRODUCTOR = item as {
+                  nombreCompleto?: string;
+                  rfc?: string;
+                  direccionCompleta?: string;
+                  correoElectronico?: string;
+                  telefono?: string;
+                  fax?: string;
+                };
+                return {
+                  id: index + 1,
+                  nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+                  numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+                  direccion: PRODUCTOR.direccionCompleta ?? '',
+                  correoElectronico: PRODUCTOR.correoElectronico ?? '',
+                  telefono: PRODUCTOR.telefono ?? '',
+                  fax: PRODUCTOR.fax ?? '',
+                };
+              });
+              this.store.setAgregarProductoresExportador(RESULT);
+            },
+            error: () => {
+              //
+            }
+          })
+        }
+      }
+
+    /**
+ * Actualiza la lista de mercancías en el store con los datos recibidos del evento.
+ * @param event Arreglo de objetos de tipo Mercancia a asignar.
+ */
+  setMercanciaDatos(event: Mercancia[]): void {
+    this.store.setMercanciaTabla(event);
+  }
 
 /**
    * Método que se ejecuta al destruir el componente.

@@ -96,7 +96,7 @@ export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[]
  * console.log(TEXTOS);
  * // Output: "La fecha indicada NO es correcta por que aún no concluye:"
  */
-export const TEXTOS = `<p style="text-align: center;">La fecha indicada NO es correcta por que aún no concluye:</p>`;
+export const TEXTOS = `La fecha indicada NO es correcta por que aún no concluye:`;
 
 /**
  * Mensaje de error para fechas que no corresponden al periodo seleccionado.

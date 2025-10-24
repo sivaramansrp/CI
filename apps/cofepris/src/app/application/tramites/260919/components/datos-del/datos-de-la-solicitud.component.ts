@@ -282,6 +282,17 @@ private modalElement: HTMLElement | null = null;
 
   /** Inicialización del componente */
   ngOnInit(): void {
+      this.importarDeRemediosHerbals.getMercanciaCrosslistData().subscribe((data) => {
+    const CROSSLIST_DATA = data as {
+      paisOrigenCrossList: CrossList;
+      paisProcedencisCrossList: CrossList;
+      usoEspecificoCrossList: CrossList;
+    };
+    this.paisOrigenCrossList = CROSSLIST_DATA.paisOrigenCrossList;
+    this.paisProcedencisCrossList = CROSSLIST_DATA.paisProcedencisCrossList;
+    this.usoEspecificoCrossList = CROSSLIST_DATA.usoEspecificoCrossList;
+
+  });
     this.solicitud260919Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -371,7 +382,7 @@ private modalElement: HTMLElement | null = null;
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: 'Selecciona un registro',
+        mensaje: 'Selecciona un registro.',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
@@ -585,24 +596,25 @@ private modalElement: HTMLElement | null = null;
     this.solicitud260919Store.setFechadePago(nuevo_valor);
   }
   /**
-   * Método para alternar el estado del control de licencia sanitaria.
-   * Si el aviso de funcionamiento está activado, deshabilita el control de licencia sanitaria.
-   * De lo contrario, habilita el control de licencia sanitaria.
-   */
-  toggleLicenciaSanitaria(): void {
-    const AVISO_DE_FUNCIONAMIENTO = this.dataDeLaSolicitudForm.get(
-      'datosDelTramiteRealizar.avisoDeFuncionamiento'
-    )?.value;
-    const LICENCIA_SANITARIA_CONTROL = this.dataDeLaSolicitudForm.get(
-      'datosDelTramiteRealizar.licenciaSanitaria'
-    );
+ * Método para alternar el estado del control de licencia sanitaria.
+ * Si el aviso de funcionamiento está activado y no hay texto en licencia sanitaria, deshabilita el control.
+ * Si hay texto en licencia sanitaria, mantiene el control habilitado.
+ */
+toggleLicenciaSanitaria(): void {
+  const AVISO_DE_FUNCIONAMIENTO = this.dataDeLaSolicitudForm.get(
+    'datosDelTramiteRealizar.avisoDeFuncionamiento'
+  )?.value;
+  const LICENCIA_SANITARIA_CONTROL = this.dataDeLaSolicitudForm.get(
+    'datosDelTramiteRealizar.licenciaSanitaria'
+  );
+  const LICENCIA_SANITARIA_VALUE = LICENCIA_SANITARIA_CONTROL?.value;
 
-    if (AVISO_DE_FUNCIONAMIENTO) {
-      LICENCIA_SANITARIA_CONTROL?.disable();
-    } else {
-      LICENCIA_SANITARIA_CONTROL?.enable();
-    }
+  if (AVISO_DE_FUNCIONAMIENTO && !LICENCIA_SANITARIA_VALUE) {
+    LICENCIA_SANITARIA_CONTROL?.disable();
+  } else {             
+    LICENCIA_SANITARIA_CONTROL?.enable();
   }
+}
   /**
    * Método para manejar el evento de cambio en el tipo de operación.
    * Si el tipo de operación es "modificación", habilita el control de justificación.

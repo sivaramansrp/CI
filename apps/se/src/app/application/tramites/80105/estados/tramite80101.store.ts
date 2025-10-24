@@ -198,7 +198,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     descripcion: ""
   },
   datosComplimentos: {
-    modalidad: 'Servicios',
+    modalidad: 'Terciarización',
     programaPreOperativo: '',
     datosGeneralis: {
       paginaWWeb: '',
@@ -206,7 +206,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     },
     obligacionesFiscales: {
       opinionPositiva: 'Si',
-      fechaExpedicion: '2025-03-15',
+      fechaExpedicion: '15/02/2025',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {

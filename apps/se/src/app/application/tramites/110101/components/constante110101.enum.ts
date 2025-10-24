@@ -1,5 +1,6 @@
 import { ConfiguracionColumna, REGEX_DIGITOS } from "@libs/shared/data-access-user/src";
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla, ProcesosTabla } from "../models/panallas110101.model";
+import { ProcesoSolicitado } from "../models/response/validar-fraccion-response.model";
 
 /**
  * @constant RADIO_OPCIONS
@@ -44,8 +45,8 @@ export const INSUMOS_TABLA: ConfiguracionColumna<InsumosTabla>[] = [
   ];
 
 /** Configuración de las columnas para la tabla de procesos en el trámite 110101. */
-export const PROCESO_TABLA: ConfiguracionColumna<ProcesosTabla>[] = [
-    { encabezado: 'Proceso', clave: (item: ProcesosTabla) => item.proceso, orden: 1 },
+export const PROCESO_TABLA: ConfiguracionColumna<ProcesoSolicitado>[] = [
+    { encabezado: 'Proceso', clave: (item: ProcesoSolicitado) => item.nombre, orden: 1 },
 ];
 
   /** Configuración de las columnas para la tabla de envases en el trámite 110101. */

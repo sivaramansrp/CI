@@ -5,11 +5,10 @@ import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
-import { ConsultaioQuery  } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
-
 /**
  * Componente para la expedición de certificados de asignación directa.
  */

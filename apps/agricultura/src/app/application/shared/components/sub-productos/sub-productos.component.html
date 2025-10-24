@@ -159,7 +159,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label class="form-label form-group">Número de lote<span [ngClass]="{'mensaje-error':detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched}">*</span>:</label>
-                    <input type="text" class="form-control" formControlName="numeroLote" />
+                    <input type="text" class="form-control" formControlName="numeroLote" [maxlength]="16" />
                     <div
                         *ngIf="detalleForm.get('numeroLote')?.invalid && detalleForm.get('numeroLote')?.touched">
                         <small class="mensaje-error">Este campo es obligatorio.</small>
@@ -257,8 +257,9 @@
     <div class="row mt-2">
         <div class="col-md-12 d-flex justify-content-end">
             <button type="button" class="btn btn-default ms-3" (click)="limpiarAnimalesVivo()">Limpiar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="agregarProductos()" *ngIf="productosForm.get('modificado')?.value === true">Modificar</button>
             <button type="button" class="btn btn-default ms-3" (click)="cancelar()">Cancelar</button>
-            <button type="button" class="btn btn-primary ms-3" (click)="agregarAnimales()">Agregar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="agregarProductos()" *ngIf="productosForm.get('modificado')?.value === false">Agregar</button>
         </div>
     </div>
 </div>

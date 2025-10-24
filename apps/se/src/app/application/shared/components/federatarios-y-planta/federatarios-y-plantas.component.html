@@ -161,7 +161,7 @@
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
+                <button class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="abrirDialogoEliminarPlantas()">Eliminar plantas</button>
               </div>
             </div>
           </div>
@@ -227,8 +227,15 @@
     </div>
   </div>
 </ng-container>
+
 @if (federatarioNotificacion) {
   <section>
     <lib-notificaciones [notificacionInput]="federatarioNotificacion" (confirmacionModal)="federatarioNotificacion = undefined"></lib-notificaciones>
+  </section>
+}
+
+@if (eliminarPlantaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="eliminarPlantaNotificacion" (confirmacionModal)="eliminarPlanta($event)"></lib-notificaciones>
   </section>
 }

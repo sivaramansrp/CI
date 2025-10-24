@@ -9,6 +9,8 @@ import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { takeUntil } from 'rxjs/operators';
+import {PasoUnoComponent} from '../paso-uno/paso-uno.component';
+import {ERROR_FORMA_ALERT} from '../../constants/intropermiso.enum';
 
 interface AccionBoton {
   accion: string;
@@ -57,7 +59,15 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @type {WizardComponent}
    * @viewChild WizardComponent
    */
-  @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+   /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
+   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * @description Índice actual del paso en el que se encuentra el usuario.
@@ -68,6 +78,22 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @default 1
    */
   indice: number = 1;
+
+  
+   /**
+    * @property {string} formErrorAlert
+    * @description
+    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+    */
+   public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+    * @property {boolean} esFormaValido
+    * @description
+    * Indica si el formulario del paso actual es válido.
+    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+    */
+  esFormaValido: boolean = false;
 
   /**
    * @description Objeto que contiene los datos de los pasos del formulario.
@@ -154,14 +180,29 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.componenteWizard.siguiente();
-      } else {
-        this.componenteWizard.atras();
+    if (e.accion === 'cont') {
+      let isValid = true;
+    
+        if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarFormularios();
       }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+    
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+    
+      this.wizardComponent.siguiente();
+      return;
     }
-  }
-  
+    
+      this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
+    
+}
 }

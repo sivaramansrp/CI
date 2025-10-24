@@ -391,7 +391,9 @@ export interface immexInfo {
     /** productoDescExportacions por periodo # */
   productoDescExportacions?:string;
   /** id por periodo # */
-  id?:number;
+  id?:number|null ;
+
+  idFraccion?:number|null;
 
   nicosTable?:NicoInfo[];
 }
@@ -559,7 +561,7 @@ export interface fraccionInfo {
   descripcionComercialExport?: string;
   nicos?:string | number;
    nicosTable?:NicoInfo[];
-  numero:number;
+  numero:number|string ;
 
 }
 /**
@@ -597,7 +599,7 @@ export const FRACCION_EXPORTACION: {
 }[] = [
  {
     encabezado: 'No.',
-    clave: (ele: fraccionInfo) => ele.numero.toString(),
+    clave: (ele: fraccionInfo) => ele?.numero.toString(),
     orden: 1,
   },
   {
@@ -733,4 +735,120 @@ export interface FraccionPayload {
   idProductoPadre: string;
   /** Código de la fracción padre */
   fraccionPadre: string;
+}
+
+
+export interface GuardarFraccionResponse {
+  codigo: string;
+  datos: FraccionDatos;
+}
+
+export interface FraccionDatos {
+  id?:number|null;
+  fraccionPadre: string | null;
+  descripcionFraccionPadre: string | null;
+  tipoFraccion: string | null;
+  exenta: string | null;
+  fraccionCompuesta: string | null;
+  claveFraccionPadre: string | null;
+  unidadMedida: string | null;
+  fraccionConcatenada: string | null;
+  descripcionTestado: string | null;
+  testado: boolean;
+  tipoOperacion: string | null;
+  valorMonedaMensual: number | null;
+  valorMonedaAnual: number | null;
+  valorProduccionMensual: number | null;
+  valorProduccionAnual: number | null;
+  valorProduccionAnualSolicitada: number | null;
+  claveCategoria: string | null;
+  descripcionCategoria: string | null;
+  mensaje: string | null;
+  descripcionUsuario: string | null;
+  umt: string | null;
+  idFraccion: number | null;
+  idProducto: number | null;
+  idProductoPadre: number | null;
+  claveProductoExportacion: string | null;
+  descripcionServicio: string | null;
+  rowID: number | null;
+  cveFraccion: string | null;
+  capitulo: string | null;
+  partida: string | null;
+  subPartida: string | null;
+  descripcion: string | null;
+  fechaCaptura: string | null;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  cveUsuario: string | null;
+  cveCapituloFraccion: string | null;
+  cvePartidaFraccion: string | null;
+  cveSubPartidaFraccion: string | null;
+  activo: boolean | null;
+  activoAnexo28: boolean | null;
+  decretoImmex: string | null;
+  sector: string | null;
+  cveServicioImmex: string | null;
+  listaProveedores: ReadonlyArray<unknown> | null;
+  listaProyecto: ReadonlyArray<unknown> | null;
+  nicoDtos: ReadonlyArray<unknown> | null;
+}
+
+export interface FraccionResponse {
+  codigo: string;
+  error: string | null;
+  causa: string | null;
+  mensaje: string;
+  datos: FraccionDatoss;
+}
+
+export interface FraccionDatoss {
+  fraccionPadre: string | null;
+  descripcionFraccionPadre: string | null;
+  tipoFraccion: string | null;
+  exenta: boolean | null;
+  fraccionCompuesta: string | null;
+  claveFraccionPadre: string | null;
+  unidadMedida: string | null;
+  fraccionConcatenada: string | null;
+  descripcionTestado: string | null;
+  testado: boolean;
+  tipoOperacion: string | null;
+  valorMonedaMensual: number | null;
+  valorMonedaAnual: number | null;
+  valorProduccionMensual: number | null;
+  valorProduccionAnual: number | null;
+  valorProduccionAnualSolicitada: number | null;
+  claveCategoria: string | null;
+  descripcionCategoria: string | null;
+  mensaje: string | null;
+  descripcionUsuario: string | null;
+  umt: string | null;
+  idFraccion: string | null;
+  idProducto: string | null;
+  idProductoPadre: string | null;
+  claveProductoExportacion: string | null;
+  descripcionServicio: string | null;
+  rowID: string | null;
+  cveFraccion: string | null;
+  capitulo: string | null;
+  partida: string | null;
+  subPartida: string | null;
+  descripcion: string | null;
+  fechaCaptura: string | null;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  cveUsuario: string | null;
+  cveCapituloFraccion: string | null;
+  cvePartidaFraccion: string | null;
+  cveSubPartidaFraccion: string | null;
+  activo: boolean | null;
+  activoAnexo28: boolean | null;
+  decretoImmex: string | null;
+  sector: string | null;
+  cveServicioImmex: string | null;
+  listaProveedores: unknown| null;
+  listaProyecto: unknown | null;
+  nicoDtos: unknown | null;
+  id?:number | null;
 }

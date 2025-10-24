@@ -1,6 +1,6 @@
 import {AbstractControl,FormBuilder,FormControl,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,REGEX_NUMEROS,REGEX_REEMPLAZAR,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
@@ -137,7 +137,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el campo de fecha inicial.
    */
-  fechaInicialInput: InputFecha = FECHA_PAGO;
+  fechaDePago: InputFecha = FECHA_PAGO;
 
   /**
    * Arreglo que contiene las filas seleccionadas de la tabla.
@@ -188,7 +188,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public tramite32101Store: Tramite32101Store,
     private tramite32101Query: Tramite32101Query,
     private router: Router,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.tramiteList = {
       catalogos: [],
@@ -320,11 +321,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           value: this.solicitudState?.cadenaDeLaDependencia,
           disabled: true,
         },
-      ],
-      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      banco: [this.solicitudState?.banco],
-      llaveDePago: [this.solicitudState?.llaveDePago, [ Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      fechaInicialInput: [this.solicitudState?.fechaInicialInput],
+      ], 
+      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.required, Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      banco: [this.solicitudState?.banco, [Validators.required]],
+      llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required, Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      fechaInicialInput: [this.solicitudState?.fechaInicialInput, [Validators.required]],
       importeDePago: [
         { value: this.solicitudState?.importeDePago, disabled: true },
       ],
@@ -403,6 +404,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Getter para debugging - obtiene el control de fechaInicialInput
+   * @returns {FormControl} El control de formulario 'fechaInicialInput'.
+   */
+  get fechaInicialInputControl(): FormControl {
+    return this.registroForm.get('fechaInicialInput') as FormControl;
+  }
+
+  /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
    * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
    */
@@ -443,6 +452,39 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   isInvalid(id: string): boolean {
     const CONTROL = this.registroForm.get(id);
     return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
+
+  /**
+   * Valida que solo se permitan caracteres alfanuméricos (letras y números) en el campo.
+   * Bloquea la entrada de caracteres especiales, espacios y signos negativos.
+   * @param event Evento del teclado
+   */
+  onlyAlphanumeric(event: KeyboardEvent): void {
+    const char = event.key;
+    const isValidChar = /^[a-zA-Z0-9]$/.test(char);
+    const isControlKey = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(char);
+    
+    if (!isValidChar && !isControlKey) {
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * Maneja el evento de input para campos alfanuméricos
+   * @param event Evento de input
+   */
+  onAlphanumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(REGEX_REEMPLAZAR, '');
+  }
+
+  /**
+   * Maneja el evento de input para campos numéricos
+   * @param event Evento de input
+   */
+  onNumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(REGEX_NUMEROS, '');
   }
 
   /**
@@ -523,18 +565,40 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.banco.catalogos = respuesta.data;
-      });
-  }
+      });  }
 
   /**
    * Maneja el cambio en la selección de la forma de adquisición.
-   * @param selectedOption - El objeto de la opción seleccionada del catálogo.
-   */  
-  onlistaDeDocumentosChange(selectedOption: Catalogo): void {
+   * @param event - El evento o objeto que contiene la opción seleccionada del catálogo.
+   */    onlistaDeDocumentosChange(event: Event | { selectedOption?: Catalogo } | Catalogo | undefined): void {
+    let VALUE = '';
+    let selectedOption: Catalogo | undefined;
     
-    const VALUE = selectedOption?.id || selectedOption?.clave;
-
-    this.comprobanteVisible = String(VALUE) === '1';
+    if (event) {
+      if ('value' in event) {
+        VALUE = (event as { value?: string }).value || '';
+      } 
+      else if ('selectedOption' in event) {
+        selectedOption = (event as { selectedOption?: Catalogo }).selectedOption;
+        VALUE = String(selectedOption?.id || '');
+      } 
+      else if ('id' in event && 'descripcion' in event) {
+        selectedOption = event as Catalogo;
+        VALUE = String(selectedOption.id || '');
+      } 
+      else if ((event as Event).target) {
+        const target = (event as Event).target as HTMLSelectElement;
+        VALUE = target?.value || '';
+      }
+    }
+    
+    const DESCRIPTION = selectedOption?.descripcion || '';
+    this.setValoresStore(this.registroForm, 'listaDeDocumentos', 'setListaDeDocumentos');
+    
+    // Determinar si el comprobante debe ser visible
+    const isCompraNacional = DESCRIPTION.toLowerCase().includes('compra nacional') || 
+                             DESCRIPTION.toLowerCase().includes('nacional');
+    this.comprobanteVisible = VALUE === '1' || selectedOption?.id === 1 || isCompraNacional;
     
     const COMPROBANTE_CONTROL = this.registroForm.get('comprobante');
     
@@ -544,6 +608,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       } else {
         COMPROBANTE_CONTROL.clearValidators();
         COMPROBANTE_CONTROL.setValue(''); 
+        COMPROBANTE_CONTROL.markAsUntouched();
       }
       COMPROBANTE_CONTROL.updateValueAndValidity();
     }
@@ -664,6 +729,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
     }
   }
+
   /**
   * modificar la fila seleccionada en modal popup
   */
@@ -688,6 +754,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.consultaAvisoAcreditacionService.setUpdatedRow([FILA_SELECCIONADA]);
       this.tramite32101Store.setAbc(FILA_SELECCIONADA);
       this.modalActualizacion.abrirModal(FILA_SELECCIONADA);
+      this.selectedRows = [];
     }
   }
 
@@ -764,31 +831,81 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * y marca el campo como no modificado (untouched).
    */
   public cambioFechaIngreso(nuevo_valor: string): void {
-    this.registroForm.get('fechaInicialInput')?.setValue(nuevo_valor);
-    this.registroForm.get('fechaInicialInput')?.markAsUntouched();
+    const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
+    
+    FECHA_CONTROL?.setValue(nuevo_valor);
+    FECHA_CONTROL?.markAsTouched();
+    FECHA_CONTROL?.markAsDirty();
+    
+    if (nuevo_valor && nuevo_valor.trim() !== '') {
+      const FECHA_INGRESADA = new Date(nuevo_valor.split('/').reverse().join('-'));
+      const FECHA_ACTUAL = new Date();
+      FECHA_ACTUAL.setHours(23, 59, 59, 999);
+      
+      if (FECHA_INGRESADA > FECHA_ACTUAL) {
+        FECHA_CONTROL?.setErrors({ 'fechaFutura': true });
+      } else {
+        const FECHA_ERROR = FECHA_CONTROL?.errors;
+        if (FECHA_ERROR && FECHA_ERROR['fechaFutura']) {
+          delete FECHA_ERROR['fechaFutura'];
+          const HAS_ERROR = Object.keys(FECHA_ERROR).length > 0;
+          FECHA_CONTROL?.setErrors(HAS_ERROR ? FECHA_ERROR : null);
+        }
+      }
+    } else {
+      const FECHA_ERROR = FECHA_CONTROL?.errors;
+      if (FECHA_ERROR && FECHA_ERROR['fechaFutura']) {
+        delete FECHA_ERROR['fechaFutura'];
+        const HAS_ERROR = Object.keys(FECHA_ERROR).length > 0;
+        FECHA_CONTROL?.setErrors(HAS_ERROR ? FECHA_ERROR : null);
+      }
+    }
+    
     this.tramite32101Store.setFechaInicialInput(nuevo_valor);
-  }
-
+  }  
+  
   /**
    * Restablece los campos del formulario relacionados con la operación bancaria.
    *
-   * Este método reinicia los valores de los siguientes controles del formulario:
+   * Este método verifica si todos los campos requeridos de "Pago de derecho" están llenos:
    * - `numeroDeOperacion`: Número de operación bancaria.
    * - `banco`: Banco asociado a la operación.
    * - `llaveDePago`: Llave de pago utilizada.
    * - `fechaInicialInput`: Fecha inicial de la operación.
    *
-   * Utiliza el método `reset()` para limpiar los valores de cada control y
-   * elimina cualquier error de validación asociado.
-   */
+   * Solo si todos estos campos están completados, procede a resetear todo el formulario
+   * y limpiar específicamente el control de fecha. De lo contrario, no realiza ninguna acción.
+   */  
   borrar(): void {
-    this.registroForm.reset();
-    const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
-    FECHA_CONTROL?.setValue('');
-    FECHA_CONTROL?.setErrors(null);
-    FECHA_CONTROL?.markAsUntouched();
-    FECHA_CONTROL?.markAsPristine();
-    this.tramite32101Store.setFechaInicialInput('');
+    // Verificar si todos los campos requeridos de "Pago de derecho" están llenos
+    const PAYMENT_FIELDS = ['numeroDeOperacion', 'banco', 'llaveDePago', 'fechaInicialInput'];
+    const ALL_PAYMENT_FIELDS_FILLED = PAYMENT_FIELDS.every(fieldName => {
+      const FIELD_CONTROL = this.registroForm.get(fieldName);
+      return FIELD_CONTROL?.value && !FIELD_CONTROL.invalid;
+    });
+    
+    // Solo proceder si todos los campos de pago están completados
+    if (ALL_PAYMENT_FIELDS_FILLED) {
+      this.registroForm.reset();
+      const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
+      FECHA_CONTROL?.setValue('');
+      FECHA_CONTROL?.setErrors(null);
+      FECHA_CONTROL?.markAsUntouched();
+      FECHA_CONTROL?.markAsPristine();
+      this.tramite32101Store.setFechaInicialInput('');
+
+      this.inicializarEstadoFormulario();
+      this.cdr.detectChanges();
+    } else {
+      // Marcar todos los campos como untouched y pristine para evitar mostrar errores de validación
+      Object.keys(this.registroForm.controls).forEach(fieldName => {
+        const FIELD_CONTROL = this.registroForm.get(fieldName);
+        if (FIELD_CONTROL) {
+          FIELD_CONTROL.markAsTouched();
+          FIELD_CONTROL.markAsPristine();
+        }
+      });
+    }
   }
 
   /**
@@ -847,7 +964,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
     this.elementoParaEliminar = i;
   }
-
   /**
   * Elimina un pedimento si se confirma la acción. 
   */
@@ -857,8 +973,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         (row) => !this.selectedRows.includes(row)
       );
       this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-      this.selectedRows = [];
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+    
+    this.selectedRows = [];
   }
 }

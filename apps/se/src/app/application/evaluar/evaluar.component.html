@@ -29,6 +29,18 @@
                         </li>
                     </ng-container>
                 </ul>
+                 @if (config.descargaSolicitud) {
+                    <ng-container>
+                        <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <label class="form-label text-title" style="cursor: pointer; text-decoration: underline;"
+                                (click)="descargarSolicitud()">
+                            Descargar datos de la solicitud
+                            </label>
+                        </div>
+                        </div>
+                    </ng-container>
+                    }
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
@@ -38,7 +50,10 @@
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
                     (enviarEvento)="enviarEvento($event)"
                     [habilitarFechasPorAceptacion]="config.habilitarFechas"
-                    [anexo222se]="config.anexo222se">
+                    [anexo222se]="config.anexo222se"
+                    [inputSentidos]="vistasModificacion110101.actualizarVista"
+                    [sentidoInput]="sentidoInputTramite110101"
+                    (controlDictaminador)="onDictaminador($event)">
                     </app-generar-dictamen>
                     }
                     @case (2) {
@@ -61,16 +76,18 @@
                         @switch (indiceDictamen) {
                         @case (1) {
                         <app-capturar-requerimiento 
-                            [isTipoRequerimiento]="false" 
-                            [isAreaSolicitante]="false"
-                            [isJustificacionRequerimiento]="true"
+                            [isTipoRequerimiento]="requerimientoConfig.isTipoRequerimiento" 
+                            [isAreaSolicitante]="requerimientoConfig.isAreaSolicitante "
+                            [isJustificacionRequerimiento]="requerimientoConfig.isJustificacionRequerimiento"
                             [iniciarResponse]="this.dataIniciarRequerimiento"
                             (formChanged)="onFormRequerimientoChanged($event)">
                         </app-capturar-requerimiento>
                         }
                         @case (2) {
-                        <app-solicitar-documentos 
-                        [isSegundaTabla]="false">
+                        <app-solicitar-documentos [isSegundaTabla]="requerimientoConfig.isSegundaTabla"
+                            [documentosEspecificos]="documentosEscpecificos"
+                            [documentosIniciales]="listadoDocumentosGuardados"
+                            (documentosActualizados)="onDocumentosActualizados($event)">
                         </app-solicitar-documentos>
                         }
                         }
@@ -104,6 +121,7 @@
         </div>
 
         <div class="row mb-5 mt-5">
+            @if (!vistasModificacion110101.actualizarVista) {
             <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
                 [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
                 [envioDigital]="envioDigital" [opinion]="opinion"
@@ -111,6 +129,18 @@
                 (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
                 (tabSeleccionado)="onTabSeleccionado($event)">
             </app-reviewers-tabs>
+         }@else {
+            <app-reviewers-tabs-110101
+            [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
+                [envioDigital]="envioDigital" [opinion]="opinion"
+                [esDictaminador]="calificacionDictaminador"
+                [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
+                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+                (tabSeleccionado)="onTabSeleccionado($event)"
+                (tratadosParaEvaluar)="recibirTratadosDesdeReviewers($event)">
+            </app-reviewers-tabs-110101>
+         }
         </div>
     </div>
 </div>

@@ -489,11 +489,8 @@
       </div>
       <div class="col-md-4">
         <label for="montoAExpedir" class="form-label"
-          >Monto a expedir
-          <span
-            [ngClass]="
-              isValid(distribucionSaldoForm, 'montoExpedir') ? 'required' : ''
-            "
+         >Monto a expedir
+          <span         
             >*</span
           >:</label
         >
@@ -511,6 +508,9 @@
               'setMontoExpedir'
             )
           "
+            [ngClass]="
+              isValid(distribucionSaldoForm, 'montoExpedir') ? 'required' : ''
+            "
         />
         @if ((distribucionSaldoForm.get('montoExpedir')?.touched ||
         distribucionSaldoForm.get('montoExpedir')?.dirty) &&

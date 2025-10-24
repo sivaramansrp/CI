@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { API_GET_CERTIFICADO_ANTIGUEDAD, API_GET_MOLINOS_ACERO_HABILITAR, API_POST_SOLICITUD } from '../servers/api-route';
-import { CambioModalidadState } from '../estados/tramite80208.store';
 import { GuadarSolicitudResponse } from '../modelos/response/guardar-solicitud-response.model';
 
 @Injectable({
@@ -35,7 +34,7 @@ export class GuardarService {
    * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
    * @returns Observable con la respuesta del servidor.
    */
-  postSolicitud(solicitud: any): Observable<BaseResponse<GuadarSolicitudResponse>> {
+  postSolicitud(solicitud: unknown): Observable<BaseResponse<GuadarSolicitudResponse>> {
     const ENDPOINT = `${this.servidor}` + API_POST_SOLICITUD;
     return this.http.post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud).pipe(
       map((response) => {

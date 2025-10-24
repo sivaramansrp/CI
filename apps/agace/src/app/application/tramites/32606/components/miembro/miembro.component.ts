@@ -3,12 +3,12 @@ import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, In
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/tramite32606.store';
 import { CommonModule } from '@angular/common';
 import { EconomicoService } from '../../services/economico.service';
 import { MiembroLabelEnum } from '../../constantes/labels32606.enum';
 import { Modal } from 'bootstrap';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Tramite32606Query } from '../../state/tramite32606.query';
 
 /** Componente para la sección de miembros del trámite 32606. */
 @Component({
@@ -18,7 +18,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
     CatalogoSelectComponent
   ],
   templateUrl: './miembro.component.html',
-  styleUrl: './miembro.component.css',
+  styleUrl: './miembro.component.scss',
 })
 export class MiembroComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de miembros. */

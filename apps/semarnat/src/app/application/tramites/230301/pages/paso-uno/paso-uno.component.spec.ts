@@ -8,7 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-import { Solicitud230301Store } from '../../estados/tramites/tramites230301.store';
+import { Tramite230301Store } from '../../estados/tramites/tramites230301.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
 
@@ -52,7 +52,7 @@ describe('PasoUnoComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Solicitud230301Store, useClass: MockSolicitud230301Store },
+        { provide: Tramite230301Store, useClass: MockSolicitud230301Store },
         ConsultaioQuery,
         { provide: DesistimientoSolicitudService, useClass: MockDesistimientoSolicitudService }
       ]

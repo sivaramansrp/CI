@@ -1,23 +1,23 @@
 export interface DomicilioTabla {
-    numeroDeOrden: string;
+    numeroOrden: string;
     fraccionArancelaria: string;
     nombreTecnico: string;
     nombreComercial: string;
     nombreEnIngles: string;
     marca: string;
-    complementoDeLaDescripcion: string;
-    cantidadAExportar: string;
-    unidadDeMedidaDeComercializacion: string;
-    valorDeLaMercancia: string;
-    numeroDeFactura: string;
-    fechaDeFactura: string;
-    norma: string;
+    complementoDescripcion: string;
+    cantidadExportar: string;
+    unidadMedidaComercializacion: string;
+    valorMercancia: string;
+    numeroFactura: string;
+    fechaFactura: string;
+    notas: string;
 }
 
 export const DOMICILIO_TABLA_COLUMNAS = [
     {
         encabezado: 'Número de orden',
-        clave: (ele: DomicilioTabla): string => ele.numeroDeOrden,
+        clave: (ele: DomicilioTabla): string => ele.numeroOrden,
         orden: 1
     },
     {
@@ -47,37 +47,37 @@ export const DOMICILIO_TABLA_COLUMNAS = [
     },
     {
         encabezado: 'Complemento de la Descripción',
-        clave: (ele: DomicilioTabla): string => ele.complementoDeLaDescripcion,
+        clave: (ele: DomicilioTabla): string => ele.complementoDescripcion,
         orden: 7
     },
     {
         encabezado: 'Cantidad a exportar',
-        clave: (ele: DomicilioTabla): string => ele.cantidadAExportar,
+        clave: (ele: DomicilioTabla): string => ele.cantidadExportar,
         orden: 8
     },
     {
         encabezado: 'Unidad de medida de comercialización',
-        clave: (ele: DomicilioTabla): string => ele.unidadDeMedidaDeComercializacion,
+        clave: (ele: DomicilioTabla): string => ele.unidadMedidaComercializacion,
         orden: 9
     },
     {
         encabezado: 'Valor de la mercancía',
-        clave: (ele: DomicilioTabla): string => ele.valorDeLaMercancia,
+        clave: (ele: DomicilioTabla): string => ele.valorMercancia,
         orden: 10
     },
     {
         encabezado: 'Número de factura',
-        clave: (ele: DomicilioTabla): string => ele.numeroDeFactura,
+        clave: (ele: DomicilioTabla): string => ele.numeroFactura,
         orden: 11
     },
     {
         encabezado: 'Fecha de Factura',
-        clave: (ele: DomicilioTabla): string => ele.fechaDeFactura,
+        clave: (ele: DomicilioTabla): string => ele.fechaFactura,
         orden: 12
     },
     {
         encabezado: 'Norma',
-        clave: (ele: DomicilioTabla): string => ele.norma,
+        clave: (ele: DomicilioTabla): string => ele.notas,
         orden: 13
     }
 ];

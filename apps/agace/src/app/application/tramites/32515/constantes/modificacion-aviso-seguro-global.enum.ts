@@ -95,8 +95,12 @@ export const REPRESENTANTE_LEGAL = [
         valor: 13,
         
       },
-      { tipo: 'pattern', valor: PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, mensaje: 'Solo se permiten letras mayúsculas, números y los símbolos' }
+      { 
+        tipo: 'pattern',
+        valor: REGEX_RFC_ALPHANUMERICO,
+      }
     ],
+    inputFilter: INPUT_FILTER_RFC_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -115,7 +119,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS}],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -134,7 +138,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS}],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -153,7 +157,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS}],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -172,8 +176,10 @@ export const REPRESENTANTE_LEGAL = [
         valor: 15,
         
       },
-      { tipo: 'pattern', valor: REGEX_TELEFONO, mensaje: 'Solo se permiten números.' }],
-  
+      { tipo: 'pattern', 
+        valor: REGEX_NOMBRE_ALPHANUMERICO
+      }],
+    inputFilter: INPUT_FILTER_NOMBRE_ALPHANUMERICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -192,8 +198,9 @@ export const REPRESENTANTE_LEGAL = [
         valor: 50,
         
       },
-      { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO, mensaje: 'Formato de correo electrónico inválido.' }
+      { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO }
     ],
+    inputFilter: REGEX_CORREO_ELECTRONICO,
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
