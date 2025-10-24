@@ -250,7 +250,16 @@ export class RepresentanteLegalExportadorComponent
       METODO_NOMBRE: metodoNombre,
     });
   }
-
+  /**
+   * Valida el formulario y marca los campos como tocados si es inválido
+   */
+   validarFormularios(): boolean {
+     if (this.form.invalid) {
+       this.form.markAllAsTouched();
+       return false;
+     }
+     return true;
+   }
   /**
    * @description
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.

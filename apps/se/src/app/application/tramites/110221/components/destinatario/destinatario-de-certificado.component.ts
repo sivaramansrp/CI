@@ -50,9 +50,7 @@ interface FormValues {
 })
 export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
   
-  validatorCheck(): boolean {
-    return this.destinatario.validatorCheck();
-  }
+ 
     /**
    * @descripcion
    * Valores actuales del formulario de destinatario.
@@ -211,23 +209,34 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       // Agrega otros controles aquí si es necesario
     });
   }
- 
-public validateAllForms(): boolean {
-  let valid = true;
-  this.destinatarioComponent?.markAllFieldsTouched();
-  this.datosDelDestinatarioComponent?.markAllFieldsTouched();
-  this.representanteLegalExportadorComponent?.markAllFieldsTouched();
-  if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
-    valid = false;
+ public validateAllForms(): boolean {
+    let valid = true;
+    this.destinatarioComponent?.markAllFieldsTouched();
+    this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+    this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+    if (
+      this.destinatarioComponent &&
+      this.destinatarioComponent.formDestinatario &&
+      !this.destinatarioComponent.formDestinatario.valid
+    ) {
+      valid = false;
+    }
+    if (
+      this.datosDelDestinatarioComponent &&
+      this.datosDelDestinatarioComponent.formDatosDelDestinatario &&
+      !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid
+    ) {
+      valid = false;
+    }
+    if (
+      this.representanteLegalExportadorComponent &&
+      this.representanteLegalExportadorComponent.form &&
+      !this.representanteLegalExportadorComponent.form.valid
+    ) {
+      valid = false;
+    }
+    return valid;
   }
-  if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
-    valid = false;
-  }
-  if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
-    valid = false;
-  }
-  return valid;
-}
 
 
 
@@ -251,8 +260,26 @@ public validateAllForms(): boolean {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
-//  validCheck(): boolean {
-//     return this.datosCertificadoDeRef.validarFormularios();
+// validarFormulario(): boolean {
+//     let isValid = true;
+//     if (this.datosDelDestinatarioComponent) {
+//       if (!this.datosDelDestinatarioComponent.validarFormularios()) {
+//         isValid = false;
+//       }
+//     }
+//     if (this.destinatarioComponent) {
+//       if (!this.destinatarioComponent.validarFormularios()) {
+//         isValid = false;
+//       }
+//     }
+//     if (this.representanteLegalExportadorComponent) {
+//       if (!this.representanteLegalExportadorComponent.validarFormularios()) {
+//         isValid = false;
+//       }
+//     } else {
+//       isValid = false;
+//     }
+//     return isValid;
 //   }
   /**
    * @method setValoresStoreExportador
@@ -275,6 +302,8 @@ public validateAllForms(): boolean {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
+  
+
 /**
    * @method setValoresStore1
    * @descripcion
@@ -286,6 +315,9 @@ public validateAllForms(): boolean {
     (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }
 
+
+
+  
   /**
      * Inicializa el formulario con los datos del estado de la solicitud.
      */
@@ -341,7 +373,43 @@ public validateAllForms(): boolean {
   setFormValidaDestinatario(valida: boolean): void {
     this.store.setFormValida({ datosDestinatario: valida });
   }
+validatorCheck(): boolean {
+    if (!this.registroFormulario) {
+      return false;
+    }
+    const DESTINATARIO_FORM_VALID = this.registroFormulario.get('destinatarioForm')?.valid;
+    const DOMICILIO_FORM_VALID = this.registroFormulario.get('domicilioForm')?.valid;
+    const REPRESENTANTE_LEGAL_FORM_VALID = this.registroFormulario.get('representanteLegalForm')?.valid;
 
+    if (DESTINATARIO_FORM_VALID && DOMICILIO_FORM_VALID && REPRESENTANTE_LEGAL_FORM_VALID) {
+      return true;
+    }
+    this.registroFormulario.get('destinatarioForm')?.markAllAsTouched();
+    this.registroFormulario.get('domicilioForm')?.markAllAsTouched();
+    this.registroFormulario.get('representanteLegalForm')?.markAllAsTouched();
+    return false;
+  }
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.datosDelDestinatarioComponent) {
+      if (!this.datosDelDestinatarioComponent.validarFormularios()) {
+        isValid = false;
+      }
+    }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormularios()) {
+        isValid = false;
+      }
+    }
+    if (this.representanteLegalExportadorComponent) {
+      if (!this.representanteLegalExportadorComponent.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
   /**
   * @method ngOnDestroy
   * @descripcion

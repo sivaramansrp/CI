@@ -1,13 +1,17 @@
-import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.model';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tramite110221State, Tramite110221Store } from '../estados/tramite110221.store';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
+
 import { Mercancias } from '../models/plantas-consulta.model';
+
 import { PROC_110221 } from '../servers/api-route';
+import { Tramite110221Query } from '../estados/tramite110221.query';
 
 /**
  * @descripcion
@@ -19,7 +23,8 @@ import { PROC_110221 } from '../servers/api-route';
 })
 export class ValidarInicialmenteCertificadoService {
   url: string = '../../../../../assets/json/110221/';
-
+  
+  private readonly servidor: string | undefined;
   /**
    * @constructor
    * @descripcion
@@ -27,7 +32,8 @@ export class ValidarInicialmenteCertificadoService {
    * @param http Cliente HTTP para realizar solicitudes.
    * @param tramite110221Store Store para manipular el estado del trámite.
    */
-  constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store, public httpService: HttpCoreService) { }
+  constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store, public httpService: HttpCoreService,    public query: Tramite110221Query
+) { }
 
     private get apiRoutes(): typeof PROC_110221 {
     return PROC_110221;
@@ -65,16 +71,16 @@ export class ValidarInicialmenteCertificadoService {
     return this.http.get<Mercancia[]>(JSON_URL);
   }
 
-  /**
-   * @method obtenerProductorPorExportador
-   * @descripcion
-   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON.
-   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
-   */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http
-      .get<ProductorExportador>('assets/json/110221/productor-exportador.json');
-  }
+  // /**
+  //  * @method obtenerProductorPorExportador
+  //  * @descripcion
+  //  * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON.
+  //  * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+  //  */
+  // obtenerProductorPorExportador(): Observable<ProductorExportador> {
+  //   return this.http
+  //     .get<ProductorExportador>('assets/json/110221/productor-exportador.json');
+  // }
 
   /**
    * @method obtenerMercancia
@@ -195,11 +201,6 @@ export class ValidarInicialmenteCertificadoService {
    * @method obtenerPaisBloque
    * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
    */
-  obtenerPaisBloque(): Observable<Catalogo[]> {
-    return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110221/país-bloque.json') // Solicita los datos del archivo JSON
-      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-  }
 
 
     obtenerMercancias(): Observable<MercanciasHistorico> {
@@ -243,6 +244,12 @@ export class ValidarInicialmenteCertificadoService {
       false
     );
   }
+    obtenerPaisBloque(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110221/país-bloque.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+
     obtenerEntidadFederativa(): Observable<JsonResponseCatalogo> {
     return this.httpService.get<JsonResponseCatalogo>(
       PROC_110221.ENTIDAD_FEDERATIVA,
@@ -264,4 +271,143 @@ obtenerRepresentacionFederal(): Observable<JsonResponseCatalogo> {
   );
 }
 
+ guardarDatosPost(
+    body: Record<string, unknown>
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110221.GUARDAR, {
+      body: body,
+    });
+    // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
+  }
+
+buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110221.BUSCAR, { body: body });
+  }
+buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
+    const RESULT: unknown[] = [];
+
+    array.forEach((arr) => {
+      const ITEM = arr as {
+        id?: number | string;
+        idMercancia?: string;
+        fraccionArancelaria?: string;
+        descripcionMercancia?: string | null;
+        unidadMedida?: string | null;
+        paisOrigen?: string | null;
+        cumpleReglasOrigen?: boolean;
+        criterioOrigen?: string | null;
+        porcentajeContenidoRegional?: number | null;
+        numeroRegistro?: boolean | string | null;
+        requiereDocumentosAdicionales?: boolean;
+        fraccionNaladi?: string;
+        fraccionNaladiSa93?: string;
+        fraccionNaladiSa96?: string;
+        fraccionNALADISA02Clave?: string;
+        fraccionNALADIClave?: string;
+        fraccionNALADSA93Clave?: string;
+        fraccionNALADISA96Clave?: string;
+        nombreTecnico?: string | null;
+        nombreComercial?: string | null;
+        numeroDeRegistrodeProductos?: string;
+        tipoFactura?: string;
+        numFactura?: string;
+        complementoDescripcion?: string;
+        fechaExpedicion?: string | null;
+        fechaVencimiento?: string | null;
+        fechaFactura?: string;
+        cantidad?: string;
+        umc?: string;
+        unidadMedidaMasaBruta?: string;
+        valorMercancia?: string;
+      };
+
+      RESULT.push({
+        id: ITEM.id || null,
+        fraccion_arancelaria: ITEM.fraccionArancelaria || '',
+        fraccion_naladi: ITEM.fraccionNALADIClave || '',
+        fraccion_naladi_sa93: ITEM.fraccionNALADSA93Clave || '',
+        fraccion_naladi_sa96: ITEM.fraccionNALADISA96Clave || '',
+        fraccion_naladi_sa02: ITEM.fraccionNALADISA02Clave || '',
+        nombre_tecnico: ITEM.nombreTecnico || '',
+        nombre_comercial: ITEM.nombreComercial || '',
+        registro_producto: ITEM.numeroDeRegistrodeProductos || '',
+        fecha_expedicion: ITEM.fechaExpedicion || '',
+        fecha_vencimiento: ITEM.fechaVencimiento || '',
+        tipo_factura: ITEM.tipoFactura || '',
+        num_factura: ITEM.numFactura || '',
+        complemento_descripcion: ITEM.complementoDescripcion || '',
+        fecha_factura: ITEM.fechaFactura || '',
+        cantidad: ITEM.cantidad || '',
+        umc: ITEM.umc || '',
+        unidad_medida: ITEM.unidadMedidaMasaBruta || '',
+        valor_mercancia: ITEM.valorMercancia || ''
+      });
+    });
+
+    return RESULT;
+  }
+
+ /** Construye el objeto certificado a partir del estado del trámite TramiteState. */
+  buildCertificado(item: Tramite110221State): unknown {    
+    return {
+      tratado_acuerdo: item.formCertificado['entidadFederativa'] || '',
+      pais_bloque: item.formCertificado['bloque'] || '',
+      fraccion_arancelaria: item.formCertificado['fraccionArancelaria'] || '',
+      nombre_comercial: item.formCertificado['nombreComercial'] || '',
+      fecha_inicio: item.formCertificado['fechaInicio'] || '',
+      fecha_fin: item.formCertificado['fechaFin'] || '',
+      registro_producto: item.formCertificado['registroProducto'] || '',
+      realizo_tercer_operador: {
+        tercer_operador: item.formCertificado['si'] || false,
+        nombre: item.formCertificado['nombres'] || '',
+        primer_apellido: item.formCertificado['primerApellido'] || '',
+        segundo_apellido: item.formCertificado['segundoApellido'] || '',
+        numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'] || '',
+        razon_social: item.formCertificado['razonSocial'] || '',
+      },
+      domicilio_tercer_operador:{
+        pais: item.formCertificado['pais'] || '',
+        calle: item.formCertificado['calle'] || '',
+        Ciudad: item.formCertificado['ciudad'] || '',
+        numero_letra: item.formCertificado['numeroLetra'] || '',
+        lada: item.formCertificado['lada'] || '',
+        telefono: item.formCertificado['telefono'] || '',
+        correo_electronico:item.formCertificado['correo'],
+        fax:item.formCertificado['fax']
+      },
+      mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaTabla),
+    };
+  }
+
+  /** Construye el objeto datos del certificado a partir del estado del trámite TramiteState. */
+  buildDatosCertificado(data: Tramite110221State): unknown {
+      return {
+        "observaciones": data.formDatosCertificado['observacionesDates'] ?? '',
+        "idioma": data.formDatosCertificado['idiomaDates'] ?? 0,
+        "representacion_federal": {
+            "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
+            "representacion_federal": data.formDatosCertificado['representacionFederalDates'] ?? 0
+        }
+      }
+    }
+
+    obtenerProductoruNevo(body: Record<string, unknown>): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110221.AGREGAR_PRODUCTOR, {
+      body: body,
+    });
+  }
+ 
+obtenerProductorPorExportador(): Observable<ProductorExportador> {
+    return this.httpService.get<ProductorExportador>(
+      PROC_110221.BUSCAR_PRODUCTOR
+    );
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite110221State> {
+    return this.query.selectTramite$;
+  }
 }

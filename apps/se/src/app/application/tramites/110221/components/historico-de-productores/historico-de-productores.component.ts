@@ -1,6 +1,6 @@
 import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
@@ -72,7 +72,10 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Solicitud actual del trámite.
    */
   public solicitudState!: Tramite110221State;
-
+ /** Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite. */
+    public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+  public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
+ 
   /**
    * Constructor del componente.
    * 
@@ -95,6 +98,8 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+      this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
+this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
     this.tramiteQuery.selectTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -114,8 +119,11 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.tramiteState = seccionState;
+      map((seccionState) => {
+        this.tramiteState = seccionState;
+        if (seccionState?.['productorMismoExportador']) {
+          this.cargarProductorPorExportador();
+        }
         })
       )
       .subscribe();
@@ -138,9 +146,10 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-    this.certificadoDeService.obtenerProductorPorExportador()
+    this.certificadoDeService
+      .obtenerProductorPorExportador()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
+      .subscribe((respuesta) => {
         this.productoresExportador = respuesta.datos;
       });
   }
@@ -166,6 +175,80 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     this.certificadoDeService.obtenerMercancias().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
       this.mercancia = respuesta.datos;
     });
+  }
+conseguirDisponiblesDatos(): void {
+    console.log('conseguirDisponiblesDatos method called');
+
+    const SELECTED_RFC = this.agregarDatosProductor['numeroRegistroFiscal'];
+    console.log('Selected RFC:', SELECTED_RFC);
+    const PAYLOAD = {
+      rfc_solicitante: SELECTED_RFC,
+    };
+    console.log('Payload:', PAYLOAD);
+    this.certificadoDeService
+      .obtenerProductoruNevo(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          console.log('Response from agregar productor nuevo:', response);
+          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.id,
+              nombreProductor: item.nombreCompleto,
+              numeroRegistroFiscal: item.rfc,
+              direccion: item.direccionCompleta,
+              correoElectronico: item.correoElectronico,
+              telefono: item.telefono,
+              fax: item.fax,
+            })
+          );
+         
+          this.store.setProductores(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+
+    // this.mercanciasDisponibles = true;
+  }
+   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+    const PAYLOAD = {
+      rfc_solicitante: event.numeroRegistroFiscal,
+    };
+    console.log('PAYLOAD', PAYLOAD);
+
+    let DATOS: HistoricoColumnas | null = null;
+    console.log(
+      'Event received in emitAgregarExportador:',
+      this.solicitudState.agregarProductoresExportador
+    );
+    this.certificadoDeService
+      .obtenerProductoruNevo(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          console.log('Response from agregar productor nuevo:', response);
+          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.id,
+              nombreProductor: item.nombreCompleto,
+              numeroRegistroFiscal: item.rfc,
+              direccion: item.direccionCompleta,
+              correoElectronico: item.correoElectronico,
+              telefono: item.telefono,
+              fax: item.fax,
+            })
+          );
+          // this.datosTablaUno$ = of(MAPPED_DATA || []);
+          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
+          console.log('MAPPED_DATA', MAPPED_DATA);
+          this.store.setProductores(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
   }
 
   /**

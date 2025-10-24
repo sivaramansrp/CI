@@ -3,6 +3,7 @@ import { Query } from "@datorama/akita";
 import { Tramite110221State} from "./tramite110221.store";
 import { Tramite110221Store } from "./tramite110221.store";
 
+
 /**
  * @descripcion
  * Query para gestionar el estado del certificado CAM.
@@ -15,6 +16,13 @@ export class Tramite110221Query extends Query<Tramite110221State> {
    */
   selectTramite$ = this.select((state) => {
     return state;
+  });
+
+   selectAgregarProductoresExportador$ = this.select((state) => {
+    return state.agregarProductoresExportador;
+  });
+    selectMercanciaProductores$ = this.select((state) => {
+    return state.mercanciaProductores;
   });
    /**
    * @descripcion

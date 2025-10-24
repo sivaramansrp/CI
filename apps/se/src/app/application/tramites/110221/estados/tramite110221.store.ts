@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 import { Mercancias } from '../models/plantas-consulta.model';
 
-import { GrupoRepresentativo } from '../models/peru-certificado.model';
+import { GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.model';
 
 import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../../110223/models/registro.model';
 
@@ -228,9 +228,9 @@ export interface Tramite110221State {
   altaPlanta: Catalogo[],
    /** Lista de catálogos que representan facturas disponibles. */
   factura: Catalogo[];
-  
+  mercanciaProductores: MercanciaTabla[];
     /** Lista de mercancías encontradas o buscadas. */
-    buscarMercancia: Mercancias[];
+    buscarMercancia: Mercancia[];
     
   /** Lista de catálogos que representan unidades de medida comercial (UMCs). */
   umcs: Catalogo[];
@@ -243,7 +243,7 @@ export interface Tramite110221State {
    */
   formDatosDelDestinatario: { [key: string]: unknown };
 
-  
+  agregarProductoresExportador: HistoricoColumnas[];
    formDestinatario: { [key: string]: unknown };
   /**
    * @property {Object} formExportor - Datos del exportador.
@@ -252,7 +252,7 @@ export interface Tramite110221State {
    */
   formExportor: { [key: string]: unknown };}
   
-
+ 
 /**
  * asegurando que el estado comience limpio y sin datos previos.
  * @method createInitialState
@@ -282,7 +282,7 @@ export function createInitialState(): Tramite110221State {
       descripcion: '',
     },
     paisBloques: [],
-
+ mercanciaProductores: [],
     mercanciaTabla: [],
     formDatosCertificado: {
       observacionesDates: '',
@@ -419,9 +419,9 @@ grupoRepresentativo: {
   },
   factura:[],
   umcs:[],
-  optionsTipoFactura: []
+  optionsTipoFactura: [],
+  agregarProductoresExportador: [],
   };
-  
 
 
 }
@@ -871,11 +871,12 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   }
     /**
      * Establece los resultados de mercancía obtenidos por búsqueda.
-     * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+     * @param buscarMercancia Lista de resultados de tipo `Mercancias`.
      */
-    setbuscarMercancia(buscarMercancia: Mercancias[]): void {
-      this.update((state) => ({ ...state, buscarMercancia }));
-    }
+    setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+    this.update((state) => ({ ...state, buscarMercancia }));
+  }
+
       /**
    * Actualiza los valores del formulario de mercancía.
    * @param values Clave/valor con información sobre la mercancía.
@@ -948,4 +949,21 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       },
     }));
   }
+  /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setProductores(productores: HistoricoColumnas[]): void {
+    this.update((state) => ({ ...state, productores }));
+  }
+ setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+      this.update((state) => ({
+        ...state,
+        agregarProductoresExportador: [
+          ...state.agregarProductoresExportador,
+          {...productor},
+        ],
+      }));
+    }
+  
 }

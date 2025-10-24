@@ -21,7 +21,7 @@ import { CertificadoDeOrigenComponent } from '../../../../shared/components/cert
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IDPROCEDIMIENTO } from '../../constantes/peru-certificado.model';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { ConfiguracionColumna, Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Mercancias } from '../../models/plantas-consulta.model';
 import { Modal } from 'bootstrap';
@@ -30,6 +30,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
 import { Tramite110221Store } from '../../estados/tramite110221.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 
 /**
  * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
@@ -239,6 +240,8 @@ export class CertificadoOrigenComponent
    */
   @ViewChild('certificadoDeOrigen')
   certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
 
   /**
    * Constructor del componente.
@@ -338,9 +341,9 @@ export class CertificadoOrigenComponent
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     // this.pais = this.tramiteQuery.paisBloques;
     this.datos1 = (
-      this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancias[]>
+      this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>
     ).pipe(
-      map((mercancias: Mercancias[]) => mercancias as unknown as Mercancia[])
+      map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
     );
   }
 
@@ -446,19 +449,64 @@ export class CertificadoOrigenComponent
   /**
    * Busca la mercancia y actualiza los datos en el store.
    */
-  buscarrMercancia(): void {
-    this.certificadoService
-      .obtenerMercancia()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Mercancias[]) => {
-          this.store.setbuscarMercancia(data);
-        },
-        () => {
-          this.toastr.error('Error al buscar Mercancia');
+buscarrMercancia(): void {  
+  const PAYLOAD = {
+    rfcExportador: 'AAL0409235E6', // Replace with the appropriate field for the new component
+    tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] }, // Adjust field names as needed
+    pais: { cvePais: this.formCertificado['bloque'] || '' }, // Adjust field names as needed
+  };
+
+  console.log('Payload:', PAYLOAD);
+
+  this.certificadoService
+    .buscarMercanciasCert(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+                console.log('Raw API Response:', response); // Log the raw API response
+
+        // interface TratadoAplicable {
+        //   nombreTratado?: string;
+        // }
+
+        interface ResponseItem {
+          idMercancia?: number | null;
+          fraccionArancelaria?: string;
+          numeroRegistro?: string;
+          fechaExpedicion?: string;
+          fechaVencimiento?: string;
+          nombreTecnico?: string;
+          
+          nombreComercial?: string;
+      
         }
-      );
-  }
+
+        interface ResponseType {
+          datos?: ResponseItem[];
+        }
+
+       const MAPPED_DATA: Mercancia[] = ((response as ResponseType)?.datos ?? []).map((item: ResponseItem): Mercancia => ({
+         id: item.idMercancia ?? undefined,
+         fraccionArancelaria: item.fraccionArancelaria || '',
+         numeroDeRegistrodeProductos: item.numeroRegistro || '',
+         nombreTecnico: item.nombreTecnico || '',
+         nombreComercial: item.nombreComercial || '',
+         fechaExpedicion: item.fechaExpedicion || '',
+         fechaVencimiento: item.fechaVencimiento || '',
+         fraccionNaladi: '',
+         fraccionNaladiSa93: '',
+         fraccionNaladiSa96: '',
+         fraccionNaladiSa02: ''
+       }));
+                  console.log('Mapped Data:', MAPPED_DATA); // Log the mapped data
+        this.store.setbuscarMercancia(MAPPED_DATA);
+      },
+      error: () => {
+
+        this.toastr.error('Error al buscar Mercancia');
+      },
+    });
+}
 
   /**
    * @method abrirModalCargaPorArchivo
@@ -560,16 +608,16 @@ export class CertificadoOrigenComponent
    *
    * @returns {boolean} Indica si el formulario es válido.
    */
-  validarFormulario(): boolean {
-    let isValid = true;
+ validarFormulario(): boolean {
+    let ESVALIDO = true;
     if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validarFormularios()) {
-        isValid = false;
+      if (!this.certificadoDeOrigen.validatorCheck()) {
+        ESVALIDO = false;
       }
     } else {
-      isValid = false;
+      ESVALIDO = false;
     }
-    return isValid;
+    return ESVALIDO;
   }
 
   /**

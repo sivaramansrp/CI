@@ -90,6 +90,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   }
   /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.destinatario?.validateAllForms() ?? true;
+  }
+
+  /**
 * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
 * Luego reinicializa el formulario con los valores actualizados desde el store.
 */
@@ -146,7 +153,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     if (this.destinatario) {
-      if (!this.destinatario.validatorCheck()) {
+      if (!this.destinatario.validateAllForms()) {
         isValid = false;
       }
     } else {
@@ -160,6 +167,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       isValid = false;
     }
+    
     return isValid;
   }
 }

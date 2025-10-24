@@ -78,6 +78,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * ```
    */
   idiomaDatos: Catalogo[] = [];
+  public idProcedimiento = 110221;
 
   /**
    * @description
@@ -207,6 +208,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
+
     this.idiomOpcion();
     this.entidadFederativasOpcion();
     this.representacionFederalOpcion();
@@ -399,7 +401,7 @@ representacionFederalOpcion(): void {
    * ```
    */
   validarFormulario(): boolean {
-    return this.datosCertificadoDeRef.validarFormularios();
-  }
+      return this.datosCertificadoDeRef.validarFormularios();
+    }
  
 }
