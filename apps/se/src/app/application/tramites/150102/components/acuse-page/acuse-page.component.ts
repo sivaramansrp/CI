@@ -1,8 +1,6 @@
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS, AccionesTabla, AcuseComponent, TITULO_ACUSE, TXT_ALERTA_ACUSE } from "@libs/shared/data-access-user/src";
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
-
 /**
  * Componente de la página de Acuse
  * Este componente está diseñado para manejar y mostrar datos relacionados con 

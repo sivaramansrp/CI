@@ -8,9 +8,24 @@
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ListaDeDatosFinal, RadioOpcion, TercerosrelacionadosdestinoTable } from '../../models/220202/fitosanitario.model';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  ListaDeDatosFinal,
+  RadioOpcion,
+  TercerosrelacionadosdestinoTable,
+} from '../../models/220202/fitosanitario.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
@@ -36,7 +51,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     InputRadioComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './agregardestinatario.component.html',
 })
@@ -72,7 +87,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * Catálogo de países.
    * @type {Catalogo[]}
    */
-  pairsCatalog: Catalogo[] = [];
+  paisCatalog: Catalogo[] = [];
 
   /**
    * Catálogo de estados.
@@ -122,7 +137,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly fitosanitarioQuery: FitosanitarioQuery,
     private validacionesService: ValidacionesFormularioService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.paisCatalogChange();
+  }
 
   /**
    * Inicializa el formulario y carga datos si existe un destinatario seleccionado.
@@ -135,7 +152,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
-      pais: ['1', Validators.required],
+      pais: ['MEX', Validators.required],
       codigoPostal: ['', [Validators.minLength(5), Validators.maxLength(5)]],
       estado: ['', Validators.required],
       municipio: [''],
@@ -145,10 +162,11 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
-      correo: ['']
+      correo: [''],
     });
 
-    this.agriculturaApiService.getAllDatosForma()
+    this.agriculturaApiService
+      .getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: ListaDeDatosFinal) => {
         const DESTINATARIO = data.seletedTerceros;
@@ -159,7 +177,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
             primerApellido: DESTINATARIO.primerApellido || '',
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
-            pais: DESTINATARIO.pais || '1',
+            pais: DESTINATARIO.pais || 'MEX',
             codigoPostal: DESTINATARIO.codigoPostal || '',
             estado: DESTINATARIO.estado || '',
             municipio: DESTINATARIO.municipio || '',
@@ -169,11 +187,10 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
             numeroInterior: DESTINATARIO.numeroInterior || '',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
-            correo: DESTINATARIO.correo || ''
+            correo: DESTINATARIO.correo || '',
           });
         }
       });
-
   }
 
   /**
@@ -181,21 +198,19 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method ngAfterViewInit
    */
   ngAfterViewInit(): void {
-    this.pairsCatalogChange();
     this.estadoCatalogChange();
-    this.municipioCatalogChange();
-    this.coloniaCatalogChange();
   }
 
   /**
    * Obtiene el catálogo de países.
-   * @method pairsCatalogChange
+   * @method paisCatalogChange
    */
-  pairsCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
+  paisCatalogChange(): void {
+    this.tercerosrelacionadosService
+      .obtieneCatalogoConsultaPaises(220202)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.pairsCatalog = data;
+      .subscribe((data) => {
+        this.paisCatalog = data.datos ?? [];
       });
   }
 
@@ -204,10 +219,13 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
+    this.destinatarioForm.get('municipio')?.patchValue('');
+    this.destinatarioForm.get('colonia')?.patchValue('');
+    this.tercerosrelacionadosService
+      .obtieneCatalogoEntidadesFederativasGeneral(220202)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.estadoCatalog = data;
+      .subscribe((data) => {
+        this.estadoCatalog = data.datos ?? [];
       });
   }
 
@@ -215,11 +233,17 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * Obtiene el catálogo de municipios.
    * @method municipioCatalogChange
    */
-  municipioCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('municipios.json')
+  municipioCatalogChange(cveEntidad: Catalogo): void {
+    this.destinatarioForm.get('colonia')?.patchValue('');
+    this.destinatarioForm.get('municipio')?.patchValue('');
+    this.tercerosrelacionadosService
+      .obtieneCatalogoEntidadFederativaMunicipios(
+        220202,
+        cveEntidad.clave ?? ''
+      )
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.municipioCatalog = data;
+      .subscribe((data) => {
+        this.municipioCatalog = data.datos ?? [];
       });
   }
 
@@ -227,11 +251,13 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * Obtiene el catálogo de colonias.
    * @method coloniaCatalogChange
    */
-  coloniaCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('colonias.json')
+  coloniaCatalogChange(cveDelegNum: Catalogo): void {
+    this.destinatarioForm.get('colonia')?.patchValue('');
+    this.tercerosrelacionadosService
+      .obtieneCatalogoColonias(220202, cveDelegNum.clave ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.coloniaCatalog = data;
+      .subscribe((data) => {
+        this.coloniaCatalog = data.datos ?? [];
       });
   }
 
@@ -243,13 +269,19 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   onGuardarDestinatario(): void {
     if (this.isFormularioValido()) {
       const FORM_VALUE = this.destinatarioForm.value;
-      
+
       // Obtener las descripciones de los catálogos para complementar los datos
-      const MUNICIPIO_DESCRIPCION = this.obtenerDescripcionMunicipio(FORM_VALUE.municipio);
-      const ESTADO_DESCRIPCION = this.obtenerDescripcionEstado(FORM_VALUE.estado);
+      const MUNICIPIO_DESCRIPCION = this.obtenerDescripcionMunicipio(
+        FORM_VALUE.municipio
+      );
+      const ESTADO_DESCRIPCION = this.obtenerDescripcionEstado(
+        FORM_VALUE.estado
+      );
       const PAIS_DESCRIPCION = this.obtenerDescripcionPais(FORM_VALUE.pais);
-      const COLONIA_DESCRIPCION = this.obtenerDescripcionColonia(FORM_VALUE.colonia);
-      
+      const COLONIA_DESCRIPCION = this.obtenerDescripcionColonia(
+        FORM_VALUE.colonia
+      );
+
       // Crear el objeto con los valores del formulario y las descripciones
       const DESTINATARIO_DATA: TercerosrelacionadosdestinoTable = {
         ...FORM_VALUE,
@@ -258,7 +290,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
         municipioDescripcion: MUNICIPIO_DESCRIPCION,
         estadoDescripcion: ESTADO_DESCRIPCION,
         paisDescripcion: PAIS_DESCRIPCION,
-        coloniaDescripcion: COLONIA_DESCRIPCION
+        coloniaDescripcion: COLONIA_DESCRIPCION,
       };
 
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
@@ -277,7 +309,12 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method obtenerDescripcionPais
    */
   obtenerDescripcionPais(paisId: string): string {
-    return this.pairsCatalog?.find(p => p.id?.toString() === paisId?.toString())?.descripcion || paisId || '';
+    return (
+      this.paisCatalog?.find((p) => p.id?.toString() === paisId?.toString())
+        ?.descripcion ||
+      paisId ||
+      ''
+    );
   }
 
   /**
@@ -287,7 +324,12 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method obtenerDescripcionEstado
    */
   obtenerDescripcionEstado(estadoId: string): string {
-    return this.estadoCatalog?.find(e => e.id?.toString() === estadoId?.toString())?.descripcion || estadoId || '';
+    return (
+      this.estadoCatalog?.find((e) => e.id?.toString() === estadoId?.toString())
+        ?.descripcion ||
+      estadoId ||
+      ''
+    );
   }
 
   /**
@@ -297,7 +339,13 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method obtenerDescripcionMunicipio
    */
   obtenerDescripcionMunicipio(municipioId: string | undefined): string {
-    return this.municipioCatalog?.find(m => m.id?.toString() === municipioId?.toString())?.descripcion || municipioId || '';
+    return (
+      this.municipioCatalog?.find(
+        (m) => m.id?.toString() === municipioId?.toString()
+      )?.descripcion ||
+      municipioId ||
+      ''
+    );
   }
 
   /**
@@ -307,7 +355,13 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method obtenerDescripcionColonia
    */
   obtenerDescripcionColonia(coloniaId: string | undefined): string {
-    return this.coloniaCatalog?.find(c => c.id?.toString() === coloniaId?.toString())?.descripcion || coloniaId || '';
+    return (
+      this.coloniaCatalog?.find(
+        (c) => c.id?.toString() === coloniaId?.toString()
+      )?.descripcion ||
+      coloniaId ||
+      ''
+    );
   }
 
   /**
@@ -352,25 +406,25 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   isFormularioValido(): boolean {
     const TIPO_PERSONA = this.destinatarioForm.get('tipoMercancia')?.value;
-    
+
     // Campos comunes siempre requeridos
     const CAMPOS_COMUNES = ['pais', 'estado', 'calle', 'numeroExterior'];
-    const CAMPOS_COMUNES_VALIDOS = CAMPOS_COMUNES.every(campo => {
+    const CAMPOS_COMUNES_VALIDOS = CAMPOS_COMUNES.every((campo) => {
       const CONTROL = this.destinatarioForm.get(campo);
       return CONTROL?.valid;
     });
-    
+
     if (!CAMPOS_COMUNES_VALIDOS) {
       return false;
     }
-    
+
     // Validación específica según tipo de persona
     if (TIPO_PERSONA === 'no') {
       // Moral: Solo razón social es requerida
       const RAZON_SOCIAL = this.destinatarioForm.get('razonSocial');
       return RAZON_SOCIAL?.valid === true;
     }
-    
+
     // Física: Nombre y primer apellido son requeridos
     const NOMBRE = this.destinatarioForm.get('nombre');
     const PRIMER_APELLIDO = this.destinatarioForm.get('primerApellido');
@@ -391,12 +445,12 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       // Moral: Razón social es requerida, nombre y apellidos no
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
-      
+
       NOMBRE_CTRL?.clearValidators();
       NOMBRE_CTRL?.setValue('');
       NOMBRE_CTRL?.updateValueAndValidity();
       NOMBRE_CTRL?.markAsUntouched();
-      
+
       PRIMER_APELLIDO_CTRL?.clearValidators();
       PRIMER_APELLIDO_CTRL?.setValue('');
       PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
@@ -405,10 +459,10 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       // Física: Nombre y apellidos son requeridos, razón social no
       NOMBRE_CTRL?.setValidators([Validators.required]);
       NOMBRE_CTRL?.updateValueAndValidity();
-      
+
       PRIMER_APELLIDO_CTRL?.setValidators([Validators.required]);
       PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
-      
+
       RAZON_SOCIAL_CTRL?.clearValidators();
       RAZON_SOCIAL_CTRL?.setValue('');
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();

@@ -34,8 +34,10 @@ import {
   ListaDeDatosFinal,
 } from '../../models/220202/fitosanitario.model';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 
 @Component({
   selector: 'app-mercancia-form',
@@ -181,6 +183,23 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   isInspeccionOcularSelected: boolean = false;
 
   /**
+   * Arreglo que almacena el catálogo de tipos de requisito.
+   */
+  tipoRequisitoList: Catalogo[] = [];
+  /**
+   * @description Lista de paises.
+   * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de paises en el formulario.
+   */
+  catalogosDatosPaisOrigenList: Catalogo[] = [];
+
+  /**
+   * @description Lista de pais Destino.
+   * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de pais Destino en el formulario.
+  */
+  catalogosDatosPaisDestinoList: Catalogo[] = [];
+
+
+  /**
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios reactivos.
@@ -194,7 +213,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     private ubicaccion: Location,
     private route: ActivatedRoute,
     private readonly agriculturaApiService: AgriculturaApiService,
-    private readonly fitosanitarioQuery: FitosanitarioQuery
+    private readonly fitosanitarioQuery: FitosanitarioQuery,
+    private registroSolicitudService: RegistroSolicitudService,
+    private catalogosService: CatalogosService
   ) { }
 
   /**
@@ -202,6 +223,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Aquí se crea el formulario reactivo y se configuran los campos necesarios.
    */
   ngOnInit(): void {
+    this.obtenerCatalogos();
     this.crearFormulario();
 
     this.fitosanitarioQuery
@@ -209,6 +231,34 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: string[]) => {
         this.usoCrossListDatos = datos;
+    });
+  }
+
+  /**
+   * Metodo que englobará todos los catalogos a obtener.
+   * @returns void
+   */
+  obtenerCatalogos(): void {
+    this.obtenerCatalogoRestricciones();
+    this.obtenerCtalogosMercancia();
+
+    
+  }
+
+  /**
+   * Obtiene el catálogo de restricciones del servicio correspondiente.
+   * Realiza una llamada al servicio de catálogos para obtener las restricciones
+   * asociadas al trámite 220202.
+   * Los datos obtenidos se almacenan en la propiedad tipoRequisitoList.
+   * La suscripción se cancela automáticamente cuando el componente se destruye
+   * mediante el uso de takeUntil.
+   * @returns void
+   */
+  obtenerCatalogoRestricciones(): void {
+    this.catalogosService.obtieneCatalogoRestricciones(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.tipoRequisitoList = data.datos ?? [];
     });
   }
 
@@ -233,7 +283,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       uso: ['', Validators.required],
       paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
-      tipoProducto: [''],
+      tipoDeProducto: [''],
       numeroDeLote: ['']
     });
 
@@ -277,13 +327,34 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param event - El objeto de catálogo seleccionado que contiene la información de la fracción arancelaria
    */
   fraccionArancelariaSeleccionada(event: Catalogo): void {
-    const FRACCION_SELECCIONADA = this.catalogosDatos.fraccionArancelariaList.find((fraccion) => fraccion.id === event.id);
-    if (FRACCION_SELECCIONADA) {
-      this.mercanciaForm.patchValue({
-        descripcionFraccion: FRACCION_SELECCIONADA.descripcion,
-        umt: FRACCION_SELECCIONADA.descripcion
+    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220202, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.getNicoFraccionArancelariaLista(event);
+          this.getUnidadMedida(event);
+          this.mercanciaForm.patchValue({
+            descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción'
       });
-    }
+        }
+    );
+  }
+  /**
+    * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+    * @method getFraccionArancelariaLista
+    * @returns {void}
+    */
+  getNicoFraccionArancelariaLista(event: Catalogo): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220202, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+
+          this.catalogosDatos.nicoList = data.datos ?? [];
+        }
+    );
   }
 
   /**
@@ -292,12 +363,35 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param event - El objeto de catálogo seleccionado que contiene la información del NICO
    */
   nicoSeleccionado(event: Catalogo): void {
-    const NICO_SELECCIONADO = this.catalogosDatos.nicoList.find((nico) => nico.id === event.id);
-    if (NICO_SELECCIONADO) {
-      this.mercanciaForm.patchValue({
-        descripcionNico: NICO_SELECCIONADO.descripcion
+    this.registroSolicitudService.obtieneNicoDescripcion(220202, this.mercanciaForm.get('fraccionArancelaria')?.value, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.mercanciaForm.patchValue({
+            descripcionNico: data.datos ?? 'Sin descripción'
       });
-    }
+        }
+    );
+  }
+
+  /**
+  * @description Obtiene la descripcion de unidad de medida.
+  * @method getUnidadMedida
+  * @returns {void}
+  */
+  getUnidadMedida(event: Catalogo): void {
+    this.registroSolicitudService.obtieneUnidadMedida(220202, event.clave!)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+
+          this.mercanciaForm.patchValue({
+            umt: data.datos?.descripcion ?? 'Sin descripción'
+          });
+        }
+      );
   }
 
   /**
@@ -421,4 +515,47 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+      /**
+   * @description Obtiene la lista de paises desde un archivo JSON.
+   * @method getcatalogosDatospaisOrigenLista
+   * @returns {void}
+   */
+
+  obtenerCtalogosMercancia(): void {
+    this.getcatalogosDatospaisOrigenLista();
+    this.getcatalogosDatospaisDestinoLista()
+  }
+
+/**
+  * Realiza una petición para obtener el catálogo de pais Destino.
+*/
+  getcatalogosDatospaisOrigenLista(): void {
+    this.catalogosService.obtieneCatalogoPaises(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.catalogosDatos.paisOrigenList = data.datos ?? [];
+      }
+    );
+    
+  }
+
+  /**
+   * Realiza una petición para obtener el catálogo de pais Destino.
+  */
+    getcatalogosDatospaisDestinoLista(): void {
+    this.catalogosService.obtieneCatalogoPaisesD(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
+      }
+    );
+    
+  }
+
 }
+

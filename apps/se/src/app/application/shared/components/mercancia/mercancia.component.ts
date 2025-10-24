@@ -539,6 +539,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Cierra el modal y oculta la alerta.
    */
   cerrarModal(): void {
+    this.mercanciaForm.reset();
     this.cerrarClicado.emit();
     this.mostrarAlerta = false;
   }
@@ -723,7 +724,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionTipoFactura(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      tipoFactura: evento.clave,
+      tipoFactura: evento.descripcion,
     });
   }
 
@@ -736,7 +737,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionUMC(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      umc: evento.clave,
+      umc: evento.descripcion,
     });
   }
 

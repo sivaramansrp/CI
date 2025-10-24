@@ -265,4 +265,31 @@ validarFormularios(): boolean {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * @description
+   * Valida el estado completo del formulario de datos del certificado.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+   *
+   * @method
+   * @public
+   * @memberof DatosCertificadoDeComponent
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario
+   *
+   * @example
+   * ```typescript
+   * if (this.validarFormularios()) {
+   *   // Proceder con el envío del formulario
+   * } else {
+   *   // Mostrar mensaje de error
+   * }
+   * ```
+   */
+  validarFormularios(): boolean {
+    if (this.formDatosDelDestinatario.valid) {
+      return true;
+    }
+    this.formDatosDelDestinatario.markAllAsTouched();
+    return false;
+  }
 }

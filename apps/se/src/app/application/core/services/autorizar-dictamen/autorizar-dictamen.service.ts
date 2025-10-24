@@ -13,6 +13,7 @@ import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/c
 import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
 import { Firma } from '../../models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../../models/autorizar-requerimiento/request/firma-autorizar-request.model';
+import { IniciarAutorizarDictamen } from '../../models/autorizar-dictamen/request/iniciar-autorizar-dictamen.model';
 import { MostrarFirmaRequest } from '../../models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../../models/autorizar-requerimiento/response/mostrar-firmar-response.model';
 import { ObservacionRequest } from '../../models/autorizar-requerimiento/request/observacion-guardar-request.model';
@@ -45,11 +46,11 @@ export class AutorizarDictamenService {
    * @returns Observable con la respuesta del servidor.
    */
 
-  getIniciarDictamen(tramite: number, numFolio: string):
+  postIniciarDictamen(tramite: number, numFolio: string, PAYLOAD: IniciarAutorizarDictamen):
     Observable<BaseResponse<IniciarAutorizacionResponse>> {
     const ENDPOINT = `${this.host}${API_POST_INICIAR_AUTORIZAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
 
-    return this.http.get<BaseResponse<IniciarAutorizacionResponse>>(ENDPOINT);
+    return this.http.post<BaseResponse<IniciarAutorizacionResponse>>(ENDPOINT, PAYLOAD);
   }
 
   /** 

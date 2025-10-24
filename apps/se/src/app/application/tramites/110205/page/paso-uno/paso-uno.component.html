@@ -18,31 +18,11 @@
             </li>
         </ul>
         <ng-container>
-            @switch (indice) {
-            @case (1) {
-            <solicitante></solicitante>
-            }
-            @case (2){
-                @if(esDatosRespuesta){
-                <app-certificado-origen></app-certificado-origen>
-                }
-            }
-            @case (3){
-                @if (esDatosRespuesta){
-                <app-peru-historico-productores></app-peru-historico-productores>
-                }
-            }
-            @case (4){
-                @if(esDatosRespuesta){
-                <app-peru-destinatario></app-peru-destinatario>
-                }
-            }
-            @case (5){
-                @if(esDatosRespuesta){
-                <app-peru-datos-certificado></app-peru-datos-certificado>
-                }
-            }
-            }
+            <solicitante #solicitante [hidden]="indice !== 1"></solicitante>
+            <app-certificado-origen #certificadoOrigen [hidden]="indice !== 2"></app-certificado-origen>
+            <app-peru-historico-productores #peruHistoricoProductores [hidden]="indice !== 3"></app-peru-historico-productores>
+            <app-peru-destinatario #peruDestinatarioComponent [hidden]="indice !== 4"></app-peru-destinatario>
+            <app-peru-datos-certificado #datosCertificado [hidden]="indice !== 5"></app-peru-datos-certificado>
         </ng-container>
     </div>
 </div>

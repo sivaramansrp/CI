@@ -2,7 +2,9 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { IniciarDictamenResponse } from "../../../core/models/shared/iniciar-dictamen-response.model";
+import { ConfiguracionColumna } from "../../../core/models/shared/configuracion-columna.model";
+
+import { HistorialObservacione, IniciarDictamenResponse } from "../../../core/models/shared/iniciar-dictamen-response.model";
 import { SentidosDisponiblesResponse } from "../../../core/models/shared/sentidos-disponibles.model";
 import { ValidacionesFormularioService } from "../../../core/services/shared/validaciones-formulario/validaciones-formulario.service";
 
@@ -10,6 +12,8 @@ import { CriteriosResponse } from "../../../core/models/shared/criterios-respons
 import { DictamenForm } from "../../../core/models/shared/dictamen-form.model";
 import { IniciarAutorizacionResponse } from "../../../core/models/shared/iniciar-autorizar-dictamen-response.model";
 import { Subject } from "rxjs";
+import { TablaDinamicaComponent } from "../tabla-dinamica/tabla-dinamica.component";
+import { TituloComponent } from "../titulo/titulo.component";
 
 
 
@@ -33,11 +37,17 @@ import { Subject } from "rxjs";
 @Component({
   selector: 'app-generar-dictamen',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, TituloComponent],
   templateUrl: './generar-dictamen.component.html',
   styleUrl: './generar-dictamen.component.scss',
 })
 export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * @event controlDictaminador
+   * @description Emite un valor booleano al componente padre indicando el estado del dictaminador.
+   * Si se emite true, el dictaminador está activo; si se emite false, está inactivo.
+   */
+  @Output() controlDictaminador: EventEmitter<boolean> = new EventEmitter();
 
   /**
    * @property {boolean} sentidoInput
@@ -151,6 +161,23 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
    * @description Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroy$ = new Subject<void>();
+
+  /** Datos para las observaciones de dictamen */
+  public evaluarObservacionesDictamen: HistorialObservacione[] = [];
+
+  /**
+   * Configuración de la tabla de observaciones del dictamen.
+   *
+   * Define las columnas que se mostrarán en la tabla de observaciones del dictamen,
+   * incluyendo encabezado, clave de acceso a los datos y orden de despliegue.
+   */
+  public tablaObservacionesDictamen: ConfiguracionColumna<HistorialObservacione>[] = [
+    { encabezado: "Fecha de generación", clave: (e: HistorialObservacione) => e.fecha_observacion, orden: 1 },
+    { encabezado: "Fecha de atención", clave: (e: HistorialObservacione) => e.fecha_atencion, orden: 2 },
+    { encabezado: "Generada por", clave: (e: HistorialObservacione) => e.cve_usuario, orden: 3 },
+    { encabezado: "Estatus", clave: (e: HistorialObservacione) => e.estado_observacion, orden: 4 },
+    { encabezado: "Detalle", clave: (e: HistorialObservacione) => e.observacion, orden: 5 }
+  ];
   
   /**
    * @constructor
@@ -216,6 +243,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
     if(this.inputSentidos){
       this.dictamenForm.removeControl('cumplimiento');
     }
+     this.controlDictaminador.emit(true); 
   }
 
   /**
@@ -304,6 +332,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
         fechaInicioVigenciaAutorizada: this.dataIniciarDictamen.fecha_inicio_vigencia,
         fechaFinVigenciaAutorizada: this.dataIniciarDictamen.fecha_fin_vigencia,
       });
+      this.evaluarObservacionesDictamen = this.dataIniciarDictamen.historial_observaciones || [];
     }
 
      if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
@@ -384,5 +413,6 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+     this.controlDictaminador.emit(false);
   }
 }

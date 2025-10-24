@@ -12,7 +12,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
-import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { OPCION_TABLA, PRODUCTO_TABLA_218, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260218State, Tramite260218Store } from '../../estados/tramite260218Store.store';
 import { CommonModule } from '@angular/common';
@@ -125,7 +125,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
-    configuracionTabla: PRODUCTO_TABLA,
+    configuracionTabla: PRODUCTO_TABLA_218,
     datos: [] as TablaMercanciasDatos[],
   };
 
