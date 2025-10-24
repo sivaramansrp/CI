@@ -41,9 +41,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
-/** Referencia al componente CertificadoDeOrigenComponent para marcar campos como tocados */
-  @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
+export class CertificadoOrigenComponent
+  implements OnInit, AfterViewInit, OnDestroy {
+  /** Referencia al componente CertificadoDeOrigenComponent para marcar campos como tocados */
+  @ViewChild('certificadoDeOrigen')
+  certificadoDeOrigen!: CertificadoDeOrigenComponent;
   /** Referencia al componente mercanciaComponent para marcar campos como tocados */
   @ViewChild('MercanciaComponent') mercanciaComponent?: MercanciaComponent;
   /**
@@ -52,8 +54,9 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    *
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
- 
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] =
+    CARGA_MERCANCIA_EXPORT;
+
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -134,7 +137,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   datosTabla$: Mercancia[] = [];
 
-
   /**
    * @descripcion
    * Valores actuales del formulario de certificado.
@@ -207,8 +209,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery,
-    private toastr: ToastrService,
-
+    private toastr: ToastrService
   ) {
     this.query.formCertificado$
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
@@ -232,7 +233,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
-      this.query.selectPeru$
+    this.query.selectPeru$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state: Tramite110222State) => {
@@ -259,10 +260,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         })
       )
       .subscribe();
-     this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
+    this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
 
-   /**
+  /**
    * @method validarFormulario
    * @description
    * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
@@ -272,7 +273,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @returns {boolean} Indica si el formulario es válido.
    */
   validarFormulario(): boolean {
-    let isValid = true;
+     let isValid = true;
     if (this.certificadoDeOrigen) {
       if (!this.certificadoDeOrigen.validarFormularios()) {
         isValid = false;
@@ -302,7 +303,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-     setTimeout(() => {
+    setTimeout(() => {
       this.processBuscarMercancias();
     }, 100);
   }
@@ -336,27 +337,25 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.store.setBloque(estado);
   }
 
- private processBuscarMercancias(): void {
-    // Get selected catalog values from the store state
+  private processBuscarMercancias(): void {
     const SELECTED_ESTADO = this.certificadoState?.estado;
-    const SELECTED_BLOQUE = this.certificadoState?.paisBloques; // bloque is stored as an array
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
 
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
-      tratadoAcuerdo: {"idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',},
-      pais: {"cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',},
+      tratadoAcuerdo: {
+        idTratadoAcuerdo: SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
+      },
+      pais: { cvePais: SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '' },
     };
 
-    this.ValidarInicialmenteCertificadoService
-
-      .buscarMercanciasCert(PAYLOAD)
+    this.ValidarInicialmenteCertificadoService.buscarMercanciasCert(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: any) => {
           console.log(response);
           const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
             (item: any) => ({
-              
               id: item.idMercancia,
               fraccionArancelaria: item.fraccionArancelaria || '',
               numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
@@ -370,7 +369,8 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
               valorDeContenidoRegional: item.valorDeContenidoRegional || '',
               normaOrigen: item.normaOrigen || '',
               otrasInstancias: item.otrasInstancias || '',
-              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              criterioParaTratoPreferencial:
+                item.criterioParaTratoPreferencial || '',
               cantidad: '',
               umc: '',
               tipoFactura: '',
@@ -388,9 +388,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
           );
           this.datosTablaUno$ = of(MAPPED_DATA || []);
 
-          this.store.setbuscarMercancia(
-            MAPPED_DATA
-          );
+          this.store.setbuscarMercancia(MAPPED_DATA);
         },
         error: () => {
           // this.toastr.error('Error al buscar Mercancia');
@@ -452,10 +450,9 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
    * @param {Mercancia[]} event - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
    */
-   guardarClicado(evento: Mercancia[]): void {
+  guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
   }
-  
 
   /**
    * Emite los datos de una mercancía seleccionada y los guarda en el store.
@@ -469,13 +466,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-    
-    const PAYLOAD = {
-      rfcExportador: "AAL0409235E6",
-      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.tratado || '' },
-      pais: { cvePais: this.certificadoState.pais || '' }
-    };
 
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.tratado || '' },
+      pais: { cvePais: this.certificadoState.pais || '' },
+    };
   }
 
   /**

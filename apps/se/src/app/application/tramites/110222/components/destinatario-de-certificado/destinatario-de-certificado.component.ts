@@ -222,6 +222,32 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     return valid;
   }
 
+  validarFormulario(): boolean {
+     let isValid = true;
+    if (this.datosDelDestinatarioComponent) {
+      if (!this.datosDelDestinatarioComponent.markAllFieldsTouched()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.representanteLegalExportadorComponent) {
+      if (!this.representanteLegalExportadorComponent.markAllFieldsTouched()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
+
   /**
    * @method datosDelDestinatarioFunc
    * @descripcion

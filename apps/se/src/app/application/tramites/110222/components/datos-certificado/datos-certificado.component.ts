@@ -120,7 +120,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     /**
      * Asignación de los observables que contienen los catálogos de datos a los que se puede suscribir el componente.
      */
-    this.idiomaDatos$ = this.tramiteQuery.selectIdioma$;
+    // this.idiomaDatos$ = this.tramiteQuery.selectIdioma$;
     this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
     this.representacionFederal$ = this.tramiteQuery.selectrepresentacionFederal$;
   }

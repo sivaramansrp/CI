@@ -5,7 +5,7 @@ import { Tramite110222State, Tramite110222Store } from '../estados/tramite110222
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { PROC_110222 } from '../servers/api-route';
+import { PROC_110222, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
 import { Tramite110222Query } from '../estados/tramite110222.query';
 
 /**
@@ -134,9 +134,12 @@ export class ValidarInicialmenteCertificadoService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: any) {
-    return this.httpService.post<any>(PROC_110222.GUARDAR, { body: body });
-    // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
+  // guardarDatosPost(body: any) {
+  //   return this.httpService.post<any>(PROC_110222.GUARDAR, { body: body });
+  //   // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
+  // }
+   guardarDatosPost( body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110222.GUARDAR, { body: body });
   }
 
   /**
@@ -222,15 +225,61 @@ export class ValidarInicialmenteCertificadoService {
   return RESULT;
 }
 
-  /**
-   * @method obtenerProductorPorExportador
-   * @description
-   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
-   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
-   */
-  obtenerProductoruNevo(body: any): Observable<any> {
-    return this.httpService.post<any>(PROC_110222.AGREGAR_PRODUCTOR, {
-      body: body,
-    });
+  //  obtenerProductorPorExportador(): Observable<ProductorExportador> {
+  //      return this.httpService.get<ProductorExportador>(
+  //     PROC_110222.BUSCAR_PRODUCTOR
+  //   );
+  // }
+
+   agregarProductores(body: {rfc_solicitante: string}): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110222.AGREGAR_PRODUCTOR, { body: body });
   }
+  
+  obtenerProductorPorExportador(rfc: string): Observable<Record<string, unknown>> {
+      return this.http.get<Record<string, unknown>>(PRODUCTORS_EXPORTADOR(rfc));
+    }
+
+    /** Construye el objeto certificado a partir del estado del trámite TramiteState. */
+  buildCertificado(item: Tramite110222State): unknown {    
+    return {
+      tratado_acuerdo: item.formCertificado['entidadFederativa'] || '',
+      pais_bloque: item.formCertificado['bloque'] || '',
+      fraccion_arancelaria: item.formCertificado['fraccionArancelaria'] || '',
+      nombre_comercial: item.formCertificado['nombreComercial'] || '',
+      fecha_inicio: item.formCertificado['fechaInicio'] || '',
+      fecha_fin: item.formCertificado['fechaFin'] || '',
+      registro_producto: item.formCertificado['registroProducto'] || '',
+      realizo_tercer_operador: {
+        tercer_operador: item.formCertificado['si'] || false,
+        nombre: item.formCertificado['nombres'] || '',
+        primer_apellido: item.formCertificado['primerApellido'] || '',
+        segundo_apellido: item.formCertificado['segundoApellido'] || '',
+        numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'] || '',
+        razon_social: item.formCertificado['razonSocial'] || '',
+      },
+      domicilio_tercer_operador:{
+        pais: item.formCertificado['pais'] || '',
+        calle: item.formCertificado['calle'] || '',
+        Ciudad: item.formCertificado['ciudad'] || '',
+        numero_letra: item.formCertificado['numeroLetra'] || '',
+        lada: item.formCertificado['lada'] || '',
+        telefono: item.formCertificado['telefono'] || '',
+        correo_electronico:item.formCertificado['correo'],
+        fax:item.formCertificado['fax']
+      },
+      mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaTabla),
+    };
+  }
+
+  /** Construye el objeto datos del certificado a partir del estado del trámite TramiteState. */
+  buildDatosCertificado(data: Tramite110222State): unknown {
+      return {
+        "observaciones": data.formDatosCertificado['observacionesDates'] ?? '',
+        "idioma": data.formDatosCertificado['idiomaDates'] ?? 0,
+        "representacion_federal": {
+            "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
+            "representacion_federal": data.formDatosCertificado['representacionFederalDates'] ?? 0
+        }
+      }
+    }
 }

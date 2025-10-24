@@ -18,31 +18,31 @@
             </li>
         </ul>
         <ng-container>
-            @switch (indice) {
-            @case (1) {
-            <solicitante></solicitante>
-            }
+            <!-- @switch (indice) {
+            @case (1) { -->
+            <solicitante #solicitante [hidden]="indice !== 1"></solicitante>
+            <!-- }
             @case (2){
-                  @if(esDatosRespuesta){
-                <app-certificado-origen #CertificadoOrigen></app-certificado-origen>
-                  }
+                  @if(esDatosRespuesta){ -->
+                <app-certificado-origen *ngIf="esDatosRespuesta" #CertificadoOrigen [hidden]="indice !== 2"></app-certificado-origen>
+                  <!-- }
             }
             @case (3){
-                  @if(esDatosRespuesta){
-                <app-historico-de-productores></app-historico-de-productores>
-                  }
+                  @if(esDatosRespuesta){ -->
+                <app-historico-de-productores *ngIf="esDatosRespuesta" #HistoricoDeProductoresComponent [hidden]="indice !== 3"></app-historico-de-productores>
+                  <!-- }
             }
             @case (4){
-                  @if(esDatosRespuesta){
-                <app-destinatario-de-certificado #DestinatarioDeCertificadoComponent></app-destinatario-de-certificado>
-                  }
+                  @if(esDatosRespuesta){ -->
+                <app-destinatario-de-certificado *ngIf="esDatosRespuesta" #DestinatarioDeCertificadoComponent [hidden]="indice !== 4"></app-destinatario-de-certificado>
+                  <!-- }
             }
             @case (5){
-                  @if(esDatosRespuesta){
-                <app-datos-certificado></app-datos-certificado>
-                  }
+                  @if(esDatosRespuesta){ -->
+                <app-datos-certificado *ngIf="esDatosRespuesta" #DatosCertificado [hidden]="indice !== 5"></app-datos-certificado>
+                  <!-- }
             }
-            }
+            } -->
         </ng-container>
     </div>
 </div>

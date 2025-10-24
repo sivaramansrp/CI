@@ -1,40 +1,34 @@
-import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Catalogo,
+  HistoricoColumnas,
+  MercanciaTabla,
+} from '../../models/peru-certificado.module';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import {
+  Tramite110222State,
+  Tramite110222Store,
+} from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
 
 @Component({
   selector: 'app-historico-de-productores',
   templateUrl: './historico-de-productores.component.html',
   styleUrl: './historico-de-productores.component.scss',
 })
-
 export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
-  /**
-   * Marca todos los campos del formulario como tocados y retorna si el formulario es válido.
-   */
-  public validateAll(): boolean {
-    if ((this as any).formHistorico) {
-      Object.values((this as any).formHistorico.controls).forEach(control => {
-        const c = control as import('@angular/forms').AbstractControl;
-        c.markAsTouched();
-        c.updateValueAndValidity();
-      });
-      return (this as any).formHistorico.valid;
-    }
-    return true;
-  }
 
   /**
    * @property {boolean} ocultarFax
    * Indica si el campo de fax debe estar oculto o visible en la interfaz de usuario.
-    * @default true
+   * @default true
    */
-  ocultarFax: boolean = true;
+  ocultarFax: boolean = false;
 
   /**
    * @property esTipoDeSeleccionado
@@ -50,16 +44,14 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
    * @command Este arreglo se utiliza para poblar un componente de selección en la interfaz de usuario.
    */
-  optionsTipoFactura: Catalogo[] = [];
+  public optionsTipoFactura: Catalogo[] = [];
   /**
    * Lista de productores disponibles para el exportador.
    */
   productoresExportador: HistoricoColumnas[] = [];
-  /**
-   * @property {mercanciaProductores} mercancia - Arreglo que contiene información de las mercancías.
-   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
-   */
-  public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+
+  /** Observable que expone la lista de mercancia al store. */
+  public mercanciaProductores!: Mercancia[];
   /**
    * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
    * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
@@ -84,9 +76,9 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    */
   public agregarDatosProductor!: { [key: string]: unknown };
   /**
-* Indica si el formulario está en modo solo lectura.
-* Cuando es `true`, los campos del formulario no se pueden editar.
-*/
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
 
   /**
@@ -96,14 +88,17 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   /** Observable que expone la lista de productores exportador agregados al store. */
   public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
 
+  /** RFC del usuario actualmente autenticado utilizado para consultas y servicios. */
+  private loginRFC = 'AAL0409235E6';
+  
   /**
    * Constructor del componente.
-   * 
+   *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {ValidarInicialmenteCertificadoService} ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con los productores.
    * @param {Tramite110222Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite110222Query} tramiteQuery - Query para obtener el estado del trámite.
-  */
+   */
   constructor(
     public fb: FormBuilder,
     private certificadoDeService: ValidarInicialmenteCertificadoService,
@@ -114,12 +109,21 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
+   *
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
     this.agregarProductoresExportador$ = this.tramiteQuery.selectAgregarProductoresExportador$;
-    this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
+    this.tramiteQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          this.productoresExportador = seccionState.productoresExportador || [];
+          this.mercanciaProductores = seccionState.mercanciaTabla;
+        })
+      )
+      .subscribe();
     this.tramiteQuery.selectTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -127,30 +131,33 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe();;
+      .subscribe();
 
+    this.cargarProductorPorExportador();
     if (this.solicitudState.optionsTipoFactura.length === 0) {
       this.facturaOpcion();
     } else {
       this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
     }
 
-    // this.tramiteQuery.formulario$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.tramiteState = seccionState;
-    //       if (seccionState?.['productorMismoExportador']) {
-    //         this.cargarProductorPorExportador();
-    //       }
-    //     })
-    //   )
-    //   .subscribe();
-    this.tramiteQuery.agregarDatosProductorFormulario$.pipe(
-      takeUntil(this.destroyNotifier$), map((seccionState) => {
-        this.agregarDatosProductor = seccionState;
-      })
-    ).subscribe();
+    this.tramiteQuery.formulario$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.tramiteQuery.agregarDatosProductorFormulario$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.agregarDatosProductor = seccionState;
+        })
+      )
+      .subscribe();
+
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -164,23 +171,47 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
-  // cargarProductorPorExportador(): void {
-  //   this.certificadoDeService.obtenerProductorPorExportador()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe(respuesta => {
-  //       this.productoresExportador = respuesta.datos;
-  //     });
-  // }
+  cargarProductorPorExportador(): void {
+    this.certificadoDeService.obtenerProductorPorExportador(this.loginRFC)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          const DATOS = (response as { datos: unknown[] }).datos;
+          const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+            const PRODUCTOR = item as {
+              nombreCompleto?: string;
+              rfc?: string;
+              direccionCompleta?: string;
+              correoElectronico?: string;
+              telefono?: string;
+              fax?: string;
+            };
+            return {
+              id: index + 1,
+              nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+              numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+              direccion: PRODUCTOR.direccionCompleta ?? '',
+              correoElectronico: PRODUCTOR.correoElectronico ?? '',
+              telefono: PRODUCTOR.telefono ?? '',
+              fax: PRODUCTOR.fax ?? '',
+            };
+          });
 
+          this.store.setProductoresExportador(RESULT);
+        },
+        error: () => {
+          //
+        },
+      });
+  }
   /**
    * @descripcion
    * Obtiene la lista de países disponibles.
    */
   facturaOpcion(): void {
-    this.certificadoDeService.getTipoFactura()
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
+    this.certificadoDeService
+      .getTipoFactura()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.optionsTipoFactura = data.datos as Catalogo[];
         this.store.setTipoFacturaOpciones(this.optionsTipoFactura);
@@ -188,153 +219,104 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
-  // cargarMercancia(): void {
-  //   this.certificadoDeService.obtenerMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
-  //     this.mercancia = respuesta.datos;
-  //   });
-  // }
-
-  /**
    * Establece valores en el estado del store para un formulario histórico.
-   * 
+   *
    * @param event - Objeto que contiene los datos necesarios para actualizar el store.
    * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
    * @param event.campo - Nombre del campo que se actualizará en el store.
    * @param event.valor - Valor que se asignará al campo en el store.
    * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
-   * 
+   *
    * @returns void
    */
-  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStore(event: { formGroupName: string; campo: string; valor: undefined; storeStateName: string; }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormHistorico({ [CAMPO]: VALOR });
   }
 
   /**
    * Establece valores en el store para agregar datos del formulario del productor.
-   * 
+   *
    * @param event - Objeto que contiene los datos necesarios para actualizar el store.
    * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
    * @param event.campo - Nombre del campo que se actualizará en el store.
    * @param event.valor - Valor que se asignará al campo en el store.
    * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
-   * 
+   *
    * @returns void
-   * 
+   *
    * @command Actualiza el estado del store con los valores proporcionados.
    */
-  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: string | number | boolean | null, storeStateName: string }): void {
+  setValoresStoreAgregarForm(event: { formGroupName: string; campo: string; valor: string | number | boolean | null; storeStateName: string; }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }
 
-  conseguirDisponiblesDatos(): void {
-    const SELECTED_RFC = this.agregarDatosProductor['numeroRegistroFiscal'];
-    console.log('Selected RFC:', SELECTED_RFC);
-    const PAYLOAD = {
-      rfc_solicitante: SELECTED_RFC,
-    };
-    this.certificadoDeService
-      .obtenerProductoruNevo(PAYLOAD)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: any) => {
-          console.log('Response from agregar productor nuevo:', response);
-          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
-            (item: any) => ({
-              id: item.id,
-              nombreProductor: item.nombreCompleto,
-              numeroRegistroFiscal: item.rfc,
-              direccion: item.direccionCompleta,
-              correoElectronico: item.correoElectronico,
-              telefono: item.telefono,
-              fax: item.fax,
-            })
-          );
-
-          this.store.setProductores(MAPPED_DATA);
-        },
-        error: () => {
-          // this.toastr.error('Error al buscar Mercancia');
-        },
-      });
-
-    // this.mercanciasDisponibles = true;
-  }
-
   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
-     const PAYLOAD = {
-      rfc_solicitante: event.numeroRegistroFiscal,
-    };
-    console.log('PAYLOAD', PAYLOAD);
-    console.log(
-      'Event received in emitAgregarExportador:',
-      this.solicitudState.agregarProductoresExportador
-    );
-    this.certificadoDeService
-      .obtenerProductoruNevo(PAYLOAD)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: any) => {
-          console.log('Response from agregar productor nuevo:', response);
-          const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
-            (item: any) => ({
-              id: item.id,
-              nombreProductor: item.nombreCompleto,
-              numeroRegistroFiscal: item.rfc,
-              direccion: item.direccionCompleta,
-              correoElectronico: item.correoElectronico,
-              telefono: item.telefono,
-              fax: item.fax,
-            })
-          );
-          // this.datosTablaUno$ = of(MAPPED_DATA || []);
-          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
-          console.log('MAPPED_DATA', MAPPED_DATA);
-          this.store.setProductores(MAPPED_DATA);
-        },
-        error: () => {
-          // this.toastr.error('Error al buscar Mercancia');
-        },
-      });
-    // if (event && typeof event === 'object' && 'nombreProductor' in event) {
-    //   DATOS = {
-    //     id: (event as HistoricoColumnas).id ?? 0,
-    //     nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
-    //     numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
-    //     direccion: String((event as HistoricoColumnas).direccion ?? ''),
-    //     correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
-    //     telefono: String((event as HistoricoColumnas).telefono ?? ''),
-    //     fax: String((event as HistoricoColumnas).fax ?? '')
-    //   };
-    // } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
-    //   DATOS = {
-    //     id: 0,
-    //     nombreProductor: "LAURA CONTRERAS",
-    //     numeroRegistroFiscal: String(event['numeroRegistroFiscal'] ?? ''),
-    //     direccion: "SAN GABRIEL 144 DURANGO",
-    //     correoElectronico: "laura2992@hotmail.com",
-    //     telefono: "044-6182999535",
-    //     fax: String(event['fax'] ?? '') || '6182999535'
-    //   };
-    // }
-    // if (DATOS) {
-    //   this.store.setAgregarProductoresExportador(DATOS);
-    // }
-    // if (this.solicitudState.agregarProductoresExportador.length) {
-    //   this.cargarMercancia();
-    // }
+    let DATOS: HistoricoColumnas | null = null;
+    if (event && typeof event === 'object' && 'nombreProductor' in event) {
+      DATOS = {
+        id: (event as HistoricoColumnas).id ?? 0,
+        nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+        numeroRegistroFiscal: String((event as HistoricoColumnas).numeroRegistroFiscal ?? ''),
+        direccion: String((event as HistoricoColumnas).direccion ?? ''),
+        correoElectronico: String((event as HistoricoColumnas).correoElectronico ?? ''),
+        telefono: String((event as HistoricoColumnas).telefono ?? ''),
+        fax: String((event as HistoricoColumnas).fax ?? '')
+      };
+      this.store.setAgregarProductoresExportador([DATOS]);
+    } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
+      const PAYLOAD = {
+        rfc_solicitante: String(event['numeroRegistroFiscal'] ?? ''),
+      };
+      this.certificadoDeService
+        .agregarProductores(PAYLOAD)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response: unknown) => {
+            const DATOS = (response as { datos: unknown[] }).datos;
+            const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+              const PRODUCTOR = item as {
+                nombreCompleto?: string;
+                rfc?: string;
+                direccionCompleta?: string;
+                correoElectronico?: string;
+                telefono?: string;
+                fax?: string;
+              };
+              return {
+                id: index + 1,
+                nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+                numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+                direccion: PRODUCTOR.direccionCompleta ?? '',
+                correoElectronico: PRODUCTOR.correoElectronico ?? '',
+                telefono: PRODUCTOR.telefono ?? '',
+                fax: PRODUCTOR.fax ?? '',
+              };
+            });
+            this.store.setAgregarProductoresExportador(RESULT);
+          },
+          error: () => {
+            //
+          }
+        })
+    }
   }
 
   /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
-    this.isFormValid = event;
+    this.store.setFormValidity('histProductores', event);
+  }
+
+  /**
+* Actualiza la lista de mercancías en el store con los datos recibidos del evento.
+* @param event Arreglo de objetos de tipo Mercancia a asignar.
+*/
+ setMercanciaDatos(event: Mercancia[]): void {
+    this.store.setmercanciaTabla(event);
   }
   /**
    * Método que se ejecuta al destruir el componente.
-   * 
    * Libera los recursos y cancela las suscripciones activas.
    */
   ngOnDestroy(): void {

@@ -125,12 +125,17 @@ export class DatosDelDestinatarioComponent
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
-  public markAllFieldsTouched(): void {
-    if (this.formDatosDelDestinatario) {
-      this.formDatosDelDestinatario.markAllAsTouched();
-    }
-  }
+  public markAllFieldsTouched(): boolean{
+    // if (this.formDatosDelDestinatario) {
+    //   this.formDatosDelDestinatario.markAllAsTouched();
+    // }
 
+     if (this.formDatosDelDestinatario.invalid) {
+      this.formDatosDelDestinatario.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
   /**
    * Inicializa el formulario 'formDatosDelDestinatario' con los campos requeridos.
    *
