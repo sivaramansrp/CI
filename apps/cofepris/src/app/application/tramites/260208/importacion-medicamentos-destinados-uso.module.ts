@@ -1,4 +1,4 @@
-import { AlertComponent,PasoCargaDocumentoComponent,PasoFirmaComponent } from '@ng-mf/data-access-user';
+import { AlertComponent,PasoFirmaComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { ImportacionMedicamentosDestinadosUsoRoutingModule } from './importacion-medicamentos-destinados-uso-routing.module';
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { PasoCargaDocumentoComponent } from '@libs/shared/data-access-user/src';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -16,6 +17,8 @@ import { TercerosRelacionadosVistaComponent } from './components/terceros-relaci
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
+
 
 @NgModule({
   declarations: [
