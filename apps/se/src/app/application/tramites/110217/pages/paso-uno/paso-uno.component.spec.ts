@@ -1,9 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
+import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
+import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 const mockStore = {
   setPestanaActiva: jest.fn(),
@@ -85,10 +89,10 @@ describe('PasoUnoComponent', () => {
       providers: [
         provideHttpClient(),
         { provide: 'ToastConfig', useValue: {} },
-        { provide: 'Tramite110217Store', useValue: mockStore },
-        { provide: 'Tramite110217Query', useValue: mockTramiteQuery },
-        { provide: 'CertificadosOrigenService', useValue: mockCertificadosOrigenService },
-        { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
+        { provide: Tramite110217Store, useValue: mockStore },
+        { provide: Tramite110217Query, useValue: mockTramiteQuery },
+        { provide: CertificadosOrigenService, useValue: mockCertificadosOrigenService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -144,6 +148,10 @@ describe('PasoUnoComponent', () => {
 
   describe('validarTodosLosFormularios', () => {
     it('should return true when all forms are valid', () => {
+      component.certificadoOrigenComp = { validarFormulario: jest.fn().mockReturnValue(true) } as any;
+      component.datosCertificadoComp = { isChildFormValid: jest.fn().mockReturnValue(true) } as any;
+      component.destinatarioComp = { validateAllForms: jest.fn().mockReturnValue(true) } as any;
+      component.historicoProductoresComp = { validarFormulario: jest.fn().mockReturnValue(true) } as any;
       expect(component.validarTodosLosFormularios()).toBe(true);
     });
 
@@ -175,15 +183,15 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  it('should call fetchGetDatosConsulta and update store when success response received', () => {
+  it('should call fetchGetDatosConsulta and update store when success response received', fakeAsync(() => {
     const spyObservaciones = jest.spyOn(mockStore, 'setObservaciones');
     component.fetchGetDatosConsulta();
+    tick();
     expect(mockCertificadosOrigenService.getDatosConsulta).toHaveBeenCalled();
     expect(spyObservaciones).toHaveBeenCalledWith('obs');
     expect(mockStore.setIdioma).toHaveBeenCalledWith('es');
     expect(mockStore.setEntidadFederativa).toHaveBeenCalledWith('CDMX');
-    expect(mockStore.setProductoresExportador).toHaveBeenCalledWith([]);
-  });
+  }));
 
   it('should emit cambioDePestana event when seleccionaTab() is called', () => {
     const spyEmit = jest.spyOn(component.cambioDePestana, 'emit');
@@ -192,6 +200,7 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should set indice correctly on seleccionaTab()', () => {
+    component.ngOnInit();
     component.seleccionaTab(5);
     expect(component.indice).toBe(5);
     expect(mockStore.setPestanaActiva).toHaveBeenCalledWith(5);

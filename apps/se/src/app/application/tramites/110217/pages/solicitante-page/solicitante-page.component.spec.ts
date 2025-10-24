@@ -120,4 +120,41 @@ describe('SolicitantePageComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
+
+  it('should call toastrService.error when shouldNavigate$ response is not OK', (done) => {
+    const mockResponse = { codigo: '01', mensaje: 'Error saving' };
+    jest.spyOn(serviceMock, 'getAllState').mockReturnValue(of({}));
+    jest.spyOn(component, 'guardar').mockResolvedValue(mockResponse);
+    const toastrService = TestBed.inject(ToastrService);
+    const errorSpy = jest.spyOn(toastrService, 'error');
+    (component as any).shouldNavigate$().subscribe((result: any) => {
+      expect(result).toBe(false);
+      expect(errorSpy).toHaveBeenCalledWith('Error saving');
+      done();
+    });
+  });
+
+  it('should handle error in guardar() and reject promise', async () => {
+    jest.spyOn(serviceMock, 'guardarDatosPost').mockReturnValue({
+      subscribe: ({ error }: any) => error('Network error')
+    } as any);
+    await expect(component.guardar({ formulario: {} } as any)).rejects.toBe('Network error');
+  });
+
+  it('should set idSolicitud to 0 when response datos.id_solicitud is invalid', async () => {
+    jest.spyOn(serviceMock, 'guardarDatosPost').mockReturnValue(of({ datos: { id_solicitud: null } }));
+    const setIdSpy = jest.spyOn(storeMock, 'setIdSolicitud');
+    await component.guardar({ formulario: {} } as any);
+    expect(setIdSpy).toHaveBeenCalledWith(0);
+  });
+
+  it('should not navigate when shouldNavigate$ returns false', () => {
+    component.pasoUnoComponent = { validarTodosLosFormularios: jest.fn().mockReturnValue(true) } as any;
+    component.wizardComponent = { siguiente: jest.fn() } as any;
+    jest.spyOn(component as any, 'shouldNavigate$').mockReturnValue(of(false));
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
 });
