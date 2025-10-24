@@ -11,6 +11,7 @@
             id="cveAduana"
             formControlName="cveAduana"
             [ngClass]="isValid(datosAduana, 'cveAduana') ? 'required' : ''"
+            [isDisabled]="soloLectura"
             (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"
           ></app-catalogo-select>
         </div>
@@ -21,6 +22,7 @@
             [required]="false"
             id="cveSeccionAduanal"
             formControlName="cveSeccionAduanal"
+            [isDisabled]="soloLectura"
             [ngClass]="
               isValid(datosAduana, 'cveSeccionAduanal') ? 'required' : ''
             "
@@ -40,6 +42,7 @@
             [required]="false"
             id="cveRecintoFiscalizado"
             formControlName="cveRecintoFiscalizado"
+            [isDisabled]="soloLectura"
             [ngClass]="
               isValid(datosAduana, 'cveRecintoFiscalizado') ? 'required' : ''
             "
@@ -66,6 +69,7 @@
             [required]="true"
             id="cveTipoDocumento"
             formControlName="cveTipoDocumento"
+            [isDisabled]="soloLectura"
             [ngClass]="
               isValid(datosPedimento, 'cveTipoDocumento') ? 'required' : ''
             "
@@ -81,8 +85,7 @@
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
-          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
-          oficial') {
+          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
           <div>
             <label class="form-label" for="estadoTipoDocumento"
               >Estado del tipo de documento</label
@@ -143,15 +146,16 @@
                 (change)="
                   setValoresStore(datosPedimento, 'aduana', 'setAduana')
                 "
+                (keyup)="limpiarSoloNumeros($event)"
               />
-              <span
+              <small
                 class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.aduana')?.invalid
                         || solicitudFormulario.get('datosPedimento.aduana')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.aduana')?.touched"
               >
                 Este campo es obligatorio.
-              </span>
+              </small>
             </div>
           </div>
           <div class="col-md-4">
@@ -181,15 +185,16 @@
                 (change)="
                   setValoresStore(datosPedimento, 'patente', 'setPatente')
                 "
+                (keyup)="limpiarSoloNumeros($event)"
               />
-              <span
+              <small
                 class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.patente')?.invalid
                         || solicitudFormulario.get('datosPedimento.patente')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.patente')?.touched"
               >
                 Este campo es obligatorio.
-              </span>
+              </small>
             </div>
           </div>
           <div class="col-md-4">
@@ -221,19 +226,19 @@
                 (change)="
                   setValoresStore(datosPedimento, 'pedimento', 'setPedimento')
                 "
+                (keyup)="limpiarSoloNumeros($event)"
               />
-              <span
+              <small
                 class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.pedimento')?.invalid
                         || solicitudFormulario.get('datosPedimento.pedimento')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.pedimento')?.touched"
               >
                 Este campo es obligatorio.
-              </span>
+              </small>
             </div>
           </div>
-          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio
-          VUCEM'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio VUCEM'){
           <div>
             <label class="form-label" for="folioImportacionTemporal"
               >Folio de importación temporal</label
@@ -248,7 +253,7 @@
               id="folioImportacionTemporal"
               name="folioImportacionTemporal"
               type="text"
-              max="25"
+              maxlength="25"
               class="form-control no-spinner"
               formControlName="folioImportacionTemporal"
               [ngClass]="
@@ -267,23 +272,22 @@
             @if(solicitudFormulario.get('datosPedimento.folioImportacionTemporal')?.invalid
             &&
             solicitudFormulario.get('datosPedimento.folioImportacionTemporal')?.touched){
-            <span class="text-danger">Este campo es obligatorio.</span>
+            <small class="text-danger">Este campo es obligatorio.</small>
             }@else if(solicitudFormulario.get(
             'datosPedimento.folioImportacionTemporal' )?.errors?.['maxlength']
             && solicitudFormulario.get(
             'datosPedimento.folioImportacionTemporal' )?.touched){
-            <span class="text-danger">El folio debe de ser de 25 dígitos.</span>
+            <small class="text-danger">El folio debe de ser de 25 dígitos.</small>
             }@else if(solicitudFormulario.get(
             'datosPedimento.folioImportacionTemporal' )?.errors?.['pattern'] &&
             solicitudFormulario.get( 'datosPedimento.folioImportacionTemporal'
             )?.touched){
-            <span class="text-danger"
-              >El folio solicitado no cuenta con coincidencias</span
+            <small class="text-danger"
+              >El folio solicitado no cuenta con coincidencias</small
             >
             }
           </div>
-          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato
-          oficial'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato oficial'){
           <div>
             <label class="form-label" for="folioFormatoOficial"
               >Folio de formato oficial</label
@@ -309,19 +313,19 @@
                   'setFolioFormatoOficial'
                 )
               "
+              (keyup)="limpiarAlfanumerico($event)"
             />
             @if(solicitudFormulario.get('datosPedimento.folioFormatoOficial')?.invalid
             &&
             solicitudFormulario.get('datosPedimento.folioFormatoOficial')?.touched){
-            <span class="text-danger">Este campo es obligatorio.</span>
+            <small class="text-danger">Este campo es obligatorio.</small>
             }
           </div>
           }
         </div>
         <div class="col-md-2">
-          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
-          oficial') {
-          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">Validar</button>
+          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" >Validar</button>
           }
         </div>
         <div class="col-md-5">
@@ -363,11 +367,6 @@
                 maxlength="25"
                 class="form-control"
                 formControlName="folioOficialProrroga"
-                [ngClass]="
-                  isValid(datosPedimento, 'folioOficialProrroga')
-                    ? 'required'
-                    : ''
-                "
                 (change)="
                   setValoresStore(
                     datosPedimento,
@@ -375,6 +374,7 @@
                     'setFolioOficialProrroga'
                   )
                 "
+                (keyup)="limpiarAlfanumerico($event)"
               />
             </div>
           </div>
@@ -388,6 +388,7 @@
               [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false : true"
               [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true : soloLectura"
               [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
+              [deshabilitarFuturas]="true"
               (valorCambiado)="cambioImportacionTemporal($event)"
             ></input-fecha>
           </div>
@@ -400,6 +401,7 @@
               [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false : true"
               [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true : soloLectura"
               [setFecha]="datosPedimento.get('fechaVencimiento')?.value"
+              [deshabilitarPasadas]="true"
               (valorCambiado)="cambioVencimiento($event)"
             ></input-fecha>
           </div>
@@ -418,6 +420,7 @@
               rows="5"
               class="form-control textarea"
               formControlName="descMercancia"
+              maxlength="4000"
               [ngClass]="
                 isValid(datosPedimento, 'descMercancia') ? 'required' : ''
               "
@@ -429,6 +432,12 @@
                 )
               "
             ></textarea>
+            @if (datosPedimento.get('descMercancia')?.hasError('required') && 
+                 datosPedimento.get('descMercancia')?.touched) {
+              <div class="text-danger">
+                <small>Este campo es obligatorio.</small>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -511,6 +520,7 @@
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         [configuracionTabla]="tablaDeDatos.encabezadas"
         [datos]="tablaDeDatos.datos"
+        [styleCenter]="true"
         (listaDeFilaSeleccionada)="filaSeleccionada($event)"
         [disableSeleccionTablaCheckBox]="soloLectura ? true : false"
       ></app-tabla-dinamica>
@@ -563,6 +573,7 @@
             [catalogo]="medioDeTransporte"
             [label]="'Medio de transporte'"
             [required]="true"
+            [isDisabled]="soloLectura"
             id="cveMedioTrasporte"
             formControlName="cveMedioTrasporte"
             [ngClass]="
@@ -619,7 +630,7 @@
                 datosMedioTransporte.get('guiaMaster')?.touched
               "
             >
-              <span class="text-danger">Este campo es obligatorio</span>
+              <small class="text-danger">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -658,7 +669,7 @@
                 datosMedioTransporte.get('guiaBl')?.touched
               "
             >
-              <span class="text-danger">Este campo es obligatorio</span>
+              <small class="text-danger">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -697,7 +708,7 @@
                 datosMedioTransporte.get('numeroBl')?.touched
               "
             >
-              <span class="text-danger">Este campo es obligatorio</span>
+              <small class="text-danger">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -803,6 +814,7 @@
           <app-catalogo-select
             [catalogo]="paisDeProcedencia"
             [label]="'País de procedencia'"
+            [isDisabled]="soloLectura"
             [required]="false"
             id="cvePaisProcedencia"
             formControlName="cvePaisProcedencia"
@@ -931,15 +943,8 @@
               maxlength="10"
               class="form-control"
               formControlName="tipContenedor"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tipContenedor') ? 'required' : ''
-              "
               (change)="
-                setValoresStore(
-                  datosMedioTransporte,
-                  'tipContenedor',
-                  'setTipContenedor'
-                )
+                setTipContenedorValue($event)
               "
             />
           </div>
@@ -951,7 +956,6 @@
         <div class="col-md-4">
           <div>
             <label class="form-label" for="tranporteMarca">Marca</label>
-            <span class="require form-label" id="tranporteMarca">*</span>
             <label class="form-label" for="tranporteMarca">:</label>
           </div>
           <div>
@@ -962,11 +966,6 @@
               class="form-control"
               maxlength="20"
               formControlName="tranporteMarca"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tranporteMarca')
-                  ? 'required'
-                  : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -980,7 +979,6 @@
         <div class="col-md-4">
           <div>
             <label class="form-label" for="tranporteModelo">Modelo</label>
-            <span class="require form-label" id="tranporteModelo">*</span>
             <label class="form-label" for="tranporteModelo">:</label>
           </div>
           <div>
@@ -991,11 +989,6 @@
               maxlength="20"
               class="form-control"
               formControlName="tranporteModelo"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tranporteModelo')
-                  ? 'required'
-                  : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -1009,7 +1002,6 @@
         <div class="col-md-4">
           <div>
             <label class="form-label" for="tranportePlaca">Placa</label>
-            <span class="require form-label" id="tranportePlaca">*</span>
             <label class="form-label" for="tranportePlaca">:</label>
           </div>
           <div>
@@ -1020,11 +1012,6 @@
               class="form-control"
               maxlength="10"
               formControlName="tranportePlaca"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'tranportePlaca')
-                  ? 'required'
-                  : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -1049,9 +1036,6 @@
               maxlength="500"
               formControlName="observaciones"
               class="form-control textarea"
-              [ngClass]="
-                isValid(datosMedioTransporte, 'observaciones') ? 'required' : ''
-              "
               (change)="
                 setValoresStore(
                   datosMedioTransporte,
@@ -1123,6 +1107,13 @@
                       )
                     "
                   ></textarea>
+                  @if (mercanciaFormulario.get('modalDescMercancia')?.hasError('required') && 
+                       mercanciaFormulario.get('modalDescMercancia')?.touched && 
+                       !mercanciaFormulario.get('modalDescMercancia')?.disabled) {
+                    <div class="text-danger">
+                      <small>Este campo es obligatorio.</small>
+                    </div>
+                  }
                 </div>
               </div>
               <div class="col-md-6">
@@ -1157,6 +1148,12 @@
                       )
                     "
                   ></textarea>
+                  @if (mercanciaFormulario.get('espeMercancia')?.hasError('required') && 
+                       mercanciaFormulario.get('espeMercancia')?.touched) {
+                    <div class="text-danger">
+                      <small>Este campo es obligatorio.</small>
+                    </div>
+                  }
                 </div>
               </div>
             </div>

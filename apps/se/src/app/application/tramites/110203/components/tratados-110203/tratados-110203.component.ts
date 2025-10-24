@@ -2,9 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent, formatDateToYYYYMMDD } from '@libs/shared/data-access-user/src';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
-
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el trámite 110203.
  * Este componente se encarga de inicializar y gestionar un formulario reactivo con campos específicos
@@ -101,41 +100,33 @@ export class Tratados110203Component implements OnInit, OnDestroy {
    * El formulario incluye los campos 'tratado', 'bloque', 'origen', 'destino', 'expedicion', 'vencimiento'.
    */
   private inicializarFormulario(): void {
-    this.tramite110203Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud110203State;
-        })
-      )
-      .subscribe();
+  this.tramite110203Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.solicitudState = seccionState as Solicitud110203State;
 
-    // Inicializa el formulario con valores del estado de la solicitud
-    this.tratadosForm = this.fb.group({
-      tratado: [this.solicitudState.tratado, Validators.required],
-      bloque: [this.solicitudState.bloque, Validators.required],
-      origen: [this.solicitudState.origen, Validators.required],
-      destino: [this.solicitudState.destino, Validators.required],
-      expedicion: [this.solicitudState.expedicion, Validators.required],
-      vencimiento: [this.solicitudState.vencimiento, Validators.required],
-    });
-
-    this.updateForm();
-  }
-
-  /**
-   * Método que deshabilita el formulario y establece los valores predeterminados en cada campo.
-   */
-  updateForm(): void {
-    this.tratadosForm.disable(); // Deshabilita el formulario para que no se pueda modificar
-
-    // Carga los valores predeterminados en cada uno de los controles del formulario
-    this.tratadosForm.get('tratado')?.setValue('Tratado de Libre Comercio México-,');
-    this.tratadosForm.get('bloque')?.setValue('ISLANDIA (REPUBLICA DE)');
-    this.tratadosForm.get('origen')?.setValue('México');
-    this.tratadosForm.get('destino')?.setValue('ISLANDIA (REPUBLICA DE)');
-    this.tratadosForm.get('expedicion')?.setValue('2025-02-18');
-    this.tratadosForm.get('vencimiento')?.setValue('2026-02-18');
+    if (!this.tratadosForm) {
+        this.tratadosForm = this.fb.group({
+          tratado: [this.solicitudState.tratado, Validators.required],
+          bloque: [this.solicitudState.bloque, Validators.required],
+          origen: [this.solicitudState.origen, Validators.required],
+          destino: [this.solicitudState.bloque, Validators.required],
+          expedicion: [formatDateToYYYYMMDD(this.solicitudState.expedicion), Validators.required],
+          vencimiento: [formatDateToYYYYMMDD(this.solicitudState.vencimiento), Validators.required],
+        });
+        this.tratadosForm.disable();
+      } else {
+        this.tratadosForm.patchValue({
+          tratado: this.solicitudState.tratado,
+          bloque: this.solicitudState.bloque,
+          origen: this.solicitudState.origen,
+          destino: this.solicitudState.bloque,
+          expedicion: formatDateToYYYYMMDD(this.solicitudState.expedicion),
+          vencimiento: formatDateToYYYYMMDD(this.solicitudState.vencimiento),
+        });  
+        this.tratadosForm.disable();
+      }
+  });
   }
 
   /**
