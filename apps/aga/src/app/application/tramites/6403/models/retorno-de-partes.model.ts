@@ -41,6 +41,18 @@ export interface SolicitudTabla {
    * Descripción de la mercancía del Solicitud.
    */
   descripcionMercancia: string;
+
+  /**
+   * Especificación de la mercancía del Solicitud.
+   */
+  espeMercancia: string;
+
+  /**
+   * Número de parte de la mercancía del Solicitud.
+   */
+  numParteMercancia: string;
+
+  
 }
 
 /**
@@ -503,4 +515,12 @@ export interface ConsultaDatos {
    * cancelan registros de mercancías dentro del flujo de la aplicación.
    */
   mercanciaFormulario: MercanciaFormulario;
+
+  /**
+   * Arreglo con los datos de la tabla de partes reemplazadas.
+   *
+   * Contiene la información de las partes que han sido reemplazadas
+   * en el proceso de solicitud del trámite.
+   */
+  tablaPartesReemplazadasDatos: SolicitudTabla[];
 }

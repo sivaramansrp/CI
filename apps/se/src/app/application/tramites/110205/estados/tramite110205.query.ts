@@ -25,11 +25,11 @@ export class Tramite110205Query extends Query<Tramite110205State> {
     return state.mercanciaTabla;
   });
 
-   /**
+  /**
    * @descripcion
    * Observable que selecciona la tabla de mercancías del estado.
    */
-   selectmercanciaTablaUno$ = this.select((state) => {
+  selectmercanciaTablaUno$ = this.select((state) => {
     return state.disponiblesDatos;
   });
 
@@ -42,17 +42,17 @@ export class Tramite110205Query extends Query<Tramite110205State> {
   });
 
   /**
- * @descripcion
- * Observable que selecciona los datos del formulario de certificado.
- */
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
   formulario$ = this.select((state) => {
     return state.formulario;
   });
 
   /**
- * @descripcion
- *  Observable que selecciona los datos del formulario de certificado.
- */
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */
   agregarDatosProductorFormulario$ = this.select((state) => {
     return state.agregarDatosProductorFormulario;
   });
@@ -80,14 +80,13 @@ export class Tramite110205Query extends Query<Tramite110205State> {
     return state.formDestinatario;
   });
 
- /**
+  /**
    * @descripcion
    * Observable que selecciona el formulario de destinatario.
    */
- selectproducto$ = this.select((state) => {
-  return state.procductoUno;
-});
-
+  selectproducto$ = this.select((state) => {
+    return state.procductoUno;
+  });
 
   /**
    * @descripcion
@@ -95,7 +94,24 @@ export class Tramite110205Query extends Query<Tramite110205State> {
    * Retorna `true` solo si todos los valores en `formaValida` son verdaderos.
    */
   FormaValida$ = this.select((state) => {
-    return Object.values(state.formaValida).every(value => value === true);
+    return Object.values(state.formaValida).every((value) => value === true);
+  });
+
+  /**
+   * @propiedad selectCambioModalidad$
+   * @tipo Observable<CambioModalidadState>
+   * @descripción Selector que permite obtener el estado completo de `CambioModalidadState`.
+   */
+  selectCambioModalidad$ = this.select((state) => {
+    return state;
+  });
+
+  /**
+   * Selecciona la mercancía que se está buscando.
+   * @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.
+   */
+  selectBuscarMercancia$ = this.select((state) => {    
+    return state.buscarMercancia;
   });
 
   selectAgregarProductoresExportador$ = this.select((state) => {
