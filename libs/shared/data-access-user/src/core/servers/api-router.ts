@@ -440,7 +440,13 @@ export const API_POST_GUARDAR_CERTIFICADO = (idSolicitud: string, tramite: numbe
  */
 export const API_POST_VISTA_PREVIA_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/vista-previa`;
 
-
+/**
+ * API para guardar el aviso de desistimiento de una solicitud.
+ * @param idSolicitud Identificador de la solicitud
+ * @returns URL del endpoint para guardar el aviso de desistimiento
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t230301/swagger-ui/index.html#/aviso-desistimiento/guardar
+ */
+export const API_POST_GUARDAR_AVISO_DESISTIMIENTO = (idSolicitud: string): string => `sat-t230301/solicitud/${idSolicitud}/aviso-desistimiento/guardar`;
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
@@ -643,7 +649,13 @@ export const API_POST_DOCUMENTOS_ESPECIFICOS_REQ = (TRAMITE: string) : string =>
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/…
  */
 export const API_POST_FIRMAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
- 
+
+/**
+ * API para generar el oficio del requerimiento del trámite 110101
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Generar-Requerimiento/guardar-oficio-requerimiento
+ */
+export const API_POST_OFICIO_REQUERIMIENTO = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/${IDSOLICITUD}/requerimiento/oficio`;
+
 /**
  * API para iniciar requerimiento trámite generico
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/in…
@@ -784,6 +796,12 @@ export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${T
  */
 export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
 
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
+ */
+export const AGREGAR_PRODUCTOR = (): string => `sat-t${TRAMITE}/solicitud/agregar-productor`;
+
 
 /*
  * API para obtener el catálogo de idiomas
@@ -887,6 +905,13 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
 export const CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/TITRAC.TA/tratados-acuerdos`;
+
+/*
+  * API para obtener el catálogo de tratados y acuerdos por país
+  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
+  */
+export const CATALOGO_TRATADO_ACUERDO_PAIS_CON_ID = (TRAMITE: string, ID: string) : string => `sat-t${TRAMITE}/catalogo/${ID}/tratados-acuerdos`;
+
 
 /**
  * 

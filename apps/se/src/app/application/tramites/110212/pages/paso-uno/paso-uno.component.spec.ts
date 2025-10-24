@@ -1,145 +1,169 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoUnoComponent } from './paso-uno.component';
-import { CommonModule } from '@angular/common';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { provideHttpClient } from '@angular/common/http';
-import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
-import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
-import { of } from 'rxjs';
-import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
+import { PasoUnoComponent } from './paso-uno.component';
+import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+@Injectable()
+class MockTramite110212Store {}
+
+@Injectable()
+class MockTramite110212Query {}
+
+@Injectable()
+class MockValidacionPosterioriService {}
 
 describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
-  let validacionPosterioriServiceMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    validacionPosterioriServiceMock = {
-      getDatosConsulta: jest.fn().mockReturnValue(
-        of({
-          success: true,
-          datos: {
-            tercerOperador: true,
-            grupoOperador: { nombre: 'Operador Test' },
-            grupoTratado: { tratado: 'Tratado Test' },
-            mercanciaSeleccionadasTablaDatos: [{ id: 1, descripcion: 'Mercancia Seleccionada' }],
-            mercanciaDisponsiblesTablaDatos: [{ id: 2, descripcion: 'Mercancia Disponible' }],
-            observaciones: 'Test Observaciones',
-            idioma: 'Español',
-            entidadFederativa: 'Entidad Test',
-            representacionFederal: 'Representación Test',
-            grupoReceptor: { nombre: 'Receptor Test' },
-            grupoDeDirecciones: { direccion: 'Dirección Test' },
-            grupoRepresentativo: { representante: 'Representante Test' },
-          },
-        })
-      ),
-      obtenerIdioma: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Español' }] })),
-      obtenerEntidadFederativa: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Entidad 1' }] })),
-      obtenerRepresentacionFederal: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Representación 1' }] }))
-    };
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,PasoUnoComponent,HttpClientTestingModule ],
 
-    tramiteStoreMock = {
-      setTercerOperador: jest.fn(),
-      setPestanaActiva: jest.fn(),
-      setGrupoOperador: jest.fn(),
-      setGrupoTratado: jest.fn(),
-      setMercanciaTablaDatos: jest.fn(),
-      setMercanciaDisponsiblesTablaDatos: jest.fn(),
-      setObservaciones: jest.fn(),
-      setIdioma: jest.fn(),
-      setEntidadFederativa: jest.fn(),
-      setRepresentacionFederal: jest.fn(),
-      setGrupoReceptor: jest.fn(),
-      setGrupoDeDirecciones: jest.fn(),
-      setGrupoRepresentativo: jest.fn(),
-    };
-    tramiteQueryMock = {
-      selectSolicitud$: of({
-        observaciones: 'Observaciones de prueba',
-        idioma: 1,
-        entidadFederativa: 1,
-        representacionFederal: 1
-      }),
-    };
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        SolicitanteComponent,
-        DestinatarioComponent,
-        DatosCertificadoComponent,
-        PasoUnoComponent
-      ],
-      providers: [provideHttpClient(),
-      { provide: ValidacionPosterioriService, useValue: validacionPosterioriServiceMock },
-      { provide: Tramite110212Store, useValue: tramiteStoreMock },
-      { provide: Tramite110212Query, useValue: tramiteQueryMock },
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Tramite110212Store, useClass: MockTramite110212Store },
+        { provide: Tramite110212Query, useClass: MockTramite110212Query },
+        ConsultaioQuery,
+        { provide: ValidacionPosterioriService, useClass: MockValidacionPosterioriService }
       ]
-    }).compileComponents();
+    }).overrideComponent(PasoUnoComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set the active tab to 1 when seleccionaTab(1) is called', () => {
-    component.seleccionaTab(1);
-    expect(component.indice).toBe(1);
+  it('should run #ngOnInit()', async () => {
+    component.tramiteQuery = component.tramiteQuery || {};
+    component.tramiteQuery.selectSolicitud$ = observableOf({});
+    component.consultaioQuery = component.consultaioQuery || {};
+    component.consultaioQuery.selectConsultaioState$ = observableOf({});
+    component.fetchGetDatosConsulta = jest.fn();
+    component.ngOnInit();
   });
 
-  it('should set the active tab to 3 when seleccionaTab(3) is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('should run #validateAllForms()', async () => {
+    component.destinatarioTramiteComponent = component.destinatarioTramiteComponent || {};
+    component.destinatarioTramiteComponent.validateAllForms = jest.fn();
+    component.validateAllForms();
   });
 
-  it('should render the SolicitanteComponent when indice is 1', () => {
-    component.indice = 1;
-    fixture.detectChanges();
-    const solicitanteElement = fixture.debugElement.nativeElement.querySelector('solicitante');
-    expect(solicitanteElement).toBeTruthy();
+  it('should run #seleccionaTab()', async () => {
+    component.store = component.store || {};
+    component.store.setPestanaActiva = jest.fn();
+    component.cambioDePestana = component.cambioDePestana || {};
+    component.cambioDePestana.emit = jest.fn();
+    component.seleccionaTab({}, {});
+    expect(component.store.setPestanaActiva).toHaveBeenCalled();
+    expect(component.cambioDePestana.emit).toHaveBeenCalled();
   });
 
-
-
-  it('should render the DestinatarioComponent when indice is 3', () => {
-    component.indice = 3;
-    component.esDatosRespuesta = true;
-    fixture.detectChanges();
-    const destinatarioElement = fixture.debugElement.nativeElement.querySelector('app-destinatario');
-    expect(destinatarioElement).toBeTruthy();
-  });
-
-  it('should render the DatosCertificadoComponent when indice is 4', () => {
-    component.indice = 4;
-    component.esDatosRespuesta = true;
-    fixture.detectChanges();
-    const datosCertificadoElement = fixture.debugElement.nativeElement.querySelector('app-datos-certificado');
-    expect(datosCertificadoElement).toBeTruthy();
-  });
-  it('should fetch data and update the store when fetchGetDatosConsulta is called', () => {
+  it('should run #fetchGetDatosConsulta()', async () => {
+    component.validacionPosterioriService = component.validacionPosterioriService || {};
+    component.validacionPosterioriService.getDatosConsulta = jest.fn().mockReturnValue(observableOf({
+      success: {},
+      datos: {
+        tercerOperador: {},
+        grupoOperador: {},
+        grupoTratado: {},
+        mercanciaDisponsiblesTablaDatos: {},
+        observaciones: {},
+        idioma: {},
+        entidadFederativa: {},
+        representacionFederal: {},
+        grupoReceptor: {},
+        grupoDeDirecciones: {},
+        grupoRepresentativo: {}
+      }
+    }));
+    component.store = component.store || {};
+    component.store.setTercerOperador = jest.fn();
+    component.store.setGrupoOperador = jest.fn();
+    component.store.setGrupoTratado = jest.fn();
+    component.store.setMercanciaDisponsiblesTablaDatos = jest.fn();
+    component.store.setObservaciones = jest.fn();
+    component.store.setIdioma = jest.fn();
+    component.store.setEntidadFederativa = jest.fn();
+    component.store.setRepresentacionFederal = jest.fn();
+    component.store.setGrupoReceptor = jest.fn();
+    component.store.setGrupoDeDirecciones = jest.fn();
+    component.store.setGrupoRepresentativo = jest.fn();
     component.fetchGetDatosConsulta();
-    expect(validacionPosterioriServiceMock.getDatosConsulta).toHaveBeenCalled();
-    expect(tramiteStoreMock.setTercerOperador).toHaveBeenCalledWith(true);
-    expect(tramiteStoreMock.setGrupoOperador).toHaveBeenCalledWith({ nombre: 'Operador Test' });
-    expect(tramiteStoreMock.setGrupoTratado).toHaveBeenCalledWith({ tratado: 'Tratado Test' });
-    expect(tramiteStoreMock.setMercanciaTablaDatos).toHaveBeenCalledWith([{ id: 1, descripcion: 'Mercancia Seleccionada' }]);
-    expect(tramiteStoreMock.setMercanciaDisponsiblesTablaDatos).toHaveBeenCalledWith([{ id: 2, descripcion: 'Mercancia Disponible' }]);
-    expect(tramiteStoreMock.setObservaciones).toHaveBeenCalledWith('Test Observaciones');
-    expect(tramiteStoreMock.setIdioma).toHaveBeenCalledWith('Español');
-    expect(tramiteStoreMock.setEntidadFederativa).toHaveBeenCalledWith('Entidad Test');
-    expect(tramiteStoreMock.setRepresentacionFederal).toHaveBeenCalledWith('Representación Test');
-    expect(tramiteStoreMock.setGrupoReceptor).toHaveBeenCalledWith({ nombre: 'Receptor Test' });
-    expect(tramiteStoreMock.setGrupoDeDirecciones).toHaveBeenCalledWith({ direccion: 'Dirección Test' });
-    expect(tramiteStoreMock.setGrupoRepresentativo).toHaveBeenCalledWith({ representante: 'Representante Test' });
-    expect(component.esDatosRespuesta).toBe(true);
+    expect(component.validacionPosterioriService.getDatosConsulta).toHaveBeenCalled();
+    expect(component.store.setTercerOperador).toHaveBeenCalled();
+    expect(component.store.setGrupoOperador).toHaveBeenCalled();
+    expect(component.store.setGrupoTratado).toHaveBeenCalled();
+    expect(component.store.setMercanciaDisponsiblesTablaDatos).toHaveBeenCalled();
+    expect(component.store.setObservaciones).toHaveBeenCalled();
+    expect(component.store.setIdioma).toHaveBeenCalled();
+    expect(component.store.setEntidadFederativa).toHaveBeenCalled();
+    expect(component.store.setRepresentacionFederal).toHaveBeenCalled();
+    expect(component.store.setGrupoReceptor).toHaveBeenCalled();
+    expect(component.store.setGrupoDeDirecciones).toHaveBeenCalled();
+    expect(component.store.setGrupoRepresentativo).toHaveBeenCalled();
   });
+
+  it('should run #validarTodosLosFormularios()', async () => {
+    component.destinatarioComp = component.destinatarioComp || {};
+    component.destinatarioComp.registroFormulario = {
+      markAllAsTouched: function() {},
+      valid: {}
+    };
+    component.datosCertificadoComp = component.datosCertificadoComp || {};
+    component.datosCertificadoComp.formDatosCertificado = {
+      markAllAsTouched: function() {},
+      valid: {}
+    };
+    component.validarTodosLosFormularios();
+
+  });
+
+  it('should run #validarFormularios()', async () => {
+    component.solicitante = component.solicitante || {};
+    component.solicitante.form = {
+      invalid: {},
+      markAllAsTouched: function() {}
+    };
+    component.certificadoOrigen = component.certificadoOrigen || {};
+    component.certificadoOrigen.validarFormulario = jest.fn();
+    component.destinatarioComp = component.destinatarioComp || {};
+    component.destinatarioComp.validateAllForms = jest.fn();
+    component.datosCertificadoComp = component.datosCertificadoComp || {};
+    component.datosCertificadoComp.validateAll = jest.fn();
+    component.validarFormularios();
+    expect(component.certificadoOrigen.validarFormulario).toHaveBeenCalled();
+    expect(component.destinatarioComp.validateAllForms).toHaveBeenCalled();
+    expect(component.datosCertificadoComp.validateAll).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
 });

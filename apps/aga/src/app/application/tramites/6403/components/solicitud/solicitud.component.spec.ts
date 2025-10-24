@@ -80,6 +80,7 @@ describe('SolicitudComponent', () => {
       setEstadoTipoDocumentoDestino: jest.fn(),
       setAutoridadPresentoAvisoDestruccion: jest.fn(),
       setValoresStore: jest.fn(),
+      setTablaPartesReemplazadasDatos: jest.fn(),
     };
 
     tramiteQueryMock = {
@@ -97,7 +98,7 @@ describe('SolicitudComponent', () => {
       obtenerTipoDeDocumento: jest.fn().mockReturnValue(of({ datos: [] })),
       obtenerMedioDeTransporte: jest.fn().mockReturnValue(of({ datos: [] })),
       obtenerPaisDeProcedencia: jest.fn().mockReturnValue(of({ datos: [] })),
-      obtenerSolicitudTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' }] })),
+      obtenerSolicitudTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' }] })),
     };
 
     validacionesServiceMock = {
@@ -246,7 +247,8 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
       mercanciaFormulario: {} as any,
       pasoActivo: 1,
       pestanaActiva: 1,
-      datosSolicitante: {} as any
+      datosSolicitante: {} as any,
+      tablaPartesReemplazadasDatos: []
     };
     component.inicializarFormulario();
     expect(component.solicitudFormulario).toBeDefined();
@@ -258,7 +260,8 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
       mercanciaFormulario: {} as any,
       pasoActivo: 1,
       pestanaActiva: 1,
-      datosSolicitante: {} as any
+      datosSolicitante: {} as any,
+      tablaPartesReemplazadasDatos: []
     };
     component.inicializarMercanciaFormulario();
     expect(component.mercanciaFormulario).toBeDefined();
@@ -284,13 +287,13 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
   });
 
   it('should update filaSeleccionadaLista in filaSeleccionada', () => {
-    const rows: SolicitudTabla[] = [{ id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' }];
+    const rows: SolicitudTabla[] = [{ id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' }];
     component.filaSeleccionada(rows);
     expect(component.filaSeleccionadaLista).toEqual(rows);
   });
 
   it('should remove selected rows in eliminarMercancia', () => {
-    const row: SolicitudTabla = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' };
+    const row: SolicitudTabla = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' };
     component.tablaDeDatos.datos = [row];
     component.filaSeleccionadaLista = [row];
     component.eliminarMercancia();
@@ -371,7 +374,7 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
   });
 
   it('should open modal and patch form in modificarReemplazadas when row is selected', () => {
-    const row = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' };
+    const row = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' };
     component.filaSeleccionadaLista = [row];
     component.mercanciaFormulario = new FormBuilder().group({
       modalDescMercancia: [''],
@@ -392,7 +395,7 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
   });
 
   it('should open modal and patch form in consultarReemplazadas when row is selected', () => {
-    const row = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' };
+    const row = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' };
     component.filaSeleccionadaLista = [row];
     component.mercanciaFormulario = new FormBuilder().group({
       modalDescMercancia: [''],
@@ -513,8 +516,8 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
   it('should update existing row if ID exists in agregarMercancias', () => {
     component.filaSeleccionadaLista = [];
     component.tablaDeDatos.datos = [
-      { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' },
-      { id: 2, marca: 'X', modelo: 'Y', numeroDeSerie: 'Z', tipo: 'W', descripcionMercancia: 'Q' }
+      { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' },
+      { id: 2, marca: 'X', modelo: 'Y', numeroDeSerie: 'Z', tipo: 'W', descripcionMercancia: 'Q', espeMercancia: 'R', numParteMercancia: 'S' }
     ];
     component.mercanciaFormulario = new FormBuilder().group({
       modalDescMercancia: ['NEW_DESC'],
@@ -571,7 +574,7 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
   it('should update existing row if ID exists in agregarMercanciaBtn', () => {
     component.filaSeleccionadaLista = [];
     component.tablaDeDatos.datos = [
-      { id: 3, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' }
+      { id: 3, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E', espeMercancia: 'F', numParteMercancia: 'G' }
     ];
     component.mercanciaFormulario = new FormBuilder().group({
       modalDescMercancia: ['NEW_DESC'],

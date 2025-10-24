@@ -9,6 +9,9 @@ import { CommonModule } from '@angular/common';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
+import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
@@ -89,15 +92,25 @@ export class AgregarMercanciaComponent implements OnDestroy{
    */
   constructor(public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: FitosanitarioQuery,
-    public fitosanitarioStore: FitosanitarioStore
+    public fitosanitarioStore: FitosanitarioStore,
+    public catalogosService: CatalogosService
+
   ) {
-    this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
-      this.catalogosDatos = resp;
-    });
+    //ponemos la lista nico vacia por que s¿depende de lo que seleccione fracciona arancelaria
+    // vamos por el catalogo de Fraccion arancelaria
+    this.getFraccionArancelariaLista();
+    this.getCatalogoUnidadesMedidaComerciales();
+    this.getCatalogoUsosMercancia();
+    this.getCatalogoTiposProducto();
+
     this.fitosanitarioQuery.seleccionarState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((estado) => {
+
+          if (estado.selectedDatos[0]?.fraccionArancelaria !== undefined && estado.selectedDatos[0]?.fraccionArancelaria !== '') {
+            this.getNicoFraccionArancelariaLista(estado.selectedDatos[0].fraccionArancelaria);
+          }
           this.cuerpoTabla = estado.tablaDatos;
           const VALOR = estado.selectedDatos[0];
           if (VALOR) {
@@ -170,6 +183,90 @@ export class AgregarMercanciaComponent implements OnDestroy{
       };
     });
 
+  }
+
+  /**
+   * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+   * @method getFraccionArancelariaLista
+   * @returns {void}
+   */
+  getFraccionArancelariaLista(): void {
+    this.catalogosService.obtieneCatalogoFraccionesArancelarias(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.fraccionArancelariaList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+     * @description Obtiene la lista de unidades de medida comerciales.
+     * @method getCatalogoUnidadesMedidaComerciales
+     * @returns {void}
+     */
+  getCatalogoUnidadesMedidaComerciales(): void {
+    this.catalogosService.obtieneCatalogoUnidadesMedidaComerciales(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.umcList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+   * @description Obtiene la lista de catalogo de usos de mercancia.
+   * @method getCatalogoUsosMercancia
+   * @returns {void}
+   */
+  getCatalogoUsosMercancia(): void {
+    this.catalogosService.obtieneCatalogoUsosMercancia(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.usoList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+ * @description Obtiene la lista de catalogo tipos de producto.
+ * @method getCatalogoTiposProducto
+ * @returns {void}
+ */
+  getCatalogoTiposProducto(): void {
+    this.catalogosService.obtieneCatalogoTiposProducto(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.tipoDeProductoList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+    * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+    * @method getFraccionArancelariaLista
+    * @returns {void}
+    */
+  getNicoFraccionArancelariaLista(clave: string): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220202, clave)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.catalogosDatos.nicoList = data.datos ?? [];
+        }
+      );
   }
 
   /**

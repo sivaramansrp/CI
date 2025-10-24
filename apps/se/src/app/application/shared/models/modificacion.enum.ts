@@ -3,7 +3,8 @@ import { Catalogo } from "@libs/shared/data-access-user/src";
 export interface Mercancia {
   descripcion?(descripcion: any): unknown;
   fraccionArancelaria: string;
-  numeroDeRegistrodeProductos: string;
+  numeroRegistroProducto?: string;
+  numeroDeRegistrodeProductos?: string;
   fechaExpedicion: string;
   fechaVencimiento: string;
   nombreTecnico: string;
@@ -19,10 +20,10 @@ export interface Mercancia {
   unidadMedidaMasaBruta?: string;
   complementoClasificacion?: string;
   complementoDescripcion?: string;
-  fraccionNaladi: string;
-  fraccionNaladiSa93: string;
-  fraccionNaladiSa96: string;
-  fraccionNaladiSa02: string;
+  fraccionNaladi?: string;
+  fraccionNaladiSa93?: string;
+  fraccionNaladiSa96?: string;
+  fraccionNaladiSa02?: string;
   nalad?: string;
   fechaFactura?: string;
   marca?: string;
