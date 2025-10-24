@@ -67,7 +67,7 @@ export class CertificadoOrigenComponent
    * @descripcion
    * Indica si el operador está activo.
    */
-  operador: boolean = false;
+  operador: boolean = true;
 
   /**
    * @descripcion

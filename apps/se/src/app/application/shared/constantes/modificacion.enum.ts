@@ -372,7 +372,7 @@ export const FECHA_ID = [110204, 110223];
  * coincide con algún valor de este arreglo.
  * @type {number[]}
  */
-export const REQUIREDA = [110204, 110205];
+export const REQUIREDA = [110204, 110205, 110207];
 /**
  * @constant BOTON_DE_OPCION_VER
  * @description

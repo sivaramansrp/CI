@@ -361,12 +361,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
    */
-  CRITERIO_PARA_CLASIFICATION: number[]= CRITERIO_PARA_CLASIFICATION;
+  CRITERIO_PARA_CLASIFICATION: number[] = CRITERIO_PARA_CLASIFICATION;
 
   /**
    * Contiene los identificadores en los que el campo "Fecha de pago" es obligatorio.
    */
-  FECHA_DE_PAGO: number[]= FECHA_DE_PAGO;
+  FECHA_DE_PAGO: number[] = FECHA_DE_PAGO;
 
   /**
    * @description
@@ -397,7 +397,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     private mercanciaService: MercanciaService,
     private seccionQuery: SeccionLibQuery,
     public catalogoServices: CatalogoServices
-  ) { }
+  ) {}
 
   /**
    * @descripcion
@@ -465,14 +465,37 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [{ value: this.datosSeleccionados?.normaOrigen, disabled: true }],
-      nombreIngles: [{ value: this.datosSeleccionados?.nombreIngles, disabled: true }],
-      otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
-      criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
-      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
-      criterioParaClasificacion: [this.datosSeleccionados?.criterioParaClasificacion ?? null],
-      fechaDePago: [ this.datosSeleccionados?.fechaDePago ?? null],
-      valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
+      normaOrigen: [
+        { value: this.datosSeleccionados?.normaOrigen, disabled: true },
+      ],
+      nombreIngles: [
+        { value: this.datosSeleccionados?.nombreIngles, disabled: true },
+      ],
+      otrasInstancias: [
+        { value: this.datosSeleccionados?.otrasInstancias, disabled: true },
+      ],
+      criterioParaConferirOrigen: [
+        {
+          value: this.datosSeleccionados?.criterioParaConferirOrigen,
+          disabled: true,
+        },
+      ],
+      criterioParaTratoPreferencial: [
+        {
+          value: this.datosSeleccionados?.criterioParaTratoPreferencial,
+          disabled: true,
+        },
+      ],
+      criterioParaClasificacion: [
+        this.datosSeleccionados?.criterioParaClasificacion ?? null,
+      ],
+      fechaDePago: [this.datosSeleccionados?.fechaDePago ?? null],
+      valorDeContenidoRegional: [
+        {
+          value: this.datosSeleccionados?.valorDeContenidoRegional,
+          disabled: true,
+        },
+      ],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
@@ -637,7 +660,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
       complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
       complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
-      criterioParaClasificacion: FALLBACK(MERCANIADATO.criterioParaClasificacion),
+      criterioParaClasificacion: FALLBACK(
+        MERCANIADATO.criterioParaClasificacion
+      ),
       fechaDePago: FALLBACK(MERCANIADATO.fechaDePago),
       fraccionNaladi: MERCANIADATO.fraccionNaladi,
       fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
@@ -790,5 +815,22 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((res) => {
         this.factura = res.datos ?? [];
       });
+  }
+
+  /**
+   *  @description
+   * Valida y formatea el valor de un campo de entrada para asegurarse de que es un número decimal válido.
+   * Si el valor es un número válido, se formatea a cuatro decimales y se actualiza el formulario reactivo.
+   * Si el valor no es válido, se limpia el campo de entrada.
+   * @param evento 
+   */
+  validarNumeroDecimal(evento: Event): void {
+    const INPUT_ELEMENT = evento.target as HTMLInputElement;
+    if (!isNaN(Number(INPUT_ELEMENT.value)) && INPUT_ELEMENT.value.trim() !== '') {
+      const NUMERO_FORMATEADO = parseFloat(INPUT_ELEMENT.value).toFixed(4);
+      INPUT_ELEMENT.value = NUMERO_FORMATEADO;
+    } else {
+      INPUT_ELEMENT.value = '';
+    }
   }
 }
