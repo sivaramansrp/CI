@@ -406,6 +406,7 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
             id: response['id'] ?? 0,
             descripcion: response['descripcion'] ?? '',
             codigo: response['codigo'] ?? '',
+            mensaje: 'Operación exitosa.',
             data: response['data'] ?? response['datos'] ?? null,
             ...response,
           } as JSONResponse);
