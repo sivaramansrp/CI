@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, ConfiguracionColumna, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
