@@ -610,7 +610,7 @@ export class CertificadoDeOrigenComponent
         fechaInicioInput: [''],
         fechaFinalInput: [''],
         nombres: ['', [Validators.required, Validators.maxLength(25)]],
-        primerApellido: ['', [Validators.required, Validators.maxLength(255)]],
+        primerApellido: ['', [Validators.required, Validators.maxLength(25)]],
         segundoApellido: ['', [Validators.maxLength(25)]],
         numeroDeRegistroFiscal: [
           '',
