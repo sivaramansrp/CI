@@ -5,6 +5,8 @@ import {
   InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_CARACTERES_ESPECIALES,
+  REGEX_NICO,
   REGEX_REEMPLAZAR,
   REG_X,
   TEXTOS,
@@ -277,6 +279,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+          this.tablaDeDatos.datos = this.tramiteState.tablaPartesReemplazadasDatos || [];
         })
       )
       .subscribe();
@@ -408,6 +411,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * @method setTipContenedorValue
+   * @description Maneja el evento de cambio del campo tipContenedor y asegura que se almacene un valor de tipo string.
+   * 
+   * @param {Event} event - El evento de cambio del campo de entrada.
+   */
+  setTipContenedorValue(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const VALOR = TARGET.value;
+    
+    // Asegurar que almacenamos un valor de tipo string, no un objeto
+    this.store.setTipContenedor(VALOR);
   }
 
   /**
@@ -627,8 +644,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value: this.tramiteState?.solicitudFormulario?.folioOficialProrroga,
             disabled: true,
-          },
-          [Validators.required],
+          }
         ],
         fechaImportacionTemporal: [this.tramiteState?.solicitudFormulario?.fechaImportacionTemporal,
           [Validators.required],
@@ -647,15 +663,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value: this.tramiteState?.solicitudFormulario?.marca,
             disabled: this.soloLectura,
-          },
-          [Validators.required],
+          }
         ],
         modelo: [
           {
             value: this.tramiteState?.solicitudFormulario?.modelo,
             disabled: this.soloLectura,
-          },
-          [Validators.required],
+          }
         ],
         numeroSerie: [
           {
@@ -752,10 +766,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         tipContenedor: [
           {
-            value: this.tramiteState?.solicitudFormulario?.tipContenedor,
-            disabled: true,
-          },
-          [Validators.required],
+            value: this.tramiteState?.solicitudFormulario?.tipContenedor || '',
+            disabled: this.soloLectura,
+          }
         ],
         tranporteMarca: [
           {
@@ -775,15 +788,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value: this.tramiteState?.solicitudFormulario?.tranportePlaca,
             disabled: this.soloLectura,
-          },
-          [Validators.required],
+          }
         ],
         observaciones: [
           {
             value: this.tramiteState?.solicitudFormulario?.observaciones,
             disabled: this.soloLectura,
           },
-          [Validators.required],
         ],
       }),
       datosDestinoMercancia: this.fb.group({
@@ -1020,6 +1031,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         modeloMercancia: this.filaSeleccionadaLista[0].modelo,
         numSerieMercancia: this.filaSeleccionadaLista[0].numeroDeSerie,
         tipoMercancia: this.filaSeleccionadaLista[0].tipo,
+        espeMercancia: this.filaSeleccionadaLista[0].espeMercancia,
+        numParteMercancia: this.filaSeleccionadaLista[0].numParteMercancia
       });
     } else {
       this.abrirModal('Debe seleccionar un registro a modificar');
@@ -1055,6 +1068,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         modeloMercancia: this.filaSeleccionadaLista[0].modelo,
         numSerieMercancia: this.filaSeleccionadaLista[0].numeroDeSerie,
         tipoMercancia: this.filaSeleccionadaLista[0].tipo,
+        espeMercancia: this.filaSeleccionadaLista[0].espeMercancia,
+        numParteMercancia: this.filaSeleccionadaLista[0].numParteMercancia
       });
     } else {
       this.abrirModal('Debe seleccionar un registro a consultar');
@@ -1077,6 +1092,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter(
         (ele) => !this.filaSeleccionadaLista.includes(ele)
       );
+      
+      // Actualizar la tienda con nuevos datos
+      this.store.setTablaPartesReemplazadasDatos(this.tablaDeDatos.datos);
+      
       this.filaSeleccionadaLista = [];
     }
   }
@@ -1134,7 +1153,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   agregarMercancias(): void {
     const FORMS = this.mercanciaFormulario.value;
     if (
-      this.mercanciaFormulario.get('modalDescMercancia')?.invalid &&
+      this.mercanciaFormulario.get('modalDescMercancia')?.invalid ||
       this.mercanciaFormulario.get('espeMercancia')?.invalid
     ) {
       this.mercanciaFormulario?.markAllAsTouched();
@@ -1149,6 +1168,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroDeSerie: FORMS?.numParteMercancia,
       tipo: FORMS?.tipoMercancia,
       descripcionMercancia: FORMS?.modalDescMercancia,
+      espeMercancia: FORMS?.espeMercancia,
+      numParteMercancia: FORMS?.numParteMercancia
+
     };
     if (ID) {
       this.tablaDeDatos.datos = this.tablaDeDatos.datos.map((item) =>
@@ -1158,6 +1180,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, { ...DATOS }];
       this.abrirModal('El registro fue agregado correctamente.');
     }
+
+    // Actualizar la tienda con nuevos datos
+    this.store.setTablaPartesReemplazadasDatos(this.tablaDeDatos.datos);
+    
     this.filaSeleccionadaLista = [];
     this.mercanciaFormulario.reset();
     this.MODAL_INSTANCE.hide();
@@ -1174,7 +1200,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   agregarMercanciaBtn(): void {
     const FORMS = this.mercanciaFormulario.value;
     if (
-      this.mercanciaFormulario.get('modalDescMercancia')?.invalid &&
+      this.mercanciaFormulario.get('modalDescMercancia')?.invalid ||
       this.mercanciaFormulario.get('espeMercancia')?.invalid
     ) {
       this.mercanciaFormulario?.markAllAsTouched();
@@ -1189,6 +1215,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroDeSerie: FORMS?.numParteMercancia,
       tipo: FORMS?.tipoMercancia,
       descripcionMercancia: FORMS?.modalDescMercancia,
+      espeMercancia: FORMS?.espeMercancia,
+      numParteMercancia: FORMS?.numParteMercancia
     };
     if (ID) {
       this.tablaDeDatos.datos = this.tablaDeDatos.datos.map((item) =>
@@ -1197,6 +1225,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, { ...DATOS }];
     }
+
+    // Actualizar la tienda con nuevos datos
+    this.store.setTablaPartesReemplazadasDatos(this.tablaDeDatos.datos);
+    
     this.filaSeleccionadaLista = [];
     this.mercanciaFormulario.reset();
     this.MODAL_INSTANCE.hide();
@@ -1442,6 +1474,44 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosPedimento.get('checkProrroga')?.enable();
     }
   }
+
+  /**
+   * Limpia el valor del input permitiendo solo números.
+   * utilizando la expresión regular `REGEX_NICO` y actualiza los controles del formulario
+   * `datosPedimento` correspondientes: `aduana`, `patente`, `pedimento` y `folioImportacionTemporal`.
+   */
+  limpiarSoloNumeros(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_NICO, '');
+      
+      // Actualizar control de formulario
+      this.datosPedimento.get('datosPedimento.aduana')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.patente')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.pedimento')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.folioImportacionTemporal')?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+  /**
+   * Limpia el valor del input permitiendo solo caracteres alfanuméricos.
+   * Utiliza la expresión regular `REGEX_CARACTERES_ESPECIALES` y actualiza los controles
+   * @param {Event} event - Evento del input.
+   */
+  limpiarAlfanumerico(event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    if (INPUT) {
+      // Replica exactamente: this.value = (this.value + '').replace(/[^0-9]/g, '');
+      INPUT.value = String(INPUT.value).replace(REGEX_CARACTERES_ESPECIALES, '');
+      
+      // Actualizar control de formulario
+      this.datosPedimento.get('datosPedimento.folioFormatoOficial')?.setValue(INPUT.value, { emitEvent: false });
+      this.datosPedimento.get('datosPedimento.folioOficialProrroga')?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+
 
   /**
    * @method ngOnDestroy

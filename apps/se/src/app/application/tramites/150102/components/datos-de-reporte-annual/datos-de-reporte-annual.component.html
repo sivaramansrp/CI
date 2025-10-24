@@ -16,7 +16,14 @@
           maxlength="16"
           formControlName="ventasTotales"
           (change)="obtenerVentasTotales($event)"
+           [ngClass]="
+              isValid(formReporteAnnual, 'ventasTotales') ? 'required' : ''
+            "
         />
+            @if (formReporteAnnual.get('ventasTotales')?.invalid && 
+                (formReporteAnnual.get('ventasTotales')?.touched || formReporteAnnual.get('ventasTotales')?.dirty)) {
+              <span class="mensaje-error">Este campo es obligatorio.</span>
+            }
       </div>
       <div class="col-md-4">
         <label class="form-label" for="totalExportaciones"
@@ -29,7 +36,14 @@
           maxlength="16"
           formControlName="totalExportaciones"
           (input)="obtenerTotalExportaciones($event)"
+           [ngClass]="
+              isValid(formReporteAnnual, 'totalExportaciones') ? 'required' : ''
+            "
         />
+          @if (formReporteAnnual.get('totalExportaciones')?.invalid && 
+              (formReporteAnnual.get('totalExportaciones')?.touched || formReporteAnnual.get('totalExportaciones')?.dirty)) {
+            <span class="mensaje-error">Este campo es obligatorio.</span>
+          }
       </div>
       <div class="col-md-4">
         <label class="form-label" for="totalImportaciones"
@@ -41,7 +55,14 @@
           class="form-control"
           formControlName="totalImportaciones"
           (input)="obtenerTotalImportaciones($event)"
+           [ngClass]="
+              isValid(formReporteAnnual, 'totalImportaciones') ? 'required' : ''
+            "
         />
+        @if (formReporteAnnual.get('totalImportaciones')?.invalid && 
+            (formReporteAnnual.get('totalImportaciones')?.touched || formReporteAnnual.get('totalImportaciones')?.dirty)) {
+           <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
       </div>
       <div class="col-md-4">
         <label class="form-label" for="saldo">Saldo b-c:</label>

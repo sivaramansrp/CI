@@ -1,11 +1,17 @@
+import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110205 } from '../servers/api-route'; 
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
 import { Observable, map } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../estados/tramite110205.store';
-import { HttpClient } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { PROC_110205 } from '../servers/api-route';
+import { Tramite110205Query } from '../estados/tramite110205.query';
+
 
 /**
  * @service PeruCertificadoService
@@ -29,14 +35,20 @@ import { PROC_110205 } from '../servers/api-route';
  * });
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PeruCertificadoService {
-    /**
-     * @property {string} url
-     * @description Ruta base para acceder a los archivos JSON utilizados en el trámite 110205.
-     */
-    url: string = '../../../../../assets/json/110205/';
+  /**
+   * @property {string} url
+   * @description Ruta base para acceder a los archivos JSON utilizados en el trámite 110205.
+   */
+  url: string = '../../../../../assets/json/110205/';
+
+  /**
+   * La URL base del servidor al que se realizarán las solicitudes.
+   * Esta propiedad es de solo lectura y se utiliza para construir las rutas de los servicios.
+   */
+  private readonly servidor: string;
 
   /**
    * @constructor
@@ -47,9 +59,12 @@ export class PeruCertificadoService {
    */
   constructor(
     private readonly http: HttpClient,
-    public tramite110205Store: Tramite110205Store,
     public httpService: HttpCoreService,
-  ) {}
+    public tramite110205Store: Tramite110205Store,
+    public query: Tramite110205Query
+  ) {
+    this.servidor = `${ENVIRONMENT.API_HOST}/api/`;
+  }
 
   /**
    * @method obtenerMenuDesplegable
@@ -63,9 +78,9 @@ export class PeruCertificadoService {
    */
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
     const BASE_URL = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(BASE_URL).pipe(
-      map(response => response.data)
-    );
+    return this.http
+      .get<RespuestaCatalogos>(BASE_URL)
+      .pipe(map((response) => response.data));
   }
 
   /**
@@ -89,8 +104,20 @@ export class PeruCertificadoService {
    * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http.get<ProductorExportador>('assets/json/110205/productor-exportador.json');
+  obtenerProductorPorExportador(rfc: string): Observable<ProductorExportador> {
+    return this.httpService.get<ProductorExportador>(BUSCAR_PRODUCTOR(rfc));
+  }
+
+  /**
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
+   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+   */
+  obtenerProductoruNevo(body: { rfc_solicitante: string }): Observable<any> {
+    return this.httpService.post<any>(PROC_110205.AGREGAR_PRODUCTOR, {
+      body: body,
+    });
   }
 
   /**
@@ -100,7 +127,9 @@ export class PeruCertificadoService {
    * @returns {Observable<MercanciasHistorico>} Un observable que emite los datos del historial de mercancías.
    */
   obtenerMercancia(): Observable<MercanciasHistorico> {
-    return this.http.get<MercanciasHistorico>('assets/json/110205/mercancias-seleccionadas.json');
+    return this.http.get<MercanciasHistorico>(
+      'assets/json/110205/mercancias-seleccionadas.json'
+    );
   }
 
   /**
@@ -113,7 +142,7 @@ export class PeruCertificadoService {
   actualizarEstadoFormulario(DATOS: Tramite110205State): void {
     this.tramite110205Store.update((state) => ({
       ...state,
-      ...DATOS
+      ...DATOS,
     }));
   }
 
@@ -124,7 +153,9 @@ export class PeruCertificadoService {
    * @returns {Observable<Tramite110205State>} Observable que emite los datos de prellenado.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite110205State> {
-    return this.http.get<Tramite110205State>('assets/json/110205/datos-prefill.json');
+    return this.http.get<Tramite110205State>(
+      'assets/json/110205/datos-prefill.json'
+    );
   }
 
   /**
@@ -141,5 +172,54 @@ export class PeruCertificadoService {
       {},
       false
     );
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite110205State> {
+    return this.query.selectPeru$;
+  }
+  guardarDatosPost(
+    body: Record<string, unknown>
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110205.GUARDAR, {
+      body: body,
+    });
+  }
+
+  /**
+   * Guarda la solicitud del trámite 80208.
+   * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postSolicitud(
+    solicitud: unknown
+  ): Observable<BaseResponse<GuadarSolicitudResponse>> {
+    const ENDPOINT = `${this.servidor}` + API_POST_SOLICITUD;
+    return this.http
+      .post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
+  }
+
+  buscarMercanciasCert(body: { [key: string]: unknown }): Observable<{ [key: string]: unknown }> {
+    return this.httpService.post<{ [key: string]: unknown }>(PROC_110205.BUSCAR, { body: body });
   }
 }

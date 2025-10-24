@@ -309,6 +309,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
+    public proveedorSeleccionadoParaModificar: Proveedor[] = [];
   /**
    * Constructor del componente.
    *
@@ -460,6 +461,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   public destinatarioModalAbierto: boolean = false;
 
+  public proveedorModalAbierto: boolean = false;
   public facturadorModalAbierto: boolean = false;
   /**
    * Destinatario data selected for modification
@@ -531,6 +533,24 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.abrirFabricanteModal();
     }
 
+    /**
+     * Emite el evento para agregar un nuevo fabricante.
+     */
+    onAgregarProveedorFinal(): void {
+      this.proveedorSeleccionadoParaModificar = [];
+      this.abrirProveedorModal();
+    }
+     /**
+   * Opens the Proveedor selection modal
+   */
+  abrirProveedorModal(): void {
+    this.proveedorModalAbierto = true;
+    const MODALELEMENT = document.getElementById('proveedorModal');
+    if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
+}
     onFacturadorAgregar(): void {
       this.facturadorSeleccionadoParaModificar = [];
       this.abrirFacturadorModal();
@@ -547,6 +567,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     MODAL.show();
   }
 }
+/**
+   * Opens the Destinatario selection modal
+   */
   abrirDestinatarioModal(): void {
     this.destinatarioModalAbierto = true;
     const MODALELEMENT = document.getElementById('destinatarioModal');
@@ -580,6 +603,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   
 }
+  /**
+   * Closes the Fabricante selection modal
+   */
+  cerrarProveedorModal(): void {
+   this.proveedorModalAbierto = false;
+   this.proveedorSeleccionadoParaModificar = [];
+    const MODAL_ELEMENT = document.getElementById('proveedorModal');
+    if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL_INSTANCE) {
+          MODAL_INSTANCE.hide();
+        }
+    }
+  
+}
 /**
  * Handles the fabricante table data update
   */
@@ -601,6 +639,12 @@ onDestinatarioUpdated(destinatarios: Destinatario[]): void {
   this.destinatarioEliminar.emit([...this.destinatarioFinalTablaDatos]);
   this.destinatarioSeleccionadoDatos = [];
   this.destinatarioSeleccionadoParaModificar = [];
+}
+onProveedorUpdated(proveedores: Proveedor[]): void {
+  this.proveedorTablaDatos = [...proveedores];
+  this.proveedorEliminar.emit([...this.proveedorTablaDatos]);
+  this.proveedorSeleccionadoDatos = [];
+  this.proveedorSeleccionadoParaModificar = [];
 }
 
 onFacturadorUpdated(facturadores: Facturador[]): void {
@@ -719,8 +763,14 @@ cerrarFacturadorModal(): void {
       this.mostrarAlerta = true;
       return;
     }
-    this.proveedorEventoModificar.emit(this.proveedorSeleccionadoDatos);
-    this.irAAcciones('../agregar-proveedor',true);
+    this.proveedorSeleccionadoParaModificar = this.proveedorSeleccionadoDatos.map(d => ({ ...d }));
+    this.proveedorModalAbierto = true;
+
+    const MODALELEMENT = document.getElementById('proveedorModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
   }
 
   /**
@@ -731,7 +781,7 @@ cerrarFacturadorModal(): void {
    * @returns {void}
    */
   modificarFacturador(): void {
-    if (!this.facturadorSeleccionadoDatos.length) {
+   if (!this.facturadorSeleccionadoDatos.length) {
       this.mostrarAlerta = true;
       return;
     }

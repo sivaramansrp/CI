@@ -1,29 +1,47 @@
-import { Component, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
   REGEX_CORREO_ELECTRONICO,
   REGEX_SOLO_DIGITOS,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Subject,
+  map,
+  takeUntil
+} from 'rxjs';
+import {
+  Tramite110212State,
+  Tramite110212Store,
+} from '../../../../estados/tramites/tramite110212.store';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
-import { DatosDelDestinatarioComponent } from "../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component";
-import { DestinatarioComponent } from "../../../../shared/components/destinatario/destinatario.component";
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
-import { Subject } from 'rxjs';
+import {
+  DatosDelDestinatarioComponent,
+} from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import {
+  DestinatarioComponent,
+} from '../../../../shared/components/destinatario/destinatario.component';
+import {
+  RepresentanteLegalExportadorComponent,
+} from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
-import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
-import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import {
+  Tramite110212Query,
+} from '../../../../estados/queries/tramite110212.query';
+
 
 interface FormValues {
   [key: string]: unknown;
