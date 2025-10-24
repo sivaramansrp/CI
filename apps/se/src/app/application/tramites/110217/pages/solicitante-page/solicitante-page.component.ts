@@ -286,7 +286,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     const CERTIFICADO = this.certificadosOrigenService.buildCertificado(data);
     const DESTINATARIO = this.certificadosOrigenService.buildDestinatario(data);
     const DATOS_CERTIFICADO = this.certificadosOrigenService.buildDatosCertificado(data);
-    const TRANSPORTE_DETALLES = this.certificadosOrigenService.buildDestinatarioTransporteDetalles(data);
+    // commneted for now, may be used in future
+    // const TRANSPORTE_DETALLES = this.certificadosOrigenService.buildDestinatarioTransporteDetalles(data);
     const PAYLOAD = {
       "rfc_solicitante": "AAL0409235E6",
       "idSolicitud": 0,

@@ -20,7 +20,6 @@ import { CertificadoDeOrigenComponent } from '../../../../shared/components/cert
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
