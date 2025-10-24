@@ -218,13 +218,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
-      if (this.idTipoTRamite === '130118') {
-        this.getDocumentosDesdeSolicitud130118();
-        this.getDocumentosDesdeSolicitud130118Opcionales();
-      } else {
-        this.getListaDocumentoObligatorios();
+      this.getDocumentosDesdeSolicitud130118();
+      this.getDocumentosDesdeSolicitud130118Opcionales();
+    }else{
+      this.getListaDocumentoObligatorios();
         this.getListaDocumentoOpcionales();
-      }
     }
   }
 
@@ -289,7 +287,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   getDocumentosDesdeSolicitud130118(): void {
     const ESPECIFICO = true;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud130118(ESPECIFICO)
+      .getDocumentosSolicitud130118(Number(this.idTipoTRamite),ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -316,7 +314,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   getDocumentosDesdeSolicitud130118Opcionales(): void {
     const ESPECIFICO = false;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud130118(ESPECIFICO)
+      .getDocumentosSolicitud130118(Number(this.idTipoTRamite),ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
