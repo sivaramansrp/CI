@@ -59,4 +59,4 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     PasoFirmaComponent
 ]
 })
-export class ValidarCertificadoModule { }
+export class ValidarCertificadoModule {}
