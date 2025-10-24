@@ -12,14 +12,31 @@
 
 
 export interface ProgramaACancelar {
-
     folioPrograma: string; 
-    idProgramaSeleccionado: string; 
+    idProgramaSeleccionado?: string; 
     modalidad: string; 
     representacionFederal: string; 
     tipoPrograma: string; 
-    estatus: string; 
+    estatus: string;
+    idProgramaAutorizado: string;
+    movimientoProgramaSE: string | null;
+    rfc: string | null;
+    resolucion: string | null;
+    unidadAdministrativa: string | null;
+    fechaInicioVigencia: string | null;
+    fechaFinVigencia: string | null;
+    actividadProductiva: string | null;
+    fechaSuspension: string | null;
+    contadorGrid: number | null;
+    idProgramaCompuesto: string | null;
 }
+
+export interface ProgramaACancelarPayload {
+    rfc: string;
+    discriminatorValue: string;
+
+}
+
 /**
  * Constante que representa el identificador de la tabla de cancelaciones disponibles.
  */

@@ -9,6 +9,7 @@ import {
   Subject,
   catchError,
   forkJoin,
+  of,
   switchMap,
   takeUntil,
   throwError,
@@ -19,12 +20,13 @@ import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 
 import { AcuseDetalleService } from '../../../core/services/shared/detalleAcuse.service';
-import { AcusesService } from '../../../core/services/120301/acuses.service';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/shared/documentos.service';
 import { DocumentosT231001Service } from '../../../core/services/shared/documentos-t231001.service';
 import { Router } from '@angular/router';
+
+import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -120,8 +122,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private route: ActivatedRoute,
     private documentosService130118: DocumentosService,
     private documentosService231001: DocumentosT231001Service,
+    private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
-    private acusesService: AcusesService
+    private aviso230301: DocumentosT230301Service
   ) {}
 
   /**
@@ -157,7 +160,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
         80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204, 110205,
-        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102
+        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102, 140101,140102
       ].includes(this.procedure)
     ) {
       this.documentosService130118
@@ -193,6 +196,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         });
     } else if (this.url === 'aviso-de-materiales') {
       this.descargarDocumentoTramite231001();
+    } else if (this.url === 'desistimiento') {
+      this.descargarDocumentoTramite230301();
     } else {
       const BODY: DocumentosRequest = {
         tipo_dependencia: 'AGA',
@@ -426,6 +431,71 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           this.datosTablaAcuse = FILAS;
         },
         error: (err) => console.error('Error:', err),
+      });
+  }
+
+  /**
+   * Descarga los documentos asociados al trámite 230301 (Aviso de Materiales).
+   */
+  private descargarDocumentoTramite230301(): void {
+    const ID = this.idSolicitud.toString();
+    /**
+     * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+     */
+    this.procedure = 230301;
+    this.acuse230301
+      .guardarAcuse(ID, this.procedure)
+      .pipe(
+        switchMap(() => this.acuse230301.vistaPrevia(ID, this.procedure)),
+        catchError((err) => {
+          console.error('Error en ACUSE_SOLICITUD (230301):', err);
+          return of(null);
+        }),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe({
+        next: (acuseResponse) => {
+          const FILAS: BodyTablaAcuse[] = [];
+          let contador = 1;
+          if (acuseResponse?.datos?.contenido) {
+            FILAS.push({
+              id: contador++,
+              documento: acuseResponse.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(acuseResponse.datos.contenido),
+              idDocumento: 'acuse',
+            });
+          }
+          this.datosTablaAcuse = FILAS;
+        },
+        error: (err) => console.error('Error inesperado (230301):', err),
+      });
+
+    this.aviso230301
+      .guardarAviso(ID, this.procedure)
+      .pipe(
+        switchMap(() => this.aviso230301.vistaPrevia(ID, this.procedure)),
+        catchError((err) => {
+          console.error('Error en AVISO DESISTIMIENTO (230301):', err);
+          return of(null);
+        }),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe({
+        next: (acuseResponse) => {
+          const FILAS: BodyTablaAcuse[] = [];
+          let contador = 1;
+
+          if (acuseResponse?.datos?.contenido) {
+            FILAS.push({
+              id: contador++,
+              documento: acuseResponse.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(acuseResponse.datos.contenido),
+              idDocumento: 'aviso',
+            });
+          }
+          this.datosTablaAcuse = FILAS;
+        },
+        error: (err) => console.error('Error inesperado (230301):', err),
       });
   }
 

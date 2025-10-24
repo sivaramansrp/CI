@@ -19,36 +19,29 @@ export const SECCIONES_TRAMITE_230301 = {
      * Validación de la primera sección del paso 1.
      * @type {boolean}
      */
-    VALIDACION_SECCION_1: false,
+    SECCION_1: true,
 
     /**
      * Validación de la segunda sección del paso 1.
      * @type {boolean}
      */
-    VALIDACION_SECCION_2: true,
+    SECCION_2: true,
   },
   PASO_2: {
     /**
      * Validación de la sección del paso 2.
      * @type {boolean}
      */
-    VALIDACION_SECCION: false,
+    SECCION_3: true,
   },
 };
 
-/**
- * Interfaz que representa el formulario de desistimiento.
- * 
- * Esta interfaz define la estructura de los datos que se manejan en el formulario
- * de desistimiento del trámite.
- */
-export interface DesistimientoForm {
-  /**
-   * Datos en formato JSON.
-   * @type {JSON}
-   */
-  data: JSON;
-}
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
+  `<p>La solicitud ha quedado registrada con el número temporal ${
+    numeroSolicitud ?? ''
+  }. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+
 
 /**
  * @constant ERROR_FORMA_ALERT

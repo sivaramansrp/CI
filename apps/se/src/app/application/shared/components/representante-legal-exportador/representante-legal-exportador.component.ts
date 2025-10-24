@@ -19,10 +19,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { PAIS_CATALOGO, REPRESENTATE_LEGAL_EXPORTADOR_CONFIG } from '../../constantes/representate-legal-exportador-config.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FieldConfig } from '../../models/representate-legal-exportador.model';
-import { REPRESENTATE_LEGAL_EXPORTADOR_CONFIG } from '../../constantes/representate-legal-exportador-config.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ValidarInicialmenteCertificadoService } from '../../../tramites/110221/services/validar-inicialmente-certificado.service';
 
@@ -141,7 +141,9 @@ export class RepresentanteLegalExportadorComponent
     this.form = this.fb.group({});
     this.crearFormulario();
 
-    this.obtenerPaisDestinoCatalogo();
+    if (PAIS_CATALOGO.includes(this.procedimiento)) {
+      this.obtenerPaisDestinoCatalogo();
+    }
   }
 
    /** Método público para marcar todos los campos como tocados y mostrar errores */
@@ -266,4 +268,15 @@ export class RepresentanteLegalExportadorComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Valida el formulario y marca los campos como tocados si es inválido
+   */
+   validarFormularios(): boolean {
+     if (this.form.invalid) {
+       this.form.markAllAsTouched();
+       return false;
+     }
+     return true;
+   }
 }

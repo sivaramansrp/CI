@@ -131,7 +131,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
         this.catalogos = data.datos.map((item, index) => ({
           id: index,
           clave: item.clave,
-          descripcion: item.descripcion,
+          descripcion: item.clave + ' - ' + item.descripcion,
         }));  
     });
   }

@@ -61,4 +61,5 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     certificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/mostrar/certificados`,
     guardarCertificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/guardar`,
     generaCadena:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/genera-cadena-original`,
+    certificadoOrigen:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/obtener-certificado-origen`,
 });

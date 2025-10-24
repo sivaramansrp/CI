@@ -66,6 +66,7 @@ describe('RetornoDePartesService', () => {
       setNumSerieMercancia: jest.fn(),
       setNumParteMercancia: jest.fn(),
       setTipoMercancia: jest.fn(),
+      setTablaPartesReemplazadasDatos: jest.fn(),
     };
 
     TestBed.configureTestingModule({

@@ -1,9 +1,10 @@
 
 import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TabEvaluarTratadosResponse, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { EmpaqueResponse, InsumoResponse, InsumosEmpaquesResponse } from '../../models/response/insumos-empaques-response.model';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { EmpaqueResponse, InsumoResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -14,6 +15,7 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
+import { DatosCriterioResumenResponse } from '../../models/response/tratado-criterio-resumen-response.model';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
@@ -21,6 +23,7 @@ import { Modal } from 'bootstrap';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
+import { ResumenValoresFormularioComponent } from '../resumen-valores-formulario/resumen-valores-formulario.component';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TratadoAcuerdoCriterioRequest } from '../../models/request/tratado-criterio-request.model';
@@ -49,10 +52,17 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
     ReactiveFormsModule,
     TablaDinamicaComponent,
     NotificacionesComponent,
-    OtrasInstanciasComponent
+    OtrasInstanciasComponent,
+    ResumenValoresFormularioComponent
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} esCalificacionBandera
+   * @description Indica si se está mostrando boton de calificación con bandera.
+   * Por defecto es false.
+   */
+  @Input() esCalificacionBandera: boolean = false;
 
   /**
    * Evento que se emite cuando los tratados son actualizados.
@@ -67,6 +77,12 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
    */
   public nuevaNotificacion!: Notificacion ;
+
+  /**
+   * Texto que describe el requisito del proceso.
+   */
+  public textoRequisitoProceso!: string;
+  
   /**
    * Evento que se emite para habilitar la pestaña siguiente en el flujo del trámite.
    * Se utiliza para notificar al componente padre que la pestaña puede ser activada,
@@ -133,6 +149,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
   /**Variable para mostrar el modal */
   public mostrarModal: boolean = false;
 
+  /**Variable para asociar la respuesta del modal */
+  valoresFormularioResumen!: DatosCriterioResumenResponse;
+
   /** Evento que se emite al cerrar el modal */
   @Output() cerrar = new EventEmitter<void>();
 
@@ -192,8 +211,14 @@ export class TratadosComponent implements OnInit, OnDestroy {
   */
   @ViewChild('modalInsumoEmpaques', { static: false }) modalElementInsumosEmpaques!: ElementRef;
 
-   /** Almacena las filas seleccionadas de la tabla */
-    public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
+  /**
+   * Referencia al elemento modal para mostrar el resumen de valores.
+  */
+  @ViewChild('modalResumenValores', { static: false }) modalElementResumenValores!: ElementRef;
+
+
+  /** Almacena las filas seleccionadas de la tabla */
+  public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
 
   public consultaState!: ConsultaioState;
     /**
@@ -1152,6 +1177,26 @@ eliminarTratado(): void {
   }
 
   /**
+   * Abre el modal de error para tratados en evaluación.
+   * 
+   * Este método configura los datos de la notificación que se mostrará en el modal
+   * cuando no se ha seleccionado un país, bloque-tratado o acuerdo.
+   */
+  abrirModalTratadosEvaluacion(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Debe seleccionar un País/bloque-tratado/acuerdo',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+    };
+  }
+
+  /**
    * Abre el modal de error.
    */
   abrirModalGlobalAccion(): void {
@@ -1186,8 +1231,8 @@ eliminarTratado(): void {
    * @returns {void}
    */
   insumosEmpaques(): void {
-    if(this.tratadoSeleccionado.length === 0) {
-      this.abrirModal();
+    if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
+      this.abrirModalTratadosEvaluacion();
       return;
     }
     const TRATADO = this.tratadoSeleccionado[0];
@@ -1304,16 +1349,18 @@ eliminarTratado(): void {
    * @returns {void}
    */
   criterioTratadoResumen(): void {
-    if(this.tratadoSeleccionado.length === 0) {
-      this.abrirModal();
+    if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
+      this.abrirModalTratadosEvaluacion();
       return;
-    }
-    this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_tratado_acuerdo.toString())
+    }          
+    this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_criterio_tratado.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
-            //**TODO: Implementacion */
+            this.modalInstance = new Modal(this.modalElementResumenValores.nativeElement);
+            this.modalInstance?.show();
+            this.valoresFormularioResumen = response.datos ?? {} as DatosCriterioResumenResponse;            
         }else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
@@ -1343,6 +1390,25 @@ eliminarTratado(): void {
         }
       }
     });
+  }
+
+  /**
+   * @method requisitoProceso
+   * @description Muestra el requisito del proceso asociado al tratado seleccionado.
+   * @returns {void}
+   */
+  requisitoProceso(): void {  
+    if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
+      this.abrirModalTratadosEvaluacion();
+      return;
+    }   
+    if(this.tratadoSeleccionado[0].descripcion_proceso === null || this.tratadoSeleccionado[0].descripcion_proceso === '') {
+      this.abrirModalGlobalAccion();
+    }else{
+      this.textoRequisitoProceso = this.tratadoSeleccionado[0].descripcion_proceso;
+      this.modalInstance = new Modal(this.modalElementResumenValores.nativeElement);
+      this.modalInstance?.show();        
+    }
   }
 
   /**
