@@ -14,8 +14,8 @@
  * @requires ./constantes/elegibilidad-de-textiles.enums - Constantes y enumeraciones
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CategoriaMensaje, Notificacion, SolicitanteQuery, SolicitanteState, } from '@ng-mf/data-access-user';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CategoriaMensaje, Notificacion, SolicitanteQuery, SolicitanteState, Usuario, } from '@ng-mf/data-access-user';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, ERROR_FORMA_FALTAN, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
@@ -35,6 +35,8 @@ import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { setMonth } from 'ngx-bootstrap/chronos/utils/date-setters';
+
+import { USUARIO_INFO } from '../../../130118/enum/enum-130118';
 
 
 /**
@@ -113,6 +115,26 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    * @default ERROR_FORMA_ALERT
    */
   public formularioAlertaError = ERROR_FORMA_ALERT;
+
+
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+  * Indica si el botón para cargar archivos está habilitado.
+  */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+  * Indica si la sección de carga de documentos está activa.
+  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+  */
+    seccionCargarDocumentos: boolean = true;
+
+  /**
+    * Evento que se emite para cargar archivos.
+    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+    */
+  cargarArchivosEvento = new EventEmitter<void>();
 
   /**
    * Contiene el mensaje de error que se muestra cuando el año ingresado no es válido.
@@ -768,6 +790,27 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       this.asignarSecciones();
     }, 200);
   }
+
+  /**
+* Método para manejar el evento de carga de documentos.
+* Actualiza el estado del botón de carga de archivos.
+*  carga - Indica si la carga de documentos está activa o no.
+* {void} No retorna ningún valor.
+*/
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
 
   /**
  * @method ngOnDestroy

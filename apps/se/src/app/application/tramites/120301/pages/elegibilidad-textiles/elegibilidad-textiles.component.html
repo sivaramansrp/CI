@@ -36,9 +36,12 @@
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged($event)" (errorValidacion)="alErrorDeValidacion($event)" (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)"></app-paso-uno>
+      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged($event)" (errorValidacion)="alErrorDeValidacion($event)"
+        (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)"></app-paso-uno>
       } @case (2) {
-      <app-paso-dos></app-paso-dos>
+      <app-paso-dos [idTipoTRamite]="'120301'" [datosUsuario]="datosUsuario"
+        [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+        (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
       } @case (3) {
       <app-paso-tres [procedure]="120301"
         [procedureUrl]="'elegibilidad-de-textiles/elegibilidad-textiles'"></app-paso-tres>
