@@ -440,7 +440,13 @@ export const API_POST_GUARDAR_CERTIFICADO = (idSolicitud: string, tramite: numbe
  */
 export const API_POST_VISTA_PREVIA_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/vista-previa`;
 
-
+/**
+ * API para guardar el aviso de desistimiento de una solicitud.
+ * @param idSolicitud Identificador de la solicitud
+ * @returns URL del endpoint para guardar el aviso de desistimiento
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t230301/swagger-ui/index.html#/aviso-desistimiento/guardar
+ */
+export const API_POST_GUARDAR_AVISO_DESISTIMIENTO = (idSolicitud: string): string => `sat-t230301/solicitud/${idSolicitud}/aviso-desistimiento/guardar`;
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
