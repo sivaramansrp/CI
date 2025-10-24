@@ -24,7 +24,7 @@ export const CONFIGURACION_MERCANCIA = [
   },
   {
     encabezado: 'Número de registro de productos', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve la fracción Naladi SA02
+    clave: (ele: Mercancia): string | undefined => ele.numeroRegistroProducto, // Función que devuelve la fracción Naladi SA02
     orden: 4, // Orden en que se mostrará la columna
   },
   {
@@ -36,7 +36,7 @@ export const CONFIGURACION_MERCANCIA = [
     encabezado: 'Fecha vencimiento', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento, // Función que devuelve el nombre comercial de la mercancía
     orden: 5, // Orden en que se mostrará la columna
-  }
+  },
 ];
 
 /**
@@ -88,9 +88,9 @@ export const MERCANCIA_SELECCIONADAS = [
   },
   {
     encabezado: 'numero', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve el nombre comercial de la mercancía
+    clave: (ele: Mercancia): string | undefined => ele.numeroRegistroProducto, // Función que devuelve el nombre comercial de la mercancía
     orden: 5, // Orden en que se mostrará la columna
-  }
+  },
 ];
 
 /**`
@@ -341,7 +341,7 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
   },
   {
     encabezado: 'Número de registro de productos', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve el número de registro de productos
+    clave: (ele: Mercancia): string | undefined => ele.numeroRegistroProducto, // Función que devuelve el número de registro de productos
     orden: 6, // Orden en que se mostrará la columna
   },
   {
@@ -353,7 +353,7 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
     encabezado: 'Fecha vencimiento', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento, // Función que devuelve la fecha de vencimiento de la mercancía
     orden: 8, // Orden en que se mostrará la columna
-  }
+  },
 ];
 
 /**

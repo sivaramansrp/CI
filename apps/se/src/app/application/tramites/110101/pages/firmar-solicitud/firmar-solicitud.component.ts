@@ -192,7 +192,7 @@ export class FirmarSolicitudComponent implements OnInit, OnDestroy {
 
   cve_rol_capturista: "CapturistaGubernamental",
   cve_usuario_capturista: "Gubernamental",
-  fecha_firma: "2025-04-15 10:00:00"
+  fecha_firma: FirmarSolicitudComponent.formatFecha(new Date()),
 };
 this.solicitudService.postGenerarCadenaOriginal(this.solicitudState.id_solcitud,PAYLOAD)
   .pipe(takeUntil(this.destroy$))

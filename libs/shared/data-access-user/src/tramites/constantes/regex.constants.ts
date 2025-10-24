@@ -958,6 +958,8 @@ export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   */
 export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
 
+export const VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 /**
  * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
  * 

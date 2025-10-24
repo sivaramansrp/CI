@@ -40,8 +40,8 @@ import { Tramite30506Query } from '../../state/tramite30506.query';
     ReactiveFormsModule,
   ],
   providers: [],
-  templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.scss',
+  templateUrl: './solicitud.component.html',
+  styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
 

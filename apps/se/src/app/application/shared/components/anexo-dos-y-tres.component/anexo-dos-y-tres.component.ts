@@ -263,6 +263,10 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
         return;
       }
     }
+    else {
+      this.abrirDosModal();
+      return;
+    }
 
     // Proceder con la eliminación
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
@@ -309,12 +313,11 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje:
-        '¿Está seguro de eliminar el registro de los anexos?',
+      mensaje: this.seleccionarDosTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el anexo que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
-      txtBtnAceptar: ' Cancelar',
-      txtBtnCancelar: 'Aceptar',
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: this.seleccionarDosTablaData.length > 0 ? 'Cancelar' : '',
     };
   }
 
@@ -360,7 +363,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       modo: 'action',
       titulo: '',
       mensaje:
-        this.seleccionarTresTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el anexo que desea eliminar.',
+        this.seleccionarTresTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el registro que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -473,12 +476,12 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
   /**
    * Confirma la eliminación del Anexo Dos después de la confirmación del modal
    */
-  confirmarEliminacionDos(): void {
+  confirmarEliminacionDos(confirmado: boolean): void {
     // Cerrar el modal
     this.nuevaDosNotificacion.cerrar = false;
 
     // Proceder con la eliminación
-    if (this.seleccionarDosTablaData.length > 0) {
+    if (confirmado && this.seleccionarDosTablaData.length > 0) {
       this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
         return !this.seleccionarDosTablaData.some(selectedItem =>
           selectedItem.encabezadoFraccion === item.encabezadoFraccion &&

@@ -796,26 +796,28 @@
       </div>
     </div>
 
-    <div class="col-md-4 form-field">
-      <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
-        [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)" (change)="
-          setValoresStore(
-            'formCertificado',
-            'fechaInicioInput',
-            'setFormCertificadoGenric'
-          )
-        "></input-fecha>
-    </div>
-    <div class="col-md-4 form-field">
-      <input-fecha [datos]="fechaFin ? fechaFinInput : fechaFinalInput"
-        [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
-        [isDisabled]="esFormularioSoloLectura" (change)="
-          setValoresStore(
-            'formCertificado',
-            'fechaFinalInput',
-            'setFormCertificadoGenric'
-          )
-        "></input-fecha>
+    <div class="row mb-3">
+      <div class="col-md-4 form-field">
+        <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
+          [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)" (change)="
+            setValoresStore(
+              'formCertificado',
+              'fechaInicioInput',
+              'setFormCertificadoGenric'
+            )
+          "></input-fecha>
+      </div>
+      <div class="col-md-4 form-field">
+        <input-fecha [datos]="fechaFin ? fechaFinInput : fechaFinalInput"
+          [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
+          [isDisabled]="esFormularioSoloLectura" (change)="
+            setValoresStore(
+              'formCertificado',
+              'fechaFinalInput',
+              'setFormCertificadoGenric'
+            )
+          "></input-fecha>
+      </div>
     </div>
 
     @if(mercanciasDisponibles){

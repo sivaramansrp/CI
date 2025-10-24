@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion, TabEvaluarTratadosResponse } from '@ng-mf/data-access-user';
 import { Subject, takeUntil, tap } from 'rxjs';
@@ -18,6 +18,12 @@ import { Solicitante110101State } from '../../estados/tramites/solicitante110101
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
+  /**
+ * @property {boolean} esDictaminadorBandera
+ * @description Indica si se está mostrando boton de la calificación con bandera.
+ * Por defecto es false.
+ */
+   @Input() esDictaminadorBandera: boolean = false;
 
   /**
    * Esta variable se utiliza para almacenar los tratados datos actualizados.
