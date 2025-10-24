@@ -233,7 +233,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destroyed$),
           tap((respuesta) => {
-            if (1 !== 1) {
+            if (!respuesta.exito) {
               const ERRORESEXTRA = (respuesta.erroresModelo || [])
                 .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
                 .join('<br>');

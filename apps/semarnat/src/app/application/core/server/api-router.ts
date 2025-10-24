@@ -198,3 +198,15 @@ export const API_POST_CADENA_ORIGINAL = (
  * @constant {string}
  */
 export const API_POST_GUARDAR_SOLICITUD =(tramite:string):string => `sat-t${tramite}/solicitud/guardar`;
+
+
+
+/**
+ * API para firmar la solicitud del tramite 231002.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231002/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMA = (tramite:string,idSolicitud:string):string => `sat-t${tramite}/solicitud/${idSolicitud}/firmar`;
+
+
+
+

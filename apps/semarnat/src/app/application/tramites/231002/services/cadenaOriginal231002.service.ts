@@ -1,5 +1,4 @@
 import {
-  API_POST_CADENA_ORIGINAL,
   ENVIRONMENT,
 } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
@@ -8,6 +7,7 @@ import { CadenaOriginalRequest } from '../models/cadena-original-request';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TRAMITE_ID } from './../constantes/aviso-retorno.enum';
+import { API_POST_CADENA_ORIGINAL } from '../../../core/server/api-router';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class CadenaOriginal231002Service {
   /**
    * URL del servidor donde se encuentra la API.
    */
-  urlServer = ENVIRONMENT.API_HOST;
+  urlServer = ENVIRONMENT.API_HOST + '/api/';
 
   constructor(private http: HttpClient) {}
 
