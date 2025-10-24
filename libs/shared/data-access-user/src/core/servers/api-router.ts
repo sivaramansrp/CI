@@ -921,8 +921,23 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS_CON_ID = (TRAMITE: string, ID: string
  */
 export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;
 
+/**
+ * Genera la URL del endpoint para obtener el catálogo de tratados o acuerdos de un tipo específico.
+ * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tipo de tratado/acuerdo (`IDETIPOTRATADOACUERDO`).
+ * Devuelve un string con la ruta completa del recurso en el backend.
+ */
 export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
 
+/**
+ * Genera la URL del endpoint para obtener la lista de países asociados a un tratado específico.
+ * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tratado (`IDTRATADO`).
+ * Devuelve un string con la ruta completa del recurso en el backend.
+ */
 export const CATALOGO_ACUERDOS = (TRAMITE: string, IDTRATADO: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${IDTRATADO}/paises`;
 
+/**
+ * Genera la URL del endpoint para obtener los tratados o acuerdos asociados a un país específico.
+ * Recibe como parámetros el tipo de trámite (`TRAMITE`) y la clave del país (`CVEPAIS`).
+ * Devuelve un string con la ruta completa del recurso en el backend.
+ */
 export const CATALOGO_ACUERDOS_PAIS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/catalogo/pais/${CVEPAIS}/tratados-acuerdos`;

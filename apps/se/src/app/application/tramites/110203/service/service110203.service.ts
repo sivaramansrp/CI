@@ -71,18 +71,38 @@ this.tramite110203Store.setMedida(DATOS.medida);
     return this.http.get<Solicitud110203State>('assets/json/110203/serviciosExtraordinarios.json');
   }
 
+  /**
+ * Envía una petición HTTP POST al endpoint definido para guardar los datos del trámite 110203.
+ * Recibe un objeto genérico como cuerpo de la solicitud.
+ * Devuelve un observable con la respuesta del servidor en formato de objeto.
+ */
   guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
     return this.httpService.post<Record<string, unknown>>(PROC_110203.GUARDAR, { body: body });
   }
 
+  /**
+ * Realiza una petición HTTP POST al endpoint correspondiente para buscar un certificado.
+ * Recibe un objeto genérico con los parámetros de búsqueda como cuerpo de la solicitud.
+ * Devuelve un observable con la respuesta del servidor en formato de objeto.
+ */
   buscarCertificado(body: Record<string, unknown>): Observable<Record<string, unknown>> {
     return this.httpService.post<Record<string, unknown>>(PROC_110203.BUSCAR_CERTIFICADO, { body: body });
   }
 
+  /**
+ * Obtiene el estado completo de la solicitud 110203 desde el store.
+ * Retorna un observable que emite los cambios en el estado de la solicitud.
+ * Permite suscribirse para reaccionar ante actualizaciones del estado.
+ */
   getAllState(): Observable<Solicitud110203State> {
     return this.tramite110203Query.selectSolicitud$;
   }
 
+  /**
+ * Construye el objeto de información correspondiente a los tratados o acuerdos comerciales.
+ * Toma los datos del estado de la solicitud y asigna los campos necesarios.
+ * Devuelve un objeto con los valores de tratado, país, bloque, origen, destino y fechas relevantes.
+ */
   buildTratados(data:Solicitud110203State): unknown {
   return {
     "tratadoAcuerdo":data.tratado,
@@ -94,6 +114,11 @@ this.tramite110203Store.setMedida(DATOS.medida);
   };
 }
 
+/**
+ * Construye el objeto con la información del destinatario a partir del estado de la solicitud.
+ * Incluye datos personales, razón social y domicilio completo del destinatario.
+ * Devuelve un objeto estructurado con los campos requeridos para el envío del trámite.
+ */
 buildDestinatario(data:Solicitud110203State):unknown {
   return {
     "nombre": data.nombre,
@@ -105,7 +130,6 @@ buildDestinatario(data:Solicitud110203State):unknown {
       "ciudad_poblacion_estado_provincia": data.ciudad,
       "calle": data.calle,
       "numero_letra": data.letra,
-      // "lada": data.lada ?? '',
       "telefono": data.telefono,
       "fax": data.fax,
       "correo_electronico": data.correo,
@@ -114,12 +138,22 @@ buildDestinatario(data:Solicitud110203State):unknown {
 }
 }
 
+/**
+ * Construye el objeto con la información relacionada al medio de transporte.
+ * Toma el valor del campo 'medio' desde el estado de la solicitud.
+ * Devuelve un objeto con la clave 'medio_de_transporte' para incluir en el trámite.
+ */
 buildTransporte(data:Solicitud110203State): unknown {
   return {
     "medio_de_transporte": data.medio
   };
 }
 
+/**
+ * Construye el objeto con la información del certificado de origen asociado a la solicitud.
+ * Incluye datos como el ID, folio, fecha de emisión, país destino y país asociado.
+ * Utiliza los valores del estado de la solicitud para completar los campos correspondientes.
+ */
   buildCertificado(data: Solicitud110203State): unknown {
     return {
       certificado: {
@@ -139,6 +173,11 @@ buildTransporte(data:Solicitud110203State): unknown {
     };
   }
 
+/**
+ * Construye el objeto con los datos detallados del certificado para la solicitud.
+ * Incluye observaciones, precisiones, presentación y la información de las mercancías seleccionadas.
+ * Devuelve un objeto estructurado con los campos necesarios para completar el certificado.
+ */
   buildDatosCertificado(data: Solicitud110203State): unknown {
     return {
       "observaciones": data.observaciones,

@@ -14,6 +14,7 @@ import { Solocitud110203Service } from '../../service/service110203.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { doDeepCopy } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tecnicos',
@@ -89,10 +90,6 @@ export class TecnicosComponent {
    */
   idSolicitud: number = 0;
 
-  // wizardService = inject(WizardService);
-
-  // isPeligro: boolean = false;
-
 /**
  * Indica si el formulario actual es válido (`true`) o no (`false`).
  */
@@ -152,26 +149,9 @@ export class TecnicosComponent {
         this.esFormaValido = true;
         return; // Detener ejecución si los formularios son inválidos
       }
-    }
-
-    let indiceActualizado = e.valor;
-    if (e.accion === 'cont') {
-      indiceActualizado = e.valor + 1;
-    } else if (e.accion === 'ant') {
-      indiceActualizado = e.valor - 1;
-    }
-
-    // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (indiceActualizado > 0 && indiceActualizado <= this.pantallasPasos.length) {
-      // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else if (e.accion === 'ant') {
-        this.wizardComponent.atras();
-      }
+      this.obtenerDatosDelStore();
+    } else if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      this.pasoNavegarPor(e);
     }
   }
 
@@ -198,6 +178,12 @@ export class TecnicosComponent {
     this.btnContinuar = false;
   }
 
+/**
+ * Construye y envía la información completa de la solicitud 110203 al servicio correspondiente.
+ * Genera los objetos necesarios (tratados, destinatario, transporte, certificado y datos del certificado).
+ * Envía el payload al backend mediante una petición POST y actualiza el ID de solicitud en el store.
+ * Devuelve una promesa con la respuesta del servidor en formato JSONResponse.
+ */
   guardar(data: Solicitud110203State): Promise<JSONResponse> {
     const TRATADOS = this.servicio110203.buildTratados(data);
     const DESTINATARIO = this.servicio110203.buildDestinatario(data);
@@ -244,38 +230,63 @@ export class TecnicosComponent {
      "destinatario": DESTINATARIO,
      "datos_del_cerificado": DATOS_CERTIFICADO
     }
-    return new Promise((resolve, reject) => {
-        this.servicio110203.guardarDatosPost(PAYLOAD).subscribe({
-          next: (response) => {
-            if (esValidObject(response) && esValidObject(response['datos'])) {
-              const DATOS = response['datos'] as { id_solicitud?: number };
-              if (getValidDatos(DATOS.id_solicitud)) {
-                this.tramite110203Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+      return new Promise((resolve, reject) => {
+        this.servicio110203.guardarDatosPost(PAYLOAD).subscribe(
+          (response) => {
+            const API_RESPONSE = doDeepCopy(response);
+            if (
+              esValidObject(API_RESPONSE) &&
+              esValidObject(API_RESPONSE.datos)
+            ) {
+              if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                this.tramite110203Store.setIdSolicitud(
+                  API_RESPONSE.datos.id_solicitud
+                );
+                this.pasoNavegarPor({ accion: 'cont', valor: 2 });
               } else {
                 this.tramite110203Store.setIdSolicitud(0);
               }
             }
             resolve({
-              id: response['id'] ?? 0,
-              descripcion: response['descripcion'] ?? '',
-              codigo: response['codigo'] ?? '',
-              data: response['data'] ?? response['datos'] ?? null,
-              ...response
+              id: API_RESPONSE['id'] ?? 0,
+              descripcion: API_RESPONSE['descripcion'] ?? '',
+              codigo: API_RESPONSE['codigo'] ?? '',
+              data: API_RESPONSE['data'] ?? API_RESPONSE['datos'] ?? null,
+              ...API_RESPONSE
             } as JSONResponse);
           },
-          error: (error) => {
+          (error) => {
             reject(error);
           }
-        });
-        });
+        );
+      });
   }
 
-
+/**
+ * Obtiene los datos almacenados en el estado (store) mediante el servicio correspondiente.
+ * Realiza una única suscripción al observable usando 'take(1)'.
+ * Al recibir los datos, los guarda mediante el método 'guardar'.
+ */
   obtenerDatosDelStore(): void {
     this.servicio110203.getAllState()
       .pipe(take(1))
       .subscribe(data => {
         this.guardar(data);
       });
+  }
+
+    /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
+  pasoNavegarPor(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 3) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
 }

@@ -10,6 +10,7 @@ import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/11020
 import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponse, CertificadoData, TablaRow } from '../../models/datos-tramite.model';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Solocitud110203Service } from '../../service/service110203.service';
@@ -153,10 +154,21 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   tramites:string='110203';
 
+  /**
+ * Indica si una fila de la tabla o listado está actualmente seleccionada.
+ */
   public filaSeleccionada: boolean = false;
 
+  /**
+ * Almacena los datos de las filas que han sido seleccionadas en una tabla.
+ * Cada elemento del arreglo corresponde a un objeto de tipo `TableBodyData`.
+ */
   public datosFilasSeleccionadas: TableBodyData[] = [];
 
+  /**
+ * Almacena el estado completo del certificado de la solicitud 110203.
+ * Se utiliza internamente en la clase para mantener los datos del certificado actual.
+ */
   private certificadoState!: Solicitud110203State;
 
   /** 
@@ -499,7 +511,6 @@ obtenerTratadosAcuerdosPorPais(cvePais: string): void {
  * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
  */
 buscarDatos(): void {
-
     const PAYLOAD = {
       numeroCertificado: "25402500186802", 
       // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
@@ -508,77 +519,97 @@ buscarDatos(): void {
 
     this.Solocitud110203Service.buscarCertificado(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      // eslint-disable-next-line complexity
       .subscribe((response: unknown) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const DATOS = (response as any).datos ?? [];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const CUERPO_TABLA = DATOS.map((item: any) => ({
-          numeroDeCertificado: item.numeroCertificado,
-          expedicion: item.fechaExpedicion,
-          vencimiento: item.fechaVencimiento,
-        }));
+        // const DATOS = (response as any).datos ?? [];
+      const API_RESPONSE = response as ApiResponse;
+      const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
 
-        //tratado
-        this.tramite110203Store.setTratado(DATOS[0].tratadoAsociado.nombre ?? '');
-        this.tramite110203Store.setBloque(DATOS[0].paisAsociado.nombre ?? '');
-        this.tramite110203Store.setOrigen(DATOS[0].cvePaisFabricacion || 'México');
-        this.tramite110203Store.setDestino(DATOS[0].solicitud.paisDestino ?? '');
-        this.tramite110203Store.setExpedicion(DATOS[0].fechaExpedicion ?? '');
-        this.tramite110203Store.setVencimiento(DATOS[0].fechaVencimiento ?? '');
-
-        //destinatario
-        this.tramite110203Store.setNombre(DATOS[0].solicitud.personaSolicitud.nombre ?? '');
-        this.tramite110203Store.setPrimer(DATOS[0].solicitud.personaSolicitud.apellidoMaterno ?? '');
-        this.tramite110203Store.setSegundo(DATOS[0].solicitud.personaSolicitud.apellidoPaterno ?? '');
-        this.tramite110203Store.setFiscal(DATOS[0].solicitud.personaSolicitud.numeroIdentificacionFiscal ?? '')
-        this.tramite110203Store.setRazon(DATOS[0].solicitud.personaSolicitud.razonSocial ?? '');
-
-        this.tramite110203Store.setCalle(DATOS[0].solicitud.personaSolicitud.domicilio.calle ?? '');
-        this.tramite110203Store.setLetra(DATOS[0].solicitud.personaSolicitud.domicilio.letra ?? '');
-        this.tramite110203Store.setCiudad(DATOS[0].solicitud.personaSolicitud.domicilio.ciudad ?? '');
-        this.tramite110203Store.setCorreo(DATOS[0].solicitud.personaSolicitud.correoElectronico ?? '');
-        this.tramite110203Store.setFax(DATOS[0].solicitud.personaSolicitud.domicilio.fax ?? '');
-        this.tramite110203Store.setTelefono(DATOS[0].solicitud.personaSolicitud.domicilio.telefono ?? '');
-
-        //transporte
-        this.tramite110203Store.setMedio(DATOS[0].medioTransporte);
-
-        //Datos Certificado
-        this.tramite110203Store.setPrecisa(DATOS[0].precisa);
-        this.tramite110203Store.setPresenta(DATOS[0].presenta);
-        this.tramite110203Store.setObservaciones(DATOS[0].observaciones);
-
-        //Mercancías seleccionadas
-        this.tramite110203Store.setOrden(DATOS[0].mercanciasAsociadas[0].numeroOrden ?? '');
-        this.tramite110203Store.setArancelaria(DATOS[0].mercanciasAsociadas[0].fraccionArancelaria ?? '');
-        this.tramite110203Store.setNombretecnico(DATOS[0].mercanciasAsociadas[0].nombreTecnico ?? '');
-        this.tramite110203Store.setComercial(DATOS[0].mercanciasAsociadas[0].nombreComercial ?? '')
-        this.tramite110203Store.setIngles(DATOS[0].mercanciasAsociadas[0].nombreIngles ?? '');
-        this.tramite110203Store.setRegistro(DATOS[0].mercanciasAsociadas[0].numeroRegistro ?? '');
-        this.tramite110203Store.setComplemento(DATOS[0].mercanciasAsociadas[0].complementoDescripcion ?? '');
-        this.tramite110203Store.setMarca(DATOS[0].mercanciasAsociadas[0].marca ?? '');
-        this.tramite110203Store.setValor(DATOS[0].mercanciasAsociadas[0].valorMercancia ?? '');
-        this.tramite110203Store.setCantidad(DATOS[0].mercanciasAsociadas[0].cantidad ?? '');
-        this.tramite110203Store.setComercializacion(DATOS[0].mercanciasAsociadas[0].unidadMedidaComercial ?? '');
-        this.tramite110203Store.setBruta(DATOS[0].mercanciasAsociadas[0].masaBruta ?? '');
-        this.tramite110203Store.setMedida(DATOS[0].mercanciasAsociadas[0].unidadMedidaMasaBruta ?? '');
-        this.tramite110203Store.setFactura(DATOS[0].mercanciasAsociadas[0].numeroFactura ?? '');
-        this.tramite110203Store.setTipo(DATOS[0].mercanciasAsociadas[0].tipoFactura ?? '');
-        this.tramite110203Store.setFechaFactura(DATOS[0].mercanciasAsociadas[0].fechaFactura ?? '');
-
-        this.establecimientoBodyData = [];
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        CUERPO_TABLA.forEach((row:any) => {
-          const TABLE_ROW: TableBodyData = { tbodyData: []};
-          TABLE_ROW.tbodyData = [row.numeroDeCertificado, row.expedicion, row.vencimiento];
-          this.establecimientoBodyData.push(TABLE_ROW);
-        });
+        if (DATOS.length > 0) {
+          this.procesarDatosCertificado(DATOS[0]);
+          this.actualizarTabla(DATOS);
+        }
       });
 
-        this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
+    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
+}
 
+private procesarDatosCertificado(data: CertificadoData): void {
+    this.actualizarDatosTratado(data);
+    this.actualizarDatosDestinatario(data);
+    this.actualizarDatosTransporte(data);
+    this.actualizarDatosCertificado(data);
+    this.actualizarDatosMercancias(data);
+}
+
+private actualizarDatosTratado(data: CertificadoData): void {
+    this.tramite110203Store.setTratado(data.tratadoAsociado.nombre ?? '');
+    this.tramite110203Store.setBloque(data.paisAsociado.nombre ?? '');
+    this.tramite110203Store.setOrigen(data.cvePaisFabricacion || 'México');
+    this.tramite110203Store.setDestino(data.solicitud.paisDestino ?? '');
+    this.tramite110203Store.setExpedicion(data.fechaExpedicion ?? '');
+    this.tramite110203Store.setVencimiento(data.fechaVencimiento ?? '');
+}
+
+private actualizarDatosDestinatario(data: CertificadoData): void {
+    const PERSONA = data.solicitud.personaSolicitud;
+    this.tramite110203Store.setNombre(PERSONA.nombre ?? '');
+    this.tramite110203Store.setPrimer(PERSONA.apellidoMaterno ?? '');
+    this.tramite110203Store.setSegundo(PERSONA.apellidoPaterno ?? '');
+    this.tramite110203Store.setFiscal(PERSONA.numeroIdentificacionFiscal ?? '');
+    this.tramite110203Store.setRazon(PERSONA.razonSocial ?? '');
+
+    const DOMICILIO = PERSONA.domicilio;
+    this.tramite110203Store.setCalle(DOMICILIO.calle ?? '');
+    this.tramite110203Store.setLetra(DOMICILIO.letra ?? '');
+    this.tramite110203Store.setCiudad(DOMICILIO.ciudad ?? '');
+    this.tramite110203Store.setCorreo(PERSONA.correoElectronico ?? '');
+    this.tramite110203Store.setFax(DOMICILIO.fax ?? '');
+    this.tramite110203Store.setTelefono(DOMICILIO.telefono ?? '');
+}
+
+private actualizarDatosTransporte(data: CertificadoData): void {
+    this.tramite110203Store.setMedio(data.medioTransporte);
+}
+
+private actualizarDatosCertificado(data: CertificadoData): void {
+    this.tramite110203Store.setPrecisa(data.precisa);
+    this.tramite110203Store.setPresenta(data.presenta);
+    this.tramite110203Store.setObservaciones(data.observaciones);
+}
+
+private actualizarDatosMercancias(data: CertificadoData): void {
+    const MERCANCIA = data.mercanciasAsociadas[0];
+    this.tramite110203Store.setOrden(MERCANCIA.numeroOrden ?? '');
+    this.tramite110203Store.setArancelaria(MERCANCIA.fraccionArancelaria ?? '');
+    this.tramite110203Store.setNombretecnico(MERCANCIA.nombreTecnico ?? '');
+    this.tramite110203Store.setComercial(MERCANCIA.nombreComercial ?? '');
+    this.tramite110203Store.setIngles(MERCANCIA.nombreIngles ?? '');
+    this.tramite110203Store.setRegistro(MERCANCIA.numeroRegistro ?? '');
+    this.tramite110203Store.setComplemento(MERCANCIA.complementoDescripcion ?? '');
+    this.tramite110203Store.setMarca(MERCANCIA.marca ?? '');
+    this.tramite110203Store.setValor(MERCANCIA.valorMercancia ?? '');
+    this.tramite110203Store.setCantidad(MERCANCIA.cantidad ?? '');
+    this.tramite110203Store.setComercializacion(MERCANCIA.unidadMedidaComercial ?? '');
+    this.tramite110203Store.setBruta(MERCANCIA.masaBruta ?? '');
+    this.tramite110203Store.setMedida(MERCANCIA.unidadMedidaMasaBruta ?? '');
+    this.tramite110203Store.setFactura(MERCANCIA.numeroFactura ?? '');
+    this.tramite110203Store.setTipo(MERCANCIA.tipoFactura ?? '');
+    this.tramite110203Store.setFechaFactura(MERCANCIA.fechaFactura ?? '');
+}
+
+private actualizarTabla(datos: CertificadoData[]): void {
+    const CUERPO_TABLA = datos.map((item: CertificadoData) => ({
+      numeroDeCertificado: item.numeroCertificado,
+      expedicion: item.fechaExpedicion,
+      vencimiento: item.fechaVencimiento,
+    }));
+
+    this.establecimientoBodyData = [];
+    CUERPO_TABLA.forEach((row: TablaRow) => {
+      const TABLE_ROW: TableBodyData = { tbodyData: [] };
+      TABLE_ROW.tbodyData = [row.numeroDeCertificado, row.expedicion, row.vencimiento];
+      this.establecimientoBodyData.push(TABLE_ROW);
+    });
 }
 
   /** 

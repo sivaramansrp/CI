@@ -132,12 +132,15 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="correo">Correo electrónico:*</label>
-          <input class="form-control" id="correo" formControlName="correo" type="text" [placeholder]="placeholder.correo" (change)="setValoresStore(destinatarioForm,'correo', 'setCorreo')">
+          <input class="form-control" id="correo" formControlName="correo" type="email" [placeholder]="placeholder.correo" (change)="setValoresStore(destinatarioForm,'correo', 'setCorreo')">
         </div>
         @if(destinatarioForm.controls['correo'].invalid && destinatarioForm.controls['correo'].touched) {
         <div class="d-grid">
         @if(destinatarioForm.controls['correo'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(destinatarioForm.controls['correo'].errors?.['email']) {
+        <span class="mensaje-error">El formato del correo electrónico no es válido</span>
         }
         </div>
         }

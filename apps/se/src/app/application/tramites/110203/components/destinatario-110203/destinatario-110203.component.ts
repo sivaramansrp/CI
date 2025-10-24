@@ -222,12 +222,18 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+/**
+ * Valida los campos del formulario de destinatario.
+ * Verifica que los campos 'calle' y 'letra' no estén vacíos ni sean nulos.
+ * Si ambos son válidos, devuelve true; de lo contrario, marca todos los campos como tocados y devuelve false.
+ */
   validarFormularios(): boolean {
     if (
       this.destinatarioForm.get('calle')?.value !== '' &&
       this.destinatarioForm.get('calle')?.value !== null &&
       this.destinatarioForm.get('letra')?.value !== '' &&
-      this.destinatarioForm.get('letra')?.value !== null
+      this.destinatarioForm.get('letra')?.value !== null && 
+      this.destinatarioForm.get('correo')?.valid 
     ) {
       return true;
     }
