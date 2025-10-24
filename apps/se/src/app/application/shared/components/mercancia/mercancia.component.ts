@@ -41,6 +41,7 @@ import {
   InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_DESCRIPCION,
   SeccionLibQuery,
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
@@ -502,7 +503,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           ? [Validators.required]
           : null,
       ],
-      marca: [this.datosSeleccionados?.marca ?? null],
+      marca: [this.datosSeleccionados?.marca ?? null,[Validators.pattern(REGEX_DESCRIPCION)]],
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [

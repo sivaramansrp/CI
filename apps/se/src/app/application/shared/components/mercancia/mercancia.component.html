@@ -157,13 +157,39 @@
               formControlName="criterioParaConferirOrigen"
             />
           </div>
+          } @if(MARCA.includes(idProcedimiento)){
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="marca">Marca:</label>
+              <input
+                type="text"
+                id="marca"
+                formControlName="marca"
+                class="form-control"
+              />
+              @if(mercanciaForm.controls['marca'].invalid &&
+              mercanciaForm.controls['marca'].touched) {
+              <div class="d-grid">
+                @if(mercanciaForm.controls['marca'].errors?.['maxlength']) {
+                <span class="mensaje-error"
+                  >La marca no puede ser mayor a 50 caracteres</span
+                >
+                } @if(mercanciaForm.controls['marca'].errors?.['pattern']) {
+                <span class="mensaje-error"
+                  >No se permiten caracteres especiales</span
+                >
+                }
+              </div>
+              }
+            </div>
+          </div>
           }
 
           <div class="col-md-6">
             <label for="cantidad"
               >Cantidad<span
                 [ngClass]="{
-                  'text-center':
+                  'text-danger':
                     mercanciaForm.controls['cantidad'].invalid &&
                     mercanciaForm.controls['cantidad'].touched
                 }"
@@ -218,7 +244,7 @@
             <label for="valorMercancia"
               >Valor de la mercancía (dólares)<span
                 [ngClass]="{
-                  'text-center':
+                  'text-danger':
                     mercanciaForm.controls['valorMercancia'].invalid &&
                     mercanciaForm.controls['valorMercancia'].touched
                 }"
@@ -251,7 +277,7 @@
             <label for="complementoDescripcion"
               >Complemento de la descripción<span
                 [ngClass]="{
-                  'text-center':
+                  'text-danger':
                     mercanciaForm.controls['complementoDescripcion'].invalid &&
                     mercanciaForm.controls['complementoDescripcion'].touched
                 }"
@@ -259,7 +285,7 @@
               >:</label
             >
             <textarea
-              class="mb-4 h-20 w-100 form-control"
+              class="mb-4 w-100 form-control h-50 no-resize"
               formControlName="complementoDescripcion"
               rows="2"
             ></textarea>
