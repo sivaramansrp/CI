@@ -50,7 +50,9 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
   ngOnInit(): void {
     this.campoDestinatario = CAMPO_DE_TRANSPORTE.includes(this.idProcedimiento);
     this.campoDetalles = CAMPO_DE_DETALLES.includes(this.idProcedimiento);
-    this.getMedioTransporte();
+    if (!this.campoDetalles) {
+      this.getMedioTransporte();
+    }
     this.createForm();
   }
 

@@ -5,6 +5,7 @@ import {
   GrupoDeDomicilio,
   GrupoTratado,
   HistoricoColumnas,
+  MercanciaTabla,
   SeleccionadasTabla,
 } from '../../tramites/110217/models/certificado-origen.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -189,6 +190,25 @@ export interface Tramite110217State {
 
   /** Lista de productores exportador agregados al estado del trámite. */
   agregarProductoresExportador: HistoricoColumnas[];
+
+  /** Lista de mercancías asociadas a los productores en el estado del trámite. */
+  mercanciaProductores: MercanciaTabla[];
+
+  formDatosCertificado: { [key: string]: unknown };
+
+  /**
+ * Objeto que indica la validez de los diferentes formularios del trámite.
+ * Cada propiedad representa un formulario y su valor indica si es válido.
+ */
+  formValidity?: {
+    datosCertificado?: boolean;
+    datosDestinatario?: boolean;
+    domicilioDestinatario?: boolean;
+    datosRepresentante?: boolean;
+    detallesTransporte?: boolean;
+    histProductores?: boolean;
+    certificadoOrigen?: boolean;
+  };
 }
 
 /**
@@ -354,6 +374,15 @@ export function createInitialState(): Tramite110217State {
     bloque: '',
     productoresExportador: [],
     agregarProductoresExportador: [],
+    mercanciaProductores: [],
+    formDatosCertificado: {
+    observacionesDates: '',
+    idiomaDates: '',
+    precisaDates: '',
+    EntidadFederativaDates: '',
+    representacionFederalDates: '',
+  },
+  formValidity: {},
   };
 }
 /**
@@ -495,8 +524,10 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    */
   public setFormDatosCertificado(datosCertificado: { [key: string]: unknown }): void {
     this.update((state) => ({
-      ...state,
-      ...datosCertificado,
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
+        ...datosCertificado,
+      },
     }));
   }
 
@@ -1700,5 +1731,31 @@ export class Tramite110217Store extends Store<Tramite110217State> {
         ...productor.map(item => ({ ...item })),
       ],
       }));
+  }
+
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
+    }));
   }
 }

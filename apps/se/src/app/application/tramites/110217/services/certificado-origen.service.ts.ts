@@ -1,10 +1,12 @@
-import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
-import { HttpClient } from '@angular/common/http';
-import { HttpCoreService } from '@libs/shared/data-access-user/src';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ProductorExportador } from '../models/certificado-origen.model';
+import { CatalogoLista, HistoricoColumnas, MercanciaTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { PROC_110217, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
+import { formatearFechaYyyyMmDd, HttpCoreService } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { Observable } from 'rxjs';
+import { Tramite110217Query } from '../../../estados/queries/tramite110217.query';
+import { Tramite110217State } from '../../../estados/tramites/tramite110217.store';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -22,7 +24,11 @@ export class CertificadosOrigenService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient, public httpService: HttpCoreService,) { }
+  constructor(
+    private http: HttpClient,
+    public httpService: HttpCoreService,
+    private tramite110217Query: Tramite110217Query
+  ) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.
@@ -129,5 +135,163 @@ export class CertificadosOrigenService {
  */
   agregarProductores(body: {rfc_solicitante: string}): Observable<unknown> {
     return this.httpService.post<unknown>(PROC_110217.AGREGAR_PRODUCTOR, { body: body });
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+  */
+  getAllState(): Observable<Tramite110217State> {
+    return this.tramite110217Query.allStoreData$;
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110217.GUARDAR, { body: body });
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  // eslint-disable-next-line class-methods-use-this
+  buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
+    return data.map(item => ({
+      "nombreCompleto": item.nombreProductor,
+      "rfc": item.numeroRegistroFiscal,
+      "direccionCompleta": item.direccion,
+      "correoElectronico": item.correoElectronico,
+      "telefono": item.telefono,
+      "fax": item.fax
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  // eslint-disable-next-line class-methods-use-this
+  buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
+    return data.map(item => ({
+      "fraccionArancelaria": item.fraccionArancelaria,
+      "cantidadComercial": item.cantidad,
+      "descUnidadMedidaComercial": item.unidadMedida,
+      "valorTransaccional": item.valorMercancia,
+      "descFactura": item.fetchFactura,
+      "fechaFactura": item.fetchFactura,
+      "numeroFactura": item.numeroFactura,
+      "complementoDescripcion": item.complementoDescripcion,
+      "rfcProductor": item.rfcProductor1
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildCertificado(data: Tramite110217State): unknown {
+    return {
+        "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
+        "pais_bloque": data.formCertificado['bloque'],
+        "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'],
+        "nombre_comercial": data.formCertificado['nombreComercialForm'],
+        "registro_producto": data.formCertificado['registroProductoForm'],
+        "fecha_inicio": formatearFechaYyyyMmDd(data.formCertificado['fechaInicioInput'] as string),
+        "fecha_fin": formatearFechaYyyyMmDd(data.formCertificado['fechaFinalInput'] as string),
+        "realizo_tercer_operador": {
+        "tercer_operador": data.formCertificado['si'] as boolean,
+        "nombre": data.formCertificado['nombres'] as string,
+        "primer_apellido": data.formCertificado['primerApellido'] as string,
+        "segundo_apellido": data.formCertificado['segundoApellido'] as string,
+        "numero_registro_fiscal": data.formCertificado['numeroDeRegistroFiscal'] as string,
+        "razon_social": data.formCertificado['razonSocial'] as string
+      },
+      "domicilio_tercer_operador": {
+        "pais": data.formCertificado['pais'] as string,
+        "ciudad": data.formCertificado['ciudad'] as string,
+        "calle": data.formCertificado['calle'] as string,
+        "numero_letra": data.formCertificado['numeroLetra'] as string,
+        "telefono": data.formCertificado['telefono'] as string,
+        "correo_electronico": data.formCertificado['correo'] as string,
+        "lada":"",
+        "fax":""
+      },
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla)
+    }
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildCertificadoMercancia(data: Mercancia[]): unknown {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+    return data.map((item) => ({
+      id: 0,
+      fraccion_arancelaria: item.fraccionArancelaria ?? '',
+      cantidad: item.cantidad ?? '',
+      unidad_medida: item.umc ?? '',
+      valor_mercancia: item.valorMercancia ?? '',
+      tipo_factura: item.tipoFactura ?? '',
+      num_factura: item.numeroFactura ?? '',
+      complemento_descripcion: item.complementoDescripcion ?? '',
+      fecha_factura: item.fechaFactura ?? ''
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildDestinatario(data: Tramite110217State): unknown {
+    return {
+      "nombre": data.grupoReceptor.nombre,
+      "primer_apellido": data.grupoReceptor.apellidoPrimer,
+      "segundo_apellido": data.grupoReceptor.apellidoSegundo,
+      "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
+      "razon_social": data.grupoReceptor.razonSocial,
+      "domicilio": {
+          "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad,
+          "calle": data.grupoDeDirecciones.calle,
+          "numero_letra": data.grupoDeDirecciones.numeroLetra,
+          "lada": "HG",
+          "telefono": data.grupoDeDirecciones.telefono,
+          "fax": 4444444,
+          "correo_electronico": data.grupoDeDirecciones.correoElectronico,
+          "pais_destino": "México"
+      },
+      "generalesRepresentanteLegal": {
+          "lugarRegistro": data.grupoRepresentativo.lugar,
+          "nombre": data.grupoRepresentativo.nombreExportador,
+          "razonSocial": data.grupoRepresentativo.empresa,
+          "puesto": data.grupoRepresentativo.cargo,
+          "telefono": data.grupoRepresentativo.telefono,
+          "correoElectronico": data.grupoRepresentativo.correoElectronico
+        },
+      "medio_transporte": "MEDTR.01"
+    }
+  }
+
+  /** Construye el objeto de datos para el certificado a partir del estado del trámite 110214. */
+  buildDatosCertificado(data: Tramite110217State): unknown {
+    return {
+      "observaciones": data.formDatosCertificado['observacionesDates'],
+      "idioma": data.formDatosCertificado['idiomaDates'],
+      "representacion_federal": {
+          "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'],
+          "representacion_federal": data.formDatosCertificado['representacionFederalDates']
+      }
+    }
+  }
+
+  /**
+   * Construye el objeto con los detalles de transporte del destinatario a partir del estado del trámite 110216.
+   * @param data Estado actual del trámite 110216.
+   * @returns Objeto con los datos de transporte para el destinatario.
+   */
+  buildDestinatarioTransporteDetalles(data: Tramite110217State): unknown {
+    return {
+      "medioTransporte": "",
+      "rutaCompleta": "",
+      "puertoEmbarque": data.grupoDeTransporte.puertoEmbarque,
+      "puertoDesembarque": data.grupoDeTransporte.puertoDesembarque,
+      "fecEmbarque": "",
+      "lugarEmbarque": "",
+      "puertoTransito": data.grupoDeTransporte.puertoTransito,
+      "nombreEmbarcacion": data.grupoDeTransporte.nombreEmbarcacion,
+      "numeroVuelo": data.grupoDeTransporte.numeroVuelo
+    }
   }
 }

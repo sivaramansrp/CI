@@ -70,9 +70,6 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   */
   public esFormularioSoloLectura: boolean = false;
 
-  /** Indica si el formulario es válido. */
-  public isFormValid: boolean = false;
-
   /**
    * Solicitud actual del trámite.
    */
@@ -158,7 +155,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
    * 
    * @returns void
    */
-  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStore(event: { formGroupName: string, campo: string, valor: string | number | boolean | object | undefined, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormHistorico({ [CAMPO]: VALOR });
   }
@@ -220,7 +217,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
 
   /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
-    this.isFormValid = event;
+    this.store.setFormValidity('histProductores', event);
   }
 
   /**

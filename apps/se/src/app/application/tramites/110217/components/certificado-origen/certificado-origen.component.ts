@@ -95,10 +95,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   datosTablaUno$: Mercancia[] = [];
 
   /**
-   * @descripcion
-   * Valores actuales del formulario de certificado.
+   * Formulario reactivo utilizado para la gestión de los datos del certificado.
+   * @type {FormGroup}
    */
-  formCertificadoValues!: { [key: string]: unknown };
+  formCertificado!: { [key: string]: undefined | boolean | string | number | object };
 
   /**
    * @descripcion
@@ -156,6 +156,27 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   /**
+   * @property {CertificadoDeOrigenComponent} certificadoDeOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
+   * Permite acceder a los métodos y propiedades del componente de certificado de origen desde el componente padre.
+   */
+  @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
+
+  /**
+   * Constructor del componente.
+   * Inicializa el formulario y las dependencias necesarias para la carga de datos.
+   * @param fb FormBuilder para la creación del formulario reactivo.
+   * @param store Store para gestionar los datos de estado.
+   * @param tramiteQuery Consulta de estado para obtener los valores del formulario.
+   * @param certificadoService Servicio para la gestión de los certificados.
+   * @param toastr Servicio de notificaciones para mostrar mensajes.
+   * @param seccionQuery Consulta para obtener el estado de la sección.
+   * @param seccionStore Store para actualizar el estado de la sección.
+   */
+  private actualizandoFormulario = false;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -181,6 +202,19 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
+    /**
+     * Suscripción para cargar los valores del formulario desde el store.
+     */
+    this.query.formCertificado$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(estado => {
+      if (!this.actualizandoFormulario && estado) {
+        this.actualizandoFormulario = true;        
+        this.formCertificado = estado as { [key: string]: string | number | boolean | object | undefined };
+        this.actualizandoFormulario = false;
+      }
+    });
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -220,7 +254,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   setValoresStore(event: {
     formGroupName: string;
     campo: string;
-    valor: undefined;
+    valor: string | number | boolean | object | undefined;
     storeStateName: string;
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
@@ -344,6 +378,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ certificado: valida });
+    this.store.setFormValidity('certificadoOrigen', valida);
   }
 
   /**
@@ -353,6 +388,27 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
+  }
+
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**

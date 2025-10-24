@@ -55,6 +55,9 @@ import { ValidarInicialmenteCertificadoService } from '../../../tramites/110221/
 export class RepresentanteLegalExportadorComponent
   implements OnDestroy, OnInit
 {
+  /** Evento para indicar si el formulario es válido */
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
   /**
    * @property procedimiento
    * @description Identificador del procedimiento actual.
@@ -141,7 +144,9 @@ export class RepresentanteLegalExportadorComponent
     this.form = this.fb.group({});
     this.crearFormulario();
 
-    this.obtenerPaisDestinoCatalogo();
+    if (this.procedimiento === '110221') {
+      this.obtenerPaisDestinoCatalogo();
+    }
   }
 
    /** Método público para marcar todos los campos como tocados y mostrar errores */
@@ -243,6 +248,7 @@ export class RepresentanteLegalExportadorComponent
     metodoNombre: string
   ): void {
     const VALOR = this.form.get(campo)?.getRawValue();
+    this.formaValida.emit(this.form.valid);
     this.formDatosDelDestinatarioEvent.emit({
       formGroupName,
       campo,

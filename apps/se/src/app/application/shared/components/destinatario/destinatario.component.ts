@@ -168,7 +168,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.camposDestinatarios = CAMPO_DE_DESTINATARIOS.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
-    this.getPaisDestino();
+    if (this.paisDestino) {
+      this.getPaisDestino();
+    }
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */

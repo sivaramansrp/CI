@@ -1,6 +1,7 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
 
 export interface Mercancia {
+  descripcion?(descripcion: any): unknown;
   fraccionArancelaria: string;
   numeroDeRegistrodeProductos: string;
   fechaExpedicion: string;
