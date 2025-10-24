@@ -609,9 +609,9 @@ export class CertificadoDeOrigenComponent
         nombreComercialForm: ['', [Validators.maxLength(200)]],
         fechaInicioInput: [''],
         fechaFinalInput: [''],
-        nombres: ['', [Validators.required, Validators.maxLength(20)]],
-        primerApellido: ['', [Validators.required, Validators.maxLength(20)]],
-        segundoApellido: ['', [Validators.maxLength(20)]],
+        nombres: ['', [Validators.required, Validators.maxLength(25)]],
+        primerApellido: ['', [Validators.required, Validators.maxLength(255)]],
+        segundoApellido: ['', [Validators.maxLength(25)]],
         numeroDeRegistroFiscal: [
           '',
           [Validators.required, Validators.maxLength(30)],
