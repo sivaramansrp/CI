@@ -13,7 +13,7 @@ import { CertificadoDeOrigenComponent } from '../../shared/components/certificad
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datosCertificado/datosCertificado.component';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from './components/destinatario-de/destinatario-de.component';
 import { MercanciaComponent } from '../../shared/components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -35,7 +35,7 @@ import { provideHttpClient } from '@angular/common/http';
     WizardComponent,
     SolicitanteComponent,
     AlertComponent,
-    DestinatarioComponent,
+    DestinatarioDeComponent,
     DatosCertificadoComponent,
     FirmaElectronicaComponent,
     PasoFirmaComponent,

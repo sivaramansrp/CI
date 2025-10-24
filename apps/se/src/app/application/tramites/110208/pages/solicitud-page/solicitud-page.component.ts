@@ -1,8 +1,8 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modificacion.enum";
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -177,22 +177,90 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.indice = 1;
-        this.datosPasos.indice = 1;
-      } else {
-        this.indice = 2;
-        this.datosPasos.indice = 2;
+        return;
       }
-
-    } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.obtenerDatosDelStore()
+    }
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
   }
+    /**
+    * Obtiene los datos del store y los guarda utilizando el servicio.
+    */
+    obtenerDatosDelStore(): void {
+      this.solocitud110208Service.getAllState()
+        .pipe(take(1))
+        .subscribe(data => {
+          this.guardar(data);
+  
+        });
+    }
+      /**
+    * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+    * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+    *
+    * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+    *
+    * @remarks
+    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
+    * La llamada al servicio actualmente está comentada.
+    */
+     guardar(data: Solicitud110208State): Promise<JSONResponse> {
+      console.log(data,'data');
+      
+     const CERTIFICADO = this.solocitud110208Service.buildCertificado(data);
+      const DATOS_CERTIFICADO = this.solocitud110208Service.buildDatosCertificado(data);   
+      const DESTINATARIO = this.solocitud110208Service.buildDestinatario(data);
+       const PAYLOAD = {
+          rfc_solicitante: 'AAL0409235E6',
+          idSolicitud: this.solicitudState.idSolicitud || 0,
+          solicitante: {
+            rfc: "AAL0409235E6",
+            nombre: "ACEROS ALVARADO S.A. DE C.V.",
+            actividad_economica: "Fabricación de productos de hierro y acero",
+            correo_electronico: "contacto@acerosalvarado.com",
+            domicilio: {
+              pais: "México",
+              codigo_postal: "06700",
+              estado: "Ciudad de México",
+              municipio_alcaldia: "Cuauhtémoc",
+              localidad: "Centro",
+              colonia: "Roma Norte",
+              calle: "Av. Insurgentes Sur",
+              numero_exterior: "123",
+              numero_interior: "Piso 5, Oficina A",
+              lada: "",
+              telefono: "123456"
+            }
+          },
+          certificado: CERTIFICADO,
+          destinatario: DESTINATARIO,
+          datos_del_certificado: DATOS_CERTIFICADO
+        };
+    
+         return new Promise((resolve, reject) => {
+               this.solocitud110208Service.guardarDatosPost(PAYLOAD).subscribe(response => {
+                 const API_RESPONSE = doDeepCopy(response);
+                 if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+                   if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
+                     this.tramite110208Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
+                     this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+                   } else {
+                     this.tramite110208Store.setIdSolicitud(0);
+                   }
+                 }
+                 resolve(response);
+               }, error => {
+                 reject(error);
+               });
+               });
+      }
 
   /**
    * Obtiene el valor del índice de la acción del botón.

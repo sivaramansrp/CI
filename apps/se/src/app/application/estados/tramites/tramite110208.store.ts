@@ -7,6 +7,7 @@ import { Mercancia } from '../../shared/models/modificacion.enum';
  * Interfaz que representa el estado de Solicitud260211.
  */
 export interface Solicitud110208State {
+  id: number | null;
   /** ID de la solicitud */
   idSolicitud: number | null;
   /**
@@ -201,6 +202,17 @@ export interface Solicitud110208State {
    * Objeto que almacena los valores del formulario de mercancía.
    */
   mercanciaForm: { [key: string]: unknown };
+  formDatosDelDestinatario: { [key: string]: unknown };
+    formDestinatario: { [key: string]: unknown };
+      /** Datos generales del destinatario en formulario dinámico */
+  destinatarioForm: { [key: string]: unknown };
+    /** Lista de países destino como catálogo */
+  paisDestin: Catalogo[];
+    /** País destino seleccionado */
+  paisDestinSeleccion: Catalogo;
+  medioDeTransporteSeleccion: Catalogo;
+    /** Lista de medios de transporte disponibles */
+    medioDeTransporte: Catalogo[];
 }
 /**
  * Función para crear el estado inicial de Solicitud110208State.
@@ -208,6 +220,7 @@ export interface Solicitud110208State {
  */
 export function createInitialState(): Solicitud110208State {
   return {
+    id: null,
     idSolicitud: 0,
     /**
      * El valor de entidadFederativa.
@@ -431,6 +444,33 @@ export function createInitialState(): Solicitud110208State {
       fechaFinalInput: '',
       nalad: '',
     },
+      formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
+      destinatarioForm: {
+      medioDeTransporte: '',
+    },
+    formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      calle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+        /** País destino seleccionado */
+    paisDestinSeleccion: { id: -1, descripcion: '' },
+    /** Lista de países destino */
+    paisDestin: [],
+        /** Lista de medios de transporte */
+    medioDeTransporte: [],
+    medioDeTransporteSeleccion: { id: -1, descripcion: '' }
   };
 }
 
@@ -1013,6 +1053,87 @@ export class Tramite110208Store extends Store<Solicitud110208State> {
         ...state.mercanciaForm,
         ...values,
       },
+    }));
+  }
+    /**
+   * Actualiza el estado del formulario de destinatario con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
+   */
+  setDestinatarioForm(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      destinatarioForm: {
+        ...state.destinatarioForm,
+        ...values,
+      },
+    }));
+  }
+  
+  /**
+   * @method setFormDatosDelDestinatario
+   * @description
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDatosDelDestinatario(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+    /**
+   * @method setFormDestinatario
+   * @description
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDestinatario(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+   /**
+   * Actualiza el estado con la lista de medios de transporte
+   * @param medioDeTransporte Arreglo de catálogos con los medios de transporte
+   */
+  setMedioDeTransporte(medioDeTransporte: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      medioDeTransporte,
+    }));
+  }
+   /**
+    * Establece los medioDeTransporteSeleccion de países en el almacén.
+    * 
+    * @param {Catalogo} medioDeTransporteSeleccion - Un array de objetos `Catalogo` que representa los medioDeTransporteSeleccion de países.
+    * 
+    * @returns {void} - No devuelve ningún valor.
+    */
+    setMedioDeTransporteSeleccion(medioDeTransporteSeleccion: Catalogo): void {
+      this.update((state) => ({
+        ...state,
+        medioDeTransporteSeleccion,
+      }));
+    }
+  /**
+   * Establece los paisDestinSeleccion de países en el almacén.
+   *
+   * @param {Catalogo} paisDestinSeleccion - Un array de objetos `Catalogo` que representa los paisDestinSeleccion de países.
+   *
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setPaisDestinSeleccion(paisDestinSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      paisDestinSeleccion,
     }));
   }
 }

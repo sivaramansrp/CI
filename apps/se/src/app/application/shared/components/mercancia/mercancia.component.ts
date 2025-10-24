@@ -41,6 +41,7 @@ import {
   InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_DESCRIPCION,
   SeccionLibQuery,
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';

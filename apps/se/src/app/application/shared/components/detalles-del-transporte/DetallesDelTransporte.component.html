@@ -3,14 +3,16 @@
         <div class="row mt-5">
             <ng-titulo titulo="Detalles del transporte" />
             <div *ngIf="campoDestinatario">
-                <div class="col-md-6">
+                <div class="row mt-5">
+                <div class="col-md-8">
                     <app-catalogo-select [catalogo]="medioDeTransporte || []" [label]="'Medio de transporte'"
                         [required]="false" name="estado" formControlName="medioDeTransporte"
                         (selectionChange)="medioDeTransporteSeleccion($event)"
                         (change)="setValoresStore('formTransporte','paisDestin','setFormDestinatario')"
                         ></app-catalogo-select>
                 </div>
-                <div class="row mt-5">
+                  </div>
+                  <div class="row mt-5">
                     <div class="col-md-6 mb-3">
                         <label>Ruta completa :</label>
                         <input type="text" class="form-control" id="rutaCompleta" formControlName="rutaCompleta"
