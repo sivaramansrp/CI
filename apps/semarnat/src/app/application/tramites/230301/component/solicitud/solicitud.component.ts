@@ -1,28 +1,38 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { Solicitud230301State, Solicitud230301Store} from '../../estados/tramites/tramites230301.store';
-import { map, takeUntil} from 'rxjs';
-import { Subject} from 'rxjs';
+import {
+  Tramite230301State,
+  Tramite230301Store,
+} from '../../estados/tramites/tramites230301.store';
+import { map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
-import { ConsultaSolicitud230301Query } from '../../estados/queries/tramites230301.query';
+import { Tramite230301Query } from '../../estados/queries/tramites230301.query';
 
-import { SeccionLibState} from '@libs/shared/data-access-user/src';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SeccionLibQuery,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { SeccionLibState } from '@libs/shared/data-access-user/src';
 
-import { SeccionLibStore} from '@libs/shared/data-access-user/src';
-
-import { RespuestaDesistimientoSolicitud } from '../../models/disponsibles.model';
-import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
-
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule],
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
-  
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
@@ -42,34 +52,38 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual de la solicitud.
-   * @type {Solicitud230301State}
+   * @type {Tramite230301State}
    */
-  public solicitudState!: Solicitud230301State;
+  public solicitud230301State!: Tramite230301State;
 
   /**
    * Estado de la sección.
    * @type {SeccionLibState}
    */
-  private seccion!: SeccionLibState;
+  private seccionState!: SeccionLibState;
+
+  /**
+   * Estado de la consulta compartida entre trámites.
+   * @type {ConsultaioState}
+   */
+  private consultaioState!: ConsultaioState;
 
   /**
    * Constructor para inicializar dependencias.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
-   * @param {DesistimientoSolicitudService} desistimientoService - Servicio para manejar solicitudes de desistimiento.
-   * @param {Solicitud230301Store} desistimientoStore - Almacén para gestionar el estado de la solicitud.
-   * @param {ConsultaSolicitud230301Query} consultaSolicitud230301 - Consulta para obtener el estado de la solicitud.
+   * @param {Tramite230301Store} tramite230301Store - Almacén para gestionar el estado de la solicitud.
+   * @param {Tramite230301Query} tramite230301Query - Consulta para obtener el estado de la solicitud.
    * @param {SeccionLibQuery} seccionQuery - Consulta para obtener el estado de la sección.
-   * @param {SeccionLibStore} seccionStore - Almacén para gestionar el estado de la sección.
+   * @param consultaioQuery
    */
   constructor(
     private fb: FormBuilder,
-    private desistimientoService: DesistimientoSolicitudService,
-    private readonly desistimientoStore: Solicitud230301Store,
-    private consultaSolicitud230301: ConsultaSolicitud230301Query,
-    private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private readonly tramite230301Store: Tramite230301Store,
+    private tramite230301Query: Tramite230301Query,
+    private readonly seccionQuery: SeccionLibQuery,
+    private readonly consultaioQuery: ConsultaioQuery
   ) {
-        // Se puede agregar aquí la lógica del constructor si es necesario
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   /**
@@ -79,11 +93,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Suscripción al estado de la solicitud
-    this.consultaSolicitud230301.estadoSolicitud$
+    this.tramite230301Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
+          this.solicitud230301State = seccionState;
         })
       )
       .subscribe();
@@ -93,66 +107,73 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.seccion = seccionState;
+          this.seccionState = seccionState;
         })
       )
       .subscribe();
-    this.crearDesistimientoForm();
-    this.getFromdata();
-    if(this.formularioDeshabilitado) {
-      this.formDesistimiento.disable();
-    }
+
+    // Suscripción al estado compartido para obtener el folio del trámite anterior
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((consultaioState) => {
+          this.consultaioState = consultaioState;
+          this.initializeComponent();
+        })
+      )
+      .subscribe();
   }
 
-    /**
+  /**
    * @function crearDesistimientoForm
    * @description
    * Inicializa un formulario reactivo para manejar los datos de "desistimiento" (retiro).
    * El formulario incluye campos para el folio de desistimiento, tipo de solicitud y motivo del desistimiento.
    * Algunos campos están pre-rellenados y deshabilitados según el estado actual de la solicitud.
-   * 
+   *
    * @returns {void} Esta función no retorna ningún valor.
    */
-    crearDesistimientoForm (): void {
-      // Inicialización del formulario reactivo
-      this.formDesistimiento = this.fb.group({
-        desistimientoFolio: [
-          { value: this.solicitudState.desistimientoFolio, disabled: true },
-          Validators.required,
-        ],
-        solicitudTipo: [
-          { value: this.solicitudState.solicitudTipo, disabled: true },
-          [Validators.required],
-        ],
-        desistimientoMotivo: [
-          this.solicitudState.desistimientoMotivo,
-          [Validators.required],
-        ],
+  crearDesistimientoForm(): void {
+    this.formDesistimiento = this.fb.group({
+      folioAnterior: [
+        { value: this.solicitud230301State.folioAnterior, disabled: true },
+      ],
+      tipoSolicitud: [
+        { value: this.solicitud230301State.tipoSolicitud, disabled: true },
+      ],
+      motivoDesistimiento: [
+        this.solicitud230301State.motivoDesistimiento,
+        [Validators.required],
+      ],
+    });
+
+    this.formDesistimiento
+      .get('motivoDesistimiento')
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((motivo) => {
+        this.tramite230301Store.setMotivoDesistimiento(motivo);
       });
-    }
+  }
 
   /**
-   * Método para obtener datos del desistimiento desde el servicio.
-   * Actualiza el formulario con los datos obtenidos.
+   * Inicializa el componente: actualiza el store local y crea el formulario.
    * @returns {void}
    */
-  getFromdata(): void {
-    this.desistimientoService
-      .getDesistimientoSolicitud('solictud.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (res: RespuestaDesistimientoSolicitud ) => {
-          this.formDesistimiento.patchValue({
-            desistimientoFolio: res.data.desistimientoFolio,
-            solicitudTipo: res.data.solicitudTipo,
-          });
-          this.desistimientoStore.setSolicitudTipo(res.data.desistimientoFolio);
-          this.desistimientoStore.setDesistimientoFolio(res.data.solicitudTipo);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+  private initializeComponent(): void {
+    this.tramite230301Store.setInitialState({
+      /**
+       Se tiene que implementar el trámite padre y reemplazar las variables fijas
+       una vez que se pueda navegar entre trámites.
+       */
+      folioAnterior: '0200800100220210814000022',
+      tipoSolicitud:
+        'Certificado fitosanitario tipo de solicitud anterior etc etc',
+      solicitudAnterior: 202734928,
+    });
+    this.crearDesistimientoForm();
+    if (this.formularioDeshabilitado) {
+      this.formDesistimiento.disable();
+    }
   }
 
   /**
@@ -169,25 +190,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para manejar cambios en la descripción del desistimiento.
-   * Actualiza el estado del almacén con el motivo del desistimiento.
-   * @returns {void}
-   */
-  onDescripcionChange(): void {
-    const DESISTIMIENTO_MOTIVO = this.formDesistimiento.get('desistimientoMotivo')?.value;
-    this.desistimientoStore.setDesistimientoMotivo(DESISTIMIENTO_MOTIVO);
-
-    const SECCION: number = 1;
-    const FORMAS_VALIDADAS = this.seccion.formaValida;
-    FORMAS_VALIDADAS[SECCION] = true;
-  }
-  /**
    * @method validarFormulario
    * @description
    * Valida el estado del formulario de desistimiento.
    * Si el formulario es válido, retorna true.
    * Si no es válido, marca todos los campos como tocados para mostrar los mensajes de error y retorna false.
-   * 
+   *
    * @returns {boolean} true si el formulario es válido, false si contiene errores de validación.
    */
   validarFormulario(): boolean {
@@ -195,8 +203,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       return true;
     }
     this.formDesistimiento.markAllAsTouched();
-    return false
+    return false;
   }
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
@@ -208,4 +217,3 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 }
-
