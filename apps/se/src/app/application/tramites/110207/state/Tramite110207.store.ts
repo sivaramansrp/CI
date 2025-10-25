@@ -145,12 +145,16 @@ export interface Solicitud110207State {
    */
   mercanciaTabla: Mercancia[];
 
+  /** Lista de mercancías seleccionadas en la tabla. */
   mercanciaSeleccionadasTabla: Mercancia[];
 
+  /** Datos del destinatario. */
   formDatosDelDestinatario: { [key: string]: unknown };
 
+  /** Datos del destinatario en formulario dinámico */
   formDestinatario: { [key: string]: unknown };
-
+  
+  /** Información del grupo representativo */
   grupoRepresentativo: GrupoRepresentativo;
 
   /** Datos generales del destinatario en formulario dinámico */

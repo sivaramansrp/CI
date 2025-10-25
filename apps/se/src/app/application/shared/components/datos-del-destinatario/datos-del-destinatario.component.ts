@@ -149,8 +149,16 @@ export class DatosDelDestinatarioComponent
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
     });  
+    this.updateRequiredValidators();
   }
 
+  /**
+   * Actualiza los validadores requeridos del campo 'numeroDeRegistroFiscal'
+   * en el formulario 'formDatosDelDestinatario' según el procedimiento actual.
+   * * @remarks
+   * Este método verifica si el identificador del procedimiento (`idProcedimiento`)
+   * está incluido en la lista de procedimientos que requieren el campo 'numeroDeRegistroFiscal'.
+   */
   updateRequiredValidators(): void {
     if (this.NUMERO_REGISTRO_FISCAL_REQUIRED.includes(this.idProcedimiento)) {
         this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
