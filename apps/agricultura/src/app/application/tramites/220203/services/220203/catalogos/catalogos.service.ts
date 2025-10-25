@@ -4,7 +4,17 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { map, Observable } from 'rxjs';
-import { API_GET_CATALOGO_CONSULTA_PAISES, API_GET_CATALOGO_FRACCION_ARANCELARIA, API_GET_CATALOGO_FRACCIONES_ARANCELARIAS, API_GET_CATALOGO_RESTRICCIONES, API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES, API_GET_CATALOGO_USOS_MERCANCIA } from 'apps/agricultura/src/app/application/core/server/api-router';
+import { API_GET_CATALOGO_CONSULTA_PAISES, 
+  API_GET_CATALOGO_FRACCION_ARANCELARIA, 
+  API_GET_CATALOGO_FRACCIONES_ARANCELARIAS, 
+  API_GET_CATALOGO_RESTRICCIONES, 
+  API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES, 
+  API_GET_CATALOGO_USOS_MERCANCIA,
+  API_GET_CATALOGO_PUNTOS_VERIFICACION,
+  API_GET_CATALOGO_MEDIO_TRANSPORTE,
+  API_GET_CATALOGO_BANCOS,
+  API_GET_CATALOGO_JUSTIFICACIONES_PAGO
+} from 'apps/agricultura/src/app/application/core/server/api-router';
 
 @Injectable({
   providedIn: 'root'
@@ -111,4 +121,46 @@ export class CatalogosService {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+    /**
+     * Obtiene el catálogo de restricciones para un trámite específico.
+     *
+     * @param tramite - El identificador numérico del trámite para el cual se requiere obtener los regímenes vigentes.
+     * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+     */
+    obtieneCatalogoMedioTransporte(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${API_GET_CATALOGO_MEDIO_TRANSPORTE(tramite.toString())}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+  
+        /**
+     * Obtiene el catálogo de restricciones para un trámite específico.
+     *
+     * @param tramite - El identificador numérico del trámite para el cual se requiere obtener los regímenes vigentes.
+     * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+     */
+    obtieneCatalogoPuntoVerificacion(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${API_GET_CATALOGO_PUNTOS_VERIFICACION(tramite.toString())}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    /**
+     * Obtiene el catálogo de restricciones para un trámite específico.
+     *
+     * @param tramite - El identificador numérico del trámite para el cual se requiere obtener los regímenes vigentes.
+     * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+     */
+    obtieneCatalogoBanco(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${API_GET_CATALOGO_BANCOS(tramite.toString())}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }    
+    /**
+     * Obtiene el catálogo de restricciones para un trámite específico.
+     *
+     * @param tramite - El identificador numérico del trámite para el cual se requiere obtener los regímenes vigentes.
+     * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+     */
+    obtieneCatalogoJustificacionesPago(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${API_GET_CATALOGO_JUSTIFICACIONES_PAGO(tramite.toString())}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }    
 }

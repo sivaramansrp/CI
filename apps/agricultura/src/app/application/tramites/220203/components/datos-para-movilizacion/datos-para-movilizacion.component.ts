@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import {CatalogosService} from '../../services/220203/catalogos/catalogos.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
@@ -103,7 +104,8 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
   constructor(
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    public catalogosService: CatalogosService
   ) {
     this.formularioMovilizacion = this.fb.group({
       medioDeTransporte: [ '', Validators.required],
@@ -183,13 +185,14 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
    * @returns {void}
    */
   obtenerCatalogosTransporte(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.transportes = data.data as Catalogo[];
-      }, (_error) => {
-        console.error('Error al obtener datos de transporte:', _error);
-      });
+    this.catalogosService.obtieneCatalogoMedioTransporte(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.transportes = data.datos ?? [];
+      }
+    );
   }
 
   /**
@@ -202,13 +205,14 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
    * @returns {void}
    */
   obtenerCatalogosPuntos(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.puntos = data.data as Catalogo[];
-      }, (_error) => {
-        console.error('Error al obtener datos de puntos:', _error);
-      });
+    this.catalogosService.obtieneCatalogoPuntoVerificacion(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.puntos = data.datos ?? [];
+      }
+    );    
   }
 
   /**
