@@ -148,8 +148,19 @@ export class DatosDelDestinatarioComponent
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
-    });
+    });  
   }
+
+  updateRequiredValidators(): void {
+    if (this.NUMERO_REGISTRO_FISCAL_REQUIRED.includes(this.idProcedimiento)) {
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    }else{
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    }
+  }
+
   /**
    * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
    * 'formDatosDelDestinatario' según el procedimiento actual.
@@ -213,6 +224,9 @@ export class DatosDelDestinatarioComponent
       } else {
         this.createForm();
       }
+    }
+    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+      this.updateRequiredValidators();
     }
   }
   /**
