@@ -10,7 +10,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { MercanciaSolicitudComponent } from '../mercancia-solicitud/mercancia-solicitud.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-
+import {CatalogosService} from '../../services/220203/catalogos/catalogos.service';
 /**
  * @fileoverview
  * Componente Angular para gestionar los datos de la solicitud de importación de acuicultura.
@@ -358,8 +358,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
-    private readonly acuiculturaStore: AcuiculturaStore
+    private readonly acuiculturaStore: AcuiculturaStore,
+    public catalogosService: CatalogosService
   ) {
+    this.getaduanaLista();
+    this.getRegimenLista();
     forkJoin([
        this.obtenerCatalogosTransporte(),
     this.obtenerCatalogosArancelaria(),
@@ -560,6 +563,38 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
         return of([]); // fallback to empty array on error
       })
     );
+  }
+
+  /**
+   * @description Obtiene la lista de aduanas desde un archivo JSON.
+   * @method getaduanaLista
+   * @returns {void}
+   */
+  getaduanaLista(): void {
+    this.catalogosService.obtieneCatalogoAduana(220203) 
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.aduanaDeIngresoList = data.datos ?? [];
+      }
+    );
+
+  }
+
+    /**
+   * Obtiene la lista para el select de régimen.
+   * @method getRegimenLista
+   */
+  getRegimenLista(): void {
+
+    this.catalogosService.obtieneCatalogoRegimenesVigentes(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+      this.regimenList = data.datos ?? [];
+    });
   }
 
   /**
