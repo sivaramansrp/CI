@@ -717,37 +717,48 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
   confirmarEliminarTransportista(): void {
   this.accionConfirmarEliminar = 'transportistas';
   if (this.seleccionDatos.length === 0) {
-      // Mostrar notificación informando que debe seleccionar al menos un elemento
-      this.alertaNotificacion = {
-        tipoNotificacion: 'INFORMACION',
-        categoria: 'INFORMACION',
-        modo: 'action',
-        titulo: 'Mensaje',
-        mensaje: 'Debe seleccionar al menos un transportista para eliminar.',
-        cerrar: false,
-        tiempoDeEspera: 3000,
-        txtBtnCancelar: '',
-        txtBtnAceptar: 'Aceptar',
-      };
-      setTimeout(() => {
-        this.mostrarNotificacion = true;
-      }, 100);
-      
-      return;
-    }
+    // Mostrar notificación informando que debe seleccionar al menos un elemento
+    this.alertaNotificacion = {
+      tipoNotificacion: 'INFORMACION',
+      categoria: 'INFORMACION',
+      modo: 'action',
+      titulo: 'Mensaje',
+      mensaje: 'Debe seleccionar al menos un transportista para eliminar.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnCancelar: '',
+      txtBtnAceptar: 'Aceptar',
+    };
 
     this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
+      tipoNotificacion: 'info',
+      categoria: 'info',
       modo: 'action',
-      titulo: '',
-      mensaje: 'El registro se ha eliminado correctamente',
+      titulo: 'Mensaje',
+      mensaje: 'Debe seleccionar al menos un transportista para eliminar.',
       cerrar: false,
-      tiempoDeEspera: 0,
-      txtBtnAceptar: 'Eliminar',
-      txtBtnCancelar: 'Cancelar'
+      tiempoDeEspera: 3000,
+      txtBtnCancelar: '',
+      txtBtnAceptar: 'Aceptar',
     };
+    setTimeout(() => {
+      this.mostrarNotificacion = true;
+    }, 100);
+    return;
   }
+
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'El registro se ha eliminado correctamente',
+    cerrar: false,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Eliminar',
+    txtBtnCancelar: 'Cancelar'
+  };
+}
 
   /**
    * Maneja la respuesta de confirmación para la eliminación de transportista.
@@ -764,17 +775,17 @@ export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
           // Cerrar el modal de Bootstrap correctamente usando la instancia Modal
           if (this.transportistaElement) {
             try {
-              const MODAL_INSTANCE = Modal.getOrCreateInstance(this.transportistaElement.nativeElement);
-              MODAL_INSTANCE.hide();
+              const MODAL_INSTANCIA = Modal.getOrCreateInstance(this.transportistaElement.nativeElement);
+              MODAL_INSTANCIA.hide();
             } catch (e) {
               document.querySelectorAll('.modal-backdrop').forEach((el) => {
                 el.parentNode?.removeChild(el);
               });
-              const MODAL_CONTAINER = document.getElementById('transportistas');
-              if (MODAL_CONTAINER) {
-                MODAL_CONTAINER.classList.remove('show');
-                MODAL_CONTAINER.setAttribute('aria-hidden', 'true');
-                MODAL_CONTAINER.setAttribute('style', 'display: none;');
+              const MODAL_CONTENEDOR = document.getElementById('transportistas');
+              if (MODAL_CONTENEDOR) {
+                MODAL_CONTENEDOR.classList.remove('show');
+                MODAL_CONTENEDOR.setAttribute('aria-hidden', 'true');
+                MODAL_CONTENEDOR.setAttribute('style', 'display: none;');
               }
             }
           }

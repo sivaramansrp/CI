@@ -554,10 +554,10 @@ eliminarPedimento(borrar: boolean): void {
   guardarDatosEnlaceOperativo(): void {
     // Abrir el modal para agregar enlace operativo
     if (this.modificacionEnlaceOperativoElement) {
-      const MODAL_INSTANCE = new Modal(
+      const MODAL_INSTANCIA = new Modal(
         this.modificacionEnlaceOperativoElement.nativeElement
       );
-      MODAL_INSTANCE.show();
+      MODAL_INSTANCIA.show();
     }
   }
 
@@ -602,10 +602,10 @@ eliminarPedimento(borrar: boolean): void {
     }
     // Abrir el modal para modificar enlace operativo
     if (this.modificacionEnlaceOperativoElement) {
-      const MODAL_INSTANCE = new Modal(
+      const MODAL_INSTANCIA = new Modal(
         this.modificacionEnlaceOperativoElement.nativeElement
       );
-      MODAL_INSTANCE.show();
+      MODAL_INSTANCIA.show();
     }
   }
 
@@ -664,9 +664,9 @@ eliminarPedimento(borrar: boolean): void {
         document.querySelectorAll('.modal-backdrop').forEach((el) => {
           el.parentNode?.removeChild(el);
         });
-        const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
-        if (MODAL_CONTAINER) {
-          MODAL_CONTAINER.style.display = 'none';
+        const MODAL_CONTENEDOR = document.getElementById('agregarEnlaceOperativo');
+        if (MODAL_CONTENEDOR) {
+          MODAL_CONTENEDOR.style.display = 'none';
         }
       }, 300);
       return;
@@ -684,9 +684,9 @@ eliminarPedimento(borrar: boolean): void {
     // Cerrar el modal
     const MODAL_AGREGAR = document.getElementById('agregarEnlaceOperativo');
     if (MODAL_AGREGAR) {
-      const MODAL_INSTANCE = Modal.getInstance(MODAL_AGREGAR);
-      if (MODAL_INSTANCE) {
-        MODAL_INSTANCE.hide();
+      const MODAL_INSTANCIA = Modal.getInstance(MODAL_AGREGAR);
+      if (MODAL_INSTANCIA) {
+        MODAL_INSTANCIA.hide();
       }
     }
 
@@ -782,9 +782,9 @@ eliminarPedimento(borrar: boolean): void {
         document.querySelectorAll('.modal-backdrop').forEach((el) => {
           el.parentNode?.removeChild(el);
         });
-        const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
-        if (MODAL_CONTAINER) {
-          MODAL_CONTAINER.style.display = 'none';
+        const MODAL_CONTENEDOR = document.getElementById('agregarEnlaceOperativo');
+        if (MODAL_CONTENEDOR) {
+          MODAL_CONTENEDOR.style.display = 'none';
         }
 
         const MENSAJE_ELIMINADO = 'Se han eliminado los datos correctamente.';

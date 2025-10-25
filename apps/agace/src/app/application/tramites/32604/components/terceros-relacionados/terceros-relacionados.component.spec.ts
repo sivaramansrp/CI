@@ -160,4 +160,94 @@ describe('TercerosRelacionadosComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+    it('should show error modal if RFC is empty in buscarTerceroNacionalIDC', () => {
+      const spy = jest.spyOn(component, 'abrirModal');
+      component.tercerosRelacionadosForm.get('rfcTercero')?.setValue('');
+      component.buscarTerceroNacionalIDC();
+      expect(spy).toHaveBeenCalledWith('Debe capturar el RFC del tercero para realizar la búsqueda.');
+    });
+
+    it('should show error modal if RFC is invalid in buscarTerceroNacionalIDC', () => {
+      const spy = jest.spyOn(component, 'abrirModal');
+      component.tercerosRelacionadosForm.get('rfcTercero')?.setValue('INVALID');
+      component.tercerosRelacionadosForm.get('rfcTercero')?.setErrors({ pattern: true });
+      component.buscarTerceroNacionalIDC();
+      expect(spy).toHaveBeenCalledWith('El RFC del tercero tiene un formato inválido.');
+    });
+
+    it('should show error modal if no enlace operativo selected for modification', () => {
+      const spy = jest.spyOn(component, 'abrirModal');
+      component.seleccionEnlaceOperativoDatos = [];
+      component.guardarModificacionEnlaceOperativo();
+      expect(spy).toHaveBeenCalledWith('Debe seleccionar un enlace operativo para modificar.');
+    });
+
+    it('should show error modal if multiple enlace operativo selected for modification', () => {
+      const spy = jest.spyOn(component, 'abrirModal');
+      component.seleccionEnlaceOperativoDatos = [{ rfc: '1' }, { rfc: '2' }] as any;
+      component.guardarModificacionEnlaceOperativo();
+      expect(spy).toHaveBeenCalledWith('Solo puede modificar un enlace operativo a la vez. Seleccione únicamente el enlace operativo que desea modificar.');
+    });
+
+    it('should call abrirModal with duplicate RFC in agregarEnlaceOperativo', () => {
+      const spy = jest.spyOn(component, 'abrirModal');
+      const evento = { rfc: 'RFC999' } as any;
+      component.enlaceOperativosLista = [evento];
+      component.agregarEnlaceOperativo(evento);
+      expect(spy).toHaveBeenCalledWith('Ya existe un enlace operativo con el RFC especificado.');
+    });
+
+    it('should set nuevaNotificacion and elementoParaEliminar in abrirModal', () => {
+      component.abrirModal('Test message', 5);
+      expect(component.nuevaNotificacion.mensaje).toBe('Test message');
+      expect(component.elementoParaEliminar).toBe(5);
+    });
+
+    it('should close notification in cerrarNotificacionExito', () => {
+      component.mostrarNotificacion = true;
+      component.alertaNotificacion = { mensaje: 'test' } as any;
+      component.cerrarNotificacionExito();
+      expect(component.mostrarNotificacion).toBe(false);
+      expect(component.alertaNotificacion).toEqual({} as any);
+    });
+
+    it('should show error modal if no enlace operativo selected for eliminar', () => {
+      const spy = jest.spyOn(component, 'abrirModal');
+      component.seleccionEnlaceOperativoDatos = [];
+      component.confirmarEliminarEnlaceOperativo();
+      expect(spy).toHaveBeenCalledWith('Debe seleccionar un enlace operativo para eliminar.');
+    });
+
+    it('should set nuevaNotificacion for confirm dialog in confirmarEliminarEnlaceOperativo', () => {
+      component.seleccionEnlaceOperativoDatos = [{ rfc: 'RFC1' }] as any;
+      component.confirmarEliminarEnlaceOperativo();
+      expect(component.nuevaNotificacion.mensaje).toContain('¿Desea eliminar el registro seleccionado?');
+    });
+
+    it('should handle confirm=true in manejarConfirmacionEliminacion', () => {
+      jest.useFakeTimers();
+      const closeSpy = jest.spyOn(component, 'cerrarDialogoEnlaceOperativo');
+      component.mostrarNotificacion = false;
+      component.manejarConfirmacionEliminacion(true);
+      expect(closeSpy).toHaveBeenCalled();
+      jest.advanceTimersByTime(300);
+      expect(component.mostrarNotificacion).toBe(true);
+      expect(component.alertaNotificacion.mensaje).toBe('Se han eliminado los datos correctamente.');
+      expect(component.alertaNotificacion.categoria).toBe('success');
+      jest.useRealTimers();
+    });
+
+    it('should handle confirm=false in manejarConfirmacionEliminacion', () => {
+      component.nuevaNotificacion = { mensaje: 'test' } as any;
+      component.manejarConfirmacionEliminacion(false);
+      expect(component.nuevaNotificacion).toEqual({} as any);
+    });
+
+    it('should do nothing in cerrarDialogoEnlaceOperativo if no selection', () => {
+      component.seleccionEnlaceOperativoDatos = [];
+      const storeSpy = jest.spyOn(component.solicitud32604Store, 'actualizarEnlaceOperativosLista');
+      component.cerrarDialogoEnlaceOperativo();
+      expect(storeSpy).not.toHaveBeenCalled();
+    });
 });

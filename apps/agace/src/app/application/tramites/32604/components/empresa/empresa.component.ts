@@ -816,28 +816,28 @@ export class EmpresaComponent implements OnInit, OnDestroy, OnChanges {
      * Muestra el modal de error con el mensaje especificado.
      * @param mensaje El mensaje de error a mostrar en el modal
      */
-    private mostrarModalError(mensaje: string): void {
+  public mostrarModalError(mensaje: string): void {
       // Actualizar el mensaje en el modal
       this.mensajeError = mensaje;
       
       if (this.elementoModalError) {
-        const MODAL_INSTANCE = new Modal(this.elementoModalError.nativeElement, {
+        const MODAL_INSTANCIA = new Modal(this.elementoModalError.nativeElement, {
           backdrop: true,
           keyboard: true,
           focus: true
         });
-        MODAL_INSTANCE.show();
+        MODAL_INSTANCIA.show();
       }
     }
 
     /**
      * Cierra el modal de error.
      */
-    private cerrarModalError(): void {
+  public cerrarModalError(): void {
       if (this.elementoModalError) {
-        const MODAL_INSTANCE = Modal.getInstance(this.elementoModalError.nativeElement);
-        if (MODAL_INSTANCE) {
-          MODAL_INSTANCE.hide();
+        const MODAL_INSTANCIA = Modal.getInstance(this.elementoModalError.nativeElement);
+        if (MODAL_INSTANCIA) {
+          MODAL_INSTANCIA.hide();
         }
       }
     }

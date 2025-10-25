@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { AgregarTransportistasComponent } from './agregar-transportistas.component';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
@@ -11,6 +11,70 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarTransportistasComponent', () => {
+  it('should show error notification for duplicate RFC when not modifying', () => {
+    const validRFC = 'XAXX010101000';
+    component.transportistasExistentes = [
+      { transportistaRFCModifTrans: validRFC, transportistaRazonSocial: '', transportistaDomicilio: '', transportistaCaat: '' }
+    ];
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue(validRFC);
+    component.transportistaCertificacionForm.get('transportistaRFCModifTrans')?.setValue(validRFC);
+    component.selectBuscarTransportista();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.nuevaNotificacion.mensaje).toContain('Ya existe un registro con ese RFC');
+  });
+
+  it('should show error notification for duplicate RFC when modifying and RFC is different', () => {
+    const validRFC = 'XAXX010101000';
+    component.transportistasExistentes = [
+      { transportistaRFCModifTrans: validRFC, transportistaRazonSocial: '', transportistaDomicilio: '', transportistaCaat: '' }
+    ];
+    component.transportistaAModificar = { transportistaRFCModifTrans: 'OTHER12345678', transportistaRazonSocial: '', transportistaDomicilio: '', transportistaCaat: '' };
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue(validRFC);
+    component.transportistaCertificacionForm.get('transportistaRFCModifTrans')?.setValue(validRFC);
+    component.selectBuscarTransportista();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.nuevaNotificacion.mensaje).toContain('Ya existe un registro con ese RFC');
+  });
+
+  it('should show error notification if RFC not found in conseguirTransportistasLista', () => {
+    jest.spyOn(component.empresasComercializadorasService, 'conseguirTransportistasLista').mockReturnValueOnce(of([]));
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue('NOTFOUND');
+    component.transportistasExistentes = [];
+    component.selectBuscarTransportista();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.nuevaNotificacion.mensaje).toContain('Existen datos incorrectos');
+  });
+
+  it('should handle service error in validarRFCContraJSON', () => {
+    jest.spyOn(component.empresasComercializadorasService, 'conseguirTransportistasLista').mockReturnValueOnce({
+      pipe: () => ({
+        subscribe: ({ error }: any) => error()
+      })
+    } as any);
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue('ERROR');
+    component.transportistasExistentes = [];
+    component.selectBuscarTransportista();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.nuevaNotificacion.mensaje).toContain('Existen datos incorrectos');
+  });
+
+  it('should call limpiar and reset form and transportistaAModificar', () => {
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue('RFC');
+    component.transportistaAModificar = { transportistaRFCModifTrans: 'RFC', transportistaRazonSocial: '', transportistaDomicilio: '', transportistaCaat: '' };
+    component.limpiar();
+    expect(component.transportistaCertificacionForm.get('transportistaRFC')?.value).toBeNull();
+    expect(component.transportistaAModificar).toBeNull();
+  });
+
+  it('should clear notification on manejarConfirmacionNotificacion', () => {
+    component.nuevaNotificacion = { categoria: 'danger' } as any;
+    component.manejarConfirmacionNotificacion(true);
+    expect(component.nuevaNotificacion).toEqual({});
+  });
   let component: AgregarTransportistasComponent;
   let fixture: ComponentFixture<AgregarTransportistasComponent>;
   let empresasComercializadorasServiceMock: jest.Mocked<EmpresasComercializadorasService>;
@@ -31,7 +95,6 @@ describe('AgregarTransportistasComponent', () => {
         ])
       ),
     } as unknown as jest.Mocked<EmpresasComercializadorasService>;
-
     solicitud32604StoreMock = {
       actualizarTransportistaRFC: jest.fn(() => of()),
       actualizarTransportistaRFCModifTrans: jest.fn(() => of()),
@@ -39,7 +102,6 @@ describe('AgregarTransportistasComponent', () => {
       actualizarTransportistaDomicilio: jest.fn(() => of()),
       actualizarTransportistaCaat: jest.fn(() => of()),
     } as unknown as jest.Mocked<Solicitud32604Store>;
-
     solicitud32604QueryMock = {
       selectSolicitud$: of({}) as any,
     } as unknown as jest.Mocked<Solicitud32604Query>;
@@ -206,5 +268,25 @@ describe('AgregarTransportistasComponent', () => {
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should set confirmarNotificacion and show error modal when RFC is invalid', () => {
+    component.transportistaCertificacionForm = new FormBuilder().group({
+      transportistaRFC: ['INVALID']
+    });
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setErrors({ required: true });
+    component.transportistaCertificacionForm.get('transportistaRFC')?.markAsTouched();
+    component.selectBuscarTransportista();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+  });
+
+  it('should disable form if transportistaAModificar is set', () => {
+    component.transportistaAModificar = { transportistaRFCModifTrans: 'RFC123' } as any;
+    component.transportistaCertificacionForm = new FormBuilder().group({
+      transportistaRFC: ['RFC123']
+    });
+    component.patchForm(component.transportistaAModificar as any);
+    expect(component.transportistaCertificacionForm.disabled).toBe(false);
   });
 });

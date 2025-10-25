@@ -327,12 +327,12 @@ export class AgregarComponent implements OnInit, OnDestroy {
     this.mensajeError = mensaje;
     
     if (this.elementoModalError) {
-      const MODAL_INSTANCE = new Modal(this.elementoModalError.nativeElement, {
+      const MODAL_INSTANCIA = new Modal(this.elementoModalError.nativeElement, {
         backdrop: true,
         keyboard: true,
         focus: true
       });
-      MODAL_INSTANCE.show();
+      MODAL_INSTANCIA.show();
     }
   }
 
@@ -341,9 +341,9 @@ export class AgregarComponent implements OnInit, OnDestroy {
    */
   private cerrarModalError(): void {
     if (this.elementoModalError) {
-      const MODAL_INSTANCE = Modal.getInstance(this.elementoModalError.nativeElement);
-      if (MODAL_INSTANCE) {
-        MODAL_INSTANCE.hide();
+      const MODAL_INSTANCIA = Modal.getInstance(this.elementoModalError.nativeElement);
+      if (MODAL_INSTANCIA) {
+        MODAL_INSTANCIA.hide();
       }
     }
   }

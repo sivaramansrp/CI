@@ -258,4 +258,30 @@ describe('AgregarEnlaceOperativoComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+    it('should set nuevaNotificacion and show error modal when RFC is invalid', () => {
+      component.agregarEnlaceOperativoForm = new FormBuilder().group({
+        agregarEnlaceRfcTercero: ['INVALID']
+      });
+      component.buscarTerceroNacionalIDC();
+      expect(component.nuevaNotificacion).toBeDefined();
+      expect(component.nuevaNotificacion.categoria).toBe('danger');
+    });
+
+    it('should disable form if esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      component.agregarEnlaceOperativoForm = new FormBuilder().group({
+        agregarEnlaceRfcTercero: ['RFC123']
+      });
+      component.guardarDatosFormulario();
+      expect(component.agregarEnlaceOperativoForm.disabled).toBe(true);
+    });
+
+    it('should enable form if esFormularioSoloLectura is false', () => {
+      component.esFormularioSoloLectura = false;
+      component.agregarEnlaceOperativoForm = new FormBuilder().group({
+        agregarEnlaceRfcTercero: ['RFC123']
+      });
+      component.guardarDatosFormulario();
+      expect(component.agregarEnlaceOperativoForm.enabled).toBe(true);
+    });
 });

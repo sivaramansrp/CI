@@ -54,7 +54,6 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   public cargarEnlaceParaModificar(enlace: EnlaceOperativo): void {
     this.modoModificar = true;
     this.agregarEnlaceOperativoForm.patchValue({
-      // agregarEnlaceRfcTercero is not in EnlaceOperativo, leave as is (user must search if needed)
       agregarEnlaceRfc: enlace.rfc ?? '',
       agregarEnlaceNombre: enlace.nombre ?? '',
       agregarEnlaceApellidoPaterno: enlace.apellidoPaterno ?? '',
@@ -611,9 +610,9 @@ abrirModal(i: number = 0): void {
         document.querySelectorAll('.modal-backdrop').forEach((el) => {
           el.parentNode?.removeChild(el);
         });
-        const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
-        if (MODAL_CONTAINER) {
-          MODAL_CONTAINER.style.display = 'none';
+        const MODAL_CONTENEDOR = document.getElementById('agregarEnlaceOperativo');
+        if (MODAL_CONTENEDOR) {
+          MODAL_CONTENEDOR.style.display = 'none';
         }
       }, 300);
       return;
@@ -686,9 +685,9 @@ abrirModal(i: number = 0): void {
       document.querySelectorAll('.modal-backdrop').forEach((el) => {
         el.parentNode?.removeChild(el);
       });
-      const MODAL_CONTAINER = document.getElementById('agregarEnlaceOperativo');
-      if (MODAL_CONTAINER) {
-        MODAL_CONTAINER.style.display = 'none';
+      const MODAL_CONTENEDOR = document.getElementById('agregarEnlaceOperativo');
+      if (MODAL_CONTENEDOR) {
+        MODAL_CONTENEDOR.style.display = 'none';
       }
     }, 300);
   }
