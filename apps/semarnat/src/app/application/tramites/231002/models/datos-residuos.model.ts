@@ -63,6 +63,7 @@ export interface EstadoFormularioResiduo {
      */
     fraccionArancelaria: string;
 
+    /** Descripción de la fracción arancelaria. */
     fraccionDesc: string;
 
     /**
@@ -72,6 +73,7 @@ export interface EstadoFormularioResiduo {
      */
     nico: string;
 
+    /** Descripción de la clave NICO. */
     nicoDesc: string;
 
     /**
@@ -109,6 +111,7 @@ export interface EstadoFormularioResiduo {
      */
     unidadMedida: string;
 
+    /** Descripción de la unidad de medida. */
     unidadMedidaDesc: string;
 
     /**
@@ -118,6 +121,7 @@ export interface EstadoFormularioResiduo {
      */
     clasificacion: string;
 
+    /** Descripción de la clasificación. */
     clasificacionDesc: string;
 
     /**
@@ -127,6 +131,7 @@ export interface EstadoFormularioResiduo {
      */
     claveResiduo: string;
 
+    /** Descripción de la clave del residuo. */
     claveResiduoDesc: string;
 
     /**
@@ -150,6 +155,7 @@ export interface EstadoFormularioResiduo {
      */
     creti: string;
 
+    /** Descripción del código CRETI. */
     cretiDesc: string;
 
     /**
@@ -159,8 +165,10 @@ export interface EstadoFormularioResiduo {
      */
     estadoFisico: string;
 
+    /** Descripción del estado físico. */
     estadoFisicoDesc: string;
 
+    /** Descripción de otro estado físico no catalogado. */
     otroEstadoFisicoDesc: string;
 
     /**
@@ -177,8 +185,10 @@ export interface EstadoFormularioResiduo {
      */
     tipoContenedor: string;
 
+    /** Descripción del tipo de contenedor. */
     tipoContenedorDesc: string;
 
+    /** Descripción de otro tipo de contenedor no catalogado. */
     otroTipoContenedorDesc: string;
 
     /**
@@ -189,9 +199,14 @@ export interface EstadoFormularioResiduo {
     capacidad: string;
   };
 
+  /** Lista de residuos peligrosos asociados. */
   residuos: ResiduoPeligroso[];
 }
 
+/**
+ * Configuración de las columnas para la tabla de residuos peligrosos.
+ * Define el encabezado, la clave de acceso a los datos y el orden de visualización de cada columna.
+ */
 export const CONFIG_TABLA_RESIDUOS: ConfiguracionColumna<ResiduoPeligroso>[] = [
   {
     encabezado: 'Orígen del residuo',

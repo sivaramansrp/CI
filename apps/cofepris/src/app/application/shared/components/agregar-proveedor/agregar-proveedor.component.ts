@@ -2,7 +2,6 @@ import {
   CODIGO_POSTAL,
   Catalogo,
   REGEX_CORREO_ELECTRONICO,
-  REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
   TipoPersona,
@@ -167,7 +166,21 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    * Se recibe como propiedad de entrada desde el componente padre.
    */
   @Input() estaOculto!: boolean;
+    /**
+     * Evento de salida que emite una señal para cancelar o cerrar el modal actual.
+     * Los componentes padres pueden suscribirse a este evento para manejar la acción de cancelación.
+     */
+    @Output() cancelarmodal = new EventEmitter<void>();
 
+    /**
+     * Arreglo que contiene la lista de proveedores mostrados en la tabla.
+     * Se recibe como propiedad de entrada desde el componente padre.
+     */
+    @Input() proveedorTablaDatos: Proveedor[] = [];
+    /**
+     * Arreglo que contiene los proveedores seleccionados en la tabla.
+     */
+    @Output() guardarYSalir = new EventEmitter<void>();
   /**
    * Constructor del componente AgregarProveedorComponent.
    *
@@ -410,68 +423,101 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    * @description Toma los datos del formulario, crea un objeto `Proveedor`, lo agrega al arreglo
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
-  guardarProveedor(): void {
-    if(this.chequeoValidacionAlGuardar){
-      if (this.agregarProveedorForm.invalid) {
-            // Marca todos los controles como tocados para mostrar errores de validación
-          Object.values(this.agregarProveedorForm.controls).forEach(control => {
-            control.markAsTouched();
-            control.updateValueAndValidity();
-            this.message = 'Faltan campos por capturar.';
-          });
-          
-            // NO redirigir ni emitir nada si el formulario es inválido
-          return;
-        }
+// eslint-disable-next-line complexity
+guardarProveedor(): void {
+  if(this.chequeoValidacionAlGuardar){
+    if (this.agregarProveedorForm.invalid) {
+      // Marca todos los controles como tocados para mostrar errores de validación
+      Object.values(this.agregarProveedorForm.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+        this.message = 'Faltan campos por capturar.';
+      });
+      
+      // NO redirigir ni emitir nada si el formulario es inválido
+      return;
     }
-    const VALOR_FORMULARIO = this.agregarProveedorForm.getRawValue();
-
-    let nombreRazonSocial: string;
-
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
-    } else {
-      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
-    }
-    const NUEVO_PROVEEDOR: Proveedor = {
-      nacionalidad: VALOR_FORMULARIO.nacionalidad,
-      tipoPersona: VALOR_FORMULARIO.tipoPersona,
-      nombreRazonSocial: nombreRazonSocial,
-      rfc: '',
-      curp: '',
-      telefono: VALOR_FORMULARIO.telefono || '',
-      correoElectronico: VALOR_FORMULARIO.correoElectronico || '',
-      calle: VALOR_FORMULARIO.calle || '',
-      numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
-      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-      pais: VALOR_FORMULARIO.pais || '',
-      colonia: VALOR_FORMULARIO.colonia || '',
-      municipioAlcaldia: '',
-      localidad: '',
-      entidadFederativa: '',
-      estadoLocalidad: VALOR_FORMULARIO.estado || '',
-      codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
-      coloniaEquivalente: '',
-      nombres: VALOR_FORMULARIO.nombres,
-      primerApellido: VALOR_FORMULARIO.primerApellido,
-      segundoApellido: VALOR_FORMULARIO.segundoApellido,
-      razonSocial: VALOR_FORMULARIO.razonSocial,
-      lada: VALOR_FORMULARIO.lada,
-    };
-
-    if (this.datoSeleccionado?.[0]?.id) {
-      NUEVO_PROVEEDOR.id = this.datoSeleccionado[0].id;
-    }
-
-    this.proveedores.push(NUEVO_PROVEEDOR);
-    this.updateProveedorTablaDatos.emit(this.proveedores);
-    this.agregarProveedorForm.reset();
-    this.ubicaccion.back();
   }
+
+  const VALOR_FORMULARIO = this.agregarProveedorForm.getRawValue();
+
+  let nombreRazonSocial: string;
+
+  if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+    nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+  } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+      VALOR_FORMULARIO.primerApellido
+    } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+  } else {
+    nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+  }
+
+  const NUEVO_PROVEEDOR: Proveedor = {
+    nacionalidad: VALOR_FORMULARIO.nacionalidad,
+    tipoPersona: VALOR_FORMULARIO.tipoPersona,
+    nombreRazonSocial: nombreRazonSocial,
+    rfc: VALOR_FORMULARIO.rfc || '',
+    curp: VALOR_FORMULARIO.curp || '',
+    telefono: `${VALOR_FORMULARIO.lada || ''} ${VALOR_FORMULARIO.telefono || ''}`.trim(),
+    correoElectronico: VALOR_FORMULARIO.correoElectronico || '',
+    calle: VALOR_FORMULARIO.calle || '',
+    numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
+    numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+    pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
+    colonia: VALOR_FORMULARIO.colonia || '',
+    municipioAlcaldia: VALOR_FORMULARIO.municipioAlcaldia || '',
+    localidad: VALOR_FORMULARIO.localidad || '',
+    entidadFederativa: '',
+    estadoLocalidad: VALOR_FORMULARIO.estado || '',
+    codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
+    coloniaEquivalente: '',
+    nombres: VALOR_FORMULARIO.nombres,
+    primerApellido: VALOR_FORMULARIO.primerApellido,
+    segundoApellido: VALOR_FORMULARIO.segundoApellido,
+    razonSocial: VALOR_FORMULARIO.denominacionRazon,
+    lada: VALOR_FORMULARIO.lada,
+  };
+
+  let UPDATED_PROVEEDORES: Proveedor[] = Array.isArray(this.proveedorTablaDatos) 
+    ? [...this.proveedorTablaDatos] 
+    : [];
+
+  if (this.datoSeleccionado?.[0]?.id) {
+    NUEVO_PROVEEDOR.id = this.datoSeleccionado[0].id;
+    UPDATED_PROVEEDORES = UPDATED_PROVEEDORES.map(p => 
+      p.id === NUEVO_PROVEEDOR.id ? NUEVO_PROVEEDOR : p
+    );
+  } else {
+    const IS_DUPLICATE = UPDATED_PROVEEDORES.some(p => 
+      (p.rfc && NUEVO_PROVEEDOR.rfc && p.rfc === NUEVO_PROVEEDOR.rfc) ||
+      (p.nombreRazonSocial && p.nombreRazonSocial === NUEVO_PROVEEDOR.nombreRazonSocial)
+    );
+    
+    if (IS_DUPLICATE) {
+      this.message = 'La información proporcionada de la persona ya existe, favor de verificar.';
+      return;
+    }
+
+    const NEXT_ID = UPDATED_PROVEEDORES.length > 0 
+      ? Math.max(...UPDATED_PROVEEDORES.map(p => p.id || 0)) + 1 
+      : 1;
+    NUEVO_PROVEEDOR.id = NEXT_ID;
+    UPDATED_PROVEEDORES.push(NUEVO_PROVEEDOR);
+  }
+
+  this.updateProveedorTablaDatos.emit(UPDATED_PROVEEDORES);
+
+  this.agregarProveedorForm.reset();
+  this.datoSeleccionado = [];
+  this.guardarYSalir.emit();
+}
+
+private getPaisDescription(paisId: string | number): string {
+  if (!paisId || !this.paisesDatos) {return '';}
+  const PAIS = this.paisesDatos.find(p => p.id.toString() === paisId.toString());
+  return PAIS ? PAIS.descripcion : '';
+}
   /**
    * @method limpiarFormulario
    * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
@@ -488,7 +534,9 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.limpiarFormulario();
+    this.datoSeleccionado = [];
+    this.cancelarmodal.emit();
   }
 
   /**

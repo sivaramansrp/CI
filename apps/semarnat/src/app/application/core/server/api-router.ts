@@ -1,16 +1,4 @@
-import { ENVIRONMENT } from '../../../environments/environment';
 
-/**
- * URLs de API comunes para los tramites T231002 y T231003.
- */
-export const COMUN_URL = {
-  BASE_URL: `${ENVIRONMENT.URL_SERVER}`,
-  API: '/api',
-  API_VERSION: '/v3',
-  CATALOGO_URL: '/catalogo',
-  SOLICITUD_URL: '/solicitud',
-  TRAMITE_URL: '/tramite',
-};
 
 /**
  * API para obtener los datos de IMMEX por RFC.
@@ -198,3 +186,15 @@ export const API_POST_CADENA_ORIGINAL = (
  * @constant {string}
  */
 export const API_POST_GUARDAR_SOLICITUD =(tramite:string):string => `sat-t${tramite}/solicitud/guardar`;
+
+
+
+/**
+ * API para firmar la solicitud del tramite 231002.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231002/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMA = (tramite:string,idSolicitud:string):string => `sat-t${tramite}/solicitud/${idSolicitud}/firmar`;
+
+
+
+

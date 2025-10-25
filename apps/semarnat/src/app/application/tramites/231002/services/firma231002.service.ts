@@ -1,13 +1,11 @@
-import {
-  API_POST_FIRMA,
-  IDSOLICITUD,
-} from '../../../constantes/231001/api-constants';
+import { API_POST_FIRMA } from './../../../core/server/api-router';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { TRAMITE_ID } from '../constantes/aviso-retorno.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +14,7 @@ export class Firma231002Service {
   /**
    * URL del servidor donde se encuentra la API.
    */
-  urlServer = ENVIRONMENT.API_HOST;
+  urlServer = ENVIRONMENT.API_HOST + '/api/';
 
   constructor(private http: HttpClient) {}
 
@@ -30,9 +28,7 @@ export class Firma231002Service {
     idSolicitud: string | number,
     body: FirmarRequest
   ): Observable<BaseResponse<T>> {
-    const ENDPOINT =
-      `${this.urlServer}/api/` +
-      API_POST_FIRMA.replace(IDSOLICITUD, String(idSolicitud));
+    const ENDPOINT = `${this.urlServer}${API_POST_FIRMA(TRAMITE_ID, String(idSolicitud))}`
     return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
       map((response) => response),
       catchError(() => {

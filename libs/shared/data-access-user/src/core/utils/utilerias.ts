@@ -335,5 +335,31 @@ export function renameKey<T extends Record<string, unknown>>(obj: T, oldKey: str
   }
   return obj;
 }
-    
 
+ /**
+     * Converts a date string from the format 'DD/MM/YYYY' to 'YYYY-MM-DD 00:00:00'.
+     *
+     * @param dateString - The date string in 'DD/MM/YYYY' format to be converted.
+     * @returns The formatted date string in 'YYYY-MM-DD 00:00:00' format.
+     */
+export function convertDate(dateString: string): string {
+        if (!dateString || typeof dateString !== 'string') {
+            return '';
+        }
+        const parsedDate = moment(dateString, 'DD/MM/YYYY', true);
+        if (!parsedDate.isValid()) {
+            return '';
+        }
+        return parsedDate.format('YYYY-MM-DD 00:00:00');
+    }
+    
+/**
+ * Formatea una cadena de fecha a formato 'YYYY-MM-DD'.
+ * Si la cadena de fecha es vacía o nula, devuelve una cadena vacía.
+ * Convierte la fecha a un objeto Date y obtiene su representación ISO limitada a la parte de fecha.
+ */
+export function formatDateToYYYYMMDD(dateString: string): string {
+  if (!dateString) {return '';}
+  const DATE = new Date(dateString);
+  return DATE.toISOString().split('T')[0];
+}
