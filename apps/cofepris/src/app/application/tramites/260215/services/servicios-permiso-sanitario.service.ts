@@ -290,13 +290,22 @@ export class ServiciosPermisoSanitarioService {
 
   /**
    * Envía los datos proporcionados mediante una solicitud HTTP POST para guardar la solicitud.
+   * OPCION 1: Usa el endpoint estándar SAT (se recomienda usar RegistroSolicitudService)
+   * OPCION 2: Usa el endpoint específico COFEPRIS (como respaldo)
    * 
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
   guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
-    // Usando la URL común para guardar solicitudes de COFEPRIS
-    const ENDPOINT = '/api/cofepris-t260215/solicitud/guardar';
+    // OPCION 1: Usar endpoint estándar SAT (recomendado - mejor usar RegistroSolicitudService)
+    const ENDPOINT_SAT = '/api/sat-t260215/solicitud/guardar';
+    
+    // OPCION 2: Usar endpoint específico COFEPRIS (como respaldo si el servidor está configurado así)
+    // const ENDPOINT_COFEPRIS = '/api/cofepris-t260215/solicitud/guardar';
+    
+    // Usar endpoint estándar SAT por defecto
+    const ENDPOINT = ENDPOINT_SAT;
+    
     return this.httpService.post<JSONResponse>(ENDPOINT, { body: body });
   }
       
