@@ -6,91 +6,41 @@
           <label class="control-label" for="modalidad"
             >Selecciona la modalidad:</label
           >
-          <input
-            id="modalidad"
-            class="form-control"
-            type="text"
-            name="modalidad"
-            formControlName="modalidad"
-          />
+          <input id="modalidad" class="form-control" type="text" name="modalidad" formControlName="modalidad" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="folio">Folio:</label>
-          <input
-            id="folio"
-            name="folio"
-            type="text"
-            class="form-control"
-            formControlName="folio"
-          />
+          <input id="folio" name="folio" type="text" class="form-control" formControlName="folio" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="ano">Año:</label>
-          <input
-            id="ano"
-            name="ano"
-            type="text"
-            class="form-control"
-            formControlName="ano"
-          />
+          <input id="ano" name="ano" type="text" class="form-control" formControlName="ano" />
         </div>
       </div>
     </div>
 
-    <ng-titulo titulo="Empresas controladas" />
+    <ng-titulo titulo="Empresas terciarizadas" />
 
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="rfc">RFC*:</label>
-          <input
-            id="rfc"
-            name="rfc"
-            type="text"
-            class="form-control"
-            formControlName="rfc"
-            (change)="setValoresStore(empresasForm, 'rfc')"
-            [class.is-invalid]="
-            empresasForm.get('rfc')?.touched &&
-            empresasForm.get('rfc')?.invalid
-            "
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              empresasForm.get('rfc')?.touched &&
-              empresasForm.get('rfc')?.invalid
-            "
-          >
-            <span *ngIf="empresasForm.get('rfc')?.hasError('required')"
-              >Este campo es obligatorio.</span
-            >
-            <span *ngIf="empresasForm.get('rfc')?.hasError('pattern')">
-            El RFC no es válido
-          </span>
-          </div>
+          <input id="rfc" name="rfc" type="text" class="form-control" formControlName="rfc"
+            (change)="setValoresStore(empresasForm, 'rfc')" />
         </div>
       </div>
       <div class="col-md-6">
-        <app-catalogo-select
-          name="estado"
-          id="clave"
-          formControlName="estado"
-          [catalogo]="estado"
-          [label]="'Estado'"
-          [required]="true"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="procesarDatosDelHijo()"
-        ></app-catalogo-select>
+        <app-catalogo-select name="estado" id="clave" formControlName="estado" [catalogo]="estado" [label]="'Estado'"
+          [required]="true" [isDisabled]="esFormularioSoloLectura" (change)="procesarDatosDelHijo()"></app-catalogo-select>
       </div>
 
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
-          Buscar controladoras
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarTerciarizadas()">
+         Buscar terciarizadas
         </button>
       </div>
 
@@ -100,7 +50,7 @@
 
     <div class="row mt-3">
       <div class="col-md-12">
-        <h6>Plantas Controladas disponibles:</h6>
+        <h6>Plantas disponibles:</h6>
         <app-tabla-dinamica
           [configuracionTabla]="tablaConfiguration"
           [datos]="plantasDisponibles"
@@ -119,7 +69,7 @@
   
     <div class="row mt-3">
       <div class="col-md-12">
-        <h6>Plantas Controladas sleccionadas:</h6>
+        <h6>Plantas seleccionadas:</h6>
         <app-tabla-dinamica 
         [configuracionTabla]="tablaConfiguration"
           [datos]="plantasSeleccionadas"
@@ -129,7 +79,7 @@
         ></app-tabla-dinamica>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarPlantas()">
+        <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="eliminarPlantas()">
           Eliminar plantas
         </button>
       </div>

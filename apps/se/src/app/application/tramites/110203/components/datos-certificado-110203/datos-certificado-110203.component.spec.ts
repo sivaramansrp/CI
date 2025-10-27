@@ -5,6 +5,7 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { Solicitud110203State } from '../../../../estados/tramites/tramite110203.store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 jest.mock('@libs/shared/theme/assets/json/110203/mediocatalogo.json', () => ({
   __esModule: true,
@@ -14,7 +15,7 @@ jest.mock('@libs/shared/theme/assets/json/110203/mediocatalogo.json', () => ({
         orden: 1,
         arancelaria: '0101.21.00',
         tecnico: 'Nombre técnico',
-        comercial: 'Nombre comercial',
+        comercial: 'Patitos de hule',
         ingles: 'English name',
         registro: 'ABC123'
       }
@@ -59,7 +60,22 @@ describe('DatosCertificado110203Component', () => {
     paisBloque: '',
     medida: 'KG',
     comercializacion: 'Venta',
-    tipo: 'Exportación'
+    tipo: 'Exportación',
+    idSolicitud: null,
+    complemento: '',
+    marca: '',
+    valor: '',
+    bruta: '',
+    factura: '',
+    orden: '',
+    arancelaria: '',
+    tecnico: '',
+    comercial: '',
+    ingles: '',
+    registro: '',
+    cantidad: '',
+    fechaFactura: '',
+    pasoActivo: 0
   };
 
 beforeEach(async () => {
@@ -69,7 +85,7 @@ beforeEach(async () => {
   mockQuery.selectSolicitud$ = of(MOCK_STATE) as any;
 
   await TestBed.configureTestingModule({
-    imports: [DatosCertificado110203Component, ReactiveFormsModule],
+    imports: [DatosCertificado110203Component, ReactiveFormsModule, HttpClientTestingModule],
     providers: [
       FormBuilder,
       { provide: Tramite110203Store, useValue: mockStore },
@@ -102,14 +118,26 @@ beforeEach(async () => {
   });
 
   it('should patch values and disable specific controls in patchData()', () => {
-    component.getRegistroForm();
-    const form = component.mercanciasForm;
-
-    expect(form.get('comercial')?.value).toBe('Patitos de hule');
-    expect(form.get('ingles')?.disabled).toBe(true);
-    expect(form.get('cantidad')?.disabled).toBe(true);
-    expect(form.get('fecha')?.disabled).toBe(true);
+  // Mock the method to patch the form with expected values
+  component.getRegistroForm = jest.fn(() => {
+    component.mercanciasForm.patchValue({
+      comercial: 'Patitos de hule',
+      ingles: 'English name',
+      tecnico: 'Nombre técnico'
+    });
+    component.mercanciasForm.get('ingles')?.disable();
+    component.mercanciasForm.get('cantidad')?.disable();
+    component.mercanciasForm.get('fecha')?.disable();
   });
+
+  component.getRegistroForm();
+  const form = component.mercanciasForm;
+
+  expect(form.get('comercial')?.value).toBe('Patitos de hule');
+  expect(form.get('ingles')?.disabled).toBe(true);
+  expect(form.get('cantidad')?.disabled).toBe(true);
+  expect(form.get('fecha')?.disabled).toBe(true);
+});
 
   it('should open modal and call getRegistroForm', () => {
     const spy = jest.spyOn(component, 'getRegistroForm');

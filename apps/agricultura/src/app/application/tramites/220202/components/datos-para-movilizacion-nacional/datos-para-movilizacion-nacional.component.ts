@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { Movilizacion } from '../../models/220202/fitosanitario.model';
@@ -81,7 +82,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   constructor(
     private readonly agriculturaApiService: AgriculturaApiService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    public catalogosService: CatalogosService,
+
   ) {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -168,12 +171,14 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   obtenerListaDeJustificaciones(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('transporte.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.transporteList = data as Catalogo[];
-      });
+    this.catalogosService.obtieneCatalogoMedioTransporte(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.transporteList = data.datos ?? [];
+      }
+    );
   }
 
   /**
@@ -183,12 +188,14 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   obtenerListaDePunto(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('punto.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.puntoList = data as Catalogo[];
-      });
+    this.catalogosService.obtieneCatalogoPuntoVerificacion(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.puntoList = data.datos ?? [];
+      }
+    );
   }
 
   /**

@@ -991,8 +991,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       [Validators.required, matrizRequerida]
     ],
   });
-
-  // Remove invalid controls
+   const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
+  setTimeout(()=>{
+ 
+      MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
+    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
+      MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos,MERCANCIA_FORM_DETALLE.tipoProducto);
+  MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
+    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
+MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
+MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
+this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);  
+},500);
+    
   const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
   if (this.detalleMercancia) {
     CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
@@ -1043,6 +1054,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       return null;
     };
   }
+public getIdFromDescripcion(
+  array: Catalogo[],
+  descripcion: string | number
+): number | string | undefined {
+  // If descripcion is a string, find by descripcion (case-insensitive)
+  if (typeof descripcion === 'string') {
+    const ITEM = array.find(el => el.descripcion.toLowerCase() === descripcion.toLowerCase());
+    return ITEM ? ITEM.id : descripcion; // Return ID if found, else return original descripcion
+  }
+
+  // If descripcion is already a number (ID), just return it
+  return descripcion;
+}
 
   static numeroUMCDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
