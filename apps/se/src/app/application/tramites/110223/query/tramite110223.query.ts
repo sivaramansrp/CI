@@ -14,18 +14,6 @@ import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 export class Tramite110223Query extends Query<TramiteState> {
 
-  /**
-   * @descripcion
-   * Observable que selecciona el estado completo del certificado.
-   */
-  selectTramite$ = this.select((state) => {
-    return state;
-  });
-
-  /**
-   * Selecciona el estado completo del trámite.
-   * @returns {Observable<any>} - Observable con el estado completo del trámite.
-   */
   selectPexim$ = this.select((state) => {
     return state;
   });

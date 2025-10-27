@@ -363,6 +363,12 @@ export class SolicitudPageComponent {
 getValorIndice(e: AccionBoton): void {
   this.esFormaValido = false;
 
+  if (e.accion === 'cont') {
+    if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
+      return;
+    }
+  }
+
   // Validar formularios antes de continuar desde el paso uno
   if (this.indice === 1 && e.accion === 'cont') {
     const IS_VALID = this.validarTodosFormulariosPasoUno();

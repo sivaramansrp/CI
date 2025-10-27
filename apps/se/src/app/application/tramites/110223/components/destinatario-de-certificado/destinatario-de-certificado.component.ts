@@ -228,8 +228,6 @@ public validateAllForms(): boolean {
   return valid;
 }
 
-
-
   /**
    * @method datosDelDestinatarioFunc
    * @descripcion
@@ -309,6 +307,7 @@ public validateAllForms(): boolean {
   get grupoRepresentativo(): FormGroup {
     return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
   }
+  
   /**
    * @method setFormValida
    * @descripcion
