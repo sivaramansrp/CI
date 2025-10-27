@@ -6,7 +6,7 @@
         </div>
         <div class="col-md-4">
           <label class="form-label text-start" for="rfcTercero"
-            >Registro Federal de Contribuyentes*:</label
+            >Registro Federal de Contribuyentes<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('rfcTercero')?.invalid && (tercerosRelacionadosForm.get('rfcTercero')?.touched || tercerosRelacionadosForm.get('rfcTercero')?.dirty)}">*</span>:</label
           >
           <input
             class="form-control"
@@ -18,6 +18,15 @@
             (change)="actualizarRfcTercero($event)"
             [disabled]="esFormularioSoloLectura"
           />
+            @if (tercerosRelacionadosForm.get('rfcTercero')?.invalid && (tercerosRelacionadosForm.get('rfcTercero')?.touched || tercerosRelacionadosForm.get('rfcTercero')?.dirty)) {
+              @if (tercerosRelacionadosForm.get('rfcTercero')?.hasError('required')) {
+                <small class="mensaje-error">Este campo es obligatorio</small>
+              }  @else if (!tercerosRelacionadosForm.get('rfcTercero')?.hasError('required') && tercerosRelacionadosForm.get('rfcTercero')?.hasError('pattern')) {
+                <small class="mensaje-error">Formato de RFC inválido</small>
+              } @else if (!tercerosRelacionadosForm.get('rfcTercero')?.hasError('required') && !tercerosRelacionadosForm.get('rfcTercero')?.hasError('pattern') && tercerosRelacionadosForm.get('rfcTercero')?.hasError('maxlength')) {
+                <small class="mensaje-error">Por favor, no escriba más de 15 caracteres.</small>
+              }
+            }
         </div>
         <div class="col-md-8">
           <div class="form-group mt-5 pull-left">
@@ -27,16 +36,9 @@
               id="Buscar"
               class="btn btn-primary me-5"
               (click)="buscarTerceroNacionalIDC()"
-              [disabled]="esFormularioSoloLectura ? true : false">            
+              [disabled]="esFormularioSoloLectura">            
               Buscar
             </button>
-            
-@if (nuevaNotificacion) {
-  <section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-  </lib-notificaciones>
-  </section>
-  }
           </div>
         </div>
         <div class="col-md-4">
@@ -97,28 +99,42 @@
           <input
             class="form-control"
             type="text"
-            size="25"
+            size="15"
             id="telefono"
             name="telefono"
             formControlName="telefono"
+            [class.is-invalid]="telefono?.invalid && (telefono?.dirty || telefono?.touched)"
             (change)="actualizarTelefono($event)"
             [disabled]="esFormularioSoloLectura"
           />
+            @if(telefono?.invalid && (telefono?.dirty || telefono?.touched)) {
+              <div class="text-danger">
+                @if(!telefono?.errors?.['pattern'] && telefono?.errors?.['maxlength']) {
+                  <small>Por favor, no escriba más de 30 caracteres.</small>
+                }
+              </div>
+            }
         </div>
         <div class="col-md-4">
-          <label class="form-label text-start" for="correoElectronico"
-            >Correo Electrónico:</label
-          >
+          <label class="form-label text-start" for="correoElectronico">Correo Electrónico:</label>
           <input
             class="form-control"
-            type="text"
-            size="25"
+            type="email"
+            size="30"
             id="correoElectronico"
             name="correoElectronico"
             formControlName="correoElectronico"
+            [class.is-invalid]="correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)"
             (change)="actualizarCorreoElectronico($event)"
             [disabled]="esFormularioSoloLectura"
           />
+            @if(correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)) {
+              <div class="text-danger">
+                @if(!correoElectronico?.errors?.['email'] && correoElectronico?.errors?.['maxlength']) {
+                  <small>Por favor, no escriba más de 320 caracteres.</small>
+                }
+              </div>
+            }
         </div>
         <div class="col-md-12">
           <ng-titulo titulo="Enlace Operativo" />
@@ -127,46 +143,45 @@
           <label>Enlace Operativo</label>
         </div>
         <div class="col-md-12">
-          <app-tabla-dinamica
-            [tipoSeleccionTabla]="enlaceOperativoTabla"
-            [configuracionTabla]="enlaceOperativoConfiguracionColumnas"
-            [datos]="enlaceOperativosLista"
-            (listaDeFilaSeleccionada)="seleccionEnlaceOperativo($event)"
-            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          >
-          </app-tabla-dinamica>
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="enlaceOperativoTabla"
+              [configuracionTabla]="enlaceOperativoConfiguracionColumnas"
+              [datos]="enlaceOperativosLista || []"
+              (listaDeFilaSeleccionada)="seleccionEnlaceOperativo($event)"
+              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            >
+            </app-tabla-dinamica>
         </div>
         <div class="col-12 mt-4 form-group text-end pull-right">
           <button
             type="button"
             name="btnAceptarEnlace"
             id="btnAceptarEnlace"
-            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary me-2"
             data-bs-toggle="modal"
             data-bs-target="#agregarEnlaceOperativo"
             (click)="guardarDatosEnlaceOperativo()"
-            [disabled]="esFormularioSoloLectura ? true : false">            
+            [disabled]="esFormularioSoloLectura">            
             Agregar
           </button>
           <button
             type="button"
             name="btnModificarEnlace"
             id="btnModificar"
-            class="btn btn-primary me-2"
+            class="btn btn-default me-2"
             data-bs-toggle="modal"
             data-bs-target="#agregarEnlaceOperativo"
-            (click)="guardarModificacionEnlaceOperativo()"
-            [disabled]="esFormularioSoloLectura ? true : false">            
+            (click)="agregarEnlaceOperativoCmp.cargarEnlaceParaModificar(seleccionEnlaceOperativoDatos[0])"
+            [disabled]="esFormularioSoloLectura || seleccionEnlaceOperativoDatos.length === 0">            
             Modificar
           </button>
           <button
             type="button"
-            name="btnCancelarEnlace"
-            id="btnCancelar"
+            name="btnEliminarEnlace"
+            id="btnEliminar"
             class="btn btn-danger"
-            (click)="cerrarDialogoEnlaceOperativo()"
-            [disabled]="esFormularioSoloLectura ? true : false">            
+            (click)="confirmarEliminarEnlaceOperativo()"
+            [disabled]="esFormularioSoloLectura || seleccionEnlaceOperativoDatos.length === 0">            
             Eliminar
           </button>
         </div>
@@ -187,7 +202,7 @@
       </div>
     </form>
   </div>
-  
+
   <div
     class="modal fade"
     id="agregarEnlaceOperativo"
@@ -198,9 +213,25 @@
     <div class="modal-dialog modal-dialog-centered modal-lg"  style="max-width: 100%; width: 100%;">
       <div class="modal-content">
         <app-agregar-enlace-operativo
+          #agregarEnlaceOperativoCmp
           (agregarEnlaceOperativo)="agregarEnlaceOperativo($event)"
         ></app-agregar-enlace-operativo>
       </div>
     </div>
   </div>
+
+  @if(alertaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+</section>
+}
+
+@if(nuevaNotificacion && nuevaNotificacion.tipoNotificacion) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="manejarConfirmacionEliminacion($event)">
+  </lib-notificaciones>
+</section>
+}
   

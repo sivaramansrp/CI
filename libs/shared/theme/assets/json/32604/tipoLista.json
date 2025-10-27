@@ -2,20 +2,24 @@
     "code": 200,
     "data": [
         {
-            "id": "0",
-            "descripcion": "Planta Productiva"
-        },
-        {
             "id": "1",
-            "descripcion": "Almacén"
+            "descripcion": "Accionista"
         },
         {
             "id": "2",
-            "descripcion": "Centro de Distribución"
+            "descripcion": "Administrador único"
         },
         {
             "id": "3",
-            "descripcion": "Otros"
+            "descripcion": "Miembro del consejo de administración"
+        },
+        {
+            "id": "4",
+            "descripcion": "Representante Legal"
+        },
+        {
+            "id": "5",
+            "descripcion": "Socio"
         }
     ],
     "message": ""
