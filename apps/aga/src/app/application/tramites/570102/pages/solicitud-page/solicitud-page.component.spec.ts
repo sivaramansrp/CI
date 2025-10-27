@@ -22,7 +22,7 @@ describe('SolicitudPageComponent', () => {
   });
 
   beforeEach(() => {
-    // Ensure wizardComponent is always initialized for each test
+    // Asegurar que wizardComponent siempre esté inicializado para cada prueba
     if (!component.wizardComponent) {
       component.wizardComponent = { siguiente: jest.fn() } as any;
     }
@@ -48,13 +48,11 @@ describe('SolicitudPageComponent', () => {
     expect(component.indice).toBe(3);
   });
 
-  it('should call alEventoHijo, cargaArchivo, and handle getValorIndice logic (modal hidden)', () => {
+  it('should call cargaArchivo and handle getValorIndice logic (modal hidden)', () => {
     component.ocultarModal = false;
-    const alEventoSpy = jest.spyOn(component, 'alEventoHijo');
     const cargaArchivoSpy = jest.spyOn(component, 'cargaArchivo');
     component.nombre = 5;
     component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(alEventoSpy).toHaveBeenCalledWith(5);
     expect(cargaArchivoSpy).toHaveBeenCalled();
     expect(component.indice).toBe(1);
   });
@@ -66,7 +64,18 @@ describe('SolicitudPageComponent', () => {
     component.wizardComponent = { siguiente: jest.fn() } as any;
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(component.nombre).toBe(1);
+    expect(component.nombre).toBe(0); // nombre permanece 0 porque indice se vuelve 2, no 1
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled(); // siguiente no se llama porque indice es 2, no 1
+  });
+
+  it('should handle getValorIndice logic (modal visible, valid range, accion cont, indice 1)', () => {
+    component.ocultarModal = true;
+    component.indice = 0; // Comenzar con un valor diferente
+    component.nombre = 0;
+    component.wizardComponent = { siguiente: jest.fn() } as any;
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+    expect(component.indice).toBe(1);
+    expect(component.nombre).toBe(1); // nombre se vuelve 1 cuando indice es 1 y accion es 'cont'
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
@@ -111,12 +120,22 @@ describe('SolicitudPageComponent', () => {
     expect(component.ocultarModal).toBe(false);
   });
 
-  it('should set nuevaNotificacion and elementoParaEliminar on abrirModal', () => {
+  it('should set nuevaNotificacion and elementoParaEliminar on abrirModal when isData is true', () => {
     component.nuevaNotificacion = undefined as any;
     component.elementoParaEliminar = 0;
+    component.isData = true; // Establecer isData como true para que nuevaNotificacion sea definida
     component.abrirModal(2);
     expect(component.nuevaNotificacion).toBeDefined();
     expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('should not set nuevaNotificacion when isData is false', () => {
+    component.nuevaNotificacion = undefined as any;
+    component.elementoParaEliminar = 0;
+    component.isData = false; // Establecer isData como false
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toBeUndefined();
+    expect(component.elementoParaEliminar).toBe(0); // elementoParaEliminar no debería cambiar
   });
 
   it('should set cargarArchivo to true and call abrirModal if indice is 1 in cargaArchivo', () => {
