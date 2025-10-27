@@ -12,10 +12,11 @@ import { Injectable } from '@angular/core';
  * Interface para el payload de búsqueda de permisos de cancelación
  */
 export interface BuscarPermisoCancelacionPayload {
-  id_solicitud: string; // Changed from number to string to match backend expectation
+  id_solicitud: number;
   rfc_solicitante: string;
   clave_entidad_federativa: string;
   id_tipo_tramite: number;
+  folio_cancelar: string;
 }
 
 /**
@@ -162,7 +163,6 @@ cargarDatosSimulados(): void {
  * @returns {Observable<BaseResponse<BuscarPermisoResponse>>} Observable con la respuesta del servidor
  */
 buscarPermisoCancelacion(payload: BuscarPermisoCancelacionPayload): Observable<BaseResponse<BuscarPermisoResponse>> {
-  // Endpoint para buscar permisos de cancelación
   const ENDPOINT = `${this.host}sat-t140105/solicitud/buscar`;
   
   return this.http.post<BaseResponse<BuscarPermisoResponse>>(ENDPOINT, payload);

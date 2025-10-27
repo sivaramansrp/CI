@@ -1,4 +1,4 @@
-import { Cancelacion, PermisosDatos, Plantas, createDatosState } from '../models/cancelacion-de-solicitus.model';
+import { Cancelacion, Plantas } from '../models/cancelacion-de-solicitus.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -58,6 +58,9 @@ export interface DesistimientoDePermisoState {
 
   /** ID del tipo de trámite */
   idTipoTramite: number;
+
+  /** Folio del trámite a cancelar */
+  folioCancelar: string;
 }
 
 /**
@@ -65,7 +68,7 @@ export interface DesistimientoDePermisoState {
  */
 function createInitialState(): DesistimientoDePermisoState {
   return {
-    idSolicitud: 202808106,
+    idSolicitud: 140105, 
     rfc: 'AAL0409235E6',
     nombre: '',
     apPaterno: '',
@@ -80,8 +83,9 @@ function createInitialState(): DesistimientoDePermisoState {
     certificado: '',
     datos: [],
     plantasSeleccionadas: [] as Plantas[],
-    claveEntidadFederativa: '09',
+    claveEntidadFederativa: 'SIN',
     idTipoTramite: 140105,
+    folioCancelar: '',
   };
 }
 

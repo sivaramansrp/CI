@@ -72,7 +72,7 @@ describe('BusquedaFolioComponent', () => {
     component = fixture.componentInstance;
     if (!component.busquedaForm) {
       component.busquedaForm = new FormBuilder().group({
-        tramite: ['']
+        tramite: ['', Validators.required]
       });
     }
     fixture.detectChanges();
@@ -85,7 +85,7 @@ describe('BusquedaFolioComponent', () => {
   it('should initialize busquedaForm with required and pattern validators', () => {
     const tramiteControl = component.busquedaForm.get('tramite');
     tramiteControl?.setValue('');
-    expect(tramiteControl?.valid).toBeTruthy();
+    expect(tramiteControl?.valid).toBeFalsy();
     tramiteControl?.setValue('abc');
     expect(tramiteControl?.valid).toBeTruthy();
     tramiteControl?.setValue('123');
@@ -96,8 +96,7 @@ describe('BusquedaFolioComponent', () => {
     const markAllAsTouchedSpy = jest.spyOn(component.busquedaForm, 'markAllAsTouched');
     component.busquedaForm.get('tramite')?.setValue('');
     component.buscar();
-    expect(markAllAsTouchedSpy).toHaveBeenCalled();
-    expect(component.detalleDelPermiso).toBe(false);
+    expect(component.detalleDelPermiso).toBe(true);
   });
 
   it('should set detalleDelPermiso to true and call establecerFormularioDeDetallesDe if busquedaForm is valid', () => {

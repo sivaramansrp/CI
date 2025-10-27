@@ -58,8 +58,6 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    * Se utiliza para abrir o cerrar el modal de archivos.
    */
   modalInstances: Modal | null = null;
-
-  // Store values - subscribed at component level like 80205
   /**
    * RFC del solicitante obtenido del store.
    */
@@ -68,7 +66,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
   /**
    * Clave de entidad federativa obtenida del store.
    */
-  claveEntidadFederativa: string = '09';
+  claveEntidadFederativa: string = 'SIN';
 
   /**
    * ID del tipo de trámite obtenido del store.
@@ -200,11 +198,7 @@ public nuevaNotificacionUno!: Notificacion;
     this.cancelacionForm = this.fb.group({
      motivoCancelacion: ['', [Validators.required, Validators.maxLength(250)]],
     });
-    
-    // Initialize store with user data if needed
     this.initializeStoreData();
-    
-    // Subscribe to store values like 80205
     this.suscribirseAStoreData();
 
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
@@ -222,9 +216,6 @@ public nuevaNotificacionUno!: Notificacion;
      
       }
     });
-
-
-     // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
       .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe(data => {
@@ -271,7 +262,6 @@ public nuevaNotificacionUno!: Notificacion;
           //   this.servicioDeMensajesService.actualizarEstadoFormulario({ rfc: userRfc });
           // }
           
-          // Para development, puedes usar un RFC de prueba:
           // this.servicioDeMensajesService.actualizarEstadoFormulario({ rfc: "AAL0409235E6" });
         }
 
@@ -320,11 +310,13 @@ public nuevaNotificacionUno!: Notificacion;
           rfc: state.rfc,
           claveEntidadFederativa: state.claveEntidadFederativa,
           idTipoTramite: state.idTipoTramite,
+          idSolicitud: state.idSolicitud,
+          folioCancelar: state.folioCancelar,
         }))
       )
       .subscribe((storeValues) => {
-        this.rfcSolicitante = storeValues.rfc || '';
-        this.claveEntidadFederativa = storeValues.claveEntidadFederativa || '09';
+        this.rfcSolicitante = storeValues.rfc || 'AAL0409235E6';
+        this.claveEntidadFederativa = storeValues.claveEntidadFederativa || 'SIN';
         this.idTipoTramite = storeValues.idTipoTramite || 140105;
       });
   }
@@ -494,6 +486,7 @@ public nuevaNotificacionUno!: Notificacion;
       };
       return;
     }
+    this.servicioDeMensajesService.actualizarEstadoFormulario({ folioCancelar: TRAMITE_VALUE });
 
     // Validar que tengamos los datos necesarios del store
     if (!this.rfcSolicitante) {
@@ -511,27 +504,46 @@ public nuevaNotificacionUno!: Notificacion;
       return;
     }
 
-    // Crear el payload para la búsqueda de permisos usando propiedades locales actualizadas del store
-    const PAYLOAD = {
-      id_solicitud: TRAMITE_VALUE, // Send folio as string from form input
-      rfc_solicitante: this.rfcSolicitante, // Get RFC from local property (updated from store)
-      clave_entidad_federativa: this.claveEntidadFederativa, // Get from local property (updated from store)
-      id_tipo_tramite: this.idTipoTramite // Get from local property (updated from store)
-    };
+    this.desistimientoQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((storeState) => ({
+          id_solicitud: storeState.idSolicitud || this.idTipoTramite,
+          rfc_solicitante: storeState.rfc || this.rfcSolicitante,
+          clave_entidad_federativa: storeState.claveEntidadFederativa || this.claveEntidadFederativa,
+          id_tipo_tramite: storeState.idTipoTramite || this.idTipoTramite,
+          folio_cancelar: storeState.folioCancelar || TRAMITE_VALUE
+        }))
+      )
+      .subscribe((PAYLOAD) => {
+        this.ejecutarBusquedaPermiso(PAYLOAD);
+      });
+  }
 
-    // Call the service to search for the permit
+  /**
+   * Ejecuta la búsqueda del permiso con el payload proporcionado.
+   * @param payload - Datos necesarios para la búsqueda del permiso
+   */
+  /**
+   * Ejecuta la búsqueda del permiso con el payload proporcionado.
+   * @param payload - Datos necesarios para la búsqueda del permiso
+   */
+  private ejecutarBusquedaPermiso(PAYLOAD: {
+    id_solicitud: number;
+    rfc_solicitante: string;
+    clave_entidad_federativa: string;
+    id_tipo_tramite: number;
+    folio_cancelar: string;
+  }): void {
     this.servicioDeMensajesService.buscarPermisoCancelacion(PAYLOAD)
       .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe({
             next: (response) => {
               if (response.codigo === '00' && response.datos) {
-                // Handle successful response
                 this.datosDePermiso = true;
                 this.cuerpoTablaCancelacion = response.datos.datos || [];
                 this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion);
                 this.cerrarModal();
-                
-                // Show success notification
                 this.nuevaNotificacion = {
                   tipoNotificacion: TipoNotificacionEnum.TOASTR,
                   categoria: CategoriaMensaje.EXITO,
@@ -544,7 +556,6 @@ public nuevaNotificacionUno!: Notificacion;
                   txtBtnCancelar: '',
                 };
               } else {
-                // Handle API error response
                 this.nuevaNotificacion = {
                   tipoNotificacion: TipoNotificacionEnum.ALERTA,
                   categoria: CategoriaMensaje.ERROR,
@@ -559,10 +570,7 @@ public nuevaNotificacionUno!: Notificacion;
               }
             },
             error: (error) => {
-              // Handle HTTP error response
               let errorMessage = 'El Folio de Trámite que ingresó no pertenece a PEXIM';
-              
-              // Provide more specific error messages based on the error response
               if (error.status) {
                 switch (error.status) {
                   case 400:
@@ -599,13 +607,6 @@ public nuevaNotificacionUno!: Notificacion;
               };
             }
           });
-
-    // Fallback: For development/testing - show mock data if service is not available
-    // Comment this out when the actual API is ready
-    // this.datosDePermiso = true;
-    // this.cuerpoTablaCancelacion = [formData as Cancelacion];
-    // this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion);
-    // this.cerrarModal();
   }
 
   

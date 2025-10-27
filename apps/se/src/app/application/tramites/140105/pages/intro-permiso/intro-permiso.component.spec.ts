@@ -33,6 +33,14 @@ class MockDesistimientoQuery {
     claveEntidadFederativa: '09',
     idTipoTramite: 140105
   });
+
+  getValue() {
+    return {
+      rfc: 'TEST123',
+      claveEntidadFederativa: '09',
+      idTipoTramite: 140105
+    };
+  }
 }
 
 @Injectable()
