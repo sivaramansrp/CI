@@ -8,6 +8,7 @@ import {
   NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
+  SoloNumerosDirective,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -21,6 +22,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  forwardRef
 } from '@angular/core';
 import {
   FRACCION_EXPORTACION,
@@ -114,6 +116,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     NotificacionesComponent,
+    forwardRef(() => SoloNumerosDirective),
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
