@@ -4,9 +4,11 @@ import {
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
 import { PASOS, TITULOMENSAJE } from '../../constants/psicotropicos-poretorno.enum';
+import { Tramite260201Query } from '../../estados/tramite260201Query.query';
+import { Tramite260201State } from '../../estados/tramite260201Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
  * @component
@@ -31,7 +33,13 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit {
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
   /**
    * @property {string | null} tituloMensaje
    * @description Título del mensaje que se muestra en el wizard.
@@ -55,6 +63,12 @@ export class ContenedorDePasosComponent {
   indice: number = 1;
 
   TEXTOS: string = AVISO.Aviso;
+
+  /**
+   * @property {Tramite260201State} storeData
+   * @description Estado de la tienda para el trámite 260201.
+   */
+  storeData!: Tramite260201State;
 
   /**
    *
@@ -81,6 +95,30 @@ export class ContenedorDePasosComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  constructor(private tramite260201Query: Tramite260201Query) {}
+
+  ngOnInit(): void {
+    this.tramite260201Query.selectTramiteState$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+  }
 
   /**
    * @method seleccionaTab
@@ -130,4 +168,60 @@ export class ContenedorDePasosComponent {
         return TITULOMENSAJE;
     }
   }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
 }
