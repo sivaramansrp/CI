@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { REGEX_RFC } from '@libs/shared/data-access-user/src';
+import { REG_X, REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { of } from 'rxjs';
 import { AgregarEnlaceOperativoComponent } from './agregar-enlace-operativo.component';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
@@ -224,7 +224,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
       agregarEnlaceApellidoMaterno: ['ApellidoM456'],
       agregarEnlaceCiudadEstado: ['Ciudad456'],
       agregarEnlaceCargo: ['Cargo456', [Validators.maxLength(250)]],
-      agregarEnlaceTelefono: ['1234567890', [Validators.pattern(/^[0-9]+$/), Validators.maxLength(30)]],
+      agregarEnlaceTelefono: ['1234567890', [Validators.pattern(REG_X.SOLO_NUMEROS), Validators.maxLength(30)]],
       agregarEnlaceCorreoElectronico: ['correo456@example.com', [Validators.email, Validators.maxLength(320)]],
       agregarEnlaceSuplente: [false]
     });
