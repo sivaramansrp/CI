@@ -5,7 +5,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { DesistimientoSolicitudService } from './desistimiento-solicitud.service';
 import { HttpClient } from '@angular/common/http';
-import { Solicitud230301Store } from '../estados/tramites/tramites230301.store';
+import { Tramite230301Store } from '../estados/tramites/tramites230301.store';
 
 @Injectable()
 class MockHttpClient {

@@ -1,14 +1,13 @@
-import { Catalogo, CatalogoLista } from '../../models/validacion-posteriori.model';
 import { CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import { Tramite110212State, Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Catalogo } from '../../models/validacion-posteriori.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
-import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
+import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 
 /**
  * Componente para gestionar los datos del certificado.
@@ -91,7 +90,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @example
      * procedure = "110212";
      */
-    procedure = '110212'; // Need to change it to 110202 when api for 110202 will be ready
+    procedure = '110212';
   
     /**
      * Referencia al componente hijo DatosCertificadoDeComponent

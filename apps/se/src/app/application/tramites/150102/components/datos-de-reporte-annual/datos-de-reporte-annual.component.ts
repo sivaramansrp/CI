@@ -1,41 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ConfiguracionAporteColumna,
-  ConfiguracionColumna,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  REG_X,
-  TablaCampoSeleccion,
-  TablaConEntradaComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MENSAJES_EXPORTACIONES_TOTALS,
-  MENSAJES_VENTAS_TOTALES,
-  TOTAL_EXPORTACIONES_MENSAJES,
-  VALIDATORS_MENSAJES,
-  VENTAS_TOTALES_MENSAJES,
-} from '../../constantes/solicitud150102.enum';
-import {
-  Solicitud150102State,
-  Solicitud150102Store,
-} from '../../estados/solicitud150102.store';
+import { ConfiguracionAporteColumna, ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, REG_X, TablaCampoSeleccion, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MENSAJES_EXPORTACIONES_TOTALS, MENSAJES_VENTAS_TOTALES, TOTAL_EXPORTACIONES_MENSAJES, VALIDATORS_MENSAJES, VENTAS_TOTALES_MENSAJES } from '../../constantes/solicitud150102.enum';
+import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BienesProducidos } from '../../models/programas-reporte.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { SolicitudService } from '../../services/solicitud.service';
-
 /**
  * @description Componente que administra los datos del reporte anual y realiza cálculos relevantes.
  * Permite la visualización y edición de bienes producidos, ventas totales, exportaciones e importaciones.
@@ -251,7 +224,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     public solicitud150102Store: Solicitud150102Store,
     public solicitud150102Query: Solicitud150102Query,
     public solicitudService: SolicitudService,
-    public consultaioQuery: ConsultaioQuery
+    public consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -320,6 +294,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         [
           Validators.maxLength(16),
           Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
+          Validators.required,
         ],
       ],
       totalExportaciones: [
@@ -330,14 +305,15 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         [
           Validators.maxLength(16),
           Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
+          Validators.required,
         ],
       ],
       totalImportaciones: [
         {
           value: this.solicitud150102State.totalImportaciones,
-          disabled: true,
+          disabled: true,          
         },
-        [Validators.maxLength(16)],
+        [Validators.maxLength(16),Validators.required],
       ],
       saldo: [{ value: this.solicitud150102State.saldo, disabled: true }],
       porcentajeExportacion: [
@@ -391,7 +367,16 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         },
       });
   }
-
+/**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
   /**
    * @description Método para obtener y actualizar las ventas totales.
    * @param evento Evento de entrada con el valor ingresado.
@@ -485,11 +470,11 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    *
    * @param evento - Lista de bienes producidos seleccionados desde la tabla de entrada.
    */
-  seleccionarBienesFilaDeEntrada(evento: BienesProducidos[]): void {
+seleccionarBienesFilaDeEntrada(evento: BienesProducidos[]): void {
     if (evento.length > 0) {
-      this.bienesProducidosSelection = -1;
-    }
-  }
+   this.bienesProducidosSelection = -1;
+} 
+}
 
   /**
    * @description Método para agregar nuevos bienes producidos si no existen en la lista.
@@ -572,9 +557,9 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /**
    * Reinicia la selección de bienes producidos.
    */
-  eliminarBienesProducidos(): void {
+eliminarBienesProducidos(): void {
     this.bienesProducidosSelection = -1;
-  }
+  } 
 
   /**
    * @description Método que se ejecuta cuando el componente se destruye.
