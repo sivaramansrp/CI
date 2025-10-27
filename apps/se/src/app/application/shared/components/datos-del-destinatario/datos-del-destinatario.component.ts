@@ -251,13 +251,6 @@ export class DatosDelDestinatarioComponent
       storeStateName,
     });
   }
-validarFormularios(): boolean {
-    if (this.formDatosDelDestinatario.valid) {
-      return true;
-    }
-    this.formDatosDelDestinatario.markAllAsTouched();
-    return false;
-  }
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
    */
@@ -265,7 +258,13 @@ validarFormularios(): boolean {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+  validarFormularios(): boolean {
+    if (this.formDatosDelDestinatario.valid) {
+      return true;
+    }
+    this.formDatosDelDestinatario.markAllAsTouched();
+    return false;
+  }
   /**
    * @description
    * Valida el estado completo del formulario de datos del certificado.
@@ -285,11 +284,5 @@ validarFormularios(): boolean {
    * }
    * ```
    */
-  validarFormularios(): boolean {
-    if (this.formDatosDelDestinatario.valid) {
-      return true;
-    }
-    this.formDatosDelDestinatario.markAllAsTouched();
-    return false;
-  }
+
 }

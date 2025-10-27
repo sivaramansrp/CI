@@ -125,13 +125,15 @@ export class CertificadoOrigenComponent
    * Observable que emite la lista de países y bloques disponibles.
    * @type {Observable<Catalogo[]>}
    */
-  pais: Catalogo[] = [] as Catalogo[];
+ 
+
+   pais: Catalogo[] = [];
 
   /**
    * Estado seleccionado del catálogo.
    * @type {Catalogo}
    */
-  estado!: Catalogo;
+  estado: Catalogo[] = [];
 
   /**
    * País o bloque seleccionado.
@@ -339,7 +341,7 @@ export class CertificadoOrigenComponent
      * Asignación de los observables que contienen los catálogos de estados y países.
      */
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
-    // this.pais = this.tramiteQuery.paisBloques;
+    //  this.pais = this.tramiteQuery.paisBloques;
     this.datos1 = (
       this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>
     ).pipe(
@@ -372,8 +374,8 @@ export class CertificadoOrigenComponent
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    this.cargarEstados();
-    this.cargarBloque();
+    // this.cargarEstados();
+    // this.cargarBloque();
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -385,7 +387,7 @@ export class CertificadoOrigenComponent
       .subscribe();
 
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
-    this.paisOpcion();
+    // this.paisOpcion();
   }
 
   /**

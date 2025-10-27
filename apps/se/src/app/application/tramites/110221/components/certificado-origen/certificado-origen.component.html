@@ -1,9 +1,9 @@
 <app-certificado-de-origen
   #certificadoDeOrigen
   [operador]="operador"
-  [tratadoAcuerdo]="(estados$ | async) || []"
-  [paisBloqu]="pais"
-  [paises]="pais"
+ [paisBloqu]="pais || []"
+  [paises]="pais || []"
+ [tratadoAcuerdo]="estado || []"
   (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
   (paisBloquEvent)="tipoSeleccion($event)"
   (setbuscarMercanciaEvent)="buscarrMercancia()"
