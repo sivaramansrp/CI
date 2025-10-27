@@ -50,7 +50,17 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 
 
 /**
- * Maneja formularios, catálogos, tablas de mercancías y modales relacionados con el trámite.
+ * Componente principal para la gestión del trámite de exención de impuestos.
+ *
+ * Este componente maneja:
+ * - Formularios reactivos para la captura de datos del trámite y mercancías.
+ * - Catálogos y listas desplegables (aduana, país, unidad de medida, etc.).
+ * - Tabla dinámica para mostrar y editar mercancías agregadas.
+ * - Lógica de modales para confirmaciones, agregados y eliminaciones.
+ * - Validaciones y sincronización con el store de estado.
+ *
+ * El flujo principal permite al usuario agregar mercancías, validar los datos, mostrar confirmaciones,
+ * y reflejar los cambios en la tabla de mercancías.
  */
 
   @Component({
@@ -69,7 +79,11 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   })
   export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
-   * Ayuda para obtener una descripción del catálogo por identificación o valor de descripción.
+   * Obtiene la descripción de un elemento de catálogo dado su id o valor de descripción.
+   *
+   * @param {Catalogo[] | undefined} catalog - Catálogo de opciones.
+   * @param {string | number} value - Valor a buscar (id o descripción).
+   * @returns {string} Descripción encontrada o el valor original si no existe coincidencia.
    */
   static obtenerDescripcion(catalog: Catalogo[] | undefined, value: string | number): string {
     if (!catalog) { return value as string; }
@@ -78,25 +92,22 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-        * Índices de las filas pendientes de eliminación (para el modal de confirmación).
-   *
+   * Índices de las filas pendientes de eliminación (usados en el modal de confirmación de eliminación).
    * @type {number[]}
    */
   filasPendientesEliminar: number[] = [];
 
   /**
-   * Prepara las filas para su eliminación almacenando sus índices antes de mostrar el modal de confirmación.
-   *
-   * @returns {void}
+   * Prepara los índices de las filas seleccionadas para su eliminación.
+   * Se utiliza antes de mostrar el modal de confirmación de eliminación.
    */
   prepararEliminarFila(): void {
     this.filasPendientesEliminar = [...this.filasSeleccionadas];
   }
 
   /**
-   * Elimina las filas después de la confirmación desde el modal.
-   *
-   * @returns {void}
+   * Elimina las filas seleccionadas de la tabla de mercancías tras la confirmación del usuario.
+   * Limpia la selección y actualiza la vista.
    */
   eliminarMercancias(): void {
     if (this.filasPendientesEliminar.length > 0) {
@@ -117,21 +128,17 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.filasPendientesEliminar = [];
   }
   /**
-   * Agrega la mercancía a la tabla después de aceptar en el modal de confirmación y cierra el modal.
-   *
-   * @returns {void}
+   * Cierra el modal de confirmación de agregado tras la aceptación del usuario.
+   * No modifica los datos de la tabla, solo gestiona el cierre visual del modal.
    */
   agregarMercanciasAceptar(): void {
-    this.agregarMercancias();
-    
     // Cerrar el modal manualmente para evitar conflictos de Bootstrap
     this.cerrarModalManual();
   }
 
   /**
-   * Cierra el modal de confirmación manualmente sin usar Bootstrap.
-   *
-   * @returns {void}
+   * Cierra el modal de confirmación de agregado de mercancía de forma manual (sin Bootstrap).
+   * Elimina el fondo y limpia el estado visual del body.
    */
   cerrarModalManual(): void {
     if (this.confirmarModalAgregarElement && this.confirmarModalAgregarElement.nativeElement) {
@@ -155,9 +162,8 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Muestra el modal de confirmación de agregado y agrega la mercancía después de aceptar.
-   *
-   * @returns {void}
+   * Valida el formulario de mercancía y, si es válido, agrega la mercancía y muestra el modal de confirmación.
+   * Si no es válido, marca los controles como tocados para mostrar errores.
    */
   agregarMercanciasConfirm(): void {
     this.envioIntentado = true;
@@ -189,7 +195,13 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 
     // Si los campos principales son válidos y (si es vehículo, también los campos de vehículo), mostrar el modal de confirmación
     if (CAMPOS_VALIDOS && CAMPOS_VEHICULO_VALIDOS) {
-      // Cerrar solo el modal de agregar mercancías sin afectar el estado general de los modales
+  // Agrega la mercancía a la tabla y actualiza la vista antes de mostrar el modal de confirmación
+  this.agregarMercancias();
+  /**
+   * Cierra únicamente el modal de agregar mercancías (modalElement) después de agregar la mercancía,
+   * sin afectar el estado de otros modales. Esto permite que el modal de confirmación
+   * "La mercancía fue agregada correctamente" se muestre inmediatamente después.
+   */
       if (this.modalElement) {
         const INSTANCIA_MODAL = Modal.getInstance(this.modalElement.nativeElement);
         if (INSTANCIA_MODAL) {
@@ -223,25 +235,23 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.agregarMercanciasForm.markAllAsTouched();
   }
   /**
-   * Índice de la fila seleccionada en la tabla, o nulo si no hay ninguno seleccionado.
+   * Índice de la fila seleccionada en la tabla de mercancías, o null si no hay ninguna seleccionada.
    */
   filaSeleccionada: number | null = null;
 
   /**
-   * Array de índices de las filas seleccionadas en la tabla con checkboxes.
+   * Array de índices de las filas seleccionadas en la tabla de mercancías (checkboxes).
    */
   filasSeleccionadas: number[] = [];
 
   /**
-   * Índice de la fila que se está editando, o nulo si se está agregando una nueva.
+   * Índice de la fila que se está editando en la tabla de mercancías, o null si se está agregando una nueva.
    */
   filaEditando: number | null = null;
 
   /**
-   * Selecciona una fila de la tabla y actualiza el índice de la fila seleccionada.
-   *
-   * @param {MercanciaRow} row Fila de mercancía seleccionada.
-   * @returns {void}
+   * Selecciona una fila de la tabla de mercancías y actualiza el índice de la fila seleccionada.
+   * @param {MercanciaRow} row - Fila seleccionada.
    */
   seleccionarFila(row: MercanciaRow): void {
   const INDICE = this.mercanciaBodyData.indexOf(row);
@@ -249,11 +259,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección múltiple de filas desde el componente tabla-dinamica.
-   * Actualiza el array de filas seleccionadas y establece filaSeleccionada solo si hay exactamente una fila seleccionada.
-   *
-   * @param {MercanciaRow[]} filasSeleccionadas Array de filas seleccionadas desde la tabla.
-   * @returns {void}
+   * Maneja la selección múltiple de filas desde la tabla dinámica.
+   * Actualiza el array de índices seleccionados y el índice único si corresponde.
+   * @param {MercanciaRow[]} filasSeleccionadas - Array de filas seleccionadas.
    */
   manejarSeleccionMultiple(filasSeleccionadas: MercanciaRow[]): void {
     // Convertir las filas seleccionadas a índices
@@ -268,12 +276,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Permite editar una fila de la tabla de mercancías.
-   * Busca la fila por su índice, valida que sea correcto, y carga los datos en el formulario de mercancías para su edición.
-   * Si el índice es inválido, no realiza ninguna acción.
-   *
-   * @param {number | null} index Índice de la fila a editar en la tabla de mercancías.
-   * @returns {void}
+   * Permite editar una fila existente de la tabla de mercancías.
+   * Carga los datos en el formulario para su edición.
+   * @param {number | null} index - Índice de la fila a editar.
    */
   editarFila(index: number | null): void {
     if (index === null || index === undefined || index < 0 || index >= this.mercanciaBodyData.length) {
@@ -299,12 +304,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Elimina una fila de la tabla de mercancías según el índice proporcionado.
-   * Si el índice es válido, elimina la fila tanto del arreglo de datos como de la tabla visual,
-   * y limpia la selección si la fila eliminada estaba seleccionada.
-   *
-   * @param {number | null} index Índice de la fila a eliminar en la tabla de mercancías.
-   * @returns {void}
+   * Elimina una fila de la tabla de mercancías por índice.
+   * Limpia la selección si la fila eliminada estaba seleccionada.
+   * @param {number | null} index - Índice de la fila a eliminar.
    */
   eliminarFila(index: number | null): void {
     if (index === null || index === undefined) {
@@ -320,18 +322,13 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Controla si el radio button debe estar deshabilitado.
+   * Indica si el grupo de radio debe estar deshabilitado.
    */
   public opcionDeshabilitado = true;
 
   /**
-   * Limpia el formulario de agregar mercancías en el modal.
-   */
-  /**
    * Limpia y reinicia el formulario de agregar mercancías en el modal.
    * Restablece los valores, el estado de los controles y la bandera de intento de envío.
-   *
-   * @returns {void}
    */
   limpiarAgregarMercanciasForm(): void {
     this.agregarMercanciasForm.reset();
@@ -341,19 +338,14 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Cancela y limpia el formulario de agregar mercancías al cerrar el modal.
-   */
-  /**
    * Cancela la operación de agregar mercancía, limpia el formulario y cierra el modal correspondiente.
-   *
-   * @returns {void}
    */
   cancelarAgregarMercanciasForm(): void {
     this.limpiarAgregarMercanciasForm();
     this.cerrarModal();
   }
   /**
-   * Bandera para indicar si se intentó enviar el formulario y mostrar errores de validación
+   * Bandera para indicar si se intentó enviar el formulario y mostrar errores de validación.
    */
   public envioIntentado = false;
   /**
@@ -381,7 +373,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   public mercanciaHeaderData: ConfiguracionColumna<TableBodyData>[] = [];
   /**
-   * Tipo de selección de la tabla (por ejemplo, selección por checkbox).
+   * Tipo de selección de la tabla de mercancías (por ejemplo, selección por checkbox).
    */
   tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
   /**
@@ -492,12 +484,12 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   soloLectura: boolean = false;
 
   /**
-   * Flag para evitar bucles infinitos en el método aduanaSeleccion
+   * Flag para evitar bucles infinitos en el método aduanaSeleccion.
    */
   private isProcessingAduanaSelection = false;
 
   /**
-   * Flag para evitar bucles infinitos en el método destinoMercanciaSeleccion
+   * Flag para evitar bucles infinitos en el método destinoMercanciaSeleccion.
    */
   private isProcessingDestinoSelection = false;
 
@@ -505,14 +497,14 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * Constructor del componente ExencionImpuestosComponent.
    * Inicializa los servicios y dependencias necesarias para el manejo de formularios, catálogos y tablas de mercancías.
    *
-   * @param {ExencionImpuestosService} exencionImpuestoService Servicio para operaciones de exención de impuestos.
-   * @param {Tramite103Store} store Almacén para el estado del trámite 103.
-   * @param {Tramite103Query} query Consulta para obtener el estado del trámite 103.
-   * @param {FormBuilder} fb Constructor para formularios reactivos de Angular.
-   * @param {ValidacionesFormularioService} validacionesService Servicio para validaciones personalizadas de formularios.
-   * @param {ConsultaioQuery} consultaioQuery Consulta para el estado de la consulta relacionada.
-   * @param {ChangeDetectorRef} cdr Referencia para la detección de cambios en el componente.
-   * @param {MercanciaTableService} mercanciaTableService Servicio para la gestión de la tabla de mercancías.
+   * @param {ExencionImpuestosService} exencionImpuestoService - Servicio para operaciones de exención de impuestos.
+   * @param {Tramite103Store} store - Store para el estado del trámite 103.
+   * @param {Tramite103Query} query - Query para obtener el estado del trámite 103.
+   * @param {FormBuilder} fb - Constructor para formularios reactivos de Angular.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones personalizadas de formularios.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta para el estado de la consulta relacionada.
+   * @param {ChangeDetectorRef} cdr - Referencia para la detección de cambios en el componente.
+   * @param {MercanciaTableService} mercanciaTableService - Servicio para la gestión de la tabla de mercancías.
    */
   constructor(
     private exencionImpuestoService: ExencionImpuestosService,
@@ -528,15 +520,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Método de inicialización del componente.
-   * Configura observables, inicializa catálogos y formularios.
-   */
-  /**
    * Método de ciclo de vida que se ejecuta al inicializar el componente.
    * Inicializa catálogos, formularios, suscripciones y datos de la tabla de mercancías.
    * Configura el modo de solo lectura y prepara la interfaz para la captura de datos.
-   *
-   * @returns {void}
    */
   ngOnInit(): void {
     // Obtener opciones de aduana
@@ -587,7 +573,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Obtiene el estado actual de la solicitud desde el almacén.
+   * Obtiene el estado actual de la solicitud desde el store.
    * @private
    */
   private obtenerEstadoSolicitud(): void {
@@ -602,15 +588,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Inicializa los catálogos necesarios para el formulario.
-   * @private
-   */
-  /**
    * Inicializa los catálogos necesarios para el formulario, obteniendo datos de los servicios correspondientes.
    * Carga los catálogos de destino de mercancía, condición, unidad de medida, año y país.
-   *
    * @private
-   * @returns {void}
    */
   private inicializaCatalogos(): void {
     // Aduana se carga en ngOnInit desde ImportadorExportadorService.getOpcionesAduana()
@@ -742,7 +722,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 
   /**
    * Obtiene el grupo de formulario para exención de impuestos.
-   * @returns {FormGroup} Grupo de formulario.
+   * @returns {FormGroup}
    */
   get exencionImpuestos(): FormGroup {
     return this.tramiteForm.get('exencionImpuestos') as FormGroup;
@@ -750,7 +730,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 
   /**
    * Obtiene el grupo de formulario para importador/exportador.
-   * @returns {FormGroup} Grupo de formulario.
+   * @returns {FormGroup}
    */
   get importadorExportador(): FormGroup {
     return this.tramiteForm.get('importadorExportador') as FormGroup;
@@ -758,20 +738,15 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 
   /**
    * Obtiene el grupo de formulario para datos de mercancía.
-   * @returns {FormGroup} Grupo de formulario.
+   * @returns {FormGroup}
    */
   get datosMercancia(): FormGroup {
     return this.agregarMercanciasForm.get('datosMercancia') as FormGroup;
   }
 
   /**
-   * Maneja la selección de aduana y actualiza el almacén.
-   */
-  /**
-   * Maneja la selección de aduana en el formulario y actualiza el almacén y el estado de los controles relacionados.
+   * Maneja la selección de aduana en el formulario y actualiza el store y el estado de los controles relacionados.
    * Habilita o deshabilita el grupo de opciones de radio según la aduana seleccionada.
-   *
-   * @returns {void}
    */
   aduanaSeleccion(): void {
       // Establezca siempre 'si' después de habilitar/deshabilitar la lógica
@@ -821,13 +796,8 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección de destino de mercancía y actualiza el almacén.
-   */
-  /**
-   * Maneja la selección de destino de mercancía en el formulario y actualiza el almacén y el estado de los controles relacionados.
+   * Maneja la selección de destino de mercancía en el formulario y actualiza el store y el estado de los controles relacionados.
    * Habilita o deshabilita el grupo de opciones de radio según el destino seleccionado.
-   *
-   * @returns {void}
    */
   destinoMercanciaSeleccion(): void {
     // Habilita el radio solo si destinoMercancia es 'Salud Pública' (id: 3)
@@ -849,7 +819,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección de condición de mercancía y actualiza el almacén.
+   * Maneja la selección de condición de mercancía y actualiza el store.
    */
   condicionMercanciaSeleccion(): void {
   const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
@@ -857,7 +827,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección de unidad de medida y actualiza el almacén.
+   * Maneja la selección de unidad de medida y actualiza el store.
    */
   unidadMedidaSeleccion(): void {
   const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
@@ -865,7 +835,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección de año y actualiza el almacén.
+   * Maneja la selección de año y actualiza el store.
    */
   anoSeleccion(): void {
   const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
@@ -873,7 +843,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección de país y actualiza el almacén.
+   * Maneja la selección de país y actualiza el store.
    */
   paisSeleccion(): void {
     const PAIS = this.tramiteForm.get('importadorExportador.pais')?.value;
@@ -881,30 +851,24 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Maneja la selección de organismo público y actualiza el almacén.
+   * Maneja la selección de organismo público y actualiza el store.
    */
   organismoPublico(): void {
     const ORGANISMOPUBLICO = this.tramiteForm.get('exencionImpuestos.organismoPublico')?.value;
     this.store.setOrganismoPublico(ORGANISMOPUBLICO);
   }
   /**
-   * Maneja la selección de persona moral.
-   * (Método deshabilitado porque setPersonaMoral no existe en Tramite103Store)
+   * Maneja la selección de persona moral y actualiza el store.
+   * (Método deshabilitado si no existe en Tramite103Store)
    */
   personaMoral(): void {
     const PERSONAMORAL = this.tramiteForm.get('exencionImpuestos.personaMoral')?.value;
     this.store.setPersonaMoral(PERSONAMORAL);
   }
   /**
-   * Maneja la selección de vehículo y actualiza el almacén.
-   */
-  /**
    * Maneja la selección del checkbox de vehículo en el formulario de mercancías.
-   * Si el checkbox está seleccionado, abre el modal de confirmación de forma segura.
-   * Si no está seleccionado, elimina los validadores de esos campos.
-   * Finalmente, actualiza la validez de los controles.
-   *
-   * @returns {void}
+   * Si está seleccionado, abre el modal de confirmación de vehículo.
+   * Si no, elimina los validadores de los campos de vehículo y actualiza la validez.
    */
   vehiculo(): void {
     const VEHICULO_CTRL = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
@@ -936,8 +900,6 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   /**
    * Abre el modal de confirmación de vehículo de manera segura.
    * Utiliza un enfoque que evita conflictos con Bootstrap y problemas de colgado.
-   *
-   * @returns {void}
    */
   abrirModalVehiculoSeguro(): void {
     setTimeout(() => {
@@ -985,9 +947,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Confirma la selección de vehículo y establece los validadores requeridos.
-   *
-   * @returns {void}
+   * Confirma la selección de vehículo y establece los validadores requeridos en los campos correspondientes.
    */
   confirmarVehiculo(): void {
     const MARCA_CTRL = this.agregarMercanciasForm.get('datosMercancia.marca');
@@ -1009,9 +969,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Cancela la selección de vehículo y desmarca el checkbox.
-   *
-   * @returns {void}
+   * Cancela la selección de vehículo, desmarca el checkbox y elimina los validadores de los campos de vehículo.
    */
   cancelarVehiculo(): void {
     const VEHICULO_CTRL = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
@@ -1035,7 +993,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Valida el formulario de destinatario marcando todos los controles como tocados si es inválido.
+   * Valida el formulario principal marcando todos los controles como tocados si es inválido.
    */
   validarDestinatarioFormulario(): void {
     if (this.tramiteForm.invalid) {
@@ -1044,10 +1002,10 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Establece un valor en el almacén a partir de un campo de formulario.
-   * @param {FormGroup} form Grupo de formulario.
-   * @param {string} campo Nombre del campo.
-   * @param {keyof Tramite103Store} metodoNombre Nombre del método en el almacén.
+   * Establece un valor en el store a partir de un campo de formulario.
+   * @param {FormGroup} form - Grupo de formulario.
+   * @param {string} campo - Nombre del campo.
+   * @param {keyof Tramite103Store} metodoNombre - Nombre del método en el store.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite103Store): void {
     const VALOR = form.get(campo)?.value;
@@ -1083,8 +1041,14 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Agrega mercancías al trámite si el formulario es válido.
-   * Actualiza la tabla y cierra el modal.
+   * Agrega una mercancía al trámite si el formulario de mercancías es válido.
+   *
+   * - Si el campo 'vehiculo' no está seleccionado y los campos principales son válidos,
+   *   agrega la mercancía como registro normal.
+   * - Si 'vehiculo' está seleccionado y el formulario es válido, agrega la mercancía como vehículo.
+   * - Si el formulario no es válido, marca todos los controles como tocados para mostrar errores.
+   *
+   * Actualiza la tabla de mercancías (`mercanciaBodyData`) y limpia el formulario después de agregar.
    */
   agregarMercancias(): void {
     const DATOS_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia');
@@ -1113,6 +1077,10 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.agregarMercanciasForm.markAllAsTouched();
   }
 
+  /**
+   * Procesa y agrega una mercancía que no es vehículo a la tabla.
+   * Limpia el formulario después de agregar.
+   */
   private procesarMercanciaSinVehiculo(): void {
     const VALORES = this.agregarMercanciasForm.value.datosMercancia;
     const VEHICULO_VALUE = VALORES.vehiculo === true ? 'Sí' : 'No';
@@ -1134,6 +1102,10 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.limpiarFormularioMercancia();
   }
 
+  /**
+   * Procesa y agrega una mercancía que es vehículo a la tabla.
+   * Limpia el formulario después de agregar.
+   */
   private procesarMercanciaConVehiculo(): void {
     const VALORES = this.agregarMercanciasForm.value.datosMercancia;
     const VEHICULO_VALUE = VALORES.vehiculo === true ? 'Sí' : 'No';
@@ -1155,6 +1127,10 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.limpiarFormularioMercancia();
   }
 
+  /**
+   * Actualiza el array de mercancías en la tabla, agregando o editando según corresponda.
+   * @param {MercanciaRow} DATOS - Datos de la mercancía a agregar o editar.
+   */
   private actualizarMercanciaBodyData(DATOS: MercanciaRow): void {
     if (this.filaEditando !== null) {
       this.mercanciaBodyData[this.filaEditando] = DATOS;
@@ -1174,6 +1150,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.mercanciaBodyData = [...this.mercanciaBodyData];
   }
 
+  /**
+   * Limpia y reinicia el formulario de mercancía y cierra el modal de agregar mercancías.
+   */
   private limpiarFormularioMercancia(): void {
     this.agregarMercanciasForm.reset();
     this.agregarMercanciasForm.markAsUntouched();
@@ -1199,7 +1178,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Inicializa los datos de la tabla de mercancías.
+   * Inicializa los datos de la tabla de mercancías (encabezados y cuerpo).
    */
   public obtenerMercancia(): void {
     // Solo configura los encabezados, pero no carga datos iniciales
@@ -1225,8 +1204,8 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-   * Cambia el valor seleccionado en el grupo de radio y actualiza el almacén.
-   * @param {string | number} value Nuevo valor seleccionado.
+   * Cambia el valor seleccionado en el grupo de radio y actualiza el store.
+   * @param {string | number} value - Nuevo valor seleccionado.
    */
   cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;
@@ -1248,9 +1227,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   }
 
   /**
-  * Método de limpieza al destruir el componente.
-  * Finaliza observables y libera recursos.
-  */
+   * Método de limpieza al destruir el componente.
+   * Finaliza observables y libera recursos.
+   */
   ngOnDestroy(): void {
     // Limpiar modal manual si está abierto
     this.cerrarModalManual();
@@ -1262,6 +1241,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 
 /**
  * Interface para la respuesta de la API que contiene catálogos.
+ * @interface
  */
 interface ApiCatalogoResponse {
   data: Catalogo[];
@@ -1270,6 +1250,7 @@ interface ApiCatalogoResponse {
 /**
  * Interfaz que representa una fila de la tabla de mercancías.
  * Extiende TableBodyData y agrega el campo opcional usoEspecifico.
+ * @interface
  */
 interface MercanciaRow extends TableBodyData {
   /**
@@ -1280,6 +1261,7 @@ interface MercanciaRow extends TableBodyData {
 
 /**
  * Interface para representar el estado de la consulta relacionada con el trámite.
+ * @interface
  */
 interface ConsultaDatos {
   readonly: boolean;
@@ -1288,6 +1270,7 @@ interface ConsultaDatos {
 
 /**
  * Interface para las opciones de radio.
+ * @interface
  */
 interface RadioOpcion {
   label: string;
@@ -1296,6 +1279,7 @@ interface RadioOpcion {
 
 /**
  * Interface para la tabla de mercancía.
+ * @interface
  */
 interface MercanciaTableData {
   mercanciaTable: {
