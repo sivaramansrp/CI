@@ -3,10 +3,12 @@ import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
-import { PASOS, TITULOMENSAJE } from '../../constants/psicotropicos-poretorno.enum';
+import { MENSAJE_DE_VALIDACION, PASOS, TITULOMENSAJE } from '../../constants/psicotropicos-poretorno.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 import { Tramite260201State } from '../../estados/tramite260201Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -78,11 +80,25 @@ export class ContenedorDePasosComponent implements OnInit {
   public infoAlert = 'alert-info';
 
   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+
+  /**
    * @property {WizardComponent} wizardComponent
    * @description Referencia al componente del wizard.
    * Utilizado para manejar la navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+    * @property {PasoUnoComponent} pasoUnoComponent
+    * @description
+    * Referencia al componente hijo `PasoUnoComponent` mediante
+    * `@ViewChild`. Permite acceder a sus métodos y propiedades
+    * desde este componente padre.
+  */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * @property {DatosPasos} datosPasos
@@ -112,6 +128,29 @@ export class ContenedorDePasosComponent implements OnInit {
  */
   seccionCargarDocumentos: boolean = true;
 
+  /**
+ * @property {string} MENSAJE_DE_ERROR
+ * @description
+ * Propiedad usada para almacenar el mensaje de error actual.
+ * Se inicializa como cadena vacía y se actualiza en función
+ * de las validaciones o errores capturados en el flujo.
+ */
+   MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+
+   /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
   constructor(private tramite260201Query: Tramite260201Query) {}
 
   ngOnInit(): void {
@@ -136,17 +175,42 @@ export class ContenedorDePasosComponent implements OnInit {
    * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (e.accion === 'cont') {
+      let isValid = true;
+
+        if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarPasoUno();
       }
+      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+        this.mostrarAlerta=true;
+        this.seleccionarFilaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE_DE_VALIDACION,
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'SI',
+          txtBtnCancelar: 'NO',
+        }
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.siguiente();
+    }else{
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
     }
   }
 
