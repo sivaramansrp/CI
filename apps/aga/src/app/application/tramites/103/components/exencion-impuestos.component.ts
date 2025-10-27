@@ -25,7 +25,6 @@ import { merge } from 'rxjs';
 import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  ConsultaioQuery,
   REGEX_PATRON_DECIMAL_12_3,
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
@@ -35,6 +34,8 @@ import {
   TituloComponent,
   ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { DatosDelMercancia } from '../constants/exencion-impuestos.enum';
 import { Tramite103Query } from '../estados/tramite103.query';
@@ -640,7 +641,6 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         organismoPublico: [this.solicitudState?.organismoPublico, [Validators.required]],
         destinoMercancia: [this.solicitudState?.destinoMercancia, [Validators.required]],
-        personaMoral: [this.solicitudState?.personaMoral]
       }),
       importadorExportador: this.fb.group({
         nombre: [this.solicitudState?.nombre, [Validators.required, Validators.maxLength(50)]],
@@ -862,7 +862,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * (Método deshabilitado si no existe en Tramite103Store)
    */
   personaMoral(): void {
-    const PERSONAMORAL = this.tramiteForm.get('exencionImpuestos.personaMoral')?.value;
+    const PERSONAMORAL = this.tramiteForm.get('importadorExportador.personaMoral')?.value;
     this.store.setPersonaMoral(PERSONAMORAL);
   }
   /**
