@@ -233,7 +233,7 @@ export class DatosDelDestinatarioComponent
         this.createForm();
       }
     }
-    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+    if (changes?.['idProcedimiento']?.currentValue && changes?.['idProcedimiento']) {
       this.updateRequiredValidators();
     }
   }

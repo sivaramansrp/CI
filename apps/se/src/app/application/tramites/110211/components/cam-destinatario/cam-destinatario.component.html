@@ -2,21 +2,27 @@
   <app-datos-del-destinatario
     (formDatosDelDestinatarioEvent)="setValoresStoreDatos($event)"
     (formaValida)="setFormValida($event)"
+    [idProcedimiento]="idProcedimiento"
     [datosForm]="formDatosDelDestinatarioValues"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     [razonSocialEditable]="true"
+    #datosDelDestinatarioComponent
   ></app-datos-del-destinatario>
+
   <app-destinatario
     (formaValida)="setFormValidaDestinatario($event)"
     [datosForm]="formDestinatarioValues"
+    [idProcedimiento]="idProcedimiento"
     (formDestinatarioEvent)="setValoresStoreDe($event)"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     #destinatarioRef
   ></app-destinatario>
-    <app-representante-legal-exportador
+
+  <app-representante-legal-exportador
     [procedimiento]="'110211'"
     [datosForm]="exportadoState.grupoRepresentativo"
     (formDatosDelDestinatarioEvent)="setValoresStore1($event)"
+    #representanteLegalExportadorComponent
   ></app-representante-legal-exportador>
 
   <!-- <form [formGroup]="exportadorForm">

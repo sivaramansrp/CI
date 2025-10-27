@@ -223,8 +223,6 @@ export class CamCertificadoService {
      * @returns Observable con la respuesta de la solicitud POST.
      */
     guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
-      return this.http.post<JSONResponse>(PROC_110211.GUARDAR, {
-        body: body,
-      });
+      return this.http.post<JSONResponse>(PROC_110211.GUARDAR, body);
     }
 }

@@ -371,7 +371,7 @@ export class CertificadoOrigenComponent
    * @description
    * Referencia al componente de certificado de origen.
    */
-  @ViewChild('certificadoDeOrigenRef')
+  @ViewChild('certificadoDeOrigenRef', { static: false })
   certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
 
   /**

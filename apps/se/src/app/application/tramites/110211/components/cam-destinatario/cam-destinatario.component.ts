@@ -1,6 +1,14 @@
-import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
+import {
+  CamState,
+  camCertificadoStore,
+} from '../../estados/cam-certificado.store';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -77,8 +85,8 @@ interface FormValues {
     DatosDelDestinatarioComponent,
     TituloComponent,
     DestinatarioComponent,
-    RepresentanteLegalExportadorComponent
-  ]
+    RepresentanteLegalExportadorComponent,
+  ],
 })
 export class CamDestinatarioComponent implements OnInit, OnDestroy {
   /**
@@ -126,8 +134,20 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * @property {number} idProcedimiento
+   * @description ID del procedimiento asociado al componente.
+   */
+  idProcedimiento: number = 110211;
 
-  @ViewChild('destinatarioRef')destinatarioComponent!: DestinatarioComponent;
+  @ViewChild('datosDelDestinatarioComponent', { static: false })
+  datosDelDestinatarioComponent!: DatosDelDestinatarioComponent;
+
+  @ViewChild('destinatarioRef', { static: false })
+  destinatarioComponent!: DestinatarioComponent;
+
+  @ViewChild('representanteLegalExportadorComponent', { static: false })
+  representanteLegalExportadorComponent!: RepresentanteLegalExportadorComponent;
 
   /**
    * @constructor
@@ -175,8 +195,8 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida que se llama después de inicializar el componente.
    * Obtiene los datos iniciales para el formulario y el estado de la sección.
    */
-async ngOnInit(): Promise<void> {
-   await this.seccionQuery.selectSeccionState$
+  async ngOnInit(): Promise<void> {
+    await this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -189,23 +209,28 @@ async ngOnInit(): Promise<void> {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.exportadoState = state as CamState;
-            // this.initActionFormBuild();
+          // this.initActionFormBuild();
         })
       )
       .subscribe();
-
-  
   }
 
   /**
-  * @description
-  * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
-  * @param event Evento con el campo y valor a actualizar.
-  * @returns {void}
-  */
-  setValoresStore1(event: { formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string; }): void {
+   * @description
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+   * @param event Evento con el campo y valor a actualizar.
+   * @returns {void}
+   */
+  setValoresStore1(event: {
+    formGroupName: string;
+    campo: string;
+    VALOR: undefined;
+    METODO_NOMBRE: string;
+  }): void {
     const { VALOR, METODO_NOMBRE } = event;
-    (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
+    (this.store as unknown as Record<string, (value: unknown) => void>)[
+      METODO_NOMBRE
+    ]?.(VALOR);
   }
 
   /**
@@ -216,11 +241,11 @@ async ngOnInit(): Promise<void> {
    * En caso contrario, habilita el formulario para permitir la edición.
    */
   // ngAfterViewInit(): void {
-    // if (this.esFormularioSoloLectura) {
-    //   this.exportadorForm.disable();
-    // } else {
-    //   this.exportadorForm.enable();
-    // }
+  // if (this.esFormularioSoloLectura) {
+  //   this.exportadorForm.disable();
+  // } else {
+  //   this.exportadorForm.enable();
+  // }
   // }
 
   /**
@@ -232,7 +257,7 @@ async ngOnInit(): Promise<void> {
   //   this.exportadorForm = this.fb.group({
   //     lugar: [
   //     this.exportadoState.lugar,
-  //     [Validators.required] 
+  //     [Validators.required]
   //     ],
   //     exportador: [
   //     this.exportadoState.exportador,
@@ -281,7 +306,12 @@ async ngOnInit(): Promise<void> {
    * Actualiza el almacén con los datos del formulario de datos del destinatario.
    * @param event Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
    */
-  setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreDatos(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
@@ -292,7 +322,12 @@ async ngOnInit(): Promise<void> {
    * Actualiza el almacén con los datos del formulario de destinatario.
    * @param event Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
    */
-  setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreDe(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
@@ -333,22 +368,35 @@ async ngOnInit(): Promise<void> {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: camCertificadoStore) => void)(VALOR);
   }
-    validarFormularios():boolean{
+  validarFormularios(): boolean {
     let isFormInvalid = true;
-//  if(this.exportadorForm.invalid){
-  // this.exportadorForm.markAllAsTouched();
-  //  isFormInvalid = false;
-  // }
-if(this.destinatarioComponent){
-  if(!this.destinatarioComponent.validarFormularios()){
-    isFormInvalid =false;
+    //  if(this.exportadorForm.invalid){
+    // this.exportadorForm.markAllAsTouched();
+    //  isFormInvalid = false;
+    // }
+    if (this.datosDelDestinatarioComponent) {
+      if (!this.datosDelDestinatarioComponent.validarFormularios()) {
+        isFormInvalid = false;
+      }
+    } else {
+      isFormInvalid = false;
+    }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormularios()) {
+        isFormInvalid = false;
+      }
+    } else {
+      isFormInvalid = false;
+    }
+    if (this.representanteLegalExportadorComponent) {
+      if (!this.representanteLegalExportadorComponent.validarFormularios()) {
+        isFormInvalid = false;
+      }
+    } else {
+      isFormInvalid = false;
+    }
+    return isFormInvalid;
   }
-}
-else{
-  isFormInvalid = false;
-}
-   return isFormInvalid;
-}
 
   /**
    * @method ngOnDestroy
