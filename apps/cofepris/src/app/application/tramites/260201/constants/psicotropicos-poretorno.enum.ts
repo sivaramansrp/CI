@@ -30,9 +30,9 @@ export const ID_PROCEDIMIENTO = 260201;
  * @description Lista de elementos requeridos para completar el formulario o proceso.
  */
 export const ELEMENTOS_REQUERIDOS = [
-  'fabricante',
-  'destinoFinal',
+  
   'correoElectronico',
   'denominacionRazon',
   'scian'
+  
 ];

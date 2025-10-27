@@ -1,10 +1,11 @@
 import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { CargaDetalleMercanciaComponent } from '../carga-masiva-detalle-mercancia/carga-detalle-mercancia.component';
 import { CommonModule } from '@angular/common';
 import { RegistroSolicitudService } from '../../../tramites/220201/services/220201/registro-solicitud/registro-solicitud.service';
 import { Subject } from 'rxjs';
@@ -12,12 +13,13 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-animales-vivo-detalles',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, NotificacionesComponent, CargaDetalleMercanciaComponent],
   templateUrl: './animales-vivo-detalles.component.html',
   styleUrl: './animales-vivo-detalles.component.scss',
 
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
+
 
   /**
    * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
@@ -122,6 +124,48 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @event
    */
   @Output() animalesVivoDetallesComponent = new EventEmitter<void>();
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion | null;
+
+  /**
+   * Obtiene el grupo de formulario 'datosServicio' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormGroup} El grupo de formulario 'datosServicio'.
+   */
+  get datosServicio(): FormGroup {
+    return this.detalleForm?.get('detalleForm') as FormGroup;
+  }
+
+  /**
+   * Guarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
+   */
+  public procesoModal!: string;
+
+  /**
+   * Almacena los datos relacionados con el archivo.
+   * 
+   * El tipo es desconocido (`unknown`) hasta que se asigne un valor específico.
+   * Puede contener información relevante sobre un archivo cargado o procesado en el componente.
+   */
+  datosArchivo: unknown = null;
+
+  /**
+   * Bandera que indica si la ventana ha terminado de cargarse.
+   * Se utiliza para controlar la visualización o inicialización de componentes dependientes de la carga.
+   */
+  banderaCargaVentana: boolean = false;
+
+  /**
+   * El número total de registros que se mostrarán o procesarán.
+   * 
+   * Esta propiedad de entrada permite que el componente padre especifique cuántos registros
+   * son relevantes para el contexto actual. Por defecto es 0 si no se proporciona.
+   */
+  @Input() cantidadRegistros: number = 0;
+
   /**
    * Constructor del componente.
    * 
@@ -159,7 +203,9 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
       id: [0, Validators.required],
+      noPartida: ['0'],
       tipoRequisito: ['', Validators.required],
+      descripcionTipoRequisito: [''],
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
@@ -169,12 +215,20 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umt: [{ value: '1', disabled: true }, Validators.required],
+      descripcionUMT: [''],
       cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
+      descripcionUMC: [''],
       especie: ['', Validators.required],
+      descripcionEspecie: [''],
       uso: ['', Validators.required],
+      descripcionUso: [''],
       paisDeOrigen: ['', Validators.required],
+      descripcionPaisDeOrigen: [''],
       paisDeProcedencia: ['', Validators.required],
+      descripcionPaisDeProcedencia: [''],
+      sensibles: this.fb.array([]),
+      modificado: [false], 
     });
 
     this.detalleForm = this.fb.group({
@@ -187,15 +241,18 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       numeroIdentificacion: [''],
       raza: [''],
       nombreCientifico: [''],
-      sexo: ['']
+      sexo: [''],
     });
 
     if (this.formularioSolicitud) {
+
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
+      this.sensiblesTablaDatos = [...(this.formularioSolicitud.sensibles || [])];
     }
   }
+
 
   /**
    * Agrega un nuevo detalle a la lista `sensiblesTablaDatos` utilizando los valores actuales del formulario `detalleForm`.
@@ -205,10 +262,30 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   agregarDetalle(): void {
+
+    if (
+      this.detalleForm.value.numeroLote === '' || 
+      this.detalleForm.value.numeroLote === null
+    ) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar al menos un campo.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.detalleForm.get('numeroLote')?.markAsTouched();
+      return;
+    }
+
     const SEXO_CATALOGO = this.catalogosDatos.sexoList.find(
       (item: Catalogo) => item.clave === this.detalleForm.value.sexo
     );
     const DETALLE = {
+      noPartida: String(this.sensiblesTablaDatos.length + 1),
       NumeroLote: this.detalleForm.value.numeroLote,
       ColorPelaje: this.detalleForm.value.colorPelaje,
       EdadAnimal: this.detalleForm.value.edadAnimal,
@@ -219,7 +296,12 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       Raza: this.detalleForm.value.raza,
       NombreCientifico: this.detalleForm.value.nombreCientifico,
       Sexo: SEXO_CATALOGO ? SEXO_CATALOGO.descripcion : '',
-      SexoClave: this.detalleForm.value.sexo
+      SexoClave: this.detalleForm.value.sexo,
+      Especie: this.detalleForm.value.especie,
+      Uso: this.detalleForm.value.uso,
+      PaisDeOrigen: this.detalleForm.value.paisDeOrigen,
+      PaisDeProcedencia: this.detalleForm.value.paisDeProcedencia,
+      
     };
     this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, DETALLE];
     this.detalleForm.reset();
@@ -235,8 +317,33 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   eliminarDetalle(): void {
-    this.sensiblesTablaDatos = this.sensiblesTablaDatos.filter((item) => !this.sensiblesTablaSeleccionada.includes(item));
-    this.sensiblesTablaSeleccionada = [];
+
+      if (this.sensiblesTablaSeleccionada.length === 0) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar al menos un registro para eliminar.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
+
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        tamanioModal: 'md',
+        txtBtnCancelar: 'Cancelar',
+        txtBtnAceptar: 'Aceptar',
+      };
+      this.procesoModal = 'eliminar_solicitud';
   }
 
   /**
@@ -267,13 +374,53 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
     }
-    else {
-      this.agregarDatosFormulario.emit(
-        {
-          formulario: this.mercanciaForm.getRawValue(),
-          tablaDatos: this.sensiblesTablaDatos
+    else {      
+      const FUEMODIFICADO = this.mercanciaForm.get('modificado')?.value as boolean;
+      const SENSIBLES_FORM_ARRAY = this.mercanciaForm.get('sensibles') as FormArray;
+      // Formatea cantidadUMC a dos decimales si es un número válido
+      let cantidadUMCValue = this.mercanciaForm.get('cantidadUMC')?.value || '';
+      if (cantidadUMCValue !== '' && !isNaN(Number(cantidadUMCValue))) {
+        cantidadUMCValue = Number(cantidadUMCValue).toFixed(2);
+      }
+
+      this.mercanciaForm.patchValue({
+        noPartida: FUEMODIFICADO ? this.mercanciaForm.get('noPartida')?.value : this.cantidadRegistros + 1,
+        id: FUEMODIFICADO ? (parseInt(this.mercanciaForm.get('id')?.value || '0', 10) + 1) : parseInt(this.mercanciaForm.get('id')?.value || '0', 10),
+        modificado: false,
+        descripcionTipoRequisito: this.catalogosDatos.tipoRequisitoList.find(item => item.clave === this.mercanciaForm.get('tipoRequisito')?.value)?.descripcion || '',        
+        descripcionEspecie: this.catalogosDatos.especieList.find(item => item.clave === this.mercanciaForm.get('especie')?.value)?.descripcion || '',
+        descripcionUMT: this.mercanciaForm.get('umt')?.value || '',
+        cantidadUMC: cantidadUMCValue,
+        descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.mercanciaForm.get('umc')?.value)?.descripcion || '',
+        descripcionUso: this.catalogosDatos.usoList.find(item => item.clave === this.mercanciaForm.get('uso')?.value)?.descripcion || '',
+        descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.mercanciaForm.get('paisDeOrigen')?.value)?.descripcion || '',
+        descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.mercanciaForm.get('paisDeProcedencia')?.value)?.descripcion || '',
+        certificadoInternacionalElectronico: this.mercanciaForm.get('numeroCertificadoInternacional')?.value || '',
+      });
+
+      SENSIBLES_FORM_ARRAY.clear();
+      this.sensiblesTablaDatos.forEach(detalle => {
+        SENSIBLES_FORM_ARRAY.push(this.fb.group(detalle));
+      });
+      const NUEVOS_SENSIBLES = this.mercanciaForm.getRawValue();
+      // Si hay un registro seleccionado, actualízalo en sensiblesTablaDatos
+      if (this.sensiblesTablaSeleccionada.length === 1) {
+        const SELECCIONADO = this.sensiblesTablaSeleccionada[0];
+        const INDEX = this.sensiblesTablaDatos.findIndex(item => item === SELECCIONADO);
+
+        if (INDEX !== -1) {
+          this.sensiblesTablaDatos[INDEX] = { ...NUEVOS_SENSIBLES, noPartida: SELECCIONADO.noPartida };
         }
-      );
+        this.sensiblesTablaSeleccionada = [];
+      } else {
+        // Si no hay selección, agrega normalmente
+        this.agregarDatosFormulario.emit(
+          {
+        formulario: NUEVOS_SENSIBLES,
+        tablaDatos: this.sensiblesTablaDatos
+          }
+        );
+      }
       this.cerrar.emit();
     }
 
@@ -294,6 +441,16 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+    this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
+        (response: BaseResponse<Catalogo>) => {
+          if (response && response.codigo === '00' && response.datos) {
+            this.mercanciaForm.get('umt')?.setValue(response.datos.descripcion);
+          } else {
+            this.mercanciaForm.get('umt')?.setValue('');
+          }
+        }
+      );
     
   }
 
@@ -319,6 +476,35 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     );
   }
 
+  
+  /**
+   * Abre el modal para la carga masiva de animales vivos.
+   * Establece la bandera 'banderaCargaVentana' en true para mostrar el componente/modal correspondiente.
+   */
+  abrirModalCargaMasivaAnimales(): void {
+    this.banderaCargaVentana = true;
+  }
+
+  /**
+   * Cierra el modal de carga masiva de animales.
+   * 
+   * Establece la bandera `banderaCargaVentana` en `false` para ocultar la ventana modal
+   * utilizada en la carga masiva de animales vivos.
+   */
+  cerrarModalCargaMasivaAnimales(): void {
+    this.banderaCargaVentana = false;    
+  }
+
+  /**
+   * Limpia los datos de la tabla de cargas masivas de animales.
+   * 
+   * Esta función vacía el arreglo `sensiblesTablaDatos`, eliminando todos los registros actuales
+   * de la tabla relacionada con cargas masivas de animales vivos.
+   */
+  limpiarTablaCargasMasivasAnimales(): void {
+    this.sensiblesTablaDatos = [];
+  }
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
    * Emite una señal a través del observable `destroy$` para notificar a los suscriptores que deben limpiar recursos y cancelar suscripciones.
@@ -328,5 +514,64 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Maneja la confirmación de acciones en un modal, dependiendo del proceso actual.
+   * 
+   * @param confirmar Indica si el usuario ha confirmado la acción en el modal.
+   * 
+   * Si el proceso actual es 'eliminar_solicitud' y el usuario confirma,
+   * elimina los elementos seleccionados de la tabla de datos sensibles,
+   * limpia la selección y reinicia el proceso del modal.
+   */
+  confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'eliminar_solicitud':
+        {
+          if (confirmar) {
+            this.sensiblesTablaDatos = this.sensiblesTablaDatos.filter((item) => !this.sensiblesTablaSeleccionada.includes(item));
+            this.sensiblesTablaSeleccionada = [];
+            this.procesoModal = '';
+          }
+          break;
+        }
+      default:
+        break;
+    }
+  }
+
+
+
+  
+  /**
+   * Recibe una lista de objetos y los transforma en instancias del tipo `Sensible`.
+   * 
+   * @param lista - Arreglo de objetos donde cada objeto representa los datos de un animal vivo,
+   *               con claves como 'Numero de lote', 'Color/Pelaje', 'Edad animal', etc.
+   * 
+   * El método mapea cada objeto de la lista a un objeto del tipo `Sensible`, asegurando que
+   * cada propiedad esté presente (o vacía si falta en el objeto original), y agrega los nuevos
+   * elementos al arreglo `sensiblesTablaDatos`.
+   * 
+   */
+  recibirLista(lista: Record<string, string>[]): void {
+
+    const NUEVOS_SENSIBLES: Sensible[] = lista.map((item, idx) => ({
+      noPartida: String(this.sensiblesTablaDatos.length + idx + 1),
+      NumeroLote: item['Numero de lote'] || '',
+      ColorPelaje: item['Color/Pelaje'] || '',
+      EdadAnimal: item['Edad animal'] || '',
+      FaseDesarrollo: item['Fase de desarrollo'] || '',
+      FuncionZootecnica: item['Función zootécnica'] || '',
+      NombreMercancia: item['Nombre de la mercancía'] || '',
+      NumeroIdentificacion: item['Número de identificación'] || '',
+      Raza: item['Raza'] || '',
+      NombreCientifico: item['Nombre científico'] || '',
+      Sexo: item['Sexo'] || '',
+      SexoClave: item['SexoClave'] || ''
+    }));
+    this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, ...NUEVOS_SENSIBLES];
+  }
+
 }
 

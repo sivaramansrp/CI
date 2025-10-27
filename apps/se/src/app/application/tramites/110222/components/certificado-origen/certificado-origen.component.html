@@ -2,13 +2,15 @@
     [operador]="operador"
     [tratadoAcuerdo]="estado || []"
     [paisBloqu]="pais || []"
-    [idProcedimiento]="110222"
+    [idProcedimiento]="idProcedimiento"
     (formCertificadoEvent)="obtenerDatosFormulario($event)"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
     [tableData]="disponiblesDatos || []"
-    (filaClics)="abrirModificarModal($event)"
+    (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
+    (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
+    (filaClics)="abrirModificarModal($event, false)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
@@ -25,6 +27,6 @@
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancia [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
-        (cerrarClicado)="cerrarModificarModal()"></app-mercancia>
+    <app-datos-mercancia-model [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" [idProcedimiento]="idProcedimiento" [fromMercanciasDisponibles]="fromMercanciasDisponibles" (guardarClicado)="abrirModificarModal($event, false)"
+        (cerrarClicado)="cerrarModificarModal()" (EMITMERCANIAS)="emitmercaniasDatos($event)"></app-datos-mercancia-model>
 </div>

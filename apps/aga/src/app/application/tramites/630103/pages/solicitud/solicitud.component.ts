@@ -50,11 +50,5 @@ export class SolicitudComponent {
       VALID_MANIFIESTO
     );
 }
-/**
- * Validates only the "Manifiesto" section of the form.
- * @return {boolean} True if the "Manifiesto" form is valid, false otherwise.
- * */
-validarManifiesto(): boolean {
-  return this.manifiesto?.validarFormulario() ?? false;
-}
+
 }

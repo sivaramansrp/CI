@@ -5,12 +5,13 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -24,17 +25,19 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
-import paisProcJson from 'libs/shared/theme/assets/json/130102/pais-procenia.json';
 
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 import { CROSLISTA_DE_PAISES } from '../../../130103/constantes/importacion-definitiva.enum';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { PaisesBloqueCatalogo } from '../../models/octava-temporal.model';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -90,12 +93,17 @@ export class PaisProcendenciaComponent implements OnInit {
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = this.crosListaDePaises;
+  selectRangoDias: string[] = [];
 
   /**
    * Catálogo de países de procedencia.
    */
-  paisProc: Catalogo[] = paisProcJson;
+  paisProc: Catalogo[] = [];
+
+  /**
+   * Catálogo de países de procedencia.
+   */
+  paisesFuente: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud 130102, obtenido desde el store.
@@ -110,7 +118,13 @@ export class PaisProcendenciaComponent implements OnInit {
    * Indica si el formulario es de solo lectura.
    */
    esFormularioSoloLectura: boolean = false;
-
+  /**
+   * Un QueryList que contiene todas las instancias de {@link CrosslistComponent} encontradas dentro de la vista.
+   * Esto permite interactuar con múltiples componentes hijos CrosslistComponent, como acceder a sus propiedades o invocar sus métodos.
+   * 
+   * @see {@link ViewChildren}
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
@@ -118,12 +132,12 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: () => this.agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar('t'),
+      funcion: () => this.agregar(''),
     },
     {
       btnNombre: 'Restar selección',
@@ -138,6 +152,17 @@ export class PaisProcendenciaComponent implements OnInit {
   ];
 
   /**
+   * Botones de acción para gestionar listas de países en la primera sección.
+  */
+   paisDeProcedenciaBotons = [
+    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
+    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('') },
+    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+  ];
+
+
+  /**
    * Constructor del componente.
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
@@ -147,7 +172,8 @@ export class PaisProcendenciaComponent implements OnInit {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-        private consultaioQuery: ConsultaioQuery
+    private catOctavaTemporalService: CatOctavaTemporalService,
+    private consultaioQuery: ConsultaioQuery
   ) {
      this.consultaioQuery.selectConsultaioState$
          .pipe(
@@ -165,8 +191,8 @@ export class PaisProcendenciaComponent implements OnInit {
    * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
-  this.inicializarEstadoFormulario();
-    this.fetchPaisProc();
+    this.inicializarEstadoFormulario();
+    this.obtenerBloques();
     this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
   }
     inicializarEstadoFormulario(): void {
@@ -188,11 +214,12 @@ export class PaisProcendenciaComponent implements OnInit {
         this.paisForm.enable();
       } 
   }
+
   /**
    * Inicializa el formulario reactivo y sus validaciones.
    */
   inicializarFormulario(): void {
-   this.tramite130102Query.selectSolicitud$
+   this.tramite130102Query.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {  
@@ -204,7 +231,8 @@ export class PaisProcendenciaComponent implements OnInit {
     this.paisForm = this.fb.group({
       bloque: [this.solicitudState?.bloque],
       descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
-      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
+      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]],
+      fechasSeleccionadas: this.fb.array([])
     });
      if (this.esFormularioSoloLectura) {
     this.paisForm.disable();
@@ -238,6 +266,18 @@ export class PaisProcendenciaComponent implements OnInit {
   }
 
   /**
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
+  changeCrosslist(fechas:any): void {
+    let  paisesSelect = this.paisesFuente.filter(pais=> fechas.includes(pais.descripcion));
+    const clavesSelect: string[] =  [];
+    clavesSelect.push(...paisesSelect.map(pais=> pais?.clave || ''));
+    this.tramite130102Store.setPaises(clavesSelect);
+  }
+  /**
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
@@ -252,17 +292,46 @@ export class PaisProcendenciaComponent implements OnInit {
     }
   }
 
-  /**
-   * Obtiene la lista de países de procedencia desde un archivo JSON.
-   */
-  fetchPaisProc() {
-    this.http
-      .get<Catalogo[]>('/assets/json/130102/pais-procenia.json')
-      .subscribe((data) => {
-        this.paisProc = data;
-      });
-  }
 
+    /**
+   * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
+   */
+    obtenerBloques(): void {
+      this.catOctavaTemporalService.getPaisesBloque().pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
+          id: item.id || index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+      });
+    }
+
+    /**
+     * Método para obtener los países asociados a un bloque específico.
+     * @param cveBloque Clave del bloque para obtener los países asociados.
+     */
+    obtenerPaisesBloque(cveBloque: string): void {
+      this.catOctavaTemporalService.getPaisesBloqueEsp(cveBloque).pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.selectRangoDias = data.datos.map((item, index) => item.descripcion); 
+        this.paisesFuente = data.datos.map((item, index) => ({  
+          id: item.id || index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));
+      });
+
+    } 
+
+    changeBloque(form: FormGroup): void {
+      const CVE_BLOQUE = form.get('bloque')?.value;
+      this.obtenerPaisesBloque(CVE_BLOQUE);
+    }
+
+  
    /**
    * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
    * 

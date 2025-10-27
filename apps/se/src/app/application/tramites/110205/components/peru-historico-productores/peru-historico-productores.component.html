@@ -1,9 +1,19 @@
 <app-historico-productores
-  (formHistoricoEvent)="setValoresStore($event)"
-  (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)"
-  [tramiteState]="tramiteState"
-  [agregarDatosProductor]="agregarDatosProductor"
-  [productoresExportador]="productoresExportador || []"
-  [mercanciaDatos]="mercancia || []"
-  [esFormularioSoloLectura]="esFormularioSoloLectura"
-></app-historico-productores>
+    (formHistoricoEvent)="setValoresStore($event)"
+    (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)"
+    [tramiteState]="tramiteState"
+    [agregarDatosProductor]="agregarDatosProductor"
+    [productoresExportador]="productoresExportador || []"
+    [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
+    [mercanciaDatos]="mercanciaProductores"
+    [ocultarFax]="ocultarFax"
+    [esTipoDeSeleccionado]="esTipoDeSeleccionado"
+    [optionsTipoFactura]="optionsTipoFactura || []"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
+    [sortMercanciasTablaOrder]="true"
+    (emitAgregarExportador)="emitAgregarExportador($event)" 
+    (emitMercanciaDatos)="setMercanciaDatos($event)"
+    (formaValida)="formaValida($event)"
+    ></app-historico-productores>
+
+    <!-- [mercanciaDatos]="(mercanciaProductores$ | async) || []" -->

@@ -583,12 +583,13 @@
       <span class="mensaje-error">Este campo es obligatorio</span>
       }
     </div>
-    @if (mostrarBoton) {
+    @if (mostrarBuscarBoton) {
     <div class="col-md-2 mt-4 buscar-btn">
       <button
         type="button"
         class="btn btn-default btn-space"
         [disabled]="esFormularioSoloLectura"
+        (click)="buscarRepresentanteLegal(solicitudForm.get('rfc')?.value)"
       >
         Buscar
       </button>

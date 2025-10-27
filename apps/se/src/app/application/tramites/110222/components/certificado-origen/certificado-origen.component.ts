@@ -1,7 +1,22 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  Catalogo,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+} from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
-import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import {
+  Tramite110222State,
+  Tramite110222Store,
+} from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/peru-certificado.module';
 import { FormBuilder } from '@angular/forms';
@@ -21,7 +36,9 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CertificadoOrigenComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -36,11 +53,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * Indicates the current language state.
-   * 
+   *
    * When `true`, the application is set to an alternate language (e.g., English).
    * When `false`, the default language is used (e.g., Spanish).
    */
-  idioma:boolean = false;
+  idioma: boolean = false;
 
   /**
    * @descripcion
@@ -100,7 +117,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Valores actuales del formulario de certificado.
    */
-  formCertificadoValues!:{ [key: string]: unknown };
+  formCertificadoValues!: { [key: string]: unknown };
 
   /**
    * @descripcion
@@ -132,10 +149,24 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
   /**
- * Indica si el formulario está en modo solo lectura.
- * Cuando es `true`, los campos del formulario no se pueden editar.
- */
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
+
+  idProcedimiento: number = 110222;
+
+  /**
+   * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
+   *
+   * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
+   * Cuando es `false`, la mercancía fue ingresada manualmente por el usuario.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  fromMercanciasDisponibles: boolean = false;
+
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -159,7 +190,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
-    });
+      });
   }
 
   /**
@@ -177,10 +208,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
-       this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {          
+        map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
@@ -197,37 +228,42 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
     this.estadoOpcion();
     this.paisOpcion();
-    this.datosTabla$ = this.query.selectmercanciaTabla$
+    this.datosTabla$ = this.query.selectmercanciaTabla$;
   }
 
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de certificado.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-}
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de certificado.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+  }
 
   /**
    * @descripcion
    * Obtiene la lista de estados disponibles.
    */
   estadoOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('estados.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable(
+      'estados.json'
     )
-    .subscribe({
-      next: (data) => {
-        this.estado = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.estado = [];
-      },
-    });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.estado = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.estado = [];
+        },
+      });
   }
 
   /**
@@ -235,19 +271,19 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene la lista de países disponibles.
    */
   paisOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('pais.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable(
+      'pais.json'
     )
-    .subscribe({
-      next: (data) => {
-        this.pais = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.pais = [];
-      },
-    });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.pais = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.pais = [];
+        },
+      });
   }
 
   /**
@@ -255,23 +291,22 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerTablaDatos('disponibles-datos.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
+    this.ValidarInicialmenteCertificadoService.obtenerTablaDatos(
+      'disponibles-datos.json'
     )
-    .subscribe({
-      next: (response: Mercancia[]) => {
-        if (response && Array.isArray(response)) {
-          this.disponiblesDatos = response as Mercancia[];
-        }
-        else {
-          this.disponiblesDatos = [];
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-      },
-    });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: Mercancia[]) => {
+          if (response && Array.isArray(response)) {
+            this.disponiblesDatos = response as Mercancia[];
+          } else {
+            this.disponiblesDatos = [];
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   /**
@@ -280,7 +315,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * @param e - Los datos del formulario a almacenar.
    */
   obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormCertificado(e as { [key: string]: string | number | boolean | object | undefined });
+    this.store.setFormCertificado(
+      e as { [key: string]: string | number | boolean | object | undefined }
+    );
   }
 
   /**
@@ -306,8 +343,12 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Abre el modal de modificación con los datos seleccionados.
    * @param disponiblesDatos - Los datos seleccionados para modificación.
    */
-  abrirModificarModal(disponiblesDatos: Mercancia): void {
+  abrirModificarModal(
+    disponiblesDatos: Mercancia,
+    fromMercanciasDisponibles: boolean
+  ): void {
     this.datosSeleccionados = disponiblesDatos;
+    this.fromMercanciasDisponibles = fromMercanciasDisponibles;
     this.store.setFormMercancia({ ...disponiblesDatos });
     if (this.modalInstance) {
       this.modalInstance.show();
@@ -352,6 +393,16 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    */
   guardarClicado(event: Mercancia[]): void {
     this.datosTabla$ = of(event);
+  }
+
+  /**
+   * Emite los datos de una mercancía seleccionada y los guarda en el store.
+   *
+   * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada.
+   * @returns {void}
+   */
+  emitmercaniasDatos(evento: Mercancia): void {
+    this.store.setmercanciaTabla([evento]);
   }
 
   /**

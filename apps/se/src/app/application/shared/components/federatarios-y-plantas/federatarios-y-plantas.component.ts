@@ -1,41 +1,36 @@
-import { Component, EventEmitter, OnChanges, OnInit } from '@angular/core';
-import { Input, Output, SimpleChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-
 import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
 import {
   CatalogoDatosIdx,
   EstadoCatalogo,
   EstadoOptionCatalogo,
   FederatariosEncabezado,
 } from '../../models/federatarios-y-plantas.model';
-import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
-import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
-import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
-import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
-
+import { Component, EventEmitter, OnChanges, OnInit } from '@angular/core';
 import {
   DEFAULT_ESTADOS,
   FECHA_DE_PAGO,
-  FECHA_DE_Tabla,
   INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
-
+import { Input, Output, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
+import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
+import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 
 

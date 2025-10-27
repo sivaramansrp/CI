@@ -10,7 +10,8 @@
                                 [required]="true"
                                 [isDisabled]="esFormularioSoloLectura"
                                 formControlName="declaracion"
-                                (change)="setValorStore(manifiestoFormulario, 'declaracion')">
+                                (change)="setValorStore(manifiestoFormulario, 'declaracion')"
+                                >
                             </lib-input-check>
                         </div>
                         
@@ -24,7 +25,12 @@
                                 el indebido uso o destino de las mismas
                             </p>
                         </div>
+                       
                     </div>
                 </div>
+                <div class="text-danger mt-1" *ngIf="manifiestoFormulario.controls['declaracion'].invalid && 
+  (manifiestoFormulario.controls['declaracion'].touched)">
+   <span class="mensaje-error">Este campo es obligatorio</span>
+</div>
     </form>
 </div>

@@ -25,3 +25,37 @@ export enum PasoNotificacion {
    */
   ACUSES = 3
 }
+
+/**
+ * Enum que representa los diferentes procesos de una solicitud.
+ * Se usa para generar el parámetro `proceso` en la API de estado de solicitud.
+ */
+export enum ProcesoSolicitud {
+
+  /** Evaluar solicitud, Generar requerimiento, Generar dictamen */
+  EVALUAR_SOLICITUD = 2,
+
+  /** Autorizar requerimiento */
+  AUTORIZAR_REQUERIMIENTO = 16,
+
+  /** Atender requerimiento */
+  ATENDER_REQUERIMIENTO = 51,
+
+  /** Verificar requerimiento */
+  VERIFICAR_REQUERIMIENTO = 14,
+
+  /** Autorizar dictamen */
+  AUTORIZAR_DICTAMEN = 12,
+
+  /** Verificar dictamen */
+  VERIFICAR_DICTAMEN = 10,
+
+  /** Autorizar opinión */
+  AUTORIZAR_OPINION = 28,
+
+  /** Verificar opinión */
+  VERIFICAR_OPINION = 26,
+
+  /** Generar opinión */
+  GENERAR_OPINION = 24
+}

@@ -30,3 +30,17 @@ export const TEXTOS_REQUISITOS = {
       <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+export const PLANTAS_DATOS =[
+    {
+      "calle": "CALLE 5",
+      "numeroExterior": "S/N",
+      "numeroInterior": "",
+      "codigoPostal": 81124,
+      "colonia": "OTRA NO ESPECIFICADA EN EL CATÁLOGO",
+      "municipioOAlcaldia": "GUASAVE",
+      "pais": "México",
+      "registro": "REG67890",
+      "registroFederalDeContribuyentes": "RFC987654321",
+      "razonSocial": "Compañía ABC S.A. de C.V.",
+      "domicilioFiscalDelSolicitante": "AVENIDA PRINCIPAL 123, CENTRO, CULIACÁN, MÉXICO"
+    }]

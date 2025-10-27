@@ -15,9 +15,9 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, Notificacion, SolicitanteQuery, SolicitanteState, } from '@ng-mf/data-access-user';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, ERROR_FORMA_FALTAN, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IniciarRequest } from '../../models/request/iniciar-request.model';
@@ -34,6 +34,7 @@ import { GuardarSolicitudCompletaRequest } from '../../models/request/guardar-so
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { setMonth } from 'ngx-bootstrap/chronos/utils/date-setters';
 
 
 /**
@@ -267,6 +268,17 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   indice: number = 1;
 
   /**
+ * Estado del solicitante.
+ */
+  solicitante!: SolicitanteState
+
+  /** Indica si el solicitante es una persona moral.
+   * Se utiliza para determinar qué campos mostrar en el formulario.
+   */
+  esPersonaMoral: boolean = false;
+
+
+  /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
    * Subject privado utilizado con el operador takeUntil para cancelar automáticamente
    * todas las suscripciones activas cuando el componente es destruido.
@@ -307,6 +319,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     txtBtnSig: 'Continuar',
   };
 
+  numeroSolicitud: string = '';
   /**
    * @constructor
    * @description Constructor del componente ElegibilidadTextilesComponent.
@@ -335,11 +348,16 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private tramiteStore: Tramite120301Store,
     private tramiteQuery: Tramite120301Query,
+    private solicitanteQuery: SolicitanteQuery,
     private textilesState: ElegibilidadDeTextilesStore) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
     });
+    const CURRENT_STATE = this.tramiteQuery.getValue();
+    if (CURRENT_STATE.idSolicitud) {
+      this.numeroSolicitud = CURRENT_STATE.idSolicitud.toString();
+    }
   }
 
   /**
@@ -370,29 +388,50 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   getValorIndice(e: AccionBoton): void {
     // Si la acción es continuar, validar formularios del paso actual
     if (e.accion === 'cont') {
-      const ISVALID = true;
-      // const ISVALID = this.validacionPasos.validarTodosLosFormularios();
-      if (ISVALID) {
-        this.guardarSolicitudCompleta();
+      if (e.valor <= 2) {
+        const ISVALID =
+          this.solicitudState.validarFormularioFacturasAsociadas &&
+          this.solicitudState.validarFormularioImportadorDestino;
+        if (ISVALID) {
+          this.guardarSolicitudCompleta();
+        }
+        if (!ISVALID) {
+          const PESTANA_ACTIVA = (this.pasoUnoComponent.indice);
+          if (PESTANA_ACTIVA === 1 || PESTANA_ACTIVA === 2) {
+            this.esFormaValido = true;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            window.scrollTo(0, 0);
+          }
+          else {
+            const CAMPOS_TAB3_VALIDOS = this.solicitudState.validarFormularioFacturasAsociadas;
+            const CAMPOS_TAB6_VALIDOS = this.solicitudState.validarFormularioImportadorDestino;
+            if (!CAMPOS_TAB3_VALIDOS || !CAMPOS_TAB6_VALIDOS) {
+              this.formularioAlertaError = ERROR_FORMA_FALTAN;
+              this.esFormaValido = true;
+              this.indice = 1;
+              this.datosPasos.indice = 1;
+              // Si los campos de la pestaña 6 están incompletos, marcar en rojo después de un pequeño delay
+              if (!CAMPOS_TAB6_VALIDOS) {
+                // Usar setTimeout para asegurar que el cambio de pestaña se complete antes de marcar campos
+                setTimeout(() => {
+                  this.marcarCamposTab6EnRojo();
+                }, 150);
+              }
+              window.scrollTo(0, 0);
+            }
+          }
+          return;
+        }
       }
-      // Si los formularios no son válidos, mostrar error y no continuar
-      if (!ISVALID) {
-        this.esFormaValido = true;
-        this.datosPasos.indice = this.indice;
-        window.scrollTo(0, 0);
-        return;
-      }
-
       this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-
       // Avanzar al siguiente paso
       this.wizardComponent.siguiente();
       this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
       return;
     }
-
     // Para botón "Anterior" - actualizar índice sin validación
     this.indice = e.valor;
     this.datosPasos.indice = this.indice;
@@ -430,9 +469,54 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   /**
    * Método que se ejecuta cuando cambia de tab en paso-uno.
    * Oculta el mensaje de error de validación.
+   * Al inicializar la pestaña 3, específicamente cambia esFormaValido a false.
+   * @param _tabIndex Índice de la pestaña seleccionada
    */
-  onTabChanged(): void {
+  onTabChanged(_tabIndex: number): void {
+    // Siempre cambiar esFormaValido a false cuando cambia de pestaña
+    // Esto incluye específicamente cuando se inicializa la pestaña 3
     this.esFormaValido = false;
+  }
+
+  /**
+   * @method validarCamposRequeridosTab6
+   * @description Valida que los campos requeridos de la pestaña 6 estén completos
+   * @returns {boolean} true si todos los campos requeridos están completos, false en caso contrario
+   */
+  private validarCamposRequeridosTab6(): boolean {
+    if (!this.validacionPasos?.importadorEnDestinoComp?.importadorForm) {
+      return false;
+    }
+
+    const FORMULARIO = this.validacionPasos.importadorEnDestinoComp.importadorForm;
+
+    // Verificar si el formulario es válido
+    return FORMULARIO.valid;
+  }
+
+  /**
+   * @method marcarCamposTab6EnRojo
+   * @description Marca todos los campos de la pestaña 6 como touched para mostrar errores en rojo
+   * y activa las alertas de validación del formulario del importador en destino.
+   * Primero asegura que los componentes estén disponibles antes de acceder a ellos.
+   */
+  private marcarCamposTab6EnRojo(): void {
+    // Asegurar que esDatosRespuesta sea true para que el componente se renderice
+    if (this.validacionPasos && !this.validacionPasos.esDatosRespuesta) {
+      this.validacionPasos.esDatosRespuesta = true;
+    }
+
+    // Usar setTimeout para dar tiempo a que Angular renderice el componente
+    setTimeout(() => {
+      if (this.validacionPasos?.importadorEnDestinoComp) {
+        this.validacionPasos.importadorEnDestinoComp.activarAlertasValidacion();
+      } else {
+        // Si aún no está disponible, intentar marcar los campos directamente
+        if (this.validacionPasos?.importadorEnDestinoComp?.importadorForm) {
+          this.validacionPasos.importadorEnDestinoComp.importadorForm.markAllAsTouched();
+        }
+      }
+    }, 100);
   }
 
   /**
@@ -528,6 +612,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
         this.solicitudState = state;
+        if (state.idSolicitud) {
+          this.numeroSolicitud = state.idSolicitud.toString() || '';
+        }
       });
 
     this.ElegibilidadDeTextilesQuery.selectTextile$
@@ -535,6 +622,15 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.historicoState = state as TextilesState;
+        })
+      )
+      .subscribe();
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.solicitante = state as SolicitanteState;
+          this.esPersonaMoral = this.solicitante.tipo_persona === 'M';
         })
       )
       .subscribe();
@@ -602,10 +698,12 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       requiere_descripcion_mercancia: true,
 
       solicitante: {
-        rfc: 'AAL0409235E6',
-        certificado_serial_number: '',
-        nombre: 'PRUEBA',
-        es_persona_moral: true
+        rfc: this.solicitante.rfc_original,
+        nombre: this.esPersonaMoral
+          ? this.solicitante.razon_social
+          : `${this.solicitante.nombre ?? ''} ${this.solicitante.ap_paterno ?? ''} ${this.solicitante.ap_materno ?? ''}`.trim(),
+        es_persona_moral: this.esPersonaMoral,
+        certificado_serial_number: '3082054030820428a00302010',
       },
 
       representacion_federal: {
@@ -693,4 +791,5 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

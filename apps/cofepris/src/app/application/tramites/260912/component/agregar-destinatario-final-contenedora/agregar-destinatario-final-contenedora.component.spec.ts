@@ -14,6 +14,7 @@ describe('AgregarDestinatarioFinalContenedoraComponent', () => {
       updateDestinatarioFinalTablaDatos: jest.fn(),
     } as any;
     component = new AgregarDestinatarioFinalContenedoraComponent(tramiteStoreMock);
+    component.idProcedimiento = ID_PROCEDIMIENTO;
   });
 
   it('should create the component', () => {

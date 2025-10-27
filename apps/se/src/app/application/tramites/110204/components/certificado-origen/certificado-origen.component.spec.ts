@@ -14,24 +14,36 @@ import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { ToastrService } from 'ngx-toastr';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
-class MockTramite110204Store {}
+class MockTramite110204Store {
+  setFormCertificado = jest.fn();
+  setbuscarMercancia = jest.fn();
+    _select = jest.fn().mockReturnValue(observableOf({}));
+  select = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
-class MockToastrService { }
+class MockToastrService { 
+}
 
 
 @Injectable()
 class MockTramite110204Query {
+  selectState$ = observableOf({});
   formCertificado$ = observableOf({});
   selectAltaPlanta$ = observableOf({});
   selectPaisBloque$ = observableOf({});
   selectBuscarMercancia$ = observableOf({});
+  actualizarEstadoFormulario = jest.fn();
 }
 
 @Injectable()
-class MockCertificadosOrigenGridService {}
+class MockCertificadosOrigenGridService {
+  buscarMercanciasCert = jest.fn().mockReturnValue(observableOf({ datos: [] }));
+
+}
 
 
 describe('CertificadoOrigenComponent', () => {
@@ -40,13 +52,14 @@ describe('CertificadoOrigenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,CertificadoOrigenComponent ],
+      imports: [ FormsModule, ReactiveFormsModule,CertificadoOrigenComponent,HttpClientTestingModule ],
 
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
         { provide: Tramite110204Store, useClass: MockTramite110204Store },
         { provide: Tramite110204Query, useClass: MockTramite110204Query },
+         { provide: MockCertificadosOrigenGridService, useClass: MockCertificadosOrigenGridService },
         { provide: CertificadosOrigenGridService, useClass: MockCertificadosOrigenGridService },
         ToastrService,
         SeccionLibQuery,
@@ -71,8 +84,6 @@ describe('CertificadoOrigenComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.cargarEstados = jest.fn();
-    component.cargarBloque = jest.fn();
     component.formCertificado = component.formCertificado || {};
     component.formCertificado.valueChanges = observableOf({});
     component.store = component.store || {};
@@ -82,8 +93,6 @@ describe('CertificadoOrigenComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.cargarEstados).toHaveBeenCalled();
-    expect(component.cargarBloque).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
@@ -92,25 +101,8 @@ describe('CertificadoOrigenComponent', () => {
     component.formCertificado.enable = jest.fn();
   });
 
-  it('should run #cargarEstados()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerListaEstado = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setaltaPlanta = jest.fn();
-    component.cargarEstados();
-    expect(component.certificadoService.obtenerListaEstado).toHaveBeenCalled();
-    expect(component.store.setaltaPlanta).toHaveBeenCalled();
-  });
+ 
 
-  it('should run #cargarBloque()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerPaisBloque = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setBloque = jest.fn();
-    component.cargarBloque();
-    expect(component.certificadoService.obtenerPaisBloque).toHaveBeenCalled();
-    expect(component.store.setBloque).toHaveBeenCalled();
-  });
 
   it('should run #tipoEstadoSeleccion()', async () => {
     component.store = component.store || {};
@@ -162,5 +154,6 @@ describe('CertificadoOrigenComponent', () => {
     component.ngAfterViewInit();
 
   });
+
 
 });

@@ -856,17 +856,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       } else{
 
         this.actualizaGridEmpresasNacionales();
-      // this.nuevaNotificacion = {
-      //   tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      //   categoria: CategoriaMensaje.ALERTA,
-      //   modo: 'modal',
-      //   titulo: '',
-      //   mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
-      //   cerrar: false,
-      //   txtBtnAceptar: 'Aceptar',
-      //   txtBtnCancelar: '',
-      // };
-      // this.esAgregarDos = true;
     }
     }
     /**
@@ -1066,18 +1055,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
           this.rfcEmpresa = '';
           this.numeroPrograma = '';
           this.tiempoPrograma = '';
-        },
-        error: (error) => {
-          this.notificacionesService.showNotification({
-            tipoNotificacion: TipoNotificacionEnum.TOASTR,
-            categoria: CategoriaMensaje.ERROR,
-            modo: '',
-            titulo: 'Error',
-            mensaje: `${error?.error}`,
-            cerrar: true,
-            txtBtnAceptar: '',
-            txtBtnCancelar: ''
-          });
         }
       });  
   }

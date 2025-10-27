@@ -52,6 +52,10 @@ describe('DatosDeLaSolicitudComponent', () => {
     routerMock = { navigate: jest.fn() };
     activatedRouteMock = {};
 
+    // Mock for CatalogosService and another dependency (replace 'otherDependencyMock' with the actual dependency if needed)
+    const catalogosServiceMock = { getCatalogo: jest.fn() };
+    const otherDependencyMock = {}; // Replace with actual mock if needed
+
     component = new DatosDeLaSolicitudComponent(
       fb,
       { get: jest.fn().mockReturnValue(of({ data: [] })) } as any,
@@ -60,7 +64,9 @@ describe('DatosDeLaSolicitudComponent', () => {
       consultaioQueryMock as ConsultaioQuery,
       fitosanitarioStoreMock as ZoosanitarioStore,
       routerMock as Router,
-      activatedRouteMock as ActivatedRoute
+      activatedRouteMock as ActivatedRoute,
+      catalogosServiceMock as any,
+      otherDependencyMock as any
     );
 
     (component as any).modalRef = new ModalMock();

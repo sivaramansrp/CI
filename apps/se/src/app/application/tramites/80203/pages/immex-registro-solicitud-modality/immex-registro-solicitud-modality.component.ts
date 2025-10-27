@@ -1,6 +1,3 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @component ImmexRegistroSolicitudModalityComponent
  * @description Este componente es responsable de manejar el flujo de pasos para el registro de solicitud IMMEX.
@@ -59,19 +56,6 @@ interface AccionBoton {
   templateUrl: './immex-registro-solicitud-modality.component.html',
 })
 export class ImmexRegistroSolicitudModalityComponent implements OnInit {
-  /**
-   * @property {any} asistenteSolicitud
-   * @description Variable destinada a almacenar los datos y configuración del asistente de solicitud.
-   * Esta propiedad puede contener información del estado actual del proceso, datos del formulario,
-   * configuraciones específicas del usuario, o cualquier otro dato relevante para el asistente.
-   * 
-   * @type {any}
-   * @default undefined
-   * @memberof ImmexRegistroSolicitudModalityComponent
-   * @since 1.0.0
-   * @todo Definir una interfaz específica para reemplazar el tipo 'any' y mejorar la tipificación
-   */
-  asistenteSolicitud: any;
 
   /**
    * @property {Array<ListaPasosWizard>} pasos
@@ -283,7 +267,7 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    * @see {@link WizardComponent.siguiente} - Método para avanzar pasos
    * @see {@link WizardComponent.atras} - Método para retroceder pasos
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     const PAYLOAD = buildGuardarPayload(this.storeData);
     let shouldNavigate = false;
     this.registroSolicitudService.postGuardarDatos('80203', PAYLOAD).subscribe(response => {
@@ -319,10 +303,6 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
         this.toastrService.error(response.mensaje);
       }
     })
-
-    
-    // eslint-disable-next-line no-console
-    console.log("this.storeData===", this.storeData);
   }
 
   /**

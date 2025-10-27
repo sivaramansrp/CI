@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
-import { ConsultaDatos, DatosDeSolicitud, RespuestaConsulta } from '../models/solicitud-datos.model';
+import { ConsultaDatos, DatosDeSolicitud, RepresentanteLegal, RespuestaConsulta } from '../models/solicitud-datos.model';
 import { Asociados } from '../models/asociados.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
@@ -379,5 +379,15 @@ export class SolicitudDatosService {
    */
   getFormData(): FormData {
     return this.formDataSubject.value;
+  }
+
+  /**
+   * Busca los datos del representante legal.
+   * @returns Observable con la respuesta del representante legal.
+   */
+  buscarRepresentanteLegal(): Observable<RepresentanteLegal> {
+    return this.http
+      .get<RepresentanteLegal>('../../../assets/json/260910/buscar-representante-legal.json')
+      .pipe();
   }
 }

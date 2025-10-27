@@ -707,7 +707,7 @@ setPlantas(plantas: PlantasDireccionModelo[]): void {
 addPlantas(plantas: PlantasDireccionModelo[]): void {
   this.update((state) => ({
     ...state,
-    plantas: [...state.plantas, ...plantas],
+    plantas: [...(state.plantas || []), ...plantas],
   }));
 }
 

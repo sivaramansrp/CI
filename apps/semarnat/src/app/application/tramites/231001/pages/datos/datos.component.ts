@@ -317,8 +317,8 @@ export class DatosComponent implements OnInit, OnDestroy {
         cantidad: item.generica2,
         cve_unidad_medida_comercial: item.unidadMedidaComercialClave,
       })),
-      numeroProgramaImmex: this.solicitudState.numeroProgramaImmex,
-      numeroRegistroAmbiental: this.solicitudState.numeroRegistroAmbiental,
+      numero_programa_immex: this.solicitudState.numeroProgramaImmex,
+      numero_registro_ambiental: this.solicitudState.numeroRegistroAmbiental,
     };
 
     return this.guardarService.postSolicitud(PAYLOAD).pipe(

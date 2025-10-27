@@ -1,8 +1,6 @@
 // @ts-nocheck
-import { async } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import {  of as observableOf } from 'rxjs';
 import { PermisoImmexDatosService } from './permiso-immex-datos.service';
 import { HttpClient } from '@angular/common/http';
 import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';

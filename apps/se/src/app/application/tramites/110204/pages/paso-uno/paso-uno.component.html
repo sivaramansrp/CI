@@ -16,7 +16,7 @@
       <ng-container>
         <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
         <app-certificado-origen #CertificadoOrigen [formularioDeshabilitado]="formularioDeshabilitado" [hidden]="indice !== 2"></app-certificado-origen>
-        <app-datos-certificado #DatosCertificado [formularioDeshabilitado]="formularioDeshabilitado" [hidden]="indice !== 3"></app-datos-certificado>
+        <app-datos-certificado #DatosCertificado [hidden]="indice !== 3"></app-datos-certificado>
       </ng-container>
     </div>
   </div>

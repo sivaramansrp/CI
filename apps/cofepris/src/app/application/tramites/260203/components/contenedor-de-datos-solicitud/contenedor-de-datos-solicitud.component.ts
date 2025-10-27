@@ -117,7 +117,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
    * según los requisitos del sistema.
    */
-   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario'];
+   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario','scian'];
 
   /**
    * Constructor de la clase que inicializa el estado del trámite y determina si el formulario es de solo lectura.

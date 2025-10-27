@@ -20,7 +20,7 @@ import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 // Se agregan las siguientes líneas para resolver errores de eslint.
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, SolicitanteStore } from '@ng-mf/data-access-user';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosGeneralesModel } from '../../../core/models/datos-generales.model';
@@ -32,6 +32,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 
 import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitante-evaluar.model';
+
+import { Notificacion } from '@ng-mf/data-access-user';
 
 
 @Component({
@@ -49,6 +51,8 @@ import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitan
   host: {}
 })
 export class SolicitanteComponent implements OnInit, OnDestroy {
+  nuevaNotificacion: Notificacion | null = null;
+
   @Input() tabindex!: number;
 
   /** Indica si se deben mostrar los datos del trámite en el formulario del solicitante. */
@@ -76,6 +80,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private formServices: FormulariosService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitanteStore: SolicitanteStore
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -100,8 +105,8 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
-    if (this.guardarDatos.id_solicitud && (this.guardarDatos.procedureId === '130118' || this.guardarDatos.procedureId === '5701' 
-      || this.guardarDatos.procedureId === '120301')) {
+     if (this.guardarDatos.id_solicitud && (this.guardarDatos.procedureId === '130118' || this.guardarDatos.procedureId === '5701' 
+      || this.guardarDatos.procedureId === '120301' || this.guardarDatos.procedureId === '110101')) {
       this.getDatosSolicitanteEvaluar(this.guardarDatos.id_solicitud);
     } else {
       this.getDatosGenerales(this.RFC);
@@ -223,7 +228,9 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
             const DATOS_TRAMITE_MAPPED = {
               folioDelTramite: response.datos.datos_solicitud.num_folio_tramite,
               fechaDeInicio: response.datos.datos_solicitud.fec_ini_tramite,
-              estadoDelTramite: response.datos.datos_solicitud.estado_tramite
+              estadoDelTramite: response.datos.datos_solicitud.estado_tramite,
+              tipoDeTramite:response.datos.datos_solicitud.desc_modalidad
+
             };
             SolicitanteComponent.patchValuesToForm(DATOS_TRAMITE_FORM, DATOS_TRAMITE_MAPPED);
 
@@ -357,6 +364,13 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
           tap((response) => {
             if (response) {
               this.datosGenerales = response;
+              const IDENTIFICACION = response.datos.identificacion;
+              this.solicitanteStore.setRfc(response.datos.rfc_original ?? '');
+              this.solicitanteStore.setNombre(IDENTIFICACION.nombre ?? '');
+              this.solicitanteStore.setPaterno(IDENTIFICACION.ap_paterno ?? '');
+              this.solicitanteStore.setMaterno(IDENTIFICACION.ap_materno ?? '');
+              this.solicitanteStore.setRazonSocial(IDENTIFICACION.razon_social ?? '');
+              this.solicitanteStore.setTipoPersona(IDENTIFICACION.tipo_persona ?? '');
             }
           })
         )

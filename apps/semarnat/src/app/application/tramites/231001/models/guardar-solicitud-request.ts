@@ -56,11 +56,11 @@ export interface GuardarSolicitud231001Request {
    * Número de programa IMMEX relacionado (si aplica).
    * Puede estar vacío si no aplica.
    */
-  numeroProgramaImmex: string;
+  numero_programa_immex: string;
   /**
    * Número de registro ambiental (si aplica).
    */
-  numeroRegistroAmbiental: string;
+  numero_registro_ambiental: string;
 }
 
 /**

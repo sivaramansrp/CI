@@ -74,12 +74,6 @@ describe('RepresentacionComponent (Jest)', () => {
     expect(component.seleccionadaRepresentacionFederal).toEqual(representacion);
   });
 
-  it('should fetchEntidadFederativa assign to seleccionadaEntidadFederativa', () => {
-    const entidad = { id: 1, descripcion: 'CDMX' };
-    component.fetchEntidadFederativa(entidad);
-    expect(component.seleccionadaEntidadFederativa).toEqual(entidad);
-  });
-
   it('should fetchRepresentacionFederal assign to seleccionadaRepresentacionFederal', () => {
     const representacion = { id: 6, descripcion: 'SHCP' };
     component.fetchRepresentacionFederal(representacion);

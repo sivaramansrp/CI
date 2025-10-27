@@ -380,7 +380,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
       nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
       marca: [DEFAULT_DATA.marca, [Validators.required, DatosSolicitudComponent.noSpecialCharactersValidator]],
-      cantidad: [DEFAULT_DATA.cantidad, [Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)]],
+      cantidad: [DEFAULT_DATA.cantidad, [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       unidadMedida: [DEFAULT_DATA.unidadMedida, Validators.required],
       paisOrigen: [DEFAULT_DATA.paisOrigen, Validators.required],
       paisProcedencia: [DEFAULT_DATA.paisProcedencia, Validators.required],

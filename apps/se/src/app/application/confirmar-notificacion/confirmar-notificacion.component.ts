@@ -224,7 +224,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmaService.postFirma(NUMFOLIO, PAYLOAD)
+    this.firmaService.postFirma(this.guardarDatos.procedureId,NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<FirmaConfirmarResponse>) => {
@@ -286,12 +286,15 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     this.confirmarNotificacionService.getAcusesRecibidosNotificación(Number(this.guardarDatos.procedureId), this.guardarDatos.folioTramite).subscribe({
     next: (response) => {
         if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
-          this.notificacionAcusesData = [{
-              id: 1,
-              idDocumento: response.datos.documentos_oficiales[0]?.id_documento_oficial ?? '',
-              documento: response.datos.documentos_oficiales[0]?.desc_documento ?? '',
-              urlPdf: response.datos.documentos_oficiales[0]?.documento_minio ?? ''
-            }];
+          const DOCS = response.datos.documentos_oficiales ?? [];
+          if(DOCS.length > 0 ){
+            this.notificacionAcusesData = DOCS.map((doc, index) => ({
+              id: index + 1,
+              idDocumento: doc.id_documento_oficial,
+              documento: doc.desc_documento,
+              urlPdf: doc.documento_minio
+            }));
+          }
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
@@ -507,7 +510,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         apellido_paterno: 'Hernández'
       }
     };
-    this.cadenaOriginalService.postCadenaOriginal(NUMFOLIO, PAYLOAD).subscribe({
+    this.cadenaOriginalService.postCadenaOriginal(this.guardarDatos.procedureId, NUMFOLIO, PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo !== '00') {
           this.nuevaNotificacion = {

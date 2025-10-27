@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ViewChild } from '@angular/core';
 import { DATOS_ESTATICOS, ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240123/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
@@ -164,7 +165,10 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
-    this.irAAcciones('../agregar-proveedor');
+this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+          data: datos
+        });
   }
 
   /**

@@ -1,14 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_POST_GUARDAR_REQUERIMIENTO, API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA } from '@libs/shared/data-access-user/src';
+import { API_POST_DOCUMENTOS_ESPECIFICOS_REQ, API_POST_GUARDAR_REQUERIMIENTO, API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA, DocumentosEspecificosResponse } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { GuardarRequerimiento } from '../../models/evaluar/request/guardar-requerimiento-request.model';
 import { GuardarRequerimientosResponse } from '../../models/evaluar/response/guardar-requerimiento-response.model';
 import { MostrarFirmarRequerimientoRequest } from '../../models/evaluar/request/firma-mostrar-requerimiento.request.model';
 import { MostrarFirmarRequerimientoResponse } from '../../models/evaluar/response/mostrar-firmar-requerimiento.response.model';
+
+import { DocumentosEspecificosRequest } from '../../models/atender-requerimiento/request/documentos-especificos.model';
 
 @Injectable({
   providedIn: 'root'
@@ -52,8 +54,43 @@ export class GuardarRequerimientoService {
    * @returns Observable con la respuesta del servidor para mostrar la firma
  */
   postMostrarFirma(tramite: number, numFolio: string, PAYLOAD: MostrarFirmarRequerimientoRequest):
-   Observable<BaseResponse<MostrarFirmarRequerimientoResponse>> {
+    Observable<BaseResponse<MostrarFirmarRequerimientoResponse>> {
     const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA(tramite.toString(), numFolio)}`;
     return this.http.post<BaseResponse<MostrarFirmarRequerimientoResponse>>(ENDPOINT, PAYLOAD);
   }
+
+  /** 
+   * Envía una solicitud para generar o consultar documentos específicos relacionados con un PEXIM.
+   * @param numFolio - Número de folio del trámite
+   * @param idSolicitud - (Opcional) Identificador de la solicitud asociada
+   * @param esSolicitud - (Opcional) Indica si se trata de una solicitud
+   * @param idRequerimiento - (Opcional) Identificador del requerimiento asociado
+   * @param PAYLOAD - (Opcional) Datos adicionales necesarios para la solicitud
+   * @returns Observable con la respuesta del servidor que incluye una lista de documentos específicos generados
+   */
+  postDocumentosEspecificos(
+    numFolio: number,
+    idSolicitud?: string,
+    esSolicitud?: boolean,
+    idRequerimiento?: number,
+    PAYLOAD?: DocumentosEspecificosRequest
+  ): Observable<BaseResponse<DocumentosEspecificosResponse[]>> {
+    const ENDPOINT = `${this.host}` + API_POST_DOCUMENTOS_ESPECIFICOS_REQ(numFolio.toString());
+    let PARAMS = new HttpParams();
+
+    if (idSolicitud) {
+      PARAMS = PARAMS.set('idSolicitud', idSolicitud);
+    }
+
+    if (esSolicitud !== null && esSolicitud !== undefined) {
+      PARAMS = PARAMS.set('esSolicitud', String(esSolicitud));
+    }
+
+    if (idRequerimiento) {
+      PARAMS = PARAMS.set('idRequerimiento', idRequerimiento);
+    }
+
+    return this.http.post<BaseResponse<DocumentosEspecificosResponse[]>>(ENDPOINT, PAYLOAD, { params: PARAMS });
+  }
+
 }

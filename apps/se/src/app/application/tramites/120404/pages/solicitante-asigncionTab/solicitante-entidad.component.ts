@@ -8,9 +8,6 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
-
-
-
 /**
  * Componente para la gestión del solicitante de asignación.
  * @selector app-solicitante-asigncion
@@ -35,15 +32,8 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
      * Evento que se emite al intentar buscar datos.
      * Contiene el estado del formulario (si fue enviado y si es inválido).
      */
-    @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
-    /**
- * Evento que emite un valor booleano al componente padre.
- * Se activa cuando el subíndice del child componente cambia.
- * - true: el subíndice es 3 (mostrar alerta)
- * - false: cualquier otro valor de subíndice
- */
-   @Output() alertaEvento = new EventEmitter<boolean>();
-  /**
+    @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean,numTramite: string}>();
+   /**
    * Índice de la pestaña seleccionada.
    */
   indice: number = 1;
@@ -63,10 +53,7 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
    * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
-    this.indice = i;
-     this.alertaEvento.emit(this.indice === 2);
-
-
+    this.indice = i;  
   }
   /**
    * Constructor del componente.
@@ -120,7 +107,7 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
    *
    * @param event - Objeto que contiene el estado del formulario.
    */
-  onBuscarIntento(event: { submitted: boolean; invalid: boolean }): void {
+  onBuscarIntento(event: { submitted: boolean; invalid: boolean ,numTramite: string}): void {
     this.buscarIntento.emit(event);
   }
 

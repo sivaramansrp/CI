@@ -1,4 +1,4 @@
-import { AvisoTablaDatos, CatalogoLista, DatosSolicitante, MercanciaTablaDatos, RespuestaConsulta } from '../models/aviso-traslado.model';
+import { AdaceDatos, AvisoTablaDatos, CatalogoLista, DatosSolicitante, MercanciaTablaDatos, RespuestaConsulta } from '../models/aviso-traslado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -96,4 +96,14 @@ export class AvisoTrasladoService {
     return this.http.get<RespuestaConsulta>(`assets/json/32503/consulta-32503.json`);
   }
 
-}
+
+  /**
+   * Obtiene los datos de ADACE desde un archivo JSON local.
+   *
+   * @returns {Observable<AdaceDatos>} Un observable con el valor de ADACE.
+   */
+  getAdaceDatos(): Observable<AdaceDatos> {
+    return this.http.get<AdaceDatos>(`assets/json/32503/adace.json`);
+  }
+
+  }

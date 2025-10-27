@@ -10,8 +10,8 @@
                 [tipoSeleccionTabla]="tipoSeleccionTabla" 
                 [configuracionTabla]="configuracionTabla"
                 [datos]="procesosTablaDatos"
-                [disableSeleccionTablaCheckBox]="true">
-            </app-tabla-dinamica>
+                (listaDeFilaSeleccionada)="onSeleccionChange($event)"
+            ></app-tabla-dinamica>
         </div>
     </div>
 </div>

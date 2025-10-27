@@ -1,41 +1,24 @@
+import { AlertComponent, BtnContinuarComponent, Catalogo, ConsultaioQuery, ConsultaioState, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import {
-  AlertComponent,
-  BtnContinuarComponent,
-  Catalogo,
-  ConsultaioQuery,
-  ConsultaioState,
-  ListaPasosWizard,
-  TituloComponent
-} from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-
-/* eslint-disable */
-import DatosSucursal from 'libs/shared/theme/assets/json/120602/branchSelData.json';
-import ExtranjerosDatos from 'libs/shared/theme/assets/json/120602/extranjeros.json';
-import TableDataDatos from 'libs/shared/theme/assets/json/120602/table-data.json';
-import radioButtonMexicana from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
-import radioButtonPersona from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
-import dropDown from 'libs/shared/theme/assets/json/120602/drop-down.json'
-
-
-import { DATOS_EMPRESA } from '@ng-mf/data-access-user';
-import { Tramite120602Query } from '../../../../estados/queries/tramite120602.query';
-
 import { Solicitud120602State, Tramite120602Store } from '../../../../estados/tramites/tramite120602.store';
-
+import { map,takeUntil} from 'rxjs/operators';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { takeUntil, map } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { DATOS_EMPRESA } from '@ng-mf/data-access-user';
+import DatosSucursal from '@libs/shared/theme/assets/json/120602/branchSelData.json';
+import ExtranjerosDatos from '@libs/shared/theme/assets/json/120602/extranjeros.json';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
-
+import { ListaDesplegable } from '../../model/listaDesplegable .model';
+import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import TableDataDatos from '@libs/shared/theme/assets/json/120602/table-data.json';
+import { Tramite120602Query } from '../../../../estados/queries/tramite120602.query';
+import dropDownDatos from '@libs/shared/theme/assets/json/120602/drop-down.json'
+import radioButtonMexicana from '@libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
+import radioButtonPersona from '@libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
 /**
  * Metadatos del componente 'DatosEmpresaComponent'.
  */
@@ -63,7 +46,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   /**
    * Referencia al store de Tramite120602 para gestionar el estado de la solicitud.
    */
-  public dropDown: any = dropDown; 
+  public dropDown: ListaDesplegable = dropDownDatos; 
   /**
    * Catálogo de opciones federales y estatales.
    */
@@ -198,8 +181,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
         this.solicitudState = seccionState;
       })
     )
-    .subscribe((data) => {
-    });
+    .subscribe();
     this.formularioEmpresa = this.fb.group({
       estado: [{value: this.solicitudState.estado, disabled: true}],
       representacionFederal: [this.solicitudState.representacionFederal, Validators.required],
@@ -329,9 +311,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * // Actualiza el valor de 'tipoEmpresa' en el store con el valor actual del formulario.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120602Store): void {
-    const valor = form.get(campo)?.value;
-    if(valor){
-    (this.tramite120602Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    if(VALOR){
+    (this.tramite120602Store[metodoNombre] as (value: unknown) => void)(VALOR);
     }
   }
 

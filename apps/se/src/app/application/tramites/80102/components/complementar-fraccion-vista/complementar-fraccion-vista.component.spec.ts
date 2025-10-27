@@ -1,93 +1,78 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComplementarFraccionVistaComponent } from "./complementar-fraccion-vista.component";
 
-import { Component } from '@angular/core';
-import { ComplementarFraccionVistaComponent } from './complementar-fraccion-vista.component';
-import { Tramite80102Query } from '../../estados/tramite80102.query';
 
-@Injectable()
-class MockTramite80102Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('ComplementarFraccionVistaComponent', () => {
-  let fixture;
-  let component;
+  let component: ComplementarFraccionVistaComponent;
+  let queryMock: any;
+  let consultaQueryMock: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ ComplementarFraccionVistaComponent,FormsModule, ReactiveFormsModule ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: Tramite80102Query, useClass: MockTramite80102Query }
-      ]
-    }).overrideComponent(ComplementarFraccionVistaComponent, {
-
-    }).compileComponents();
-    fixture = TestBed.createComponent(ComplementarFraccionVistaComponent);
-    component = fixture.debugElement.componentInstance;
+    queryMock = {
+      selectDatosParaNavegar$: {
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: jest.fn((fn) => {
+          fn({ encabezadoDescripcionComercial: 'desc comercial' });
+          return { unsubscribe: jest.fn() };
+        }),
+      },
+    };
+    consultaQueryMock = {
+      selectConsultaioState$: {
+        pipe: jest.fn().mockReturnThis(),
+        subscribe: jest.fn(),
+      },
+    };
+    component = new ComplementarFraccionVistaComponent(queryMock, consultaQueryMock);
+    component.descripcion = 'test descripcion';
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.query = component.query || {};
-    component.query.selectDatosParaNavegar$ = observableOf({
-      encabezadoDescripcionComercial: {}
+  it('should initialize esFormularioSoloLectura from consultaQuery', () => {
+    const pipeMock = jest.fn().mockReturnValue({
+      subscribe: (fn: any) => fn({ readonly: true }),
     });
-    component.complimentarFraccionDatos = component.complimentarFraccionDatos || {};
-    component.complimentarFraccionDatos.descripcion = 'descripcion';
+    consultaQueryMock.selectConsultaioState$.pipe = pipeMock;
+    const comp = new ComplementarFraccionVistaComponent(queryMock, consultaQueryMock);
+    expect(comp.esFormularioSoloLectura).toBe(true);
+  });
+
+  it('should set complimentarFraccionDatos.descripcion on ngOnInit', () => {
+    component.complimentarFraccionDatos = { descripcion: '' } as any;
     component.ngOnInit();
-
+    expect(component.complimentarFraccionDatos.descripcion).toBe('desc comercial');
   });
 
-  it('should run #getDatos()', async () => {
-
-    component.getDatos({});
-
+  it('should emit guardarComplementarFraccion with descripcion on getDatos', () => {
+    const emitSpy = jest.spyOn(component.guardarComplementarFraccion, 'emit');
+    const event = { descripcion: 'old' } as any;
+    component.getDatos(event);
+    expect(emitSpy).toHaveBeenCalledWith({
+      ...event,
+      descripcion: 'test descripcion',
+    });
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should emit cerrarPopup', () => {
+    const emitSpy = jest.spyOn(component.cerrarPopup, 'emit');
+    component.cerrarPopup.emit();
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-     expect(component.destroyNotifier$.next).toHaveBeenCalled();
-     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
+  it('should have default values for public properties', () => {
+    expect(Array.isArray(component.catagoriaSeleccionDatos)).toBe(true);
+    expect(typeof component.complimentarFraccionDatos).toBe('object');
+    expect(component.esFormularioSoloLectura).toBe(false);
+  });
 });

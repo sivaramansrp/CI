@@ -31,10 +31,17 @@ export const PASOS = [
 
 /**
  * @const TEXTOS_REQUISITOS
- * @description Textos específicos relacionados con los requisitos del trámite IMMEX.
+ * @description Contiene los textos informativos y de ayuda relacionados con los requisitos del trámite IMMEX.
  *
- * @property {string} INSTRUCCIONES - Instrucciones específicas para los requisitos.
- * @property {string} ADJUNTAR - Texto para adjuntar nuevos documentos.
+ * @property {string} INSTRUCCIONES - HTML con instrucciones generales para el usuario sobre cómo manejar los documentos requeridos.
+ * @property {string} ADJUNTAR - HTML con indicaciones para adjuntar nuevos documentos en el sistema.
+ *
+ * @example
+ * // Para mostrar las instrucciones en el componente de requisitos:
+ * this.instruccionesHtml = TEXTOS_REQUISITOS.INSTRUCCIONES;
+ *
+ * // Para mostrar el texto de adjuntar documentos:
+ * this.adjuntarHtml = TEXTOS_REQUISITOS.ADJUNTAR;
  */
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
@@ -47,6 +54,11 @@ export const TEXTOS_REQUISITOS = {
 /**
  * @const SUCECESS_MESSAGE_STAGEONE
  * @description Mensaje de éxito mostrado al usuario después de completar la etapa uno del trámite IMMEX.
+ *
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar el mensaje de éxito al registrar la solicitud
+ * this.successMessage = SUCECESS_MESSAGE_STAGEONE;
  */
 export const SUCECESS_MESSAGE_STAGEONE = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`;
 
@@ -109,3 +121,49 @@ export const USUARIO_INFO = {
   idSolicitud: 202775426,
   referenciaSolicitud: '',
 };
+
+/**
+ * @const ERROR_FORMA_ALERT
+ * @description Mensaje de error HTML para el campo "Cambio de modalidad" cuando es requerido.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando no se ha seleccionado una modalidad de cambio.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación en el formulario
+ * this.errorMessage = ERROR_FORMA_ALERT;
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <p>Corrija los siguientes errores:</p>
+      <p> 1. - (Cambio de modalidad) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`
+
+/**
+ * @const ERROR_SERVICIOS_ALERT
+ * @description Mensaje de error HTML para cuando no se han agregado servicios requeridos.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando debe agregar al menos un servicio a la solicitud.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación cuando faltan servicios
+ * this.errorMessage = ERROR_SERVICIOS_ALERT;
+ */
+export const ERROR_SERVICIOS_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <p> 1. - (Debe agregar al menos un servicio) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`

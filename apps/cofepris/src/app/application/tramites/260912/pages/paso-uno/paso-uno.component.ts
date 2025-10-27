@@ -16,7 +16,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { DatosEmpresaComponent } from '../../component/datos-empresa/datos-empresa.component';
 import { DomicilioDelEstablecimientoComponent } from '../../component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
 import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
-import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component.ts';
+import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component';
 import { TramitesAsociadoComponent } from '../../component/tramites-asociado/tramites-asociado.component';
 
 import { Solocitud260912Service } from '../../services/service260912.service';
