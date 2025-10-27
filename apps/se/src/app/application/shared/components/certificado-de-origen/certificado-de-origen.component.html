@@ -28,7 +28,7 @@
           <label class="form-label" for="nombres">
             Nombre(s)<span *ngIf="!requerida">*</span>:
           </label>
-          <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="50"
+          <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="25"
             (input)="onNombreInput($event)" (change)="
               setValoresStore(
                 'formCertificado',
@@ -52,7 +52,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="primerApellido">Primer apellido<span *ngIf="!requerida">*</span>:</label>
-            <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="50"
+            <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="25"
               (change)="
                 setValoresStore(
                   'formCertificado',
@@ -83,7 +83,7 @@
           <div class="form-group">
             <label class="form-label" for="segundoApellido">Segundo apellido:</label>
             <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
-              maxlength="50" (change)="
+              maxlength="25" (change)="
                 setValoresStore(
                   'formCertificado',
                   'segundoApellido',
@@ -107,7 +107,7 @@
           <div class="form-group">
             <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
             <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
-              maxlength="32" (change)="
+              maxlength="30" (change)="
                 setValoresStore(
                   'formCertificado',
                   'numeroDeRegistroFiscal',

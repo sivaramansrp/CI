@@ -1,9 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { InputRadio, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
-import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+  
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { Domicilios, InputRadio, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 import { Solicitud32604Store } from '../../estados/solicitud32604.store';
@@ -20,7 +23,12 @@ import { Solicitud32604Store } from '../../estados/solicitud32604.store';
   templateUrl: './modificar.component.html',
   styleUrl: './modificar.component.scss',
 })
-export class ModificarComponent implements OnInit {
+export class ModificarComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+   * Formulario reactivo para la modificación de domicilio
+   */
+  form!: FormGroup;
+
   /** Modelo para la opción de tipo sí/no representado como radio button */
   sinoOpcion: InputRadio = {} as InputRadio;
 
@@ -28,13 +36,28 @@ export class ModificarComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
 
   /**
- * Lista de contenedores.
- */
+   * Lista de contenedores/tipos de instalación.
+   */
   contenedores: {
     catalogos: Catalogo[];
     labelNombre: string;
     primerOpcion: string;
   };
+
+  /**
+   * Datos del domicilio a modificar
+   */
+  @Input() domicilioAModificar: Domicilios | null = null;
+
+  /**
+   * Emisor de eventos para enviar el domicilio modificado al componente padre
+   */
+  @Output() domicilioModificado = new EventEmitter<Domicilios>();
+
+  /**
+   * Emisor de eventos para notificar al componente padre que debe cerrar el modal
+   */
+  @Output() cerrarModalEvento = new EventEmitter<void>();
 
   /**
    * Constructor de la clase ModificarComponent.
@@ -59,6 +82,7 @@ export class ModificarComponent implements OnInit {
       labelNombre: 'Tipo de instalacion',
       primerOpcion: 'Seleccione un valor',
     };
+    this.inicializarFormulario();
   }
 
   /**
@@ -71,6 +95,79 @@ export class ModificarComponent implements OnInit {
   }
 
   /**
+   * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada.
+   * Actualiza el formulario cuando se recibe un nuevo domicilio para modificar.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['domicilioAModificar'] && changes['domicilioAModificar'].currentValue) {
+      // Solo llenar el formulario si los catálogos ya están cargados
+      if (this.contenedores.catalogos && this.contenedores.catalogos.length > 0) {
+        this.llenarFormularioConDatos();
+      }
+    }
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta cuando el componente se destruye.
+   * Completa el subject destroy$ para cancelar todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Inicializa el formulario reactivo con validadores
+   */
+  inicializarFormulario(): void {
+    this.form = this.fb.group({
+      instalacionPrincipal: ['No', [Validators.required]],
+      tipoInstalacion: ['', [Validators.required]],
+      entidadFederativa: [''],
+      municipioDelegacion: [''],
+      registroSESAT: [''],
+      direccion: [''],
+      codigoPostal: [''],
+      procesoProductivo: ['', [Validators.required]],
+      acreditaInmueble: ['', [Validators.required]]
+    });
+  }
+
+  /**
+   * Llena el formulario con los datos del domicilio a modificar
+   */
+  llenarFormularioConDatos(): void {
+    if (this.domicilioAModificar && this.form) {
+      // Buscar el ID del tipo de instalación en el catálogo
+      let tipoInstalacionId = '';
+      if (this.domicilioAModificar.cveTipoInstalacion && this.contenedores.catalogos.length > 0) {
+        tipoInstalacionId = this.domicilioAModificar.cveTipoInstalacion.toString();
+      } else if (this.domicilioAModificar.tipoInstalacion && this.contenedores.catalogos.length > 0) {
+        const TIPO_ENCONTRADO = this.contenedores.catalogos.find(
+          item => item.descripcion === this.domicilioAModificar?.tipoInstalacion
+        );
+        tipoInstalacionId = TIPO_ENCONTRADO ? TIPO_ENCONTRADO.id.toString() : '';
+      }
+
+      this.form.patchValue({
+        instalacionPrincipal: this.domicilioAModificar.instalacionPrincipal || 'No',
+        tipoInstalacion: tipoInstalacionId,
+        entidadFederativa: this.domicilioAModificar.entidadFederativa || '',
+        municipioDelegacion: this.domicilioAModificar.municipioDelegacion || '',
+        registroSESAT: this.domicilioAModificar.registroSESAT || '',
+        direccion: this.domicilioAModificar.direccion || '',
+        codigoPostal: this.domicilioAModificar.codigoPostal || '',
+        procesoProductivo: this.domicilioAModificar.procesoProductivo || '',
+        acreditaInmueble: this.domicilioAModificar.acreditaInmueble || ''
+      });
+      // Deshabilitar campos después de parchear
+      ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+        this.form.get(field)?.disable({ emitEvent: false });
+      });
+    }
+  }
+
+  /**
    * Actualiza el campo '190' en el estado global.
    *
    * @param {string | number} valor - Valor numérico o de texto para el campo 290.
@@ -78,7 +175,23 @@ export class ModificarComponent implements OnInit {
   actualizar290(valor: string | number): void {
     this.solicitud32604Store.actualizar290(valor);
   }
+  /**
+   * Actualiza el campo 'procesoProductivo' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo procesoProductivo.
+   */
+  actualizarProcesoProductivo(valor: string | number): void {
+    this.solicitud32604Store.actualizarProcesoProductivo(valor);
+  }
 
+  /**
+   * Actualiza el campo 'goceDelInmueble' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo goceDelInmueble.
+   */
+  actualizarGoceDelInmueble(valor: string | number): void {
+    this.solicitud32604Store.actualizarGoceDelInmueble(valor);
+  }
   /**
    * Método para obtener la opción de radio (sí/no) desde el servicio.
    * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
@@ -99,11 +212,64 @@ export class ModificarComponent implements OnInit {
  */
   cargarCatalogos(): void {
     this.empresasComercializadorasService
-      .getContenedores()
-      .pipe(takeUntil(this.destroy$))
+      .obtenerTipoInstalacion()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.contenedores.catalogos = data.data;
+        // Llenar el formulario después de que los catálogos estén cargados
+        this.llenarFormularioConDatos();
       });
+  }
+
+  /**
+   * Guarda las modificaciones del domicilio
+   */
+  guardarModificaciones(): void {
+    // Habilite los campos deshabilitados antes de enviarlos para garantizar que sus valores estén incluidos
+    ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+      this.form.get(field)?.enable({ emitEvent: false });
+    });
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      // Deshabilitar campos nuevamente después de la validación
+      ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+        this.form.get(field)?.disable({ emitEvent: false });
+      });
+      return;
+    }
+
+    // Obtener el nombre del tipo de instalación seleccionado
+    const TIPO_INSTALACION_SELECCIONADO = this.contenedores.catalogos.find(
+      item => item.id.toString() === this.form.value.tipoInstalacion
+    );
+
+    const DOMICILIO_MODIFICADO: Domicilios = {
+      ...this.domicilioAModificar,
+      ...this.form.value,
+      cveTipoInstalacion: this.form.value.tipoInstalacion,
+      tipoInstalacion: TIPO_INSTALACION_SELECCIONADO ? TIPO_INSTALACION_SELECCIONADO.descripcion : this.form.value.tipoInstalacion,
+      procesoProductivo: this.form.value.procesoProductivo,
+      acreditaInmueble: this.form.value.acreditaInmueble
+    } as Domicilios;
+
+    // Emitir el domicilio modificado al componente padre
+    this.domicilioModificado.emit(DOMICILIO_MODIFICADO);
+
+    // Deshabilitar campos nuevamente después de enviar
+    ['municipioDelegacion', 'entidadFederativa', 'registroSESAT', 'direccion', 'codigoPostal'].forEach(field => {
+      this.form.get(field)?.disable({ emitEvent: false });
+    });
+
+    // Notificar al componente padre para cerrar el modal
+    this.cerrarModalEvento.emit();
+  }
+
+  /**
+   * Cancela la modificación y cierra el modal
+   */
+  cancelarModificacion(): void {
+    this.form.reset();
+    this.cerrarModalEvento.emit();
   }
 }

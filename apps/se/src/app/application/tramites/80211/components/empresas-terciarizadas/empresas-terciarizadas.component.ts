@@ -292,11 +292,16 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
   /**
    * Busca las empresas controladoras y actualiza el estado de las plantas.
    */
-  buscarControladoras(): void {
+  buscarTerciarizadas(): void {
     const ESTADO_VALUE = this.empresasForm.get('estado')?.value;
     const RFC_VALUE = this.empresasForm.get('rfc')?.value;
 
-    if (!ESTADO_VALUE || ESTADO_VALUE.length === 0) {
+    if (
+      (!ESTADO_VALUE ||
+        ESTADO_VALUE.length === 0 ||
+        ESTADO_VALUE.trim() === '') &&
+      (!RFC_VALUE || RFC_VALUE.length === 0 || RFC_VALUE.trim() === '')
+    ) {
       this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -312,7 +317,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!RFC_VALUE) {
+    if (!RFC_VALUE || RFC_VALUE.length === 0 || RFC_VALUE.trim() === '') {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -327,11 +332,52 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.esFormularioValido()) {
-      this.obtenerPlantaDisponibles();
-      this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset();
-    }
+       const PAYLOAD = {
+      rfcEmpresaSubManufacturera: this.empresasForm.get('rfc')?.value,
+      entidadFederativa: this.empresasForm.get('estado')?.value,
+      idPrograma: null,
+    };
+
+    this.serviciosService
+      .postPlantasDisponiblesTablaTerciarizadas(this.tramiteID, PAYLOAD)
+      .pipe(
+        map((data: BaseResponse<PlantasDisponiblesResponse[]>) => {
+          const RESPONSE = (data.datos ?? []).map(
+            (item: PlantasDisponiblesResponse) => {
+              const DOMICILIO = item.domicilioDto || {};
+              return {
+                id: String(item.recintoSolicitudPK?.idRecinto ?? ''),
+                calle: DOMICILIO.calle ?? '',
+                numExterior: DOMICILIO.numExterior ?? '',
+                numInterior: DOMICILIO.numInterior ?? '',
+                codigoPostal: DOMICILIO.codigoPostal ?? '',
+                colonia: DOMICILIO.colonia ?? '',
+                municipio: DOMICILIO.municipio ?? '',
+                entidadFederativa: DOMICILIO.entidadFederativa?.nombre ?? '',
+                pais: DOMICILIO.pais?.nombre ?? '',
+                registroFederal: item.empresaDto?.rfc ?? '',
+                domicilio: DOMICILIO.descUbicacion ?? '',
+                razon: item.empresaDto?.razonSocial ?? '',
+              } as Plantas;
+            }
+          );
+          this.tramite80211Store.establecerDatos({
+            plantasDisponibles: RESPONSE,
+          });
+          return RESPONSE;
+        })
+      )
+      .subscribe({
+        next: (plantas: Plantas[]) => {
+          this.plantasDisponibles = plantas;
+          this.tramite80211Store.establecerDatos({
+            plantasDisponibles: plantas,
+          });
+        },
+        error: (err) => {
+          console.error('Error al obtener plantas disponibles:', err);
+        },
+      });
   }
 
   /**
@@ -631,52 +677,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     this.espectaculoAlertaAgregar = false;
   }
 
-  obtenerPlantaDisponibles(): void {
-    const PAYLOAD = {
-      rfcEmpresaSubManufacturera: this.empresasForm.get('rfc')?.value,
-      entidadFederativa: this.empresasForm.get('estado')?.value,
-      idPrograma: null,
-    };
-
-    this.serviciosService
-      .postPlantasDisponiblesTablaTerciarizadas(this.tramiteID, PAYLOAD)
-      .pipe(
-        map((data: BaseResponse<PlantasDisponiblesResponse[]>) => {
-          const RESPONSE = (data.datos ?? []).map(
-            (item: PlantasDisponiblesResponse) => {
-              const DOMICILIO = item.domicilioDto || {};
-              return {
-                id: String(item.recintoSolicitudPK?.idRecinto ?? ''),
-                calle: DOMICILIO.calle ?? '',
-                numExterior: DOMICILIO.numExterior ?? '',
-                numInterior: DOMICILIO.numInterior ?? '',
-                codigoPostal: DOMICILIO.codigoPostal ?? '',
-                colonia: DOMICILIO.colonia ?? '',
-                municipio: DOMICILIO.municipio ?? '',
-                entidadFederativa: DOMICILIO.entidadFederativa?.nombre ?? '',
-                pais: DOMICILIO.pais?.nombre ?? '',
-                registroFederal: item.empresaDto?.rfc ?? '',
-                domicilio: DOMICILIO.descUbicacion ?? '',
-                razon: item.empresaDto?.razonSocial ?? '',
-              } as Plantas;
-            }
-          );
-          this.tramite80211Store.setPlantasBuscadas(RESPONSE);
-          return RESPONSE;
-        })
-      )
-      .subscribe({
-        next: (plantas: Plantas[]) => {
-          this.plantasDisponibles = plantas;
-          this.tramite80211Store.establecerDatos({
-            plantasDisponibles: plantas,
-          });
-        },
-        error: (err) => {
-          console.error('Error al obtener plantas disponibles:', err);
-        },
-      });
-  }
 
   /**
    * @description

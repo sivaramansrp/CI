@@ -1,3 +1,14 @@
+
+
+
+/**
+ * Identificador único del trámite 230301.
+ * 
+ * Esta constante se utiliza para referenciar el trámite en diversas partes de la aplicación,
+ */
+export const TRAMITE_ID = '230301';
+
+
 /**
  * URL base para acceder a los recursos JSON del trámite 230301.
  * 
