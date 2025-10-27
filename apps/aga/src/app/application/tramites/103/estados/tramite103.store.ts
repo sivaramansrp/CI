@@ -265,11 +265,11 @@ export class Tramite103Store extends Store<Solicitud103State> {
     this.update((state) => ({ ...state, organismoPublico }));
   }
   /**
-   * Actualiza el organismo público en el estado.
-   * @param {string} organismoPublico - Nombre del organismo público.
+   * Actualiza el persona moral en el estado.
+   * @param {string} personaMoral - Nombre del persona moral.
    */
-  public setPersonaMoral(organismoPublico: string): void {
-    this.update((state) => ({ ...state, personaMoral: organismoPublico }));
+  public setPersonaMoral(personaMoral: string): void {
+    this.update((state) => ({ ...state, personaMoral }));
   }
   /**
    * Actualiza la aduana en el estado.
