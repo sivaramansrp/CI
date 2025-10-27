@@ -1,25 +1,28 @@
 import {
-  API_GET_CATALOGO_CONSULTA_PAISES,
   API_GET_CATALOGO_ADUANAS,
   API_GET_CATALOGO_BANCOS,
-  API_GET_CATALOGO_FRACCION_ARANCELARIA,
+  API_GET_CATALOGO_CONSULTA_PAISES,
   API_GET_CATALOGO_FRACCIONES_ARANCELARIAS,
+  API_GET_CATALOGO_FRACCION_ARANCELARIA,
+  API_GET_CATALOGO_MEDIO_TRANSPORTE,
   API_GET_CATALOGO_OFICINAS_INSPECCION,
+  API_GET_CATALOGO_PUNTOS_VERIFICACION,
   API_GET_CATALOGO_PUNTO_INSPECCION,
+  API_GET_CATALOGO_REGIMENES,
   API_GET_CATALOGO_REGIMENES_VIGENTES,
   API_GET_CATALOGO_RESTRICCIONES,
-  API_GET_CATALOGO_MEDIO_TRANSPORTE,
-  API_GET_CATALOGO_PUNTOS_VERIFICACION,
   API_GET_CATALOGO_TIPOS_PRODUCTO,
   API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
-  API_GET_CATALOGO_USOS_MERCANCIA
+  API_GET_CATALOGO_USOS_MERCANCIA,
+  API_GET_DATOS_SOLICITUD
 } from '../../../../../core/server/api-router';
+import { Observable, map } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { PrellenadoSolicitud } from "../../../models/220202/prellenado-solicitud.model";
 
 @Injectable({
   providedIn: 'root'
@@ -223,6 +226,30 @@ export class CatalogosService {
    */
   obtieneCatalogoBanco(tramite: number):Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_BANCOS(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param cveUcon - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitud`).
+   */
+  obtenSolicitudPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitud>> {
+    const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITUD(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitud>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de regímenes para un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere obtener los regímenes.
+   * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+   */
+  obtieneCatalogoRegimenes(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_REGIMENES(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

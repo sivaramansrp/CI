@@ -105,6 +105,18 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   }
 
   /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updateFilaSolicitud(tercerosRelacionados: FilaSolicitud[]): void {
+    this.update(state => ({
+      ...state,
+      tablaDatos: tercerosRelacionados,
+    }));
+  }
+
+  /**
    * Actualiza el estado con los datos finales de la tabla.
    * @param tablaDatos Arreglo de filas con los datos de la solicitud.
    */

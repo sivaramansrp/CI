@@ -172,8 +172,8 @@ export interface ListaDeDatosFinal {
      */
     usoCrossListDatos: string[];
 
-      seletedTerceros: TercerosrelacionadosdestinoTable;
-      seletedExdora: TercerosrelacionadosdestinoTable;
+    seletedTerceros: TercerosrelacionadosdestinoTable;
+    seletedExdora: TercerosrelacionadosdestinoTable;
 }
 
 /**
@@ -359,6 +359,11 @@ export interface FilaSolicitud {
     requisito: string;
 
     /**
+    * Descripción del requisito solicitado.
+    */
+    descripcionTipoRequisito?: string;
+
+    /**
      * Número del certificado internacional asociado.
      */
     numeroCertificadoInternacional: string;
@@ -394,6 +399,11 @@ export interface FilaSolicitud {
     umt: string;
 
     /**
+    * Desripcion de la unidad de medida de transporte (UMT) utilizada.
+    */
+    descripcionUMT?: string;
+
+    /**
      * Cantidad en la unidad de medida de transporte (UMT).
      */
     cantidadUMT: string | number;
@@ -404,6 +414,11 @@ export interface FilaSolicitud {
     umc: string;
 
     /**
+    * Desripcion de la unidad de medida de comercialización (UMC) utilizada.
+    */
+    descripcionUMC?: string;
+
+    /**
      * Cantidad en la unidad de medida de comercialización (UMC).
      */
     cantidadUMC: string | number;
@@ -412,6 +427,11 @@ export interface FilaSolicitud {
      * Uso previsto del producto.
      */
     uso: string;
+
+  /**
+   * descripcion del Uso previsto del producto.
+   */
+    descripcionUso?: string;
 
     /**
      * Tipo de producto especificado en la solicitud.
@@ -429,9 +449,19 @@ export interface FilaSolicitud {
     paisDeOrigen: string;
 
     /**
+     * Nombre del país de origen del producto.
+     */
+    descripcionPaisDeOrigen?: string;
+
+    /**
      * País de procedencia del producto.
      */
     paisDeProcedencia: string;
+
+    /**
+     * País de procedencia del producto.
+     */
+    descripcionPaisDeProcedencia?: string;
 
     /**
      * Certificado internacional electrónico asociado al producto.
@@ -513,6 +543,34 @@ export interface SolicitudFilaTabla {
      */
     cantidad: number;
 
+    /**
+     * Nombre del proveedor de la mercancía.
+     */
+    proveedor: string;
+}
+
+/**
+ * Representa una fila de la tabla de solicitudes en el sistema.
+ */
+export interface SolicitudData {
+    id?: number;
+
+    /**
+     * Identificador de la solicitud.
+     */
+    id_solicitud?: string;
+    /**
+     * Fecha en la que se creó la solicitud.
+     */
+    fecha_creacion: string;
+    /**
+     * Nombre o descripción de la mercancía solicitada.
+     */
+    mercancia: string;
+    /**
+     * Cantidad de mercancía solicitada.
+     */
+    cantidad: number;
     /**
      * Nombre del proveedor de la mercancía.
      */
@@ -742,62 +800,62 @@ export interface DatosMercancia {
     /**
    * Lista de tipos de requisitos asociados a la solicitud.
    */
-  tipoRequisitoList: Catalogo[];
+    tipoRequisitoList: Catalogo[];
 
-  /**
-   * Lista de requisitos específicos relacionados con la solicitud.
-   */
-  requisitoList: Catalogo[];
+    /**
+     * Lista de requisitos específicos relacionados con la solicitud.
+     */
+    requisitoList: Catalogo[];
 
-  /**
-   * Lista de fracciones arancelarias aplicables.
-   */
-  fraccionArancelariaList: Catalogo[];
+    /**
+     * Lista de fracciones arancelarias aplicables.
+     */
+    fraccionArancelariaList: Catalogo[];
 
-  /**
-   * Lista de NICO (Números de Identificación Comercial) relacionados.
-   */
-  nicoList: Catalogo[];
+    /**
+     * Lista de NICO (Números de Identificación Comercial) relacionados.
+     */
+    nicoList: Catalogo[];
 
-  /**
-   * Lista de unidades de medida de transporte (UMT).
-   */
-  umtList: Catalogo[];
+    /**
+     * Lista de unidades de medida de transporte (UMT).
+     */
+    umtList: Catalogo[];
 
-  /**
-   * Lista de unidades de medida comercial (UMC).
-   */
-  umcList: Catalogo[];
+    /**
+     * Lista de unidades de medida comercial (UMC).
+     */
+    umcList: Catalogo[];
 
-  /**
-   * Lista de especies relacionadas con la solicitud.
-   */
-  especieList: Catalogo[];
+    /**
+     * Lista de especies relacionadas con la solicitud.
+     */
+    especieList: Catalogo[];
 
-  /**
-   * Lista de usos específicos asociados a la solicitud.
-   */
-  usoList: Catalogo[];
+    /**
+     * Lista de usos específicos asociados a la solicitud.
+     */
+    usoList: Catalogo[];
 
-  /**
-   * Lista de países de origen de los productos o bienes.
-   */
-  paisOrigenList: Catalogo[];
+    /**
+     * Lista de países de origen de los productos o bienes.
+     */
+    paisOrigenList: Catalogo[];
 
-  /**
-   * Lista de países de procedencia de los productos o bienes.
-   */
-  paisDeProcedenciaList: Catalogo[];
+    /**
+     * Lista de países de procedencia de los productos o bienes.
+     */
+    paisDeProcedenciaList: Catalogo[];
 
-  /**
-   * Lista de sexos aplicables en el contexto de la solicitud.
-   */
-  sexoList: Catalogo[];
+    /**
+     * Lista de sexos aplicables en el contexto de la solicitud.
+     */
+    sexoList: Catalogo[];
 
-  /**
-   * Lista de tipos de productos aplicables en el contexto de la solicitud.
-   */
-  tipoDeProductoList: Catalogo[];
+    /**
+     * Lista de tipos de productos aplicables en el contexto de la solicitud.
+     */
+    tipoDeProductoList: Catalogo[];
 }
 /**
  * Interfaz que define la estructura de etiquetas cruzadas para elementos de interfaz.
@@ -815,99 +873,99 @@ export interface CrossListEtiqueta {
  * @interface
  */
 export interface TercerosrelacionadosdestinoTable {
-  /**
-   * Tipo de persona (Física/Moral).
-   */
-  tipoMercancia: string;
-  /**
-   * Nombre(s) del destinatario.
-   */
-  nombre: string;
-  /**
-   * Primer apellido del destinatario.
-   */
-  primerApellido: string;
-  /**
-   * Segundo apellido del destinatario (opcional).
-   */
-  segundoApellido?: string;
-  /**
-   * Denominación o razón social del destinatario.
-   */
-  razonSocial: string;
-  /**
-   * País del destinatario.
-   */
-  pais: string;
-  /**
-   * Código postal del destinatario.
-   */
-  codigoPostal: string;
-  /**
-   * Estado del destinatario.
-   */
-  estado: string;
-  /**
-   * Municipio del destinatario (opcional).
-   */
-  municipio?: string;
-  /**
-   * Colonia del destinatario (opcional).
-   */
-  colonia?: string;
-  /**
-   * Calle del destinatario.
-   */
-  calle: string;
-  /**
-   * Número exterior del domicilio del destinatario.
-   */
-  numeroExterior: string;
-  /**
-   * Número interior del domicilio del destinatario (opcional).
-   */
-  numeroInterior?: string;
-  /**
-   * Lada telefónica del destinatario (opcional).
-   */
-  lada?: string;
-  /**
-   * Teléfono del destinatario (opcional).
-   */
-  telefono?: string;
-  /**
-   * Correo electrónico del destinatario (opcional).
-   */
-  correo?: string;
-  /**
-   * Planta del destinatario (opcional).
-   */
-  planta?: string;
+    /**
+     * Tipo de persona (Física/Moral).
+     */
+    tipoMercancia: string;
+    /**
+     * Nombre(s) del destinatario.
+     */
+    nombre: string;
+    /**
+     * Primer apellido del destinatario.
+     */
+    primerApellido: string;
+    /**
+     * Segundo apellido del destinatario (opcional).
+     */
+    segundoApellido?: string;
+    /**
+     * Denominación o razón social del destinatario.
+     */
+    razonSocial: string;
+    /**
+     * País del destinatario.
+     */
+    pais: string;
+    /**
+     * Código postal del destinatario.
+     */
+    codigoPostal: string;
+    /**
+     * Estado del destinatario.
+     */
+    estado: string;
+    /**
+     * Municipio del destinatario (opcional).
+     */
+    municipio?: string;
+    /**
+     * Colonia del destinatario (opcional).
+     */
+    colonia?: string;
+    /**
+     * Calle del destinatario.
+     */
+    calle: string;
+    /**
+     * Número exterior del domicilio del destinatario.
+     */
+    numeroExterior: string;
+    /**
+     * Número interior del domicilio del destinatario (opcional).
+     */
+    numeroInterior?: string;
+    /**
+     * Lada telefónica del destinatario (opcional).
+     */
+    lada?: string;
+    /**
+     * Teléfono del destinatario (opcional).
+     */
+    telefono?: string;
+    /**
+     * Correo electrónico del destinatario (opcional).
+     */
+    correo?: string;
+    /**
+     * Planta del destinatario (opcional).
+     */
+    planta?: string;
 
-  /**
-   * Domicilio completo del destinatario (opcional).
-   */
-  domicilio?: string;
+    /**
+     * Domicilio completo del destinatario (opcional).
+     */
+    domicilio?: string;
 
-  /**
-   * Descripción del municipio (para mostrar en tabla).
-   */
-  municipioDescripcion?: string;
-  
-  /**
-   * Descripción del estado (para mostrar en tabla).
-   */
-  estadoDescripcion?: string;
-  
-  /**
-   * Descripción del país (para mostrar en tabla).
-   */
-  paisDescripcion?: string;
-  
-  /**
-   * Descripción de la colonia (para mostrar en tabla).
-   */
-  coloniaDescripcion?: string;
+    /**
+     * Descripción del municipio (para mostrar en tabla).
+     */
+    municipioDescripcion?: string;
+
+    /**
+     * Descripción del estado (para mostrar en tabla).
+     */
+    estadoDescripcion?: string;
+
+    /**
+     * Descripción del país (para mostrar en tabla).
+     */
+    paisDescripcion?: string;
+
+    /**
+     * Descripción de la colonia (para mostrar en tabla).
+     */
+    coloniaDescripcion?: string;
 }
 
 /**
@@ -916,53 +974,53 @@ export interface TercerosrelacionadosdestinoTable {
  */
 export interface TercerosrelacionadosExportadorTable {
 
-  /**
-   * Tipo de persona (Física/Moral).
-   */
-  tipoMercancia: string;
+    /**
+     * Tipo de persona (Física/Moral).
+     */
+    tipoMercancia: string;
 
-  /**
-   * Nombre(s) del destinatario.
-   */
-  nombre: string;
+    /**
+     * Nombre(s) del destinatario.
+     */
+    nombre: string;
 
-  /**
-   * Denominación o razón social del destinatario.
-   */
-  razonSocial: string;
+    /**
+     * Denominación o razón social del destinatario.
+     */
+    razonSocial: string;
 
-  /**
-   * País del destinatario.
-   */
-  pais: string;
+    /**
+     * País del destinatario.
+     */
+    pais: string;
 
-  /**
-   * Teléfono del destinatario (opcional).
-   */
-  telefono?: string;
+    /**
+     * Teléfono del destinatario (opcional).
+     */
+    telefono?: string;
 
-  /**
-   * Domicilio completo del destinatario (opcional).
-   */
-  domicilio?: string;
+    /**
+     * Domicilio completo del destinatario (opcional).
+     */
+    domicilio?: string;
 
-  /**
-   * Correo electrónico del destinatario (opcional).
-   */
-  correo?: string;
-  
-  /**
-   * Primer apellido del destinatario.
-   */
-  primerApellido: string;
+    /**
+     * Correo electrónico del destinatario (opcional).
+     */
+    correo?: string;
 
-  /**
-   * Segundo apellido del destinatario (opcional).
-   */
-  segundoApellido?: string;
+    /**
+     * Primer apellido del destinatario.
+     */
+    primerApellido: string;
 
-  /**
-   * Lada telefónica del destinatario (opcional).
-   */
-  lada?: string;
+    /**
+     * Segundo apellido del destinatario (opcional).
+     */
+    segundoApellido?: string;
+
+    /**
+     * Lada telefónica del destinatario (opcional).
+     */
+    lada?: string;
 }
