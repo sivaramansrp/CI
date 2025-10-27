@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, InputFecha, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices, InputFecha, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 
@@ -67,6 +67,17 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
   @Output() modificarEventMercancia: EventEmitter<boolean> = new EventEmitter<boolean>(false);
 
   /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110203'
+   */
+  tramites: string = '110209';
+
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de mercancías.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -74,7 +85,7 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    * @param {Router} router - Servicio para la navegación.
    * @param {Tramite110209Query} tramite110209Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: MercanciasService, private router: Router, private tramite110209Query: Tramite110209Query,private tramite110209Store:Tramite110209Store) {
+  constructor(private fb: FormBuilder, private service: MercanciasService, private router: Router, private tramite110209Query: Tramite110209Query,private tramite110209Store:Tramite110209Store, private catalogoService: CatalogoServices,) {
     this.mercanciaFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
@@ -97,6 +108,8 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
     this.getMercanciasValor();
     this.getTipoFactura();
     this.getUnidadValor();
+    this.obtenerUnidadComercializacion();
+    this.obtenerTipoFactura();
   }
 
   /**
@@ -162,7 +175,35 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
       this.tramite110209Store.setTramite110209({ [campo]: VALOR });
     }
   
+ /*
+   * Consulta el catálogo de unidades de medida de comercialización basado en los trámites actuales.
+   * El resultado se almacena en la propiedad `comercializacion`.
+   * Se cancela automáticamente la suscripción al destruir el componente.
+   */
+  obtenerUnidadComercializacion(): void {
+    this.catalogoService.unidadesMedidaComercialCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.unidadOptions = response?.datos ?? [];
+        }
+      });
+  }
 
+    /*
+   * Consulta el catálogo de tipos de factura según los trámites actuales.
+   * El resultado se almacena en la propiedad `tipoDatos`.
+   * La suscripción se gestiona automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  obtenerTipoFactura(): void {
+    this.catalogoService.tipoFacturaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tipoFacturaOptions = response?.datos ?? [];
+        }
+      });
+  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
