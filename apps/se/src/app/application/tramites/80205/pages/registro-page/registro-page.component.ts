@@ -49,7 +49,13 @@ export class RegistroPageComponent implements OnDestroy {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * Notificador para la destrucción del componente.
+   * Subject utilizado para notificar la destrucción del componente.
+   * 
+   * Se utiliza con el operador `takeUntil` para cancelar automáticamente
+   * todas las suscripciones cuando el componente se destruye, evitando
+   * memory leaks y comportamientos inesperados.
+   * 
+   * @property {Subject<void>} destroyNotifier$ - Subject que emite cuando el componente se destruye
    */
   destroyNotifier$: Subject<void> = new Subject();
 
@@ -93,7 +99,9 @@ export class RegistroPageComponent implements OnDestroy {
      * Valor del aviso de privacidad.
      * @type {string}
      */
-      AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;/**
+      AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
+
+  /**
    * Controla la visibilidad del mensaje de error.
    * @type {boolean}
    */
@@ -161,17 +169,17 @@ export class RegistroPageComponent implements OnDestroy {
       idTipoTramite: string = '80205';
 
   /**
-   * Maneja la acción del botón y navega entre los pasos.
-   * @method getValorIndice
-   * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
-   */
-  /**
-   * Constructor del componente.
-   * @param {AmpliacionServiciosQuery} tramiteQuery - Servicio de consulta de trámites
-   * @param {AmpliacionServiciosStore} tranmiteStore - Store de trámites
-   * @param {SeccionLibStore} seccion - Store de sección
-   * @param {RegistroSolicitudService} registroSolicitudService - Servicio de registro
-   * @param {ToastrService} toastrService - Servicio para mostrar notificaciones
+   * Constructor del componente RegistroPageComponent.
+   * 
+   * Inicializa las dependencias necesarias para el funcionamiento del componente
+   * y establece las suscripciones iniciales para el estado del formulario.
+   * 
+   * @constructor
+   * @param {AmpliacionServiciosQuery} tramiteQuery - Servicio de consulta para trámites de ampliación de servicios
+   * @param {AmpliacionServiciosStore} tranmiteStore - Store para el manejo del estado de trámites
+   * @param {SeccionLibStore} seccion - Store para el manejo del estado de secciones
+   * @param {RegistroSolicitudService} registroSolicitudService - Servicio para el registro de solicitudes
+   * @param {ToastrService} toastrService - Servicio para mostrar notificaciones tipo toast
    */
   constructor(
     private tramiteQuery: AmpliacionServiciosQuery,
@@ -184,9 +192,24 @@ export class RegistroPageComponent implements OnDestroy {
       this.seccion.establecerSeccion([true]);
       this.seccion.establecerFormaValida([true]);
     })
-
   }
-  
+
+  /**
+   * Maneja la acción del botón y navega entre los pasos del wizard.
+   * 
+   * Este método gestiona la navegación entre pasos del asistente, validando
+   * formularios en el primer paso y ejecutando el guardado de datos.
+   * Controla la navegación hacia adelante y hacia atrás del wizard.
+   * 
+   * @method getValorIndice
+   * @param {AccionBoton} e - Objeto con la acción ('cont' o 'ant') y el valor (índice) del botón
+   * @returns {void} Este método no retorna ningún valor
+   * 
+   * @example
+   * ```typescript
+   * this.getValorIndice({ accion: 'cont', valor: 2 });
+   * ```
+   */
   getValorIndice(e: AccionBoton): void {
     if (this.indice === 1) {
       const FORM_VALIDO = this.pasoUnoComponent?.validarTodosLosFormularios() ?? false;
@@ -262,29 +285,41 @@ export class RegistroPageComponent implements OnDestroy {
 
   
   /**
-   * Método para manejar el evento de carga de documentos.
-   * Actualiza el estado de la sección de carga de documentos.
-   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * {void} No retorna ningún valor.
+   * Maneja el evento de finalización de carga de documentos.
+   * 
+   * Actualiza el estado de la sección de carga de documentos basado en
+   * si la carga se realizó correctamente o no.
+   * 
+   * @method cargaRealizada
+   * @param {boolean} cargaRealizada - Indica si la carga de documentos se realizó correctamente
+   * @returns {void} Este método no retorna ningún valor
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
 
   /**
-  * Método para manejar el evento de carga de documentos.
-  * Actualiza el estado del botón de carga de archivos.
-  *  carga - Indica si la carga de documentos está activa o no.
-  * {void} No retorna ningún valor.
-  */
+   * Maneja el evento de activación/desactivación de la carga de documentos.
+   * 
+   * Actualiza el estado del botón de carga de archivos basado en el parámetro
+   * proporcionado, habilitando o deshabilitando la funcionalidad.
+   * 
+   * @method manejaEventoCargaDocumentos
+   * @param {boolean} carga - Indica si la carga de documentos está activa (true) o inactiva (false)
+   * @returns {void} Este método no retorna ningún valor
+   */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
 
   /**
-   * Método para navegar a la siguiente sección del wizard.
-   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
+   * Navega al siguiente paso del wizard.
+   * 
+   * Realiza la validación de los documentos cargados y actualiza
+   * el índice actual y el estado de los pasos del asistente.
+   * 
+   * @method siguiente
+   * @returns {void} Este método no retorna ningún valor
    */
   siguiente(): void {
     // Aqui se hara la validacion de los documentos cargdados
@@ -294,9 +329,13 @@ export class RegistroPageComponent implements OnDestroy {
   }
 
   /**
-   * Método para navegar a la sección anterior del wizard.
-   * Actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
+   * Navega al paso anterior del wizard.
+   * 
+   * Actualiza el índice actual y el estado de los pasos del asistente
+   * para retroceder un paso en la navegación.
+   * 
+   * @method anterior
+   * @returns {void} Este método no retorna ningún valor
    */
   anterior(): void {
     this.wizardComponent.atras();
@@ -305,25 +344,49 @@ export class RegistroPageComponent implements OnDestroy {
   }
 
   /**
-   * Emite un evento para cargar archivos.
-   * {void} No retorna ningún valor.
+   * Maneja el evento de clic del botón de carga de archivos.
+   * 
+   * Emite un evento para iniciar el proceso de carga de archivos
+   * cuando el usuario hace clic en el botón correspondiente.
+   * 
+   * @method onClickCargaArchivos
+   * @returns {void} Este método no retorna ningún valor
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
   }
 
   /**
-   * Maneja el evento de carga en progreso.
-   * @param {boolean} carga - Estado de la carga
+   * Maneja el estado de carga en progreso.
+   * 
+   * Actualiza la propiedad que indica si hay una carga de documentos
+   * en progreso, utilizada para mostrar indicadores de carga en la UI.
+   * 
+   * @method onCargaEnProgreso
+   * @param {boolean} carga - Estado de la carga (true: en progreso, false: finalizada)
+   * @returns {void} Este método no retorna ningún valor
    */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
 
   /**
-   * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
-   * y enviar los datos al servidor.
-   * @returns {Observable<BaseResponse<{ id_solicitud: number }>>}
+   * Guarda la solicitud de ampliación de servicios.
+   * 
+   * Utiliza el adaptador para convertir el estado actual del trámite
+   * en el formato requerido y envía los datos al servidor mediante
+   * el servicio de registro de solicitudes.
+   * 
+   * @method onGuardar
+   * @returns {Observable<BaseResponse<{ id_solicitud: number }>>} Observable que emite la respuesta del servidor con el ID de la solicitud creada
+   * 
+   * @example
+   * ```typescript
+   * this.onGuardar().subscribe({
+   *   next: (response) => console.log('Solicitud guardada:', response.datos.id_solicitud),
+   *   error: (error) => console.error('Error al guardar:', error)
+   * });
+   * ```
    */
   onGuardar(): Observable<BaseResponse<{ id_solicitud: number }>> {
     return this.tramiteQuery.selectTramite80205$.pipe(
@@ -351,8 +414,15 @@ export class RegistroPageComponent implements OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
-   * Emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores
-   * que deben limpiar recursos o cancelar suscripciones, y luego completa el observable.
+   * 
+   * Emite un valor en el observable `destroyNotifier$` para notificar a todos los
+   * suscriptores que deben limpiar recursos o cancelar suscripciones activas,
+   * y luego completa el observable para liberar memoria.
+   * 
+   * @method ngOnDestroy
+   * @returns {void} Este método no retorna ningún valor
+   * 
+   * @implements {OnDestroy}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

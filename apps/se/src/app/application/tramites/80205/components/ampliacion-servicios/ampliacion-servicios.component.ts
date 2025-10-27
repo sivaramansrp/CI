@@ -533,6 +533,14 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method eliminarEmpresasNacionales
    * @return {void}
    */
+
+  /**
+   * Cierra la notificación de "no hay fila seleccionada".
+   * Establece la propiedad `noRowSelected` en `false` para ocultar la notificación.
+   * 
+   * @method cerrarNoRow
+   * @returns {void} Este método no retorna ningún valor.
+   */
   cerrarNoRow(): void {
     this.noRowSelected=false;
   }
@@ -779,6 +787,15 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method eliminarEmpresasNacionales
    * @return {void}
    */
+
+  /**
+   * Cierra la notificación de "no hay fila seleccionada" para la tabla C.
+   * Establece la propiedad `noRowSelectedTablaC` en `false` para ocultar la notificación
+   * específica de la tabla de empresas nacionales.
+   * 
+   * @method cerrarNoRowTablaC
+   * @returns {void} Este método no retorna ningún valor.
+   */
   cerrarNoRowTablaC(): void {
     this.noRowSelectedTablaC=false;
   }
@@ -859,6 +876,22 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       this.actualizaGridEmpresasNacionales();
     }
 
+/**
+ * Muestra un modal de validación con un mensaje personalizado.
+ * 
+ * Este método configura y muestra una notificación modal de tipo alerta
+ * con el mensaje proporcionado. Establece `rowNotSeleccionada` en `true`
+ * para activar la visualización del modal.
+ * 
+ * @method formularioValidacionModal
+ * @param {string} mensaje - El mensaje que se mostrará en el modal de validación
+ * @returns {void} Este método no retorna ningún valor
+ * 
+ * @example
+ * ```typescript
+ * this.formularioValidacionModal('Debe seleccionar un servicio');
+ * ```
+ */
 formularioValidacionModal(mensaje:string): void {
   this.rowNotSeleccionada = true;
   this.nuevaNotificacion = {
