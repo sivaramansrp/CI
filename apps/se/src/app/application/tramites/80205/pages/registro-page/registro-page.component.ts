@@ -69,7 +69,7 @@ export class RegistroPageComponent implements OnDestroy {
    * Componente Wizard.
    * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild('wizardRef') wizardComponent!: WizardComponent;
 
   /**
    * Índice actual del paso.
@@ -209,25 +209,39 @@ export class RegistroPageComponent implements OnDestroy {
             this.esFormaValido = false;
             this.indice = 1;
             this.datosPasos.indice = 1;
-            this.wizardComponent.indiceActual = 1;
+            if (this.wizardComponent) {
+              this.wizardComponent.indiceActual = 0;
+            }
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
             return;
           }
-            this.esFormaValido = true;
-            this.indice = e.valor;
-            this.datosPasos.indice = this.indice;
+          
+          if (respuesta.datos?.id_solicitud) {
+            this.idSolicitudState = respuesta.datos.id_solicitud;
+            this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
+          }
+          
+          this.esFormaValido = true;
+          
+          this.indice = e.valor; // This should be 2 for step 2
+          this.datosPasos.indice = this.indice;
+          
+          if (e.accion === 'cont') {
             this.wizardComponent.siguiente();
-            if (respuesta.datos?.id_solicitud) {
-              this.idSolicitudState = respuesta.datos.id_solicitud;
-              this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
-            }
-            this.toastrService.success(respuesta.mensaje);
+          } else if (e.accion === 'ant') {
+            this.wizardComponent.atras();
+          }
+          
+          this.toastrService.success(respuesta.mensaje);
         },
         error: (error) => {
           this.formErrorAlert = ServiciosService.generarAlertaDeError(error.error || 'Error al procesar la solicitud');
           this.esFormaValido = false;
           this.indice = 1;
-          this.wizardComponent.indiceActual = 1;
+          // Reset wizard to first step (wizard is 0-indexed)
+          if (this.wizardComponent) {
+            this.wizardComponent.indiceActual = 0;
+          }
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         }
       });
@@ -235,6 +249,8 @@ export class RegistroPageComponent implements OnDestroy {
     } else {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        
         if (e.accion === 'cont') {
           this.wizardComponent.siguiente();
         } else {
