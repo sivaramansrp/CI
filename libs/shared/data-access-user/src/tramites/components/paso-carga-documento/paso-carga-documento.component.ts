@@ -8,6 +8,7 @@ import { CargaDocumentoComponent } from '../carga-documento/carga-documento.comp
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
+import { TEXTOS } from '../../../core/enums/constantes-alertas.enum';
 import { TituloComponent } from '../../components/titulo/titulo.component';
 import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
 /**
@@ -27,6 +28,11 @@ import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
 })
 export class PasoCargaDocumentoComponent implements OnInit, OnDestroy, OnChanges {
   @Input() idSolicitud: number | null = null;
+
+  /**
+  * Constantes de textos utilizados en el componente.
+  */
+  TEXTOSINTRUCCIONES = TEXTOS;
   
   /**
    * Obtener el valor de la instrucción e inicializar la variable

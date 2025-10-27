@@ -1,7 +1,11 @@
 <div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
 
-  <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+  @if (this.idSolicitud) {
+    <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+  }@else {
+    <ng-alert [CONTENIDO]="TEXTOSINTRUCCIONES.INSTRUCCIONES"></ng-alert>
+  }
 
   <carga-documento
       [idTipoTRamite]="idTipoTRamite"
