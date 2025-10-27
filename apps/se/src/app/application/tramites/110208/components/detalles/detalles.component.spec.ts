@@ -139,9 +139,29 @@ describe('DetallesComponent', () => {
       numeroFiscal: '',
       razonSocial: '',
       observaciones: '',
-      idioma: '',
+      idioma: [],
       entidadFederativaCertificado: '',
-      representacionFederal: ''
+      representacionFederal: '',
+      id: null,
+      idSolicitud: null,
+      formDatosCertificado: {},
+      entidadFederativaDatos: [],
+      representacionFederalDatos: [],
+      idiomaDatos: [],
+      representacionFederalSeleccion: {id: 1, descripcion: 'Representación 1'},
+      formaValida: {},
+      disponiblesDatos: [],
+      mercanciaTabla: [],
+      formCertificado: {},
+      estado:  {id: 1, descripcion: 'Representación 1'},
+      mercanciaForm: {},
+      formDatosDelDestinatario: {},
+      formDestinatario: {},
+      destinatarioForm: {},
+      paisDestin: [],
+      paisDestinSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporteSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporte: []
     };
     mockQuery.selectSolicitud$ = of(newState);
 
@@ -244,9 +264,29 @@ describe('DetallesComponent', () => {
       numeroFiscal: '',
       razonSocial: '',
       observaciones: '',
-      idioma: '',
+      idioma: [],
       entidadFederativaCertificado: '',
-      representacionFederal: ''
+      representacionFederal: '',
+      id: null,
+      idSolicitud: null,
+      formDatosCertificado: {},
+      entidadFederativaDatos: [],
+      representacionFederalDatos: [],
+      idiomaDatos: [],
+      representacionFederalSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      formaValida: {},
+      disponiblesDatos: [],
+      mercanciaTabla: [],
+      formCertificado: {},
+      estado:  {id: 1, descripcion: 'Representación 1'},
+      mercanciaForm: {},
+      formDatosDelDestinatario: {},
+      formDestinatario: {},
+      destinatarioForm: {},
+      paisDestin: [],
+      paisDestinSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporteSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporte: []
     };
 
     mockQuery.selectSolicitud$ = of(newState);

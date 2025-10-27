@@ -212,8 +212,6 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
     * La llamada al servicio actualmente está comentada.
     */
      guardar(data: Solicitud110208State): Promise<JSONResponse> {
-      console.log(data,'data');
-      
      const CERTIFICADO = this.solocitud110208Service.buildCertificado(data);
       const DATOS_CERTIFICADO = this.solocitud110208Service.buildDatosCertificado(data);   
       const DESTINATARIO = this.solocitud110208Service.buildDestinatario(data);

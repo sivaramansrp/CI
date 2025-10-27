@@ -18,6 +18,7 @@ import {
   Tramite110208Store,
 } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { BuscarMercanciasResponse } from '../../constants/validacion-posteriori.enum';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
@@ -143,7 +144,7 @@ export class CertificadoOrigenComponent
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
-  public idProcedimiento = 110204;
+  public idProcedimiento = 110208;
 
   /**
    * Configuración de las columnas de la tabla de carga de mercancías.
@@ -251,31 +252,32 @@ export class CertificadoOrigenComponent
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] || "ARG" },
     };
 
-    this.solicitudService
-      .buscarMercanciasCert(PAYLOAD)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: any) => {
-          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map((item: any) => ({
-            id: item.idMercancia,
-            fraccionArancelaria: item.fraccionArancelaria || '',
-            numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
-            fechaExpedicion: item.fechaExpedicion || '',
-            fechaVencimiento: item.fechaVencimiento || '',
-            nombreTecnico: item.nombreTecnico || '',
-            nombreComercial: item.nombreComercial || '',
-            criterioParaConferirOrigen: item.fraccionArancelaria || '',
-            valorDeContenidoRegional: item.fraccionArancelaria || '',
-            normaOrigen: item.fraccionArancelaria || '',
-            nombreIngles: item.nombreIngles || '',
-
-          }));
-          this.disponiblesDatos = MAPPED_DATA;
-
-          this.store.setDisponsiblesDatos(MAPPED_DATA);
+ this.solicitudService
+   .buscarMercanciasCert(PAYLOAD)
+   .pipe(takeUntil(this.destroyNotifier$))
+   .subscribe({
+     next: (res) => {
+       const RESPONSE = res as unknown as BuscarMercanciasResponse;
+ 
+       const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
+         id: item.idMercancia,
+         fraccionArancelaria: item.fraccionArancelaria || '',
+         numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+         fechaExpedicion: item.fechaExpedicion || '',
+         fechaVencimiento: item.fechaVencimiento || '',
+         nombreTecnico: item.nombreTecnico || '',
+         nombreComercial: item.nombreComercial || '',
+         criterioParaConferirOrigen: item.criterioOrigen || '',
+         valorDeContenidoRegional: item.valorContenidoRegional || '',
+         normaOrigen: item.normaOrigen || '',
+         nombreIngles: item.nombreIngles || '',
+       }));
+ 
+       this.disponiblesDatos = MAPPED_DATA;
+       this.store.setDisponsiblesDatos(MAPPED_DATA);
      },
-      });
-  }
+   });
+   }
   /**
    * @descripcion
    * Actualiza el almacén con el estado seleccionado.
