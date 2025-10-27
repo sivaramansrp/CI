@@ -295,6 +295,13 @@ export class Anexo1Component implements OnInit, OnDestroy {
   espectaculoAlerta: boolean = false;
 
   /**
+   * @property {boolean} eliminarPermisoImmexConfirmacion
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar un permiso IMMEX seleccionado.
+   */
+  eliminarPermisoImmexConfirmacion: boolean = false;
+
+  /**
    * @property {FilaPlantas[]} listSelectedView
    * @description
    * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
@@ -660,7 +667,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
 obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
     this.espectaculoAlerta = true;
-    this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe introducir un número de permiso IMMEX válido.');
+    this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Tiene que introducir el permiso immex.');
     return;
   }
 
@@ -697,10 +704,21 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
               // this.immexTableDatos = IMMEX_RESPONSE;
               this.immexTableDatos = API_DATOS.datos.datosConsultaProgramaDtos;
               totalRecords += API_DATOS.datos.datosConsultaProgramaDtos.length;
+              this.immexTableDatos = this.immexTableDatos.map((item: PermisoImmexGridDatos, index: number) => ({
+                ...item,
+                consecutivo: index + 1
+              }));
             }
 
             if (esValidArray(API_DATOS.datos.productoExportacionDtoList)) {
               this.fraccionTablaDatos = API_DATOS.datos.productoExportacionDtoList;
+              this.fraccionTablaDatos = this.fraccionTablaDatos.map((item: FraccionInfo, index: number) => ({
+                ...item,
+                fraccionArancelaria: {
+                  ...item.fraccionArancelaria,
+                  consecutivo: index + 1
+                }
+              }));
               totalRecords += API_DATOS.datos.productoExportacionDtoList.length;
             }
 
@@ -871,10 +889,17 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
                   ...API_DATOS.datos
                 }
               }
+              this.fraccionTablaDatos.push(DATOS as FraccionInfo);
+              this.fraccionTablaDatos = this.fraccionTablaDatos.map((item: FraccionInfo, index: number) => ({
+                ...item,
+                fraccionArancelaria: {
+                  ...item.fraccionArancelaria,
+                  consecutivo: index + 1
+                }
+              }));
               this.immexRegistroStore.establecerDatos({
                 fraccionTablaDatos: [
-                  ...this.fraccionTablaDatos,
-                  DATOS
+                  ...this.fraccionTablaDatos
                 ]
               })
             }
@@ -1039,24 +1064,29 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    * Actualiza el estado en el store tras la eliminación.
    */
   eliminarPermisoImmex(): void {
-    this.eliminarPlantasAlerta = true;
+    this.espectaculoAlerta = true;
     if (!this.listaFilaSeleccionada) {
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un permiso immex.');
     } else if (this.listaFilaSeleccionada) {
-      this.eliminarPlantasConfirmacion = true;
+      this.eliminarPermisoImmexConfirmacion = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
     }
-    if (this.listaFilaSeleccionada) {
-      const SELECTED_IDS = new Set(
-        [this.listaFilaSeleccionada].map((item) => item.consecutivo)
-      );
-      this.immexTableDatos = this.immexTableDatos.filter(
-        (item) => !SELECTED_IDS.has(item.consecutivo)
-      );
-      this.listaFilaSeleccionada = null;
-      this.immexRegistroStore.establecerDatos({
-        immexTableDatos: this.immexTableDatos,
-      });
+  }
+
+  eliminarPermisoImmexDatos(event: boolean): void {
+    if (event === true) {
+      if (this.listaFilaSeleccionada) {
+        const SELECTED_IDS = new Set(
+          [this.listaFilaSeleccionada].map((item) => item.consecutivo)
+        );
+        this.immexTableDatos = this.immexTableDatos.filter(
+          (item) => !SELECTED_IDS.has(item.consecutivo)
+        );
+        this.listaFilaSeleccionada = null;
+        this.immexRegistroStore.establecerDatos({
+          immexTableDatos: this.immexTableDatos,
+        });
+      }
     }
   }
 
@@ -1128,6 +1158,13 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
       this.mercanciaImportacionForm.markAllAsTouched();
       
     }
+  }
+
+  /**
+   * Cierra el modal de confirmación.
+   */
+  cerrarModal(): void {
+    this.espectaculoAlerta = false;
   }
 
   /**
