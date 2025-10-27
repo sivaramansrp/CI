@@ -158,7 +158,7 @@ esMostrarAlerta: boolean = false;
         if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if(this.esFormaValido===false){
+      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
         this.mostrarAlerta=true;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
