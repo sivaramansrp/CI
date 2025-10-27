@@ -3,7 +3,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { HistoricoColumnas } from '../models/certificado-origen.model';
+import { GrupoRepresentativo, HistoricoColumnas } from '../models/certificado-origen.model';
 
 
 /**
@@ -81,6 +81,31 @@ export interface TramiteState {
    * Contiene campos como observaciones, idioma, entidad federativa y representación federal.
    */
   formDatosCertificado: { [key: string]: unknown};
+
+  /**
+   * @property {Object} formDatosDelDestinatario - Datos del destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como nombres, apellidos, número de registro fiscal y razón social.
+   */
+  formDatosDelDestinatario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} formDestinatario - Datos del formulario de destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como país, ciudad, número de teléfono, fax y correo electrónico.
+   */
+  formDestinatario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} formExportor - Datos del exportador.
+   * @description
+   * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  formExportor: { [key: string]: unknown };
+
+  /** Régimen de la mercancía. */
+  grupoRepresentativo: GrupoRepresentativo;
+
   /**
    * Objeto que contiene datos del formulario de mercancía.
    * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
@@ -214,6 +239,43 @@ export const INITIAL_STATE: TramiteState = {
     optionsTipoFactura: [],
   productoresExportador: [],
   agregarProductoresExportador: [],
+  formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
+  formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      celle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  formExportor: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  grupoRepresentativo: {
+      lugar: '',
+      nombre: '',
+      empresa: '',
+      cargo: '',
+      registroFiscal: '',
+      telefono: '',
+      fax: '',
+      correo: '',
+    },
 };
 
 /**
@@ -599,5 +661,47 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
         ],
       }));
     }
+
+    /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de exportador en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de exportador.
+   */
+  setFormExportador(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
 
 }

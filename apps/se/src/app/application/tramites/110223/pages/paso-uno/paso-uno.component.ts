@@ -5,9 +5,10 @@ import { CertificadoOrigenComponent } from "../../components/certificado-origen/
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
 import { DatosCertificadoComponent } from "../../components/datos-certificado/datos_certificado.component";
-import { DestinatarioComponent } from "../../components/destinatario/destinatario.component";
+// import { DestinatarioComponent } from "../../components/destinatario/destinatario.component";
 import { HistoricoProductoressComponent } from "../../components/historico-productores/historico-productores.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { DestinatarioDeCertificadoComponent } from "../../components/destinatario-de-certificado/destinatario-de-certificado.component";
 
 
 /**
@@ -26,7 +27,8 @@ import { ReactiveFormsModule } from "@angular/forms";
     DatosCertificadoComponent,
     ReactiveFormsModule,
     CommonModule,
-    DestinatarioComponent
+    // DestinatarioComponent
+    DestinatarioDeCertificadoComponent
   ]
 })
 export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -97,7 +99,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
    * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
    */
-  @ViewChild('Destinatario') destinatario!: DestinatarioComponent;
+  @ViewChild('Destinatario') destinatario!: DestinatarioDeCertificadoComponent;
 
   /**
    * Constructor con inyección de dependencias para servicios de detección de cambios,
@@ -203,13 +205,20 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
       isValid = false;
     }
     if(this.destinatario){
-       if (!this.destinatario.validatorCheck()) {
+      //  if (!this.destinatario.validatorCheck()) {
         isValid = false;
-      }
+      // }
     } else {
       isValid = false;
     }
     return isValid;
+  }
+
+  /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.destinatario?.validateAllForms() ?? true;
   }
 
   /**
