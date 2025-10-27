@@ -1,14 +1,18 @@
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, REGEX_NUMEROS, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild ,Input} from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
 import { CSV_DE_TABLA, ELGIR_DE_ARCHIVO, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
 import { DatosDelCsvArchivo, GridContenedores } from '../../models/datos-tramite.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil ,tap } from 'rxjs';
 import { Contenedor11202Query } from '../../estados/contenedor11202.query';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Modal } from 'bootstrap';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
+import {
+    SolicitanteService
+} from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+
 
 /**
  * @component ContenedorComponent
@@ -210,12 +214,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   archivoNoCsv: boolean = false;
 
+  @Input() RFC: string = 'LEQI8101314S7';
+
+  rfc_original: string = "";
+
+
+
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
     private contenedorStore: Contenedor11202Store,
     private contenedorQuery: Contenedor11202Query,
     private consultaioQuery: ConsultaioQuery,
+    private solicitanteServicio: SolicitanteService
+
   ) { 
     this.contenedore = {
       catalogos: [],
@@ -254,6 +266,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.crearFormSolicitud();
     this.cargarCatalogContenedores();
     this.loadDatosTablaData();
+    this.getDatosGenerales(this.RFC);
   }
 
   /**
@@ -263,8 +276,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getAduanas()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: Catalogo[]): void => {
-        this.options = data as Catalogo[];
+      .subscribe((response): void => {
+        this.options = response.datos;
+
       });
   }
 
@@ -275,8 +289,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getContenedores()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.contenedore.catalogos = data;
+      .subscribe((response) => {
+        this.contenedore.catalogos = response.datos;
       });
   }
 
@@ -334,6 +348,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarBotonesBuscar = false;
   }
 
+  getDatosGenerales(RFC: string): void {
+        this.solicitanteServicio
+            .getDatosGeneralesAPI(RFC)
+            .pipe(
+                tap((response: any) => {
+                    if (response) {
+                        this.rfc_original = response.datos.rfc_original
+                    }
+                })
+            )
+            .subscribe();
+    }
+
   /**
    * Agrega un nuevo contenedor al grid.
    */
@@ -343,10 +370,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
     const TIPOCONTENEDOR = this.solicitudForm.value.datosContenedor.tipoContenedor;
     const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
+    const CONTENEDOR_DATA = {
+      rfc: this.rfc_original,
+      aduana: ADUANA,
+      iniciales_contenedor: INICIALESCONTENEDOR,
+      numero_contenedor: NUMEROCONTENEDOR,
+      digito_verificador: this.solicitudForm.value.datosContenedor.digitoDeControl || '',
+      tipo_contenedor: TIPOCONTENEDOR,
+    };
+    console.log('Agregar contenedor con los siguientes datos:', CONTENEDOR_DATA);
     if ( INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && TIPOCONTENEDOR ) {
-      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      this.datosTramiteService.agregarSolicitud(CONTENEDOR_DATA).pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
-          if (respuesta?.success) {
+          if (respuesta?.codigo === '00') {
             respuesta.datos.id = this.contenedores.length + 1;
             this.contenedores = [...this.contenedores, respuesta.datos];
             (this.contenedorStore.setContenedores as (valor: GridContenedores[]) => void)(this.contenedores);
@@ -374,23 +410,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
     const isCsv = FILE.type === 'text/csv' || FILE.name.toLowerCase().endsWith('.csv');
     if (isCsv) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
-        this.showArchivoSeleccionadoTable = true;
-      };
-      READER.readAsText(FILE);
-    
-      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-        (respuesta) => {
-          if (respuesta?.success) {
-            respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
-            this.datosDelCsvArchivo = [...this.datosDelCsvArchivo, respuesta.datos];
-            (this.contenedorStore.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
-          }
-        }
-      );
+      const formData = new FormData();
+            formData.append('archivo', FILE);
+            formData.append('rfc', this.rfc_original);
+            formData.append('aduana', this.solicitudForm.value.datosGenerales.aduana);
+            // formData.append('fingreso', convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
+
+            this.datosTramiteService
+                .validarArchivoCsv(formData)
+                .pipe(takeUntil(this.destroyNotifier$))
+                .subscribe((respuesta) => {
+                    if (respuesta?.codigo === '00') {
+                      this.datosDelCsvArchivo = respuesta.datos.contenedores;
+                    }
+                });
     } else {
       this.archivoDescripcion = true;
     }
@@ -548,8 +581,47 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Este método emite un evento para continuar con el proceso.
    */
   continuar(): void {
-    this.continuarEvento.emit('');
+    this.solicitudGuardar();
   }
+
+  solicitudGuardar(): void {
+      const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
+      let contenedores: any[] = [];
+
+    if (TIPO_BUSQUEDA === 'Contenedor') {
+      contenedores = this.contenedores;
+    } else if (TIPO_BUSQUEDA === 'Archivo CSV') {
+      contenedores = this.datosDelCsvArchivo;
+    } 
+
+        const PAYLOAD = {
+            "id_solcitud": this.contenedorState.idSolicitud || null,
+            "solicitante": {
+                "rfc": this.rfc_original,
+                "nombre": "Juan Pérez",
+                "es_persona_moral": true,
+                "certificado_serial_number": "string"
+            },
+            "contenedores": contenedores,
+        }
+        this.datosTramiteService
+            .solicitudGuardar(PAYLOAD)
+            .pipe(takeUntil(this.destroyNotifier$)
+
+            )
+            .subscribe(
+                (respuesta) => {
+                    // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
+                    if (respuesta?.codigo === '00') {
+                      this.contenedorStore.setIdSolicitud(respuesta.datos.id_solicitud);
+                        //this.tramite11201Store.setIdSolicitud(respuesta.datos.id_solicitud);
+                        this.continuarEvento.emit('');
+
+                    }
+                }
+            );
+    }
+
 
   /**
    * cancelar del formulario.
