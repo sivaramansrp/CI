@@ -342,7 +342,7 @@ export const USUARIO_INFO = {
         </div>
         <div class="d-flex align-items-center">
             <p class="mb-0 error-detail">
-                (Debe seleccionar plantas submanufactureras) es un campo requerido
+                (Debe seleccionar plantas submanufatureras) es un campo requerido
             </p>
         </div>
     </div>

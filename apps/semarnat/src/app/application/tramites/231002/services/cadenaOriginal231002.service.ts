@@ -1,18 +1,18 @@
+import {
+  ENVIRONMENT,
+} from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { API_POST_CADENA_ORIGINAL } from './../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { CadenaOriginalRequest } from '../models/cadena-original-request';
-import {
-  ENVIRONMENT
-} from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TRAMITE_ID } from '../enum/constants';
+import { TRAMITE_ID } from './../constantes/aviso-retorno.enum';
+import { API_POST_CADENA_ORIGINAL } from '../../../core/server/api-router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CadenaOriginal230301Service {
+export class CadenaOriginal231002Service {
   /**
    * URL del servidor donde se encuentra la API.
    */
@@ -21,7 +21,7 @@ export class CadenaOriginal230301Service {
   constructor(private http: HttpClient) {}
 
   /**
-   * Obtiene la cadena original del trámite 230301.
+   * Obtiene la cadena original del trámite 130118.
    * @param body Objeto que contiene los datos necesarios para generar la cadena original.
    * @returns Un observable que emite la respuesta del servidor con la cadena original.
    */

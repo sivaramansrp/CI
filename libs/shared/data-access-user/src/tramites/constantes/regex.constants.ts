@@ -1263,3 +1263,10 @@ export const REGEX_NICO = /[^0-9]/g;
  * Utilizada para validación de entrada de teclas en campos numéricos.
  */
 export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
+
+/**
+ * Expresión regular para reemplazar la parte decimal de un número.
+ * Coincide con el punto seguido de uno o más dígitos al final de la cadena.
+ * Ejemplo: "123.45" => ".45"
+ */
+export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;

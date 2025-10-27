@@ -9,8 +9,7 @@ import {
   CVE_PARTIDA_FRACCION,
   CVE_SUBPARTIDA_FRACCION,
   GET_ADUANAS,
-  RFC,
-  TRAMITE,
+  RFC
 } from '../../../constantes/231001/api-constants';
 
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';

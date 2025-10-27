@@ -11,7 +11,7 @@
  * @author Sistema VUCEM
  */
 
-import { AGREGAR_PRODUCTOR, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
+import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -549,6 +549,16 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+   /*
+   * Obtiene el catálogo de unidades de masa bruta correspondiente al trámite proporcionado.
+   * @param {string} tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor que contiene el catálogo de unidades de masa bruta.
+   */
+  unidadDeMasaBrutaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_UNIDAD_DE_MASA_BRUTA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
   /**
    * Obtiene el catálogo de tratados y acuerdos internacionales aplicables a un país específico.
    * @param tramite - El ID del trámite.
@@ -573,4 +583,34 @@ export class CatalogoServices {
       const ENDPOINT = `${this.host}${CATALOGO_PAIS_BLOQUE_CLAVE(tramite, clave)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+/**
+ * Obtiene los datos del catálogo de tratados o acuerdos para un trámite específico.
+ * Recibe como parámetros el tipo de trámite y el ID del tipo de tratado/acuerdo.
+ * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+ */
+  tratadosAcuerdosCatalogoDatosNew(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite, ideTipoTratadoAcuerdo)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+ * Obtiene la lista de países asociados a un tratado específico para un trámite determinado.
+ * Recibe como parámetros el tipo de trámite y el ID del tratado.
+ * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+ */
+getPaisesPorTratado(tramite: string, tratadoId: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS(tramite, tratadoId)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * Obtiene los tratados o acuerdos asociados a un país específico para un trámite determinado.
+ * Recibe como parámetros el tipo de trámite y la clave del país.
+ * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+ */
+getTratadosAcuerdosPorPais(tramite: string, cvePais: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS_PAIS(tramite, cvePais)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }
