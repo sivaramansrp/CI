@@ -123,13 +123,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
     { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificado, orden: 4 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccionArancelaria, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
     {encabezado:'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8},
     { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.medidadetarifa, orden: 10 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
     { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
     { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
     { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
@@ -370,8 +370,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     .subscribe({
       next: ([transporte, arancelaria, umc, umt, uso]) => {
       this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+
       this.cuerpoTablaFila = datos.mercanciaGroup;
+
       this.datosMercanciaStore = datos.realizarGroup;
+
       if(this.datosMercanciaFormGroup) {
           this.datosMercanciaFormGroup.patchValue({
             realizarGroup: this.datosMercanciaStore

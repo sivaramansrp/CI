@@ -151,8 +151,8 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.getCatalogoUsosMercancia();
     this.getcatalogosDatospaisOrigenLista()
 
-    this.obtenerCatalogosTransporte();
-    this.obtenerUMCCatalogosTransporte();
+    // this.obtenerCatalogosTransporte();
+    // this.obtenerUMCCatalogosTransporte();
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
       this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as Fila;
     })
@@ -208,8 +208,8 @@ export class MercanciaSolicitudComponent implements OnInit {
   * @method getNicoFraccionArancelariaLista
   * @returns {void}
   */
-  getNicoFraccionArancelariaLista(): void {
-    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value)
+  getNicoFraccionArancelariaLista(fraccionArancelaria: string): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220203, fraccionArancelaria)
       .pipe(
         takeUntil(this.DESTROY_NOTIFIER$)
       ).subscribe(
@@ -381,7 +381,7 @@ export class MercanciaSolicitudComponent implements OnInit {
             this.mercanciaGroup.patchValue({
               descripcionFraccionArancelaria: data.datos?.descripcion ?? 'Sin descripción'
             });
-            this.getNicoFraccionArancelariaLista();
+            this.getNicoFraccionArancelariaLista(this.mercanciaGroup.get('fraccionArancelaria')?.value);
             this.getUnidadMedida();
           }
         );      
@@ -444,6 +444,9 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {FormGroup} El grupo de formularios construido con validaciones
    */
   private buildMercanciaFormGroup(MERCANCIA_DATA: Fila): FormGroup {
+    if (MERCANCIA_DATA.fraccionArancelaria !== undefined && MERCANCIA_DATA.fraccionArancelaria !== '') {
+      this.getNicoFraccionArancelariaLista(MERCANCIA_DATA.fraccionArancelaria);
+    }
     return this.fb.group({
       tipoRequisito: [MERCANCIA_DATA.tipoRequisito || '', Validators.required],
       requisito: [MERCANCIA_DATA.requisito || '', Validators.required],
