@@ -221,8 +221,7 @@ export class CamCertificadoComponent {
      * La llamada al servicio actualmente está comentada.
      */
     guardar(item: CamState): Promise<JSONResponse> {
-      const MERCANCIA_SELECCIONADAS =
-        this.camCertificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+      const MERCANCIA_SELECCIONADAS = this.camCertificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
       const PAYLOAD = {
         rfc_solicitante: 'AAL0409235E6',
         solicitante: {

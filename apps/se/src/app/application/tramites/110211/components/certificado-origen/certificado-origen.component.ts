@@ -1,6 +1,22 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  CamState,
+  camCertificadoStore,
+} from '../../estados/cam-certificado.store';
+import {
+  Catalogo,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+} from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
@@ -11,18 +27,19 @@ import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 /**
  * @description
  * Componente para la gestión de Certificados de Origen en el módulo CAM.
- * 
+ *
  * Este componente es responsable de:
  * - Gestionar el formulario de certificado de origen
  * - Manejar la interacción con servicios y estados
  * - Administrar la selección de estados y países
  * - Controlar la visualización y modificación de mercancías
- * 
+ *
  * @usageNotes
  * ### Ejemplo de uso
  * ```html
@@ -30,7 +47,7 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
  *   [esFormularioSoloLectura]="false">
  * </app-certificado-origen>
  * ```
- * 
+ *
  * @publicApi
  * @module CertificadosOrigin
  * @version 1.0.0
@@ -40,21 +57,27 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,CertificadoDeOrigenComponent,
-    MercanciaComponent]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CertificadoDeOrigenComponent,
+    MercanciaComponent,
+  ],
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CertificadoOrigenComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   /**
    * @description
    * Lista de estados disponibles para selección.
-   * 
+   *
    * Esta propiedad almacena el catálogo de estados que se cargan desde el servicio
    * `CamCertificadoService`. Se utiliza para poblar los selectores de estados en el
    * formulario.
-   * 
+   *
    * @type {Catalogo[]}
    * @default []
-   * 
+   *
    * @example
    * ```typescript
    * // Estructura de un elemento del catálogo
@@ -70,10 +93,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Catálogo de países disponibles para selección en el formulario.
-   * 
+   *
    * @property {Catalogo[]} pais
    * @memberof CertificadoOrigenComponent
-   * 
+   *
    * @example
    * ```typescript
    * // Estructura del catálogo de países
@@ -107,7 +130,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   mercanciasDisponibles: boolean = true;
 
-   /**
+  /**
    * @descripcion
    * Indica si el campo de mercancías está activo.
    */
@@ -134,14 +157,14 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Indicador del estado del operador.
-   * 
-   * Esta bandera controla si el operador del certificado está activo 
+   *
+   * Esta bandera controla si el operador del certificado está activo
    * y puede realizar operaciones en el sistema.
-   * 
+   *
    * @property {boolean} operador
    * @memberof CertificadoOrigenComponent
    * @default true
-   * 
+   *
    * @example
    * ```typescript
    * if (this.operador) {
@@ -156,13 +179,13 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Almacena los datos de la mercancía seleccionada para su modificación.
-   * 
+   *
    * Esta propiedad se utiliza cuando el usuario selecciona una mercancía
    * de la tabla para editarla en el modal de modificación.
-   * 
+   *
    * @property {Mercancia} datosSeleccionados
    * @memberof CertificadoOrigenComponent
-   * 
+   *
    * @example
    * ```typescript
    * // Al seleccionar una mercancía
@@ -175,18 +198,18 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Instancia del modal de Bootstrap utilizado para modificar datos.
-   * 
+   *
    * Esta propiedad mantiene la referencia al modal de Bootstrap que se utiliza
    * para mostrar y ocultar el formulario de modificación de mercancías.
-   * 
+   *
    * @property {Modal} modalInstance
    * @memberof CertificadoOrigenComponent
-   * 
+   *
    * @example
    * ```typescript
    * // Inicialización del modal
    * this.modalInstance = new Modal(this.modifyModal.nativeElement);
-   * 
+   *
    * // Mostrar modal
    * this.modalInstance.show();
    * ```
@@ -196,15 +219,15 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Indicador de selección de fila en la tabla.
-   * 
+   *
    * Esta bandera se utiliza para controlar el estado de selección
    * en la tabla de mercancías. Se activa cuando el usuario selecciona
    * una fila y se reinicia al cerrar el modal.
-   * 
+   *
    * @property {boolean} tablaSeleccionEvent
    * @memberof CertificadoOrigenComponent
    * @default false
-   * 
+   *
    * @example
    * ```typescript
    * // Al cerrar el modal
@@ -219,38 +242,38 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Objeto que almacena los valores actuales del formulario de certificado.
-   * 
+   *
    * Esta propiedad mantiene sincronizados los valores del formulario con el estado
    * de la aplicación, permitiendo acceder a los datos en cualquier momento.
-   * 
+   *
    * @property {Object} formCertificadoValues
    * @memberof CertificadoOrigenComponent
    * @type {{ [key: string]: unknown }}
-   * 
+   *
    * @example
    * ```typescript
    * // Suscripción a cambios en el formulario
    * this.query.formCertificado$.subscribe(estado => {
    *   this.formCertificadoValues = estado;
    * });
-   * 
+   *
    * // Acceso a valores específicos
    * const valor = this.formCertificadoValues['campoCertificado'];
    * ```
    */
-  formCertificadoValues!: { [key: string]: unknown};
+  formCertificadoValues!: { [key: string]: unknown };
 
   /**
    * @description
    * Estado actual del certificado en el módulo CAM.
-   * 
+   *
    * Esta propiedad privada mantiene el estado actual del certificado,
    * incluyendo toda la información necesaria para su gestión y validación.
-   * 
+   *
    * @property {CamState} certificadoState
    * @private
    * @memberof CertificadoOrigenComponent
-   * 
+   *
    * @example
    * ```typescript
    * // Actualización del estado
@@ -267,22 +290,22 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Subject utilizado para gestionar la limpieza de suscripciones.
-   * 
+   *
    * Este Subject se utiliza en conjunto con el operador takeUntil para
    * cancelar todas las suscripciones cuando el componente se destruye,
    * evitando así fugas de memoria.
-   * 
+   *
    * @property {Subject<void>} destroyNotifier$
    * @private
    * @memberof CertificadoOrigenComponent
-   * 
+   *
    * @example
    * ```typescript
    * // Uso en suscripciones
    * observable$.pipe(
    *   takeUntil(this.destroyNotifier$)
    * ).subscribe();
-   * 
+   *
    * // Limpieza en ngOnDestroy
    * ngOnDestroy(): void {
    *   this.destroyNotifier$.next();
@@ -295,15 +318,15 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Estado actual de la sección del formulario.
-   * 
+   *
    * Mantiene el estado de la sección actual, incluyendo información
    * sobre permisos, validaciones y configuración específica de la
    * sección del certificado.
-   * 
+   *
    * @property {SeccionLibState} seccionState
    * @private
    * @memberof CertificadoOrigenComponent
-   * 
+   *
    * @example
    * ```typescript
    * // Suscripción al estado de la sección
@@ -320,22 +343,22 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   /**
    * @description
    * Referencia al elemento del modal de modificación.
-   * 
+   *
    * Esta referencia se utiliza para gestionar el modal de modificación de datos.
    * El modal se inicializa como una instancia de Bootstrap Modal en el ciclo de vida
    * `ngAfterViewInit`.
-   * 
+   *
    * @type {ElementRef}
    * @memberof CertificadoOrigenComponent
    * @viewChild
-   * 
+   *
    * @example
    * ```typescript
    * // En el template
    * <div #modifyModal class="modal fade">
    *   <!-- Contenido del modal -->
    * </div>
-   * 
+   *
    * // En el componente
    * if (this.modifyModal) {
    *   this.modalInstance = new Modal(this.modifyModal.nativeElement);
@@ -348,14 +371,14 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @description
    * Referencia al componente de certificado de origen.
    */
-  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+  @ViewChild('certificadoDeOrigenRef')
+  certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
 
   /**
    * @description
    * Referencia al componente de mercancías.
    */
   @ViewChild('mercanciaRef') mercanciaComponent!: MercanciaComponent;
-
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -366,7 +389,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @description
    * Esta propiedad controla si el formulario es solo de lectura (`true`) o editable (`false`).
    */
-  esFormularioSoloLectura:boolean = false;
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Configuración de las columnas de la tabla de carga de mercancías.
@@ -374,26 +397,27 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    *
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] =
+    CARGA_MERCANCIA_EXPORT;
 
   /**
    * @description
    * Constructor del componente CertificadoOrigen.
-   * 
+   *
    * Inicializa los siguientes servicios y dependencias:
    * - CamCertificadoService: Para obtener datos del certificado
    * - camCertificadoStore: Para gestionar el estado del formulario
    * - camCertificadoQuery: Para consultar el estado del formulario
    * - SeccionLibQuery: Para consultar el estado de la sección
    * - ConsultaioQuery: Para gestionar el estado de consulta
-   * 
+   *
    * @constructor
    * @param {CamCertificadoService} camCertificadoService - Servicio para datos del certificado
    * @param {camCertificadoStore} store - Store para el estado del formulario
    * @param {camCertificadoQuery} query - Query para consultar el estado
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección
    * @param {ConsultaioQuery} consultaioQuery - Query para el estado de consulta
-   * 
+   *
    * @example
    * ```typescript
    * constructor(
@@ -411,6 +435,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
+    private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
@@ -419,30 +444,29 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
-        this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-      })
-    )
-    .subscribe()
-    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
    * @description
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
-   * 
+   *
    * Este método realiza las siguientes tareas de inicialización:
    * 1. Suscribe a los cambios del estado de la sección
    * 2. Suscribe a los cambios del estado del certificado CAM
    * 3. Carga los catálogos de estados y países
    * 4. Inicializa el observable de datos de la tabla
-   * 
+   *
    * @lifecycle
    * @implements OnInit
-   * 
+   *
    * @example
    * ```typescript
    * ngOnInit(): void {
@@ -471,7 +495,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         map((state) => {
           this.certificadoState = state as CamState;
           this.datosTablaUno$ = state.disponiblesDatos;
-          this.datosTabla$ = state.mercanciaSeleccionadasTablaDatos;
+          this.datosTabla$ = state.mercanciaTabla;
         })
       )
       .subscribe();
@@ -479,34 +503,38 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.estadoOpcion();
     this.paisOpcion();
   }
-  
+
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de certificado.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStore(event: { formGroupName: string, campo: string, valor: string | number | boolean | object | null | undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-}
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de certificado.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: string | number | boolean | object | null | undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+  }
 
   /**
    * @descripcion
    * Obtiene la lista de estados disponibles.
    */
   estadoOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('estados.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.estado = data as Catalogo[];
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.estado = [];
-      },
-    });
+    this.camCertificadoService
+      .obtenerMenuDesplegable('estados.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.estado = data as Catalogo[];
+        },
+        error: (_error: HttpErrorResponse) => {
+          this.estado = [];
+        },
+      });
   }
 
   /**
@@ -514,18 +542,17 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
    * Obtiene la lista de países disponibles.
    */
   paisOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('pais.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.pais = data as Catalogo[];
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.pais = [];
-      },
-    });
+    this.camCertificadoService
+      .obtenerMenuDesplegable('pais.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.pais = data as Catalogo[];
+        },
+        error: (_error: HttpErrorResponse) => {
+          this.pais = [];
+        },
+      });
   }
 
   /**
@@ -533,20 +560,94 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {
+        idTratadoAcuerdo: this.certificadoState.estado.clave,
+        descripcion: this.certificadoState.estado.descripcion,
+      },
+      pais: {
+        cvePais: this.certificadoState.paisBloques[0].clave,
+        nombreAlterno: this.certificadoState.paisBloques[0].descripcion,
+      },
+      tipoConsulta: 'DISPONIBLES_UE',
+      vigentesUnicamente: true,
+      incluirCuposUE: true,
+    };
+
     this.camCertificadoService
-      .obtenerTablaDatos('disponibles-datos.json')
+      .buscarMercanciasCert(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-            this.store.setDisponsiblesDatos(this.disponiblesDatos);
-          } else {
-            this.disponiblesDatos = [];
+        next: (response) => {
+          interface TratadoAplicable {
+            nombreTratado?: string;
           }
+
+          interface ResponseItem {
+            idMercancia?: number | null;
+            fraccionArancelaria?: string;
+            numeroRegistro?: string;
+            numeroRegistroProducto?: string;
+            fechaExpedicion?: string;
+            fechaVencimiento?: string;
+            nombreTecnico?: string;
+            nombreComercial?: string;
+            fraccionNALADIClave?: string;
+            fraccionNALADSA93Clave?: string;
+            fraccionNALADISA96Clave?: string;
+            fraccionNALADISA02Clave?: string;
+            criterioOrigen?: string;
+            porcentajeContenidoRegional?: string;
+            tratadoAplicable?: TratadoAplicable;
+            unidadMedida?: string;
+          }
+
+          interface ResponseType {
+            datos?: ResponseItem[];
+          }
+
+          const MAPPED_DATA: Mercancia[] = (
+            (response as ResponseType)?.datos ?? []
+          ).map(
+            (item: ResponseItem): Mercancia => ({
+              id: item.idMercancia ?? undefined,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistro || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              fraccionNaladi: item.fraccionNALADIClave || '',
+              fraccionNaladiSa93: item.fraccionNALADSA93Clave || '',
+              fraccionNaladiSa96: item.fraccionNALADISA96Clave || '',
+              fraccionNaladiSa02: item.fraccionNALADISA02Clave || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.porcentajeContenidoRegional || '',
+              normaOrigen: item.tratadoAplicable?.nombreTratado || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: item.unidadMedida || '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              nombreIngles: '',
+              otrasInstancias: '',
+              criterioParaTratoPreferencial: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.store.setDisponsiblesDatos(MAPPED_DATA);
         },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
+        error: () => {
+          this.toastr.error('Error al buscar Mercancia');
         },
       });
   }
@@ -566,7 +667,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
    * @param e - Los datos del formulario a almacenar.
    */
   obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormCertificado(e as { [key: string]: string | number | boolean | object | undefined });
+    this.store.setFormCertificado(
+      e as { [key: string]: string | number | boolean | object | undefined }
+    );
   }
 
   /**
@@ -590,15 +693,18 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
   /**
    * Método para abrir el modal de modificación.
    */
-    abrirModificarModal(datos1: Mercancia, fromMercanciasDisponibles: boolean): void {
-      this.datosSeleccionados = datos1;
-       this.fromMercanciasDisponibles = fromMercanciasDisponibles;
-      this.store.setFormMercancia({ ...datos1 });
-        
-      if (this.modalInstance) {
-        this.modalInstance.show();
-      }      
+  abrirModificarModal(
+    datos1: Mercancia,
+    fromMercanciasDisponibles: boolean
+  ): void {
+    this.datosSeleccionados = datos1;
+    this.fromMercanciasDisponibles = fromMercanciasDisponibles;
+    this.store.setFormMercancia({ ...datos1 });
+
+    if (this.modalInstance) {
+      this.modalInstance.show();
     }
+  }
 
   /**
    * @descripcion
@@ -620,20 +726,20 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
-    if(this.esFormularioSoloLectura){
+    if (this.esFormularioSoloLectura) {
       this.conseguirDisponiblesDatos();
     }
   }
 
   /**
    * Emite los datos de una mercancía seleccionada o capturada y los almacena en el estado global.
-   * 
+   *
    * Este método envuelve el objeto de tipo `Mercancia` en un arreglo y lo envía al store
    * mediante el método `setMercanciaTabla`, para actualizar la lista de mercancías.
    *
    * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o modificada.
    */
-  emitmercaniasDatos(evento: Mercancia): void{
+  emitmercaniasDatos(evento: Mercancia): void {
     this.store.setMercanciaTabla([evento]);
   }
 
@@ -646,13 +752,13 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     this.store.setFormValida({ certificado: valida });
   }
 
-  validarFormularios():boolean{
+  validarFormularios(): boolean {
     let isFormInvalid = true;
-  if(!this.certificadoDeOrigenComponent.validarFormularios()){
-    isFormInvalid = false;
+    if (!this.certificadoDeOrigenComponent.validarFormularios()) {
+      isFormInvalid = false;
+    }
+    return isFormInvalid;
   }
-   return isFormInvalid;
-}
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

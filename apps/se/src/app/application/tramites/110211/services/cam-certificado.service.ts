@@ -166,9 +166,7 @@ export class CamCertificadoService {
   buscarMercanciasCert(
     body: Record<string, unknown>
   ): Observable<JSONResponse> {
-    return this.http.post<JSONResponse>(PROC_110211.BUSCAR, {
-      body: body,
-    });
+    return this.http.post<JSONResponse>(PROC_110211.BUSCAR, body);
   }
 
     /**
