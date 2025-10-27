@@ -75,7 +75,6 @@ describe('SolicitudPageComponent', () => {
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -83,8 +82,6 @@ describe('SolicitudPageComponent', () => {
     component.solocitud110208Service.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
     component.solocitud110208Service.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.solocitud110208Service.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
-    // expect(component.solocitud110208Service.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #getValorIndice()', async () => {
@@ -98,9 +95,6 @@ describe('SolicitudPageComponent', () => {
       accion: {},
       valor: {}
     });
-    // expect(component.validarTodosFormulariosPasoUno).toHaveBeenCalled();
-    // expect(component.obtenerDatosDelStore).toHaveBeenCalled();
-    // expect(component.pasoNavegarPor).toHaveBeenCalled();
   });
 
   it('should run #obtenerDatosDelStore()', async () => {
@@ -108,8 +102,6 @@ describe('SolicitudPageComponent', () => {
     component.solocitud110208Service.getAllState = jest.fn().mockReturnValue(observableOf({}));
     component.guardar = jest.fn();
     component.obtenerDatosDelStore();
-    // expect(component.solocitud110208Service.getAllState).toHaveBeenCalled();
-    // expect(component.guardar).toHaveBeenCalled();
   });
 
   it('should run #guardar()', async () => {
@@ -124,12 +116,6 @@ describe('SolicitudPageComponent', () => {
     component.tramite110208Store.setIdSolicitud = jest.fn();
     component.pasoNavegarPor = jest.fn();
     component.guardar({});
-    // expect(component.solocitud110208Service.buildCertificado).toHaveBeenCalled();
-    // expect(component.solocitud110208Service.buildDatosCertificado).toHaveBeenCalled();
-    // expect(component.solocitud110208Service.buildDestinatario).toHaveBeenCalled();
-    // expect(component.solocitud110208Service.guardarDatosPost).toHaveBeenCalled();
-    // expect(component.tramite110208Store.setIdSolicitud).toHaveBeenCalled();
-    // expect(component.pasoNavegarPor).toHaveBeenCalled();
   });
 
   it('should run #pasoNavegarPor()', async () => {
@@ -140,15 +126,12 @@ describe('SolicitudPageComponent', () => {
       valor: {},
       accion: {}
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('should run #validarTodosFormulariosPasoUno()', async () => {
     component.pasoUnoComponent = component.pasoUnoComponent || {};
     component.pasoUnoComponent.validateAll = jest.fn();
     component.validarTodosFormulariosPasoUno();
-    // expect(component.pasoUnoComponent.validateAll).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -156,8 +139,6 @@ describe('SolicitudPageComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

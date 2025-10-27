@@ -74,14 +74,12 @@ describe('CargaDeMercanciasComponent', () => {
     component.cargarArchivoInstance = component.cargarArchivoInstance || {};
     component.cargarArchivoInstance.show = jest.fn();
     component.cargarArchivo();
-    // expect(component.cargarArchivoInstance.show).toHaveBeenCalled();
   });
 
   it('should run #cerrar()', async () => {
     component.cargarArchivoInstance = component.cargarArchivoInstance || {};
     component.cargarArchivoInstance.hide = jest.fn();
     component.cerrar();
-    // expect(component.cargarArchivoInstance.hide).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
@@ -90,10 +88,6 @@ describe('CargaDeMercanciasComponent', () => {
     component.obtenerEstadoList = jest.fn();
     component.obtenerFormDatos = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    // expect(component.obtenerTablaDatos).toHaveBeenCalled();
-    // expect(component.obtenerEstadoList).toHaveBeenCalled();
-    // expect(component.obtenerFormDatos).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
@@ -114,8 +108,6 @@ describe('CargaDeMercanciasComponent', () => {
       controls: {}
     });
     component.inicializarEstadoFormulario();
-    // expect(component.solicitudState.disable).toHaveBeenCalled();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #obtenerTablaDatos()', async () => {
@@ -124,7 +116,6 @@ describe('CargaDeMercanciasComponent', () => {
       data: {}
     }));
     component.obtenerTablaDatos();
-    // expect(component.service.obtenerTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #obtenerFormDatos()', async () => {
@@ -143,8 +134,6 @@ describe('CargaDeMercanciasComponent', () => {
     component.formMercancia = component.formMercancia || {};
     component.formMercancia.patchValue = jest.fn();
     component.obtenerFormDatos();
-    // expect(component.service.obtenerFormDatos).toHaveBeenCalled();
-    // expect(component.formMercancia.patchValue).toHaveBeenCalled();
   });
 
 
@@ -164,7 +153,6 @@ describe('CargaDeMercanciasComponent', () => {
       data: {}
     }));
     component.obtenerEstadoList();
-    // expect(component.service.obtenerEstadoList).toHaveBeenCalled();
   });
 
 
@@ -173,7 +161,6 @@ describe('CargaDeMercanciasComponent', () => {
     component.validacionesService = component.validacionesService || {};
     component.validacionesService.isValid = jest.fn();
     component.esValido({});
-    // expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
 
 
@@ -184,7 +171,6 @@ describe('CargaDeMercanciasComponent', () => {
       value: {}
     });
     component.formatearACuatroDecimales({});
-    // expect(component.formMercancia.get).toHaveBeenCalled();
   });
 
   it('should run #buscarAgregar()', async () => {
@@ -209,8 +195,6 @@ describe('CargaDeMercanciasComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

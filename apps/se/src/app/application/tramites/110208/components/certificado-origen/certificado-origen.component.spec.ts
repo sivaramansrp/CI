@@ -98,15 +98,12 @@ describe('CertificadoOrigenComponent', () => {
     component.store = component.store || {};
     component.store.setDisponsiblesDatos = jest.fn();
     component.conseguirDisponiblesDatos();
-    // expect(component.solicitudService.buscarMercanciasCert).toHaveBeenCalled();
-    // expect(component.store.setDisponsiblesDatos).toHaveBeenCalled();
   });
 
   it('should run #tipoEstadoSeleccion()', async () => {
     component.store = component.store || {};
     component.store.setEstado = jest.fn();
     component.tipoEstadoSeleccion({});
-    // expect(component.store.setEstado).toHaveBeenCalled();
   });
 
   it('should run #tipoSeleccion()', async () => {
@@ -115,7 +112,6 @@ describe('CertificadoOrigenComponent', () => {
     component.tipoSeleccion({
       descripcion: {}
     });
-    // expect(component.store.setBloque).toHaveBeenCalled();
   });
 
   it('should run #abrirModificarModal()', async () => {
@@ -124,28 +120,23 @@ describe('CertificadoOrigenComponent', () => {
     component.modalInstance = component.modalInstance || {};
     component.modalInstance.show = jest.fn();
     component.abrirModificarModal({}, {});
-    // expect(component.store.setFormMercancia).toHaveBeenCalled();
-    // expect(component.modalInstance.show).toHaveBeenCalled();
   });
 
   it('should run #cerrarModificarModal()', async () => {
     component.modalInstance = component.modalInstance || {};
     component.modalInstance.hide = jest.fn();
     component.cerrarModificarModal();
-    // expect(component.modalInstance.hide).toHaveBeenCalled();
   });
 
   it('should run #emitmercaniasDatos()', async () => {
     component.store = component.store || {};
     component.store.setmercanciaTabla = jest.fn();
     component.emitmercaniasDatos({});
-    // expect(component.store.setmercanciaTabla).toHaveBeenCalled();
   });
   it('should run #setFormValida()', async () => {
     component.store = component.store || {};
     component.store.setFormValida = jest.fn();
     component.setFormValida({});
-    // expect(component.store.setFormValida).toHaveBeenCalled();
   });
 
   it('should run #guardarClicado()', async () => {
@@ -159,8 +150,6 @@ describe('CertificadoOrigenComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });
