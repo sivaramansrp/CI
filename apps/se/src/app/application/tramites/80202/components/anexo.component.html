@@ -120,7 +120,7 @@
                             <div class="col-12 mt-5">
                                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                                     <label for="fraccion-arancelaria-import">Cantidad anual*:</label>
-                                    <input type="text" class="form-control" id="fraccion-arancelaria-import" formControlName="cantidadAnual" placeholder="" />
+                                    <input type="text" class="form-control" id="fraccion-arancelaria-import" formControlName="cantidadAnual" placeholder="" maxlength="16" />
                                     <div *ngIf="importacionForm.get('cantidadAnual')?.touched">
                                         <small *ngIf="importacionForm.get('cantidadAnual')?.hasError('required')" class="text-danger">
         La cantidad anual es obligatoria.
@@ -131,8 +131,8 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                                    <label for="fraccion-arancelaria-import">Capacidad instalada por periodo#*:</label>
-                                    <input type="text" class="form-control" id="fraccion-arancelaria-import" formControlName="capacidadInstalada" placeholder="" />
+                                    <label for="fraccion-arancelaria-import">Cantidad por periodo*:</label>
+                                    <input type="text" class="form-control" id="fraccion-arancelaria-import" required="true" formControlName="capacidadInstalada" placeholder="" maxlength="16"/>
                                     <div *ngIf="importacionForm.get('capacidadInstalada')?.touched">
                                         <small *ngIf="importacionForm.get('capacidadInstalada')?.hasError('required')" class="text-danger">
         La capacidad instalada es obligatoria.
@@ -143,8 +143,8 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                                    <label for="fraccion-arancelaria-import">Cantidad por periodo #*:</label>
-                                    <input type="text" class="form-control" id="fraccion-arancelaria-import" formControlName="cantidadPorPeriodo" placeholder="" />
+                                    <label for="fraccion-arancelaria-import">Cantidad autorizada por periodo*:</label>
+                                    <input type="text" class="form-control" id="fraccion-arancelaria-import" required="true" formControlName="cantidadPorPeriodo" placeholder="" maxlength="16"/>
                                     <div *ngIf="importacionForm.get('cantidadPorPeriodo')?.touched">
                                         <small *ngIf="importacionForm.get('cantidadPorPeriodo')?.hasError('required')" class="text-danger">
         La cantidad por periodo es obligatoria.
@@ -156,7 +156,7 @@
                                 </div>
                                 @if(firstloadCompleted){
                                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                                    <app-catalogo-select [label]="'Nico *'" [catalogo]="nico" formControlName="nicos" [placeholder]="'Selecciona un valor'" name="Nico" [isDisabled]="esFormularioSoloLectura" (change)="descripcionNico()"></app-catalogo-select>
+                                    <app-catalogo-select [label]="'Nico*'" [catalogo]="nico" formControlName="nicos" [placeholder]="'Selecciona un valor'" name="Nico" [isDisabled]="esFormularioSoloLectura" (change)="descripcionNico()"></app-catalogo-select>
                                 </div>
                                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                                     <label for="description-nico">Descripción Nico:</label>

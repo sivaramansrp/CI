@@ -958,6 +958,8 @@ export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   */
 export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
 
+export const VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 /**
  * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
  * 
@@ -1261,3 +1263,10 @@ export const REGEX_NICO = /[^0-9]/g;
  * Utilizada para validación de entrada de teclas en campos numéricos.
  */
 export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
+
+/**
+ * Expresión regular para reemplazar la parte decimal de un número.
+ * Coincide con el punto seguido de uno o más dígitos al final de la cadena.
+ * Ejemplo: "123.45" => ".45"
+ */
+export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;

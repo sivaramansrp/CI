@@ -440,7 +440,13 @@ export const API_POST_GUARDAR_CERTIFICADO = (idSolicitud: string, tramite: numbe
  */
 export const API_POST_VISTA_PREVIA_CERTIFICADO = (idSolicitud: string, tramite: number): string => `sat-t${tramite}/solicitud/${idSolicitud}/constancia/vista-previa`;
 
-
+/**
+ * API para guardar el aviso de desistimiento de una solicitud.
+ * @param idSolicitud Identificador de la solicitud
+ * @returns URL del endpoint para guardar el aviso de desistimiento
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t230301/swagger-ui/index.html#/aviso-desistimiento/guardar
+ */
+export const API_POST_GUARDAR_AVISO_DESISTIMIENTO = (idSolicitud: string): string => `sat-t230301/solicitud/${idSolicitud}/aviso-desistimiento/guardar`;
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
@@ -790,6 +796,12 @@ export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${T
  */
 export const CATALOGO_PAISES_BLOQUE = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
 
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
+ */
+export const AGREGAR_PRODUCTOR = (): string => `sat-t${TRAMITE}/solicitud/agregar-productor`;
+
 
 /*
  * API para obtener el catálogo de idiomas
@@ -883,6 +895,12 @@ export const CATALOGO_SELECCIONAR_REGLA = (TRAMITE: string) : string => `sat-t${
 export const CATALOGO_SECTORES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/sectores`;
 
 /*
+ * API para obtener la unidad de medida de la masa bruta
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/se/unidades-medidas
+ */
+export const CATALOGO_UNIDAD_DE_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/se/unidades-medidas`;
+
+/*
   * API para obtener el catálogo de tratados y acuerdos por país
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
@@ -908,3 +926,24 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS_CON_ID = (TRAMITE: string, ID: string
  * @returns 
  */
 export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;
+
+/**
+ * Genera la URL del endpoint para obtener el catálogo de tratados o acuerdos de un tipo específico.
+ * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tipo de tratado/acuerdo (`IDETIPOTRATADOACUERDO`).
+ * Devuelve un string con la ruta completa del recurso en el backend.
+ */
+export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+
+/**
+ * Genera la URL del endpoint para obtener la lista de países asociados a un tratado específico.
+ * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tratado (`IDTRATADO`).
+ * Devuelve un string con la ruta completa del recurso en el backend.
+ */
+export const CATALOGO_ACUERDOS = (TRAMITE: string, IDTRATADO: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${IDTRATADO}/paises`;
+
+/**
+ * Genera la URL del endpoint para obtener los tratados o acuerdos asociados a un país específico.
+ * Recibe como parámetros el tipo de trámite (`TRAMITE`) y la clave del país (`CVEPAIS`).
+ * Devuelve un string con la ruta completa del recurso en el backend.
+ */
+export const CATALOGO_ACUERDOS_PAIS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/catalogo/pais/${CVEPAIS}/tratados-acuerdos`;
