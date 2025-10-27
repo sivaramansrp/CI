@@ -35,7 +35,7 @@
     <div class="row mb-3" *ngIf="verTabla">
         <div class="col-md-12">
             <ng-table [commonTableHeader]="establecimientoHeaderData"
-                [commonTableBody]="establecimientoBodyData"></ng-table>
+                [commonTableBody]="establecimientoBodyData" (seleccionCambio)="onRowSelectionChange($event)"></ng-table>
             <nav aria-label="Page navigation example">
                 <ul class="pagination d-flex justify-content-center">
                     <li class="page-item"><a class="page-link" >1</a></li>
