@@ -459,6 +459,13 @@ export const API_POST_VISTA_PREVIA = (idSolicitud: string, tramite: number): str
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consu…
  */
 export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
+
+/**
+ * API para obtener los documentos
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consu…
+ */
+export const API_GET_DOCUMENTOS11202 = 'sat-t11202/solicitud/documentos';
+ 
  
 /**
  *API para obtener los documentos del tramite 231001

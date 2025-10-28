@@ -1,4 +1,4 @@
-import { API_GET_DOCUMENTOS130118, API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../servers/api-router";
+import { API_GET_DOCUMENTOS130118,API_GET_DOCUMENTOS11202, API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../servers/api-router";
 import { CatalogoDocumentosResponse, ParametrosGetDocumentos } from "../../../models/shared/anexar-documentos.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map, throwError } from "rxjs";
@@ -14,7 +14,7 @@ export class CatalogoDocumentosService {
     constructor(
         private http: HttpClient,
     ) {
-        this.host = `${ENVIRONMENT.API_HOST}/api`;
+        this.host = `${ENVIRONMENT.API_HOST_TEST}/api`;
     }
 
     getDocumentosObligatorios(tramite: string, params: ParametrosGetDocumentos): Observable<CatalogoDocumentosResponse> {
@@ -49,6 +49,30 @@ export class CatalogoDocumentosService {
         }
 
         const URL = `${this.host}/${API_GET_DOCUMENTOS130118}`;
+
+        return this.http.get<CatalogoDocumentosResponse>(URL, { params }).pipe(
+            map((response) => response),
+            catchError((error) => {
+                console.error('Error en getDocumentosSolicitud:', error);
+                return throwError(() => new Error('Error al obtener documentos'));
+            })
+        );
+    }
+
+    /**
+     * Obtiene los documentos de la solicitud 130118.
+     * @param especifico Indica si se deben obtener documentos específicos.
+     * @param idSolicitud ID de la solicitud (opcional).
+     * @returns Observable con la respuesta del catálogo de documentos.
+     */
+    getDocumentosSolicitud11202(especifico: boolean, idSolicitud?: number): Observable<CatalogoDocumentosResponse> {
+        let params = new HttpParams().set('especifico', String(especifico));
+
+        if (idSolicitud) {
+            params = params.set('idSolicitud', idSolicitud);
+        }
+
+        const URL = `${this.host}/${API_GET_DOCUMENTOS11202}`;
 
         return this.http.get<CatalogoDocumentosResponse>(URL, { params }).pipe(
             map((response) => response),

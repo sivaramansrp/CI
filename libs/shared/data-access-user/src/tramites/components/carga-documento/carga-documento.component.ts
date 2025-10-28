@@ -221,6 +221,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       if (this.idTipoTRamite === '130118') {
         this.getDocumentosDesdeSolicitud130118();
         this.getDocumentosDesdeSolicitud130118Opcionales();
+      } else if (this.idTipoTRamite === '11202') {
+        this.getDocumentosDesdeSolicitud11202();
+        this.getDocumentosDesdeSolicitud11202Opcionales();
       } else {
         this.getListaDocumentoObligatorios();
         this.getListaDocumentoOpcionales();
@@ -239,6 +242,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
+          console.log(response);
           response.datos.documento_tramite.forEach((documento: Documento) => {
             if (documento.tipo_documento) {
               this.catalogoDocumentosObligatorios.push({
@@ -328,6 +332,57 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         },
         error: (err) => {
           console.error('Error obteniendo documentos desde 130118', err);
+        }
+      });
+  }
+
+    /**
+   * Obtiene los documentos desde la solicitud 11202.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud 11202.
+   * @returns {void} No retorna nada.
+   */
+  getDocumentosDesdeSolicitud11202(): void {
+    const ESPECIFICO = true;
+    this.catalogoDocumentosService
+      .getDocumentosSolicitud11202(ESPECIFICO)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoDocumentosObligatorios = response.datos.documento_tramite.map((doc) => ({
+            ...doc.tipo_documento,
+            adicionales: [],
+            cargado: false,
+          }));
+          
+          // Validar estado inicial después de cargar documentos 130118
+          this.actualizarEstadoBotonCargarArchivos();
+        },
+        error: (err) => {
+          console.error('Error obteniendo documentos desde 11202', err);
+        }
+      });
+  }
+
+  /**
+   * Obtiene los documentos opcionales desde la solicitud 11202.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 11202.
+   * @returns {void} No retorna nada.
+   */
+  getDocumentosDesdeSolicitud11202Opcionales(): void {
+    const ESPECIFICO = false;
+    this.catalogoDocumentosService
+      .getDocumentosSolicitud11202(ESPECIFICO)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoDocumentosOpcionales = response.datos.documento_fraccion.map((doc) => ({
+            ...doc.tipo_documento,
+            adicionales: [],
+            cargado: false,
+          }));
+        },
+        error: (err) => {
+          console.error('Error obteniendo documentos desde 11202', err);
         }
       });
   }
