@@ -637,7 +637,7 @@ export class CertificadoDeOrigenComponent
         correo: ['', Validators.required],
         correoElectronico: [''],
         domTercerOperador: [''],
-        mercanciasSeleccionadas: [this.guardarClicado || [], [MERCANCIA_SELECCIONADAS_REQUIRED.includes(this.idProcedimiento) ? matrizRequerida : null]],
+        mercanciasSeleccionadas: [this.guardarClicado || []],
         // Nuevos controles de formulario para el procedimiento 110222
         // calle1: ['', Validators.required],
         // numeroLetra1: ['', Validators.required],
@@ -649,6 +649,10 @@ export class CertificadoDeOrigenComponent
       },
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
+
+    if(this.idProcedimiento && MERCANCIA_SELECCIONADAS_REQUIRED?.includes(this.idProcedimiento)){
+      this.formCertificado.get('mercanciasSeleccionadas')?.setValidators(matrizRequerida);
+    }
 
     if (this.idProcedimiento === 110222) {
       this.formCertificado.addControl('calle1', new FormControl('', [Validators.required]));
