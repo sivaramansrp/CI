@@ -178,17 +178,15 @@ export class SolicitudDeReporteComponent {
       this.esFormaValidoTres = false;
       this.esFormaValidoCuatro = false;
       this.datosPasos.indice = this.indice;
-      
       return;
     }
+    
       this.esFormaValido = false;
       this.esFormaValidoDos = false;
       this.esFormaValidoTres = false;
       this.esFormaValidoCuatro = false;
-    this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;    
-    
       this.wizardComponent.siguiente();
   }
 }

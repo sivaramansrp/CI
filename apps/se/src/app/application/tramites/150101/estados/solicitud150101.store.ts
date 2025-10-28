@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ProgramasReporte } from '../models/programas-reporte.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
@@ -60,6 +61,9 @@ export interface Solicitud150101State {
    * Porcentaje de exportación.
    */
   porcentajeExportacion: number;
+
+  /** solicitudDato */
+  solicitudDato?: ProgramasReporte[];
 }
 
 /**
@@ -122,6 +126,8 @@ export function createInitialState(): Solicitud150101State {
      * Porcentaje de exportación.
      */
     porcentajeExportacion: 0,
+
+    solicitudDato: [],
   };
 }
 
@@ -271,5 +277,16 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
     nuevoDatos: Solicitud150101State
   ): void {
     this.update(nuevoDatos);
+  }
+
+  /**
+   * Actualiza el estado de la solicitud anual con nuevos datos.
+   * @param nuevoDatos Nuevo estado de la solicitud anual.
+   */
+  public setSolicitusDatos(solicitudDato: ProgramasReporte[]): void {
+    this.update((state) => ({
+      ...state,
+      solicitudDato,
+    }));
   }
 }

@@ -128,3 +128,9 @@ export const ERROR_FORMA_ALERT_QUAD= `
 </div>
 
 `;
+
+/**
+ * Mensaje de validación cuando las ventas totales son menores que cero.
+ */
+export const VENTAS_TOTALES_MENSAJES =
+  "Ventas totales deben ser mayores o iguales a cero.";

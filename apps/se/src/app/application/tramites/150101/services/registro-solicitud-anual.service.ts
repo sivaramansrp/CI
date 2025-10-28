@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { ProgramasReporte, RegistroSolicitudDatos } from '../models/programas-reporte.model';
 import { ReporteFechas } from '../models/programas-reporte.model';
+import { BUSCAR_PROGRAMAS } from '../servers/api-route';
 
 
 /**
@@ -35,12 +36,10 @@ export class SolicitudService {
 
   /**
    * Obtiene la lista de programas para el reporte desde un archivo JSON local.
-   * @returns {Observable<ProgramasReporte[]>} Observable que emite un arreglo de programas para el reporte.
+   * @returns {Observable<Record<string, unknown>>} Observable que emite un arreglo de programas para el reporte.
    */
-  obtenerProgramasReporte(): Observable<ProgramasReporte[]> {
-    return this.http.get<ProgramasReporte[]>(
-      'assets/json/150101/programas-reporte.json'
-    );
+  obtenerProgramasReporte(rfc: string): Observable<Record<string, unknown>> {
+    return this.http.get<Record<string, unknown>>(BUSCAR_PROGRAMAS(rfc));
   }
 
   /**

@@ -1,7 +1,8 @@
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, InputFechaComponent, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
@@ -54,6 +55,16 @@ const FECHA_FIN = {
   selector: 'app-programas-reporte-anual',
   templateUrl: './programas-reporte-anual.component.html',
   styleUrl: './programas-reporte-anual.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    BsDatepickerModule,
+    TablaDinamicaComponent,
+    InputFechaComponent,
+    NotificacionesComponent
+  ],
 })
 export class ProgramasReporteAnnualComponent implements OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
@@ -158,6 +169,9 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     },
   ];
 
+  // Valor de RFC de ejemplo
+  private loginRfc: string = 'AAL0409235E6';
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -206,7 +220,11 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       .subscribe();
 
     this.obtenerReporteFechas();
-    this.obtenerProgramasReporte();
+    if (this.solicitud150101Query.getValue().solicitudDato?.length) {
+      this.solicitudDatos = this.solicitud150101Query.getValue().solicitudDato ?? [];
+    } else {
+      this.obtenerProgramasReporte();
+    }
   }
 
   /**
@@ -326,12 +344,30 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
   obtenerProgramasReporte(): void {
     this.solicitudService
-      .obtenerProgramasReporte()
+      .obtenerProgramasReporte(this.loginRfc)
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (respuesta: ProgramasReporte[]) => {
-          this.solicitudDatos = respuesta;
+        next: (respuesta: Record<string, unknown>) => {
+          const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
+          if (Array.isArray(DATOS) && DATOS.length) {
+            const PROGRAMAS = DATOS.map((item) => {
+              const PROGRAMA = item as ProgramasReporte;
+              return {
+                folioPrograma: PROGRAMA.folioPrograma ?? '',
+                modalidad: PROGRAMA.modalidad ?? '',
+                tipoPrograma: PROGRAMA.tipoPrograma ?? '',
+                estatus: PROGRAMA.estatus ?? '',
+              };
+            });
+            this.solicitudDatos = PROGRAMAS;
+            this.solicitud150101Store.setSolicitusDatos(this.solicitudDatos);
+          } else {
+            this.solicitudDatos = [];
+          }
         },
+        error: () => {
+        this.solicitudDatos = [];
+      },
       });
   }
 
