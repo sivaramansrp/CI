@@ -661,7 +661,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103
+  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203
 ];
 
 /**
@@ -888,6 +888,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_260201: 260201,
   TRAMITE_260301: 260301,
   TRAMITE_260210: 260210,
+
 }
 
 /**
@@ -1021,6 +1022,8 @@ export const MOSTRAR_NOTIFICACION = [
   260209, 260205, 260204, 260202,
 ];
 
+export const ENABLE_FIELDS = [ 260209, 260210];
+
 /**
  * Enumera los tipos de actualización que se pueden realizar.
  *
@@ -1055,7 +1058,7 @@ export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [
  * @const ES_PUNTO_Y_COMA
  * @description Lista de identificadores de procedimientos para los cuales se utiliza punto y coma.
  */
-export const ES_PUNTO_Y_COMA = [260210];
+export const ES_PUNTO_Y_COMA = [260210, 260209];
 
 /**
  * Constante que representa el texto del manifiesto y declaraciones.
@@ -1128,7 +1131,7 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210];
 
 
 
