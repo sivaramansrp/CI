@@ -130,7 +130,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
         this.guardarDatos = {
           ...this.guardarDatos,
-          folioTramite: res.datos?.num_folio_caat ?? '',
+          folioTramite: res.datos?.mensaje ?? '',
           procedureId: (res.datos?.id_solicitud ?? 0).toString()
         };
         this.isSuccessCert = true

@@ -146,11 +146,12 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    if (this.banderaVista === "Resolucion") {
-      this.alertaNotificacion = GENERARMENSAJERESOLUCION(this.guardarDatos.folioTramite);
-    } else {
-      this.alertaNotificacion = GENERARMENSAJENOTIFICACION(this.guardarDatos.folioTramite);
-    }
+    // if (this.banderaVista === "Resolucion") {
+    //   this.alertaNotificacion = GENERARMENSAJERESOLUCION(this.guardarDatos.folioTramite);
+    // } else {
+    //   this.alertaNotificacion = GENERARMENSAJENOTIFICACION(this.guardarDatos.folioTramite);
+    // }
+    this.alertaNotificacion = this.guardarDatos.folioTramite
   }
 
 

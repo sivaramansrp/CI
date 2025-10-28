@@ -227,7 +227,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
       this.guardarDatos = {
         ...this.guardarDatos,
-        folioTramite: data.num_folio_caat ?? '',
+        folioTramite: data.mensaje ?? '',
         procedureId: (data.id_solicitud ?? 0).toString()
       };
 
