@@ -22,6 +22,48 @@
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 
+export interface ApiResponseSolicitante {
+  codigo: string | null;
+  mensaje: string | null;
+  datos: {
+    mostrar_director_general: boolean | null;
+    solicitante: Solicitante | null;
+    director_general: DirectorGeneral | null
+    caat_existe: boolean | null;
+    mensaje: string | null
+  };
+}
+
+interface DirectorGeneral {
+  nombre: string | null;
+  primer_apellido: string | null;
+  segundo_apellido: string | null;
+}
+
+
+export interface Solicitante {
+  id_persona_solicitud: number | null;
+  rfc: string | null;
+  razon_social: string | null;
+  correo_electronico: string | null;
+  descripcion_giro: string | null;
+  domicilio: Domicilio;
+}
+
+export interface Domicilio {
+  pais: string;
+  codigo_postal: string;
+  estado: string;
+  municipio: string | null;
+  localidad: string | null;
+  colonia: string | null;
+  calle: string;
+  numero_exterior: string;
+  numero_interior: string;
+  lada: string | null;
+  telefono: string | null;
+}
+
 /**
  * Interfaz que representa una selección importante del catálogo para el registro de muestras de mercancías.
  * 

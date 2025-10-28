@@ -217,7 +217,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       this.documentDetails = data.documento_detalle ?? {}
       this.acuseDocumentos = [
         {
-          id: data.id_solicitud ?? 0,
+          id: 0,
           idDocumento: data.cve_folio_caat ?? '',
           documento: data.documento_detalle?.nombre_archivo ?? '',
           urlPdf: data.documento_detalle?.nombre_archivo ?? '', // for display or download name
@@ -399,7 +399,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
           this.documentDetails = res.datos?.documento_detalle ?? {}
           this.acuseDocumentos = [
             {
-              id: res.datos?.id_solicitud ?? 0,
+              id: 1,
               idDocumento: res.datos?.cve_folio_caat ?? '',
               documento: res.datos?.documento_detalle?.nombre_archivo ?? '',
               urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name

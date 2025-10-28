@@ -115,7 +115,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       if (Number(res.codigo) === 0) {
         this.acuseDocumentos = [
           {
-            id: res.datos?.id_solicitud ?? 0,
+            id: 1,
             idDocumento: res.datos?.cve_folio_caat ?? '',
             documento: res.datos?.documento_detalle?.nombre_archivo ?? '',
             urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
@@ -125,7 +125,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
         this.guardarDatos = {
           ...this.guardarDatos,
-          folioTramite: res.datos?.num_folio_caat ?? '',
+          folioTramite: res.datos?.mensaje ?? '',
           procedureId: (res.datos?.id_solicitud ?? 0).toString()
         };
         this.isSuccessCert = true
