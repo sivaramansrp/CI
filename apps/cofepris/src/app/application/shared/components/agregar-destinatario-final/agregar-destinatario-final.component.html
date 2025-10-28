@@ -187,6 +187,8 @@
           [required]="true" [placeholder]="'Selecciona un valor'" (selectionChange)="cargarEstados($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('estado')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -194,6 +196,8 @@
           [required]="true" [placeholder]="'Selecciona un valor'" (selectionChange)="cargarMunicipios($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('municipio')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
     </div>
@@ -204,6 +208,8 @@
           [required]="!requiedField" [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('localidad')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -211,13 +217,17 @@
           [label]="'Código postal o equivalente'" [required]="true" [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable" 
           [markTouched]="agregarDestinatarioFinal.get('codigoPostal')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
           [placeholder]="'Selecciona un valor'" [isDisabled]="estaDeshabilitadoDesplegable"
           [required]="idProcedimiento === 260911 || !elementosNoRequeridos.includes('colonia')"
-          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false">
+          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false">
         </app-catalogo-select>
       </div>
     </div>
