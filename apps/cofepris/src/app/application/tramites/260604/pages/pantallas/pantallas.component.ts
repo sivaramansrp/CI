@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
 
@@ -28,6 +28,20 @@ export class PantallasComponent {
    * Lista de pasos del wizard, obtenida desde una constante.
    */
   public pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+
+  /**
+   * @property {string} TEXTOS
+   * @description
+   * Texto de aviso utilizado en el componente.
+   */
+  TEXTOS: string = AVISO.Aviso;
+
+  /**
+   * @property {string} infoAlert
+   * @description
+   * Clase CSS para aplicar estilos a los mensajes de información.
+   */
+  public infoAlert = 'alert-info';
  
   /**
    * @property indice
