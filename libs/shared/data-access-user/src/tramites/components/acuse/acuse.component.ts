@@ -121,7 +121,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    */
   datosTablaAcuse: BodyTablaAcuse[] = [];
   datosTablaResoluciones: BodyTablaAcuse[] = [];
-  @Input() isAcuse?: string = "1";
   idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
@@ -155,57 +154,10 @@ export class AcuseComponent implements OnChanges, OnDestroy {
 
     if (changes['idSolicitud']?.currentValue) {
       this.generarYMostrarDocumentos();
-      if (this.isAcuse != "1") {
-        this.datosTablaResoluciones = [];
-        this.guardarResolucion();
-      }
     }
   }
 
 
-  guardarResolucion(): void {
-    console.log('Folio', this.folio);
-    console.log('idSolicitud', this.idSolicitud);
-    console.log('procedure', this.procedure);
-    console.log('txtAlerta', this.txtAlerta);
-    this.documentosResolucinService.getDetalleTramiteByFolio(this.procedure.toString(),this.folio).subscribe({
-      next: (data) => {
-        if (data?.codigo === '00') {
-          console.log('Guardado de resolución exitoso', data.datos?.resolucion?.id_resolucion);
-          this.documentosResolucinService.guardarResolucion(this.procedure.toString(), data.datos?.resolucion?.id_resolucion || 0).subscribe({
-            next: (res) => {
-              if (res?.codigo === '00') {
-                this.idLlaveArchivo = res.datos?.llave_archivo || '';
-                this.acuseDetalleService.getDescargarAcuse(this.procedure, this.idLlaveArchivo).subscribe({  
-                  next: (data) => {
-                    if (data?.codigo === '00' && data?.datos?.contenido) {
-                      this.datosTablaResoluciones = [
-                        {
-                          id: 1,
-                          documento: data.datos.nombre_archivo,
-                          urlPdf: AcuseComponent.crearUrlPdf(data.datos.contenido),
-                          idDocumento: '1',
-                        },
-                      ];
-                    }
-                  },        
-                  error: (err) => {
- 
-                  }
-                });
-              } 
-            },
-            error: (err) => {
- 
-            }
-          });
-        }
-      },
-      error: (err) => {
-
-      }
-    });
-  }
 
   /**
    * Método que genera y muestra los documentos necesarios para el acuse.

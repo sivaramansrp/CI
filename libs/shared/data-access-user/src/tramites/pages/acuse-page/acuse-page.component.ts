@@ -63,10 +63,6 @@ export class AcusePageComponent implements OnInit {
    */
   procedure:number=0;
 
-  /**
-   * Indica si se trata de un acuse.
-   */
-  isAcuse: string = "1";
 
   constructor(
     private tramiteQueries: TramiteFolioQueries,
