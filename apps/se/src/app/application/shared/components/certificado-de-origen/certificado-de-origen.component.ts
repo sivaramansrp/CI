@@ -718,20 +718,14 @@ export class CertificadoDeOrigenComponent
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  /**
-   * method loadComboUnidadMedida
-   * description Carga la lista de derechos desde el servicio.
-   */
-  loadComboUnidadMedida(): void {
-    this.service
-      .getDatos('110222') // Llama al servicio para obtener los datos.
-      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
-      .subscribe((data): void => {
-        // Maneja los datos recibidos.
-        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
-      });
-  }
 
+ /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.formCertificado && this.formularioArchivo) {
+      this.formCertificado.markAllAsTouched();
+      this.formularioArchivo.markAllAsTouched();
+    }
+  }
   /**
    * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
    *
@@ -927,12 +921,9 @@ export class CertificadoDeOrigenComponent
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
-    this.applyTercerOperadorValidation(); // Add validation for procedure 110222
-    this.nuevaNotificacion = {} as Notificacion;
+    this.applyTercerOperadorValidation(); 
+    this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
-    if(this.idProcedimiento === 110222){
-      this.loadComboUnidadMedida();
-    }
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
@@ -1451,10 +1442,9 @@ export class CertificadoDeOrigenComponent
   }
 
   /**
-   * Getter para obtener el catálogo de países o bloques.
+   * Getter para obtener el catálogo de países.
    * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
-   *
-   * @returns {Catalogo[]} El catálogo de países o bloques.
+   * @returns {Catalogo[]} El catálogo de países.
    */
   get paisGet(): Catalogo[]{
     return this.circulacion?.length

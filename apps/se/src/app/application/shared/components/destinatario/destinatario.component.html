@@ -50,7 +50,7 @@
                 class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+            <app-catalogo-select [catalogo]="paisDestinDestinatario" [label]="'País Destino'" [required]="true"
               [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
               name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
