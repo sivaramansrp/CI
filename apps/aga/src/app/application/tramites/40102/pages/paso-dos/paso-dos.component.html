@@ -10,7 +10,10 @@
     [catalogoDocumentos]="catalogoDocumentos"
   ></anexar-documentos> -->
   @if(isSuccessCert){
-  <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  <!-- <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert> -->
+  <app-acuse-recibo [datosTabla]="acuseDocumentos" [datosTablaAcuseNotificacion]="[]" [guardarDatos]="guardarDatos"
+    [banderaVista]="'Acuse'">
+  </app-acuse-recibo>
   }@else {
   <firma-electronica [tipo]="'persona_firma_40102'" [cadenaOriginal]="cadenaOriginal"
     (datosFirma)="getDatosOfFirma($event)"></firma-electronica>

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioState } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Certificado } from '../../../40101/pages/paso-dos/paso-dos.component';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { Chofer40102Query } from '../../estados/chofer40102.query';
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -21,6 +22,27 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Constante que contiene los textos utilizados en el componente.
    */
   TEXTOS: string = '';
+
+  banderaVista: string = ""
+
+  acuseDocumentos: BodyTablaResolucion[] = [];
+  guardarDatos: ConsultaioState = {
+    folioTramite: '',
+    procedureId: '',
+    parameter: '',
+    department: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    update: false,
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: '',
+    idSolicitudSeleccionada: ''
+  };
 
   isSuccessCert: boolean = false
   cadenaOriginal = '';
@@ -91,8 +113,23 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       id_solicitud: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
       if (Number(res.codigo) === 0) {
+        this.acuseDocumentos = [
+          {
+            id: res.datos?.id_solicitud ?? 0,
+            idDocumento: res.datos?.cve_folio_caat ?? '',
+            documento: res.datos?.documento_detalle?.nombre_archivo ?? '',
+            urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
+            fullBase64: res.datos?.documento_detalle?.contenido ?? '' // <--- backend base64 here
+          }
+        ];
+
+        this.guardarDatos = {
+          ...this.guardarDatos,
+          folioTramite: res.datos?.num_folio_caat ?? '',
+          procedureId: (res.datos?.id_solicitud ?? 0).toString()
+        };
         this.isSuccessCert = true
-        this.TEXTOS = res.datos.mensaje
+        this.TEXTOS = res?.datos?.mensaje ?? ''
       }
     });
   }

@@ -1,8 +1,9 @@
 import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../estado/chofer40101.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_40101, WizardComponent } from '@ng-mf/data-access-user';
+import { ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_40101, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, combineLatest } from 'rxjs';
 import { Tramite40101State, Tramite40101Store } from '../../estado/tramite40101.store';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -17,15 +18,24 @@ interface AccionBoton {
 }
 
 export interface IniciarResponse {
-  codigo: string;
-  mensaje: string;
-  datos: {
-    id_solicitud: number;
-    cadena_original: string;
-    is_extranjero: boolean
-    mensaje: string;
+  codigo?: string;
+  mensaje?: string;
+  datos?: {
+    cadena_original?: string;
+    id_solicitud?: number;
+    cve_folio_caat?: string;
+    num_folio_caat?: string;
+    fecha_de_vigencia?: string;
+    is_extranjero?: boolean;
+    mensaje?: string;
+    documento_detalle?: {
+      llave_archivo?: string;
+      nombre_archivo?: string;
+      contenido?: string; // base64 if returned
+    };
   };
 }
+
 export interface DriverNacional {
   rfc: string;
   curp: string;
@@ -74,11 +84,20 @@ export interface DriverExtranjero {
   paisDeResidencia: string;
 }
 
+
+export interface DocumentoDetalle {
+  llave_archivo?: string;
+  nombre_archivo?: string;
+  contenido?: string;
+  url_archivo?: string;
+}
+
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
+
 export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
@@ -89,6 +108,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   isExtrajero: boolean = false
   isBtnShow: string = "yes"
+  documentDetails: DocumentoDetalle = {};
+  acuseDocumentos: BodyTablaResolucion[] = [];
   /** Indica si el trámite es CAAT (Certificado de Autotransporte Aduanal Terrestre).
    * 
    * @type {boolean}
@@ -133,6 +154,25 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  banderaVista: string = ""
+
+  guardarDatos: ConsultaioState = {
+    folioTramite: '',
+    procedureId: '',
+    parameter: '',
+    department: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    update: false,
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: '',
+    idSolicitudSeleccionada: ''
+  };
 
   /**
  * Constructor del componente. Inicializa las dependencias necesarias.
@@ -173,6 +213,26 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroySolicitante$)).subscribe((data: ApiResponseSolicitante['datos']) => {
       this.isCaat = data.caat_existe;
       this.catErrorMessage = data.mensaje
+      this.isExtrajero = data.is_extranjero || false
+      this.documentDetails = data.documento_detalle ?? {}
+      this.acuseDocumentos = [
+        {
+          id: data.id_solicitud ?? 0,
+          idDocumento: data.cve_folio_caat ?? '',
+          documento: data.documento_detalle?.nombre_archivo ?? '',
+          urlPdf: data.documento_detalle?.nombre_archivo ?? '', // for display or download name
+          fullBase64: data.documento_detalle?.contenido ?? '' // <--- backend base64 here
+        }
+      ];
+
+      this.guardarDatos = {
+        ...this.guardarDatos,
+        folioTramite: data.num_folio_caat ?? '',
+        procedureId: (data.id_solicitud ?? 0).toString()
+      };
+
+      this.banderaVista = 'Acuse';
+
     });
     this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroySolicitante$)).subscribe((data: ApiResponseSolicitante['datos']) => {
       this.isShowDirector = data.mostrar_director_general;
@@ -329,9 +389,31 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         };
 
         this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
-          this.chofer40101Service.guardarDatosFirma(res.datos);
-          this.chofer40101Store.setSolicitudId(res.datos.id_solicitud);
-          this.isExtrajero = res?.datos?.is_extranjero
+          this.chofer40101Service.guardarDatosFirma({
+            id_solicitud: res.datos?.id_solicitud ?? 0,
+            cadena_original: res.datos?.cadena_original ?? '', // Add appropriate value if available
+            is_extranjero: res.datos?.is_extranjero ?? false
+          });
+          this.chofer40101Store.setSolicitudId(res.datos?.id_solicitud ?? 0);
+          this.isExtrajero = res?.datos?.is_extranjero ?? false
+          this.documentDetails = res.datos?.documento_detalle ?? {}
+          this.acuseDocumentos = [
+            {
+              id: res.datos?.id_solicitud ?? 0,
+              idDocumento: res.datos?.cve_folio_caat ?? '',
+              documento: res.datos?.documento_detalle?.nombre_archivo ?? '',
+              urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
+              fullBase64: res.datos?.documento_detalle?.contenido ?? '' // <--- backend base64 here
+            }
+          ];
+
+          this.guardarDatos = {
+            ...this.guardarDatos,
+            folioTramite: res.datos?.num_folio_caat ?? '',
+            procedureId: (res.datos?.id_solicitud ?? 0).toString()
+          };
+
+          this.banderaVista = 'Acuse';
           if (this.isExtrajero) {
             this.isBtnShow = 'no'
             this.pasos = PASOS.slice(0, 1)

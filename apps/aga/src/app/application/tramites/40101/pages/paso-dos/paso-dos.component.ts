@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { base64ToHex, CATALOGOS_ID, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { base64ToHex, CATALOGOS_ID, ConsultaioState, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs/operators';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 
 
 export interface Certificado {
@@ -15,6 +16,8 @@ export interface Certificado {
   firma: string;
   rfc: string;
 }
+
+
 
 @Component({
   selector: 'app-paso-dos',
@@ -28,11 +31,30 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   TEXTOS: string = '';
 
   isSuccessCert: boolean = false
+  acuseDocumentos: BodyTablaResolucion[] = [];
 
   /**
    * Lista de tipos de documentos disponibles para el trámite.
    */
   tiposDocumentos: Catalogo[] = [];
+
+  guardarDatos: ConsultaioState = {
+    folioTramite: '',
+    procedureId: '',
+    parameter: '',
+    department: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    update: false,
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: '',
+    idSolicitudSeleccionada: ''
+  };
 
   /**
    * Clase CSS utilizada para mostrar un mensaje de alerta informativa.
@@ -96,8 +118,23 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       solicitudId: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
       if (Number(res.codigo) === 0) {
+        this.acuseDocumentos = [
+          {
+            id: res.datos?.id_solicitud ?? 0,
+            idDocumento: res.datos?.cve_folio_caat ?? '',
+            documento: res.datos?.documento_detalle?.nombre_archivo ?? '',
+            urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
+            fullBase64: res.datos?.documento_detalle?.contenido ?? '' // <--- backend base64 here
+          }
+        ];
+
+        this.guardarDatos = {
+          ...this.guardarDatos,
+          folioTramite: res.datos?.num_folio_caat ?? '',
+          procedureId: (res.datos?.id_solicitud ?? 0).toString()
+        };
         this.isSuccessCert = true
-        this.TEXTOS = res?.datos?.mensaje
+        this.TEXTOS = res?.datos?.mensaje ?? ''
       }
     });
   }

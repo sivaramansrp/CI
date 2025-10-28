@@ -20,7 +20,7 @@ import {
 } from '../../estados/chofer40102.store';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Chofer40102Query } from '../../estados/chofer40102.query';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { ConsultaioState, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
@@ -28,8 +28,9 @@ import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
-import { IniciarResponse } from '../../../40101/pages/solicitante-page/solicitante-page.component';
+import { DocumentoDetalle, IniciarResponse } from '../../../40101/pages/solicitante-page/solicitante-page.component';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 
 /**
  * Interfaz que define la estructura de un objeto de acción de botón para la navegación del wizard.
@@ -141,6 +142,26 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   isBtnShow: string = "yes"
   catErrorMessage: string = ""
   isCaat: boolean = false
+  documentDetails: DocumentoDetalle = {};
+  acuseDocumentos: BodyTablaResolucion[] = [];
+
+  guardarDatos: ConsultaioState = {
+    folioTramite: '',
+    procedureId: '',
+    parameter: '',
+    department: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    update: false,
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: '',
+    idSolicitudSeleccionada: ''
+  };
 
   /**
   * Clase CSS para mostrar una alerta de información.
@@ -470,9 +491,26 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       }
       this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
         // this.chofer40101Service.guardarDatosFirma(res.datos);
-        (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res?.datos?.cadena_original);
+        (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res?.datos?.cadena_original ?? '');
         (this.chofer40102Store['setSolicitudeId'] as (valor: unknown) => void)(res?.datos?.id_solicitud);
-        this.isExtrajero = res?.datos?.is_extranjero
+        this.isExtrajero = res?.datos?.is_extranjero ?? false
+        this.documentDetails = res?.datos?.documento_detalle ?? {}
+        this.acuseDocumentos = [
+          {
+            id: res?.datos?.id_solicitud ?? 0,
+            idDocumento: res?.datos?.cve_folio_caat ?? '',
+            documento: res?.datos?.documento_detalle?.nombre_archivo ?? '',
+            urlPdf: res?.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
+            fullBase64: res?.datos?.documento_detalle?.contenido ?? '' // <--- backend base64 here
+          }
+        ];
+
+        this.guardarDatos = {
+          ...this.guardarDatos,
+          folioTramite: res?.datos?.num_folio_caat ?? '',
+          procedureId: (res?.datos?.id_solicitud ?? 0).toString()
+        };
+
         if (this.isExtrajero) {
           this.isBtnShow = 'no'
           this.pasos = PASOS.slice(0, 1)

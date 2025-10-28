@@ -30,6 +30,17 @@ export interface ApiResponseSolicitante {
   mensaje: string;
   datos: {
     mostrar_director_general: boolean;
+    cve_folio_caat?: string;
+    num_folio_caat?: string;
+    fecha_de_vigencia?: string;
+    id_solicitud?: number;
+    is_extranjero?: boolean;
+    documento_detalle?: {
+      llave_archivo?: string;
+      contenido?: string
+      nombre_archivo?: string;
+      url_archivo?: string;
+    };
     solicitante: Solicitante;
     caat_existe: boolean;
     mensaje: string
