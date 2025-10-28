@@ -33,6 +33,8 @@ import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directi
 
 import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitante-evaluar.model';
 
+import { Notificacion } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'solicitante',
@@ -49,6 +51,8 @@ import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitan
   host: {}
 })
 export class SolicitanteComponent implements OnInit, OnDestroy {
+  nuevaNotificacion: Notificacion | null = null;
+
   @Input() tabindex!: number;
 
   /** Indica si se deben mostrar los datos del trámite en el formulario del solicitante. */
@@ -360,9 +364,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
           tap((response) => {
             if (response) {
               this.datosGenerales = response;
-
               const IDENTIFICACION = response.datos.identificacion;
-
               this.solicitanteStore.setRfc(response.datos.rfc_original ?? '');
               this.solicitanteStore.setNombre(IDENTIFICACION.nombre ?? '');
               this.solicitanteStore.setPaterno(IDENTIFICACION.ap_paterno ?? '');

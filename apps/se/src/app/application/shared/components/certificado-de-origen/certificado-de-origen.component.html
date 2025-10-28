@@ -28,7 +28,7 @@
           <label class="form-label" for="nombres">
             Nombre(s)<span *ngIf="!requerida">*</span>:
           </label>
-          <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="50"
+          <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="25"
             (input)="onNombreInput($event)" (change)="
               setValoresStore(
                 'formCertificado',
@@ -52,7 +52,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="primerApellido">Primer apellido<span *ngIf="!requerida">*</span>:</label>
-            <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="50"
+            <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="25"
               (change)="
                 setValoresStore(
                   'formCertificado',
@@ -83,7 +83,7 @@
           <div class="form-group">
             <label class="form-label" for="segundoApellido">Segundo apellido:</label>
             <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
-              maxlength="50" (change)="
+              maxlength="25" (change)="
                 setValoresStore(
                   'formCertificado',
                   'segundoApellido',
@@ -107,7 +107,7 @@
           <div class="form-group">
             <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
             <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
-              maxlength="32" (change)="
+              maxlength="30" (change)="
                 setValoresStore(
                   'formCertificado',
                   'numeroDeRegistroFiscal',
@@ -796,26 +796,28 @@
       </div>
     </div>
 
-    <div class="col-md-4 form-field">
-      <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
-        [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)" (change)="
-          setValoresStore(
-            'formCertificado',
-            'fechaInicioInput',
-            'setFormCertificadoGenric'
-          )
-        "></input-fecha>
-    </div>
-    <div class="col-md-4 form-field">
-      <input-fecha [datos]="fechaFin ? fechaFinInput : fechaFinalInput"
-        [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
-        [isDisabled]="esFormularioSoloLectura" (change)="
-          setValoresStore(
-            'formCertificado',
-            'fechaFinalInput',
-            'setFormCertificadoGenric'
-          )
-        "></input-fecha>
+    <div class="row mb-3">
+      <div class="col-md-4 form-field">
+        <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
+          [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)" (change)="
+            setValoresStore(
+              'formCertificado',
+              'fechaInicioInput',
+              'setFormCertificadoGenric'
+            )
+          "></input-fecha>
+      </div>
+      <div class="col-md-4 form-field">
+        <input-fecha [datos]="fechaFin ? fechaFinInput : fechaFinalInput"
+          [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
+          [isDisabled]="esFormularioSoloLectura" (change)="
+            setValoresStore(
+              'formCertificado',
+              'fechaFinalInput',
+              'setFormCertificadoGenric'
+            )
+          "></input-fecha>
+      </div>
     </div>
 
     @if(mercanciasDisponibles){
@@ -886,16 +888,15 @@
     } @if (mercanciasDisponibles) {
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="cargaMercanciaConfiguracionTabla"
-        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
+        [datos]="guardarClicado || []"  [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
         [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
       <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0 && idProcedimiento !== 110223 ">Por favor, necesitas
         agregar un valor en la tabla dinámica</span>
     </div>
-
     } @else {
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTablaMercancia"
-        [datos]="guardarClicado || []" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+        [datos]="guardarClicado || []" [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
     </div>
     }
 

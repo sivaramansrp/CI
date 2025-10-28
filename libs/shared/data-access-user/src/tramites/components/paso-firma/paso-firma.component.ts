@@ -228,7 +228,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
-            rfcSolicitante: 'AAL0409235E6'
+            rfc_solicitante: 'AAL0409235E6'
           };
           if (this.procedure === 110216 || this.procedure === 110210) {
             PAYLOAD = renameKey(PAYLOAD as unknown as Record<string, unknown>, 'rfcSolicitante', 'rfc_solicitante') as unknown as FirmarRequest;

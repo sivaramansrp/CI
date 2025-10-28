@@ -21,7 +21,8 @@
                 (listaDeFilaSeleccionada)="opcionLista = $event"
                 [acciones]="tablaAcciones"
                 (alternarValor)="accionesSolitudValor($event)"
-                [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+                [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+                (filaClic)="patchOpcionesValue($event)"></app-tabla-dinamica>
             </div>
           </div>
           }
@@ -98,7 +99,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal <span [ngClass]="{'text-danger':datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
+          <label class="form-label" for="codigoPostal">Código postal<span [ngClass]="{'text-danger':datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
           <input class="form-control" id="codigoPostal" type="text" maxlength="12" formControlName="codigoPostal"
             [ngClass]="
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
@@ -115,7 +116,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="estadoDatos" formControlName="estado" [label]="'Estado'" [required]="true"
-            name="estado" [placeholder]="'Selecciona un valor'" (selectionChange)="cambioDeEstado($event)"
+            name="estado"   [placeholder]="'Selecciona una opción'" (selectionChange)="cambioDeEstado($event)"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -191,7 +192,7 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle <span [ngClass]="{'text-danger':datosSolicitudForm.get('calle')?.touched }">*</span>:</label>
+          <label class="form-label" for="calle">Calle<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'calle') && datosSolicitudForm.get('calle')?.touched }">*</span>:</label>
           <span tooltip="Domicilio, calle, número interior, número exterior, lote">
             <i class="bi bi-question-circle-fill"></i>
           </span>
@@ -269,7 +270,7 @@
 
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono <span [ngClass]="{'text-danger':datosSolicitudForm.get('telefono')?.touched }">*</span>:</label>
+          <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'text-danger':datosSolicitudForm.get('telefono')?.touched }">*</span>:</label>
           <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" [ngClass]="
               isValid(datosSolicitudForm, 'telefono') ? 'required' : ''
             " />
@@ -331,7 +332,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-check mt-4">
-          <label class="form-label mx-1" for="licenciaSanitaria"><b>No.de licencia sanitaria</b><span
+          <label class="form-label mx-1" for="licenciaSanitaria"><b>No. de licencia sanitaria</b><span
               *ngIf="esCampoRequerido('licenciaSanitaria')">*</span>:</label>
           <span
             tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente">
@@ -347,7 +348,7 @@
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
-            [placeholder]="'Selecciona un valor'" [isBold]="true" [tooltipQuestionCircle]="true"
+              [placeholder]="'Selecciona una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircleText]="
               'Régimen al que se destinará la mercancía'
             " [required]="true" name="regimen" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
@@ -356,7 +357,7 @@
       <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
           <app-catalogo-select [catalogo]="adunasDeEntradasDatos" [isBold]="true" formControlName="adunasDeEntradas"
-            [label]="'Aduanas de entradas'" [placeholder]="'selecciona un valor'" [required]="true"
+            [label]="'Aduanas de entradas'"   [placeholder]="'Selecciona una opción'" [required]="true"
             name="adunasDeEntradas" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -525,11 +526,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="representanteRfc">
-            @if(esProcedimiento260210) {
-              Solicitud de comentarios*:
-            } @else {
-              RFC*:
-            }
+            RFC<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'representanteRfc')&&datosSolicitudForm.get('representanteRfc')?.touched }">*</span>:
           </label>
           <input class="form-control" id="representanteRfc" type="text" 
             [maxlength]="esProcedimiento260210 ? 50 : 13"
@@ -554,7 +551,7 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteNombre">Nombre o Razón Social*:</label>
+          <label class="form-label" for="representanteNombre">Nombre o Razón Social<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'representanteNombre')&& datosSolicitudForm.get('representanteNombre')?.touched }">*</span>:</label>
           <input class="form-control" id="representanteNombre" type="text" maxlength="100"
             formControlName="representanteNombre" [ngClass]="
               isValid(datosSolicitudForm, 'representanteNombre') ? 'required' : ''
@@ -567,7 +564,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+          <label class="form-label" for="apellidoPaterno">Apellido paterno<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'apellidoPaterno') && datosSolicitudForm.get('apellidoPaterno')?.touched }">*</span>:</label>
           <input class="form-control" id="apellidoPaterno" type="text" maxlength="50"
             formControlName="apellidoPaterno" [ngClass]="
               isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''

@@ -11,6 +11,7 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('clasificacionProducto')?.errors?.['required'] && mercanciaForm.get('clasificacionProducto')?.touched ? true : false"
             name="clasificacionProducto"
+            [placeholder]="'Selecciona una opción'"
           ></app-catalogo-select>
         </div>
       </div>
@@ -25,6 +26,7 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('especificarClasificacionProducto')?.errors?.['required'] && mercanciaForm.get('especificarClasificacionProducto')?.touched? true : false"
             name="especificarClasificacionProducto"
+              [placeholder]="'Selecciona una opción'"
           ></app-catalogo-select>
         </div>
       </div>
@@ -169,6 +171,7 @@
           [required]="true"
           [markUntouched]="mercanciaForm.get('tipoProducto')?.errors?.['required'] && mercanciaForm.get('tipoProducto')?.touched ? true : false"
           name="tipoProducto"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -213,6 +216,7 @@
           [label]="'Forma farmacéutica'"
           [required]="true"
           name="formaFarmaceutica"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -259,6 +263,7 @@
           [label]="'Estado físico'"
           [required]="true"
           name="estadoFisico"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -338,7 +343,7 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria<span
+            >Fracción arancelaria <span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
@@ -395,6 +400,7 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched ? true : false"
             name="fraccionArancelaria"
+              [placeholder]="'Selecciona una opción'"
           ></app-catalogo-select>
       </div>
     </div>
@@ -476,7 +482,7 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmt"
-            >UMT<span
+            >UMT <span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
@@ -559,6 +565,7 @@
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
           name="cantidadUmc"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -616,7 +623,7 @@
           [datos]="fechaDeCaducidadInputMercanica"
           name="fechaCaducidad"
           (valorCambiado)="fechaDeCaducidadValor($event)"
-          [setFecha]="mercanciaForm.get('fechaDeCaducidad')?.value"
+          [setFecha]="mercanciaForm.get('fechaCaducidad')?.value"
         ></input-fecha>
         </div>
       </div>

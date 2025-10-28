@@ -991,8 +991,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       [Validators.required, matrizRequerida]
     ],
   });
-
-  // Remove invalid controls
+   const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
+  setTimeout(()=>{
+ 
+      MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
+    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
+      MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos,MERCANCIA_FORM_DETALLE.tipoProducto);
+  MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
+    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
+MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
+MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
+this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);  
+},500);
+    
   const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
   if (this.detalleMercancia) {
     CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
@@ -1043,6 +1054,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       return null;
     };
   }
+public getIdFromDescripcion(
+  array: Catalogo[],
+  descripcion: string | number
+): number | string | undefined {
+  // If descripcion is a string, find by descripcion (case-insensitive)
+  if (typeof descripcion === 'string') {
+    const ITEM = array.find(el => el.descripcion.toLowerCase() === descripcion.toLowerCase());
+    return ITEM ? ITEM.id : descripcion; // Return ID if found, else return original descripcion
+  }
+
+  // If descripcion is already a number (ID), just return it
+  return descripcion;
+}
 
   static numeroUMCDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -1202,7 +1226,7 @@ public convertToStringArray(value: unknown): string[] {
       return;
     }
      const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
-   // Set additional values
+      // Set additional values
     VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
     VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
@@ -1210,6 +1234,30 @@ public convertToStringArray(value: unknown): string[] {
     VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
     VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
+
+    const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;
+    const CLASIFICACIONOBJ = this.clasificacionProductoDatos?.find(item => item.id === Number(CLASIFICACIONID));
+    VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.descripcion ?? '';
+
+    const ESPECIFICARCLASIFICACIONID = this.mercanciaForm.get('especificarClasificacionProducto')?.value;
+    const ESPECIFICARCLASIFICACIONOBJ = this.especificarClasificacionProductoDatos?.find(item => item.id === Number(ESPECIFICARCLASIFICACIONID));
+    VALORTABLAMERCANCIA.especificarClasificacionProducto = ESPECIFICARCLASIFICACIONOBJ?.descripcion ?? '';
+
+    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
+    const TIPOPRODUCTOOBJ = this.tipoProductoDatos?.find(item => item.id === Number(TIPOPRODUCTOID));
+    VALORTABLAMERCANCIA.tipoProducto = TIPOPRODUCTOOBJ?.descripcion ?? '';
+
+    const FORMAFARMACEUTICAID = this.mercanciaForm.get('formaFarmaceutica')?.value;
+    const FORMAFARMACEUTICAOBJ = this.formaFarmaceuticaDatos?.find(item => item.id === Number(FORMAFARMACEUTICAID));
+    VALORTABLAMERCANCIA.formaFarmaceutica = FORMAFARMACEUTICAOBJ?.descripcion ?? '';
+
+    const ESTADOFISICOID = this.mercanciaForm.get('estadoFisico')?.value;
+    const ESTADOFISICOOBJ = this.estadoFisicoDatos?.find(item => item.id === Number(ESTADOFISICOID));
+    VALORTABLAMERCANCIA.estadoFisico = ESTADOFISICOOBJ?.descripcion ?? '';
+
+    const UMCID = this.mercanciaForm.get('cantidadUmc')?.value;
+    const UMCOBJ = this.cantidadUmcDatos?.find(item => item.id === Number(UMCID));
+    VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.descripcion ?? '';
     
     // Emit the merchandise data
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
@@ -1350,7 +1398,7 @@ public convertToStringArray(value: unknown): string[] {
    */
   fechaDeCaducidadValor(valor: string): void {
     this.mercanciaForm.patchValue({
-      fechaDeCaducidad: valor,
+      fechaCaducidad: valor,
     });
   }
 

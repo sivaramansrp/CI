@@ -58,6 +58,20 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
    * Se utiliza para abrir o cerrar el modal de archivos.
    */
   modalInstances: Modal | null = null;
+  /**
+   * RFC del solicitante obtenido del store.
+   */
+  rfcSolicitante: string = '';
+
+  /**
+   * Clave de entidad federativa obtenida del store.
+   */
+  claveEntidadFederativa: string = 'SIN';
+
+  /**
+   * ID del tipo de trámite obtenido del store.
+   */
+  idTipoTramite: number = 140105;
 
   
 
@@ -184,8 +198,8 @@ public nuevaNotificacionUno!: Notificacion;
     this.cancelacionForm = this.fb.group({
      motivoCancelacion: ['', [Validators.required, Validators.maxLength(250)]],
     });
-    
-
+    this.initializeStoreData();
+    this.suscribirseAStoreData();
 
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
@@ -202,9 +216,6 @@ public nuevaNotificacionUno!: Notificacion;
      
       }
     });
-
-
-     // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
       .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe(data => {
@@ -227,6 +238,87 @@ public nuevaNotificacionUno!: Notificacion;
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Inicializa los datos del store con información del usuario si están vacíos.
+   * Esto asegura que tengamos los datos necesarios para el payload.
+   */
+  private initializeStoreData(): void {
+    this.desistimientoQuery.selectTramite$
+      .pipe(takeUntil(this.destroyNotificationSubject$))
+      .subscribe((storeData) => {
+        // Si el RFC está vacío, podemos establecer un valor predeterminado o obtenerlo de otro lugar
+        if (!storeData.rfc) {
+          // Aquí podrías obtener el RFC de:
+          // 1. Un servicio de autenticación
+          // 2. Session storage
+          // 3. Un servicio de usuario global
+          // 4. O pedir al usuario que lo ingrese
+          
+          // Por ejemplo, podrías hacer:
+          // const userRfc = this.authService.getCurrentUserRfc();
+          // if (userRfc) {
+          //   this.servicioDeMensajesService.actualizarEstadoFormulario({ rfc: userRfc });
+          // }
+          
+          // this.servicioDeMensajesService.actualizarEstadoFormulario({ rfc: "AAL0409235E6" });
+        }
+
+        // Inicializar clave_entidad_federativa si está vacía
+        if (!storeData.claveEntidadFederativa) {
+          // Podrías obtener esto de:
+          // 1. Ubicación del usuario
+          // 2. Configuración del sistema
+          // 3. Selección del usuario
+          // 4. Servicio de geolocalización
+          
+          // Ejemplo:
+          // const userState = this.locationService.getUserState();
+          // if (userState) {
+          //   this.servicioDeMensajesService.actualizarEstadoFormulario({ 
+          //     claveEntidadFederativa: userState 
+          //   });
+          // }
+        }
+
+        // Inicializar idTipoTramite si está vacío o incorrecto
+        if (!storeData.idTipoTramite || storeData.idTipoTramite !== 140105) {
+          // Este valor generalmente es fijo para cada componente/trámite
+          // pero podría venir de:
+          // 1. Configuración del componente
+          // 2. Parámetros de la ruta
+          // 3. Configuración del sistema
+          
+          // Para este trámite específico, asegurar que sea 140105:
+          this.servicioDeMensajesService.actualizarEstadoFormulario({ 
+            idTipoTramite: 140105 
+          });
+        }
+      });
+  }
+
+  /**
+   * Suscribe a los valores del store y los mantiene actualizados en propiedades locales.
+   * Similar al patrón usado en 80205 suscribirseAFields().
+   */
+  private suscribirseAStoreData(): void {
+    this.desistimientoQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((state) => ({
+          rfc: state.rfc,
+          claveEntidadFederativa: state.claveEntidadFederativa,
+          idTipoTramite: state.idTipoTramite,
+          idSolicitud: state.idSolicitud,
+          folioCancelar: state.folioCancelar,
+        }))
+      )
+      .subscribe((storeValues) => {
+        this.rfcSolicitante = storeValues.rfc || 'AAL0409235E6';
+        this.claveEntidadFederativa = storeValues.claveEntidadFederativa || 'SIN';
+        this.idTipoTramite = storeValues.idTipoTramite || 140105;
+      });
   }
 
    /**
@@ -348,6 +440,174 @@ public nuevaNotificacionUno!: Notificacion;
     }
   
     }
+
+  /**
+   * Busca permisos para cancelación basado en el folio del trámite.
+   * @method buscarPermisoCancelacion
+   */
+  buscarPermisoCancelacion(event?: Event): void {
+    // Prevenir la propagación del evento para evitar activar la validación del formulario padre
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
+    // Validar el formulario antes de proceder
+    if (this.busquedaForm.invalid) {
+      this.busquedaForm.markAllAsTouched();
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite es un dato requerido",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const TRAMITE_VALUE = this.busquedaForm.get('tramite')?.value;
+
+    // Validar longitud del folio
+    if (TRAMITE_VALUE.length !== 25) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite debe tener exactamente 25 caracteres",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.servicioDeMensajesService.actualizarEstadoFormulario({ folioCancelar: TRAMITE_VALUE });
+
+    // Validar que tengamos los datos necesarios del store
+    if (!this.rfcSolicitante) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "No se encontraron los datos del solicitante. Intente recargar la página.",
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.desistimientoQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((storeState) => ({
+          id_solicitud: storeState.idSolicitud || this.idTipoTramite,
+          rfc_solicitante: storeState.rfc || this.rfcSolicitante,
+          clave_entidad_federativa: storeState.claveEntidadFederativa || this.claveEntidadFederativa,
+          id_tipo_tramite: storeState.idTipoTramite || this.idTipoTramite,
+          folio_cancelar: storeState.folioCancelar || TRAMITE_VALUE
+        }))
+      )
+      .subscribe((PAYLOAD) => {
+        this.ejecutarBusquedaPermiso(PAYLOAD);
+      });
+  }
+
+  /**
+   * Ejecuta la búsqueda del permiso con el payload proporcionado.
+   * @param payload - Datos necesarios para la búsqueda del permiso
+   */
+  /**
+   * Ejecuta la búsqueda del permiso con el payload proporcionado.
+   * @param payload - Datos necesarios para la búsqueda del permiso
+   */
+  private ejecutarBusquedaPermiso(PAYLOAD: {
+    id_solicitud: number;
+    rfc_solicitante: string;
+    clave_entidad_federativa: string;
+    id_tipo_tramite: number;
+    folio_cancelar: string;
+  }): void {
+    this.servicioDeMensajesService.buscarPermisoCancelacion(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotificationSubject$))
+      .subscribe({
+            next: (response) => {
+              if (response.codigo === '00' && response.datos) {
+                this.datosDePermiso = true;
+                this.cuerpoTablaCancelacion = response.datos.datos || [];
+                this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion);
+                this.cerrarModal();
+                this.nuevaNotificacion = {
+                  tipoNotificacion: TipoNotificacionEnum.TOASTR,
+                  categoria: CategoriaMensaje.EXITO,
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: 'Permiso encontrado exitosamente',
+                  cerrar: false,
+                  tiempoDeEspera: 2000,
+                  txtBtnAceptar: 'Aceptar',
+                  txtBtnCancelar: '',
+                };
+              } else {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: TipoNotificacionEnum.ALERTA,
+                  categoria: CategoriaMensaje.ERROR,
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: response.error || 'No se encontró el permiso especificado',
+                  cerrar: false,
+                  tiempoDeEspera: 3000,
+                  txtBtnAceptar: 'Aceptar',
+                  txtBtnCancelar: '',
+                };
+              }
+            },
+            error: (error) => {
+              let errorMessage = 'El Folio de Trámite que ingresó no pertenece a PEXIM';
+              if (error.status) {
+                switch (error.status) {
+                  case 400:
+                    errorMessage = 'Error en los datos enviados. Verifique el formato del folio.';
+                    break;
+                  case 401:
+                    errorMessage = 'No tiene autorización para realizar esta consulta.';
+                    break;
+                  case 404:
+                    errorMessage = 'El Folio de Trámite que ingresó no fue encontrado en el sistema.';
+                    break;
+                  case 500:
+                    errorMessage = 'Error interno del servidor. Intente nuevamente más tarde.';
+                    break;
+                  default:
+                    if (error.error?.mensaje) {
+                      errorMessage = error.error.mensaje;
+                    } else if (error.message) {
+                      errorMessage = error.message;
+                    }
+                }
+              }
+
+              this.nuevaNotificacion = {
+                tipoNotificacion: TipoNotificacionEnum.ALERTA,
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: '',
+                mensaje: errorMessage,
+                cerrar: false,
+                tiempoDeEspera: 3000,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
+          });
+  }
 
   
 

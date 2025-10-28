@@ -116,8 +116,6 @@ export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown 
         true
     );
 
-
-
     /**
      * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
      * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
@@ -162,16 +160,22 @@ export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown 
     @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter<number>();
 
 
-      @Input() tableId!: string;
+    /**
+     * Identificador único para la tabla. Esta propiedad de entrada se utiliza para
+     * distinguir y gestionar el estado o el comportamiento del componente de la tabla.
+     * 
+     * @input
+     */
+    @Input() tableId!: string;
 
 
     ngOnInit(): void {
         this.paginatedDatos = [...this.data];
-        
+
         // Si no se ha proporcionado un ID de tabla, se genera uno aleatorio.
         this.tableId = this.tableId ? this.tableId : 'tabla_' + Math.floor(Math.random() * 1000000);
         this.getUpdatePagination();
-      }
+    }
 
     /**
      * Alterna la expansión de una fila en la tabla dinámica.
@@ -294,7 +298,7 @@ export class TablaDinamicaExpandidaComponent<T extends { [key: string]: unknown 
         }
 
     }
-    
+
 }
 
 

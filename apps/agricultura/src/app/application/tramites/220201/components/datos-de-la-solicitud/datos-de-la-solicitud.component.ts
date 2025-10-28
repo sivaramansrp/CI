@@ -1,32 +1,27 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-
-import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import {CatalogosService} from '../../services/220201/catalogos/catalogos.service'
-import { HttpClient } from '@angular/common/http';
-
-import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
-
 import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CONFIGURACION_SENSIBLES } from '../../../../shared/constantes/datos-de-la-solicitue.enum';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { PrellenadoSolicitud } from '../../models/220201/prellenado-solicitud.model';
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
-import { Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-
-import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
-
 
 
 /**
@@ -433,7 +428,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       numeroGuia: [''],
       certificacion: [''],
       regimen: ['', Validators.required],
-      datosDeMercancia:['']
+      datosDeMercancia: ['']
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
@@ -469,7 +464,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerListasDesplegables
    */
   obtenerListasDesplegables(): void {
-    this.obtenerIngresoSelectList();    
+    this.obtenerIngresoSelectList();
     this.obtenerPuntoInspeccionList();
     this.obtenerRegimenList();
     this.obtenerDatosTablaSolicitud();
@@ -482,13 +477,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   obtenerIngresoSelectList(): void {
 
     this.catalogoService.obtieneCatalogoAduana(220201)
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe(
-      (data): void => {
-        this.aduanaDeIngreso = data.datos ?? [];
-      }
-    );
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+        (data): void => {
+          this.aduanaDeIngreso = data.datos ?? [];
+        }
+      );
   }
 
   /**
@@ -496,25 +491,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerSanidadAgropecuariaList
    */
   obtenerSanidadAgropecuariaList(cveAduana: string): void {
-    if(cveAduana !== ''){
+    if (cveAduana !== '') {
       this.catalogoService.obtieneCatalogoOficinasInspeccion(220201, cveAduana)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-        (data): void => {
-          this.sanidadAgropecuaria = data.datos ?? [];
-        }
-      );
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+          (data): void => {
+            this.sanidadAgropecuaria = data.datos ?? [];
+          }
+        );
     }
-    
+
   }
 
   /**
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList(): void {
-    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, '34013').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+  obtenerPuntoInspeccionList(oisa: string = '34013'): void {
+    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, oisa).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.puntoInspeccion = data.datos ?? [];
     });
   }
@@ -525,7 +520,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   obtenerEstablecimientoList(): void {
 
-    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7','220201').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7', '220201').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.establecimientoTIF = data.datos ?? [];
     });
   }
@@ -544,19 +539,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList(): void {
+  obtenerRegimenList(clave_regimen: string=''): void {
 
     this.catalogoService.obtieneCatalogoRegimenes(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimen = data.datos ?? [];
+      this.regimen = clave_regimen 
+        ? (data.datos ?? []).filter((item) => item.clave === clave_regimen) 
+        : data.datos ?? [];
     });
   }
 
   obtenerDatosTablaSolicitud(): void {
-    this.registroSolicitudService.obtieneDatosDeLaSolicitud(220201,'AAL0409235E6').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.registroSolicitudService.obtieneDatosDeLaSolicitud(220201, 'AAL0409235E6').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.cuerpoTablaSolicitud = data.datos ?? [];
     });
   }
-  
+
   /**
    * Actualiza los datos almacenados en el store.
    * @method setValoresStore
@@ -572,7 +569,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   radioBotonSeleccionado(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia
-    
+    console.warn('Valor del radio button seleccionado:', VALOR);
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
@@ -595,7 +592,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 18 }
       ];
     }
-    else { 
+    else {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
         { encabezado: 'Tipo de requisitos', clave: (fila: FilaSolicitud): string => fila.descripcionTipoRequisito ?? '', orden: 2 },
@@ -671,7 +668,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
     const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (VALOR === 'yes') {
-      
+
       this.modalRef.abrir(AnimalesVivoContenedoraComponent, { cantidadRegistros: CANTIDAD_REGISTROS });
     }
     else if (VALOR === 'no') {
@@ -721,15 +718,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {void}
   */
   agregarMercancia(): void {
-    if(this.filasSeleccionadas.size > 0) {
+    if (this.filasSeleccionadas.size > 0) {
       this.tablaMercancias.clearSelection();
       this.filasSeleccionadas.clear();
       this.fitosanitarioStore.update(
-      (state) => ({
-        ...state,
-        selectedDatos: []
-      })
-    );
+        (state) => ({
+          ...state,
+          selectedDatos: []
+        })
+      );
     }
     const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
@@ -747,7 +744,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {boolean}
   */
   validarFormulario(): boolean {
-    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
+    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true : false;
     if (this.forma.valid) {
       return this.mensajeErrorTabla;
     }
@@ -756,22 +753,126 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     return false
   }
 
-onFilaClic(event: SolicitudData): void {
-  if (event && event.id) {
-    this.certificadoZoosanitarioServices.obtenerSolicitudDataUrl("solicitud.json")
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
-        if (datos?.datosDeLaSolicitud) {
-          this.datosDelaSolicitud.patchValue(datos.datosDeLaSolicitud);
-        }
-        if (datos?.filaSolicitud) {
-          this.fitosanitarioStore.updateFilaSolicitud(datos.filaSolicitud);
-        }
-      });
-  }
-}
+  onFilaClic(event: SolicitudData): void {
+    console.warn('Fila clicada:', event);
+    if (event && event.id_solicitud) {
+      this.catalogoService.obtenSolicitudPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (datos) => {
+            if (datos?.datos) {
+              this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
+              this.obtenerPuntoInspeccionList(datos.datos.punto_inspeccion || '');
+              //Regimen
+              this.obtenerRegimenList(datos.datos?.clave_regimen || '');
+              this.datosDelaSolicitud.patchValue({                
+                aduanaIngreso: datos.datos.cve_aduana || '',
+                tipoMercancia: datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA' ? 'no' : 'yes', //'yes' para animales vivos, 'no' para subproductos
+                oficinaInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
+                claveUCON: datos.datos.clave_UCON || '',
+                establecimientoTIF: datos.datos.establecimiento_TIF || '',
+                nombreVeterinario: datos.datos.nombre_veterinario || '',
+                regimen: datos.datos.clave_regimen || '',
+                numeroGuia: datos.datos.numero_autorizacion || '',
+              });              
+            } else {
+              this.datosDelaSolicitud.reset();
+            }
+            console.warn('Datos de la solicitud prellenada:', datos);
+            const DETALLE_MERCANCIA = datos?.datos as PrellenadoSolicitud || [];
+            if (DETALLE_MERCANCIA.mercancia.length > 0) {
 
-columns: ColumnConfig[] = [
+              const FILAS_SOLICITUD: FilaSolicitud[] = [];
+              // eslint-disable-next-line complexity
+              DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
+
+                const LISTADETALLEPRODUCTOS: DetallasDatos[] = mercancia.lista_detalle_mercancia ?.map((producto) => ({
+                  numeroDeLote: producto.numero_lote_detalle || '',
+                  fechaElaboracionEmpaqueProceso: producto.fecha_elaboracion || '',
+                  fechaProduccionSacrificio: producto.fecha_sacrificio_str || '',
+                  fechaFinProduccionSacrificio: producto.fecha_sacrificio_fin || '',
+                  fechaCaducidadProducto: producto.fecha_caducidad_str || '',
+                  fechaFinCaducidadProducto: producto.fecha_caducidad_fin || '',
+                  fechaFinElaboracionEmpaqueProceso: producto.fecha_elaboracion_fin || '',
+                  fechhaInicioProduccionSacrificio: producto.fecha_sacrificio_str || '',
+                  fechaInicioCaducidadProducto: producto.fecha_caducidad_str || '',
+                  fechaCaducidad: producto.fecha_caducidad || '',
+                })) as DetallasDatos[] || [];
+
+                const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
+                  noPartida: mercancia.numero_partida.toString(),
+                  NumeroLote: animal.numero_lote_detalle || '',
+                  ColorPelaje: animal.color_pelaje_detalle || '',
+                  EdadAnimal: animal.edad_animal_detalle || '',
+                  FaseDesarrollo: animal.fase_desarrollo_detalle || '',
+                  FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
+                  NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
+                  Raza: animal.raza_detalle || '',
+                  Sexo: animal.id_sexo_detalle || '',
+                  NombreCientifico: animal.nombre_cientifico_detalle || '',
+                  NombreMercancia: animal.nombre_mercancia_detalle || '',
+                })) as Sensible[] || [];
+
+                const FILAS: FilaSolicitud = {
+                  noPartida: mercancia.numero_partida.toString(),
+                  descripcionTipoRequisito: mercancia.descripcion_tipo_requisito || '',
+                  tipoRequisito: mercancia.tipo_requisito || '',
+                  requisito: mercancia.requisitos || '',
+                  numeroCertificadoInternacional: String(mercancia.numero_certificado) || '',
+                  fraccionArancelaria: mercancia.fraccion_arancelaria_corto || '',
+                  descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
+                  nico: mercancia.clave_nico || '',
+                  descripcionNico: mercancia.descripcion_nico || '',
+                  descripcionUso: mercancia.descripcion_uso || '',
+                  umt: mercancia.clave_unidad_comercial || '',
+                  cantidadUMT: mercancia.cantidad_umt || 0,
+                  umc: mercancia.clave_unidad_medida || '',
+                  descripcionUMT: mercancia.descripcion_umt || '',
+                  descripcionUMC: mercancia.descripcion_umc || '',
+                  cantidadUMC: mercancia.cantidad_umc || 0,
+                  especie: mercancia.descripcion_especie || '',
+                  uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
+                  paisDeOrigen: mercancia.clave_paises_origen || '',
+                  paisDeDestino: mercancia.nombre_pais_procedencia || '',
+                  paisDeProcedencia: mercancia.clave_paises_procedencia || '',
+                  descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
+                  descripcionPaisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  tipoPresentacionDescripcion: mercancia.id_tipo_presentacion || '',
+                  tipoPlanta: mercancia.descripcion_tipo_planta || '',
+                  plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
+                  certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
+                  tipoDeProducto: '',
+                  numeroDeLote: '', 
+                  sensibles: LISTADETALLESENSIBLES,
+                  detalleProductos: LISTADETALLEPRODUCTOS,
+                  descripcion: ''
+                };
+                FILAS_SOLICITUD.push(FILAS);
+              });
+
+              this.fitosanitarioStore.updateFilaSolicitud(FILAS_SOLICITUD);
+            }
+            this.radioBotonSeleccionado()
+          },
+          error: (error) => {
+            console.error('Error al obtener los datos de la solicitud prellenada:', error);
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
+    }
+  }
+
+  columns: ColumnConfig[] = [
     { encabezado: 'No. partida', clave: 'noPartida', width: '30%' },
     { encabezado: 'Tipo de requisito', clave: 'tipoRequisito', width: '20%' },
     { encabezado: 'Requisito', clave: 'requisito', width: '20%' },
@@ -802,19 +903,19 @@ columns: ColumnConfig[] = [
     { encabezado: 'Fase de desarrollo', clave: 'FaseDesarrollo', width: '10%' },
     { encabezado: 'Función zootécnica', clave: 'FuncionZootecnica', width: '10%' },
     { encabezado: 'Nombre de la mercancía', clave: 'NombreMercancia', width: '10%' },
-    { encabezado: 'Numero de identificación', clave: 'NumeroIdentificacion', width: '10%' },                
+    { encabezado: 'Numero de identificación', clave: 'NumeroIdentificacion', width: '10%' },
     { encabezado: 'Raza', clave: 'Raza', width: '10%' },
-    { encabezado: 'Sexo', clave: 'Sexo', width: '10%' },        
-    { encabezado: 'Nombre cientifico', clave: 'NombreCientifico', width: '25%' },              
+    { encabezado: 'Sexo', clave: 'Sexo', width: '10%' },
+    { encabezado: 'Nombre cientifico', clave: 'NombreCientifico', width: '25%' },
   ];
 
-    nestedColumnsDetalleProductos: ColumnConfig[] = [
+  nestedColumnsDetalleProductos: ColumnConfig[] = [
     { encabezado: 'Número de lote', clave: 'numeroDeLote', width: '8%' },
     { encabezado: 'Fecha de elaboración o empaque o proceso', clave: 'fechaElaboracionEmpaqueProceso', width: '10%' },
     { encabezado: 'Fecha de producción o sacrificio', clave: 'fechaProduccionSacrificio', width: '10%' },
     { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave: 'fechaCaducidadProducto', width: '10%' },
     { encabezado: 'Fecha de fin de elaboración o empaque o proceso', clave: 'fechaFinElaboracionEmpaqueProceso', width: '10%' },
-    { encabezado: 'Fecha de fin de producción o sacrificio', clave: 'fechaFinProduccionSacrificio', width: '10%' },                
+    { encabezado: 'Fecha de fin de producción o sacrificio', clave: 'fechaFinProduccionSacrificio', width: '10%' },
     { encabezado: 'Fecha de fin de caducidad del producto o consumo preferente', clave: 'fechaFinCaducidadProducto', width: '10%' },
   ];
 
@@ -849,12 +950,12 @@ columns: ColumnConfig[] = [
   }
 
   /** Método para manejar el cambio de filas seleccionadas. */
-  onfilasSeleccionadasChange(filasSeleccionadas: FilaSolicitud[] ): void {
+  onfilasSeleccionadasChange(filasSeleccionadas: FilaSolicitud[]): void {
     const FS = filasSeleccionadas
       .map((row) => row.id)
       .filter((id): id is number => id !== undefined && id !== null);
     this.filasSeleccionadas = new Set(FS);
-    if( this.filasSeleccionadas.size > 1 ){
+    if (this.filasSeleccionadas.size > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -866,12 +967,12 @@ columns: ColumnConfig[] = [
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      
-  }
-  
-}
 
-confirmacionModal(confirmar: boolean): void {
+    }
+
+  }
+
+  confirmacionModal(confirmar: boolean): void {
     switch (this.procesoModal) {
       case 'validar_formulario':
         {

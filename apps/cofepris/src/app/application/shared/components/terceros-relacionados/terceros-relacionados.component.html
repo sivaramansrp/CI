@@ -180,6 +180,7 @@
           class="btn btn-primary ms-2"
           [disabled]="esFormularioSoloLectura ? true : false"
           *ngIf="!esVisible || (esVisible && estaOculto)"
+          (click)="onAgregarProveedorFinal()"
         >
           Agregar
         </button>
@@ -318,19 +319,26 @@
 </div>
 
 
-<!-- Proveedor Modal -->
+<!-- Update the Proveedor Modal -->
 <div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <!-- <h5 class="modal-title" id="proveedorModalLabel">
+        <h5 class="modal-title" id="proveedorModalLabel">
           {{ proveedorSeleccionadoParaModificar.length > 0 ? 'Modificar Proveedor' : 'Agregar Proveedor' }}
-        </h5> -->
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <app-agregar-proveedor
-          >
+          *ngIf="proveedorModalAbierto"
+          [idProcedimiento]="idProcedimiento"
+          [proveedorTablaDatos]="proveedorTablaDatos"
+          [datoSeleccionado]="proveedorSeleccionadoParaModificar"
+          (updateProveedorTablaDatos)="onProveedorUpdated($event)"
+          (cancelarmodal)="cerrarProveedorModal()"
+          (guardarYSalir)="cerrarProveedorModal()"
+          [tramiteID]="tramiteID">
         </app-agregar-proveedor>
       </div>
     </div>
