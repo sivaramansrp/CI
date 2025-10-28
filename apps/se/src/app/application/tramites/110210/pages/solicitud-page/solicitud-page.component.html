@@ -9,6 +9,11 @@
           <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
         </div>
         }
+        @if(showCatalogoError){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="catalogoErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+        }
       <app-wizard [listaPasos]="pasos"></app-wizard>
 
     </div>
@@ -16,13 +21,10 @@
     <div class="row">
       @switch (indice) {
       @case (1) {
-      <app-paso-uno #pasoUno></app-paso-uno>
+      <app-paso-uno #pasoUno (noDatosError)="showError()"></app-paso-uno>
       }
       @case (2) {
-      <app-paso-dos></app-paso-dos>
-      }
-      @case (3) {
-      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110210" [procedureUrl]="'tramites-disponibles/solicitud'"></paso-firma>
+      <paso-firma [idSolicitud]="guardarIdSolicitud" [procedure]="110210" [procedureUrl]="'tramites-disponibles/solicitud'"></paso-firma>
       }
     }
 

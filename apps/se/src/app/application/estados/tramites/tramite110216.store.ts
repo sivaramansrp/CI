@@ -9,9 +9,11 @@ import {
   GrupoDeDomicilio,
   GrupoDeTransporte,
   GrupoOperador,
+  GrupoReceptor,
   GrupoRepresentativo,
   GrupoTratado,
   HistoricoColumnas,
+  MercanciaTabla,
   SeleccionadasTabla,
 } from '../../tramites/110216/models/certificado-origen.model';
 
@@ -27,7 +29,7 @@ export interface Tramite110216State {
   formDatosProductor: { [key: string]: string | number | boolean | null };
   formHistorico: { [key: string]: undefined };
   grupoDeTransporte: GrupoDeTransporte;
-  grupoReceptor: string;
+  grupoReceptor: GrupoReceptor;
   grupoRepresentativo: {
     nombreRepresentante?: string;
     apellidoPaterno?: string;
@@ -80,6 +82,11 @@ export interface Tramite110216State {
   buscarMercancia: Mercancia[];
   formaValida: { [key: string]: boolean };
   mercanciaTabla: Mercancia[];
+  /**
+   * @description
+   * Lista de mercancías disponibles para seleccionar o procesar dentro del formulario.
+   */
+  disponiblesDatos: Mercancia[];
   
     nombre: string;
     apellidoPrimer: string;
@@ -101,12 +108,28 @@ export interface Tramite110216State {
    */
   datosProductorFormulario: { [key: string]: unknown };
 
+  /**
+ * Objeto que indica la validez de los diferentes formularios del trámite.
+ * Cada propiedad representa un formulario y su valor indica si es válido.
+ */
   formValidity?: {
     datosCertificado?: boolean;
     destinatario?: boolean;
     histProductores?: boolean;
     certificadoOrigen?: boolean;
   };
+
+  /** Lista de productores exportador agregados al estado del trámite. */
+  agregarProductoresExportador: HistoricoColumnas[];
+
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
+
+  /** Lista de mercancías asociadas a los productores en el estado del trámite. */
+  mercanciaProductores: MercanciaTabla[];
 }
 
 /**
@@ -169,8 +192,15 @@ export const INITIAL_STATE: Tramite110216State = {
   buscarMercancia: [],
   formaValida: {},
   mercanciaTabla: [],
+  disponiblesDatos: [],
   pestanaActiva: 0,
-  grupoReceptor: '',
+  grupoReceptor: {
+    nombre: '',
+    apellidoPrimer: '',
+    apellidoSegundo: '',
+    numeroFiscal: '',
+    razonSocial: '',
+  },
   grupoDeDirecciones: {} as GrupoDeDirecciones,
 
   grupoRepresentativo: {} as GrupoRepresentativo,
@@ -193,7 +223,9 @@ export const INITIAL_STATE: Tramite110216State = {
     fax: '',      
   },
   formValidity: {},
-
+  agregarProductoresExportador: [],
+  productoresExportador: [],
+  mercanciaProductores: [],
 };
 
 /**
@@ -238,9 +270,22 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({ ...state, representacionFederal }));
   }
 
-  public setGrupoReceptor(grupoReceptor: string): void {
-    this.update((state) => ({ ...state, grupoReceptor }));
-  }
+  /**
+     * @method setGrupoReceptor
+     * @description Actualiza la información del receptor en el estado del trámite.
+     *
+     * Este método permite establecer los datos del receptor en el grupo receptor del estado.
+     *
+     * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
+     *
+     * @returns {void}
+     */
+    public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+      this.update((state) => ({
+        ...state,
+        grupoReceptor,
+      }));
+    }
 
   public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
     this.update((state) => ({ ...state, grupoDeDirecciones }));
@@ -384,31 +429,72 @@ export class Tramite110216Store extends Store<Tramite110216State> {
         return { ...state, mercanciaTabla: UPDATEDLIST };
       }
 
-      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+      const UPDATEDLIST = mercanciaTabla.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
       return { ...state, mercanciaTabla: UPDATEDLIST };
     });
   }
-public setGrupoReceptorNombre(nombre: string): void {
-  this.update((state) => ({ ...state, nombre }));
-}
 
-public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
-  this.update((state) => ({ ...state, apellidoPrimer }));
-}
+  /**
+   * Actualiza el nombre del grupo receptor.
+   *
+   * @param {string} nombre - Nombre del grupo receptor.
+   */
+  public setGrupoReceptorNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, nombre },
+    }));
+  }
 
-public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
-  this.update((state) => ({ ...state, apellidoSegundo }));
-}
+  /**
+   * Actualiza el primer apellido del grupo receptor.
+   *
+   * @param {string} apellidoPrimer - Primer apellido del grupo receptor.
+   */
+  public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, apellidoPrimer },
+    }));
+  }
 
-public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
-  this.update((state) => ({ ...state, numeroFiscal }));
-}
+  /**
+   * Actualiza el segundo apellido del grupo receptor.
+   *
+   * @param {string} apellidoSegundo - Segundo apellido del grupo receptor.
+   */
+  public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, apellidoSegundo },
+    }));
+  }
 
-public setGrupoReceptorRazonSocial(razonSocial: string): void {
-  this.update((state) => ({ ...state, razonSocial }));
-}
+  /**
+   * Actualiza el número fiscal del grupo receptor.
+   *
+   * @param {string} numeroFiscal - Número fiscal del grupo receptor.
+   */
+  public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, numeroFiscal },
+    }));
+  }
+
+  /**
+   * Actualiza la razón social del grupo receptor.
+   *
+   * @param {string} razonSocial - Razón social del grupo receptor.
+   */
+  public setGrupoReceptorRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, razonSocial },
+    }));
+  }
 
 public setGrupoDeDireccionesCiudad(ciudad: string): void {
   this.update((state) => ({
@@ -590,6 +676,44 @@ public setGrupoDeTransporteNumeroVuelo(numeroVuelo: string): void {
     this.update((state) => ({
       ...state,
       representacionFederalSeleccion,
+    }));
+  }
+
+  /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador: [
+        ...state.agregarProductoresExportador,
+        ...productor.map(item => ({ ...item })),
+      ],
+     }));
+  }
+
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
     }));
   }
 }

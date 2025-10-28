@@ -12,6 +12,7 @@ import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitu
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
+import {ELEMENTOS_REQUERIDOS} from '../../constantes/maquila-materias-primas.enum'
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -61,6 +62,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @access public
    */
   fabricanteTablaDatos: Fabricante[] = [];
+
+   /**
+        * @property {string[]} elementosRequeridos
+        * @description
+        * Lista de elementos requeridos para completar el formulario o proceso.
+        */
+       public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos

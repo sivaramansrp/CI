@@ -17,7 +17,7 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, TabEvaluarTratadosResponse, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { CatalogoTipoDocumento, CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, DocumentosEspecificosResponse, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, TabEvaluarTratadosResponse, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
@@ -59,8 +59,11 @@ import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firm
 import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
 
 import { ModeloConfig, ServiceConfig } from '../shared/models/service-config.model';
+import { RequerimientoConfig } from '../shared/models/requerimiento-config.model';
 import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
+
+import { DocumentosEspecificosRequest } from '../core/models/atender-requerimiento/request/documentos-especificos.model';
 
 /**
  * @component
@@ -102,6 +105,12 @@ import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
   styleUrl: './evaluar.component.scss',
 })
 export class EvaluarComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} calificacionDictaminador
+   * @description Indica la calificación actual del dictaminador.
+   * Por defecto es false, lo que significa que no se puede ver el boton dictaminador.
+   */
+  calificacionDictaminador: boolean = false;
 
   /**
    * @property {boolean} sentidoInputTramite110101
@@ -280,6 +289,15 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   yaCargoDictamenes = false;
 
+  /** Lista de tipos de requerimiento */
+  documentosEscpecificos: DocumentosEspecificosResponse[] = [];
+
+  /** Listado de documentos específicos seleccionados para el requerimiento */
+  listadoDocumentosEspecificos: number[] = [];
+
+  /** Listado de documentos específicos guardados para el requerimiento */
+  listadoDocumentosGuardados: CatalogoTipoDocumento[] = [];
+
   /**
 * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
 * Incluye:
@@ -334,16 +352,21 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   config!: TramiteConfig;
 
+  /** * @property {RequerimientoConfig} requerimientoConfig
+   * @description Configuración de requerimientos específica del trámite, obtenida del servicio TramiteConfigService.
+   */
+  requerimientoConfig!: RequerimientoConfig;
+
   /**
    * @property {ServiceConfig} serviceConfig
    * @description Configuración de servicios específicos del trámite, obtenida del servicio TramiteConfigService.
    */
   serviceConfig!: ServiceConfig;
 
-   /**
-   * @property {ModeloConfig} vistasModificacion110101
-   * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
-  */
+  /**
+  * @property {ModeloConfig} vistasModificacion110101
+  * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
+ */
   vistasModificacion110101!: ModeloConfig;
 
   /**
@@ -394,6 +417,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.config = this.tramiteConfigService.getConfig(this.tramite);
     this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
+    this.requerimientoConfig = this.tramiteConfigService.getRequerimientoConfig(this.tramite);
     this.vistasModificacion110101 = this.tramiteConfigService.getModeloConfig(this.tramite);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
@@ -970,7 +994,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   opcionesEvaluacion(): void {
-    
+
     const PAYLOAD: OpcionesEvaluacionRequest = {
       cve_rol_capturista: this.guardarDatos.current_user,
       considera_capturista: true
@@ -1124,7 +1148,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
              this.obtenerCriterios();
           }
           if(this.vistasModificacion110101.actualizarVista){
-            this.sentidoInputTramite110101 = resp.datos?.nombre_sentido_dictamen === "Rechazado" ? false: true;
+            this.sentidoInputTramite110101 = resp.datos?.sentido_dictamen === "Rechazado" ? false: true;
           }
         }
 
@@ -1174,6 +1198,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     });
   }
+  /**
+   * Establece el estado del calificador dictaminador.
+   * Actualiza el valor que indica si el usuario actúa como dictaminador en el proceso de calificación.
+   */
+  onDictaminador(valor: boolean): void{
+    this.calificacionDictaminador = valor;
+  }
 
   /**
    * @method getSentidosDisponibles
@@ -1209,6 +1240,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   seleccionaTabRequerimiento(i: number): void {
     this.indiceDictamen = i;
+
+    if (i === 2 && this.requerimientoConfig.isSegundaTabla) {
+      this.postDocumentosEspecificos();
+    }
   }
 
   /**
@@ -1232,13 +1267,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
       texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
-        id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud): undefined,
-          criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
+        id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud) : undefined,
+        criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
           id_tratado_acuerdo: tratado.id_tratado_acuerdo,
           cve_tratado_acuerdo: tratado.cve_tratado_acuerdo
-        })) ?? [] 
+        })) ?? []
       })
     };
 
@@ -1325,10 +1360,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         apellido_materno: 'PRUEBA'
       },
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
-          criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
+        criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
-        })) ?? [] 
+        })) ?? []
       })
     };
 
@@ -1597,6 +1632,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       justificacion: this.justificacion,
       alcance_requerimiento: 'X0XX',
+      documentos_especificos: this.listadoDocumentosEspecificos
     };
 
     this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1664,6 +1700,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       id_accion: this.guardarDatos.action_id,
       justificacion: this.justificacion,
+      documentos_especificos: this.listadoDocumentosEspecificos,
       alcance_requerimiento: '',
       solicitante: {
         nombre: 'Javier',
@@ -1792,6 +1829,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
+            if(this.vistasModificacion110101.actualizarVista){
+              this.postDocumentoRequerimiento();
+            }
             this.router.navigate(['bandeja-de-tareas-pendientes']);
           }
 
@@ -1814,7 +1854,171 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-  
+
+  /**
+   * Realiza una petición para guardar y generar el oficio de requerimiento.
+   * Maneja la respuesta mostrando notificaciones de éxito o error según corresponda.
+ */
+  postDocumentoRequerimiento(): void {
+    this.firmarRequermientoService.postGuardarOficioRequerimiento(this.tramite, this.guardarDatos.id_solicitud)
+       .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error generar oficio',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Ocurrió un error al generar el oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error generar oficio';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+  /**
+   * Realiza una petición para obtener los documentos específicos asociados a un requerimiento.
+   * Maneja la respuesta mostrando notificaciones de éxito o error según corresponda.
+   */
+  postDocumentosEspecificos(): void {
+    const PAYLOAD: DocumentosEspecificosRequest = {
+      id_pexim: 0,
+      list_fraccion_arancelarias: [],
+      list_mecanismo_asignaciones: [],
+      list_tratamientos: [],
+      clave_tipo_accion_mecanismo: '',
+      descripcion_tipo_accion_mecanismo: '',
+      esquema_regla_octava: 0
+    };
+    const IDREQUERMIENTO = this.dataIniciarRequerimiento?.id_requerimiento;
+    const IDSOLICITUD = this.guardarDatos.id_solicitud;
+
+    this.guardarRequerimientoService.postDocumentosEspecificos(this.tramite, IDSOLICITUD, false, IDREQUERMIENTO, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            this.documentosEscpecificos = resp.datos ?? [];
+
+            if (IDREQUERMIENTO) {
+              this.cargarDocumentosGuardados(IDREQUERMIENTO, IDSOLICITUD, PAYLOAD);
+            }
+
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al recuperar documentos específicos.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Error al recuperar documentos específicos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al recuperar documentos específicos.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+  /**
+   * Carga los documentos específicos previamente guardados para un requerimiento.
+   * Realiza una petición al servicio `GuardarRequerimientoService` y actualiza
+   * el listado de documentos guardados si la respuesta es exitosa.
+   * Maneja errores mostrando notificaciones adecuadas.
+   * @param idRequerimiento - Identificador del requerimiento.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @param payload - Objeto con los parámetros necesarios para la petición.
+   */
+  cargarDocumentosGuardados(idRequerimiento: number, idSolicitud: string, payload: DocumentosEspecificosRequest): void {
+    this.guardarRequerimientoService
+      .postDocumentosEspecificos(this.tramite, idSolicitud, true, idRequerimiento, payload)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            const DOCUMENTOS_PREVIOS = (resp.datos ?? []).map(doc => ({
+              id: doc.id_tipo_documento,
+              description: doc.documento,
+            }));
+            this.listadoDocumentosGuardados = DOCUMENTOS_PREVIOS;
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al recuperar documentos específicos.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        },
+      });
+  }
+
+  /**
+   * Actualiza el listado de documentos específicos seleccionados.
+   *
+   * @param listado - Arreglo de objetos que contienen el identificador de cada documento.
+   *                   Se extrae únicamente la propiedad `id` de cada elemento.
+   */
+  onDocumentosActualizados(listado: { id: number }[]): void {
+    this.listadoDocumentosEspecificos = listado.map(item => item.id);
+  }
+
   /**
    * Descarga un archivo Excel con los datos de la solicitud.
    *
@@ -1831,26 +2035,26 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
-          // Convertir Base64 a un Blob
-          const BASE64_DATA = resp.datos ?? '';
-          const BYTE_CHARACTERS = atob(BASE64_DATA);
-          const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
-          for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
-            BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
-          }
-          const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
-          const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            // Convertir Base64 a un Blob
+            const BASE64_DATA = resp.datos ?? '';
+            const BYTE_CHARACTERS = atob(BASE64_DATA);
+            const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+            for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+              BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+            }
+            const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+            const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-          // Crear enlace de descarga
-          const LINK = document.createElement('a');
-          LINK.href = window.URL.createObjectURL(BLOB);
-          LINK.download = 'datosRPE.xlsx';
-          LINK.click();
+            // Crear enlace de descarga
+            const LINK = document.createElement('a');
+            LINK.href = window.URL.createObjectURL(BLOB);
+            LINK.download = 'datosRPE.xlsx';
+            LINK.click();
 
-          // Liberar memoria
-          window.URL.revokeObjectURL(LINK.href);
+            // Liberar memoria
+            window.URL.revokeObjectURL(LINK.href);
 
-  
+
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {

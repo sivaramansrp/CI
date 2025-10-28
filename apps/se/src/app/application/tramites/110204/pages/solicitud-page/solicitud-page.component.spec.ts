@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { of as observableOf } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
 
@@ -14,7 +15,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule,],
+      imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule],
       declarations: [
         SolicitudPageComponent,
       ],

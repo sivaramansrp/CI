@@ -5,12 +5,15 @@
     [agregarDatosProductor]="agregarDatosProductor"
     [productoresExportador]="productoresExportador || []"
     [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
-    [mercanciaDatos]="(mercanciaProductores$ | async) || []"
+    [mercanciaDatos]="mercanciaProductores"
     [ocultarFax]="ocultarFax"
     [esTipoDeSeleccionado]="esTipoDeSeleccionado"
     [optionsTipoFactura]="optionsTipoFactura || []"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     [sortMercanciasTablaOrder]="true"
     (emitAgregarExportador)="emitAgregarExportador($event)" 
+    (emitMercanciaDatos)="setMercanciaDatos($event)"
     (formaValida)="formaValida($event)"
     ></app-historico-productores>
+
+    <!-- [mercanciaDatos]="(mercanciaProductores$ | async) || []" -->

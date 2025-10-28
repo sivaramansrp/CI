@@ -16,8 +16,21 @@
                     <app-generar-dictamen [isAntecedentes]="config.isAntecedentes" [mostrarTitulo]="true"
                     [dataIniciarDictamenAutorizar]="dataAutorizarDictamen"
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles" [soloLectura]="true"
-                    [habilitarFechasPorAceptacion]="true">
+                    [habilitarFechasPorAceptacion]="true" [habilitarFechasPorAceptacion]="config.habilitarFechas"
+                    [isAntecedentes]="config.isAntecedentes" [anexo222se]="config.anexo222se" [habilitarFechasPorAceptacion]="config.habilitarFechas" >
                     </app-generar-dictamen>
+                      @if (config.descargaSolicitud) {
+                    <ng-container>
+                        <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <label class="form-label text-title" style="cursor: pointer; text-decoration: underline;"
+                                (click)="descargarSolicitud()">
+                            Descargar datos de la solicitud
+                            </label>
+                        </div>
+                        </div>
+                    </ng-container>
+                    }
 
                     <div class="d-flex justify-content-lg-end h3">
                         <button class="btn  btn-primary ms-2" type="button" (click)="firmarMostrarAutorizarDictamen()">Autorizar</button>

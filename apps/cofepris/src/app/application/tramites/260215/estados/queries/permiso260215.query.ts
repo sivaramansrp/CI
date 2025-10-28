@@ -13,7 +13,7 @@ export class Permiso260215Query extends Query<Sanitario260215State> {
   selecteDespecificarClasificacion$ = this.select(
     (state) => state.setDespecificarClasificacion
   );
-
+ 
   /**
    * Observable que selecciona todos los terceros relacionados del estado.
    * Devuelve el estado completo.

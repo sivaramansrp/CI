@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RegistroService } from './registro.service';
-import { Tramite30506Store, Solicitud30506State, Catalogo, createInitialState } from '../state/Tramite30506.store';
+import { Tramite30506Store, Solicitud30506State, Catalogo, createInitialState } from '../state/tramite30506.store';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 describe('RegistroService', () => {

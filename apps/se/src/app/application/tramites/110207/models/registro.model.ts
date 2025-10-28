@@ -215,3 +215,42 @@ export const HEADERS_DATA: ConfiguracionColumna<SeleccionadasTabla>[] = [
     orden: 8,
   },
 ];
+
+/**
+ * @descripcion
+ * Interfaz que representa la información del grupo representativo
+ * relacionado con el exportador y su empresa.
+ */
+export interface GrupoRepresentativo {
+  /**
+   * @descripcion
+   * Lugar asociado al grupo representativo.
+   */
+
+  lugar: string;
+  /**
+   * @descripcion
+   * Nombre del exportador perteneciente al grupo representativo.
+   */
+  nombreExportador: string;
+  /**
+   * @descripcion
+   * Nombre de la empresa del exportador.
+   */
+  empresa: string;
+  /**
+   * @descripcion
+   * Cargo o puesto del representante dentro de la empresa.
+   */
+  cargo: string;
+  /**
+   * @descripcion
+   * Número de teléfono de contacto del representante.
+   */
+  telefono: string;
+  /**
+   * @descripcion
+   * Correo electrónico del representante o exportador.
+   */
+  correoElectronico: string;
+}

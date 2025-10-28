@@ -332,7 +332,6 @@ get ninoFormGroup(): FormGroup {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.consultaState = seccionState;
-          this.createFormMercancia();
         })
       )
       .subscribe();
@@ -347,7 +346,7 @@ get ninoFormGroup(): FormGroup {
      this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
       })).subscribe();
-    this.createFormMercancia();
+    this.inicializarFormulario();
 
     if(this.solicitudeState.insumosTablaDatos.length){
       this.insumosTablaDatos = this.solicitudeState.insumosTablaDatos;
@@ -398,35 +397,6 @@ get ninoFormGroup(): FormGroup {
       });
   }
 
-  /**
-    * Crea un grupo de formularios reactivos para "Mercancia" con los siguientes controles:
-    * - nombreComercial: Un campo de texto obligatorio.
-    * - nombreIngles: Un campo de texto obligatorio.
-    * - fraccionArancelaria: Un campo de texto con una longitud máxima de 8 caracteres y un validador de patrones para valores numéricos.
-    * - descripcion: Un campo de texto opcional.
-    * - valorTransaccion: Un campo de texto con una longitud máxima de 20 caracteres.
-    */
-  public createFormMercancia(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  public guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.formMercancia.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.formMercancia.enable();
-    }
-}
 
   /**
    * Inicializa el formulario reactivo `formMercancia` con los valores predeterminados de `solicitudeState`.

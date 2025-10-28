@@ -1,15 +1,15 @@
+import { Component, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
 import { Catalogo } from '../../models/validar-inicialmente-certificado.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { FormBuilder, FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
@@ -220,6 +220,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ datos: valida });
+    this.store.setFormValidity('datosCertificado', valida);
   }
 
   /**

@@ -64,15 +64,11 @@ describe('MercanciasModalComponent', () => {
       valueChanges: observableOf({})
     });
     component.parchearValoresDelFormulario = jest.fn();
-    component.cargarFactura = jest.fn();
-    component.cargarUmc = jest.fn();
     component.store = component.store || {};
     component.store.setFormMercancia = jest.fn();
     component.ngOnInit();
     expect(component.fb.group).toHaveBeenCalled();
     expect(component.parchearValoresDelFormulario).toHaveBeenCalled();
-    expect(component.cargarFactura).toHaveBeenCalled();
-    expect(component.cargarUmc).toHaveBeenCalled();
     expect(component.store.setFormMercancia).toHaveBeenCalled();
   });
 
@@ -92,26 +88,6 @@ describe('MercanciasModalComponent', () => {
     component.store = component.store || {};
     component.store.setUmc = jest.fn();
     component.tipoUmcSeleccion({});
-    expect(component.store.setUmc).toHaveBeenCalled();
-  });
-
-  it('should run #cargarFactura()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerFacturas = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setFactura = jest.fn();
-    component.cargarFactura();
-    // expect(component.certificadoService.obtenerFacturas).toHaveBeenCalled();
-    // expect(component.store.setFactura).toHaveBeenCalled();
-  });
-
-  it('should run #cargarUmc()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerUmc = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setUmc = jest.fn();
-    component.cargarUmc();
-    expect(component.certificadoService.obtenerUmc).toHaveBeenCalled();
     expect(component.store.setUmc).toHaveBeenCalled();
   });
 

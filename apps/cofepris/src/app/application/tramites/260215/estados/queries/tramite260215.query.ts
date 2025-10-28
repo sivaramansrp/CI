@@ -13,6 +13,40 @@ export class Tramite260215Query extends Query<Solicitud260215State> {
   selectSolicitud$ = this.select((state) => {
     return state;
   });
+   /**
+   * @property {Observable<Fabricante[]>} getFabricanteTablaDatos$
+   * Observable que selecciona los datos de la tabla de fabricantes.
+   */
+  public getFabricanteTablaDatos$ = this.select(
+    (state) => state.fabricanteTablaDatos
+  );
+ /**
+   * @property {Observable<Destinatario[]>} getDestinatarioFinalTablaDatos$
+   * Observable que selecciona los datos de la tabla de destinatarios finales.
+   */
+  public getDestinatarioFinalTablaDatos$ = this.select(
+    (state) => state.destinatarioFinalTablaDatos
+  );
+  
+  /**
+   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
+   * Observable que selecciona los datos de la tabla de proveedores.
+   */
+  public getProveedorTablaDatos$ = this.select(
+    (state) => state.proveedorTablaDatos
+  );
+    /**
+   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
+   * Observable que selecciona los datos de la tabla de facturadores.
+   */
+  public getFacturadorTablaDatos$ = this.select(
+    (state) => state.facturadorTablaDatos
+  );
+   /**
+   * @property {Observable<Tramite260214State>} selectTramiteState$
+   * Observable que selecciona el estado completo del trámite.
+   */
+  selectTramiteState$ = this.select((state) => state);
 
   /**Guarda el estado completo del formulario de la solicitud */
   constructor(protected override store: Tramite260215Store) {

@@ -5,7 +5,11 @@
       <div *ngIf="campoDestinatario">
         <div class="row">
           <div class="col-md-4 form-group">
-            <label class="form-label" for="Calle">Calle*:</label>
+            <label class="form-label" for="Calle">Calle<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['calle'].invalid &&
+                    formDestinatario.controls['calle'].touched
+                }">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
               (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
@@ -15,7 +19,11 @@
                 class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+            <label class="form-label" for="numeroLetra">Número y/o letra<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['numeroLetra'].invalid &&
+                    formDestinatario.controls['numeroLetra'].touched
+                }">*</span>:</label>
             <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
               (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
@@ -28,7 +36,11 @@
         </div>
         <div class="row">
           <div class="col-md-8 form-group">
-            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
+            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['ciudad'].invalid &&
+                    formDestinatario.controls['ciudad'].touched
+                }">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
               (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
@@ -39,17 +51,18 @@
           </div>
           <div class="col-md-4 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
               name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
-            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched ||
-            formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid">
-              @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es
-                obligatorio</span> } </div> }
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 form-group">
-            <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
+            <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['correoElectronico'].invalid &&
+                    formDestinatario.controls['correoElectronico'].touched
+                }">*</span>:</label>
             <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
               (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
             @if(formDestinatario.controls['correoElectronico'].invalid &&
@@ -89,7 +102,11 @@
       <div *ngIf="camposDestinatarios">
         <div class="row">
           <div class="col-md-8 form-group">
-            <label class="form-label" for="Calle">Calle*:</label>
+            <label class="form-label" for="Calle">Calle<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['calle'].invalid &&
+                    formDestinatario.controls['calle'].touched
+                }">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
               (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
@@ -99,7 +116,11 @@
                 class="mensaje-error"> Por favor, no escribas más de 90 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+            <label class="form-label" for="numeroLetra">Número y/o letra<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['numeroLetra'].invalid &&
+                    formDestinatario.controls['numeroLetra'].touched
+                }">*</span>:</label>
             <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
               (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
@@ -112,7 +133,11 @@
         </div>
         <div class="row">
           <div class="col-md-8 form-group">
-            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
+            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['ciudad'].invalid &&
+                    formDestinatario.controls['ciudad'].touched
+                }">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
               (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
@@ -122,7 +147,11 @@
                 class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
+            <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['correoElectronico'].invalid &&
+                    formDestinatario.controls['correoElectronico'].touched
+                }">*</span>:</label>
             <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
               (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
             @if(formDestinatario.controls['correoElectronico'].invalid &&
@@ -164,7 +193,11 @@
       <ng-template #defaultTemplate>
         <div class="row">
           <div class="col-md-8 form-group">
-            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
+            <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['ciudad'].invalid &&
+                    formDestinatario.controls['ciudad'].touched
+                }">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
               (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
@@ -177,7 +210,11 @@
         </div>
         <div class="row">
           <div class="col-md-4 form-group">
-            <label class="form-label" for="Calle">Calle*:</label>
+            <label class="form-label" for="Calle">Calle<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['calle'].invalid &&
+                    formDestinatario.controls['calle'].touched
+                }">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
               (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
@@ -188,7 +225,11 @@
                 escribas más de 90 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+            <label class="form-label" for="numeroLetra">Número y/o letra<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['numeroLetra'].invalid &&
+                    formDestinatario.controls['numeroLetra'].touched
+                }">*</span>:</label>
             <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
               (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
@@ -231,7 +272,11 @@
                 solo números</span> } </div> }
           </div> } <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico*: </label>
+              <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="{
+                  'text-danger':
+                    formDestinatario.controls['correoElectronico'].invalid &&
+                    formDestinatario.controls['correoElectronico'].touched
+                }">*</span>: </label>
               <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
               <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
                 (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
@@ -246,12 +291,10 @@
                 class="mensaje-error">Por favor, no escribas más de 70 caracteres</span> } </div> }
           </div> @if(paisDestino){ <div class="col-md-8 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
               name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
-            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched ||
-            formDestinatario.get('paisDestin')?.dirty)) { <div class="d-grid">
-              @if(formDestinatario.get('paisDestin')?.errors?.['required']) { <span class="mensaje-error">Este campo es
-                obligatorio</span> } </div> }
+  
           </div> }
         </div>
       </ng-template>

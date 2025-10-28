@@ -1,7 +1,7 @@
 /*
 /AnexoUnoSeccionComponent
 */
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -53,6 +53,7 @@ import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * compodoc
  * @class AnexoUnoSeccionComponent
@@ -84,7 +85,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   * @implements {OnInit, OnDestroy}
   */
 
-export class AnexoUnoSeccionComponent implements OnInit, OnDestroy {
+export class AnexoUnoSeccionComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
@@ -255,7 +256,8 @@ constructor(private fb: FormBuilder,
   private consultaioQuery: ConsultaioQuery,
   private complimentosService: ComplimentosService,
   private complementarStore: ComplementarStore,
-  private complementarQuery: ComplementarQuery
+  private complementarQuery: ComplementarQuery,
+  private servicioDeFormularioService: ServicioDeFormularioService,
 ){ 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -1148,6 +1150,20 @@ public tipoDeDocumenteCatalog: Catalogo[] = [];
     });
   }
 
+    /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.anexoUnoTablaLista.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoUnoTabla1', this.anexoUnoTablaLista);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoUnoTabla1', this.anexoUnoTablaLista);
+      }
+
+      if (this.anexoFraccionAnarelaria.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoUnoTabla2', this.anexoFraccionAnarelaria);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoUnoTabla2', this.anexoFraccionAnarelaria);
+      }
+  }
 
   /**
    * Emite el evento `obtenerProyectoImmexTablaLista` con la lista de proyectos IMMEX proporcionada.

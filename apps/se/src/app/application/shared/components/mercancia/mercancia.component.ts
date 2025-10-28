@@ -3,12 +3,15 @@ import {
   CLASIFICACION_NALADISA_1996_IDS,
   CLASIFICACION_NALADISA_2002_IDS,
   CLASIFICACION_NALADI_IDS,
+  CRITERIO_PARA_CLASIFICATION,
   CRITERIO_PARA_CONFERIR_ORIGEN_IDS,
   CRITERIO_PARA_TRATO_PREFERENCIAL_IDS,
   FECHA,
+  FECHA_DE_PAGO,
   FECHA_FACTURA_IDS,
   FECHA_FACTURA_REFERENCIA,
   FECHA_FACTURA_REFERENCIA_IDS,
+  FECHA_PAGO,
   FRACCION_ARANCELARIA_IDS,
   MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
@@ -38,6 +41,7 @@ import {
   InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_DESCRIPCION,
   SeccionLibQuery,
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
@@ -189,6 +193,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Fecha final para el formulario.
    */
   fechaFactura: InputFecha = FECHA;
+
+  /**
+   * @descripcion
+   * Fecha final para el formulario.
+   */
+  fechaDePago: InputFecha = FECHA_PAGO;
 
   /**
    * @descripcion
@@ -350,6 +360,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   MARCA: number[] = MARCA_IDS;
 
   /**
+   * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
+   */
+  CRITERIO_PARA_CLASIFICATION: number[] = CRITERIO_PARA_CLASIFICATION;
+
+  /**
+   * Contiene los identificadores en los que el campo "Fecha de pago" es obligatorio.
+   */
+  FECHA_DE_PAGO: number[] = FECHA_DE_PAGO;
+
+  /**
    * @description
    * Contiene los identificadores de las unidades de medida utilizadas para la comercialización.
    * Estos valores se obtienen de la constante `UNIDAD_MEDIDA_COMERCIALIZACION_IDS`
@@ -378,7 +398,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     private mercanciaService: MercanciaService,
     private seccionQuery: SeccionLibQuery,
     public catalogoServices: CatalogoServices
-  ) { }
+  ) {}
 
   /**
    * @descripcion
@@ -467,6 +487,10 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           disabled: true,
         },
       ],
+      criterioParaClasificacion: [
+        this.datosSeleccionados?.criterioParaClasificacion ?? null,
+      ],
+      fechaDePago: [this.datosSeleccionados?.fechaDePago ?? null],
       valorDeContenidoRegional: [
         {
           value: this.datosSeleccionados?.valorDeContenidoRegional,
@@ -479,7 +503,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           ? [Validators.required]
           : null,
       ],
-      marca: [this.datosSeleccionados?.marca ?? null],
+      marca: [this.datosSeleccionados?.marca ?? null,[Validators.pattern(REGEX_DESCRIPCION)]],
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [
@@ -539,6 +563,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Cierra el modal y oculta la alerta.
    */
   cerrarModal(): void {
+    this.mercanciaForm.reset();
     this.cerrarClicado.emit();
     this.mostrarAlerta = false;
   }
@@ -637,6 +662,10 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
       complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
       complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
+      criterioParaClasificacion: FALLBACK(
+        MERCANIADATO.criterioParaClasificacion
+      ),
+      fechaDePago: FALLBACK(MERCANIADATO.fechaDePago),
       fraccionNaladi: MERCANIADATO.fraccionNaladi,
       fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
       fraccionNaladiSa96: MERCANIADATO.fraccionNaladiSa96,
@@ -644,6 +673,17 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nalad: MERCANIADATO.nalad,
       fechaFactura: MERCANIADATO.fechaFactura,
     };
+  }
+
+  /**
+   * @descripcion
+   * Obtiene el catálogo de tipos de factura y actualiza las opciones del campo de formulario correspondiente.
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'tipoFactura' en `factura` con las opciones obtenidas.
+   */
+  conseguirUMCDescripcion(clave: string): string {
+    const UMC = this.optionsUMC.find((item) => item.clave === clave);
+    return UMC ? UMC.descripcion : '';
   }
 
   /**
@@ -689,6 +729,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * @summary Actualiza `fechaDePago` y sincroniza con el store.
+   * @description Setea el valor, marca el control como tocado/modificado y persiste vía `setFechaDePago`.
+   * @param {string} nuevo_valor Fecha seleccionada (p. ej., '2025-09-04').
+   * @returns {void}
+   */
+  public cambioFechaDePago(nuevo_valor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDePago: nuevo_valor,
+    });
+  }
+
+  /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
    * @param nombreControl - Nombre del control a verificar.
    * @returns True si el control es inválido, de lo contrario false.
@@ -709,7 +761,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionTipoFactura(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      tipoFactura: evento.clave,
+      tipoFactura: evento.descripcion,
     });
   }
 
@@ -722,7 +774,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionUMC(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      umc: evento.clave,
+      umc: evento.descripcion,
     });
   }
 
@@ -776,5 +828,39 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((res) => {
         this.factura = res.datos ?? [];
       });
+  }
+
+  /**
+   *  @description
+   * Valida y formatea el valor de un campo de entrada para asegurarse de que es un número decimal válido.
+   * Si el valor es un número válido, se formatea a cuatro decimales y se actualiza el formulario reactivo.
+   * Si el valor no es válido, se limpia el campo de entrada.
+   * @param evento 
+   */
+  validarCantidadDecimal(evento: Event): void {
+    const INPUT_ELEMENT = evento.target as HTMLInputElement;
+    if (!isNaN(Number(INPUT_ELEMENT.value)) && INPUT_ELEMENT.value.trim() !== '') {
+      const NUMERO_FORMATEADO = parseFloat(INPUT_ELEMENT.value).toFixed(4);
+      INPUT_ELEMENT.value = NUMERO_FORMATEADO;
+    } else {
+      INPUT_ELEMENT.value = '';
+    }
+  }
+
+  /**
+   * @description
+   * Valida y formatea el valor de un campo de entrada para mercancía, asegurándose de que es un número decimal válido.
+   * Si el valor es un número válido, se formatea a cuatro decimales y se actualiza el campo de entrada.
+   * Si el valor no es válido, se limpia el campo de entrada.
+   * @param evento Evento que contiene el valor del campo de entrada a validar.
+   */
+  validarMercanciaDecimal(evento: Event): void {
+    const INPUT_ELEMENT = evento.target as HTMLInputElement;
+    if (!isNaN(Number(INPUT_ELEMENT.value)) && INPUT_ELEMENT.value.trim() !== '') {
+      const NUMERO_FORMATEADO = parseFloat(INPUT_ELEMENT.value).toFixed(4);
+      INPUT_ELEMENT.value = NUMERO_FORMATEADO;
+    } else {
+      INPUT_ELEMENT.value = '';
+    }
   }
 }

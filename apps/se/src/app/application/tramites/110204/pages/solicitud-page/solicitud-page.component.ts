@@ -1,12 +1,12 @@
 import {
   AVISO_CONTRNIDO,
   DatosPasos,
-  doDeepCopy,
-  esValidObject,
-  getValidDatos,
   ListaPasosWizard,
   SeccionLibStore,
   WizardComponent,
+  doDeepCopy,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/modificacion.enum';
@@ -195,7 +195,7 @@ export class SolicitudPageComponent implements OnDestroy {
 
 
 
-  /**
+ /**
 * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
 * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
 *
@@ -206,9 +206,8 @@ export class SolicitudPageComponent implements OnDestroy {
 * La llamada al servicio actualmente está comentada.
 */
  guardar(item: TramiteState): Promise<JSONResponse> {
-  console.log('item', item);
-
-  const MERCANCIA_SELECCIONADAS = this.certificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+  const CERTIFICADO = this.certificadoService.buildCertificado(item);
+  const DATOS_CERTIFICADO = this.certificadoService.buildDatosCertificado(item);
 
   const PAYLOAD = {
     rfc_solicitante: 'AAL0409235E6',
@@ -232,46 +231,9 @@ export class SolicitudPageComponent implements OnDestroy {
         telefono: "123456"
       }
     },
-    certificado: {
-      tratado_acuerdo: item.formCertificado['entidadFederativa'],
-      pais_bloque: item.formCertificado['bloque'],
-      fraccion_arancelaria: item.formCertificado['fraccionArancelaria'],
-      nombre_comercial: item.formCertificado['nombreComercial'],
-      fecha_inicio: item.formCertificado['fechaInicio'],
-      fecha_fin: item.formCertificado['fechaFin'],
-      registro_producto:item.formCertificado['registroProducto'],
-      realizo_tercer_operador: {
-        tercer_operador: item.formCertificado['si'],
-        nombre: item.formCertificado['nombres'],
-        primer_apellido: item.formCertificado['primerApellido'],
-        segundo_apellido: item.formCertificado['segundoApellido'],
-        numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'],
-        razon_social: item.formCertificado['razonSocial']
-      },
-      domicilio_tercer_operador: {
-        pais: item.formCertificado['pais'],
-        ciudad: item.formCertificado['ciudad'],
-        calle: item.formCertificado['calle'],
-        numero_letra: item.formCertificado['numeroLetra'],
-        lada: item.formCertificado['lada'],
-        telefono: item.formCertificado['telefono'],
-        fax: item.formCertificado['fax'],
-        correo_electronico: item.formCertificado['correo']
-      },
-      mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
-    },
-    datos_del_certificado: {
-      observaciones: item.formDatosCertificado['observacionesDates'],
-      idioma: item.formDatosCertificado['idiomaDates'],
-      representacion_federal: {
-        entidad_federativa: item.formDatosCertificado['EntidadFederativaDates'],
-        representacion_federal: item.formDatosCertificado['representacionFederalDates']
-      }
-    }
+    certificado: CERTIFICADO,
+    datos_del_certificado: DATOS_CERTIFICADO
   };
-
-  console.log(PAYLOAD, 'PAYLOAD');
-
 
      return new Promise((resolve, reject) => {
         this.certificadoService.guardarDatosPost(PAYLOAD).subscribe(response => {
@@ -279,6 +241,7 @@ export class SolicitudPageComponent implements OnDestroy {
           if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
             if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
               this.tramiteStore.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+              this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             } else {
               this.tramiteStore.setIdSolicitud(0);
             }
@@ -289,6 +252,7 @@ export class SolicitudPageComponent implements OnDestroy {
         });
         });
 }
+
 
   /**
    * Navega a través de los pasos del asistente según la acción del botón.

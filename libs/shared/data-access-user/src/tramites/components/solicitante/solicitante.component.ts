@@ -33,6 +33,8 @@ import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directi
 
 import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitante-evaluar.model';
 
+import { Notificacion } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'solicitante',
@@ -49,6 +51,8 @@ import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitan
   host: {}
 })
 export class SolicitanteComponent implements OnInit, OnDestroy {
+  nuevaNotificacion: Notificacion | null = null;
+
   @Input() tabindex!: number;
 
   /** Indica si se deben mostrar los datos del trámite en el formulario del solicitante. */
@@ -101,7 +105,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
-    if (this.guardarDatos.id_solicitud && (this.guardarDatos.procedureId === '130118' || this.guardarDatos.procedureId === '5701' 
+     if (this.guardarDatos.id_solicitud && (this.guardarDatos.procedureId === '130118' || this.guardarDatos.procedureId === '5701' 
       || this.guardarDatos.procedureId === '120301' || this.guardarDatos.procedureId === '110101')) {
       this.getDatosSolicitanteEvaluar(this.guardarDatos.id_solicitud);
     } else {
@@ -224,7 +228,9 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
             const DATOS_TRAMITE_MAPPED = {
               folioDelTramite: response.datos.datos_solicitud.num_folio_tramite,
               fechaDeInicio: response.datos.datos_solicitud.fec_ini_tramite,
-              estadoDelTramite: response.datos.datos_solicitud.estado_tramite
+              estadoDelTramite: response.datos.datos_solicitud.estado_tramite,
+              tipoDeTramite:response.datos.datos_solicitud.desc_modalidad
+
             };
             SolicitanteComponent.patchValuesToForm(DATOS_TRAMITE_FORM, DATOS_TRAMITE_MAPPED);
 
@@ -358,9 +364,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
           tap((response) => {
             if (response) {
               this.datosGenerales = response;
-
               const IDENTIFICACION = response.datos.identificacion;
-
               this.solicitanteStore.setRfc(response.datos.rfc_original ?? '');
               this.solicitanteStore.setNombre(IDENTIFICACION.nombre ?? '');
               this.solicitanteStore.setPaterno(IDENTIFICACION.ap_paterno ?? '');

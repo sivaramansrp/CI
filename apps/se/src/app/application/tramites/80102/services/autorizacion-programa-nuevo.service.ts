@@ -232,7 +232,7 @@ getServicoImmex(): Observable<JsonResponseCatalogo> {
       descripcionLugarEmbarque: DATOS_COMPLIMENTOS?.datosGeneralis?.localizacion ?? '',
       capacidadAlmacenaje: DATOS_COMPLIMENTOS?.formaModificaciones?.nombreDeNotaria ?? '',
       numeroPermiso: DATOS_COMPLIMENTOS?.obligacionesFiscales?.opinionPositiva === '1' ? 'SI' : '',
-      fechaOperacion: formatearFechaYyyyMmDd(DATOS_COMPLIMENTOS?.obligacionesFiscales?.fechaExpedicion),
+      fechaOperacion: DATOS_COMPLIMENTOS?.obligacionesFiscales?.fechaExpedicion,
       nomOficialAutorizado: DATOS_COMPLIMENTOS?.formaModificaciones?.nombreDelFederatario ?? '',
 
     };
