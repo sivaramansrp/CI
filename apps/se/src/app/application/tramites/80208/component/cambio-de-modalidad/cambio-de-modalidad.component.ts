@@ -507,7 +507,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
         claveServicio: Number(item.claveServicio)
       })),
       modalidad: this.tramiteID,
-      idPrograma: "121517"
+      idPrograma: "121579"
     };
 
     this.serviciosService.postServiciosImmexTabla(this.tramiteID, PAYLOAD).pipe(
@@ -567,7 +567,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     this.serviciosService.postServiciosAutorizadosTabla(this.tramiteID,{
       rfc: 'NOV0509053I7',
       numeroPrograma: '2',
-      idPrograma: '121517',
+      idPrograma: '121579',
       tipoPrograma: 'TICPSE.IMMEX'
     })
       .pipe(
@@ -850,12 +850,13 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
         filter((data: BaseResponse<EmpresasNacionalesResponse>) => data.codigo === '00'),
         map((data: BaseResponse<EmpresasNacionalesResponse>) => {
           if(data?.datos?.empresasNacionales === null) {
+            const ERROR_MSG = data?.datos?.resultado ? data.datos.resultado : data?.mensaje;
             this.notificacionesService.showNotification({
             tipoNotificacion: TipoNotificacionEnum.TOASTR,
             categoria: CategoriaMensaje.ERROR,
             modo: '',
             titulo: 'Error',
-            mensaje: `${data?.mensaje}`,
+            mensaje: `${ERROR_MSG}`,
             cerrar: true,
             txtBtnAceptar: '',
             txtBtnCancelar: ''
@@ -1060,13 +1061,36 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
       txtBtnCancelar: 'Cancelar',
     };
     this.esEliminar = true;}}
-  /**
-   * Muestra una notificación de confirmación al intentar agregar un servicio.
-   * @method agregarEmpresa
-   * @return {void} Este método no retorna ningún valor.
-   *  
-   * */
+    /**
+     * Muestra una notificación de confirmación al intentar agregar un servicio.
+     * @method agregarEmpresa
+     * @return {void} Este método no retorna ningún valor.
+     *  
+     * */
     agregarEmpresa(): void {
+      if(this.rfcEmpresa.trim() === ''){
+        this.formularioValidacionModal('Introduzca un RFC válido');
+        return;
+      } else if(this.numeroPrograma.trim() === ''){
+        this.formularioValidacionModal('Introduzca un no. de Programa valido');
+        return;
+      } else if(this.tiempoPrograma.trim() === ''){
+        this.formularioValidacionModal('Introduzca un Año valido');
+        return;
+      }else if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.idServicio===undefined&&this.autorizadosSeleccionados[0]?.idServicio===undefined)){
+        this.formularioValidacionModal('Debe seleccionar un Servicio.');
+        return;
+      }
+        this.actualizaGridEmpresasNacionales();
+    }
+
+    /**
+     * Muestra una notificación de confirmación al intentar agregar un servicio.
+     * @method doAgregarDos
+     * @return {void} Este método no retorna ningún valor.
+     *  
+     * */
+    doAgregarDos(): void {
       if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.idServicio===undefined&&this.autorizadosSeleccionados[0]?.idServicio===undefined)){
         this.nuevaNotificacion = {
           tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -1079,11 +1103,25 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
           txtBtnCancelar: '',
         };
         this.rowNotSeleccionada = true;
-      } else{
-
+      } else {
         this.actualizaGridEmpresasNacionales();
+      }
     }
-    }
+
+    formularioValidacionModal(mensaje:string): void {
+  this.rowNotSeleccionada = true;
+  this.nuevaNotificacion = {
+  tipoNotificacion: TipoNotificacionEnum.ALERTA,
+  categoria: CategoriaMensaje.ALERTA,
+  modo: 'modal',
+  titulo: '',
+  mensaje: mensaje,
+  cerrar: false,
+  txtBtnAceptar: 'Aceptar',
+  txtBtnCancelar: '',
+  };
+}
+
     /**
      * Muestra una notificación de confirmación al intentar eliminar un servicio.
      * @method eliminarEmpresa
