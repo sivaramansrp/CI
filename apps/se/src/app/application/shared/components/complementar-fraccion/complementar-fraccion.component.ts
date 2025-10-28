@@ -62,18 +62,14 @@ export class ComplementarFraccionComponent implements OnInit {
   @Output()
   emitirComplimentarFraccionDatos: EventEmitter<ComplimentarFraccionResoponse> =
     new EventEmitter<ComplimentarFraccionResoponse>(true);
-
+/**
+ * Evento para cerrar el popup.
+ */
+   @Output() cerrarPopup = new EventEmitter<void>();
   /**
    * Formulario para complementar fracción.
    */
   public complimentarForm!: FormGroup;
-
-  /**
-   * Evento que se emite al cerrar el popup.
-   * 
-   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
-   */
-  @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
    * Fila seleccionada del tipo AnexoUnoEncabezado.
@@ -200,6 +196,7 @@ export class ComplementarFraccionComponent implements OnInit {
    */
   seleccionGuardar(): void {
     this.emitirComplimentarFraccionDatos.emit(this.complimentarForm.value);
+     this.cerrarPopup.emit();
   }
 
   /**
