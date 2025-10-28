@@ -151,6 +151,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    */
   anoFormValido: boolean = false;
 
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true; 
+
   /**
    * @property {FormGroup} formGroup
    * @description Grupo de formularios reactivos de Angular que maneja todos los datos 
@@ -817,6 +820,47 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+ * Método para navegar a la sección anterior del wizard.
+ * Actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+ */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Maneja el evento de carga en progreso emitido por un componente hijo.
+   * Actualiza el estado de cargaEnProgreso según el valor recibido.
+   * @param cargando Valor booleano que indica si la carga está en progreso.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
   }
 
 
