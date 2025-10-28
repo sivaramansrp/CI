@@ -1086,30 +1086,6 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Al eliminar el permiso también se eliminaran las fracciones relacionadas. ¿Desea eliminar el registro?', '', 'danger', 'Cancelar');
     }
   }
-  /**
-   * @method eliminarconfirmar
-   * @description
-   * Confirma o cancela la eliminación del permiso IMMEX seleccionado.
-   * Se ejecuta cuando el usuario responde al modal de confirmación de eliminación.
-   * Si el usuario confirma (event === true), elimina el permiso seleccionado de la tabla,
-   * actualiza el estado en el store y limpia la selección actual.
-   * 
-   * @param {boolean} event - Respuesta del usuario al modal de confirmación.
-   *                         `true` para confirmar eliminación, `false` para cancelar.
-   * @returns {void}
-   */
-  eliminarconfirmar(event: boolean): void {
-    this.eliminarPlantasConfirmacion = false;
-    if(event === true){
-    this.espectaculoAlerta = true;
-    if (!this.listaFilaSeleccionada) {
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un permiso immex.');
-    } else if (this.listaFilaSeleccionada) {
-      this.eliminarPermisoImmexConfirmacion = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
-    }
-  }
-}
 
   eliminarPermisoImmexDatos(event: boolean): void {
     if (event === true) {
