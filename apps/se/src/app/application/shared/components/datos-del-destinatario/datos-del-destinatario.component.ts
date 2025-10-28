@@ -53,7 +53,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110223];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -121,6 +121,7 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
+    this.applyNumeroRegistroFiscalValidation();
     this.inicializarEstadoFormulario();
   }
 
@@ -165,8 +166,9 @@ export class DatosDelDestinatarioComponent
       'numeroDeRegistroFiscal'
     );
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
+    const NOMBRES = this.formDatosDelDestinatario.get('nombres');
 
-    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) {
+    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO || !NOMBRES) {
       return;
     }
 
@@ -176,16 +178,29 @@ export class DatosDelDestinatarioComponent
         Validators.maxLength(30),
       ]);
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
+      NOMBRES.setValidators([Validators.maxLength(20)]);
+    } else if (this.idProcedimiento === 110223) {
+      NUMERO_REGISTRO_FISCAL.setValidators([
+        Validators.required,
+        Validators.maxLength(30),
+      ]);
+      NOMBRES.setValidators([
+        Validators.required,
+        Validators.maxLength(20),
+      ]);
+      PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
     } else {
       NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
       PRIMER_APELLIDO.setValidators([
         Validators.required,
         Validators.maxLength(20),
       ]);
+      NOMBRES.setValidators([Validators.maxLength(20)]);
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
+    NOMBRES.updateValueAndValidity();
   }
 
   /**

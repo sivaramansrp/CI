@@ -135,7 +135,6 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
   
 
-
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -211,22 +210,22 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     });
   }
  
-public validateAllForms(): boolean {
-  let valid = true;
-  this.destinatarioComponent?.markAllFieldsTouched();
-  this.datosDelDestinatarioComponent?.markAllFieldsTouched();
-  this.representanteLegalExportadorComponent?.markAllFieldsTouched();
-  if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
-    valid = false;
-  }
-  if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
-    valid = false;
-  }
-  if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
-    valid = false;
-  }
-  return valid;
-}
+// public validateAllForms(): boolean {
+//   let valid = true;
+//   this.destinatarioComponent?.markAllFieldsTouched();
+//   this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+//   this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+//   if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
+//     valid = false;
+//   }
+//   if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
+//     valid = false;
+//   }
+//   if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
+//     valid = false;
+//   }
+//   return valid;
+// }
 
   /**
    * @method datosDelDestinatarioFunc
@@ -336,6 +335,43 @@ public validateAllForms(): boolean {
    */
   setFormValidaDestinatario(valida: boolean): void {
     this.store.setFormValida({ datosDestinatario: valida });
+  }
+
+  /**
+   * Valida todos los formularios asociados a los componentes destinatario, datos del destinatario y representante legal exportador.
+   * 
+   * Marca todos los campos de los formularios como "tocados" para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validateAllForms(): boolean {
+    let valid = true;
+    this.destinatarioComponent?.markAllFieldsTouched();
+    this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+    this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+    if (
+      this.destinatarioComponent &&
+      this.destinatarioComponent.formDestinatario &&
+      !this.destinatarioComponent.formDestinatario.valid
+    ) {
+      valid = false;
+    }
+    if (
+      this.datosDelDestinatarioComponent &&
+      this.datosDelDestinatarioComponent.formDatosDelDestinatario &&
+      !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid
+    ) {
+      valid = false;
+    }
+    if (
+      this.representanteLegalExportadorComponent &&
+      this.representanteLegalExportadorComponent.form &&
+      !this.representanteLegalExportadorComponent.form.valid
+    ) {
+      valid = false;
+    }
+    return valid;
   }
 
   /**
