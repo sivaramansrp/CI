@@ -14,7 +14,7 @@
             <ng-alert [CONTENIDO]="serviciosImmxAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
             </div>
             }
-            <app-wizard [listaPasos]="pasos"></app-wizard>
+            <app-wizard #wizardRef [listaPasos]="pasos"></app-wizard>
         </div>
         <div class="row">
             @switch (indice) { @case (1) {
