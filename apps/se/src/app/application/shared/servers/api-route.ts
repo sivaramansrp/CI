@@ -51,8 +51,8 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarControldasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-controladas/buscar-datos-grid-plantas-controladoras`,
     buscarTerciarizadasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-terciarizadas/buscar-datos-grid-plantas`,
     buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
+    tratadosAcuerdos: (countryCode: string) => `${BASE_URL}${API}/${procedure}${CATALOGO}/${countryCode}/tratados-acuerdos`,
     buscarPermisoImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/agregar-anexo-premiso`,
-    tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
     buscarFraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
     buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
@@ -61,4 +61,5 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     certificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/mostrar/certificados`,
     guardarCertificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/guardar`,
     generaCadena:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/genera-cadena-original`,
+    certificadoOrigen:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/obtener-certificado-origen`,
 });

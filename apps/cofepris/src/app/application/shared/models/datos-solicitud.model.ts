@@ -66,7 +66,93 @@ export interface TablaOpcionConfig {
   mercancia: string;
   cantidad: string;
   proveedor: string;
-}
+   /** RFC Sanitario - Registro Federal de Contribuyentes */
+   rfcSanitario: string;
+  
+   /** Denominación o Razón Social */
+   denominacionRazon: string;
+   
+   /** Correo Electrónico */
+   correoElectronico: string;
+   
+   /** Código Postal */
+   codigoPostal: string;
+   
+   /** Estado */
+   estado: string;
+   
+   /** Municipio o Alcaldía */
+   municipioAlcaldia: string;
+   
+   /** Localidad */
+   localidad: string;
+   
+   /** Colonia */
+   colonia: string;
+   
+   /** Calle y Número */
+   calleYNumero: string;
+   
+   /** Calle */
+   calle: string;
+   
+   /** Código de área telefónica (LADA) */
+   lada: string;
+   
+   /** Número de teléfono */
+   telefono: string;
+   
+   /** Aviso */
+   aviso: string;
+   
+   /** Licencia Sanitaria */
+   licenciaSanitaria: string;
+   
+   /** Régimen */
+   regimen: string;
+   
+   /** Aduanas de Entrada */
+   adunasDeEntradas: string;
+   
+   /** Aeropuerto */
+   aeropuerto: boolean;
+   
+   /** Aeropuerto Dos */
+   aeropuertoDos: boolean;
+   
+   /** Público */
+   publico: string;
+   
+   /** RFC del Representante */
+   representanteRfc: string;
+   
+   /** Nombre del Representante */
+   representanteNombre: string;
+   
+   /** Apellido Paterno */
+   apellidoPaterno: string;
+   
+   /** Apellido Materno */
+   apellidoMaterno: string;
+   
+   /** Régimen de la Mercancía */
+   regimenLaMercancia: string;
+   
+   /** Aduana */
+   aduana: string;
+   
+   /** Mercancías */
+   mercancias: TablaMercanciasDatos[];
+
+   scian: TablaScianConfig[];
+   
+   /** Manifiesto */
+   manifesto: string;
+   
+   /** Manifestos Casilla de Verificación */
+   manifiestosCasillaDeVerificacion: boolean;
+ }
+
 
 /**
  * Interfaz genérica para la configuración de una tabla de opciones.
@@ -181,14 +267,15 @@ export interface TablaMercanciasDatos {
   paisProcedencia: string;
   tipoProducto: string;
   usoEspecifico: string;
-  detallarUsoEspecifico?:string,
-  numeroDePiezasAFabricar?:string,
-  descripcionNumeroDePiezas?:string,
+  detallarUsoEspecifico?:string;
+  numeroDePiezasAFabricar?:string;
+  descripcionNumeroDePiezas?:string;
   numeroCAS?:string;
-  cantidadDeLotes?:string
-  kgPorLote?:string,
-  paisDeDestino?:string,
+  cantidadDeLotes?:string;
+  kgPorLote?:string;
+  paisDeDestino?:string;
   denominacionCumonInternacional?:string;
+  caducidad?:string;
   marcaComercialDenominacion?:string;
   especifique?: string;
   especifiqueObligatorio?:string;

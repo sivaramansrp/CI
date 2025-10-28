@@ -35,8 +35,23 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {
   AlertComponent,
   CatalogoSelectComponent,
+  CatalogoServices,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
@@ -55,6 +70,7 @@ import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
+  MercanciaForm,
   OpcionConfig,
   ScianConfig,
   TablaMercanciasConfig,
@@ -62,21 +78,13 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import { Subject, delay, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ScianDataService } from '../../services/scian-data.service';
+import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 
@@ -95,13 +103,16 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     TooltipModule,
     InputRadioComponent,
     TablePaginationComponent,
+    ScianTablaComponent,
+    DatosMercanciaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent
-  implements OnInit, OnDestroy, OnChanges
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -141,6 +152,7 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
 
+  @Input() public mercanciaFormState! : MercanciaForm;
   /**
    * @property {boolean} opcionesColapsableState
    * Estado colapsable inicial para mostrar u ocultar ciertas secciones.
@@ -216,6 +228,9 @@ export class DatosDeLaSolicitudComponent
    * Formulario reactivo principal del componente.
    */
   public datosSolicitudForm!: FormGroup;
+
+  public isContinuarButtonClicked: boolean = false;
+
 
   /**
    * @property {Catalogo[]} estadoDatos
@@ -531,6 +546,47 @@ export class DatosDeLaSolicitudComponent
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Reference to the SCIAN modal element
+   */
+  @ViewChild('scianModal') scianModal!: ElementRef;
+
+
+  /**
+   * Indicates if the SCIAN modal is currently open
+   */
+  public scianModalAbierto: boolean = false;
+
+   /**
+   * Indicates if the merchandise modal is currently open
+   */
+  public mercanciaModalAbierto: boolean = false;
+
+    /**
+     * @property {Subscription} subscription
+     * @private
+     * @description
+     * Contenedor principal para gestionar suscripciones a observables que requieren
+     * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+     * para casos específicos que necesitan control granular de suscripciones.
+     * 
+     * @pattern Subscription Management
+     * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+     * @cleanup Se desuscribe manualmente en ngOnDestroy()
+     * @use_case Suscripciones que requieren lógica de limpieza personalizada
+     * 
+     * @example
+     * ```typescript
+     * this.subscription.add(
+     *   this.service.getData().subscribe(data => { ... })
+     * );
+     * ```
+     */
+    private subscription: Subscription = new Subscription();
+   
+
+public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
+
+  /**
    * Constructor del componente.
    *
    * Inyecta los servicios y dependencias necesarias para la construcción del formulario,
@@ -549,8 +605,13 @@ export class DatosDeLaSolicitudComponent
     public activatedRoute: ActivatedRoute,
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
-    private scianDataService: ScianDataService
+    private scianDataService: ScianDataService,
+    private cdr: ChangeDetectorRef,
+    private catalogoService: CatalogoServices
+
+
   ) {
+
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'regimenDatos',
@@ -561,11 +622,11 @@ export class DatosDeLaSolicitudComponent
       'adunasDeEntradasDatos',
       '/cofepris/adunasDeEntradasDatos.json'
     );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'estadoDatos',
-      '/cofepris/estadoDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'estadoDatos',
+    //   '/cofepris/estadoDatos.json'
+    // );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'regimenLaMercanciaDatos',
@@ -605,6 +666,7 @@ export class DatosDeLaSolicitudComponent
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.catalogoLista(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
@@ -680,6 +742,63 @@ export class DatosDeLaSolicitudComponent
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
   }
+
+  catalogoLista(tramite: string): void {
+   this.subscription.add(
+      this.catalogoService
+      .estadosCatalogo(tramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const DATOS = response.datos as Catalogo[];
+        
+        if (response) {
+          this.estadoDatos = DATOS;
+        }
+      })
+    );  
+  }
+
+
+   /**
+   * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
+   * @param datos1 Los datos de la mercancia seleccionada.
+   */
+   patchOpcionesValue(datos1: TablaOpcionConfig): void {
+    this.datosSolicitudForm.patchValue({
+      rfcSanitario: datos1.rfcSanitario || '',
+      denominacionRazon: datos1.denominacionRazon || '',
+      correoElectronico: datos1.correoElectronico || '',
+      codigoPostal: datos1.codigoPostal || '',
+      estado: datos1.estado || '',
+      municipioAlcaldia: datos1.municipioAlcaldia || '',
+      localidad: datos1.localidad || '',
+      colonia: datos1.colonia || '',
+      calleYNumero: datos1.calleYNumero || '',
+      calle: datos1.calle || '',
+      lada: datos1.lada || '',
+      telefono: datos1.telefono || '',
+      aviso: datos1.aviso || '',
+      licenciaSanitaria: datos1.licenciaSanitaria || '',
+      regimen: datos1.regimen || '',
+      adunasDeEntradas: datos1.adunasDeEntradas || '',
+      aeropuerto: datos1.aeropuerto || false,
+      aeropuertoDos: datos1.aeropuertoDos || false,
+      publico: datos1.publico || '',
+      representanteRfc: datos1.representanteRfc || '',
+      representanteNombre: datos1.representanteNombre || '',
+      apellidoPaterno: datos1.apellidoPaterno || '',
+      apellidoMaterno: datos1.apellidoMaterno || '',
+      regimenLaMercancia: datos1.regimenLaMercancia || '',
+      aduana: datos1.aduana || '',
+      mercancias: datos1.mercancias || [],
+      manifesto: datos1.manifesto || '',
+      manifiestosCasillaDeVerificacion: datos1.manifiestosCasillaDeVerificacion || false
+    });
+    
+    this.scianConfig.datos =  datos1.scian;
+    this.tablaMercanciasConfig.datos = datos1.mercancias;
+   
+    }
 
   /**
    * @method crearDatosSolicitudForm
@@ -911,9 +1030,7 @@ export class DatosDeLaSolicitudComponent
         [Validators.required],
       ],
     });
-    if (this.formularioDeshabilitado) {
-      this.datosSolicitudForm.disable();
-    }
+    
 
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
@@ -922,6 +1039,28 @@ export class DatosDeLaSolicitudComponent
       if (EMPTY) {
         this.alternarControlesDeFormulario(false);
       }
+    }
+  }
+
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Hook del ciclo de vida de Angular que se ejecuta después de que se inicializa la vista del componente.
+   * Verifica el estado del formulario y realiza las siguientes acciones:
+   * - Si `formularioDeshabilitado` es `true` y existe `datosSolicitudForm`, deshabilita todo el formulario.
+   * - En caso contrario, crea un nuevo formulario de datos de solicitud llamando a `crearDatosSolicitudForm()`.
+   * 
+   * Este método es especialmente útil para manejar el estado de habilitación/deshabilitación del formulario
+   * después de que todos los elementos de la vista han sido inicializados.
+   * 
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if (this.formularioDeshabilitado && this.datosSolicitudForm) {
+      this.datosSolicitudForm.disable();
+    }
+    else {
+      this.crearDatosSolicitudForm()
     }
   }
 
@@ -937,9 +1076,9 @@ export class DatosDeLaSolicitudComponent
         this.datosSolicitudForm.disable();
       } else {
         this.datosSolicitudForm.enable();
-      }
+      } 
     }
-    if (
+    if ( changes['datosSolicitudFormState'] &&
       changes['datosSolicitudFormState'].currentValue &&
       this.datosSolicitudForm
     ) {
@@ -1136,6 +1275,7 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
+    if (this.scianLista && this.scianLista.length > 0) {
     if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
       this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
     }
@@ -1143,8 +1283,81 @@ export class DatosDeLaSolicitudComponent
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
-    this.irAAcciones('../scian-selecion');
   }
+  this.abrirScianModal();
+  }
+
+    /**
+   * Opens the SCIAN selection modal
+   */
+  abrirScianModal(): void {
+    this.scianModalAbierto = true;
+    // If using Bootstrap 5
+    const MODALELEMENT = document.getElementById('scianModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+   /**
+   * Closes the SCIAN selection modal
+   */
+  cerrarScianModal(): void {
+    this.scianModalAbierto = false;
+    const MODALELEMENT = document.getElementById('scianModal');
+    if (MODALELEMENT) {
+      const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
+      if (MODAL) {
+        MODAL.hide();
+      }
+    }
+  }
+
+  
+
+  /**
+   * Handles SCIAN selection from the modal
+   */
+ onScianSeleccionado(scianData: TablaScianConfig): void {
+  if (this.scianConfig && this.scianConfig.datos) {
+    const EXISTE = this.scianConfig.datos.find(item => item.clave === scianData.clave);
+    if (!EXISTE) {
+      this.scianConfig.datos = [...this.scianConfig.datos, scianData];
+      
+      this.scianDataService.updateScianData(this.scianConfig.datos);
+      
+      if (this.scianSeleccionado) {
+        this.scianSeleccionado.emit(this.scianConfig.datos);
+      }      
+      this.cdr.markForCheck();
+    } else {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El elemento SCIAN seleccionado ya existe en la tabla.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarAlerta = true;
+    }
+  } else {
+    this.scianConfig = {
+      ...this.scianConfig,
+      datos: [scianData]
+    };
+    this.scianDataService.updateScianData(this.scianConfig.datos);
+    if (this.scianSeleccionado) {
+      this.scianSeleccionado.emit(this.scianConfig.datos);
+    }
+  }
+}
+
+  
 
   /**
    * Agrega las mercancías seleccionadas a la configuración de la tabla y emite el evento correspondiente.
@@ -1155,15 +1368,10 @@ export class DatosDeLaSolicitudComponent
    *
    * @returns {void} Este método no devuelve ningún valor.
    */
-  agregarMercancias(): void {
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(
-      this.tablaMercanciasLista
-    );
-    if (this.mercanciasSeleccionado) {
-      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
-    }
-    this.irAAcciones('../mercancia-datos');
-  }
+ agregarMercancias(): void {
+  this.mercanciaSeleccionada = undefined; // Clear any previous selection
+  this.abrirMercanciaModal();
+}
 
   /**
    * Emite un evento con los datos seleccionados de las listas asociadas.
@@ -1191,14 +1399,24 @@ export class DatosDeLaSolicitudComponent
       };
       this.mostrarAlerta = true;
     } else if (this.tablaMercanciasLista.length === 1) {
-      this.datosDeTablaSeleccionados.emit({
-        scianSeleccionados: this.scianLista,
-        mercanciasSeleccionados: this.tablaMercanciasLista,
-        opcionSeleccionados: this.opcionLista,
-        opcionesColapsableState: this.opcionesColapsable,
-      });
-      this.irAAcciones('../mercancia-datos');
-    }
+    // Set the selected merchandise data before opening modal
+    this.mercanciaSeleccionada = this.tablaMercanciasLista[0];
+    this.abrirMercanciaModal();
+  } else {
+    // No merchandise selected
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar una mercancía para modificar.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
   }
 
   /**
@@ -1516,6 +1734,8 @@ export class DatosDeLaSolicitudComponent
    * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
    */
   formularioSolicitudValidacion(): boolean {
+    this.isContinuarButtonClicked = true;
+  
     if (this.datosSolicitudForm.valid) {
       return true;
     }
@@ -1537,6 +1757,89 @@ export class DatosDeLaSolicitudComponent
   }): void {
     this.accioneSolitudValor.emit(event);
   }
+
+   /**
+   * Opens the merchandise selection modal
+   */
+  abrirMercanciaModal(): void {
+    this.mercanciaModalAbierto = true;
+    const MODALELEMENT = document.getElementById('mercanciaModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+   /**
+   * Closes the merchandise selection modal
+   */
+ cerrarMercanciaModal(): void {
+  this.mercanciaModalAbierto = false;
+  this.mercanciaSeleccionada = undefined; // Clear selection when closing
+  const MODALELEMENT = document.getElementById('mercanciaModal');
+  if (MODALELEMENT) {
+    const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
+    if (MODAL) {
+      MODAL.hide();
+    }
+  }
+}
+
+ /**
+ * Handles merchandise selection from the modal
+ */
+onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
+  if (this.mercanciaSeleccionada) {
+    // Busque el índice del objeto existente que coincida con TODAS las propiedades
+    const INDEX = this.tablaMercanciasConfig.datos.findIndex(item =>
+      Object.keys(item).every(
+        key => item[key as keyof TablaMercanciasDatos] ===
+               this.mercanciaSeleccionada![key as keyof TablaMercanciasDatos]
+      )
+    );
+
+    if (INDEX !== -1) {
+      // Reemplace ese objeto específico con los nuevos datos
+      this.tablaMercanciasConfig.datos[INDEX] = { ...mercanciaData };
+    }
+
+  } else {
+    // Agregar nueva mercancía si no hay nada seleccionado
+    this.tablaMercanciasConfig.datos = [
+      ...this.tablaMercanciasConfig.datos,
+      mercanciaData
+    ];
+  }
+  
+  // Update the form control value
+  this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
+  
+  if (this.mercanciasSeleccionado) {
+    this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+  }
+  
+  // Clear selected merchandise and close modal
+  this.mercanciaSeleccionada = undefined;
+  this.cerrarMercanciaModal();
+  
+  // Force change detection
+  this.cdr.markForCheck();
+}
+
+  /**
+ * Updates the table after merchandise changes
+ */
+private updateMercanciaTable(): void {
+  // Force the table to refresh by reassigning the data
+  this.tablaMercanciasConfig = {
+    ...this.tablaMercanciasConfig,
+    datos: [...this.tablaMercanciasConfig.datos]
+  };
+  
+  // Update the form control
+  this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
+  this.datosSolicitudForm.get('mercancias')?.updateValueAndValidity();
+}
 
   /**
    * Emite un evento con los datos seleccionados de la tabla.

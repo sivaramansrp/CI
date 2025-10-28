@@ -185,7 +185,6 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
         this.mostrarErrorFormularios = true;
         return;
       }
-      this.ejecutarGuardadoSolicitud();
       this.mostrarErrorFormularios = false;
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
@@ -272,23 +271,42 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * Método que invoca al servicio de guardado de la solicitud.
    * @param data - Datos de la solicitud a guardar.
    */
-  ejecutarGuardadoSolicitud(): void {
+  ejecutarGuardadoSolicitud(e: AccionBoton): void {
     this.generaContratoSolicitud();
     const dataRequest : SaveReglaOctavaRequest = this.generaContratoSolicitud();
     this.catOctavaTemporalService.saveDataRequest(dataRequest).subscribe({
       next: (data) => {
-        if(data.datos.id_solicitud){
-          this.tramite130102Store.setIdSolicitud(data.datos.id_solicitud);
-          this.tramite130102Store.setDynamicFieldValue('idSolicitud', data.datos.id_solicitud);
-          this.obtenerCadenaOriginal(data.datos.id_solicitud);
-        } else {
-
-          alert(`Error: ${data.codigo} - Causa: ${data.mensaje}`);
-          return;
-        } 
+        if (data.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje: data.mensaje || 'Error al guardar la solicitud verifica los datos ingresados.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+   
+            return;
+          } else {
+            if(data.datos.id_solicitud){
+              this.tramite130102Store.setIdSolicitud(data.datos.id_solicitud);
+              this.tramite130102Store.setDynamicFieldValue('idSolicitud', data.datos.id_solicitud);
+              this.obtenerCadenaOriginal(data.datos.id_solicitud);
+              this.getValorIndice(e);
+              // reset de formularios
+              this.formularioRegistroService.resetFormularios();
+            } else {
+              alert(`Error: ${data.codigo} - Causa: ${data.mensaje}`);
+              return;
+            } 
+          }
+        
       },
       error: (error) => {
         alert(`Error: ${error}`);
+        return;
       }
     }
     );

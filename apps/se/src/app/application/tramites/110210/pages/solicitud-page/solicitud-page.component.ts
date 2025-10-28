@@ -2,7 +2,7 @@ import {
   AVISO,
   DatosPasos,
   ListaPasosWizard,
-  PASOS,
+  PASOS2,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
@@ -13,7 +13,7 @@ import {
 } from '../../estados/store/tramite110210.store';
 import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
-import { ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
+import { ERROR_CATALOGO_ALERT, ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 
@@ -80,7 +80,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Lista de pasos del asistente.
    * @type {ListaPasosWizard[]}
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
 
   /**
    * Índice del paso actual.
@@ -111,6 +111,13 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   esFormaValido: boolean = false;
 
+  /** @property {boolean} showCatalogoError
+   * @description
+   * Indica si se debe mostrar un error relacionado con el catálogo.
+   * Se utiliza para controlar la visualización de mensajes de error específicos en la interfaz.
+   */
+  public showCatalogoError: boolean = false;
+
   /**
    * @property {Object} formErrorAlert
    * @description
@@ -119,6 +126,12 @@ export class SolicitudPageComponent implements OnDestroy {
    * Define el título, mensaje y opciones de visualización para la alerta de error de validación de formularios.
    */
   public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /** @property {Object} catalogoErrorAlert
+   * @description
+   * Objeto que contiene la configuración del mensaje de error para errores de catálogo.
+   */
+  public catalogoErrorAlert = ERROR_CATALOGO_ALERT;
 
   /**
    * Datos de los pasos del asistente.
@@ -172,7 +185,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Obtiene el valor del índice de la acción del botón.
    * @param {AccionBoton} e - Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
+  async getValorIndice(e: AccionBoton): Promise<void> {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -193,13 +206,15 @@ export class SolicitudPageComponent implements OnDestroy {
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
       // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
+      
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-        this.guardar();
+        await this.guardar();
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
       } else if (e.accion === 'ant') {
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
         this.wizardComponent.atras();
       }
     }
@@ -212,7 +227,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Utiliza el estado actual de la solicitud para construir el payload.
    * Si la respuesta es válida, actualiza los identificadores de solicitud y muestra un mensaje de éxito.
    */
-  public guardar():void{
+  public guardar():Promise<void> {
     const SOLICITUD = this.solicitudState;
     const PAYLOAD = {
         "solicitud": {
@@ -222,33 +237,7 @@ export class SolicitudPageComponent implements OnDestroy {
             "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
             "correoElectronico": "vucem2021@gmail.com",
             "telefono": "55-98764532",
-            "cveUsuario": "AAL0409235E6",
-            "domicilio": {
-              "pais": {
-                "clave": "MEX",
-                "nombre": "ESTADOS UNIDOS MEXICANOS"
-              },
-              "entidadFederativa": {
-                "clave": "SIN",
-                "nombre": "SINALOA"
-              },
-              "delegacionMunicipio": {
-                "clave": "25001",
-                "nombre": "AHOME"
-              },
-              "localidad": {
-                "clave": "00181210008",
-                "nombre": "LOS MOCHIS"
-              },
-              "colonia": {
-                "clave": "00181210001",
-                "nombre": "MIGUEL HIDALGO"
-              },
-              "calle": "CAMINO VIEJO",
-              "numeroExterior": "1353",
-              "numeroInterior": "",
-              "codigoPostal": "81210"
-            }
+            "cveUsuario": "AAL0409235E6"
           },
           "cveRolCapturista": "PersonaMoral",
           "cveUsuarioCapturista": "AAL0409235E6",
@@ -269,43 +258,21 @@ export class SolicitudPageComponent implements OnDestroy {
           "idTramite": 110210
         }
       };
-
-    this.service.guardar(PAYLOAD).pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe((response) => {
-        if(esValidObject(response)) {
-          const RESPONSE = doDeepCopy(response);
-          this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
-          this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
-          this.generaCadena(this.guardarIdSolicitud);
-        }
-      });
-  }
-/**   * @method generaCadena
-   * @description
-   * Genera la cadena original para la solicitud guardada.
-   */
-  public generaCadena(solicitudId:number): void {
-    const PAYLOAD = {
-        "num_folio_tramite": null,
-        "boolean_extranjero": true,
-        "solicitante": {
-            "rfc": "AAL0409235E6",
-            "nombre": "Juan Pérez",
-            "es_persona_moral": true,
-            "certificado_serial_number": "string"
-        },
-        "cve_rol_capturista": "CapturistaGubernamental",
-        "cve_usuario_capturista": "Gubernamental",
-        "fecha_firma": "2025-07-01 20:01:25"
-    };
-    this.service.generaCadena(PAYLOAD, solicitudId).pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe((response) => {
-        if(esValidObject(response)) {
-          const RESPONSE = doDeepCopy(response);
-          console.log('CADENA GENERADA', RESPONSE);
-        }
+      return new Promise((resolve, reject) => {
+        this.service.guardar(PAYLOAD).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe((response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            this.TramiteStore.setIdSolicitud(RESPONSE?.datos?.idSolicitud ?? 0);
+            this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+            this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+            this.wizardComponent.siguiente();
+            resolve();
+          }
+        },error=>{
+          reject(error);
+        });
       });
   }
 
@@ -329,6 +296,14 @@ export class SolicitudPageComponent implements OnDestroy {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Muestra un error relacionado con el catálogo.
+   * Establece la propiedad `showCatalogoError` en `true` para activar la visualización del mensaje de error en la interfaz.
+   */
+  public showError(): void {
+    this.showCatalogoError = true;
   }
 
   /**

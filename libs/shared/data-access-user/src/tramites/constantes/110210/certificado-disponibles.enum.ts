@@ -1,7 +1,7 @@
 
 export interface CertificadoDisponibles {
     numeroCertificado: string;
-    idCertificado: number;
+    idSolicitud: number;
     fechaExpedicion: string;
     fechaVencimiento: string;
 }

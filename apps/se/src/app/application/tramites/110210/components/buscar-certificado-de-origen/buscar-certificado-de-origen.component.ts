@@ -1,5 +1,5 @@
 import { Catalogo, CertificadoDisponibles, ConsultaioQuery, Notificacion, NotificacionesComponent,TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
@@ -28,6 +28,17 @@ import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
   styleUrl: './buscar-certificado-de-origen.component.scss',
 })
 export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  /**
+   * Evento que se emite cuando no se encuentran datos.
+   * @type {EventEmitter<void>}
+   */
+  @Output() noDatosError = new EventEmitter<void>();
+
+  /**
+   * Evento que se emite cuando se deshabilita el certificado.
+   * @type {EventEmitter<void>}
+   */
+  @Output() disableCertificado = new EventEmitter<void>();
   /**
    * Formulario para buscar el certificado de origen.
    * @type {FormGroup}
@@ -108,7 +119,6 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.getValoresStore();
     this.obtenerPaisBloque();
-    this.obtenerTratadoAcuerdo();
   }
 
    /**
@@ -196,8 +206,8 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
  *
  * @returns {void}
  */
-  obtenerTratadoAcuerdo(): void {
-    this.complimentosService.getTratadoAcuerdo().pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+  obtenerTratadoAcuerdo(countryCode: string): void {
+    this.complimentosService.getTratadoAcuerdo(countryCode).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
         if(esValidObject(res)) {
           const RESPONSE = doDeepCopy(res);
           if(esValidArray(RESPONSE.datos)) {
@@ -216,9 +226,10 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110210Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110210Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    if (campo === 'paisBloqueClave' && VALOR && VALOR !== '') {
+      this.obtenerTratadoAcuerdo(VALOR);
+    }
   }
-
-
 
   /**
    * Obtiene los valores del store y los asigna al formulario.
@@ -317,7 +328,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
               const DATOS: CertificadoDisponibles[] = []
               RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
                 const DATOSOBJ = {
-                  idCertificado: certificado.idCertificado,
+                  idSolicitud: certificado.idSolicitud,
                   numeroCertificado: certificado.numeroCertificado,
                   fechaExpedicion: certificado.fechaExpedicion,
                   fechaVencimiento: certificado.fechaVencimiento,
@@ -338,6 +349,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Actualiza el estado del grid de comercializadores de catálogos.
    */
   actualizaGridComercializadoresCatalogs(): void {
+    this.disableCertificado.emit();
     const PAISES = this.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.value;
     const TRATADOS = this.buscarCertificadoDeOrigenFrom.get('tratadoAcuerdoClave')?.value;
     if(PAISES){
@@ -406,7 +418,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
               const DATOS: CertificadoDisponibles[] = []
               RESPONSE.datos.forEach((certificado: CertificadoDisponibles) => {
                 const DATOSOBJ = {
-                  idCertificado: certificado.idCertificado,
+                  idSolicitud: certificado.idSolicitud,
                   numeroCertificado: certificado.numeroCertificado,
                   fechaExpedicion: certificado.fechaExpedicion,
                   fechaVencimiento: certificado.fechaVencimiento,
@@ -415,10 +427,12 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
               });
               this.tramite110210Store.setCertificadosDisponibles(DATOS);
             }else{
-              this.guardarObservacion();
+              this.noDatosError.emit();
+              this.tramite110210Store.setCertificadosDisponibles([]);
             }  
           }else{
-              this.guardarObservacion();
+              this.noDatosError.emit();
+              this.tramite110210Store.setCertificadosDisponibles([]);
             } 
         }
       });
@@ -443,7 +457,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: "Corrija los siguientes errores:",
-        mensaje: "El certificado de origen no existe",
+        mensaje: "(Número de certificado) es un campo requerido",
         cerrar: false,
         txtBtnAceptar: "Aceptar",
         txtBtnCancelar: "",

@@ -148,8 +148,27 @@ export class DatosDelDestinatarioComponent
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
-    });
+    });  
+    this.updateRequiredValidators();
   }
+
+  /**
+   * Actualiza los validadores requeridos del campo 'numeroDeRegistroFiscal'
+   * en el formulario 'formDatosDelDestinatario' según el procedimiento actual.
+   * * @remarks
+   * Este método verifica si el identificador del procedimiento (`idProcedimiento`)
+   * está incluido en la lista de procedimientos que requieren el campo 'numeroDeRegistroFiscal'.
+   */
+  updateRequiredValidators(): void {
+    if (this.NUMERO_REGISTRO_FISCAL_REQUIRED.includes(this.idProcedimiento)) {
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    }else{
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    }
+  }
+
   /**
    * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
    * 'formDatosDelDestinatario' según el procedimiento actual.
@@ -214,6 +233,9 @@ export class DatosDelDestinatarioComponent
         this.createForm();
       }
     }
+    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+      this.updateRequiredValidators();
+    }
   }
   /**
   /**
@@ -249,5 +271,32 @@ export class DatosDelDestinatarioComponent
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @description
+   * Valida el estado completo del formulario de datos del certificado.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+   *
+   * @method
+   * @public
+   * @memberof DatosCertificadoDeComponent
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario
+   *
+   * @example
+   * ```typescript
+   * if (this.validarFormularios()) {
+   *   // Proceder con el envío del formulario
+   * } else {
+   *   // Mostrar mensaje de error
+   * }
+   * ```
+   */
+  validarFormularios(): boolean {
+    if (this.formDatosDelDestinatario.valid) {
+      return true;
+    }
+    this.formDatosDelDestinatario.markAllAsTouched();
+    return false;
   }
 }

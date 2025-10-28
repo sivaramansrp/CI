@@ -410,6 +410,12 @@ export const FECHA_DE_CADUCIDAD_PAGO = {
   habilitado: true,
 };
 
+export const FECHA_DE_CADUCIDAD_MERCANICA = {
+  labelNombre: 'Fecha de caducidad:',
+  required: false,
+  habilitado: true,
+};
+
 /**
  * Representa la estructura de los datos relacionados con terceros.
  *
