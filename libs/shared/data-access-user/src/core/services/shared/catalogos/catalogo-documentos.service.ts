@@ -41,7 +41,7 @@ export class CatalogoDocumentosService {
      * @param idSolicitud ID de la solicitud (opcional).
      * @returns Observable con la respuesta del catálogo de documentos.
      */
-    getDocumentosSolicitud130118(tramite: number, especifico: boolean, idSolicitud?: number): Observable<CatalogoDocumentosResponse> {
+    getDocumentosSolicitud(tramite: number, especifico: boolean, idSolicitud?: number): Observable<CatalogoDocumentosResponse> {
         let params = new HttpParams().set('especifico', String(especifico));
 
         if (idSolicitud) {
