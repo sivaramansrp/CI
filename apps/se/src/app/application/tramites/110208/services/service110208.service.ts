@@ -77,8 +77,8 @@ export class Solocitud110208Service {
     this.tramite110208Store.setPaisDestino(DATOS.paisDestino);
     this.tramite110208Store.setMedioTransporte(DATOS.medioTransporte);
     this.tramite110208Store.setRutaCompleta(DATOS.rutaCompleta);
-    this.tramite110208Store.setPuertoDeEmbarque(DATOS.puertoDeEmbarque);
-    this.tramite110208Store.setPuertoDeDesembarque(DATOS.puertoDeDesembarque);
+    this.tramite110208Store.setPuertoDesembarque(DATOS.puertoDeDesembarque);
+    this.tramite110208Store.setPuertoEmbarque(DATOS.puertoDeEmbarque);
     this.tramite110208Store.setObservaciones(DATOS.observaciones);
     this.tramite110208Store.setIdioma(DATOS.idioma);
     this.tramite110208Store.setEntidadFederativaCertificado(DATOS.entidadFederativaCertificado);
@@ -177,15 +177,10 @@ export class Solocitud110208Service {
     return {
       observaciones: data.formDatosCertificado['observacionesDates'] ?? '',
       idioma: data.formDatosCertificado['idiomaDates'] ?? 0,
-      presenta: data.formDatosCertificado['presentaDates'] ?? 'ghgh',
-      precisa: data.formDatosCertificado['precisaDates'] ?? 'grrfgh',
       representacion_federal: {
         entidad_federativa: data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
         representacion_federal: data.formDatosCertificado['representacionFederalDates'] ?? 0
       },
-        desea_obtener_certificado: false,
-        justificacion: "wertyu"
-      
     }
   }
   /** Construye el objeto certificado a partir del estado del trámite TramiteState. */

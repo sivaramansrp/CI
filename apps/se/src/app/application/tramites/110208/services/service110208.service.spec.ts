@@ -60,8 +60,8 @@ describe('Solocitud110208Service', () => {
     service.tramite110208Store.setPaisDestino = jest.fn();
     service.tramite110208Store.setMedioTransporte = jest.fn();
     service.tramite110208Store.setRutaCompleta = jest.fn();
-    service.tramite110208Store.setPuertoDeEmbarque = jest.fn();
-    service.tramite110208Store.setPuertoDeDesembarque = jest.fn();
+    service.tramite110208Store.setPuertoDesembarque = jest.fn();
+    service.tramite110208Store.setPuertoEmbarque = jest.fn();
     service.tramite110208Store.setObservaciones = jest.fn();
     service.tramite110208Store.setIdioma = jest.fn();
     service.tramite110208Store.setEntidadFederativaCertificado = jest.fn();
@@ -136,8 +136,8 @@ describe('Solocitud110208Service', () => {
     expect(service.tramite110208Store.setPaisDestino).toHaveBeenCalled();
     expect(service.tramite110208Store.setMedioTransporte).toHaveBeenCalled();
     expect(service.tramite110208Store.setRutaCompleta).toHaveBeenCalled();
-    expect(service.tramite110208Store.setPuertoDeEmbarque).toHaveBeenCalled();
-    expect(service.tramite110208Store.setPuertoDeDesembarque).toHaveBeenCalled();
+    expect(service.tramite110208Store.setPuertoEmbarque).toHaveBeenCalled();
+    expect(service.tramite110208Store.setPuertoDesembarque).toHaveBeenCalled();
     expect(service.tramite110208Store.setObservaciones).toHaveBeenCalled();
     expect(service.tramite110208Store.setIdioma).toHaveBeenCalled();
     expect(service.tramite110208Store.setEntidadFederativaCertificado).toHaveBeenCalled();

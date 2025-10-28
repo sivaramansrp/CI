@@ -164,7 +164,12 @@ export class CertificadoOrigenComponent
    * @default false
    */
   fromMercanciasDisponibles: boolean = false;
-
+  /**
+   * Referencia al componente hijo CertificadoDeOrigenComponent
+   * Permite acceder al formulario y métodos del componente hijo
+   */
+  @ViewChild(CertificadoDeOrigenComponent)
+  certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
   /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
@@ -365,7 +370,27 @@ export class CertificadoOrigenComponent
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
   }
+  /**
+   * Método público para validar todos los formularios del componente datos-certificado.
+   * Valida el formulario del componente hijo DatosCertificadoDeComponent y actualiza el estado.
+   * @returns boolean indicando si todos los formularios son válidos
+   */
+  public validateAll(): boolean {
+    let valid = true;
 
+    // Validar el componente hijo datos-certificado-de
+    if (this.certificadoDeOrigenComponent) {
+      // Usar el método validarFormularios del componente hijo que marca los campos como touched
+      const IS_CHILD_FORM_VALID = this.certificadoDeOrigenComponent.validarFormularios();
+      if (!IS_CHILD_FORM_VALID) {
+        valid = false;
+      }
+      // Actualizar el estado de validez en el store
+      this.setFormValida(IS_CHILD_FORM_VALID);
+    }
+
+    return valid;
+  }
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

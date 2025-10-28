@@ -182,24 +182,6 @@ describe('DetallesComponent', () => {
     expect(component.detallas.get('rutaCompleta')?.enabled).toBeTruthy();
   });
 
-  it('debe llamar a setValoresStore para puertoDeEmbarque', () => {
-    const form = component.detallas;
-    form.get('puertoDeEmbarque')?.setValue('Nuevo Puerto');
-
-    component.setValoresStore(form, 'puertoDeEmbarque', 'setPuertoDeEmbarque');
-
-    expect(mockStore.setPuertoDeEmbarque).toHaveBeenCalledWith('Nuevo Puerto');
-  });
-
-  it('debe llamar a setValoresStore para puertoDeDesembarque', () => {
-    const form = component.detallas;
-    form.get('puertoDeDesembarque')?.setValue('Puerto Destino');
-
-    component.setValoresStore(form, 'puertoDeDesembarque', 'setPuertoDeDesembarque');
-
-    expect(mockStore.setPuertoDeDesembarque).toHaveBeenCalledWith('Puerto Destino');
-  });
-
   it('debe inicializar con valores vacíos cuando solicitudState está vacío', () => {
     mockQuery.selectSolicitud$ = of({} as Solicitud110208State);
     fixture = TestBed.createComponent(DetallesComponent);

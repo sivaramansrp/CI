@@ -352,11 +352,8 @@ export function createInitialState(): Solicitud110208State {
     /**
      * El valor de puertoDeEmbarque.
      */
-    puertoDeEmbarque: '',
-    /**
-     * El valor de puertoDeDesembarque.
-     */
     puertoDeDesembarque: '',
+
     /**
      * El valor de observaciones.
      */
@@ -473,6 +470,8 @@ export function createInitialState(): Solicitud110208State {
     paisDestin: [],
     /** Lista de medios de transporte */
     medioDeTransporte: [],
+    puertoDeEmbarque: '',
+    /** Medio de transporte seleccionado */
     medioDeTransporteSeleccion: { id: -1, descripcion: '' }
   };
 }
@@ -825,7 +824,7 @@ export class Tramite110208Store extends Store<Solicitud110208State> {
    * Establece el estado de puertoDeEmbarque.
    * @param puertoDeEmbarque - El valor de puertoDeEmbarque.
    */
-  public setPuertoDeEmbarque(puertoDeEmbarque: string): void {
+  public setPuertoEmbarque(puertoDeEmbarque: string): void {
     this.update((state) => ({
       ...state,
       puertoDeEmbarque,
@@ -835,7 +834,7 @@ export class Tramite110208Store extends Store<Solicitud110208State> {
    * Establece el estado de puertoDeDesembarque.
    * @param puertoDeDesembarque - El valor de puertoDeDesembarque.
    */
-  public setPuertoDeDesembarque(puertoDeDesembarque: string): void {
+  public setPuertoDesembarque(puertoDeDesembarque: string): void {
     this.update((state) => ({
       ...state,
       puertoDeDesembarque,

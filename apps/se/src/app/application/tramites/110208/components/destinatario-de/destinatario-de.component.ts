@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-return */
 import {
   Catalogo,
   SeccionLibQuery,
@@ -179,7 +178,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   /**
    * Maneja el envío del formulario y muestra errores si hay campos obligatorios vacíos en ambos formularios.
    */
-  onSubmit(): void {
+  onSubmit(): boolean {
     let valid = true;
     if (this.destinatarioForm && this.destinatarioForm.invalid) {
       this.destinatarioForm.markAllAsTouched();
@@ -197,9 +196,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
         valid = false;
       }
     }
-    if (!valid) {
-        return;
-    }
+        return valid;
   }
 
   /**
@@ -272,6 +269,18 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
+  /**
+   * Maneja los valores del store para los detalles del transporte.
+   * @param event Evento del formulario con estructura específica del transporte
+   */
+  setValoresStoreTransporte(event: { formGroupName: string; campo: string; valor: undefined; storeStateName: string }): void {
+    const { valor: VALOR } = event;
+    const METODO_STORE = this.store[event.storeStateName as keyof Tramite110208Store];
+    if (typeof METODO_STORE === 'function') {
+      (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+    }
+  }
+  
   /**
    * Establece valores en el estado de la tienda para un formulario genérico de certificado.
    *

@@ -1,4 +1,4 @@
-import { AccionBoton, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { AccionBoton, DatosPasos, ERROR_FORMA_ALERT, JSONResponse, ListaPasosWizard, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
@@ -24,7 +24,10 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    */
   indice: number = 1;
 
-  
+    /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+    public formErrorAlert = ERROR_FORMA_ALERT;
     /**
   * @property {boolean} esFormaValido
   * @description
