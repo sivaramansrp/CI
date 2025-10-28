@@ -9,5 +9,6 @@
       [cargaArchivosEvento]="reenviarEvento"
       (cargaRealizada)="documentosCargados($event)"
       (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+      (cargaEnProgreso)="onCargaEnProgreso($event)"
     ></carga-documento>
 </div>
