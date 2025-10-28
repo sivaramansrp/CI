@@ -277,6 +277,7 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
         this.formErrorAlert = ImmexRegistroSolicitudModalityComponent.generarAlertaDeError(ERROR_MESSAGE);
         this.esFormaValido = false;
         this.indice = 1;
+        this.datosPasos.indice = 1;
         this.wizardComponent.indiceActual = 1;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
@@ -290,9 +291,15 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
             this.immexRegistroStore.setIdSolicitud(0);
           }
         }
+        // Calcular el nuevo índice basado en la acción
+        let indiceActualizado = e.valor;
+        if (e.accion === 'cont') {
+          indiceActualizado = e.valor + 1;
+        }
         this.toastrService.success(response.mensaje);
-         if (e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
+         if (indiceActualizado > 0 && indiceActualizado < 5) {
+          this.indice = indiceActualizado;
+          this.datosPasos.indice = indiceActualizado;
           if (e.accion === 'cont') {
             this.wizardComponent.siguiente();
           } else {

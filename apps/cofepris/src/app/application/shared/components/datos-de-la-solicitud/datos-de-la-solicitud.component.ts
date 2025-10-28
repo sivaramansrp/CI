@@ -759,6 +759,47 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
   }
 
 
+   /**
+   * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
+   * @param datos1 Los datos de la mercancia seleccionada.
+   */
+   patchOpcionesValue(datos1: TablaOpcionConfig): void {
+    this.datosSolicitudForm.patchValue({
+      rfcSanitario: datos1.rfcSanitario || '',
+      denominacionRazon: datos1.denominacionRazon || '',
+      correoElectronico: datos1.correoElectronico || '',
+      codigoPostal: datos1.codigoPostal || '',
+      estado: datos1.estado || '',
+      municipioAlcaldia: datos1.municipioAlcaldia || '',
+      localidad: datos1.localidad || '',
+      colonia: datos1.colonia || '',
+      calleYNumero: datos1.calleYNumero || '',
+      calle: datos1.calle || '',
+      lada: datos1.lada || '',
+      telefono: datos1.telefono || '',
+      aviso: datos1.aviso || '',
+      licenciaSanitaria: datos1.licenciaSanitaria || '',
+      regimen: datos1.regimen || '',
+      adunasDeEntradas: datos1.adunasDeEntradas || '',
+      aeropuerto: datos1.aeropuerto || false,
+      aeropuertoDos: datos1.aeropuertoDos || false,
+      publico: datos1.publico || '',
+      representanteRfc: datos1.representanteRfc || '',
+      representanteNombre: datos1.representanteNombre || '',
+      apellidoPaterno: datos1.apellidoPaterno || '',
+      apellidoMaterno: datos1.apellidoMaterno || '',
+      regimenLaMercancia: datos1.regimenLaMercancia || '',
+      aduana: datos1.aduana || '',
+      mercancias: datos1.mercancias || [],
+      manifesto: datos1.manifesto || '',
+      manifiestosCasillaDeVerificacion: datos1.manifiestosCasillaDeVerificacion || false
+    });
+    
+    this.scianConfig.datos =  datos1.scian;
+    this.tablaMercanciasConfig.datos = datos1.mercancias;
+   
+    }
+
   /**
    * @method crearDatosSolicitudForm
    * @description Crea y configura el formulario reactivo con campos específicos deshabilitados por defecto
@@ -1693,6 +1734,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
    */
   formularioSolicitudValidacion(): boolean {
+    this.isContinuarButtonClicked = true;
+  
     if (this.datosSolicitudForm.valid) {
       return true;
     }

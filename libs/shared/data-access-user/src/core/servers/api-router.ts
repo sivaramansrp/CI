@@ -552,6 +552,27 @@ export const IDOPINION= '{idOpinion}';
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_OPINION_DETALLE = `sat-t${TRAMITE}/tramite/opinion/${IDOPINION}/detalle`
+
+/**
+ * Id trámite que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDTRAMITEFOLIO= '{idTramiteFolio}';
+
+/**
+ * API para Consultar detalle  del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Registro-Solicitud/consulta-detalle-by-numFolioTramite
+ */
+export const API_GET_TRAMITE_DETALLE = (TRAMITE: string, IDTRAMITEFOLIO: string) : string =>  `sat-t${TRAMITE}/tramite/${IDTRAMITEFOLIO}/detalle`
+
+/**
+ * Id resolucion que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDRESOLUCION= '{idResolucion}';
+
+export const API_POST_GUARDAR_RESOLUCION = (TRAMITE: string, IDRESOLUCION: number) : string => `sat-t${TRAMITE}/confirmar-notificacion/resolucion/${IDRESOLUCION}/acuse/guardar`;
+
  
 /**
  * Id dictamen que se utilizará en las consultas.

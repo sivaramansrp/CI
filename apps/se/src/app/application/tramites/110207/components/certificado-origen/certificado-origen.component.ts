@@ -308,6 +308,7 @@ export class CertificadoOrigenComponent
 
           interface ResponseItem {
             idMercancia?: number | null;
+            numeroRegistroProducto: string;
             fraccionArancelaria?: string;
             numeroRegistro?: string;
             fechaExpedicion?: string;
@@ -334,6 +335,7 @@ export class CertificadoOrigenComponent
             (item: ResponseItem): Mercancia => ({
               id: item.idMercancia ?? undefined,
               fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
               numeroDeRegistrodeProductos: item.numeroRegistro || '',
               fechaExpedicion: item.fechaExpedicion || '',
               fechaVencimiento: item.fechaVencimiento || '',
@@ -470,8 +472,7 @@ export class CertificadoOrigenComponent
     // Validar el componente hijo datos-certificado-de
     if (this.certificadoDeOrigenComponent) {
       // Usar el método validarFormularios del componente hijo que marca los campos como touched
-      const IS_CHILD_FORM_VALID =
-        this.certificadoDeOrigenComponent.validarFormularios();
+      const IS_CHILD_FORM_VALID = this.certificadoDeOrigenComponent.validarFormularios();
       if (!IS_CHILD_FORM_VALID) {
         valid = false;
       }
@@ -480,6 +481,16 @@ export class CertificadoOrigenComponent
     }
 
     return valid;
+  }
+
+  /**
+   * @param evento  
+   *  Método que actualiza el estado global (store) con las mercancías seleccionadas.
+   *  Recibe un arreglo de objetos de tipo `Mercancia` y lo pasa al método `mercanciaSeleccionadasTabla`
+   *  del store para actualizar la lista de mercancías seleccionadas en el estado de la aplicación.
+   */
+  mercanciaSeleccionada(evento: Mercancia): void {
+    this.store.mercanciaSeleccionadasTabla([evento]);
   }
 
   /**
