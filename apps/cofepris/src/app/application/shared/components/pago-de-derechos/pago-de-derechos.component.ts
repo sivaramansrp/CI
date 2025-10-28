@@ -160,6 +160,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   public esFechaValida: boolean = true;
 
+  public isContinuarButtonClicked: boolean = false; 
+
   /**
    * Estado actual de la solicitud, obtenido del store.
    * @type {PagoDerechosState}
@@ -402,6 +404,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     )(VALOR);
   }
 
+
+  formularioSolicitudValidacion(): boolean {
+    this.isContinuarButtonClicked = true;
+    if((this.pagoDerechosForm.get('claveReferencia')?.value!=='' && this.pagoDerechosForm.get('claveReferencia')?.value!==null) && ( this.pagoDerechosForm.get('cadenaDependencia')?.value!=='' && this.pagoDerechosForm.get('cadenaDependencia')?.value!==null) && (this.pagoDerechosForm.get('llavePago')?.value!=='' && this.pagoDerechosForm.get('llavePago')?.value!==null) && (this.pagoDerechosForm.get('importePago')?.value!=='' && this.pagoDerechosForm.get('importePago')?.value!==null) && (this.pagoDerechosForm.get('fechaPago')?.value!=='' && this.pagoDerechosForm.get('fechaPago')?.value!==null)){
+      this.isContinuarButtonClicked = false;
+    }
+    this.pagoDerechosForm.markAllAsTouched();
+    if (this.pagoDerechosForm.valid) {
+
+      return true;
+    }
+   
+    return false;
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * Se encarga de liberar las suscripciones para evitar fugas de memoria.

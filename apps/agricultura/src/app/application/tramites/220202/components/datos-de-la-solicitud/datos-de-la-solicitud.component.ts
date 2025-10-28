@@ -28,10 +28,12 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 
 /**
  * @description Constructor del componente.
@@ -85,7 +87,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
  */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** @description Indica si el panel de detalle está colapsado o no. */
-  colapsable: boolean = false;
+  colapsable: boolean = true;
 
   /**
    * @description Datos para las columnas de la tabla.
@@ -230,6 +232,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Grupo de formularios anidado para los datos de la solicitud.--220202
+   * @property {FormGroup} datos
+   */
+  datos!: FormGroup;
 
   /**
    * @description Configuración de las columnas de la tabla de solicitudes.
@@ -445,7 +453,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public consultaioQuery: ConsultaioQuery,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public fitosanitarioStore: FitosanitarioStore
+    public fitosanitarioStore: FitosanitarioStore,
+    public catalogosService: CatalogosService,
+    public fitosanitarioQuery: FitosanitarioQuery
   ) {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -453,7 +463,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
         this.cuerpoTabla = datos.tablaDatos;
-        this.createFromFields();
       });
 
     this.consultaioQuery.selectConsultaioState$
@@ -497,6 +506,46 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     this.obtenerTodosLosDatosDeLaLista();
     this.createFromFields();
+    this.initActionFormBuild();
+  }
+
+  /**
+   * Inicializa el grupo de formularios anidado para los datos de la solicitud.
+   * @method initActionFormBuild
+   */
+  initActionFormBuild(): void {
+    this.datos = this.fb.group({
+      aduanaDeIngreso: ['', Validators.required],
+      oficinaDeInspeccion: ['', Validators.required],
+      puntoDeInspeccion: ['', Validators.required],
+      regimen: ['', Validators.required],
+      numeroDeGuia: [''],
+      numeroDeCarro: ['']
+    });
+    this.forma.setControl('datos', this.datos);
+    this.fitosanitarioQuery.seleccionarDatosForma$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos: DatosForma) => {
+      if (datos) {
+        // carga de catalogos antes de asignar valores
+        const CARGACATALOGOS = async () => {
+          if (datos.aduanaDeIngreso !== undefined && datos.aduanaDeIngreso !== '') {
+            await this.obtenerSanidadAgropecuariaList(datos.aduanaDeIngreso);
+          }
+          if (datos.oficinaDeInspeccion !== undefined && datos.oficinaDeInspeccion !== '') {
+            await this.obtenerPuntoInspeccionList(datos.oficinaDeInspeccion);
+          }
+        }
+        CARGACATALOGOS().then(() => {
+          this.datos.patchValue({
+            aduanaDeIngreso: datos.aduanaDeIngreso || '',
+            oficinaDeInspeccion: datos.oficinaDeInspeccion || '',
+            puntoDeInspeccion: datos.puntoDeInspeccion || '',
+            regimen: datos.regimen || '',
+            numeroDeGuia: datos.numeroDeGuia || '',
+            numeroDeCarro: datos.numeroDeCarro || ''
+          })
+        })
+      }
+    });
   }
 
   /**
@@ -509,7 +558,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.createFromFields();
     }
   }
 
@@ -535,7 +583,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   createFromFields(): void {
-    this.forma = this.fb.group(this.inicializarCamposFormulario());
+    this.forma = this.fb.group({
+      datos: this.fb.group({})
+    });
     if (this.forma) {
       this.notificationCheck = true;
     }
@@ -614,8 +664,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   obtenerTodosLosDatosDeLaLista(): void {
     this.getaduanaLista();
-    this.getagropecuariaLista();
-    this.getPuntoLista();
     this.getRegimenLista();
     this.getArancelariaLista();
     this.getNicoLista();
@@ -639,54 +687,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getaduanaLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('aduana_de_ingreso.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.aduanaList = data as Catalogo[];
-      });
-  }
-
-  /**
-   * @description Obtiene la lista de agropecuarias desde un archivo JSON.
-   * @method getagropecuariaLista
-   * @returns {void}
-   */
-  getagropecuariaLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('aduana_de_ingreso.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.agropecuariaList = data as Catalogo[];
-      });
-  }
-
-  /**
-   * @description Obtiene la lista de puntos de verificación desde un archivo JSON.
-   * @method getPuntoLista
-   * @returns {void}
-   */
-  getPuntoLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('punto.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.puntoList = data as Catalogo[];
-      });
-  }
-
-  /**
-   * @description Obtiene la lista de regímenes desde un archivo JSON.
-   * @method getRegimenLista
-   * @returns {void}
-   */
-  getRegimenLista(): void {
-    this.agriculturaApiService
-      .obtenerSelectorList('regimen.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.regimeList = data as Catalogo[];
-      });
+    this.catalogosService.obtieneCatalogoAduana(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+        this.aduanaList = data.datos ?? [];
+      }
+    );
+    
   }
 
   /**
@@ -763,11 +772,70 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Actualiza los datos almacenados en el store.
    * @method setValoresStore
    */
-  setValoresStore(_forma?: FormGroup, _campo?: string): void {
-    const VALOR = this.forma.value;
+  setValoresStore(): void {
+    const VALOR = this.datos.value;
     (
       this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void
     )(VALOR);
+
+  }
+
+  /**
+   * Obtiene la lista para el select de oficina de inspección de sanidad agropecuaria desde el selector.
+   * @method catalogoOficinas
+   */
+  catalogoOficinas(_forma?: FormGroup): void {
+    const VALOR = this.forma.value;
+    this.obtenerSanidadAgropecuariaList(VALOR.datos.aduanaDeIngreso);
+  }
+
+  /**
+   * Obtiene la lista para el select de puntos de inspeccion desde el selector.
+   * @method obtenerPuntoInspeccion
+   */
+  obtenerPuntoInspeccion(_forma?: FormGroup): void {
+    const VALOR = this.forma.value;
+    this.obtenerPuntoInspeccionList(VALOR.datos.oficinaDeInspeccion);
+  }
+
+  /**
+   * Obtiene la lista para el select de régimen.
+   * @method getRegimenLista
+   */
+  getRegimenLista(): void {
+
+    this.catalogosService.obtieneCatalogoRegimenesVigentes(220202).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.regimeList = data.datos ?? [];
+    });
+  }
+
+  /**
+   * Obtiene la lista para el select de punto de inspección.
+   * @method obtenerPuntoInspeccionList
+   */
+  async obtenerPuntoInspeccionList(valor: string): Promise<void> {
+    this.catalogosService.obtieneCatalogoPuntoInspeccion(220202, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.puntoList = data.datos ?? [];
+    });
+  }
+
+  /**
+   * Obtiene la lista para el select de sanidad agropecuaria.
+   * @method obtenerSanidadAgropecuariaList
+   */
+  async obtenerSanidadAgropecuariaList(cveAduana: string): Promise<void> {
+    this.agropecuariaList = [];
+    if(cveAduana && cveAduana !== ''){
+      this.catalogosService.obtieneCatalogoOficinasInspeccion(220202, cveAduana)
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+        (data): void => {
+          this.agropecuariaList = data.datos ?? [];
+        }
+      );
+    }
+
   }
 
   /**
@@ -841,28 +909,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   modificarMercancia(): void {
     const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
     const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
-    
+
     // Verificar si no hay registros en la tabla
     if (!TABLE_DATA || TABLE_DATA.length === 0) {
       this.modificarMercanciaNotification();
       this.moduloEmergente = true;
       return;
     }
-    
+
     // Verificar si no hay registros seleccionados
     if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
       this.modificarMercanciaNotification();
       this.moduloEmergente = true;
       return;
     }
-    
+
     // Verificar si hay más de un registro seleccionado
     if (SELECTED_DATA.length > 1) {
       this.modificarMercanciaNotification();
       this.moduloEmergente = true;
       return;
     }
-    
+
     // Si hay exactamente un dato seleccionado, abrir el modal con el componente de agregar/modificar mercancía
     this.modalRef.abrir(AgregarMercanciaComponent);
   }
@@ -875,28 +943,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   eliminarMercancia(): void {
       const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
       const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
-      
+
       // Verificar si no hay registros en la tabla
       if (!TABLE_DATA || TABLE_DATA.length === 0) {
         this.eliminarMercanciaNotification();
         this.moduloEmergente = true;
         return;
       }
-      
+
       // Verificar si no hay registros seleccionados
       if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
         this.eliminarMercanciaNotification();
         this.moduloEmergente = true;
         return;
       }
-      
+
       // Si hay más de un registro seleccionado, mostrar mensaje de error
       if (SELECTED_DATA.length > 1) {
         this.eliminarMercanciaNotification();
         this.moduloEmergente = true;
         return;
       }
-      
+
       // Si hay exactamente un registro seleccionado, eliminar directamente
       if (SELECTED_DATA.length === 1) {
         const FILTERED_VALOR = TABLE_DATA.filter(
@@ -908,7 +976,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             tablaDatos: FILTERED_VALOR
           })
         );
-        
+
         // Limpiar selección después de eliminar
         this.seleccionTabla([]);
       }
@@ -958,7 +1026,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           tablaDatos: FILTERED_VALOR
         })
       );
-      
+
       // Limpiar selección después de eliminar
       this.seleccionTabla([]);
     }
@@ -968,7 +1036,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description 
+   * @description
    * Genera una notificación de error para la operación de eliminar mercancía.
    * Esta función valida el estado actual de la selección de datos en la tabla y muestra un mensaje
    * @method eliminarMercanciaNotification
@@ -977,9 +1045,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   eliminarMercanciaNotification(): void {
     const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
     const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
-    
+
     let mensaje = 'Selecciona un registro.';
-    
+
     // Si no hay registros en la tabla
     if (!TABLE_DATA || TABLE_DATA.length === 0) {
       mensaje = 'Selecciona un registro.';
@@ -992,7 +1060,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     else if (SELECTED_DATA.length > 1) {
       mensaje = 'Selecciona un registro.';
     }
-    
+
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -1015,9 +1083,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   modificarMercanciaNotification(): void {
     const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
     const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
-    
+
     let mensaje = 'Selecciona sólo un registro para modificar.';
-    
+
     // Si no hay registros en la tabla
     if (!TABLE_DATA || TABLE_DATA.length === 0) {
       mensaje = 'Selecciona sólo un registro para modificar.';
@@ -1030,7 +1098,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     else if (SELECTED_DATA.length > 1) {
       mensaje = 'Selecciona sólo un registro para modificar.';
     }
-    
+
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',

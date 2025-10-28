@@ -101,6 +101,36 @@ export interface Solicitud110203State {
   bruta: string;
   /** **Número de factura asociado a la solicitud** */
   factura: string;
+  /** **Código de país de la mercancía** */
+  cvePais: string;
+  /** **Número de orden de compra o pedido** */
+  orden: string;
+  /** **Código arancelario de la mercancía** */
+  arancelaria: string;
+  /** Nombre del técnico responsable del trámite */
+  tecnico: string;
+  /** Nombre del responsable comercial del trámite */
+  comercial: string;
+  /** Indicador o versión en inglés del documento o trámite */
+  ingles: string;
+  /** Número o código de registro del producto o solicitud */
+  registro: string;
+  /** Cantidad de unidades o productos incluidos en la solicitud */
+  cantidad: string;
+  /** Fecha en la que se emitió la factura asociada */
+  fechaFactura: string;
+  /** Paso actual o índice del flujo activo en el proceso */
+  pasoActivo: number;
+  /**
+   * Estado de validez de las diferentes secciones del formulario.
+   * Cada propiedad indica si la sección ha sido completada correctamente.
+   */
+    formValidity?: {
+      tratados?: boolean;
+      destinatario?: boolean;
+      transporte?: boolean;
+      datosCertificado?: boolean;
+  };
 }
 
 /**
@@ -209,6 +239,28 @@ export function createInitialState(): Solicitud110203State {
     bruta: '',
     /** **Número de factura asociado a la solicitud** */
     factura: '',
+    /** **Código de país de la mercancía** */
+    cvePais: '',
+    /** **Número de orden de compra o pedido** */
+    orden: '',
+    /** **Código arancelario de la mercancía** */
+    arancelaria: '',
+    /** **Nombre del técnico responsable del trámite** */
+    tecnico: '',
+    /** **Nombre del responsable comercial del trámite** */
+    comercial: '',
+    /** **Indicador o versión en inglés del documento o trámite** */
+    ingles: '',
+    /** **Número o código de registro del producto o solicitud** */
+    registro: '',
+    /** **Cantidad de unidades o productos incluidos en la solicitud** */
+    cantidad: '',
+    /** **Fecha en la que se emitió la factura asociada** */
+    fechaFactura: '',
+    /** **Paso actual o índice del flujo activo en el proceso** */
+    pasoActivo: 1,
+    /** Estado de validez de las diferentes secciones del formulario */
+    formValidity: {}
   };
 }
 
@@ -669,6 +721,142 @@ export class Tramite110203Store extends Store<Solicitud110203State> {
     this.update((state) => ({
       ...state,
       factura,
+    }));
+  }
+
+   /**
+   * Establece el valor de "cvePais" en el estado.
+   *
+   * @param cvePais - Valor que representa el código de país de la mercancía.
+   */
+  public setCvePais(cvePais: string): void {
+    this.update((state) => ({
+      ...state,
+      cvePais,
+    }));
+  }
+
+  /**
+   * Establece el valor de "orden" en el estado.
+   *
+   * @param orden - Valor que representa el número de orden de compra o pedido asociado a la solicitud.
+   */
+  public setOrden(orden: string): void {
+    this.update((state) => ({
+      ...state,
+      orden,
+    }));
+  }
+
+  /**
+   * Establece el valor de "arancelaria" en el estado.
+   *
+   * @param arancelaria - Valor que representa el número de arancelaria asociado a la solicitud.
+   */
+  public setArancelaria(arancelaria: string): void {
+    this.update((state) => ({
+      ...state,
+      arancelaria,
+    }));
+  }
+
+/**
+ * Establece el nombre del técnico en el estado.
+ *
+ * @param tecnico - Nombre del técnico responsable de la solicitud.
+ */
+  public setNombretecnico(tecnico: string): void {
+    this.update((state) => ({
+      ...state,
+      tecnico,
+    }));
+  }
+
+/**
+ * Establece el nombre del responsable comercial en el estado.
+ *
+ * @param comercial - Nombre del responsable comercial asociado a la solicitud.
+ */
+  public setComercial(comercial: string): void {
+    this.update((state) => ({
+      ...state,
+      comercial,
+    }));
+  }
+
+  /**
+ * Establece el valor del campo "inglés" en el estado.
+ *
+ * @param ingles - Valor que representa la versión o información en inglés asociada a la solicitud.
+ */
+  public setIngles(ingles: string): void {
+    this.update((state) => ({
+      ...state,
+      ingles,
+    }));
+  }
+
+  /**
+ * Establece el valor del campo "registro" en el estado.
+ *
+ * @param registro - Número o código de registro asociado a la solicitud.
+ */
+  public setRegistro(registro: string): void {
+    this.update((state) => ({
+      ...state,
+      registro,
+    }));
+  }
+
+  /**
+ * Establece el valor del campo "cantidad" en el estado.
+ *
+ * @param cantidad - Cantidad de unidades o productos asociados a la solicitud.
+ */
+  public setCantidad(cantidad: string): void {
+    this.update((state) => ({
+      ...state,
+      cantidad,
+    }));
+  }
+
+  /**
+ * Establece la fecha de la factura en el estado.
+ *
+ * @param fechaFactura - Fecha en la que se emitió la factura asociada a la solicitud.
+ */
+  public setFechaFactura(fechaFactura: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaFactura,
+    }));
+  }
+
+  /**
+ * Establece el paso activo actual en el estado.
+ *
+ * @param pasoActivo - Índice o número que representa el paso activo en el proceso.
+ */
+  public setPasoActivo(pasoActivo: number): void {
+    this.update((state) => ({
+      ...state,
+      pasoActivo,
+    }));
+  }
+
+  /**
+ * Actualiza la validez de una sección específica del formulario en el estado.
+ *
+ * @param formName - Nombre de la sección del formulario a actualizar (ejemplo: "tratados", "destinatario").
+ * @param isValid - Booleano que indica si la sección es válida (`true`) o no (`false`).
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
     }));
   }
 }

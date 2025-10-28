@@ -459,21 +459,200 @@ export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
  */
 export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   {
-    fechaCreacion: '2025-02-19 11:26:55.0',
-    mercancia:
-      'Los demás. Únicamente: Los que no sean estupefacientes o psicotrópicos, o contengan dichas sustancias...',
-    cantidad: '0.5',
-    proveedor: 'TramitesVUCEM SA de CV',
+    fechaCreacion: '2024-01-15',
+    mercancia: 'Medicamentos',
+    cantidad: '100',
+    proveedor: 'Farmacéutica ABC S.A.',
+    rfcSanitario: 'FAR840315ABC',
+    denominacionRazon: 'Farmacéutica ABC S.A. de C.V.',
+    correoElectronico: 'contacto@farmabc.com',
+    codigoPostal: '01000',
+    estado: '101',
+    municipioAlcaldia: 'Álvaro Obregón',
+    localidad: 'Santa Fe',
+    colonia: 'Santa Fe Centro',
+    calleYNumero: 'Av. Santa Fe 495',
+    calle: 'Av. Santa Fe',
+    lada: '55',
+    telefono: '12345678',
+    aviso: 'AV-2024-001',
+    licenciaSanitaria: 'LS-2024-001',
+    regimen: '101',
+    adunasDeEntradas: '101',
+    aeropuerto: true,
+    aeropuertoDos: false,
+    publico: 'Si',
+    representanteRfc: 'REP840315XYZ',
+    representanteNombre: 'Juan Carlos',
+    apellidoPaterno: 'García',
+    apellidoMaterno: 'López',
+    regimenLaMercancia: 'Importación',
+    aduana: 'México - Aeropuerto Internacional',
+    mercancias: [
+      {
+        clasificacionProducto: 'Dispositivo Médico',
+        especificarClasificacionProducto: 'Instrumental Médico',
+        denominacionEspecificaProducto: 'Estetoscopio Digital',
+        formaFarmaceutica: 'N/A',
+        estadoFisico: 'Sólido',
+        fraccionArancelaria: '9018.11.01',
+        unidadMedidaComercializacion: 'Piezas',
+        cantidadUMC: '25',
+        unidadMedidaTarifa: 'Piezas',
+        cantidadUMT: '25',
+        presentacion: 'Piezas',
+        numeroRegistroSanitario: 'REG-002-2024',
+        paisOrigen: 'Alemania',
+        paisProcedencia: 'Estados Unidos',
+        tipoProducto: 'Dispositivo Médico',
+        usoEspecifico: 'Diagnóstico médico'
+      },
+    ],
+    scian: [
+      {
+        clave: '325412',
+        descripcion: 'Fabricación de preparaciones farmacéuticas'
+      }
+    ],
+    manifesto: 'MAN-2024-001',
+    manifiestosCasillaDeVerificacion: true
   },
   {
-    fechaCreacion: '2024-11-08 13:02:58.0',
-    mercancia:
-      'Los demás. Únicamente: Los que no sean estupefacientes o psicotrópicos, o contengan',
-    cantidad: '0.5',
-    proveedor: 'TramitesVUCEM SA de CV',
+    fechaCreacion: '2024-02-20',
+    mercancia: 'Dispositivos Médicos',
+    cantidad: '50',
+    proveedor: 'Medtech Solutions Ltd.',
+    rfcSanitario: 'MED850420DEF',
+    denominacionRazon: 'Medtech Solutions México S.A.',
+    correoElectronico: 'importaciones@medtech.mx',
+    codigoPostal: '64000',
+    estado: '101',
+    municipioAlcaldia: 'Monterrey',
+    localidad: 'Centro',
+    colonia: 'Centro Histórico',
+    calleYNumero: 'Morelos 123',
+    calle: 'Morelos',
+    lada: '81',
+    telefono: '87654321',
+    aviso: 'AV-2024-002',
+    licenciaSanitaria: 'LS-2024-002',
+    regimen: '101',
+    adunasDeEntradas: '101',
+    aeropuerto: false,
+    aeropuertoDos: true,
+    publico: 'Si',
+    representanteRfc: 'REP850420ABC',
+    representanteNombre: 'María Elena',
+    apellidoPaterno: 'Rodríguez',
+    apellidoMaterno: 'Martínez',
+    regimenLaMercancia: 'Importación Temporal',
+    aduana: 'Nuevo Laredo - Terrestre',
+    mercancias: [ {
+      clasificacionProducto: 'Dispositivo Médico',
+      especificarClasificacionProducto: 'Instrumental Médico',
+      denominacionEspecificaProducto: 'Estetoscopio Digital',
+      formaFarmaceutica: 'N/A',
+      estadoFisico: 'Sólido',
+      fraccionArancelaria: '9018.11.01',
+      unidadMedidaComercializacion: 'Piezas',
+      cantidadUMC: '25',
+      unidadMedidaTarifa: 'Piezas',
+      cantidadUMT: '25',
+      presentacion: 'Piezas',
+      numeroRegistroSanitario: 'REG-002-2024',
+      paisOrigen: 'Alemania',
+      paisProcedencia: 'Estados Unidos',
+      tipoProducto: 'Dispositivo Médico',
+      usoEspecifico: 'Diagnóstico médico'
+    },
+    {
+      clasificacionProducto: 'Dispositivo Médico',
+      especificarClasificacionProducto: 'Instrumental Médico',
+      denominacionEspecificaProducto: 'Estetoscopio Digital',
+      formaFarmaceutica: 'N/A',
+      estadoFisico: 'Sólido',
+      fraccionArancelaria: '9018.11.01',
+      unidadMedidaComercializacion: 'Piezas',
+      cantidadUMC: '25',
+      unidadMedidaTarifa: 'Piezas',
+      cantidadUMT: '25',
+      presentacion: 'Piezas',
+      numeroRegistroSanitario: 'REG-002-2024',
+      paisOrigen: 'Alemania',
+      paisProcedencia: 'Estados Unidos',
+      tipoProducto: 'Dispositivo Médico',
+      usoEspecifico: 'Diagnóstico médico'
+    },
+    ],
+    scian: [
+      {
+        clave: '334510',
+        descripcion: 'Fabricación de instrumentos y aparatos de medición'
+      }
+    ],
+    manifesto: 'MAN-2024-002',
+    manifiestosCasillaDeVerificacion: false
   },
+  {
+    fechaCreacion: '2024-03-10',
+    mercancia: 'Suplementos Alimenticios',
+    cantidad: '200',
+    proveedor: 'NutriHealth Corp.',
+    rfcSanitario: 'NUT860512GHI',
+    denominacionRazon: 'NutriHealth México S.A. de C.V.',
+    correoElectronico: 'legal@nutrihealth.mx',
+    codigoPostal: '44100',
+    estado: '101',
+    municipioAlcaldia: 'Guadalajara',
+    localidad: 'Zona Centro',
+    colonia: 'Centro',
+    calleYNumero: 'Juárez 456',
+    calle: 'Juárez',
+    lada: '33',
+    telefono: '11223344',
+    aviso: 'AV-2024-003',
+    licenciaSanitaria: 'LS-2024-003',
+    regimen: '101',
+    adunasDeEntradas: '101',
+    aeropuerto: true,
+    aeropuertoDos: true,
+    publico: 'Si',
+    representanteRfc: 'REP860512DEF',
+    representanteNombre: 'Carlos Alberto',
+    apellidoPaterno: 'Hernández',
+    apellidoMaterno: 'Silva',
+    regimenLaMercancia: 'Importación',
+    aduana: 'Guadalajara - Aeropuerto',
+    mercancias: [
+      {
+        clasificacionProducto: 'Dispositivo Médico',
+        especificarClasificacionProducto: 'Instrumental Médico',
+        denominacionEspecificaProducto: 'Estetoscopio Digital',
+        formaFarmaceutica: 'N/A',
+        estadoFisico: 'Sólido',
+        fraccionArancelaria: '9018.11.01',
+        unidadMedidaComercializacion: 'Piezas',
+        cantidadUMC: '25',
+        unidadMedidaTarifa: 'Piezas',
+        cantidadUMT: '25',
+        presentacion: 'Piezas',
+        numeroRegistroSanitario: 'REG-002-2024',
+        paisOrigen: 'Alemania',
+        paisProcedencia: 'Estados Unidos',
+        tipoProducto: 'Dispositivo Médico',
+        usoEspecifico: 'Diagnóstico médico'
+      },
+    ],
+    scian: [
+      {
+        clave: '311999',
+        descripcion: 'Elaboración de otros alimentos'
+      }
+    ],
+    manifesto: 'MAN-2024-003',
+    manifiestosCasillaDeVerificacion: true
+  }
 ];
-
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE
  * @description Lista de identificadores de procedimientos que no deben ser utilizados
@@ -482,7 +661,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103
+  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203
 ];
 
 /**
@@ -617,7 +796,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210
 ];
 
 export const REQUIRED_BANCO = [260902];

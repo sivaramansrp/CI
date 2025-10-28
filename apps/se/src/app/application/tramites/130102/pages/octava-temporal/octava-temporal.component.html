@@ -24,10 +24,16 @@
                  }
             }
         </div>
-        <btn-continuar [dePadre]="consultaState.readonly ? false : true" [datos]="datosPasos" (continuarEvento)="getValorIndice($event);"></btn-continuar>
+        <btn-continuar [dePadre]="consultaState.readonly ? false : true" [datos]="datosPasos" (continuarEvento)="ejecutarGuardadoSolicitud($event);"></btn-continuar>
          @if (mostrarAlerta) {
  <ng-alert [CONTENIDO]="avisoContrnido"></ng-alert>
 }
     </div>
 
 </div>
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

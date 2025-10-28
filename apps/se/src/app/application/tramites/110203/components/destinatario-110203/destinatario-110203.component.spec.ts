@@ -50,6 +50,22 @@ const MOCK_SOLICITUD_STATE: Solicitud110203State = {
   medida: 'medida1',
   comercializacion: 'comercial1',
   tipo: 'tipo1',
+  idSolicitud: null,
+  complemento: '',
+  marca: '',
+  valor: '',
+  bruta: '',
+  factura: '',
+  orden: '',
+  arancelaria: '',
+  tecnico: '',
+  comercial: '',
+  ingles: '',
+  registro: '',
+  cantidad: '',
+  fechaFactura: '',
+  pasoActivo: 0,
+  cvePais: ''
 };
 
 describe('Destinatario110203Component', () => {

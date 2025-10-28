@@ -217,36 +217,36 @@ export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212, 110223]
 /**
  * IDs de procedimientos en los que el campo “Cantidad” es obligatorio.
  */
-export const REQUIRED_CANTIDAD: number[] = [110204, 110205, 110212, 110222, 110211];
+export const REQUIRED_CANTIDAD: number[] = [110204, 110205, 110212, 110222, 110211, 110207];
 
 /**
  * IDs de procedimientos en los que el campo “UMC” (Unidad de Medida Comercial) es obligatorio.
  */
-export const REQUIRED_UMC: number[] = [110204, 110205, 110211];
+export const REQUIRED_UMC: number[] = [110204, 110205, 110211, 110207];
 
 /**
  * IDs de procedimientos en los que el campo “Valor de mercancía” es obligatorio.
  */
 export const REQUIRED_VALOR_MERCANCIA: number[] = [
-  110204, 110205, 110212, 110222
+  110204, 110205, 110212, 110222, 110207
 ];
 
 /**
  * IDs de procedimientos en los que el campo “Complemento de descripción” es obligatorio.
  */
 export const REQUIRED_COMPLEMENTO_DESCRIPCION: number[] = [
-  110204, 110205, 110212, 110222, 110211
+  110204, 110205, 110212, 110222, 110211, 110207
 ];
 
 /**
  * IDs de procedimientos en los que el campo “Número de factura” es obligatorio.
  */
-export const REQUIRED_NUMERO_FACTURA: number[] = [110212, 110211];
+export const REQUIRED_NUMERO_FACTURA: number[] = [110212, 110211, 110207];
 
 /**
  * IDs de procedimientos en los que el campo “Tipo de factura” es obligatorio.
  */
-export const REQUIRED_TIPO_FACTURA: number[] = [110204, 110205, 110222];
+export const REQUIRED_TIPO_FACTURA: number[] = [110204, 110205, 110222, 110207];
 
 /**
  * IDs de procedimientos en los que el campo “Criterio para clasificación” es obligatorio.
@@ -257,3 +257,8 @@ export const CRITERIO_PARA_CLASIFICATION: number[] = [110211];
  * IDs de procedimientos en los que el campo “Fecha de pago” es obligatorio.
  */
 export const FECHA_DE_PAGO: number[] = [110211];
+
+/**
+ * IDs de procedimientos en los que el campo “Mercancías seleccionadas” es obligatorio.
+ */
+export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207];
