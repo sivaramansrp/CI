@@ -407,15 +407,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
 
   formularioSolicitudValidacion(): boolean {
     this.isContinuarButtonClicked = true;
-    if((this.pagoDerechosForm.get('claveReferencia')?.value!=='' && this.pagoDerechosForm.get('claveReferencia')?.value!==null) && ( this.pagoDerechosForm.get('cadenaDependencia')?.value!=='' && this.pagoDerechosForm.get('cadenaDependencia')?.value!==null) && (this.pagoDerechosForm.get('llavePago')?.value!=='' && this.pagoDerechosForm.get('llavePago')?.value!==null) && (this.pagoDerechosForm.get('importePago')?.value!=='' && this.pagoDerechosForm.get('importePago')?.value!==null) && (this.pagoDerechosForm.get('fechaPago')?.value!=='' && this.pagoDerechosForm.get('fechaPago')?.value!==null)){
+    
+    const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
+    const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
+    const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
+    const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
+    const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    
+    const ALL_FIELDS_VALID = (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) && 
+                            (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) && 
+                            (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) && 
+                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null) && 
+                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null);
+    
+    if (ALL_FIELDS_VALID) {
       this.isContinuarButtonClicked = false;
-    }
-    this.pagoDerechosForm.markAllAsTouched();
-    if (this.pagoDerechosForm.valid) {
-
       return true;
     }
-   
+    
+    this.pagoDerechosForm.markAllAsTouched();
+    
+    
+    
     return false;
   }
   /**
