@@ -1,4 +1,3 @@
-/* eslint-disable dot-notation */
 /**
  * @component CertificadoComponent
  * @descripcion
@@ -224,7 +223,11 @@ export class CertificadoComponent {
     }
     return true;
   }
-
+  /**
+   * Guarda el estado del trámite en el store.
+   * @param item - Estado del trámite a guardar.
+   * @returns Promesa con la respuesta del servidor.
+   */
   guardar(item: Tramite110222State): Promise<JSONResponse> {
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',

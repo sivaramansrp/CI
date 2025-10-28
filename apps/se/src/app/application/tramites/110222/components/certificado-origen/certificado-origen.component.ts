@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AfterViewInit,
   Component,
@@ -177,7 +176,9 @@ export class CertificadoOrigenComponent
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+  /** Identificador del procedimiento actual. */
   idProcedimiento: number = 110222;
+  /** Formulario reactivo para el registro. */
   registroForm!: FormGroup;
 
   /**
@@ -337,6 +338,10 @@ export class CertificadoOrigenComponent
     this.store.setBloque(estado);
   }
 
+  /*
+    * @descripcion
+    * Procesa la búsqueda de mercancías basándose en el estado y bloque seleccionados.
+    */
   private processBuscarMercancias(): void {
     const SELECTED_ESTADO = this.certificadoState?.estado;
     const SELECTED_BLOQUE = this.certificadoState?.paisBloques;

@@ -126,11 +126,7 @@ export class DatosDelDestinatarioComponent
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
   public markAllFieldsTouched(): boolean{
-    // if (this.formDatosDelDestinatario) {
-    //   this.formDatosDelDestinatario.markAllAsTouched();
-    // }
-
-     if (this.formDatosDelDestinatario.invalid) {
+    if (this.formDatosDelDestinatario.invalid) {
       this.formDatosDelDestinatario.markAllAsTouched();
       return false;
     }

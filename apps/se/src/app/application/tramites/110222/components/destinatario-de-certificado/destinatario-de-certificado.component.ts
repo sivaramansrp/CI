@@ -204,7 +204,12 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       // Agrega otros controles aquí si es necesario
     });
   }
-
+/*
+* @method validateAllForms
+   * @descripcion
+   * Marca todos los campos de los formularios como tocados y verifica su validez.
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
   public validateAllForms(): boolean {
     if (!this.destinatarioComponent || !this.datosDelDestinatarioComponent || !this.representanteLegalExportadorComponent) {
       return false;
@@ -219,6 +224,12 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     );
   }
 
+  /*
+* @method validarFormulario
+   * @descripcion
+   * Marca todos los campos de los formularios como tocados y verifica su validez.
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
   validarFormulario(): boolean {
      let isValid = true;
     if (this.datosDelDestinatarioComponent) {

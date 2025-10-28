@@ -924,9 +924,6 @@ export class CertificadoDeOrigenComponent
     this.applyTercerOperadorValidation(); 
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
-    // if(this.idProcedimiento === 110222){
-    //   this.loadComboUnidadMedida();
-    // }
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {

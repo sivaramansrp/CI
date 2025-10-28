@@ -11,8 +11,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * 
  */
 export interface Tramite110222State {
-
+  /** Tratado asociado al trámite */
   tratado: string;
+  /** País asociado al trámite */
   pais: string;
   /** ID de la solicitud */
   idSolicitud: number | null;
@@ -224,17 +225,18 @@ export interface Tramite110222State {
 
   /** Lista de representaciones federales disponibles */
   representacionFederalDatos: Catalogo[];
-
+  /** Lista de productores agregados al exportador */
   agregarProductoresExportador: HistoricoColumnas[];
-
+  /** Lista de mercancías asociadas a los productores */
   mercanciaProductores: MercanciaTabla[];
+  /** Lista de mercancías disponibles */
   disponiblesDatos: Mercancia[];
   /**
    * @property {HistoricoColumnas[]} productoresExportador
    * @description Lista de productores asociados al exportador.
    */
   productoresExportador: HistoricoColumnas[];
-
+  /** Validez de los formularios individuales */
   formValidity?: {
     datosCertificado?: boolean;
     destinatario?: boolean;
@@ -390,20 +392,12 @@ export function createInitialState(): Tramite110222State {
       fax: '',
     },
     optionsTipoFactura: [],
-    /** Lista de idiomas disponibles */
     idiomaDatos: [],
-    /** Lista de entidades federativas disponibles */
     entidadFederativaDatos: [],
-
     agregarProductoresExportador: [],
-
-    /** Lista de representaciones federales disponibles */
     representacionFederalDatos: [],
-
     mercanciaProductores: [],
-
     disponiblesDatos: [],
-
     productoresExportador: [],
     formValidity: {},
   };

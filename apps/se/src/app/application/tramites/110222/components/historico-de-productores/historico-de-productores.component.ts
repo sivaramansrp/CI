@@ -250,7 +250,13 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }
-
+/*
+* @method emitAgregarExportador
+   * @descripcion
+   * Maneja la adición de un productor al exportador, ya sea directamente o mediante una llamada al servicio.
+   * @param event - Objeto que contiene los datos del productor o la información necesaria para agregarlo.
+   * 
+   */
   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
     let DATOS: HistoricoColumnas | null = null;
     if (event && typeof event === 'object' && 'nombreProductor' in event) {

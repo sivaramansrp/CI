@@ -148,11 +148,7 @@ export class RepresentanteLegalExportadorComponent
 
    /** Método público para marcar todos los campos como tocados y mostrar errores */
   public markAllFieldsTouched(): boolean {
-    // if (this.form) {
-    //   this.form.markAllAsTouched();
-    // }
-
-     if (this.form.invalid) {
+       if (this.form.invalid) {
       this.form.markAllAsTouched();
       return false;
     }

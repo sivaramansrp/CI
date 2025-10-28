@@ -28,16 +28,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-
+  /** Referencia al componente DestinatarioDeCertificadoComponent mediante ViewChild. */
   @ViewChild('DestinatarioDeCertificadoComponent')
   destinatarioComponent!: DestinatarioDeCertificadoComponent;
-
+  /** Referencia al componente CertificadoOrigenComponent mediante ViewChild. */
   @ViewChild('CertificadoOrigen')
   certificadoOrigen!: CertificadoOrigenComponent;
-
+  /** Referencia al componente HistoricoDeProductoresComponent mediante ViewChild. */
   @ViewChild('HistoricoDeProductoresComponent')
   HistoricoDeProductoresComponent!: HistoricoDeProductoresComponent;
-
+  /** Referencia al componente DatosCertificadoComponent mediante ViewChild. */
   @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
 
   /** Subject para notificar la destrucción del componente. */
@@ -49,6 +49,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+  /** Inyección de dependencias a través del constructor. */
   constructor(
     private consultaQuery: ConsultaioQuery,
     public validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService
