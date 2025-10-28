@@ -80,7 +80,7 @@ export interface AgregarDatosProductorFormulario {
  */
 export interface GrupoReceptor {
   /** Nombre del receptor */
-  nombre: string;
+  nombres: string;
   
   /** Primer apellido del receptor */
   apellidoPrimer: string;
@@ -121,6 +121,9 @@ export interface GrupoDeDirecciones {
   
   /** Dirección de correo electrónico */
   correoElectronico: string;
+
+  /** Pais */
+  pais: string;
 }
 /**
  * Representa los datos del grupo representativo.

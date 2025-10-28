@@ -325,9 +325,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       this.certificadosOrigenService.guardarDatosPost(PAYLOAD).subscribe({
         next: (response) => {
           if (esValidObject(response) && esValidObject(response['datos'])) {
-            const DATOS = response['datos'] as { id_solicitud?: number };
-            if (getValidDatos(DATOS.id_solicitud)) {
-              this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+            const DATOS = response['datos'] as { idSolicitud?: number };
+            if (getValidDatos(DATOS.idSolicitud)) {
+              this.store.setIdSolicitud(DATOS.idSolicitud ?? 0);
             } else {
               this.store.setIdSolicitud(0);
             }

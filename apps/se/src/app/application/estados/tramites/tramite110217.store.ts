@@ -232,7 +232,7 @@ export function createInitialState(): Tramite110217State {
       fax: '',
     },
     grupoReceptor: {
-      nombre: '',
+      nombres: '',
       apellidoPrimer: '',
       apellidoSegundo: '',
       numeroFiscal: '',
@@ -246,6 +246,7 @@ export function createInitialState(): Tramite110217State {
       telefono: '',
       fax: '',
       correoElectronico: '',
+      pais: ''
     },
     grupoRepresentativo: {
       lugar: '',
@@ -603,10 +604,10 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    *
    * @param {string} nombre - El nombre del receptor a establecer.
    */
-  public setGrupoReceptorNombre(nombre: string): void {
+  public setGrupoReceptorNombre(nombres: string): void {
     this.update((state) => ({
       ...state,
-      grupoReceptor: { ...state.grupoReceptor, nombre },
+      grupoReceptor: { ...state.grupoReceptor, nombres },
     }));
   }
 
@@ -762,6 +763,22 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     this.update((state) => ({
       ...state,
       grupoDeDirecciones: { ...state.grupoDeDirecciones, correoElectronico },
+    }));
+  }
+
+  /**
+   * Actualiza el correo electrónico en el grupo de direcciones.
+   *
+   * Este método permite establecer el correo electrónico en el grupo de direcciones del receptor.
+   *
+   * @param {string} correoElectronico - El correo electrónico a establecer.
+   */
+  public setGrupoDeDireccionesPais(
+    pais: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, pais },
     }));
   }
 
@@ -1575,6 +1592,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
       grupoReceptor,
     }));
   }
+
 
   /**
    * Actualiza la información del grupo de direcciones en el estado del trámite.

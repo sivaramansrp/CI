@@ -237,7 +237,7 @@ export class CertificadosOrigenService {
   /** Construye el objeto destinatario a partir del estado del trámite 110214. */
   buildDestinatario(data: Tramite110217State): unknown {
     return {
-      "nombre": data.grupoReceptor.nombre,
+      "nombre": data.grupoReceptor.nombres,
       "primer_apellido": data.grupoReceptor.apellidoPrimer,
       "segundo_apellido": data.grupoReceptor.apellidoSegundo,
       "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
