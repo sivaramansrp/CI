@@ -236,6 +236,12 @@ export interface ImportadorExportador {
    * @type {string}
    */
   opcion: string;
+
+  /**
+   * Persona moral relacionada.
+   * @type {string}
+   */
+  personaMoral: string;
 }
 
 /**

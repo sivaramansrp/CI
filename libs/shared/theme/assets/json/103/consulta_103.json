@@ -4,7 +4,7 @@
   "datos": {
       "exencionImpuestos": {
         "manifesto": "Declaro bajo protesta de decir verdad que los datos son correctos",
-        "aduana": "2",
+        "aduana": "10",
         "organismoPublico": "Servicio de Administración Tributaria",
         "destinoMercancia": "1"
       },
@@ -19,13 +19,14 @@
         "codigoPostal": "44100",
         "estado": "Jalisco",
         "colonia": "Centro",
-        "opcion": "No"
+        "opcion": "No",
+        "personaMoral": "Persona"
       },
       "datosMercancia": {
         "tipoDeMercancia": "Componentes electrónicos",
         "usoEspecifico": "Fabricación industrial",
-        "condicionMercancia": "Usada",
-        "unidadMedida": "Cajas",
+        "condicionMercancia": "1",
+        "unidadMedida": "1",
         "vehiculo": "Tráiler",
         "ano": "2023",
         "cantidad": "120",
