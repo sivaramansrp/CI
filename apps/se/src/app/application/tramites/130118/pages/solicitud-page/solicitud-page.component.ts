@@ -170,6 +170,9 @@ export class SolicitudPageComponent implements OnInit {
    */
   esPersonaMoral: boolean = false;
 
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true; 
+
   /**
    * Notificación que se muestra al usuario.
    * Se utiliza para mostrar mensajes de éxito, error o información.
@@ -502,6 +505,16 @@ anterior(): void {
   this.indice = this.wizardComponent.indiceActual + 1;
   this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
 }
+
+  /**
+    * Maneja el evento de carga en progreso emitido por un componente hijo.
+    * Actualiza el estado de cargaEnProgreso según el valor recibido.
+    * @param cargando Valor booleano que indica si la carga está en progreso.
+    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
 
 /**
  * Emite un evento para cargar archivos.

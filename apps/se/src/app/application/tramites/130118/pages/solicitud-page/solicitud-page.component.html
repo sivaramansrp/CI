@@ -39,7 +39,8 @@
           [datosUsuario]="datosUsuario"
           [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
-          (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgresoChange)="onCargaEnProgresoPadre($event)"></app-paso-dos>
         }
         @case (3) {
           <paso-firma [idSolicitud]="this.solicitudState.idSolicitud" [procedure]="130118" [procedureUrl]="'solicitud'"></paso-firma>
@@ -78,7 +79,7 @@
             (click)="
               seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
             "
-            [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+            [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
           >
             {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
           </button>
