@@ -71,7 +71,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Notificador para gestionar la destrucción de suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @descripcion
@@ -141,12 +141,12 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @param consultaQuery - Consulta para obtener el estado global de consulta.
    */
   constructor(
-    private readonly fb: FormBuilder,
-    private store: Tramite110222Store,
-    private query: Tramite110222Query,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    public fb: FormBuilder,
+    public store: Tramite110222Store,
+    public query: Tramite110222Query,
+    public seccionStore: SeccionLibStore,
+    public seccionQuery: SeccionLibQuery,
+    public consultaQuery: ConsultaioQuery
   ) {
     this.query.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -206,20 +206,17 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
   }
 
   public validateAllForms(): boolean {
-    let valid = true;
-    this.destinatarioComponent?.markAllFieldsTouched();
-    this.datosDelDestinatarioComponent?.markAllFieldsTouched();
-    this.representanteLegalExportadorComponent?.markAllFieldsTouched();
-    if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
-      valid = false;
+    if (!this.destinatarioComponent || !this.datosDelDestinatarioComponent || !this.representanteLegalExportadorComponent) {
+      return false;
     }
-    if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
-      valid = false;
-    }
-    if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
-      valid = false;
-    }
-    return valid;
+    this.destinatarioComponent.markAllFieldsTouched();
+    this.datosDelDestinatarioComponent.markAllFieldsTouched();
+    this.representanteLegalExportadorComponent.markAllFieldsTouched();
+    return (
+      this.destinatarioComponent.formDestinatario?.valid &&
+      this.datosDelDestinatarioComponent.formDatosDelDestinatario?.valid &&
+      this.representanteLegalExportadorComponent.form?.valid
+    );
   }
 
   validarFormulario(): boolean {

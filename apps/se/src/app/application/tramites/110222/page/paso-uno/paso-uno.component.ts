@@ -5,11 +5,11 @@ import {
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioDeCertificadoComponent } from '../../components/destinatario-de-certificado/destinatario-de-certificado.component';
-import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 @Component({
   selector: 'app-paso-uno',
@@ -41,7 +41,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
 
   /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Referencia al componente SolicitanteComponent mediante ViewChild.

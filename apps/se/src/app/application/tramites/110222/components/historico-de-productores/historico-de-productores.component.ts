@@ -3,7 +3,7 @@ import {
   HistoricoColumnas,
   MercanciaTabla,
 } from '../../models/peru-certificado.module';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite110222State,
@@ -11,10 +11,9 @@ import {
 } from '../../estados/tramite110222.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
-import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
 
 @Component({
   selector: 'app-historico-de-productores',

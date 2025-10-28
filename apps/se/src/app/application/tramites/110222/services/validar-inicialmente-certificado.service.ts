@@ -1,12 +1,14 @@
-import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
-import { Observable, map } from 'rxjs';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpCoreService, JsonResponseCatalogo } from '@ng-mf/data-access-user';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { PROC_110222, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
 import { Tramite110222State, Tramite110222Store } from '../estados/tramite110222.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { CadenaOriginalRequest } from '../../130118/model/request/cadena-original-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { PROC_110222, PRODUCTORS_EXPORTADOR } from '../servers/api-route';
 import { Tramite110222Query } from '../estados/tramite110222.query';
+
 
 /**
  * @descripcion
@@ -32,60 +34,6 @@ export class ValidarInicialmenteCertificadoService {
     public httpService: HttpCoreService,
     private tramite110222Query: Tramite110222Query
   ) { }
-
-  // /**
-  //  * @method obtenerMenuDesplegable
-  //  * @descripcion
-  //  * Obtiene un arreglo de objetos `Catalogo` desde un archivo JSON ubicado en la URL especificada.
-  //  * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
-  //  * @returns Un `Observable` que emite un arreglo de objetos `Catalogo`.
-  //  * @usageNotes
-  //  * Este método construye la URL completa al agregar el `fileName` a la URL base (`this.url`) 
-  //  * y realiza una solicitud HTTP GET para recuperar los datos.
-  //  */
-  // obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
-  //   const BASE_URL = this.url + fileName;
-  //   return this.http.get<RespuestaCatalogos>(BASE_URL).pipe(
-  //     map(response => response.data)
-  //   );
-  // }
-
-  // /**
-  //  * @method obtenerTablaDatos
-  //  * @descripcion
-  //  * Obtiene un arreglo de objetos `Mercancia` desde un archivo JSON ubicado en la URL especificada.
-  //  * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
-  //  * @returns Un `Observable` que emite un arreglo de objetos `Mercancia`.
-  //  * @usageNotes
-  //  * Este método construye la URL completa al agregar el `fileName` a la URL base (`this.url`) 
-  //  * y realiza una solicitud HTTP GET para recuperar los datos.
-  //  */
-  // obtenerTablaDatos(fileName: string): Observable<Mercancia[]> {
-  //   const JSON_URL = this.url + fileName;
-  //   return this.http.get<Mercancia[]>(JSON_URL);
-  // }
-
-  // /**
-  //  * @method obtenerProductorPorExportador
-  //  * @descripcion
-  //  * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON.
-  //  * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
-  //  */
-  // obtenerProductorPorExportador(): Observable<ProductorExportador> {
-  //   return this.http
-  //     .get<ProductorExportador>('assets/json/110222/productor-exportador.json');
-  // }
-
-  // /**
-  //  * @method obtenerMercancia
-  //  * @descripcion
-  //  * Obtiene el historial de mercancías seleccionadas desde un archivo JSON local.
-  //  * @returns {Observable<MercanciasHistorico>} Un observable que emite los datos del historial de mercancías.
-  //  */
-  // obtenerMercancia(): Observable<MercanciasHistorico> {
-  //   return this.http
-  //     .get<MercanciasHistorico>('assets/json/110222/mercancias-seleccionadas.json');
-  // }
 
   /**
    * @method getRegistroTomaMuestrasMercanciasData
@@ -134,10 +82,7 @@ export class ValidarInicialmenteCertificadoService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  // guardarDatosPost(body: any) {
-  //   return this.httpService.post<any>(PROC_110222.GUARDAR, { body: body });
-  //   // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
-  // }
+
    guardarDatosPost( body: Record<string, unknown>): Observable<Record<string, unknown>> {
     return this.httpService.post<Record<string, unknown>>(PROC_110222.GUARDAR, { body: body });
   }
@@ -150,10 +95,6 @@ export class ValidarInicialmenteCertificadoService {
     return this.tramite110222Query.selectTramite$;
   }
   buscarMercanciasCert(body: any): Observable<any> {
-    // return this.httpService.post<any>(
-    //   'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
-    //   { body: body }
-    // );
      return this.httpService.post<any>(PROC_110222.BUSCAR, { body: body });
   }
    /**
@@ -225,12 +166,6 @@ export class ValidarInicialmenteCertificadoService {
   return RESULT;
 }
 
-  //  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-  //      return this.httpService.get<ProductorExportador>(
-  //     PROC_110222.BUSCAR_PRODUCTOR
-  //   );
-  // }
-
    agregarProductores(body: {rfc_solicitante: string}): Observable<unknown> {
     return this.httpService.post<unknown>(PROC_110222.AGREGAR_PRODUCTOR, { body: body });
   }
@@ -282,4 +217,31 @@ export class ValidarInicialmenteCertificadoService {
         }
       }
     }
+
+    /**
+       * Obtiene la cadena original del trámite 130118.
+       * @param body Objeto que contiene los datos necesarios para generar la cadena original.
+       * @returns Un observable que emite la respuesta del servidor con la cadena original.
+       */
+      obtenerCadenaOriginal<T>(
+        idSolicitud: string,
+        body: CadenaOriginalRequest
+      ): Observable<BaseResponse<T>> {
+        return this.http
+          .post<BaseResponse<T>>(
+            PROC_110222.API_POST_CADENA_ORIGINAL(idSolicitud),
+            body
+          )
+          .pipe(
+            map((response) => response),
+            catchError(() => {
+              const ERROR = new Error(
+                `Error al obtener la cadena original en ${PROC_110222.API_POST_CADENA_ORIGINAL(
+                  idSolicitud
+                )}`
+              );
+              return throwError(() => ERROR);
+            })
+          );
+      }
 }

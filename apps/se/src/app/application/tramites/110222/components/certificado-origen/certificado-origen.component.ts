@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AfterViewInit,
   Component,
@@ -13,23 +14,22 @@ import {
   SeccionLibState,
   SeccionLibStore,
 } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, map, of, take, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import {
   Tramite110222State,
   Tramite110222Store,
 } from '../../estados/tramite110222.store';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/peru-certificado.module';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
-import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
-import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
-import { ToastrService } from 'ngx-toastr';
 
 /**
  * @descripcion
@@ -353,7 +353,6 @@ export class CertificadoOrigenComponent
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: any) => {
-          console.log(response);
           const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
             (item: any) => ({
               id: item.idMercancia,
@@ -463,17 +462,6 @@ export class CertificadoOrigenComponent
   emitmercaniasDatos(evento: Mercancia): void {
     this.store.setmercanciaTabla([evento]);
   }
-
-  buscarMercancias(): void {
-    const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-
-    const PAYLOAD = {
-      rfcExportador: 'AAL0409235E6',
-      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.tratado || '' },
-      pais: { cvePais: this.certificadoState.pais || '' },
-    };
-  }
-
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

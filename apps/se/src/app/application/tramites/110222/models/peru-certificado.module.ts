@@ -302,3 +302,12 @@ export interface GrupoRepresentativo {
   telefono: string;
   fax: string;
 }
+
+// export interface GrupoRepresentativo {
+//   lugar: string;
+//   nombreExportador: string;
+//   empresa: string;
+//   cargo: string;
+//   telefono: string;
+//   correoElectronico: string;
+// }

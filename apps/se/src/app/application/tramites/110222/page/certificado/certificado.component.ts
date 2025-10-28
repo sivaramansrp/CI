@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 /**
  * @component CertificadoComponent
  * @descripcion
@@ -17,26 +18,24 @@ import {
 import { Component, ViewChild } from '@angular/core';
 import {
   DatosPasos,
-  doDeepCopy,
   ERROR_FORMA_ALERT,
-  esValidObject,
-  getValidDatos,
   JSONResponse,
   WizardComponent,
+  esValidObject,
+  getValidDatos,
 } from '@libs/shared/data-access-user/src';
-import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, take, takeUntil } from 'rxjs';
-import { PASOS } from '../../constantes/peru-certificado.module';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Tramite110222Query } from '../../estados/tramite110222.query';
 import {
   Tramite110222State,
   Tramite110222Store,
 } from '../../estados/tramite110222.store';
-import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { ToastrService } from 'ngx-toastr';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
-import { FECHA_EXPEDICION } from '../../../110209/constantes/certificado-sgp.enum';
+import { PAGO_DE_DERECHOS } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constantes/peru-certificado.module';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 /**
  * @component CertificadoComponent
  * @description
@@ -163,9 +162,7 @@ export class CertificadoComponent {
   /**
    * Obtiene el valor del índice de la acción del botón.
    * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   *
    * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   *
    * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
 
@@ -227,30 +224,6 @@ export class CertificadoComponent {
     }
     return true;
   }
-  /**
-   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
-   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
-   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
-   * */
-  // buildMercanciaSeleccionadas(arr: any[]): any[] {
-  //   return arr.map((item: any) => ({
-  //     id: item.id,
-  //     fraccion_arancelaria: item.fraccionArancelaria,
-  //     cantidad: item.cantidad,
-  //     unidad_medida: item.unidadMedida,
-  //     valor_mercancia: item.valorMercancia,
-  //     nombreTecnico: item.nombreTecnico,
-  //     nombre_comercial: item.nombreComercial,
-  //     registro_producto: item.numeroRegistroProducto,
-  //     fechaExpedicion: item.fechaExpedicion,
-  //     fechaVencimiento: item.fechaVencimiento,
-  //     tipo_factura: item.tipoFactura,
-  //     num_factura: item.numFactura,
-  //     complemento_descripcion: item.complementoDescripcion,
-  //     fecha_factura: item.fechaFactura,
-  //     umc: item.umc,
-  //   }));
-  // }
 
   guardar(item: Tramite110222State): Promise<JSONResponse> {
     const PAYLOAD = {
@@ -276,31 +249,31 @@ export class CertificadoComponent {
         },
       },
       certificado: {
-        tratado_acuerdo: item.formCertificado['entidadFederativa'],
-        pais_bloque: item.formCertificado['bloque'],
-        fraccion_arancelaria: item.formCertificado['fraccionArancelariaForm'],
-        nombre_comercial: item.formCertificado['nombreComercialForm'],
-        registro_producto: item.formCertificado['numeroDeRegistroProductoForm'],
-        fecha_inicio: item.formCertificado['fechaInicioInput'],
-        fecha_fin: item.formCertificado['fechaFinalInput'],
         realizo_tercer_operador: {
           tercer_operador: item.formCertificado['si'],
           nombre: item.formCertificado['nombres'],
           primer_apellido: item.formCertificado['primerApellido'],
           segundo_apellido: item.formCertificado['segundoApellido'],
-          numero_registro_fiscal:
-            item.formCertificado['numeroDeRegistroFiscal'],
+          numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'],
           razon_social: item.formCertificado['razonSocial'],
         },
         domicilio_tercer_operador: {
-          pais: item.formCertificado['pais'],
-          ciudad: item.formCertificado['ciudad'],
-          calle: item.formCertificado['calle'],
-          numero_letra: item.formCertificado['numeroLetra'],
-          telefono: item.formCertificado['telefono'],
-          correo_electronico: item.formCertificado['correo'],
-          fax: item.formCertificado['fax'],
+          calle: item.formCertificado['calle1'],
+          numero_letra: item.formCertificado['numeroLetra1'],
+          ciudad: item.formCertificado['ciudad1'],
+          pais: item.formCertificado['pais1'],
+          correo_electronico: item.formCertificado['correo1'],
+          telefono: item.formCertificado['telefono1'],
+          fax: item.formCertificado['fax1'],
         },
+        tratado_acuerdo: item.formCertificado['entidadFederativa'] || '',
+        pais_bloque: item.formCertificado['bloque'],
+        fraccion_arancelaria: item.formCertificado['fraccionArancelariaForm'],
+        registro_producto: item.formCertificado['numeroDeRegistroProductoForm'],
+        nombre_comercial: item.formCertificado['nombreComercialForm'],
+        fecha_inicio: item.formCertificado['fechaInicioInput'],
+        fecha_fin: item.formCertificado['fechaFinalInput'],
+
         mercancias_seleccionadas: item.mercanciaTabla.map((m: Mercancia) => ({
           id: m.id,
           fraccion_arancelaria: m.fraccionArancelaria,
@@ -327,17 +300,16 @@ export class CertificadoComponent {
         },
         generalesRepresentanteLegal: {
           lugarRegistro: item.formExportor['lugar'],
-          nombre: item.formExportor['exportador'],
-          empresa: item.formExportor['empresa'],
+          nombre: item.formExportor['nombre'],
           cargo: item.formExportor['cargo'],
-          numero_registro_fiscal: item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+          numero_registro_fiscal: item.formExportor['registroFiscal'],
           telefono: item.formExportor['telefono'],
-          correoElectronico: item.formExportor['correoElectronico'],
+          correoElectronico: item.formExportor['correo'],
           fax: item.formExportor['fax'],
         },
       },
       datos_del_certificado: {
-        idioma: item.formDatosCertificado['idiomaDates'],
+        idioma: item.formDatosCertificado['idiomaDates'] || 'en',
         observaciones: item.formDatosCertificado['observacionesDates'],
         representacion_federal: {
           entidad_federativa:
@@ -384,10 +356,10 @@ export class CertificadoComponent {
         ],
       },
     };
-
     return new Promise((resolve, reject) => {
       this.ValidarInicialmenteCertificadoService.guardarDatosPost(PAYLOAD).subscribe(
         (response) => {
+
           if (esValidObject(response) && esValidObject(response['datos'])) {
             const DATOS = response['datos'] as { idSolicitud?: number };
             if (getValidDatos(DATOS.idSolicitud)) {

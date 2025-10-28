@@ -1,6 +1,6 @@
+import { GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -224,18 +224,18 @@ export interface Tramite110222State {
 
   /** Lista de representaciones federales disponibles */
   representacionFederalDatos: Catalogo[];
-  
+
   agregarProductoresExportador: HistoricoColumnas[];
 
   mercanciaProductores: MercanciaTabla[];
-  disponiblesDatos:Mercancia[];
+  disponiblesDatos: Mercancia[];
   /**
    * @property {HistoricoColumnas[]} productoresExportador
    * @description Lista de productores asociados al exportador.
    */
   productoresExportador: HistoricoColumnas[];
 
-   formValidity?: {
+  formValidity?: {
     datosCertificado?: boolean;
     destinatario?: boolean;
     histProductores?: boolean;
@@ -273,6 +273,14 @@ export function createInitialState(): Tramite110222State {
       segundoApellido: '',
       numeroDeRegistroFiscal: '',
       razonSocial: '',
+      pais: '',
+      ciudad: '',
+      telefono: '',
+      correoElectronico: '',
+      numeroLetra: '',
+      calle: '',
+      correo: '',
+      fax: ''
     },
     estado: {
       id: -1,
@@ -319,6 +327,7 @@ export function createInitialState(): Tramite110222State {
       primerApellido: '',
       segundoApellido: '',
       numeroDeRegistroFiscal: '',
+      registroFiscal: '',
       razonSocial: '',
     },
     fraccionArancelaria: '',
@@ -387,7 +396,7 @@ export function createInitialState(): Tramite110222State {
     entidadFederativaDatos: [],
 
     agregarProductoresExportador: [],
-  
+
     /** Lista de representaciones federales disponibles */
     representacionFederalDatos: [],
 
@@ -396,7 +405,7 @@ export function createInitialState(): Tramite110222State {
     disponiblesDatos: [],
 
     productoresExportador: [],
-     formValidity: {},
+    formValidity: {},
   };
 }
 
@@ -419,18 +428,18 @@ export class Tramite110222Store extends Store<Tramite110222State> {
   constructor() {
     super(createInitialState());
   }
-    /**
-   * Guarda el ID de la solicitud en el estado.
-   *
-   * @param idSolicitud - El ID de la solicitud que se va a guardar.
-   */
+  /**
+ * Guarda el ID de la solicitud en el estado.
+ *
+ * @param idSolicitud - El ID de la solicitud que se va a guardar.
+ */
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({
       ...state,
       idSolicitud,
     }));
   }
-  
+
   /**
    * @descripcion
    * Actualiza los datos del formulario de certificado.
@@ -450,7 +459,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario histórico.
    * @param values - Valores a actualizar en el formulario.
    */
-   setFormHistorico(values: {
+  setFormHistorico(values: {
     [key: string]: undefined | boolean | string | number | object;
   }): void {
     this.update((state) => ({
@@ -466,7 +475,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de productor.
    * @param values - Valores a actualizar en el formulario.
    */
-   setAgregarFormDatosProductor(values: {
+  setAgregarFormDatosProductor(values: {
     [key: string]: string | number | boolean | null;
   }): void {
     this.update((state) => ({
@@ -520,7 +529,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza la tabla de mercancías en el almacén.
    * @param mercanciaTabla - Array de objetos `Mercancia` que representa la tabla de mercancías.
    */
- public setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+  public setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((STATE) => {
       const LISTAEXISTENTE = STATE.mercanciaTabla || [];
       const NUEVOARTICULO = { ...mercanciaTabla[0] };
@@ -533,20 +542,20 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       }
 
       // Actualizar el elemento existente cuando id > 0
-      const UPDATEDLIST = mercanciaTabla.map((ITEM) => 
+      const UPDATEDLIST = mercanciaTabla.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
     });
   }
 
-   /**
-     * Establece los resultados de mercancía obtenidos por búsqueda.
-     * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
-     */
-    setbuscarMercancia(buscarMercancia: Mercancia[]): void {
-      this.update((state) => ({ ...state, buscarMercancia }));
-    }
+  /**
+    * Establece los resultados de mercancía obtenidos por búsqueda.
+    * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+    */
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+    this.update((state) => ({ ...state, buscarMercancia }));
+  }
 
   /**
    * @descripcion
@@ -1014,7 +1023,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       ...state,
       grupoRepresentativo,
     }));
-  } 
+  }
   /**
    * Establece los datos de la representación federal en el almacén.
    * 
@@ -1028,10 +1037,10 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       representacionFederalDatos,
     }));
   }
-    /**
-   * Establece los resultados de mercancía obtenidos por búsqueda.
-   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
-   */
+  /**
+ * Establece los resultados de mercancía obtenidos por búsqueda.
+ * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+ */
   setProductores(productores: HistoricoColumnas[]): void {
     this.update((state) => ({ ...state, productores }));
   }
@@ -1040,33 +1049,33 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
    * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
    */
-     setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
     this.update((state) => ({
       ...state,
       agregarProductoresExportador: [
         ...state.agregarProductoresExportador,
         ...productor.map(item => ({ ...item })),
       ],
-     }));
-  } 
+    }));
+  }
 
-     /**
-   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
-   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
-   */
-    setMercanciaProductores(mercancia: MercanciaTabla[]): void {
-      this.update((state) => ({
-        ...state,
-        mercanciaProductores: mercancia,
-      }));
-    }
+  /**
+* Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+* @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+*/
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
 
-      /**
-   * @method setDatosConfidencialesProductor
-   * @description
-   * Actualiza el estado de datos confidenciales del productor en el almacén.
-   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
-   * */
+  /**
+* @method setDatosConfidencialesProductor
+* @description
+* Actualiza el estado de datos confidenciales del productor en el almacén.
+* @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+* */
   setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
     this.update((state) => ({
       ...state,
@@ -1074,16 +1083,16 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     }));
   }
 
-   /**
-   * @method setProductoresExportador
-   * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
-   *
-   * Este método permite establecer los datos de los productores asociados al exportador.
-   *
-   * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
-   *
-   * @returns {void}
-   */
+  /**
+  * @method setProductoresExportador
+  * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+  *
+  * Este método permite establecer los datos de los productores asociados al exportador.
+  *
+  * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+  *
+  * @returns {void}
+  */
   public setProductoresExportador(
     productoresExportador: HistoricoColumnas[]
   ): void {
@@ -1093,11 +1102,11 @@ export class Tramite110222Store extends Store<Tramite110222State> {
     }));
   }
 
-    /**
- * Actualiza el estado de validez de un formulario específico dentro del trámite.
- * @param formName Nombre del formulario a actualizar.
- * @param isValid Indica si el formulario es válido o no.
- */
+  /**
+* Actualiza el estado de validez de un formulario específico dentro del trámite.
+* @param formName Nombre del formulario a actualizar.
+* @param isValid Indica si el formulario es válido o no.
+*/
   setFormValidity(formName: string, isValid: boolean): void {
     this.update((state) => ({
       ...state,
@@ -1107,11 +1116,11 @@ export class Tramite110222Store extends Store<Tramite110222State> {
       },
     }));
   }
-/**
-   * Actualiza el estado con una nueva lista de fechas de idioma.
-   *
-   * @param idiomaDates - Un arreglo de objetos de tipo `Catalogo` que representa las fechas de idioma a establecer en el estado.
-   */
+  /**
+     * Actualiza el estado con una nueva lista de fechas de idioma.
+     *
+     * @param idiomaDates - Un arreglo de objetos de tipo `Catalogo` que representa las fechas de idioma a establecer en el estado.
+     */
   public setIdiomaDates(idiomaDates: Catalogo[]): void {
     this.update((state) => ({ ...state, idiomaDates }));
   }
