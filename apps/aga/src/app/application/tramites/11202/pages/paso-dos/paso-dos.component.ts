@@ -41,8 +41,7 @@ export class PasoDosComponent implements OnInit {
    * - null — se ha proporcionado explícitamente la ausencia de usuario,
    * - Usuario — objeto de usuario válido con los datos esperados.
    */
-  @Input() datosUsuario?: Usuario | null;
-
+  @Input() datosUsuario!: Usuario;
   /**
    * Evento de salida que notifica al componente padre sobre la necesidad de reenviar
    * una carga previamente realizada.
