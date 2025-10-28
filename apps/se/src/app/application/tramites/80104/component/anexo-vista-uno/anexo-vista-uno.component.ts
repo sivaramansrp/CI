@@ -3,8 +3,6 @@
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';

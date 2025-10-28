@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 import { FitosanitarioStore } from '../estados/fitosanitario.store';
-import { ListaDeDatosFinal } from '../models/220202/fitosanitario.model';
+import { DatosForma, ListaDeDatosFinal } from '../models/220202/fitosanitario.model';
 
 /**
  * @summary Servicio de consulta para el estado de fitosanitarios.
@@ -84,6 +84,7 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
     (estado) => estado.selectedDatos
   );
 
+
   /**
    * Observable que emite los datos relacionados con las normas desde el estado global.
    * Se obtiene utilizando un selector que accede a la propiedad `usoCrossListDatos`
@@ -103,4 +104,13 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    * @memberof FitosanitarioQuery
    */
   seleccionarExportador$ = this.select(estado => estado.seletedExdora);
+  /**
+   * Selector para obtener el formulario seleccionado.
+   * 
+   * @readonly
+   * @type {Observable<DatosForma>}
+   * @memberof FitosanitarioQuery
+   */
+
+  seleccionarDatosForma$ = this.select(estado => estado.datos);
 }

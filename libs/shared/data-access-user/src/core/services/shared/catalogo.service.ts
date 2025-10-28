@@ -11,7 +11,7 @@
  * @author Sistema VUCEM
  */
 
-import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_110214, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
+import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESTADOS, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -56,15 +56,15 @@ import { Observable } from 'rxjs';
  * @author Sistema VUCEM
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CatalogoServices {
   /**
    * URL base del host para todas las consultas de catálogos.
-   * 
+   *
    * Esta propiedad almacena la URL base configurada desde las variables de entorno
    * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
-   * 
+   *
    * @type {string}
    * @readonly
    * @since 1.0.0
@@ -73,13 +73,13 @@ export class CatalogoServices {
 
   /**
    * Constructor del servicio de catálogos.
-   * 
+   *
    * Inicializa el servicio configurando la URL base del host desde las constantes
    * de configuración e inyectando el cliente HTTP necesario para realizar las
    * consultas a los diferentes endpoints de catálogos.
-   * 
+   *
    * @param http - Cliente HTTP de Angular para realizar peticiones a los servicios REST
-   * 
+   *
    * @example
    * ```typescript
    * // Angular maneja la inyección automáticamente
@@ -87,7 +87,7 @@ export class CatalogoServices {
    *   // El servicio está listo para usar
    * }
    * ```
-   * 
+   *
    * @see HttpClient
    * @see COMUN_URL.BASE_URL
    * @since 1.0.0
@@ -97,23 +97,22 @@ export class CatalogoServices {
     this.host = `${COMUN_URL.BASE_URL}`;
   }
 
-
   /**
    * Obtiene el catálogo de servicios IMMEX (Industria Manufacturera, Maquiladora y de Servicios de Exportación).
-   * 
+   *
    * Este método consulta el catálogo de servicios disponibles bajo el programa IMMEX,
    * que permite a las empresas importar temporalmente bienes para ser utilizados en
    * procesos productivos o de servicios destinados a la exportación, sin cubrir
    * el pago del impuesto general de importación.
-   * 
+   *
    * @param tramite - Identificador único del trámite (ej: '110219', '130118') que determina
    *                  el contexto y versión del catálogo IMMEX a consultar
-   * 
+   *
    * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta del servidor
    *          conteniendo el array de servicios IMMEX disponibles
-   * 
+   *
    * @throws {HttpErrorResponse} Error HTTP si la consulta falla o el servicio no está disponible
-   * 
+   *
    * @example
    * ```typescript
    * this.catalogoServices.immexCatalogo('110219')
@@ -130,7 +129,7 @@ export class CatalogoServices {
    *     }
    *   });
    * ```
-   * 
+   *
    * @see CATALOGO_IMMEX
    * @see BaseResponse
    * @see Catalogo
@@ -144,19 +143,19 @@ export class CatalogoServices {
 
   /**
    * Obtiene el catálogo de estados de la República Mexicana.
-   * 
+   *
    * Este método consulta el catálogo oficial de entidades federativas (estados)
    * de México, incluyendo información como códigos oficiales, nombres completos
    * y datos administrativos relevantes para los trámites del sistema VUCEM.
-   * 
+   *
    * @param tramite - Identificador del trámite que determina la versión específica
    *                  del catálogo de estados a consultar
-   * 
+   *
    * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta
    *          conteniendo el array completo de estados mexicanos
-   * 
+   *
    * @throws {HttpErrorResponse} Error HTTP en caso de falla en la comunicación con el servidor
-   * 
+   *
    * @example
    * ```typescript
    * // Cargar estados para un selector
@@ -167,7 +166,7 @@ export class CatalogoServices {
    *       nombre: estado.descripcion
    *     }));
    *   });
-   * 
+   *
    * this.catalogoServices.estadosCatalogo('130118')
    *   .pipe(
    *     map(response => response.datos.filter(estado => estado.activo))
@@ -176,7 +175,7 @@ export class CatalogoServices {
    *     this.catalogoEstados.catalogos = estadosActivos;
    *   });
    * ```
-   * 
+   *
    * @see CATALOGO_ESTADOS
    * @see BaseResponse
    * @see Catalogo
@@ -190,19 +189,19 @@ export class CatalogoServices {
 
   /**
    * Obtiene el catálogo internacional de países.
-   * 
+   *
    * Este método consulta el catálogo oficial de países reconocidos internacionalmente,
    * incluyendo códigos ISO, nombres oficiales en español, y información relevante
    * para operaciones de comercio exterior y trámites aduaneros del sistema VUCEM.
-   * 
+   *
    * @param tramite - Identificador del trámite que especifica el contexto y versión
    *                  del catálogo de países a consultar
-   * 
+   *
    * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta
    *          del servidor con el listado completo de países disponibles
-   * 
+   *
    * @throws {HttpErrorResponse} Error HTTP si hay problemas de conectividad o el servicio no responde
-   * 
+   *
    * @example
    * ```typescript
    * this.catalogoServices.paisesCatalogo('110219')
@@ -213,10 +212,10 @@ export class CatalogoServices {
    *     this.catalogoPaises.catalogos = response.datos;
    *     this.paisesDisponibles = true;
    *   });
-   * 
+   *
    * this.catalogoServices.paisesCatalogo('130118')
    *   .pipe(
-   *     map(response => response.datos.filter(pais => 
+   *     map(response => response.datos.filter(pais =>
    *       pais.descripcion.includes('América')
    *     ))
    *   )
@@ -224,7 +223,7 @@ export class CatalogoServices {
    *     this.paisesRegionales = paisesAmerica;
    *   });
    * ```
-   * 
+   *
    * @see CATALOGO_PAISES
    * @see BaseResponse
    * @see Catalogo
@@ -238,21 +237,21 @@ export class CatalogoServices {
 
   /**
    * Obtiene el catálogo de códigos NICO (Nomenclatura de Designación y Codificación de Mercancías).
-   * 
+   *
    * Este método consulta el catálogo de códigos NICO asociados a una fracción arancelaria específica.
    * Los códigos NICO proporcionan una clasificación detallada de mercancías para efectos de
    * comercio exterior, complementando la información de las fracciones arancelarias con
    * especificaciones técnicas y comerciales más precisas.
-   * 
+   *
    * @param tramite - Identificador del trámite que determina el contexto de la consulta
    * @param claveFraccion - Código de la fracción arancelaria para la cual se requieren
    *                        los códigos NICO asociados (ej: '72162101')
-   * 
+   *
    * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta
    *          conteniendo el array de códigos NICO específicos para la fracción
-   * 
+   *
    * @throws {HttpErrorResponse} Error HTTP si la fracción no existe o hay problemas de conectividad
-   * 
+   *
    * @example
    * ```typescript
    * this.catalogoServices.nicosCatalogo('110219', '72162101')
@@ -272,12 +271,12 @@ export class CatalogoServices {
    *       this.habilitarSelectorNICO = false;
    *     }
    *   });
-   * 
+   *
    * this.fraccionControl.valueChanges
    *   .pipe(
    *     debounceTime(300),
    *     distinctUntilChanged(),
-   *     switchMap(fraccion => 
+   *     switchMap(fraccion =>
    *       this.catalogoServices.nicosCatalogo('130118', fraccion)
    *     )
    *   )
@@ -285,14 +284,17 @@ export class CatalogoServices {
    *     this.actualizarNICOsDisponibles(nicosResponse.datos);
    *   });
    * ```
-   * 
+   *
    * @see CATALOGO_NICO
    * @see BaseResponse
    * @see Catalogo
    * @since 1.0.0
    * @author Sistema VUCEM
    */
-  nicosCatalogo(tramite: string, claveFraccion: string): Observable<BaseResponse<Catalogo[]>> {
+  nicosCatalogo(
+    tramite: string,
+    claveFraccion: string
+  ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_NICO(tramite, claveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
@@ -330,6 +332,16 @@ export class CatalogoServices {
   paisesBloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_PAISES_BLOQUE(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /*
+   * Obtiene el catálogo de países (bloques).
+   * @param {string} tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   */
+  obtenerProductoNuevo(body: any): Observable<BaseResponse<any>> {
+    const ENDPOINT = `${this.host}${AGREGAR_PRODUCTOR()}`;
+    return this.http.post<any>(ENDPOINT, { body: body });
   }
 
   /*
@@ -373,6 +385,7 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+
   /*
    * Obtiene el catálogo de idiomas.
    * @param {string} tramite - El ID del trámite.
@@ -398,14 +411,16 @@ export class CatalogoServices {
    * @param {string} tramite - El ID del trámite.
    * @returns {Observable<BaseResponse<Catalogo[]>>}
    */
-  unidadesMedidaComercialCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  unidadesMedidaComercialCatalogo(
+    tramite: string
+  ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${UNIDADES_MEDIDA_COMERCIAL(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**
    * Obtiene el catálogo de países organizados por bloques comerciales.
-   * 
+   *
    * Este método consulta el catálogo de países agrupados por bloques o regiones
    * comerciales (como TLCAN/T-MEC, Unión Europea, MERCOSUR, etc.), facilitando
    * la selección de países según los acuerdos comerciales vigentes y las
@@ -413,12 +428,12 @@ export class CatalogoServices {
    *
    * @param tramite - Identificador del trámite para el cual se requiere el catálogo
    *                  de países organizados por bloques comerciales
-   * 
+   *
    * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta
    *          con el listado de países agrupados por bloques comerciales
-   * 
+   *
    * @throws {HttpErrorResponse} Error HTTP si el servicio no está disponible
-   * 
+   *
    * @example
    * ```typescript
    * this.catalogoServices.paisBloqueCatalogo('110219')
@@ -429,10 +444,10 @@ export class CatalogoServices {
    *     this.paisCatalogo.catalogos = response.datos;
    *     this.organizarPaisesPorBloque(response.datos);
    *   });
-   * 
+   *
    * this.catalogoServices.paisBloqueCatalogo('130118')
    *   .pipe(
-   *     map(response => response.datos.filter(pais => 
+   *     map(response => response.datos.filter(pais =>
    *       pais.grupo === 'TLCAN' || pais.grupo === 'T-MEC'
    *     ))
    *   )
@@ -440,7 +455,7 @@ export class CatalogoServices {
    *     this.paisesBloqueSeleccionado = paisesNorteamerica;
    *   });
    * ```
-   * 
+   *
    * @see CATALOGO_PAISES_BLOQUE
    * @see BaseResponse
    * @see Catalogo
@@ -454,7 +469,7 @@ export class CatalogoServices {
 
   /**
    * Obtiene el catálogo de medios de transporte disponibles para operaciones de comercio exterior.
-   * 
+   *
    * Este método consulta el catálogo oficial de medios de transporte utilizados
    * en operaciones de importación y exportación, incluyendo transporte marítimo,
    * aéreo, terrestre, ferroviario y otros medios especializados, con sus
@@ -462,12 +477,12 @@ export class CatalogoServices {
    *
    * @param tramite - Identificador del trámite que determina los medios de transporte
    *                  aplicables y las regulaciones específicas
-   * 
+   *
    * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta
    *          del servidor con el listado completo de medios de transporte disponibles
-   * 
+   *
    * @throws {HttpErrorResponse} Error HTTP si hay problemas de conectividad con el catálogo
-   * 
+   *
    * @example
    * ```typescript
    * this.catalogoServices.medioTransporteCatalogo('110219')
@@ -478,20 +493,20 @@ export class CatalogoServices {
    *     this.mediosTransporte = response.datos;
    *     this.habilitarSelectorTransporte = true;
    *   });
-   * 
+   *
    * this.catalogoServices.medioTransporteCatalogo('130118')
    *   .pipe(
-   *     map(response => response.datos.filter(medio => 
+   *     map(response => response.datos.filter(medio =>
    *       medio.tipo === 'MARITIMO' || medio.tipo === 'AEREO'
    *     ))
    *   )
    *   .subscribe(transporteInternacional => {
    *     this.mediosInternacionales = transporteInternacional;
    *   });
-   * 
+   *
    * this.origenControl.valueChanges
    *   .pipe(
-   *     switchMap(origen => 
+   *     switchMap(origen =>
    *       this.catalogoServices.medioTransporteCatalogo('110219')
    *     ),
    *     map(response => this.filtrarPorOrigen(response.datos, this.origenControl.value))
@@ -500,14 +515,16 @@ export class CatalogoServices {
    *     this.actualizarOpcionesTransporte(mediosPermitidos);
    *   });
    * ```
-   * 
+   *
    * @see CATALOGO_MEDIO_TRANSPORTE
    * @see BaseResponse
    * @see Catalogo
    * @since 1.0.0
    * @author Sistema VUCEM
    */
-  medioTransporteCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  medioTransporteCatalogo(
+    tramite: string
+  ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_MEDIO_TRANSPORTE(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 
@@ -523,12 +540,22 @@ export class CatalogoServices {
   }
 
   /*
- * Obtiene el catálogo de sectores ID del trámite.
- * @param {string} tramite - El ID del trámite.
- * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
- */
+   * Obtiene el catálogo de sectores ID del trámite.
+   * @param {string} tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+   */
   sectoresCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_SECTORES(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+   /*
+   * Obtiene el catálogo de unidades de masa bruta correspondiente al trámite proporcionado.
+   * @param {string} tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor que contiene el catálogo de unidades de masa bruta.
+   */
+  unidadDeMasaBrutaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_UNIDAD_DE_MASA_BRUTA(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
@@ -538,8 +565,8 @@ export class CatalogoServices {
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
   tratadoCatalogoPais(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    if (tramite === '110214') {
-      const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_110214(tramite)}`;
+    if (tramite === '110214' || tramite === '110216' || tramite === '110207' || tramite === '110205') {
+      const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC(tramite)}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
     const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS(tramite)}`;
@@ -556,4 +583,34 @@ export class CatalogoServices {
       const ENDPOINT = `${this.host}${CATALOGO_PAIS_BLOQUE_CLAVE(tramite, clave)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+/**
+ * Obtiene los datos del catálogo de tratados o acuerdos para un trámite específico.
+ * Recibe como parámetros el tipo de trámite y el ID del tipo de tratado/acuerdo.
+ * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+ */
+  tratadosAcuerdosCatalogoDatosNew(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite, ideTipoTratadoAcuerdo)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+ * Obtiene la lista de países asociados a un tratado específico para un trámite determinado.
+ * Recibe como parámetros el tipo de trámite y el ID del tratado.
+ * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+ */
+getPaisesPorTratado(tramite: string, tratadoId: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS(tramite, tratadoId)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * Obtiene los tratados o acuerdos asociados a un país específico para un trámite determinado.
+ * Recibe como parámetros el tipo de trámite y la clave del país.
+ * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+ */
+getTratadosAcuerdosPorPais(tramite: string, cvePais: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS_PAIS(tramite, cvePais)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }

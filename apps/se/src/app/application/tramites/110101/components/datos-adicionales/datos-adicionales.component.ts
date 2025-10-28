@@ -15,6 +15,7 @@ import { PROTESTA } from '@ng-mf/data-access-user';
 import { OPCIONES, RADIO_OPCIONS, SELECCIONAR_TRANSFORMACION} from '../constante110101.enum';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
 * Este componente se utiliza para mostrar la forma del datos adicionales. - 110101
@@ -30,7 +31,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     AlertComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-    InputRadioComponent
+    InputRadioComponent,
+    TooltipModule
   ]
 })
 export class DatosAdicionalesComponent implements OnInit, OnDestroy {

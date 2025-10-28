@@ -155,7 +155,7 @@
         <div class="row">
           <div class="col-md-4">
             <app-catalogo-select
-              [catalogo]="pairsCatalog"
+              [catalogo]="paisCatalog"
               [label]="'País'"
               [required]="true"
               name="pais"
@@ -207,6 +207,7 @@
               [isDisabled]="esFormularioSoloLectura"
               formControlName="estado"
               [markTouched]="destinatarioForm.get('estado')?.touched ?? false"
+              (selectionChange)="municipioCatalogChange($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -219,6 +220,7 @@
               name="municipio"
               [isDisabled]="esFormularioSoloLectura"
               formControlName="municipio"
+              (selectionChange)="coloniaCatalogChange($event)"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">

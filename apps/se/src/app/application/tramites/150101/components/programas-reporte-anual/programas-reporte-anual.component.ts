@@ -53,6 +53,12 @@ const FECHA_FIN = {
 
 import { ValidationErrors } from '@angular/forms';
 
+/**
+ * 
+ * @param control 
+ * @returns 
+ */
+
 function integerValidator(control: AbstractControl): ValidationErrors | null {
   const VALUE = control.value;
   if (VALUE === null || VALUE === '' || VALUE === undefined) {

@@ -40,8 +40,7 @@ import { provideHttpClient } from '@angular/common/http';
     AcuseComponent,
     AcusePageComponent,
     BsDatepickerModule.forRoot(),
-    NotificacionesComponent,
-    AlertComponent
+    NotificacionesComponent,AlertComponent
   ],
   providers: [provideHttpClient(), ToastrService],
 })

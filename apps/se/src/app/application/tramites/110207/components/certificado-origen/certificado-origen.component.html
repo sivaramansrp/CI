@@ -1,6 +1,5 @@
 <app-certificado-de-origen 
     [operador]="operador"
-    [tratadoAcuerdo]="estado || []"
     [paisBloqu]="pais || []"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
@@ -12,13 +11,15 @@
     [guardarClicado]="datosTabla$"
     (guardarClicadoEvent)="guardarClicado($event)"
     (formaValida)="setFormValida($event)"
-    [datosForm]="formCertificadoValues"
+    [datosForm]="formCertificado"
     [cargoDeMercancias]="cargoDeMercancias"
     [mercanciasDisponibles]="mercanciasDisponibles"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formCertificadoEvent)="setValoresStore($event)"
-    [tramiteState]="formCertificadoValues"
+    [mercanciasDisponiblesTabla]="false"
+    [tramiteState]="formCertificado"
     [domicilio]="false"
+    (seleccionado)="mercanciaSeleccionada($event)"
     [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
     [idProcedimiento]="idProcedimiento">
 </app-certificado-de-origen>

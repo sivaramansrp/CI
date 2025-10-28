@@ -8,10 +8,11 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ELEMENTOS_REQUERIDOS_TR } from '../../constants/medicos-uso.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
 import { Tramite260214Store } from '../../estados/tramite260210Store.store';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -124,6 +125,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * ```
    */
   public esFormularioSoloLectura: boolean = false; 
+
+  @ViewChild(TercerosRelacionadosComponent)
+  TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+     
+
+  /**
+       * @property {string[]} elementosRequeridos
+       * @description
+       * Lista de elementos requeridos para completar el formulario o proceso.
+       */
+   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS_TR; 
 
   /**
    * @constructor
@@ -341,6 +353,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addProveedores(newProveedores: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(newProveedores);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

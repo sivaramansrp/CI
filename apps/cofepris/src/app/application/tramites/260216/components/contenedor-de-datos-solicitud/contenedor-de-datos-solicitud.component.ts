@@ -144,7 +144,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Contiene los nombres de los campos que deben estar presentes y validados,
    * tales como `correoElectronico` y `manifesto`.
    */
-  elementosRequeridos: string[] = ['correoElectronico', 'manifesto'];
+  elementosRequeridos: string[] = ['correoElectronico', 'manifesto','denominacionRazon'];
 
   /**
    * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent

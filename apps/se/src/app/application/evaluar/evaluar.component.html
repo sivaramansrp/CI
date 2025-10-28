@@ -52,7 +52,8 @@
                     [habilitarFechasPorAceptacion]="config.habilitarFechas"
                     [anexo222se]="config.anexo222se"
                     [inputSentidos]="vistasModificacion110101.actualizarVista"
-                    [sentidoInput]="sentidoInputTramite110101">
+                    [sentidoInput]="sentidoInputTramite110101"
+                    (controlDictaminador)="onDictaminador($event)">
                     </app-generar-dictamen>
                     }
                     @case (2) {
@@ -75,16 +76,18 @@
                         @switch (indiceDictamen) {
                         @case (1) {
                         <app-capturar-requerimiento 
-                            [isTipoRequerimiento]="false" 
-                            [isAreaSolicitante]="false"
-                            [isJustificacionRequerimiento]="true"
+                            [isTipoRequerimiento]="requerimientoConfig.isTipoRequerimiento" 
+                            [isAreaSolicitante]="requerimientoConfig.isAreaSolicitante "
+                            [isJustificacionRequerimiento]="requerimientoConfig.isJustificacionRequerimiento"
                             [iniciarResponse]="this.dataIniciarRequerimiento"
                             (formChanged)="onFormRequerimientoChanged($event)">
                         </app-capturar-requerimiento>
                         }
                         @case (2) {
-                        <app-solicitar-documentos 
-                        [isSegundaTabla]="false">
+                        <app-solicitar-documentos [isSegundaTabla]="requerimientoConfig.isSegundaTabla"
+                            [documentosEspecificos]="documentosEscpecificos"
+                            [documentosIniciales]="listadoDocumentosGuardados"
+                            (documentosActualizados)="onDocumentosActualizados($event)">
                         </app-solicitar-documentos>
                         }
                         }
@@ -131,6 +134,7 @@
             [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
                 [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
                 [envioDigital]="envioDigital" [opinion]="opinion"
+                [esDictaminador]="calificacionDictaminador"
                 [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
                 (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
                 (tabSeleccionado)="onTabSeleccionado($event)"

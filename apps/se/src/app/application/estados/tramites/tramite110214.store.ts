@@ -1325,12 +1325,12 @@ export class Tramite110214Store extends Store<Tramite110214State> {
    * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
    * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
    */
-  setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
     this.update((state) => ({
       ...state,
       agregarProductoresExportador: [
         ...state.agregarProductoresExportador,
-        {...productor},
+        ...productor.map(item => ({ ...item })),
       ],
      }));
   } 
@@ -1393,7 +1393,7 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       }
 
       // Actualizar el elemento existente cuando id > 0
-      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+      const UPDATEDLIST = mercanciaTabla.map((ITEM) => 
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };

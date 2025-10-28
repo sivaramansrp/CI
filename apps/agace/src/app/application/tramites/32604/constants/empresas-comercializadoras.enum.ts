@@ -16,6 +16,23 @@ import {
 import { Instalaciones } from './agregar.model';
 
 /**
+ * Interface para representar un registro extraído del archivo Excel
+ */
+export interface RegistroExcel {
+  id: number;
+  nombre: string;
+  descripcion: string;
+}
+
+/**
+ * Interface para representar el libro de trabajo Excel
+ */
+export interface LibroTrabajoExcel {
+  NombresHojas: string[];
+  Hojas: Record<string, unknown>;
+}
+
+/**
  * Arreglo de objetos que representa los pasos de un proceso o trámite.
  * 
  * Cada objeto contiene:
@@ -78,13 +95,13 @@ export const RECIBIR_NOTIFICACIONES_CONFIGURACION: ConfiguracionColumna<RecibirN
     },
     {
       /** Primer apellido del destinatario */
-      encabezado: 'Primer apellido',
+      encabezado: 'Apellido paterno',
       clave: (item: RecibirNotificaciones) => item.apellidoPaterno,
       orden: 4,
     },
     {
       /** Segundo apellido del destinatario */
-      encabezado: 'Segundo apellido',
+      encabezado: 'Apellido materno',
       clave: (item: RecibirNotificaciones) => item.apellidoMaterno,
       orden: 5,
     },
@@ -147,21 +164,11 @@ export const ENLACE_OPERATIVO_CONFIGURACION: ConfiguracionColumna<EnlaceOperativ
     },
 
     /**
-     * Configuración para la columna "Ciudad".
-     * Muestra la ciudad de cada enlace operativo.
-     */
-    {
-      encabezado: 'Ciudad',
-      clave: (item: EnlaceOperativo) => item.ciudad,
-      orden: 1,
-    },
-
-    /**
      * Configuración para la columna "Cargo".
      * Muestra el cargo de cada enlace operativo.
      */
     {
-      encabezado: 'Cargo',
+      encabezado: 'Cargo o Puesto',
       clave: (item: EnlaceOperativo) => item.cargo,
       orden: 1,
     },
@@ -171,7 +178,7 @@ export const ENLACE_OPERATIVO_CONFIGURACION: ConfiguracionColumna<EnlaceOperativ
      * Muestra el número de teléfono de cada enlace operativo.
      */
     {
-      encabezado: 'teléfono',
+      encabezado: 'Teléfono',
       clave: (item: EnlaceOperativo) => item.telefono,
       orden: 1,
     },
@@ -181,7 +188,7 @@ export const ENLACE_OPERATIVO_CONFIGURACION: ConfiguracionColumna<EnlaceOperativ
      * Muestra el correo electrónico de cada enlace operativo.
      */
     {
-      encabezado: 'Correo',
+      encabezado: 'Correo Electrónico',
       clave: (item: EnlaceOperativo) => item.correo,
       orden: 1,
     },
@@ -193,76 +200,6 @@ export const ENLACE_OPERATIVO_CONFIGURACION: ConfiguracionColumna<EnlaceOperativ
     {
       encabezado: 'Suplente',
       clave: (item: EnlaceOperativo) => item.suplente,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Calle".
-     * Muestra la calle de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Calle',
-      clave: (item: EnlaceOperativo) => item.calle,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Número Exterior".
-     * Muestra el número exterior de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Numero Exterior',
-      clave: (item: EnlaceOperativo) => item.numeroExterior,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Número Interior".
-     * Muestra el número interior de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Numero Interior',
-      clave: (item: EnlaceOperativo) => item.numeroInterior,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Colonia".
-     * Muestra la colonia de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Colonia',
-      clave: (item: EnlaceOperativo) => item.colonia,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Código Postal".
-     * Muestra el código postal de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Codigo Postal',
-      clave: (item: EnlaceOperativo) => item.codigoPostal,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Localidad".
-     * Muestra la localidad de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Localidad',
-      clave: (item: EnlaceOperativo) => item.localidad,
-      orden: 1,
-    },
-
-    /**
-     * Configuración para la columna "Delegación o Municipio".
-     * Muestra la delegación o municipio de la dirección de cada enlace operativo.
-     */
-    {
-      encabezado: 'Delegacion Municipio',
-      clave: (item: EnlaceOperativo) => item.delegacionMunicipio,
       orden: 1,
     },
   ];
@@ -414,7 +351,7 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
   [
     {
       /** Instalaciones principales de la empresa. */
-      encabezado: 'Instalaciones principales',
+      encabezado: '*Instalaciones principales',
       clave: (item: Domicilios) => item.instalacionPrincipal,
       orden: 1,
     },
@@ -422,97 +359,103 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
       /** Tipo de instalación de la empresa. */
       encabezado: 'Tipo de instalación',
       clave: (item: Domicilios) => item.tipoInstalacion,
-      orden: 1,
+      orden: 2,
     },
     {
       /** Entidad federativa donde está ubicada la instalación. */
       encabezado: 'Entidad federativa',
       clave: (item: Domicilios) => item.entidadFederativa,
-      orden: 1,
+      orden: 3,
     },
     {
       /** Municipio o delegación donde se encuentra la instalación. */
       encabezado: 'Municipio o delegación',
       clave: (item: Domicilios) => item.municipioDelegacion,
-      orden: 1,
+      orden: 4,
     },
     {
       /** Dirección completa del domicilio, incluyendo colonia, calle y número. */
       encabezado: 'Colonia, calle y número',
       clave: (item: Domicilios) => item.direccion,
-      orden: 1,
+      orden: 5,
     },
     {
       /** Código postal correspondiente al domicilio. */
       encabezado: 'Código postal',
       clave: (item: Domicilios) => item.codigoPostal,
-      orden: 1,
+      orden: 6,
     },
     {
       /** Registro del domicilio ante la Secretaría de Economía (SE) o el Servicio de Administración Tributaria (SAT). */
       encabezado: 'Registro ante SE/SAT',
       clave: (item: Domicilios) => item.registroSESAT,
-      orden: 1,
+      orden: 7,
     },
     {
       /** Proceso productivo que se realiza en la instalación. */
       encabezado: 'Proceso Productivo',
       clave: (item: Domicilios) => item.procesoProductivo,
-      orden: 1,
+      orden: 8,
     },
     {
       /** Indica si el domicilio acredita el uso y goce del inmueble. */
       encabezado: 'Acredita el uso y Goce del Inmueble',
       clave: (item: Domicilios) => item.acreditaInmueble,
-      orden: 1,
+      orden: 9,
     },
     {
       /** Indica si la instalación realiza operaciones de Comercio Exterior. */
       encabezado: 'Realiza operaciones de Comercio Exterior',
       clave: (item: Domicilios) => item.operacionesCExt,
-      orden: 1,
+      orden: 10,
     },
     {
       /** Reconocimiento mutuo para la instalación C-TPAT. */
       encabezado: 'Reconocimiento Mutuo (Instalación C-TPAT)',
       clave: (item: Domicilios) => item.instalacionCtpat,
-      orden: 1,
+      orden: 11,
     },
     {
       /** Perfil de la empresa correspondiente a la instalación. */
       encabezado: 'Perfil de la empresa',
       clave: (item: Domicilios) => item.instalacionPerfil,
-      orden: 1,
+      orden: 12,
     },
     {
       /** Perfil del Recinto Fiscalizado Estratégico. */
       encabezado: 'Perfil del Recinto Fiscalizado Estratégico',
       clave: (item: Domicilios) => item.instalacionPerfilRFE,
-      orden: 1,
+      orden: 13,
     },
     {
       /** Perfil del Auto Transportista Terrestre. */
       encabezado: 'Perfil del Auto Transportista Terrestre',
       clave: (item: Domicilios) => item.instalacionPerfilAuto,
-      orden: 1,
+      orden: 14,
     },
     {
       /** Perfil del Transportista Ferroviario. */
       encabezado: 'Perfil del Transportista Ferroviario',
       clave: (item: Domicilios) => item.instalacionPerfilFerro,
-      orden: 1,
+      orden: 15,
     },
     {
       /** Perfil del Recinto Fiscalizado. */
       encabezado: 'Perfil del Recinto Fiscalizado',
       clave: (item: Domicilios) => item.instalacionPerfilRf,
-      orden: 1,
+      orden: 16,
     },
     {
       /** Perfil de Mensajería y Paquetería. */
       encabezado: 'Perfil de Mensajería y Paquetería',
       clave: (item: Domicilios) => item.instalacionPerfilMensajeria,
-      orden: 1,
+      orden: 17,
+    },
+    {
+      /** Perfil de Almacén General. */
+      encabezado: 'Perfil Almacén General',
+      clave: (item: Domicilios) => item.instalacionPerfilAlmacen,
+      orden: 18,
     },
   ];
 
@@ -606,11 +549,10 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
    * @type {ConfiguracionColumna<Instalaciones>[]}
    */
   export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<Instalaciones>[] = [
-  { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
   { encabezado: 'Entidad federativa', clave: (articulo) => articulo.entidadFederativa, orden: 1 },
   { encabezado: 'Municipio o delegación', clave: (articulo) => articulo.municipio, orden: 2 },
   { encabezado: 'Colonia, calle y número', clave: (articulo) => articulo.coloniaCalleNumero, orden: 3 },
   { encabezado: 'Código postal', clave: (articulo) => articulo.codigoPostal, orden: 4 },
-  { encabezado: 'Registro Aduana', clave: (articulo) => articulo.registroAduana, orden: 5 }
+  { encabezado: 'Registro ante SE/SAT', clave: (articulo) => articulo.registroAduana, orden: 5 }
 ];
   

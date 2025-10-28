@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { DatosComponent} from '../datos/datos.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { PAGO_DE_DERECHOS } from '../../../150102/constantes/solicitud150102.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -64,7 +65,14 @@ export class SolicitudDeReporteComponent {
    * @type {ListaPasosWizard[]}
    */
   pantallasPasos: ListaPasosWizard[] = REPORTE_ANUAL_PASOS;
-
+ /**
+   * Representa el estado actual del pago de derechos.
+   *
+   * Inicialmente se establece con el valor `ADJUNTAR` de la enumeración `PAGO_DE_DERECHOS`.
+   *
+   * @type {string}
+   */
+  PAGO_DE_DERECHOS: string = PAGO_DE_DERECHOS.ADJUNTAR;
   /**
    * Índice del paso actual dentro del asistente.
    *
