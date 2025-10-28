@@ -63,6 +63,11 @@
     (confirmacionModal)="eliminarPermisoImmex()"></lib-notificaciones>
   }
 
+  @if(eliminarPlantasConfirmacion) {
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarconfirmar($event)"></lib-notificaciones>
+  }
+
   <!-- Add notifications for modal forms -->
   @if(espectaculoAlerta) {
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
@@ -140,6 +145,10 @@
             Guardar
           </button>
         </footer>
+        @if(eliminarNICOAlerta){
+          <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+          (confirmacionModal)="eliminarNICOAlerta = false"></lib-notificaciones>
+        }
       </div>
     </div>
   </div>
