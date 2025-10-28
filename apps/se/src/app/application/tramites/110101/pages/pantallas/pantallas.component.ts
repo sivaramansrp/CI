@@ -11,8 +11,8 @@ import { Solicitante110101Query } from '../../estados/queries/solicitante110101.
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 
 import { EmpaqueMercancia, InsumoMercancia, SolicitudCompletaRequest } from '../../models/request/guardado-solicitud-request.model';
-import { SolicitudService } from '../../services/solicitud.service';
 import { RegistroCuestionarioRequest } from '../../models/request/validar-solicitud-request.model';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * **Interfaz que representa una acción de un botón en la interfaz**  
@@ -153,15 +153,17 @@ export class PantallasComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
-    this.guardarSolicitudCompleta(() => {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    });
-  }
+      this.validarSolicitudCompleta(() => {
+        this.guardarSolicitudCompleta(() => {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        });
+      });
+    }
   }
   /**
    * @method guardarSolicitudCompleta
@@ -367,7 +369,7 @@ export class PantallasComponent implements OnInit {
    * @description
    * Envía una solicitud al servicio para validar si la solicitud está completa.
    */
-  validarSolicitudCompleta(): void {
+  validarSolicitudCompleta(onSuccessCallBack?: () => void): void {
     const PAYLOAD: RegistroCuestionarioRequest = {
     rfc: "",
     clave_entidad: "",
@@ -498,7 +500,9 @@ export class PantallasComponent implements OnInit {
     .subscribe({
       next: (response) => {
         if (response.codigo === CodigoRespuesta.EXITO) {
-          /** */
+          if (onSuccessCallBack) {
+            onSuccessCallBack();
+          }
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {

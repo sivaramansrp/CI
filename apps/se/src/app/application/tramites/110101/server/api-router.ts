@@ -141,7 +141,7 @@ export const API_POST_GUARDAR_SOLICITUD = `sat-t110101/solicitud/guardar`;
  * API para validar la solicitud completa previo al guardado.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/valida-solicitud
  */
-export const API_POST_VALIDAR_SOLICITUD_COMPLETA = `sat-t110101/tramite/solicitud/validar`; 
+export const API_POST_VALIDAR_SOLICITUD_COMPLETA = `sat-t110101/solicitud/validar`; 
 
 /**
  * API para generar la cadena original para la solicitud
