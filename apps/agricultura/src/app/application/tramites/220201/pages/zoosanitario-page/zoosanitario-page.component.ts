@@ -7,8 +7,6 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
-import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
  * Este componente gestiona el flujo del formulario a través de un asistente (wizard),
@@ -31,7 +29,7 @@ import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solici
   imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
 export class ZoosanitarioPageComponent {
-  @ViewChild(PasoUnoComponent) padre!: PasoUnoComponent;
+  @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -107,8 +105,8 @@ export class ZoosanitarioPageComponent {
     */
   readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
 
-   /** Indica la visibilidad del botón Guardar. */
-    public btnGuardarVisible: string = 'visible';
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
@@ -134,6 +132,10 @@ export class ZoosanitarioPageComponent {
         return; // Detener ejecución si los formularios son inválidos
       }
     }
+
+
+    
+
     // Calcular el nuevo índice basado en la acción
     let indiceActualizado = e.valor;
     if (e.accion === 'cont') {
@@ -187,8 +189,8 @@ export class ZoosanitarioPageComponent {
     }
   }
   /**
- * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
- */
+   * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
@@ -213,10 +215,13 @@ export class ZoosanitarioPageComponent {
     return numeros.reduce((acumulador, numero) => acumulador + numero, 0);
   }
 
-  
-
-  callGrandchild(): void {
-    this.padre.callChild(); // 🔥 Desde el abuelo ejecutas el método del hijo    
+  /**
+   * Maneja el guardado parcial de una solicitud invocando el método `guardaSolicitudParcial` 
+   * del servicio `guardadoParcial`. Esta función se utiliza típicamente para persistir 
+   * el estado actual del formulario o los datos de la aplicación.
+   */
+  guardadoParcialSolicitud(): void {
+    this.guardadoParcial.guardaSolicitudParcial();
   }
 
 }

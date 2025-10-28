@@ -20,7 +20,7 @@
                   <div class="col-md-12">
                     <label for="Solicitud">Solicitud</label>
                   </div>
-                  <div class="col-md-12">
+                  <div class="col-md-12" style="cursor: pointer">
                     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                       [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud"
                       [tableId]="'tabla-solicitud'" [showPagination]="true" [mode]="'client'"
@@ -79,7 +79,7 @@
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="establecimientoTIF" formControlName="establecimientoTIF"
           [label]="'Establecimiento TIF'" [required]="false" name="establecimientoTIF"
-          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"></app-catalogo-select>
+          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(); obtenerVeterinarioList()"></app-catalogo-select>
       </div>
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="veterinario" formControlName="nombreVeterinario"

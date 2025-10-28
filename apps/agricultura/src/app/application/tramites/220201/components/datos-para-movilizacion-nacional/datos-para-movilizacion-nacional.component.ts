@@ -1,7 +1,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  RespuestaCatalogos,
   SharedModule,
   TituloComponent
 } from '@libs/shared/data-access-user/src';

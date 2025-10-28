@@ -34,7 +34,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
     DatosParaMovilizacionNacionalComponent, PagoDeDerechosComponent, TercerospageComponent, CommonModule]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-    @ViewChild(DatosDeLaSolicitudComponent) hijo!: DatosDeLaSolicitudComponent;
+    @ViewChild(DatosDeLaSolicitudComponent) solicitud!: DatosDeLaSolicitudComponent;
   /**
    * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
    * @property {Subject<void>} destroyNotifier$
@@ -176,6 +176,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       if (this.solicitante.form.invalid) {
         this.solicitante.form.markAllAsTouched();
         isValid = false;
+        this.indice += 1;
       }
     } else {
       isValid = false;
@@ -216,8 +217,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-callChild(): void {
-    this.hijo.sayHello();
+  /**
+   * Guarda el estado actual de la solicitud de manera parcial.
+   * Este método invoca la función `guardarParcial` en el objeto `solicitud`,
+   * permitiendo al usuario guardar el progreso sin completar todo el proceso.
+   */
+  guardaSolicitudParcial(): void {
+    this.solicitud.guardarParcial();
   }
   
 

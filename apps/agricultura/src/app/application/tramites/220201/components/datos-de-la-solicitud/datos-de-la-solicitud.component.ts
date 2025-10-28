@@ -1,13 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { DatosParaMovilizacionNacional, FilaSolicitud, PagoDeDerechos, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
-import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
-
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CONFIGURACION_SENSIBLES } from '../../../../shared/constantes/datos-de-la-solicitue.enum';
 import { CatalogosService } from '../../services/220201/catalogos/catalogos.service';
@@ -24,6 +23,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 import { GuardaSolicitud, Mercancia } from '../../models/220201/guardar-solicitud.model';
+import { TercerosrelacionadosdestinoTable } from '../../../220202/models/220202/fitosanitario.model';
 
 
 /**
@@ -312,9 +312,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   public procesoModal!: string;
 
+  /**
+   * Referencia ViewChild al componente `TablaDinamicaComponent` que maneja una tabla dinámica
+   * del tipo `Sensible`. Esto permite la interacción con la instancia del componente en la plantilla.
+   * 
+   * @type {TablaDinamicaComponent<Sensible>}
+   */
   @ViewChild('tablaMercancias') tablaMercancias!: TablaDinamicaComponent<Sensible>;
 
+  /**
+   * Objeto que almacena los datos necesarios para la movilización nacional.
+   * @type {DatosParaMovilizacionNacional}
+   */
+  datosParaMovilizacionNacional = {} as DatosParaMovilizacionNacional;
 
+  /**
+   * Objeto que representa los terceros relacionados con el destino.
+   * @type {TercerosrelacionadosdestinoTable}
+   */
+  tercerosRelacionados = {} as TercerosrelacionadosdestinoTable;
+
+  /**
+   * Objeto que representa el pago de derechos asociado a la solicitud.
+   * Se inicializa como un objeto vacío del tipo `PagoDeDerechos`.
+   */
+  pagoDeDerechos = {} as PagoDeDerechos;
 
   /**
    * Constructor del componente.
@@ -359,6 +381,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
+        
         //Mantiene ordenados los datos por no de partida
         if (datos.tablaDatos && datos.tablaDatos.length > 0) {
           datos.tablaDatos.sort((a, b) => {
@@ -368,13 +391,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           });
         }
         this.cuerpoTabla = datos.tablaDatos;
-        console.warn('Cuerpo tabla', this.cuerpoTabla);
+        this.datosParaMovilizacionNacional = datos.datosParaMovilizacionNacional;
+        this.tercerosRelacionados = datos.tercerosRelacionados[0] || {};
+        this.pagoDeDerechos = datos.pagoDeDerechos || {};
+
       });
     this.crearFormulario();
     this.initActionFormBuild();
-
     this.nuevaNotificacion = {} as Notificacion;
-
   }
 
   ngAfterViewInit(): void {
@@ -393,9 +417,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.datosDelaSolicitud.get('claveUCON')?.valueChanges
       .pipe(debounceTime(300))
       .subscribe(value => {
-        if (value.length < 5) {
-          this.moduloEmergente = false;
-        } else {
+        this.establecimientoTIF = [];
+        const EXISTE = this.obtenerEstablecimientoTif(value);
+        if (EXISTE) {          
+          this.moduloEmergente = EXISTE;
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
           this.messageDeError = `No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.`;
@@ -467,7 +492,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();
-    this.obtenerPuntoInspeccionList();
     this.obtenerRegimenList();
     this.obtenerDatosTablaSolicitud();
   }
@@ -520,11 +544,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de establecimiento.
    * @method obtenerEstablecimientoList
    */
-  obtenerEstablecimientoList(): void {
-
-    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7', '220201').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+  obtenerEstablecimientoTif(cveUcon: string): boolean {
+    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7', cveUcon).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.establecimientoTIF = data.datos ?? [];
     });
+    return this.establecimientoTIF.length > 0;
   }
 
   /**
@@ -532,7 +556,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerVeterinarioList
    */
   obtenerVeterinarioList(): void {
-    this.catalogoService.obtieneCatalogoMedicosVeterinarios(220201, '1').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+    const CVE_ESTABLECIMIENTO_TIF = this.datosDelaSolicitud.get('establecimientoTIF')?.value || '';
+    this.catalogoService.obtieneCatalogoMedicosVeterinarios(220201, CVE_ESTABLECIMIENTO_TIF).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.veterinario = data.datos ?? [];
     });
   }
@@ -585,7 +610,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   radioBotonSeleccionado(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia
-    console.warn('Valor del radio button seleccionado:', VALOR);
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
@@ -680,7 +704,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   modificarMercancia(): void {
-    console.warn('Filas seleccionadas:', this.filasSeleccionadas);
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
     const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (VALOR === 'yes') {
@@ -769,8 +792,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     return false
   }
 
+  /**
+   * Maneja el evento de clic en una fila de la tabla de solicitudes.
+   * 
+   * @param event - Objeto que contiene los datos de la solicitud seleccionada.
+   * 
+   * Este método realiza las siguientes acciones:
+   * - Verifica si el evento contiene un `id_solicitud` válido.
+   * - Obtiene los datos prellenados de la solicitud desde el servicio `catalogoService`.
+   * - Actualiza los formularios y listas relacionadas con los datos obtenidos.
+   * - Procesa la información de mercancías, generando listas de detalles y sensibles.
+   * - Actualiza el estado de la tienda `fitosanitarioStore` con las filas procesadas.
+   * - Maneja errores en caso de fallos al obtener los datos.
+   */
   onFilaClic(event: SolicitudData): void {
-    console.warn('Fila clicada:', event);
     if (event && event.id_solicitud) {
       this.catalogoService.obtenSolicitudPrellenado(220201, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
@@ -794,14 +829,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
             } else {
               this.datosDelaSolicitud.reset();
             }
-            console.warn('Datos de la solicitud prellenada:', datos);
             const DETALLE_MERCANCIA = datos?.datos as PrellenadoSolicitud || [];
             if (DETALLE_MERCANCIA.mercancia.length > 0) {
 
               const FILAS_SOLICITUD: FilaSolicitud[] = [];
               // eslint-disable-next-line complexity
               DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
-
                 const LISTADETALLEPRODUCTOS: DetallasDatos[] = mercancia.lista_detalle_mercancia?.map((producto) => ({
                   numeroDeLote: producto.numero_lote_detalle || '',
                   fechaElaboracionEmpaqueProceso: producto.fecha_elaboracion || '',
@@ -870,8 +903,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
             }
             this.radioBotonSeleccionado()
           },
-          error: (error) => {
-            console.error('Error al obtener los datos de la solicitud prellenada:', error);
+          error: () => {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
@@ -959,10 +991,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'Sexo', clave: (fila: Sensible): string => fila.Sexo, orden: 9 },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
-  onRowExpanded(row: any): void {
+  /** Método que se ejecuta cuando una fila es expandida para mostrar detalles adicionales. */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+  onRowExpanded(row: FilaSolicitud): void {
+    
     // Aquí puedes cargar los datos para la tabla anidada si es necesario
-    console.warn('Fila expandida:', row);
   }
 
   /** Método para manejar el cambio de filas seleccionadas. */
@@ -1002,37 +1035,47 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  sayHello(): void {
+  /**
+   * Guarda una solicitud parcial recopilando datos del formulario y la tabla,
+   * construyendo un objeto estructurado y enviándolo al servicio backend.
+   *
+   * Pasos:
+   * 1. Extrae datos del formulario `datosDelaSolicitud`.
+   * 2. Mapea las filas de la tabla `cuerpoTabla` en un arreglo de objetos `Mercancia`.
+   * 3. Construye un objeto `GuardaSolicitud` con los datos recopilados.
+   * 4. Llama al servicio `registroSolicitudService` para guardar la solicitud parcial.
+   *
+   * @returns {void}
+   */
+  // eslint-disable-next-line complexity
+  guardarParcial(): void {
 
     const FORMULARIO = this.datosDelaSolicitud.value;
-
-    console.warn('Valor del formulario:', FORMULARIO);
 
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
       tipo_mercancia: fila.tipoDeProducto || '',
-      tipo_requisito: typeof fila.tipoRequisito === 'string' ? parseInt(fila.tipoRequisito, 10) || 0 : fila.tipoRequisito || 0,
+      tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
-      numero_certificado: typeof fila.numeroCertificadoInternacional === 'string' ? parseInt(fila.numeroCertificadoInternacional, 10) || 0 : fila.numeroCertificadoInternacional || 0,
+      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
       cve_fraccion: fila.fraccionArancelaria || '',
       id_fraccion_gubernamental: 0,
       clave_nico: fila.nico || '',
       descripcion_mercancia: fila.descripcion || '',
-      cantidad_umt: typeof fila.cantidadUMT === 'string' ? parseFloat(fila.cantidadUMT) || 0 : fila.cantidadUMT || 0,
+      cantidad_umt: Number(fila.cantidadUMT) || 0,
       clave_unidad_medida: fila.umc || '',
-      cantidad_umc: typeof fila.cantidadUMC === 'string' ? parseFloat(fila.cantidadUMC) || 0 : fila.cantidadUMC || 0,
+      cantidad_umc: Number(fila.cantidadUMC) || 0,
       clave_unidad_comercial: fila.umt || '',
-      id_especie: typeof fila.especie === 'string' ? parseInt(fila.especie, 10) || 0 : fila.especie || 0,
-      id_uso_mercancia_tipo_tramite: typeof fila.uso === 'string' ? parseInt(fila.uso, 10) || 0 : fila.uso || 0,
+      id_especie: Number(fila.especie) || 0,
+      id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
       presentacion: fila.tipoPresentacionDescripcion || '',
-      cantidad_presentacion: typeof fila.presentacion === 'string' ? parseFloat(fila.presentacion) || 0 : fila.presentacion || 0,
+      cantidad_presentacion: Number(fila.presentacion) || 0,
       id_tipo_presentacion: fila.tipoPresentacion || '',
       id_tipo_planta: fila.tipoPlanta || '',
       id_planta_autorizada: fila.plantaAutorizadaOrigen || '',
       clave_paises_origen: fila.paisDeOrigen || '',
       clave_paises_procedencia: fila.paisDeProcedencia || '',
-      lista_detalle_mercancia: fila.sensibles?.map((detalle) => ({
+      lista_detalle_mercancia: (fila.sensibles ?? []).map((detalle) => ({
         numero_lote_detalle: detalle.NumeroLote || '',
         color_pelaje_detalle: detalle.ColorPelaje || '',
         edad_animal_detalle: detalle.EdadAnimal || '',
@@ -1043,17 +1086,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         id_sexo_detalle: detalle.Sexo || '',
         nombre_cientifico_detalle: detalle.NombreCientifico || '',
         nombre_mercancia_detalle: detalle.NombreMercancia || '',
-        fecha_sacrificio: '', // Provide default or mapped value
-        fecha_elaboracion: '', // Provide default or mapped value
-        fecha_caducidad: '', // Provide default or mapped value
-        fecha_elaboracion_fin: '', // Provide default or mapped value
-        fecha_caducidad_fin: '', // Provide default or mapped value
-        fecha_sacrificio_fin: '', // Added missing property
-      })) || [],
+        fecha_sacrificio: '', 
+        fecha_elaboracion: '',
+        fecha_caducidad: '', 
+        fecha_elaboracion_fin: '', 
+        fecha_caducidad_fin: '', 
+        fecha_sacrificio_fin: '', 
+      })) || fila.detalleProductos?.map((detalleProducto) => ({
+        numeroDeLote: detalleProducto.numeroDeLote || '',
+        fechaElaboracionEmpaqueProceso: detalleProducto.fechaElaboracionEmpaqueProceso || '',
+        fechaProduccionSacrificio: detalleProducto.fechaProduccionSacrificio || '',
+        fechaCaducidadProducto: detalleProducto.fechaCaducidadProducto || '',
+        fechaFinElaboracionEmpaqueProceso: detalleProducto.fechaFinElaboracionEmpaqueProceso || '',
+        fechaFinProduccionSacrificio: detalleProducto.fechaFinProduccionSacrificio || '',
+        fechaFinCaducidadProducto: detalleProducto.fechaFinCaducidadProducto || '',
+    }))
     }));
-
-
-    console.warn('Filas de la solicitud:', FILAS);
 
     const SOLICITUDPARCIAL: GuardaSolicitud = {
       id_solicitud: null,
@@ -1066,61 +1114,60 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         nombre_veterinario: FORMULARIO.nombreVeterinario,
         numero_autorizacion: FORMULARIO.numeroGuia,
         clave_regimen: FORMULARIO.clave_regimen,
-
         mercancia: FILAS
       },
       transporte: {
-        coordenadas: '',
-        ide_medio_transporte: '',
-        identificacion_transporte: '',
-        id_punto_verificacion: 0,
-        razon_social: ''
+        coordenadas: this.datosParaMovilizacionNacional.coordenadas || '',
+        ide_medio_transporte: this.datosParaMovilizacionNacional.medio || '',
+        identificacion_transporte: this.datosParaMovilizacionNacional.transporte || '',
+        id_punto_verificacion: this.datosParaMovilizacionNacional.punto || '',
+        razon_social: this.datosParaMovilizacionNacional.nombre || ''
       },
       terceros: {
         terceros_exportador: [{
-          tipo_persona_sol: '',
+          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
           persona_moral: true,
-          nombre: '',
-          apellido_paterno: '',
-          apellido_materno: '',
-          razon_social: '',
-          pais: '',
-          descripcion_ubicacion: '',
-          lada: '',
-          telefonos: '',
-          correo: ''
+          nombre: this.tercerosRelacionados?.nombre || '',
+          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
+          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
+          razon_social: this.tercerosRelacionados?.razonSocial || '',
+          pais: this.tercerosRelacionados?.pais || '',
+          descripcion_ubicacion: this.tercerosRelacionados?.coloniaDescripcion || '',
+          lada: this.tercerosRelacionados?.lada || '',
+          telefonos: this.tercerosRelacionados?.telefono || '',
+          correo: this.tercerosRelacionados?.correo || ''
         }],
         terceros_destinatario: [{
-          tipo_persona_sol: '',
+          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
           persona_moral: true,
           num_establ_tif: '',
           nom_establ_tif: '',
-          nombre: '',
-          apellido_paterno: '',
-          apellido_materno: '',
-          razon_social: '',
-          pais: '',
-          codigo_postal: '',
-          cve_entidad: '',
-          cve_deleg_mun: '',
-          cve_colonia: '',
-          calle: '',
-          num_exterior: '',
-          num_interior: '',
-          lada: '',
-          telefonos: '',
-          correo: ''
+          nombre: this.tercerosRelacionados?.nombre || '',
+          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
+          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
+          razon_social: this.tercerosRelacionados?.razonSocial || '',
+          pais: this.tercerosRelacionados?.pais || '',
+          codigo_postal: this.tercerosRelacionados?.codigoPostal || '',
+          cve_entidad: this.tercerosRelacionados?.estado || '',
+          cve_deleg_mun: this.tercerosRelacionados?.municipio || '',
+          cve_colonia: this.tercerosRelacionados?.colonia || '',
+          calle: this.tercerosRelacionados?.calle || '',
+          num_exterior: this.tercerosRelacionados?.numeroExterior || '',
+          num_interior: this.tercerosRelacionados?.numeroInterior || '',
+          lada: this.tercerosRelacionados?.lada || '',
+          telefonos: this.tercerosRelacionados?.telefono || '',
+          correo: this.tercerosRelacionados?.correo || ''
         }]
       },
       pago: {
         exento_pago: true,
-        ide_motivo_exento_pago: '',
-        cve_referencia_bancaria: '',
-        cadena_pago_dependencia: '',
-        cve_banco: '',
-        llave_pago: '',
-        fec_pago: '',
-        imp_pago: 0
+        ide_motivo_exento_pago: this.pagoDeDerechos?.exentoPago || '',
+        cve_referencia_bancaria: this.pagoDeDerechos?.claveReferencia || '',
+        cadena_pago_dependencia: this.pagoDeDerechos?.cadenaDependencia || '',
+        cve_banco: this.pagoDeDerechos?.banco || '',
+        llave_pago: this.pagoDeDerechos?.llavePago || '',
+        fec_pago: this.pagoDeDerechos?.fechaPago || '',
+        imp_pago: Number(this.pagoDeDerechos?.importePago) || 0
       },
       solicitante: {
         rfc: 'AAL0409235E6',
@@ -1136,8 +1183,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
     this.registroSolicitudService.guardaSolicitudParcial(220201, SOLICITUDPARCIAL).subscribe();
 
-
-    console.warn('👶 Hola desde el hijo');
   }
 
   /**
