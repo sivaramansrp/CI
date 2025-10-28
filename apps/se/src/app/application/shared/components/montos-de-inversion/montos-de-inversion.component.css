@@ -1,3 +1,7 @@
 .mnx {
     white-space: nowrap;
 }
+
+.ml-6px {
+  margin-left: 6px;
+}

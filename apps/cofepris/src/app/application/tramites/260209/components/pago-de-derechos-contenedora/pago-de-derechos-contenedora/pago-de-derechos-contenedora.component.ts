@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy,ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -26,6 +26,10 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
   public pagoDerechos: PagoDerechosFormState;
+
+   @ViewChild('PagoDeDerechosComponent')
+    pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  
 
   /**
    * Identificador único del procedimiento.
@@ -67,7 +71,11 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
       .subscribe();
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
-
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * @method updatePagoDerechos
    * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.

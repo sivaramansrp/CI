@@ -16,8 +16,10 @@
     [mercanciasDisponibles]="mercanciasDisponibles"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formCertificadoEvent)="setValoresStore($event)"
+    [mercanciasDisponiblesTabla]="false"
     [tramiteState]="formCertificado"
     [domicilio]="false"
+    (seleccionado)="mercanciaSeleccionada($event)"
     [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
     [idProcedimiento]="idProcedimiento">
 </app-certificado-de-origen>

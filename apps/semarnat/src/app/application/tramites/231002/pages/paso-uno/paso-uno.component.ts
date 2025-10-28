@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
@@ -32,6 +27,11 @@ import { Subject } from 'rxjs';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
+   * Indica si el formulario actual es válido.
+   */
+  @Input() esFormaValido!: boolean;
+
+  /**
    * Índice de la pestaña seleccionada.
    *
    * Esta propiedad indica cuál de las pestañas del formulario está seleccionada en un
@@ -39,10 +39,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    *
    * @type {number}
    */
-  indice: number = 1;
+  indice: number = 2;
 
-  @ViewChild(DatosSolicitudComponent)
-  datosSolicitudComponent!: DatosSolicitudComponent;
+  @ViewChild('solicitud', { static: false })
+  datosSolicitudComponent: DatosSolicitudComponent | undefined;
 
   /**
    * Selecciona una pestaña específica.
@@ -126,6 +126,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           );
         }
       });
+  }
+
+  /**
+   * Valida todos los formularios en el componente.
+   * @returns si todos los formularios son válidos
+   */
+  validarTodosLosFormularios(): boolean {
+    if (this.indice >= 2 && this.datosSolicitudComponent) {
+      this.datosSolicitudComponent.marcarCamposComoTocados();
+      return this.datosSolicitudComponent.validarFormulario();
+    }
+    this.indice = 2;
+    return false;
   }
 
   /**

@@ -23,6 +23,7 @@ import {
   REPRESENTANTE_LEGAL_EN_INIT,
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
+  ENABLE_FIELDS
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -77,9 +78,9 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import { Subject, delay, map, takeUntil } from 'rxjs';
+import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ScianDataService } from '../../services/scian-data.service';
@@ -271,6 +272,8 @@ export class DatosDeLaSolicitudComponent
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  public enableFields = ENABLE_FIELDS;
 
   /**
    * @property {string} textoManifestoContenido
@@ -558,7 +561,30 @@ export class DatosDeLaSolicitudComponent
    /**
    * Indicates if the merchandise modal is currently open
    */
-  public mercanciaModalAbierto: boolean = false
+  public mercanciaModalAbierto: boolean = false;
+
+    /**
+     * @property {Subscription} subscription
+     * @private
+     * @description
+     * Contenedor principal para gestionar suscripciones a observables que requieren
+     * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+     * para casos específicos que necesitan control granular de suscripciones.
+     * 
+     * @pattern Subscription Management
+     * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+     * @cleanup Se desuscribe manualmente en ngOnDestroy()
+     * @use_case Suscripciones que requieren lógica de limpieza personalizada
+     * 
+     * @example
+     * ```typescript
+     * this.subscription.add(
+     *   this.service.getData().subscribe(data => { ... })
+     * );
+     * ```
+     */
+    private subscription: Subscription = new Subscription();
+   
 
 public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
@@ -574,6 +600,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param datosSolicitudService - Servicio para gestionar la información de la solicitud.
    * @param consultaioQuery - Servicio para la consulta de datos relacionados con la solicitud.
    * @param scianDataService - Servicio para la obtención de datos del catálogo SCIAN.
+   * @param catalogoService - Servicio para la obtención de catálogos diversos.
+   * @param cdr - Servicio para la detección de cambios en el componente.
    */
   constructor(
     public fb: FormBuilder,
@@ -582,33 +610,34 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
     private scianDataService: ScianDataService,
-     private cdr: ChangeDetectorRef
+    private catalogoService: CatalogoServices,
+    private cdr: ChangeDetectorRef
   ) {
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenDatos',
-      '/cofepris/regimenDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'adunasDeEntradasDatos',
-      '/cofepris/adunasDeEntradasDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'estadoDatos',
-      '/cofepris/estadoDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenLaMercanciaDatos',
-      '/cofepris/regimenLaMercanciaDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'aduanaDatos',
-      '/cofepris/aduanaDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenDatos',
+    //   '/cofepris/regimenDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'adunasDeEntradasDatos',
+    //   '/cofepris/adunasDeEntradasDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'estadoDatos',
+    //   '/cofepris/estadoDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenLaMercanciaDatos',
+    //   '/cofepris/regimenLaMercanciaDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'aduanaDatos',
+    //   '/cofepris/aduanaDatos.json'
+    // );
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -638,7 +667,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.inicializarCatalogo(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
+   
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
@@ -712,7 +743,96 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
+
+
+        Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+          const CONTROL = this.datosSolicitudForm.get(controlName);
+          CONTROL?.enable();
+         
+    
+        });
   }
+
+  inicializarCatalogo(tramite: string): void {
+   this.subscription.add(
+      this.catalogoService
+      .estadosCatalogo(tramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const DATOS = response.datos as Catalogo[];
+        
+        if (response) {
+          this.estadoDatos = DATOS;
+        }
+      })
+    );  
+    this.subscription.add(
+      this.catalogoService
+        .regimenesCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.regimenDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .aduanasCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.adunasDeEntradasDatos = DATOS;
+          }
+        })
+    );
+  }
+
+   /**
+   * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
+   * @param datos1 Los datos de la mercancia seleccionada.
+   */
+   patchOpcionesValue(datos1: TablaOpcionConfig): void {
+    this.datosSolicitudForm.patchValue({
+      rfcSanitario: datos1.rfcSanitario || '',
+      denominacionRazon: datos1.denominacionRazon || '',
+      correoElectronico: datos1.correoElectronico || '',
+      codigoPostal: datos1.codigoPostal || '',
+      estado: datos1.estado || '',
+      municipioAlcaldia: datos1.municipioAlcaldia || '',
+      localidad: datos1.localidad || '',
+      colonia: datos1.colonia || '',
+      calleYNumero: datos1.calleYNumero || '',
+      calle: datos1.calle || '',
+      lada: datos1.lada || '',
+      telefono: datos1.telefono || '',
+      aviso: datos1.aviso || '',
+      licenciaSanitaria: datos1.licenciaSanitaria || '',
+      regimen: datos1.regimen || '',
+      adunasDeEntradas: datos1.adunasDeEntradas || '',
+      aeropuerto: datos1.aeropuerto || false,
+      aeropuertoDos: datos1.aeropuertoDos || false,
+      publico: datos1.publico || '',
+      representanteRfc: datos1.representanteRfc || '',
+      representanteNombre: datos1.representanteNombre || '',
+      apellidoPaterno: datos1.apellidoPaterno || '',
+      apellidoMaterno: datos1.apellidoMaterno || '',
+      regimenLaMercancia: datos1.regimenLaMercancia || '',
+      aduana: datos1.aduana || '',
+      mercancias: datos1.mercancias || [],
+      manifesto: datos1.manifesto || '',
+      manifiestosCasillaDeVerificacion: datos1.manifiestosCasillaDeVerificacion || false
+    });
+    
+    this.scianConfig.datos =  datos1.scian;
+    this.tablaMercanciasConfig.datos = datos1.mercancias;
+   
+    }
 
   /**
    * @method crearDatosSolicitudForm
@@ -723,7 +843,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       rfcSanitario: [
         {
           value: this.datosSolicitudFormState.rfcSanitario,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -735,7 +855,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       denominacionRazon: [
         {
           value: this.datosSolicitudFormState.denominacionRazon,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -746,7 +866,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       correoElectronico: [
         {
           value: this.datosSolicitudFormState.correoElectronico,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -758,7 +878,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       codigoPostal: [
         {
           value: this.datosSolicitudFormState.codigoPostal,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -777,7 +897,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       municipioAlcaldia: [
         {
           value: this.datosSolicitudFormState.municipioAlcaldia,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -788,14 +908,14 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       localidad: [
         {
           value: this.datosSolicitudFormState.localidad,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       colonia: [
         {
           value: this.datosSolicitudFormState.colonia,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
       ],
       calleYNumero: [
@@ -815,18 +935,18 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
         {
           value: this.datosSolicitudFormState.telefono,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
-          Validators.maxLength(5),
+          
           Validators.pattern(REGEX_SOLO_DIGITOS),
         ],
       ],
@@ -975,6 +1095,19 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     }
     else {
       this.crearDatosSolicitudForm()
+      if(this.idProcedimiento===260209){
+      Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+        const CONTROL = this.datosSolicitudForm.get(controlName);
+        if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
+        
+        
+        CONTROL?.enable();
+        
+        }
+       
+  
+      });
+    }
     }
   }
 
@@ -1513,7 +1646,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         representanteRfc: 'REP123456789',
         representanteNombre: 'EUROFOODS DE MEXICO',
         apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL',
       });
       this.mostrarAlerta = false;
     }
@@ -1572,8 +1704,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.disable();
       }
     });
-
+   if(this.idProcedimiento!==260209 && this.idProcedimiento!==260210){
     this.establecimientoSeleccionado = enable;
+  }
   }
 
   /**
@@ -1619,7 +1752,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado') {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
         return;
       }
 
@@ -1627,7 +1760,13 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.enable();
       }
     });
+    if(this.idProcedimiento===260209|| this.idProcedimiento===260210){
+      this.establecimientoSeleccionado = false;
+    }
+    else{
     this.establecimientoSeleccionado = true;
+    }
+
   }
 
   /**
@@ -1648,12 +1787,116 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
    */
   formularioSolicitudValidacion(): boolean {
-    if (this.datosSolicitudForm.valid) {
+    this.isContinuarButtonClicked = true;
+  this.marcarTodosLosCamposComoTocados();
+    if (this.verificarCamposValidosODeshabilitados()) {
       return true;
     }
-    this.datosSolicitudForm.markAllAsTouched();
+    //this.datosSolicitudForm.markAllAsTouched();
     return false;
   }
+  /**
+ * Marca todos los campos del formulario como tocados (touched) uno por uno.
+ * Esto permite mostrar mensajes de validación para todos los campos.
+ * @returns {void}
+ */
+marcarTodosLosCamposComoTocados(): void {
+  const EXCLUDED_FIELDS = [
+    'aduana',
+    'aeropuertoDos',
+    'calleYNumero',
+    'manifiestosCasillaDeVerificacion',
+    'regimenLaMercancia',
+    'aviso',
+    'licenciaSanitaria'
+  ];
+  if (!this.datosSolicitudForm) {
+   
+    return;
+  }
+
+  // Get all control names
+  const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
+  
+
+  // Loop through each control and mark as touched
+  CONTROL_NAMES.forEach((controlName: string) => {
+    const CONTROL = this.datosSolicitudForm.get(controlName);
+    
+    if (CONTROL) {
+      // Mark the control as touched
+      if (EXCLUDED_FIELDS.includes(controlName)) {
+       
+        return; // Continue to next field
+      }
+      CONTROL.markAsTouched();
+      
+      // Optional: Also mark as dirty to trigger additional validation states
+  
+    }
+  });
+
+  // Update the form's validation status
+  this.datosSolicitudForm.updateValueAndValidity();
+  
+  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
+}
+
+/**
+ * Verifica si todos los campos del formulario (excepto los excluidos) son válidos o están deshabilitados.
+ * @returns {boolean} - Retorna `true` si todos los campos requeridos son válidos o están deshabilitados, `false` en caso contrario.
+ */
+verificarCamposValidosODeshabilitados(): boolean {
+  if (!this.datosSolicitudForm) {
+    console.warn('Form is not initialized');
+    return false;
+  }
+
+  // Fields to exclude from validation check
+  const EXCLUDED_FIELDS = [
+    'aduana',
+    'aeropuertoDos',
+    'calleYNumero',
+    'manifiestosCasillaDeVerificacion',
+    'regimenLaMercancia',
+    'aviso',
+    'licenciaSanitaria'
+  ];
+
+  const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
+  
+  let allFieldsValidOrDisabled = true;
+
+
+  // Loop through each control to check validation status
+  CONTROL_NAMES.forEach((controlName: string) => {
+    const CONTROL = this.datosSolicitudForm.get(controlName);
+    
+    if (CONTROL) {
+      // Skip excluded fields
+      if (EXCLUDED_FIELDS.includes(controlName)) {
+       
+      
+        return; // Continue to next field
+      }
+
+
+      // Check if field is valid or disabled
+     else if (CONTROL.disabled) {
+       return ;
+      
+      } else if (!CONTROL.valid) {
+        allFieldsValidOrDisabled = false;
+
+      } 
+    }
+  });
+
+ 
+  
+
+  return allFieldsValidOrDisabled;
+}
 
   /**
    * Emite el evento de acción seleccionada en la solicitud.
