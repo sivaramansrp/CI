@@ -137,6 +137,11 @@ export const API_POST_VALIDAR_EMPAQUE = `sat-t110101/solicitud/empaque/validar`;
  */
 export const API_POST_GUARDAR_SOLICITUD = `sat-t110101/solicitud/guardar`;
 
+/**
+ * API para validar la solicitud completa previo al guardado.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/valida-solicitud
+ */
+export const API_POST_VALIDAR_SOLICITUD_COMPLETA = `sat-t110101/tramite/solicitud/validar`; 
 
 /**
  * API para generar la cadena original para la solicitud
@@ -189,3 +194,4 @@ export const API_GET_MERCANCIA_EVALUAR = (IDSOLICITUD: string): string => `sat-t
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-declaraciones-by-id-solicitud
  */
 export const API_GET_PROTESTO_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/declaraciones`;
+

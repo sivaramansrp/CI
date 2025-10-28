@@ -12,6 +12,7 @@ import { Solicitante110101State, Tramite110101Store } from '../../estados/tramit
 
 import { EmpaqueMercancia, InsumoMercancia, SolicitudCompletaRequest } from '../../models/request/guardado-solicitud-request.model';
 import { SolicitudService } from '../../services/solicitud.service';
+import { RegistroCuestionarioRequest } from '../../models/request/validar-solicitud-request.model';
 
 /**
  * **Interfaz que representa una acción de un botón en la interfaz**  
@@ -359,8 +360,173 @@ export class PantallasComponent implements OnInit {
           }
         }
       });
-
   }
+  
+  /**
+   * @method validarSolicitudCompleta
+   * @description
+   * Envía una solicitud al servicio para validar si la solicitud está completa.
+   */
+  validarSolicitudCompleta(): void {
+    const PAYLOAD: RegistroCuestionarioRequest = {
+    rfc: "",
+    clave_entidad: "",
+    clave_entidad_solicitante: "",
+    clave_unidad_admin: "",
+    tratados_agregados: [
+      {
+        tratado_acuerdo: {
+          cve_tratado_acuerdo: "",
+          id_tratado_acuerdo: 0
+        },
+        cve_grupo_criterio: "",
+        cve_pais: "",
+        id_bloque: 0,
+        cve_bloque: "",
+        nombre_pais_o_bloque: ""
+      }
+    ],
+    registro_cuestionario: {
+      separacion_contable: false,
+      solicita_exportador_autorizado: false,
+      ide_condicion_exportador_autorizado: "",
+      solicita_exportador_autorizado_jpn: false,
+      ide_condicion_exportador_autorizado_jpn: "",
+      mercancia: {
+        requiere_juegos_o_surtidos: false,
+        acumulacion_ap: false,
+        ide_tipo_metodo: "",
+        ide_tipo_metodo_mercancia_uruguay: "",
+        ide_tipo_metodo_mercancia_panama: "",
+        ide_tipo_metodo_mercancia: "",
+        ide_tipo_metodo_mercancia_alianza_p: "",
+        ide_tipo_proceso_mercancia: "",
+        nombre_comercial: "",
+        insumos: [
+          {
+            ide_tipo_insumo: "",
+            importe_valor: 0,
+            peso: 0,
+            volumen: 0,
+            nombre: "",
+            desc_proveedor: "",
+            desc_fabricante_productor: "",
+            cve_fraccion: "",
+            fraccion_arancelaria_prevalidada: false,
+            cve_pais: "",
+            rfc_fabricante_productor: "",
+            tratados_originarios: [
+              {
+                cve_pais: "",
+                id_bloque: 0,
+                cve_bloque: "",
+                cve_tratado_acuerdo: ""
+              }
+            ]
+          }
+        ],
+        empaques: [
+          {
+            ide_tipo_insumo: "",
+            importe_valor: 0,
+            peso: 0,
+            volumen: 0,
+            nombre: "",
+            desc_proveedor: "",
+            desc_fabricante_productor: "",
+            cve_fraccion: "",
+            fraccion_arancelaria_prevalidada: false,
+            cve_pais: "",
+            rfc_fabricante_productor: "",
+            tratados_originarios: [
+              {
+                cve_pais: "",
+                id_bloque: 0,
+                cve_bloque: "",
+                cve_tratado_acuerdo: ""
+              }
+            ]
+          }
+        ],
+        procesos_solicitados: [
+          {
+            id_proceso_ceror: 0,
+            cumple_proceso: 0
+          }
+        ],
+        cve_fraccion: "",
+        id_descripcion_alterna_ue: 0,
+        id_descripcion_alterna_aelc: 0,
+        id_descripcion_alterna_sgp: 0,
+        id_descripcion_alterna_ace: 0,
+        peso_es_requerido: false,
+        volumen_es_requerido: false,
+        tipo_proceso_mercancia: "",
+        valor_transaccional_fob: 0,
+        valor_transaccion: 0,
+        costo_neto_ap: 0,
+        costo_neto: 0,
+        costo_unitario: 0,
+        precio_franco_fabrica: 0,
+        nombre_ingles: "",
+        descripcion_juego: "",
+        cumple_juegos_surtidos: false,
+        cumple_juegos_surtidos_peru: false,
+        cumple_juegos_surtidos_alianza_p: false,
+        cumple_acumulacion: false,
+        materiales_intermedios: false,
+        materiales_fungibles: false,
+        acumulacion: false,
+        materiales_intermedios_uruguay: false,
+        materiales_fungibles_uruguay: false,
+        acumulacion_uruguay: false,
+        materiales_intermedios_peru: false,
+        materiales_fungibles_peru: false,
+        acumulacion_peru: false,
+        cve_fraccion_naladi: "",
+        cve_fraccion_naladisa93: "",
+        cve_fraccion_naladisa96: "",
+        cve_fraccion_naladisa02: "",
+        peso: 0,
+        volumen: 0
+      }
+    }
+  };
 
-
+  this.solicitudService.postValidarSolicitudCompleta(PAYLOAD)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          /** */
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error para validar la solicitud.',
+            mensaje: response.causa || response.mensaje || 'Error para validar la solicitud.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (error) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = error?.error?.error || 'Error para generar la cadena original.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
 }

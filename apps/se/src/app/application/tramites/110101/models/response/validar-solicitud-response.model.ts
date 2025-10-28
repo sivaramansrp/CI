@@ -1,0 +1,91 @@
+/**
+ * Modelo de respuesta para la validación de la solicitud completa.
+ */
+export interface MercanciaSolicitudResponse {
+  /** Datos de la mercancía */
+  mercancia: Mercancia;
+
+  /** Lista de tratados agregados a la mercancía */
+  tratados_agregados: TratadoAgregado[];
+}
+
+/**
+ * Modelo que representa los datos de la mercancía.
+ */
+export interface Mercancia {
+  /** Peso de la mercancía */
+  peso: number | null;
+
+  /** Volumen de la mercancía */
+  volumen: number | null;
+
+  /** Identificador del tipo de método aplicado */
+  ide_tipo_metodo: string | null;
+
+  /** Fracción NALADI principal */
+  fraccion_naladi: FraccionNaladi;
+
+  /** Fracción NALADI versión 1993 */
+  fraccion_naladi_93: FraccionNaladi;
+
+  /** Fracción NALADI versión 1996 */
+  fraccion_naladi_96: FraccionNaladi;
+
+  /** Fracción NALADI versión 2002 */
+  fraccion_naladi_02: FraccionNaladi;
+
+  /** Descripciones alternas para la Unión Europea */
+  descripciones_alternas_ue: string | null;
+
+  /** Descripciones alternas para la Asociación Europea de Libre Comercio (AELC) */
+  descripciones_alternas_aelc: string | null;
+
+  /** Descripciones alternas para el Sistema Generalizado de Preferencias (SGP) */
+  descripciones_alternas_sgp: string | null;
+
+  /** Descripciones alternas para Acuerdos de Complementación Económica (ACE) */
+  descripciones_alternas_ace: string | null;
+}
+
+/**
+ * Modelo para la fracción NALADI en sus distintas versiones.
+ */
+export interface FraccionNaladi {
+  /** Identificador de la fracción NALADI */
+  id_fraccion: number | null;
+
+  /** Clave de la fracción NALADI */
+  clave_fraccion: string | null;
+
+  /** Descripción de la fracción NALADI */
+  descripcion_fraccion: string | null;
+}
+
+/**
+ * Modelo que representa los tratados agregados a la mercancía.
+ */
+export interface TratadoAgregado {
+  /** Identificador del tratado o acuerdo */
+  id_tratado_acuerdo: number;
+
+  /** Clave del grupo de criterio del tratado */
+  cve_grupo_criterio: string;
+
+  /** Clave del país asociado al tratado */
+  cve_pais: string;
+
+  /** Identificador del bloque comercial (si aplica) */
+  id_bloque: number | null;
+
+  /** Clave del bloque comercial (si aplica) */
+  cve_bloque: string | null;
+
+  /** Identificador del tipo de proceso de mercancía */
+  ide_tipo_proceso_mercancia: string;
+
+  /** Indica si cumple con el juego de reglas del tratado */
+  cumple_juego: boolean | null;
+
+  /** Indica si cumple con la acumulación del tratado */
+  cumple_acumulacion: boolean | null;
+}
