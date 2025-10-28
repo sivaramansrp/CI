@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
+  CatalogoServices,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -31,11 +32,11 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 
@@ -65,6 +66,10 @@ export class AgregarDestinatarioFinalComponent
   @Output() guardarYSalir = new EventEmitter<void>();
   @Input() destinatarioFinalTablaDatos: Destinatario[] = [];
   @Input() tramiteState: unknown;
+  /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  @Input() tramiteID: string = '';
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -241,6 +246,10 @@ export class AgregarDestinatarioFinalComponent
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+    /**
+     * Suscripción para manejar observables.
+     */
+    private subscription: Subscription = new Subscription();
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -254,7 +263,8 @@ export class AgregarDestinatarioFinalComponent
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService
+    private datosSolicitudService: DatosSolicitudService,
+     private catalogoServices: CatalogoServices
   ) {
     //constructor necesario para el servicio
   }
@@ -287,6 +297,64 @@ export class AgregarDestinatarioFinalComponent
   private setupEditMode(): void {
     setTimeout(() => {
       this.agregarDestinatarioFinal.enable();
+       let valorPais = this.datoSeleccionado?.[0]?.pais;
+        if (valorPais && this.paisesDatos.length > 0) {
+          const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+            p.descripcion === valorPais || 
+            p.clave?.toString() === valorPais?.toString()
+          );
+          valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+        }
+       // Estado
+    let valorEstado = this.datoSeleccionado?.[0]?.estadoLocalidad;
+    if (valorEstado && this.estadosDatos.length > 0) {
+      const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
+        e.descripcion === valorEstado || 
+        e.clave?.toString() === valorEstado?.toString()
+      );
+      valorEstado = ESTADO_ENCONTRADO ? ESTADO_ENCONTRADO.clave : valorEstado;
+    }
+    
+    // Municipio
+    let valorMunicipio = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    if (valorMunicipio && this.municipiosDatos.length > 0) {
+      const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+        m.descripcion === valorMunicipio || 
+        m.clave?.toString() === valorMunicipio?.toString()
+      );
+      valorMunicipio = MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.clave : valorMunicipio;
+    }
+    
+    // Localidad
+    let valorLocalidad = this.datoSeleccionado?.[0]?.localidad;
+    if (valorLocalidad && this.localidadesDatos.length > 0) {
+      const LOCALIDAD_ENCONTRADA = this.localidadesDatos.find(l => 
+        l.descripcion === valorLocalidad || 
+        l.clave?.toString() === valorLocalidad?.toString()
+      );
+      valorLocalidad = LOCALIDAD_ENCONTRADA ? LOCALIDAD_ENCONTRADA.clave : valorLocalidad;
+    }
+    
+    // Colonia
+    let valorColonia = this.datoSeleccionado?.[0]?.colonia;
+    if (valorColonia && this.coloniasDatos.length > 0) {
+      const COLONIA_ENCONTRADA = this.coloniasDatos.find(c => 
+        c.descripcion === valorColonia || 
+        c.clave?.toString() === valorColonia?.toString()
+      );
+      valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
+    }
+    
+    // Código Postal
+    let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
+    if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
+      const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
+        cp.descripcion === valorCodigoPostal || 
+        cp.clave?.toString() === valorCodigoPostal?.toString()
+      );
+      valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
+    }
+
       this.agregarDestinatarioFinal.patchValue({
         tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
         rfc: this.datoSeleccionado?.[0]?.rfc,
@@ -295,12 +363,12 @@ export class AgregarDestinatarioFinalComponent
         primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
         segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
         denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
-        pais: this.datoSeleccionado?.[0]?.pais || '2',
-        estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
-        municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
-        localidad: this.datoSeleccionado?.[0]?.localidad,
-        codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
-        colonia: this.datoSeleccionado?.[0]?.colonia,
+        pais: valorPais,
+        estado: valorEstado,
+        municipio: valorMunicipio,
+        localidad: valorLocalidad,
+        codigoPostal: valorCodigoPostal,
+        colonia: valorColonia,
         calle: this.datoSeleccionado?.[0]?.calle,
         numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
         numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
@@ -340,6 +408,14 @@ export class AgregarDestinatarioFinalComponent
       if (this.datoSeleccionado?.[0]?.tipoPersona) {
         this.agregarDestinatarioFinal.enable();
       }
+        let valorPais = this.datoSeleccionado?.[0]?.pais;
+        if (valorPais && this.paisesDatos.length > 0) {
+          const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+            p.descripcion === valorPais || 
+            p.clave?.toString() === valorPais?.toString()
+          );
+          valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+        }
       this.agregarDestinatarioFinal?.patchValue({
         tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
         rfc: this.datoSeleccionado?.[0]?.rfc,
@@ -348,7 +424,7 @@ export class AgregarDestinatarioFinalComponent
         primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
         segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
         razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
-        pais: this.datoSeleccionado?.[0]?.pais,
+        pais: valorPais,
         estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
         municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
         localidad: this.datoSeleccionado?.[0]?.localidad,
@@ -479,21 +555,32 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
     nombreRazonSocial = '';
   }
 
-  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
-    const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
-    return ITEM ? ITEM.descripcion : id.toString();
+  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], clave: string | number): string => {
+    if (!catalogArray || catalogArray.length === 0 || !clave) {
+      return clave?.toString() || '';
+    }
+    
+    const ITEM_BY_CLAVE = catalogArray.find(cat => 
+      cat?.clave && cat.clave.toString() === clave.toString()
+    );
+    
+    if (ITEM_BY_CLAVE) {
+      return ITEM_BY_CLAVE.descripcion;
+    }
+    
+    return clave.toString();
   };
   
   return {
-    nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
+    nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string || '',
     tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
     nombreRazonSocial: nombreRazonSocial,
     rfc: VALOR_FORMULARIO['rfc'] as string,
-    curp: '',
-    telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
-    correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
-    calle: VALOR_FORMULARIO['calle'] as string,
-    numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
+    curp: VALOR_FORMULARIO['curp'] as string || '',
+    telefono: `${VALOR_FORMULARIO['lada'] || ''} ${VALOR_FORMULARIO['telefono'] || ''}`.trim(),
+    correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string || '',
+    calle: VALOR_FORMULARIO['calle'] as string || '',
+    numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string || '',
     numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
     pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
     colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
@@ -502,12 +589,12 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
     entidadFederativa: '',
     estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
     codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
-    coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
-    nombres: VALOR_FORMULARIO['nombres'] as string,
-    primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
-    segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
-    razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
-    lada: VALOR_FORMULARIO['lada'] as string,
+    coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string || '',
+    nombres: VALOR_FORMULARIO['nombres'] as string || '',
+    primerApellido: VALOR_FORMULARIO['primerApellido'] as string || '',
+    segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string || '',
+    razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string || '',
+    lada: VALOR_FORMULARIO['lada'] as string || '',
   };
 }
 
@@ -550,7 +637,7 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    */
   ngOnInit(): void {
     this.requiedField = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento);
-    this.cargarDatos();
+    this.cargarDatos(this.tramiteID);
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
     this.changeNacionalidad();
@@ -597,7 +684,7 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
    * destrucción usando `takeUntil(this.unsubscribe$)`.
    */
-  cargarDatos(): void {
+  cargarDatos(tramite: string): void {
     this.datosSolicitudService
       .obtenerListaCodigosPostales()
       .pipe(takeUntil(this.unsubscribe$))
@@ -605,19 +692,31 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
         this.codigosPostalesDatos = data;
       });
 
-    this.datosSolicitudService
-      .obtenerListaPaises()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.paisesDatos = data;
-      });
+    // this.datosSolicitudService
+    //   .obtenerListaPaises()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.paisesDatos = data;
+    //   });
+    this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.paisesDatos = DATOS;
+  }));
 
-    this.datosSolicitudService
-      .obtenerListaEstados()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.estadosDatos = data;
-      });
+    // this.datosSolicitudService
+    //   .obtenerListaEstados()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.estadosDatos = data;
+    //   });
+    this.subscription.add(this.catalogoServices.estadosCatalogo(tramite).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.estadosDatos = DATOS;
+  }));
 
     this.datosSolicitudService
       .obtenerListaMunicipios()

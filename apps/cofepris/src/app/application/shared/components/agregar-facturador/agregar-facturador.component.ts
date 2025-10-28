@@ -1,6 +1,7 @@
 import {
   CODIGO_POSTAL,
   Catalogo,
+  CatalogoServices,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
@@ -25,11 +26,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Facturador } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
-import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 
@@ -130,6 +131,15 @@ export class AgregarFacturadorComponent
    */
   public estaDeshabilitadoDesplegable: boolean = true;
 
+     
+  /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  @Input() tramiteID: string = '';
+  /**
+   * Suscripción para manejar observables.
+   */
+  private subscription: Subscription = new Subscription();
   /**
    * Constructor que inicializa el formulario y servicios necesarios.
    *
@@ -142,7 +152,8 @@ export class AgregarFacturadorComponent
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private catalogoServices: CatalogoServices,
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
@@ -151,7 +162,7 @@ export class AgregarFacturadorComponent
    * Hook de inicialización del componente. Carga los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.cargarDatos();
+    this.obtenerListaPaises(this.tramiteID);
     this.crearAgregarFormularioFacturador();
     this.changeNacionalidad();
      this.chequeoValidacionAlGuardar =
@@ -159,7 +170,17 @@ export class AgregarFacturadorComponent
         ? true
         :false;
   }
-
+  /**
+   * Obtiene la lista de países según el trámite especificado.
+   */
+ obtenerListaPaises(tramite: string): void {
+    this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.paisesDatos = DATOS;
+    }));
+}
   /**
    * Método que inicializa el formulario reactivo y valida los elementos según el procedimiento.
    * @returns {void}
@@ -236,12 +257,20 @@ export class AgregarFacturadorComponent
         if (this.datoSeleccionado?.[0]?.tipoPersona) {
           this.agregarFacturadorForm?.enable();
         }
+        let valorPais = this.datoSeleccionado?.[0]?.pais;
+        if (valorPais && this.paisesDatos.length > 0) {
+          const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+            p.descripcion === valorPais || 
+            p.clave?.toString() === valorPais?.toString()
+          );
+          valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+        }
         this.agregarFacturadorForm.patchValue({
           tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
           nombres: this.datoSeleccionado?.[0]?.nombres,
           primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
           segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-          pais: this.datoSeleccionado?.[0]?.pais,
+          pais: valorPais,
           estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
           codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
           colonia: this.datoSeleccionado?.[0]?.colonia,
@@ -277,7 +306,21 @@ export class AgregarFacturadorComponent
         this.paisesDatos = data;
       });
   }
-
+  /**
+   *
+   * @returns {string} Descripción del país o cadena vacía si no se encuentra.
+   */
+  private getPaisDescription(paisId: string | number): string {
+    if (!paisId || !this.paisesDatos || this.paisesDatos.length === 0) {
+      return '';
+    }
+    
+    const PAIS = this.paisesDatos.find(p => 
+      p?.clave && p.clave.toString() === paisId.toString()
+    );
+    
+    return PAIS ? PAIS.descripcion : '';
+  }
   /**
    * Construye un objeto `Facturador` a partir del formulario,
    * lo agrega al arreglo `facturadores` y actualiza el store.
@@ -319,7 +362,7 @@ export class AgregarFacturadorComponent
       calle: VALOR_FORMULARIO.calle || '',
       numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
       numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-      pais: VALOR_FORMULARIO.pais || '',
+      pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
       colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
