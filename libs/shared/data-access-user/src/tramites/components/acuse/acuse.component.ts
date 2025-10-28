@@ -121,6 +121,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    */
   datosTablaAcuse: BodyTablaAcuse[] = [];
   datosTablaResoluciones: BodyTablaAcuse[] = [];
+  @Input() isAcuse?: string = "1";
   idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
@@ -154,7 +155,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
 
     if (changes['idSolicitud']?.currentValue) {
       this.generarYMostrarDocumentos();
-      if (this.tituloResoluciones != "") {
+      if (this.isAcuse != "1") {
         this.datosTablaResoluciones = [];
         this.guardarResolucion();
       }
