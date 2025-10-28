@@ -2,8 +2,7 @@ import { Query } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
 
-import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
-import { PermisosDatos } from '../models/cancelacion-de-solicitus.model';
+import { DesistimientoDePermisoState, DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 
 /**
  * Consulta para el estado de desistimiento de permiso.
@@ -12,7 +11,7 @@ import { PermisosDatos } from '../models/cancelacion-de-solicitus.model';
 @Injectable({
     providedIn: 'root',
 })
-export class DesistimientoQuery extends Query<PermisosDatos> {
+export class DesistimientoQuery extends Query<DesistimientoDePermisoState> {
     // Constructor que inyecta el store correspondiente.
     constructor(protected override store: DesistimientoStore) {
         super(store);
@@ -33,4 +32,5 @@ export class DesistimientoQuery extends Query<PermisosDatos> {
     selectMotivoCancelacion$ = this.select((state) => {
         return state.motivoCancelacion;
     });
+    selectTramite140105$= this.select((state) => state);
 }
