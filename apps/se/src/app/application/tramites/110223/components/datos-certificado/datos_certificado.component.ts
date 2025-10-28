@@ -219,8 +219,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
       this.idiomOpcion();
-      // this.entidadFederativasOpcion();
-      // this.representacionFederalOpcion();
       this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -323,41 +321,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     idiomaSeleccion(estado: Catalogo): void {
       this.store.setIdiomaSeleccion(estado);
     }
-  
-    // /**
-    //  * @metodo entidadFederativaSeleccion
-    //  * @descripcion
-    //  * Procesa la selección de una entidad federativa y actualiza el estado.
-    //  * 
-    //  * @parametros
-    //  * @param {Catalogo} estado - Entidad federativa seleccionada del catálogo
-    //  * 
-    //  * @dispara
-    //  * - Actualización del almacén central
-    //  * - Actualización de dependencias relacionadas
-    //  */
-    // entidadFederativaSeleccion(estado: Catalogo): void {
-    //   this.store.setEntidadFederativaSeleccion(estado);
-    // }
-  
-    // /**
-    //  * @metodo representacionFederalSeleccion
-    //  * @descripcion
-    //  * Gestiona la selección de una representación federal y actualiza el estado.
-    //  * 
-    //  * @parametros
-    //  * @param {Catalogo} estado - Representación federal seleccionada del catálogo
-    //  * 
-    //  * @dispara
-    //  * - Actualización en el almacén central
-    //  * - Actualización de campos relacionados
-    //  * 
-    //  * @uso
-    //  * Se invoca cuando el usuario selecciona una nueva representación federal
-    //  */
-    // representacionFederalSeleccion(estado: Catalogo): void {
-    //   this.store.setRepresentacionFederalDatosSeleccion(estado);
-    // }
   
     /**
      * @metodo setFormValida

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { Catalogo, CatalogoServices, ConsultaioQuery, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from "@libs/shared/data-access-user/src";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import {Observable,Subject,map, of, takeUntil } from "rxjs";
+import { Tramite110223Store, TramiteState } from "../../estados/Tramite110223.store";
 import { CargaPorArchivoComponent } from "../../../../shared/components/carga-por-archivo/carga-por-archivo.component";
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
@@ -9,15 +10,12 @@ import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { IDPROCEDIMIENTO } from "../../enums/constantes-alertas.enum";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
-import { MercanciasHistorico } from "../../models/certificado-origen.model";
+import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
 import { MercanciasModalComponent } from "../mercancias-modal/mercancias-modal.component";
 import { Modal } from "bootstrap";
+import { OPTIONS_TRATADO } from "../../models/registro.model";
 import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
-import { Tramite110223Store, TramiteState } from "../../estados/Tramite110223.store";
-
-import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
-import { OPTIONS_TRATADO } from "../../models/registro.model";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
@@ -129,12 +127,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Catalogo}
    */
   estado!: Catalogo;
-
-  // /**
-  //  * País o bloque seleccionado.
-  //  * @type {Catalogo}
-  //  */
-  // paisBloque!: Catalogo;
 
   /**
    * Subject para gestionar el ciclo de vida del componente.
@@ -350,11 +342,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           this.seccion = seccionState;
         })
       )
-      .subscribe();    /**
-     * Asignación de los observables que contienen los catálogos de estados y países.
-     */
+      .subscribe();    
+      
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
-    // this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>).pipe(
       map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
     );
@@ -407,9 +397,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
         }
       );
 
-    //   this.catalogoServices.tratadosAcuerdosCatalogo(this.TramitesID, this.tratadoAsociado).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-    //   this.optionsTratado.catalogos = res.datos ?? [];
-    // });
   }
 
   /**
@@ -430,24 +417,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       },
     });
   }
-
-  // /**
-  //  * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-  //  */
-  // cargarBloque(): void {
-  //   this.certificadoService
-  //     .obtenerPaisBloque()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe(
-  //       (data: Catalogo) => {
-  //         this.pais = data;
-  //         this.store.setBloque(data);
-  //       },
-  //       (error) => {
-  //         console.error('Error al cargar los países/bloques:', error);
-  //       }
-  //     );
-  // }
 
   /**
    * Establece el estado seleccionado en el store.
@@ -553,7 +522,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           this.store.setbuscarMercancia(MAPPED_DATA);
         },
         error: () => {
-          // this.toastr.error('Error al buscar Mercancia');
+          // 
         },
       });
 

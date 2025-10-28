@@ -3,19 +3,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-// import { Tramite110223State, Tramite110223Store } from '../../estados/tramite110223.store';
+import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
-// import { GrupoRepresentativo } from '../../models/peru-certificado.module';
-// import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
-import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
-// import { Tramite110223Query } from '../../estados/tramite110223.query';
-import { Validators } from '@angular/forms';
 import { GrupoRepresentativo } from '../../models/certificado-origen.model';
-import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { IDPROCEDIMIENTO } from '../../enums/constantes-alertas.enum';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { Tramite110223Query } from '../../query/tramite110223.query';
+import { Validators } from '@angular/forms';
 
 /**
  * @description
@@ -210,23 +206,6 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     });
   }
  
-// public validateAllForms(): boolean {
-//   let valid = true;
-//   this.destinatarioComponent?.markAllFieldsTouched();
-//   this.datosDelDestinatarioComponent?.markAllFieldsTouched();
-//   this.representanteLegalExportadorComponent?.markAllFieldsTouched();
-//   if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
-//     valid = false;
-//   }
-//   if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
-//     valid = false;
-//   }
-//   if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
-//     valid = false;
-//   }
-//   return valid;
-// }
-
   /**
    * @method datosDelDestinatarioFunc
    * @descripcion

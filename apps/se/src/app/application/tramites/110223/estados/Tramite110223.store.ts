@@ -1,9 +1,9 @@
 import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../models/registro.model';
+import { GrupoRepresentativo, HistoricoColumnas } from '../models/certificado-origen.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { GrupoRepresentativo, HistoricoColumnas } from '../models/certificado-origen.model';
 
 
 /**

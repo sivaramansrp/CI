@@ -3,18 +3,16 @@ import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ERROR_FORMA_ALERT } from '../../../110204/constantes/modificacion.enum';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PASOS } from '../../enums/constantes-alertas.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src/';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Tramite110223Query } from '../../query/tramite110223.query';
-import { Payload } from '../../enums/texto.enum';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { ToastrService } from 'ngx-toastr';
-// Ensure PasoDosComponent and PasoUnoComponent are standalone components or declared in an NgModule
+import { Tramite110223Query } from '../../query/tramite110223.query';
 
 /**
  * TEXTO DE ALERTA PARA TERCEROS.
@@ -164,11 +162,7 @@ export class SolicitudPageComponent {
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */
-  // guardar(item: any): void {
   guardar(item: TramiteState): Promise<JSONResponse> {
-    // const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(
-    //   item.mercanciaTabla
-    // );
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       idSolicitud: this.solicitudState.idSolicitud,
@@ -228,33 +222,33 @@ export class SolicitudPageComponent {
           valor_mercancia: m.valorMercancia,
         })),
       },
-      // destinatario: {
-      //   nombre: item.formDatosDelDestinatario['nombres'],
-      //   primer_apellido: item.formDatosDelDestinatario['primerApellido'],
-      //   segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
-      //   numero_registro_fiscal:
-      //     item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
-      //   razon_social: item.formDatosDelDestinatario['razonSocial'],
-      //   domicilio: {
-      //     ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
-      //     calle: item.formDestinatario['calle'],
-      //     numero_letra: item.formDestinatario['numeroLetra'],
-      //     lada: item.formDestinatario['lada'],
-      //     telefono: item.formDestinatario['telefono'],
-      //     fax: item.formDestinatario['fax'],
-      //     correo_electronico: item.formDestinatario['correoElectronico'],
-      //     pais_destino: item.formDestinatario['paisDestino'],
-      //   },
-      //   generalesRepresentanteLegal: {
-      //     lugarRegistro: item.formExportor['lugar'],
-      //     nombre: item.formExportor['exportador'],
-      //     razonSocial: item.formExportor['nombres'],
-      //     puesto: item.formExportor['puesto'],
-      //     telefono: item.formExportor['telefono'],
-      //     correoElectronico: item.formExportor['correoElectronico'],
-      //   },
-      //   medio_transporte: item.formDatosDelDestinatario['medioTransporte'],
-      // },
+      destinatario: {
+        nombre: item.formDatosDelDestinatario['nombres'],
+        primer_apellido: item.formDatosDelDestinatario['primerApellido'],
+        segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
+        numero_registro_fiscal:
+          item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+        razon_social: item.formDatosDelDestinatario['razonSocial'],
+        domicilio: {
+          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
+          calle: item.formDestinatario['calle'],
+          numero_letra: item.formDestinatario['numeroLetra'],
+          lada: item.formDestinatario['lada'],
+          telefono: item.formDestinatario['telefono'],
+          fax: item.formDestinatario['fax'],
+          correo_electronico: item.formDestinatario['correoElectronico'],
+          pais_destino: item.formDestinatario['paisDestino'],
+        },
+        generalesRepresentanteLegal: {
+          lugarRegistro: item.formExportor['lugar'],
+          nombre: item.formExportor['exportador'],
+          razonSocial: item.formExportor['nombres'],
+          puesto: item.formExportor['puesto'],
+          telefono: item.formExportor['telefono'],
+          correoElectronico: item.formExportor['correoElectronico'],
+        },
+        medio_transporte: item.formDatosDelDestinatario['medioTransporte'],
+      },
       datos_del_certificado: {
         observaciones: item.formDatosCertificado['observacionesDates'],
         idioma: item.formDatosCertificado['idiomaDates'],
@@ -363,12 +357,6 @@ export class SolicitudPageComponent {
 getValorIndice(e: AccionBoton): void {
   this.esFormaValido = false;
 
-  // if (e.accion === 'cont') {
-  //   if (this.pasoUnoComponent && !this.pasoUnoComponent.validateAllForms()) {
-  //     return;
-  //   }
-  // }
-
   // Validar formularios antes de continuar desde el paso uno
   if (this.indice === 1 && e.accion === 'cont') {
     const IS_VALID = this.validarTodosFormulariosPasoUno();
@@ -399,6 +387,7 @@ getValorIndice(e: AccionBoton): void {
     }
   }
 }
+
 /**
  * @descripcion
  * Valida todos los formularios contenidos en el componente `pasoUnoComponent`.

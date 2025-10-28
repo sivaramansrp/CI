@@ -145,17 +145,6 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  // /**
-  //  * Carga la lista de productores disponibles para el exportador desde el servicio.
-  //  */
-  // cargarProductorPorExportador(): void {
-  //   this.certificadoDeService.obtenerProductorPorExportador()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe(respuesta => {
-  //       this.productoresExportador = respuesta.datos;
-  //     });
-  // }
-
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */

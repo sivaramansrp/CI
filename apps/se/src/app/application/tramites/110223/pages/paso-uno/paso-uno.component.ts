@@ -5,11 +5,9 @@ import { CertificadoOrigenComponent } from "../../components/certificado-origen/
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
 import { DatosCertificadoComponent } from "../../components/datos-certificado/datos_certificado.component";
-// import { DestinatarioComponent } from "../../components/destinatario/destinatario.component";
+import { DestinatarioDeCertificadoComponent } from "../../components/destinatario-de-certificado/destinatario-de-certificado.component";
 import { HistoricoProductoressComponent } from "../../components/historico-productores/historico-productores.component";
 import { ReactiveFormsModule } from "@angular/forms";
-import { DestinatarioDeCertificadoComponent } from "../../components/destinatario-de-certificado/destinatario-de-certificado.component";
-
 
 /**
  * Componente correspondiente al primer paso del flujo del trámite.
@@ -27,7 +25,6 @@ import { DestinatarioDeCertificadoComponent } from "../../components/destinatari
     DatosCertificadoComponent,
     ReactiveFormsModule,
     CommonModule,
-    // DestinatarioComponent
     DestinatarioDeCertificadoComponent
   ]
 })
