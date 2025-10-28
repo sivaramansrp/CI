@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
@@ -56,6 +56,17 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
 
   unidaddeMedidadeComercializacionOptions: Catalogo[] = [];
 
+      /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110218'
+   */
+  tramites: string = '110218';
+
+     /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Opciones para el tipo de factura.
    * Contiene un arreglo de objetos de tipo `Catalogo`.
@@ -67,6 +78,12 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
    * Contiene campos como nombre comercial, marca, valor de mercancía, etc.
    */
   modifydatosdelcertificado!: FormGroup;
+
+  /**
+   * Datos del catálogo de tipo de factura.
+   * Contiene un arreglo de objetos de tipo `Catalogo`.
+   */
+  tipoDatos: Catalogo[] = [];
 
   /**
    * Estado seleccionado del trámite 110218.
@@ -105,7 +122,8 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
     private service: CertificadoTecnicoJaponService,
     private tramite110218Query: Tramite110218Query,
     private tramite110218Store: Tramite110218Store,
-    private router: Router
+    private router: Router,
+    private catalogoService: CatalogoServices,
   ) {}
 
   /**
@@ -187,8 +205,8 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
    * Obtiene los datos necesarios y configura el formulario.
    */
   ngOnInit(): void {
-    this.unidadMedidaData();
-    this.tipoDeFactura();
+    // this.unidadMedidaData();
+    // this.tipoDeFactura();
     this.getValorStore();
     this.inicializarFormulario();
     if (this.selectedRow) {
@@ -199,7 +217,19 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
         fechadelaFactura: this.selectedRow.fechadelaFactura,
       });
     }
-  }
+            /*
+     * Carga el catálogo de unidades de medida de comercialización
+     * y almacena los datos en la propiedad `comercializacion`.
+     */
+    this.obtenerUnidadComercializacion();
+
+        /*
+     * Carga el catálogo de tipos de factura
+     * y almacena los datos en la propiedad `tipoDatos`.
+     */
+    this.obtenerTipoFactura();
+   }
+
   /**
    * Detecta cambios en las propiedades de entrada del componente.
    * Actualiza el formulario con los datos de la fila seleccionada si están disponibles.
@@ -220,27 +250,27 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
    * Obtiene los datos de la unidad de medida desde el servicio.
    * Actualiza las opciones disponibles en el formulario.
    */
-  unidadMedidaData(): void {
-    this.service
-      .getUnidadMedida()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Catalogo[]) => {
-        this.unidaddeMedidadeComercializacionOptions = data;
-      });
-  }
+  // unidadMedidaData(): void {
+  //   this.service
+  //     .getUnidadMedida()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data: Catalogo[]) => {
+  //       this.unidaddeMedidadeComercializacionOptions = data;
+  //     });
+  // }
 
   /**
    * Obtiene los datos del tipo de factura desde el servicio.
    * Actualiza las opciones disponibles en el formulario.
    */
-  tipoDeFactura(): void {
-    this.service
-      .getTipodeFctura()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Catalogo[]) => {
-        this.tipodeFacturaOptions = data;
-      });
-  }
+  // tipoDeFactura(): void {
+  //   this.service
+  //     .getTipodeFctura()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data: Catalogo[]) => {
+  //       this.tipodeFacturaOptions = data;
+  //     });
+  // }
 
   /**
    * Establece los valores de los datos de la tabla en el formulario.
@@ -322,5 +352,29 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
     } else {
       this.modifydatosdelcertificado.markAllAsTouched();
     }
+  }
+       obtenerUnidadComercializacion(): void {
+      this.catalogoService.unidadesMedidaComercialCatalogo(this.tramites)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            this.unidaddeMedidadeComercializacionOptions = response?.datos ?? [];
+          }
+        });
+    }
+
+      /*
+   * Consulta el catálogo de tipos de factura según los trámites actuales.
+   * El resultado se almacena en la propiedad `tipoDatos`.
+   * La suscripción se gestiona automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  obtenerTipoFactura(): void {
+    this.catalogoService.tipoFacturaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tipodeFacturaOptions = response?.datos ?? [];
+        }
+      });
   }
 }

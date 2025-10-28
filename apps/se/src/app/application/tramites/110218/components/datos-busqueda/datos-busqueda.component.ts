@@ -1,7 +1,7 @@
 import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -238,9 +238,19 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      * Si el usuario cambia el valor, este se almacena en la tienda de Akita  
      * llamando al método setTratadoAcuerdo.  
      */
-    this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110218Store.setTramite110218State({ tratadoAcuerdo: valor }));
+  this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
+  .pipe(takeUntil(this.unsubscribe$),
+   distinctUntilChanged(),
+  debounceTime(200))
+  .subscribe(valor => {
+    this.tramite110218Store.setTramite110218State({ tratadoAcuerdo: valor });
+    
+    this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
+    
+    if (valor) {
+      this.obtenerPaisesPorTratado(valor);
+    } 
+  });
 
     /** 
      * Escucha los cambios en el campo "paisBloque" del formulario.  
@@ -263,12 +273,12 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     /**
     * Llama a la función para obtener los tratados y acuerdos.
     */
-    this.obtenerTratadosAcuerdos();
+    this.obtenerTratadoAcuerdo();
 
     /**
     * Llama a la función para obtener los países y bloques.
     */
-    this.obtenerPaisesBloque();
+    // this.obtenerPaisesBloque();
   }
   /**
    * Handles radio value changes.
@@ -401,8 +411,8 @@ public buscar(): void {
    * la propiedad `this.tratadoAcuerdo`. La suscripción se gestiona para finalizar automáticamente cuando
    * el componente se destruye, evitando fugas de memoria.
    */
-  obtenerTratadosAcuerdos(): void {
-    this.catalogoService.tratadosAcuerdosCatalogo(this.tramites,"TITRAC.TA")
+  obtenerTratadoAcuerdo(): void {
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites,"TITRAC.TA")
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -425,6 +435,53 @@ public buscar(): void {
         }
       });
   }
+
+/**
+ * Obtiene la lista de países asociados a un tratado y, si hay resultados, 
+ * obtiene los tratados y acuerdos relacionados al primer país clave encontrado.
+ *
+ * @param tratadoId - Identificador del tratado para filtrar los países.
+ */
+obtenerPaisesPorTratado(tratadoId: string): void {
+  this.catalogoService.getPaisesPorTratado(this.tramites, tratadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {        
+        if (response?.datos && response.datos.length > 0) {
+          // Extract the first país clave from the response
+          const PAIS_CLAVE = response.datos[0].clave;
+          if (PAIS_CLAVE !== undefined) {
+            this.obtenerTratadosAcuerdosPorPais(PAIS_CLAVE);
+          }
+        } else {
+          this.paisBloque = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error obteniendo países por tratado:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Obtiene los tratados y acuerdos asociados a un país específico.
+ *
+ * @param cvePais - Clave o código del país para filtrar tratados y acuerdos.
+ */
+obtenerTratadosAcuerdosPorPais(cvePais: string): void {
+  this.catalogoService.getTratadosAcuerdosPorPais(this.tramites, cvePais)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        this.paisBloque = response?.datos ?? [];
+      },
+      error: (error) => {
+        console.error('Error obteniendo tratados-acuerdos por país:', error);
+        this.paisBloque = [];
+      }
+    });
+}
 
   /** 
    * Método de ciclo de vida de Angular que se ejecuta cuando el componente se destruye.  
