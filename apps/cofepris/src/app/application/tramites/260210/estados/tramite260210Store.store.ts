@@ -113,7 +113,7 @@ export function createInitialState(): Tramite260210State {
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
-    opcionesColapsableState: false,
+    opcionesColapsableState: true,
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',
