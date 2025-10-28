@@ -82,11 +82,13 @@ import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+
 import { ScianDataService } from '../../services/scian-data.service';
 import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -610,8 +612,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
     private scianDataService: ScianDataService,
+    private cdr: ChangeDetectorRef,
     private catalogoService: CatalogoServices,
-    private cdr: ChangeDetectorRef
+    private toastr: ToastrService
+
+
   ) {
     // this.datosSolicitudService.obtenerRespuestaPorUrl(
     //   this,
@@ -1174,31 +1179,153 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
   }
 
   /**
-   * Busca el RFC del representante en el formulario y, si existe,
-   * actualiza los campos relacionados con el nombre, apellido paterno
-   * y apellido materno del representante con valores predeterminados.
+   * Busca el RFC del representante en el formulario usando API calls similares al patrón de SE 80205.
+   * Si existe el RFC, realiza una llamada al método del servicio para obtener los datos del representante.
+   * Actualiza los campos relacionados con el nombre, apellido paterno y apellido materno.
    */
   buscarRepresentanteRfc(): void {
-    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value;
-    if (RFC_VALUE) {
-      if (this.esProcedimiento260210) {
-      
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL',
-        });
-      } else {
-      
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL',
-        });
-      }
-    } else {
+    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value?.trim();
+    
+    if (!RFC_VALUE || RFC_VALUE === '') {
       this.abrirRfcModal();
+      return;
     }
+
+    // Realizar llamada API con payload desde el store usando el método del servicio
+    this.buscarDatosRepresentante(RFC_VALUE);
+  }
+
+  
+  /**
+   * Busca los datos del representante legal utilizando el RFC proporcionado.
+   *
+   * @param rfc - RFC del representante legal a buscar.
+   *
+   * Realiza una petición al servicio para obtener los datos del representante legal
+   * según el RFC ingresado. Si la respuesta es válida y contiene datos, procesa la información
+   * del representante. Si no se encuentran datos o la respuesta no es válida, muestra una advertencia
+   * y carga datos predeterminados. En caso de error en la petición, muestra un mensaje de error
+   * y notifica al usuario sobre el problema de conexión.
+   */
+  private buscarDatosRepresentante(rfc: string): void {
+    const PAYLOAD: RfcSearchPayload = {
+      rfcRepresentanteLegal: rfc
+    };
+    this.datosSolicitudService
+      .buscarRepresentantePorRfc(this.idProcedimiento.toString(), PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response?.codigo === '00' && response.datos) {
+            this.procesarDatosRepresentante(response.datos);
+          } else {
+            console.warn('Respuesta no válida del servidor:', response);
+            this.toastr.warning('No se encontraron datos para el RFC proporcionado', 'Búsqueda de RFC');
+            this.mostrarDatosPredeterminados();
+          }
+        },
+        error: (error) => {
+          console.error('Error en la búsqueda de RFC:', error);
+          this.toastr.error('Error al buscar los datos del representante', 'Error de Búsqueda');
+          this.mostrarErrorRfc('Error al conectar con el servidor. Por favor, intente nuevamente.');
+        }
+      });
+  }
+
+  /**
+   * Datos predeterminados para el representante legal
+   */
+  private readonly DATOS_PREDETERMINADOS = {
+    representanteNombre: 'EUROFOODS DE MEXICO',
+    apellidoPaterno: 'GONZALEZ',
+    apellidoMaterno: 'PINAL',
+  };
+
+  /**
+   * Procesa los datos del representante obtenidos de la API
+   */
+  private procesarDatosRepresentante(data: RepresentanteData): void {
+    // Determinar el campo de nombre según el procedimiento
+    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    
+    // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
+    const DATOS_FORMULARIO = {
+      representanteNombre: NOMBRE_FIELD || this.DATOS_PREDETERMINADOS.representanteNombre,
+      apellidoPaterno: data.apellidoPaterno || this.DATOS_PREDETERMINADOS.apellidoPaterno,
+      apellidoMaterno: data.apellidoMaterno || this.DATOS_PREDETERMINADOS.apellidoMaterno,
+    };
+
+    this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
+
+    // Mostrar notificación de éxito
+    this.toastr.success('Datos del representante cargados exitosamente', 'Búsqueda de RFC');
+    this.mostrarNotificacionExito('Datos del representante cargados exitosamente.');
+  }
+
+  /**
+   * Muestra datos predeterminados cuando no se encuentran en la API
+   */
+  private mostrarDatosPredeterminados(): void {
+    this.datosSolicitudForm.patchValue(this.DATOS_PREDETERMINADOS);
+
+    // Mostrar notificación informativa
+    this.toastr.info('Se cargaron datos predeterminados del representante', 'Información');
+    this.mostrarNotificacionInfo('Se cargaron datos predeterminados del representante.');
+  }
+
+  /**
+   * Muestra notificación de error para RFC inválido
+   */
+  private mostrarErrorRfc(mensaje: string): void {
+    this.toastr.error(mensaje, 'Error de Validación');
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Muestra notificación de éxito
+   */
+  private mostrarNotificacionExito(mensaje: string): void {
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Muestra notificación informativa
+   */
+  private mostrarNotificacionInfo(mensaje: string): void {
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
   }
 
   /**
