@@ -51,6 +51,7 @@ import {
 import {
   AlertComponent,
   CatalogoSelectComponent,
+  CatalogoServices,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
@@ -77,7 +78,7 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import { Subject, delay, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
@@ -558,7 +559,30 @@ export class DatosDeLaSolicitudComponent
    /**
    * Indicates if the merchandise modal is currently open
    */
-  public mercanciaModalAbierto: boolean = false
+  public mercanciaModalAbierto: boolean = false;
+
+    /**
+     * @property {Subscription} subscription
+     * @private
+     * @description
+     * Contenedor principal para gestionar suscripciones a observables que requieren
+     * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+     * para casos específicos que necesitan control granular de suscripciones.
+     * 
+     * @pattern Subscription Management
+     * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+     * @cleanup Se desuscribe manualmente en ngOnDestroy()
+     * @use_case Suscripciones que requieren lógica de limpieza personalizada
+     * 
+     * @example
+     * ```typescript
+     * this.subscription.add(
+     *   this.service.getData().subscribe(data => { ... })
+     * );
+     * ```
+     */
+    private subscription: Subscription = new Subscription();
+   
 
 public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
@@ -582,8 +606,12 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
     private scianDataService: ScianDataService,
-     private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private catalogoService: CatalogoServices
+
+
   ) {
+
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'regimenDatos',
@@ -594,11 +622,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       'adunasDeEntradasDatos',
       '/cofepris/adunasDeEntradasDatos.json'
     );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'estadoDatos',
-      '/cofepris/estadoDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'estadoDatos',
+    //   '/cofepris/estadoDatos.json'
+    // );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'regimenLaMercanciaDatos',
@@ -638,6 +666,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.catalogoLista(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
@@ -713,6 +742,22 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
   }
+
+  catalogoLista(tramite: string): void {
+   this.subscription.add(
+      this.catalogoService
+      .estadosCatalogo(tramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const DATOS = response.datos as Catalogo[];
+        
+        if (response) {
+          this.estadoDatos = DATOS;
+        }
+      })
+    );  
+  }
+
 
    /**
    * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
