@@ -67,7 +67,7 @@ export class SolicitudModalidadPageComponent implements OnInit {
    * @property {WizardComponent} wizardComponent
    * @description Referencia al componente del asistente (wizard).
    */
-  @ViewChild('wizardRef') wizardComponent!: WizardComponent;
+  @ViewChild("wizardRef") wizardComponent!: WizardComponent;
 
   /**
    * @property {number} indice

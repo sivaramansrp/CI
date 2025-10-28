@@ -27,6 +27,7 @@ import { DocumentosT2310Service } from '../../../core/services/shared/documentos
 import { Router } from '@angular/router';
 
 import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
+import { DocumentosTramiteResolucionService } from '../../../core/services/shared/detalleTramite.service';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -41,6 +42,11 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Generalmente representa el nombre del trámite o sección.
    */
   @Input() titulo!: string;
+
+  /**
+   * Título opcional para la sección de resoluciones.
+   */
+  @Input() tituloResoluciones?: string;
 
   /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
@@ -114,6 +120,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Datos que se muestran en la tabla de acuse.
    */
   datosTablaAcuse: BodyTablaAcuse[] = [];
+  datosTablaResoluciones: BodyTablaAcuse[] = [];
+  idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
   constructor(
@@ -124,7 +132,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private documentosService2310: DocumentosT2310Service,
     private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
-    private aviso230301: DocumentosT230301Service
+    private aviso230301: DocumentosT230301Service,
+    private documentosResolucinService: DocumentosTramiteResolucionService
   ) {}
 
   /**
@@ -145,7 +154,56 @@ export class AcuseComponent implements OnChanges, OnDestroy {
 
     if (changes['idSolicitud']?.currentValue) {
       this.generarYMostrarDocumentos();
+      if (this.tituloResoluciones != "") {
+        this.datosTablaResoluciones = [];
+        this.guardarResolucion();
+      }
     }
+  }
+
+
+  guardarResolucion(): void {
+    console.log('Folio', this.folio);
+    console.log('idSolicitud', this.idSolicitud);
+    console.log('procedure', this.procedure);
+    console.log('txtAlerta', this.txtAlerta);
+    this.documentosResolucinService.getDetalleTramiteByFolio(this.procedure.toString(),this.folio).subscribe({
+      next: (data) => {
+        if (data?.codigo === '00') {
+          console.log('Guardado de resolución exitoso', data.datos?.resolucion?.id_resolucion);
+          this.documentosResolucinService.guardarResolucion(this.procedure.toString(), data.datos?.resolucion?.id_resolucion || 0).subscribe({
+            next: (res) => {
+              if (res?.codigo === '00') {
+                this.idLlaveArchivo = res.datos?.llave_archivo || '';
+                this.acuseDetalleService.getDescargarAcuse(this.procedure, this.idLlaveArchivo).subscribe({  
+                  next: (data) => {
+                    if (data?.codigo === '00' && data?.datos?.contenido) {
+                      this.datosTablaResoluciones = [
+                        {
+                          id: 1,
+                          documento: data.datos.nombre_archivo,
+                          urlPdf: AcuseComponent.crearUrlPdf(data.datos.contenido),
+                          idDocumento: '1',
+                        },
+                      ];
+                    }
+                  },        
+                  error: (err) => {
+ 
+                  }
+                });
+              } 
+            },
+            error: (err) => {
+ 
+            }
+          });
+        }
+      },
+      error: (err) => {
+
+      }
+    });
   }
 
   /**

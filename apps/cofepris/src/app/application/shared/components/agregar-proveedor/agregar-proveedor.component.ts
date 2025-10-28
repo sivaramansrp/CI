@@ -1,6 +1,7 @@
 import {
   CODIGO_POSTAL,
   Catalogo,
+  CatalogoServices,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
@@ -25,10 +26,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Proveedor } from '../../models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
@@ -181,6 +182,15 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
      * Arreglo que contiene los proveedores seleccionados en la tabla.
      */
     @Output() guardarYSalir = new EventEmitter<void>();
+        /**
+     * Suscripción para manejar observables.
+     */
+    private subscription: Subscription = new Subscription();
+    
+  /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  @Input() tramiteID: string = '';
   /**
    * Constructor del componente AgregarProveedorComponent.
    *
@@ -191,7 +201,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private catalogoServices: CatalogoServices,
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
@@ -202,7 +213,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    */
   ngOnInit(): void {
     this.cambiarHabilitacionNacionalidad();
-    this.cargarDatos();
+    this.obtenerListaPaises(this.tramiteID);
     this.validarElementos();
     this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
@@ -328,12 +339,20 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         if (this.datoSeleccionado?.[0]?.tipoPersona) {
           this.agregarProveedorForm?.enable();
         }
+        let valorPais = this.datoSeleccionado?.[0]?.pais;
+        if (valorPais && this.paisesDatos.length > 0) {
+          const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+            p.descripcion === valorPais || 
+            p.clave?.toString() === valorPais?.toString()
+          );
+          valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+        }
         this.agregarProveedorForm.patchValue({
           tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
           nombres: this.datoSeleccionado?.[0]?.nombres,
           primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
           segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-          pais: this.datoSeleccionado?.[0]?.pais,
+          pais: valorPais,
           estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
           codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
           colonia: this.datoSeleccionado?.[0]?.colonia,
@@ -417,7 +436,17 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         this.paisesDatos = data;
       });
   }
-
+  /**
+   * Obtiene la lista de países según el trámite especificado.
+   */
+ obtenerListaPaises(tramite: string): void {
+    this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.paisesDatos = DATOS;
+    }));
+}
   /**
    * @method guardarProveedor
    * @description Toma los datos del formulario, crea un objeto `Proveedor`, lo agrega al arreglo
@@ -514,8 +543,14 @@ guardarProveedor(): void {
 }
 
 private getPaisDescription(paisId: string | number): string {
-  if (!paisId || !this.paisesDatos) {return '';}
-  const PAIS = this.paisesDatos.find(p => p.id.toString() === paisId.toString());
+  if (!paisId || !this.paisesDatos || this.paisesDatos.length === 0) {
+    return '';
+  }
+  
+  const PAIS = this.paisesDatos.find(p => 
+    p?.clave && p.clave.toString() === paisId.toString()
+  );
+  
   return PAIS ? PAIS.descripcion : '';
 }
   /**

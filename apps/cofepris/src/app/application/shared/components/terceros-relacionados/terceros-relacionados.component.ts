@@ -310,6 +310,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
     public proveedorSeleccionadoParaModificar: Proveedor[] = [];
+    /**
+ * Identificador del trámite asociado.
+ * Se recibe como propiedad de entrada desde el componente padre.
+ */
+@Input() tramiteID: string = '';
   /**
    * Constructor del componente.
    *
