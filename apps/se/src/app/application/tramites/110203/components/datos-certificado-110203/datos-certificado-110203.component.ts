@@ -1,20 +1,21 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogoServices, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 
+import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
+import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 
 import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 
 import mercanciasFromDatos from '@libs/shared/theme/assets/json/110203/mercancias-from-datos.json';
 
-import { REGEX_RFC,REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
-import { Tramite110203Query } from '../../estados/tramite110203.query';
+import { REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_RFC,REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
+import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que gestiona los datos del certificado 110203, incluyendo la visualización de mercancias, 
@@ -38,7 +39,7 @@ import { Tramite110203Query } from '../../estados/tramite110203.query';
 @Component({
   selector: 'app-datos-certificado-110203',
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent],
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent, CommonModule, NotificacionesComponent],
   templateUrl: './datos-certificado-110203.component.html',
   styleUrl: './datos-certificado-110203.component.scss'
 })
@@ -91,17 +92,17 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   /**
    * Lista de tipos de datos obtenidos del catálogo.
    */
-  tipoDatos: Catalogo[] = mediocatalogo?.tipo;
+  tipoDatos: Catalogo[] = [];
 
   /**
    * Lista de opciones de comercialización obtenidas del catálogo.
    */
-  comercializacion: Catalogo[] = mediocatalogo?.comercializacion;
+  comercializacion: Catalogo[] = [];
 
   /**
    * Lista de medidas obtenidas del catálogo.
    */
-  medida: Catalogo[] = mediocatalogo?.comercializacion;
+  medida: Catalogo[] = [];
 
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancias.
@@ -150,6 +151,22 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110203'
+   */
+  tramites: string = '110203';
+
+/**
+ * Objeto que representa la notificación de validación.
+ */
+  public validationNotificacion!: Notificacion;
+
+/**
+ * Indica si se debe mostrar la notificación de validación en la interfaz.
+ */
+  public showValidationNotification: boolean = false;
+
+  /**
    * Inicializa el componente inyectando los servicios requeridos y configurando las suscripciones de estado.
    *
    * @param fb - Servicio FormBuilder de Angular para crear y gestionar formularios.
@@ -166,7 +183,8 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
     private tramite110203Query: Tramite110203Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
   ) { 
 /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -241,18 +259,18 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    */
   public getRegistroForm(): void {
     this.mercanciasForm = this.fb.group({
-      comercial: [mercanciasFromDatos?.comercial, Validators.required],
-      ingles: [mercanciasFromDatos?.ingles, Validators.required],
-      complemento: [this.solicitudState?.complemento ? this.solicitudState?.complemento : mercanciasFromDatos?.complemento],
-      marca: [this.solicitudState?.marca ? this.solicitudState?.marca : mercanciasFromDatos?.marca, Validators.required],
-      valor: [this.solicitudState?.valor ? this.solicitudState?.valor : mercanciasFromDatos?.valor, [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
-      cantidad: [mercanciasFromDatos?.cantidad, [Validators.required, Validators.pattern(REGEX_RFC)]],
-      comercializacion: [this.solicitudState?.comercializacion, Validators.required],
-      bruta: [this.solicitudState?.bruta ? this.solicitudState?.bruta : mercanciasFromDatos?.bruta, [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
-      medida: [this.solicitudState?.medida, Validators.required],
-      factura: [this.solicitudState?.factura ? this.solicitudState?.factura : mercanciasFromDatos?.factura, Validators.required],
-      tipo: [this.solicitudState?.tipo, Validators.required],
-      fecha: [mercanciasFromDatos?.fecha, Validators.required]
+      comercial: [this.solicitudState?.comercial || '', Validators.required],
+      ingles: [this.solicitudState?.ingles || '', Validators.required],
+      complemento: [this.solicitudState?.complemento || ''],
+      marca: [this.solicitudState?.marca || '', Validators.required],
+      valor: [this.solicitudState?.valor || '', [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES)]],
+      cantidad: [this.solicitudState?.cantidad || '', [Validators.required, Validators.pattern(REGEX_RFC)]],
+      comercializacion: [this.solicitudState?.comercializacion || '', Validators.required],
+      bruta: [this.solicitudState?.bruta || '', [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES)]],
+      medida: [this.solicitudState?.medida || '', Validators.required],
+      factura: [this.solicitudState?.factura || '', Validators.required],
+      tipo: [this.solicitudState?.tipo || '', Validators.required],
+      fecha: [this.solicitudState?.fechaFactura || '', Validators.required]
     });
     this.patchData();
   }
@@ -287,11 +305,40 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+  this.tramite110203Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((state) => {
+      this.solicitudState = state as Solicitud110203State;
+      
+      if (state.orden) {
+        this.updateMercanciasWithApiData(state);
+      }
+    });
+
        /**
    * Inicializa el formulario reactivo del componente con sus valores y validaciones correspondientes.
    * Este método configura los controles del formulario y sus validadores iniciales.
    */
     this.inicializarFormulario();
+
+    /*
+     * Carga el catálogo de unidades de medida de comercialización
+     * y almacena los datos en la propiedad `comercializacion`.
+     */
+    this.obtenerUnidadComercializacion();
+
+    /*
+     * Carga el catálogo de unidades de masa bruta
+     * y almacena los datos en la propiedad `medida`.
+     */
+    this.obtenerUnidadMasaBruta();
+
+    /*
+     * Carga el catálogo de tipos de factura
+     * y almacena los datos en la propiedad `tipoDatos`.
+     */
+    this.obtenerTipoFactura();
    }
    /**
  * Formatea el valor de un campo numérico del formulario a 4 decimales.
@@ -346,10 +393,10 @@ formatDecimal(controlName: string, functionName: keyof Tramite110203Store): void
       ingles: ['', Validators.required],
       complemento: [''],
       marca: ['', Validators.required],
-      valor: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valor: ['', [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES)]],
       cantidad: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       comercializacion: [this.solicitudState.comercializacion, Validators.required],
-      bruta: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      bruta: ['', [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES)]],
       medida: [this.solicitudState.medida, Validators.required],
       factura: ['', Validators.required],
       tipo: [this.solicitudState.tipo, Validators.required],
@@ -368,12 +415,64 @@ formatDecimal(controlName: string, functionName: keyof Tramite110203Store): void
     const VALOR = form.get(campo)?.value;
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+/**
+ * Valida el formulario comprobando que el valor del campo "factura" no exceda los 36 caracteres.
+ *
+ * @returns `true` si la validación es exitosa; `false` si la longitud es mayor a 36, y muestra una notificación.
+ */
+private validateForm(): boolean {
+  const FACTURA_VALOR = this.mercanciasForm.get('factura')?.value;
+  if (FACTURA_VALOR && FACTURA_VALOR.length > 36) {
+    this.mostrarNotificacionValidacion();
+    return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Muestra la notificación de validación para errores en el formulario.
+ */
+private mostrarNotificacionValidacion(): void {
+  this.validationNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Error de Validación',
+    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres del número de factura no puede ser mayor a 36.',
+    cerrar: true,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  this.showValidationNotification = true;
+}
+
+/**
+ * Cierra la notificación de validación.
+ */
+public cerrarNotificacionValidacion(): void {
+  this.showValidationNotification = false;
+}
+
+/**
+ * Maneja la acción de aceptar en la notificación de validación.
+ */
+public aceptarNotificacionValidacion(): void {
+  this.showValidationNotification = false;
+}
+
   /**
  * Actualiza la primera mercancía de la lista con los valores del formulario.
  * Valida que el formulario sea correcto antes de asignar los nuevos datos.
  * Finalmente, cierra el modal después de guardar los cambios.
  */
 onModificar(): void {
+  if (!this.validateForm()) {
+    return;
+  }
+
     const UPDATED_DATOS = this.mercanciasForm.value;
 
     this.mercancias[0] = {
@@ -393,6 +492,68 @@ onModificar(): void {
     };    
     this.closeModal.nativeElement.click();
   
+}
+
+  /*
+   * Consulta el catálogo de unidades de medida de comercialización basado en los trámites actuales.
+   * El resultado se almacena en la propiedad `comercializacion`.
+   * Se cancela automáticamente la suscripción al destruir el componente.
+   */
+  obtenerUnidadComercializacion(): void {
+    this.catalogoService.unidadesMedidaComercialCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.comercializacion = response?.datos ?? [];
+        }
+      });
+  }
+
+  /*
+   * Consulta el catálogo de unidades de masa bruta correspondiente a los trámites actuales.
+   * El resultado se almacena en la propiedad `medida`.
+   * La suscripción se cancela automáticamente cuando el componente se destruye.
+   */
+  obtenerUnidadMasaBruta(): void {
+    this.catalogoService.unidadDeMasaBrutaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.medida = response?.datos ?? [];
+        }
+      });
+  }
+
+  /*
+   * Consulta el catálogo de tipos de factura según los trámites actuales.
+   * El resultado se almacena en la propiedad `tipoDatos`.
+   * La suscripción se gestiona automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  obtenerTipoFactura(): void {
+    this.catalogoService.tipoFacturaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tipoDatos = response?.datos ?? [];
+        }
+      });
+  }
+
+/**
+ * Updates the mercancias array with data from the store/API
+ */
+private updateMercanciasWithApiData(state: Solicitud110203State): void {
+  if (this.mercancias && this.mercancias.length > 0) {
+    this.mercancias[0] = {
+      ...this.mercancias[0],
+      orden: state.orden || this.mercancias[0].orden,
+      arancelaria: state.arancelaria || this.mercancias[0].arancelaria,
+      tecnico: state.tecnico || this.mercancias[0].tecnico,
+      comercial: state.comercial || this.mercancias[0].comercial,
+      ingles: state.ingles || this.mercancias[0].ingles,
+      registro: state.registro || this.mercancias[0].registro,
+    };
+  }
 }
 
   /**

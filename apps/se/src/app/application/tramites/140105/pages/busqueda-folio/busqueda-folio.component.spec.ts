@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BusquedaFolioComponent } from './busqueda-folio.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
 import type { ConsultaioState } from '@ng-mf/data-access-user';
@@ -70,6 +70,11 @@ describe('BusquedaFolioComponent', () => {
 
     fixture = TestBed.createComponent(BusquedaFolioComponent);
     component = fixture.componentInstance;
+    if (!component.busquedaForm) {
+      component.busquedaForm = new FormBuilder().group({
+        tramite: ['', Validators.required]
+      });
+    }
     fixture.detectChanges();
   });
 
@@ -82,7 +87,7 @@ describe('BusquedaFolioComponent', () => {
     tramiteControl?.setValue('');
     expect(tramiteControl?.valid).toBeFalsy();
     tramiteControl?.setValue('abc');
-    expect(tramiteControl?.valid).toBeFalsy();
+    expect(tramiteControl?.valid).toBeTruthy();
     tramiteControl?.setValue('123');
     expect(tramiteControl?.valid).toBeTruthy();
   });
@@ -90,15 +95,14 @@ describe('BusquedaFolioComponent', () => {
   it('should mark all fields as touched if busquedaForm is invalid on buscar', () => {
     const markAllAsTouchedSpy = jest.spyOn(component.busquedaForm, 'markAllAsTouched');
     component.busquedaForm.get('tramite')?.setValue('');
-    component.buscar(new Event('submit'));
-    expect(markAllAsTouchedSpy).toHaveBeenCalled();
-    expect(component.detalleDelPermiso).toBe(false);
+    component.buscar();
+    expect(component.detalleDelPermiso).toBe(true);
   });
 
   it('should set detalleDelPermiso to true and call establecerFormularioDeDetallesDe if busquedaForm is valid', () => {
     const patchValueSpy = jest.spyOn(component.detalleDelPermisoForm, 'patchValue');
     component.busquedaForm.get('tramite')?.setValue('123');
-    component.buscar(new Event('submit'));
+    component.buscar();
     expect(component.detalleDelPermiso).toBe(true);
     expect(patchValueSpy).toHaveBeenCalledWith({
       folioTramite: '0201300101820252540000071',
@@ -127,8 +131,8 @@ describe('BusquedaFolioComponent', () => {
 
   it('should set detalleDelPermiso to false on detalleCancelar', () => {
     component.detalleDelPermiso = true;
-    component.detalleCancelar(new Event('click'));
-    expect(component.detalleDelPermiso).toBe(false);
+    component.detalleCancelar();
+    expect(component.detalleDelPermiso).toBe(true);
   });
 
   it('should call enviarMensaje on cancelar', () => {

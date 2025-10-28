@@ -660,7 +660,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreComercial: FALLBACK(MERCANIADATO.nombreComercial),
       normaOrigen: FALLBACK(MERCANIADATO.normaOrigen),
       cantidad: FALLBACK(MERCANIADATO.cantidad),
-      umc: FALLBACK(this.conseguirUMCDescripcion(MERCANIADATO.umc ?? '')),
+      umc: FALLBACK(MERCANIADATO.umc),
       tipoFactura: FALLBACK(MERCANIADATO.tipoFactura),
       valorMercancia: FALLBACK(MERCANIADATO.valorMercancia),
       fechaFinalInput: FALLBACK(MERCANIADATO.fechaFinalInput),

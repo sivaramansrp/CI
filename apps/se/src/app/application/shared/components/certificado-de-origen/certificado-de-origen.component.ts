@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { FormularioSi } from '../../models/certificado-origen.model';
+import { MERCANCIA_SELECCIONADAS_REQUIRED } from '../../constantes/mercancia.enum';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
@@ -570,6 +571,14 @@ export class CertificadoDeOrigenComponent
   requerida: boolean = false;
 
   /**
+   * @property {boolean} isInvalidaMercanciaSeleccion
+   * @description
+   * Indica si la selección de mercancía en la tabla es inválida.
+   * Se utiliza para mostrar mensajes de error cuando no se ha seleccionado ninguna mercancía.
+   */
+  isInvalidaMercanciaSeleccion: boolean = false;
+
+  /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
@@ -628,6 +637,7 @@ export class CertificadoDeOrigenComponent
         correo: ['', Validators.required],
         correoElectronico: [''],
         domTercerOperador: [''],
+        mercanciasSeleccionadas: [this.guardarClicado || [], [MERCANCIA_SELECCIONADAS_REQUIRED.includes(this.idProcedimiento) ? matrizRequerida : null]],
         // Nuevos controles de formulario para el procedimiento 110222
         // calle1: ['', Validators.required],
         // numeroLetra1: ['', Validators.required],
@@ -1102,6 +1112,11 @@ export class CertificadoDeOrigenComponent
     this.seletedccionadaguardarClicado = evento;
     this.seleccionadaguardarClicado = [evento];
     this.seleccionado.emit(evento);
+
+    const CONTROL = this.formCertificado.get('mercanciasSeleccionadas');
+    CONTROL?.setValue([evento]);
+    CONTROL?.markAsDirty();
+    CONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -1478,4 +1493,27 @@ export class CertificadoDeOrigenComponent
       domTercerOperador: evento,
     });
   }
+
+  /**
+   * Verifica si un campo es requerido según la configuración de campos requeridos.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+   */
+  esCampoRequerido(campo: string): boolean {
+    return this.elementosRequeridos?.includes(campo) ?? false;
+  }
+}
+
+/**
+ * Valida que el valor del control sea una matriz no vacía.
+ *
+ * @param {AbstractControl} control - El control de formulario a validar.
+ * @returns {ValidationErrors | null} - Retorna un objeto de errores si la validación falla, o `null` si pasa.
+ */
+export function matrizRequerida(
+  control: AbstractControl
+): ValidationErrors | null {
+  const VALUE = control.value;
+  return Array.isArray(VALUE) && VALUE.length === 0 ? { required: true } : null;
 }

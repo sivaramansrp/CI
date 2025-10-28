@@ -1,21 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DESTINATARIO_DATOS } from '../../constant/destinatario.enum';
-import { Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
+import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
+import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
-import { DatosDelDestinatarioComponent } from "../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component";
-import { DestinatarioComponent } from "../../../../shared/components/destinatario/destinatario.component";
-import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
-import { Tramite110203Query } from '../../estados/tramite110203.query';
-
-interface FormValues {
-  [key: string]: unknown;
-}
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el destinatario para el trámite 110203.
- * Este componente permite la edición de los datos personales del destinatario, como nombres, dirección, correo y teléfono,
+ * Este componente permite la edición de los datos personales del destinatario, como nombre, dirección, correo y teléfono,
  * y guarda los valores seleccionados en el estado de la solicitud a través de un formulario reactivo.
  * 
  * @component
@@ -31,7 +25,7 @@ interface FormValues {
 @Component({
   selector: 'app-destinatario-110203',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, DatosDelDestinatarioComponent, DestinatarioComponent],
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './destinatario-110203.component.html',
   styleUrl: './destinatario-110203.component.scss'
 })
@@ -59,12 +53,12 @@ interface FormValues {
  * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
  */
 export class Destinatario110203Component implements OnInit, OnDestroy {
-
+  
   /**
-   * Formulario reactivo que gestiona los datos del destinatario, incluyendo nombres, dirección, correo, etc.
+   * Formulario reactivo que gestiona los datos del destinatario, incluyendo nombre, dirección, correo, etc.
    * 
    * Campos:
-   * - nombres
+   * - nombre
    * - primer
    * - segundo
    * - fiscal
@@ -77,14 +71,14 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
    * - telefono
    */
   destinatarioForm!: FormGroup;
-  /** Indica si los campos de nombres y apellidos están en solo lectura. 
-   * Se activa si el campo "razón social" tiene datos. */
-  camposNombreSoloLectura = false;
+/** Indica si los campos de nombre y apellidos están en solo lectura. 
+ * Se activa si el campo "razón social" tiene datos. */
+  camposNombreSoloLectura= false;
   /**
  * Establece los valores de los placeholders utilizados en el formulario.
  * El valor se obtiene desde el catálogo de medios.
  */
-  placeholder: Placeholders = mediocatalogo.placeholder;
+  placeholder :Placeholders=mediocatalogo.placeholder;
   /**
    * Estado de la solicitud 110203, que contiene los valores actuales de los campos relacionados con el destinatario.
    */
@@ -94,10 +88,6 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  /** Bandera de validez para datos-del-destinatario */
-  datosDelDestinatarioValido: boolean = false;
-  /** Valores actuales del formulario de destinatario. */
-  formDestinatarioValues!: FormValues;
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias necesarias.
@@ -111,9 +101,7 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
-  formDatosDelDestinatarioValues!: FormValues;
-  /** Bandera de validez para destinatario */
-  destinatarioValido: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
@@ -139,10 +127,10 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
   }
 
 
-  /**
-      * Evalúa si se debe inicializar o cargar datos en el formulario.  
-      * Además, obtiene la información del catálogo de mercancía.
-      */
+ /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.destinatarioForm?.get('razon')?.setValue(this.solicitudState.razon);
@@ -153,10 +141,10 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
   }
 
 
-  /**
-  * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-  * Luego reinicializa el formulario con los valores actualizados desde el store.
-  */
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -175,78 +163,51 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
     this.inicializarFormulario();
   }
 
-  setValoresStores(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-    const { campo: CAMPO, valor: VALOR } = event;
-    this.tramite110203Store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
-  }
-
-  setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-    const { campo: CAMPO, valor: VALOR } = event;
-    this.tramite110203Store.setFormDestinatario({ [CAMPO]: VALOR });
-  }
-
-  /**
-  * Recibe validez del formulario de destinatario
-  */
-  setFormValidaDestinatario(valido: boolean): void {
-    this.destinatarioValido = valido;
-  }
-  /**
-  * Recibe validez del formulario de datos-del-destinatario
-  */
-  setFormValida(valido: boolean): void {
-    this.datosDelDestinatarioValido = valido;
-  }
-
   /**
    * Método que inicializa el formulario reactivo con los valores del destinatario desde el estado de la solicitud.
-   * El formulario contiene los campos: 'nombres', 'primer', 'segundo', 'fiscal', 'razon', 'calle', 'letra', 'ciudad',
+   * El formulario contiene los campos: 'nombre', 'primer', 'segundo', 'fiscal', 'razon', 'calle', 'letra', 'ciudad',
    * 'correo', 'fax' y 'telefono', que son los datos personales del destinatario.
    */
   private inicializarFormulario(): void {
     this.tramite110203Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud110203State;
-        })
-      )
-      .subscribe();
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.solicitudState = seccionState as Solicitud110203State;
 
     // Inicializa el formulario con los valores del destinatario desde el estado de la solicitud
     this.destinatarioForm = this.fb.group({
-      nombres: [this.solicitudState.nombres, [Validators.maxLength(30)]],
-      primer: [this.solicitudState.primer, [Validators.maxLength(20)]],
-      segundo: [this.solicitudState.segundo, [Validators.maxLength(20)]],
-      fiscal: [this.solicitudState.fiscal, [Validators.maxLength(30), Validators.required]],
-      razon: [this.solicitudState.razon, [Validators.maxLength(70)]],
-      calle: [this.solicitudState.calle, Validators.required],
-      letra: [this.solicitudState.letra, Validators.required],
-      ciudad: [this.solicitudState.ciudad, Validators.required],
-      correo: [this.solicitudState.correo, Validators.required],
-      fax: [this.solicitudState.fax],
+      nombre: [this.solicitudState.nombre,[Validators.maxLength(30)]],
+      primer: [this.solicitudState.primer,[Validators.maxLength(20)]],
+      segundo: [this.solicitudState.segundo,[Validators.maxLength(20)]],
+      fiscal: [this.solicitudState.fiscal,[Validators.maxLength(30),Validators.required]],
+      razon: [this.solicitudState.razon,[Validators.maxLength(70)]],
+      calle: [this.solicitudState.calle, [Validators.required, Validators.maxLength(100)]],
+      letra: [this.solicitudState.letra, [Validators.required, Validators.maxLength(30)]],
+      ciudad: [this.solicitudState.ciudad, [Validators.required, Validators.maxLength(50)]],
+      correo: [this.solicitudState.correo, [Validators.required, Validators.email]],
+      fax: [this.solicitudState.fax, [Validators.maxLength(20)]],
       telefono: [this.solicitudState.telefono],
     });
-    this.destinatarioForm.patchValue(DESTINATARIO_DATOS);
-    this.destinatarioForm.get('razon')?.valueChanges.subscribe(value => {
-      if (value && value.trim().length > 0) {
-        // Clear the first 3 fields
-        this.destinatarioForm.get('nombres')?.setValue('');
-        this.destinatarioForm.get('primer')?.setValue('');
-        this.destinatarioForm.get('segundo')?.setValue('');
+    // this.destinatarioForm.patchValue(DESTINATARIO_DATOS);
+     this.destinatarioForm.get('razon')?.valueChanges.subscribe(value => {
+    if (value && value.trim().length > 0) {
+      // Clear the first 3 fields
+      this.destinatarioForm.get('nombre')?.setValue('');
+      this.destinatarioForm.get('primer')?.setValue('');
+      this.destinatarioForm.get('segundo')?.setValue('');
 
-        // Optionally mark as touched or dirty if needed
-        this.destinatarioForm.get('nombres')?.markAsTouched();
-        this.destinatarioForm.get('primer')?.markAsTouched();
-        this.destinatarioForm.get('segundo')?.markAsTouched();
+      // Optionally mark as touched or dirty if needed
+      this.destinatarioForm.get('nombre')?.markAsTouched();
+      this.destinatarioForm.get('primer')?.markAsTouched();
+      this.destinatarioForm.get('segundo')?.markAsTouched();
 
-        // Set a flag so template can bind readonly
-        this.camposNombreSoloLectura = true;
-      } else {
-        this.camposNombreSoloLectura = false;
-      }
+      // Set a flag so template can bind readonly
+      this.camposNombreSoloLectura = true;
+    } else {
+      this.camposNombreSoloLectura = false;
+    }
+  });
     });
-
   }
 
   /**
@@ -259,6 +220,25 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110203Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+/**
+ * Valida los campos del formulario de destinatario.
+ * Verifica que los campos 'calle' y 'letra' no estén vacíos ni sean nulos.
+ * Si ambos son válidos, devuelve true; de lo contrario, marca todos los campos como tocados y devuelve false.
+ */
+  validarFormularios(): boolean {
+    if (
+      this.destinatarioForm.get('calle')?.value !== '' &&
+      this.destinatarioForm.get('calle')?.value !== null &&
+      this.destinatarioForm.get('letra')?.value !== '' &&
+      this.destinatarioForm.get('letra')?.value !== null && 
+      this.destinatarioForm.get('correo')?.valid 
+    ) {
+      return true;
+    }
+    this.destinatarioForm.markAllAsTouched();
+    return false;
   }
 
   /**

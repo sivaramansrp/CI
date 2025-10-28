@@ -53,4 +53,12 @@ export class Tramite260208Query extends Query<Tramite260208State> {
     proveedorTablaDatos: state.proveedorTablaDatos,
     facturadorTablaDatos: state.facturadorTablaDatos,
   }));
+      /**
+     * @propiedad selectImmexRegistro$
+     * @tipo Observable<ImmexRegistroState>
+     * @descripción Selector que permite obtener el estado completo de `ImmexRegistroState`.
+     */
+    selectImmexRegistro$ = this.select((state) => {
+        return state;
+    });
 }

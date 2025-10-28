@@ -888,16 +888,15 @@
     } @if (mercanciasDisponibles) {
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="cargaMercanciaConfiguracionTabla"
-        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
+        [datos]="guardarClicado || []"  [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
         [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
       <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0">Por favor, necesitas
         agregar un valor en la tabla dinámica</span>
     </div>
-
     } @else {
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTablaMercancia"
-        [datos]="guardarClicado || []" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+        [datos]="guardarClicado || []" [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
     </div>
     }
 

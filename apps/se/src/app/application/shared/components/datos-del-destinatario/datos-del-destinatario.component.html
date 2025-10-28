@@ -14,7 +14,11 @@
           </div>
         </div>
         <div class="col-md-4 form-group">
-          <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
+          <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal<span [ngClass]="{
+                  'text-danger':
+                    formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid &&
+                    formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched
+                }">*</span>:</label>
           <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" [maxlength]="32" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
           <div *ngIf="formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid && formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched">
             <div class="d-grid">
@@ -38,7 +42,11 @@
           <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido" (change)="setValoresStore('formDatosDelDestinatario','segundoApellido','setFormDatosDelDestinatario')" /> @if(formDatosDelDestinatario.controls['segundoApellido'].invalid && formDatosDelDestinatario.controls['segundoApellido'].touched) { <div class="d-grid"> @if(formDatosDelDestinatario.controls['segundoApellido'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDatosDelDestinatario.controls['segundoApellido'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span> } </div> }
         </div>
         <div class="col-md-4 form-group">
-          <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal<span *ngIf="NUMERO_REGISTRO_FISCAL_REQUIRED.includes(idProcedimiento)">*</span>: </label>
+          <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal<span *ngIf="NUMERO_REGISTRO_FISCAL_REQUIRED.includes(idProcedimiento)" [ngClass]="{
+                  'text-danger':
+                    formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid &&
+                    formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched
+                }">*</span>: </label>
           <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" /> @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid && formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched) { <div class="d-grid"> @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].errors?.['required']) { <span class="mensaje-error">Este campo es obligatorio</span> } @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].errors?.['maxlength']) { <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span> } </div> }
         </div>
         <div class="col-md-8 form-group">
