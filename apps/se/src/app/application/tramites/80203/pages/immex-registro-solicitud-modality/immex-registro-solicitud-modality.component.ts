@@ -5,13 +5,14 @@
  */
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { ERROR_ALERT, ERROR_DETALLE_ALERT, ERROR_FRACCION_ALERT, PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { ImmexRegistroState, ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
 import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
-import { PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import { buildGuardarPayload } from '../../mappers/guardar.mapper';
 
 /**
@@ -118,6 +119,34 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    * this.wizardComponent.atras();
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+   * @property {PasoUnoComponent} pasoUno
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente,
+   * especialmente para validar todos sus formularios antes de avanzar al siguiente paso.
+   */
+  @ViewChild('pasoUno') pasoUno!: PasoUnoComponent;
+
+  /**
+   * @property {boolean} isValid
+   * @description
+   * Indica si la validación general del paso actual es correcta.
+   * Se utiliza para controlar la navegación entre pasos del wizard.
+   * Se establece a `false` cuando hay errores de validación que impiden el avance.
+   */
+  isValid: boolean = true;
+
+  /**
+   * @property {string} errorAlerta
+   * @description
+   * Contiene el mensaje HTML de error que se muestra al usuario cuando la validación falla.
+   * Puede contener diferentes tipos de alertas según el tipo de error:
+   * - ERROR_ALERT: Cuando faltan tanto permisos IMMEX como fracciones
+   * - ERROR_FRACCION_ALERT: Cuando faltan fracciones arancelarias
+   * - ERROR_DETALLE_ALERT: Cuando falta información del detalle de mercancía
+   */
+  public errorAlerta!:string
 
   /**
    * @property {number} indice
@@ -220,15 +249,45 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    */
   infoError = 'alert-danger';
 
+  /**
+   * @property {boolean} IMMEXTablaError
+   * @description
+   * Indica si existe un error relacionado con la tabla de permisos IMMEX.
+   * Se establece a `true` cuando la tabla de permisos IMMEX está vacía y es requerida para la validación.
+   * Utilizado para mostrar mensajes de error específicos al usuario.
+   */
+  IMMEXTablaError!: boolean;
+
+  /**
+   * @property {boolean} fraccionTablaError
+   * @description
+   * Indica si existe un error relacionado con la tabla de fracciones arancelarias.
+   * Se establece a `true` cuando la tabla de fracciones arancelarias está vacía y es requerida para la validación.
+   * Utilizado para mostrar mensajes de error específicos al usuario.
+   */
+  fraccionTablaError!: boolean;
+
+  /**
+   * @property {boolean} mercanciaImportacionFormError
+   * @description
+   * Indica si existe un error relacionado con el formulario de mercancía de importación.
+   * Se establece a `true` cuando el formulario de mercancía de importación es inválido.
+   * Utilizado para mostrar mensajes de error específicos al usuario.
+   */
+  mercanciaImportacionFormError: boolean = false;
+
   constructor(public immexRegistroQuery: ImmexRegistroQuery, public immexRegistroStore: ImmexRegistroStore, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {
   }
 
   ngOnInit(): void {
     this.immexRegistroQuery.selectImmexRegistro$.pipe().subscribe((data) => {
       this.storeData = data;
+      this.IMMEXTablaError = data.IMMEXTablaError;
+      this.fraccionTablaError = data.fraccionTablaError;
+      this.mercanciaImportacionFormError = data.mercanciaImportacionFormError;
     }); 
 
-    
+
   }
 
   /**
@@ -268,6 +327,24 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    * @see {@link WizardComponent.atras} - Método para retroceder pasos
    */
   getValorIndice(e: AccionBoton): void {
+    if (this.indice === 1) {
+      const ISVALID = this.validarTodosFormulariosPasoUno() ?? false;
+      this.isValid = ISVALID;
+      if (!this.isValid) {
+        if(this.IMMEXTablaError && this.fraccionTablaError){
+          this.errorAlerta = ERROR_ALERT;
+        }
+        else if(this.fraccionTablaError){
+          this.errorAlerta = ERROR_FRACCION_ALERT;
+        }
+        else if(this.mercanciaImportacionFormError){
+          this.errorAlerta = ERROR_DETALLE_ALERT;
+        }
+        this.datosPasos.indice = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+
     const PAYLOAD = buildGuardarPayload(this.storeData);
     let shouldNavigate = false;
     this.registroSolicitudService.postGuardarDatos('80203', PAYLOAD).subscribe(response => {
@@ -297,19 +374,22 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
           indiceActualizado = e.valor + 1;
         }
         this.toastrService.success(response.mensaje);
-         if (indiceActualizado > 0 && indiceActualizado < 5) {
-          this.indice = indiceActualizado;
-          this.datosPasos.indice = indiceActualizado;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
+        
       } else {
         this.toastrService.error(response.mensaje);
       }
     })
+    }
+    else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
   }
 
   /**
@@ -381,5 +461,54 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
       </div>
       `;
       return ALERTA;
+  }
+
+  /**
+   * @method validarTodosFormulariosPasoUno
+   * @description Método privado que valida todos los formularios del primer paso del asistente IMMEX.
+   * Este método verifica si el componente `PasoUnoComponent` está disponible y si todos sus 
+   * formularios han sido correctamente validados antes de permitir el avance al siguiente paso.
+   * 
+   * El método implementa una validación defensiva que retorna `true` si el componente pasoUno
+   * no está disponible (caso de gracia), y delega la validación real al método 
+   * `validarFormularios()` del componente hijo.
+   * 
+   * Este método es crucial para mantener la integridad del flujo del wizard, asegurando que
+   * solo se permita avanzar cuando todos los datos requeridos hayan sido ingresados correctamente.
+   * 
+   * @private
+   * @returns {boolean} Resultado de la validación:
+   *                   - `true`: Si no hay componente pasoUno (caso de gracia) o si todos los formularios son válidos
+   *                   - `false`: Si algún formulario del paso uno es inválido o no ha sido completado
+   * @memberof ImmexRegistroSolicitudModalityComponent
+   * @since 1.0.0
+   * @see {@link PasoUnoComponent.validarFormularios} - Método que realiza la validación de los formularios
+   * @see {@link getValorIndice} - Método que utiliza esta validación para controlar la navegación
+   * 
+   * @example
+   * ```typescript
+   * // Uso interno en el método getValorIndice
+   * if (this.indice === 1) {
+   *   const ISVALID = this.validarTodosFormulariosPasoUno() ?? false;
+   *   this.isValid = ISVALID;
+   *   if (!this.isValid) {
+   *     // Mostrar errores y no avanzar
+   *     return;
+   *   }
+   * }
+   * ```
+   * 
+   * @throws No lanza excepciones directas, pero depende del comportamiento del componente hijo
+   * @complexity O(1) - Operación de complejidad constante
+   */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUno) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUno.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 }
