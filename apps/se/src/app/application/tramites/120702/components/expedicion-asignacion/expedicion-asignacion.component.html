@@ -14,12 +14,20 @@
                             [required]="true" placeholder="Selecciona un año" formControlName="anoDelOficio"
                             for="anoDelOficio" id="anoDelOficio" aria-label="Año del oficio de asignación"
                             (change)="setValoresStore(asignacionForm,'anoDelOficio', 'setAnoDelOficio')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                        @if(asignacionForm.controls['anoDelOficio'].invalid &&
+                        asignacionForm.controls['anoDelOficio'].touched){
+                        <div class="d-grid">
+                            @if(asignacionForm.controls['anoDelOficio'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
-                        <input type="number" class="form-control" id="numeroOficio" formControlName="numeroOficio"
+                        <input type="text" class="form-control" id="numeroOficio" formControlName="numeroOficio"
                             name="numeroOficio" [required]="true" aria-label="Número de oficio de asignación"
                             (change)="setValoresStore(asignacionForm,'numeroOficio', 'setNumeroOficio')">
                         @if(asignacionForm.controls['numeroOficio'].invalid &&
@@ -27,6 +35,12 @@
                         <div class="d-grid">
                             @if(asignacionForm.controls['numeroOficio'].errors?.['required']) {
                             <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(asignacionForm.controls['numeroOficio'].errors?.['pattern']) {
+                            <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                            }
+                            @if(asignacionForm.controls['numeroOficio'].errors?.['maxlength']) {
+                            <span class="mensaje-error">El número de oficio no debe exceder los 15 dígitos</span>
                             }
                         </div>
                         }
@@ -173,7 +187,7 @@
                             <span class="mensaje-error">Por favor, escribe un número entero válido</span>
                             }
                             @if(asignacionForm.controls['montoAExpedir'].errors?.['maxlength']) {
-                            <span class="mensaje-error">La cantidad solicitada a expedir no debe ser mayor al saldo disponible</span>
+                            <span class="mensaje-error">El monto no debe exceder los 15 dígitos</span>
                             }
                         </div>
                         }
