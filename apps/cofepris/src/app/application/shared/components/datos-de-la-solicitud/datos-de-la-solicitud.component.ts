@@ -52,7 +52,6 @@ import {
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  CatalogoServices,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
@@ -79,9 +78,9 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
+import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ScianDataService } from '../../services/scian-data.service';
@@ -601,6 +600,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param datosSolicitudService - Servicio para gestionar la información de la solicitud.
    * @param consultaioQuery - Servicio para la consulta de datos relacionados con la solicitud.
    * @param scianDataService - Servicio para la obtención de datos del catálogo SCIAN.
+   * @param catalogoService - Servicio para la obtención de catálogos diversos.
+   * @param cdr - Servicio para la detección de cambios en el componente.
    */
   constructor(
     public fb: FormBuilder,
@@ -609,37 +610,34 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
     private scianDataService: ScianDataService,
-    private cdr: ChangeDetectorRef,
-    private catalogoService: CatalogoServices
-
-
+    private catalogoService: CatalogoServices,
+    private cdr: ChangeDetectorRef
   ) {
-
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenDatos',
-      '/cofepris/regimenDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'adunasDeEntradasDatos',
-      '/cofepris/adunasDeEntradasDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenDatos',
+    //   '/cofepris/regimenDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'adunasDeEntradasDatos',
+    //   '/cofepris/adunasDeEntradasDatos.json'
+    // );
     // this.datosSolicitudService.obtenerRespuestaPorUrl(
     //   this,
     //   'estadoDatos',
     //   '/cofepris/estadoDatos.json'
     // );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenLaMercanciaDatos',
-      '/cofepris/regimenLaMercanciaDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'aduanaDatos',
-      '/cofepris/aduanaDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenLaMercanciaDatos',
+    //   '/cofepris/regimenLaMercanciaDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'aduanaDatos',
+    //   '/cofepris/aduanaDatos.json'
+    // );
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -669,7 +667,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.catalogoLista(String(this.idProcedimiento));
+    this.inicializarCatalogo(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
    
     this.crearDatosSolicitudForm();
@@ -755,7 +753,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         });
   }
 
-  catalogoLista(tramite: string): void {
+  inicializarCatalogo(tramite: string): void {
    this.subscription.add(
       this.catalogoService
       .estadosCatalogo(tramite)
@@ -768,8 +766,32 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         }
       })
     );  
-  }
+    this.subscription.add(
+      this.catalogoService
+        .regimenesCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
 
+          if (response) {
+            this.regimenDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .aduanasCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.adunasDeEntradasDatos = DATOS;
+          }
+        })
+    );
+  }
 
    /**
    * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
