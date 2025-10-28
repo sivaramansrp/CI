@@ -15,7 +15,7 @@ import { DocumentoResponse } from '../../models/shared/documentos-request.model'
 @Injectable({
   providedIn: 'root',
 })
-export class DocumentosT231001Service {
+export class DocumentosT2310Service {
   /**
    * URL base del servicio
    */

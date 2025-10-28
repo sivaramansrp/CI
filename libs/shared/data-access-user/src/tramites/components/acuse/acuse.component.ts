@@ -23,10 +23,11 @@ import { AcuseDetalleService } from '../../../core/services/shared/detalleAcuse.
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/shared/documentos.service';
-import { DocumentosT231001Service } from '../../../core/services/shared/documentos-t231001.service';
+import { DocumentosT2310Service } from '../../../core/services/shared/documentos-t231001.service';
 import { Router } from '@angular/router';
 
 import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
+import { DocumentosTramiteResolucionService } from '../../../core/services/shared/detalleTramite.service';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -41,6 +42,11 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Generalmente representa el nombre del trámite o sección.
    */
   @Input() titulo!: string;
+
+  /**
+   * Título opcional para la sección de resoluciones.
+   */
+  @Input() tituloResoluciones?: string;
 
   /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
@@ -114,6 +120,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Datos que se muestran en la tabla de acuse.
    */
   datosTablaAcuse: BodyTablaAcuse[] = [];
+  datosTablaResoluciones: BodyTablaAcuse[] = [];
+  idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
   constructor(
@@ -121,10 +129,11 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private documentosService: DocumentoService,
     private route: ActivatedRoute,
     private documentosService130118: DocumentosService,
-    private documentosService231001: DocumentosT231001Service,
+    private documentosService2310: DocumentosT2310Service,
     private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
-    private aviso230301: DocumentosT230301Service
+    private aviso230301: DocumentosT230301Service,
+    private documentosResolucinService: DocumentosTramiteResolucionService
   ) {}
 
   /**
@@ -145,7 +154,56 @@ export class AcuseComponent implements OnChanges, OnDestroy {
 
     if (changes['idSolicitud']?.currentValue) {
       this.generarYMostrarDocumentos();
+      if (this.tituloResoluciones != "") {
+        this.datosTablaResoluciones = [];
+        this.guardarResolucion();
+      }
     }
+  }
+
+
+  guardarResolucion(): void {
+    console.log('Folio', this.folio);
+    console.log('idSolicitud', this.idSolicitud);
+    console.log('procedure', this.procedure);
+    console.log('txtAlerta', this.txtAlerta);
+    this.documentosResolucinService.getDetalleTramiteByFolio(this.procedure.toString(),this.folio).subscribe({
+      next: (data) => {
+        if (data?.codigo === '00') {
+          console.log('Guardado de resolución exitoso', data.datos?.resolucion?.id_resolucion);
+          this.documentosResolucinService.guardarResolucion(this.procedure.toString(), data.datos?.resolucion?.id_resolucion || 0).subscribe({
+            next: (res) => {
+              if (res?.codigo === '00') {
+                this.idLlaveArchivo = res.datos?.llave_archivo || '';
+                this.acuseDetalleService.getDescargarAcuse(this.procedure, this.idLlaveArchivo).subscribe({  
+                  next: (data) => {
+                    if (data?.codigo === '00' && data?.datos?.contenido) {
+                      this.datosTablaResoluciones = [
+                        {
+                          id: 1,
+                          documento: data.datos.nombre_archivo,
+                          urlPdf: AcuseComponent.crearUrlPdf(data.datos.contenido),
+                          idDocumento: '1',
+                        },
+                      ];
+                    }
+                  },        
+                  error: (err) => {
+ 
+                  }
+                });
+              } 
+            },
+            error: (err) => {
+ 
+            }
+          });
+        }
+      },
+      error: (err) => {
+
+      }
+    });
   }
 
   /**
@@ -159,8 +217,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
-        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204, 110205,
-        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102, 140101,140102
+        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204,
+        110205, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217,
+        110218, 110219, 110221, 110222, 110223, 130102, 140101, 140102,
       ].includes(this.procedure)
     ) {
       this.documentosService130118
@@ -194,8 +253,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           },
           error: (err) => console.error('Error:', err),
         });
-    } else if (this.url === 'aviso-de-materiales') {
-      this.descargarDocumentoTramite231001();
+    } else if ([231001, 231002, 231003].includes(this.procedure)) {
+      this.descargarDocumentoTramite2310();
     } else if (this.url === 'desistimiento') {
       this.descargarDocumentoTramite230301();
     } else {
@@ -343,8 +402,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     this.base64Archivos(url, 'descargar');
   }
 
-
-
   /**
    * Método que maneja la navegación al salir del componente.
    *
@@ -360,19 +417,19 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   }
 
   /**
-   * Descarga los documentos asociados al trámite 231001 (Aviso de Materiales).
+   * Descarga los documentos asociados a los trámites 2310XX (Aviso de Materiales,Aviso de reciclaje y aviso de retorno).
    */
-  private descargarDocumentoTramite231001(): void {
+  private descargarDocumentoTramite2310(): void {
     const ID = this.idSolicitud.toString();
 
-  /**
-   * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
-   */
-    const ACUSE_SOLICITUD = this.documentosService231001
+    /**
+     * Observable que guarda el acuse de la solicitud y luego obtiene su vista previa.
+     */
+    const ACUSE_SOLICITUD = this.documentosService2310
       .guardarDocumento(ID, this.procedure, true)
       .pipe(
         switchMap(() =>
-          this.documentosService231001.vistaPreviaDocumento(
+          this.documentosService2310.vistaPreviaDocumento(
             ID,
             this.procedure,
             true
@@ -380,14 +437,14 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         )
       );
 
-  /**
-   * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
-   */
-    const CONSTANCIA_SOLICITUD = this.documentosService231001
+    /**
+     * Observable que guarda la constancia de la solicitud y luego obtiene su vista previa.
+     */
+    const CONSTANCIA_SOLICITUD = this.documentosService2310
       .guardarDocumento(ID, this.procedure, false)
       .pipe(
         switchMap(() =>
-          this.documentosService231001.vistaPreviaDocumento(
+          this.documentosService2310.vistaPreviaDocumento(
             ID,
             this.procedure,
             false
@@ -395,9 +452,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         )
       );
 
-  /**
-   * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
-   */
+    /**
+     * Se utiliza forkJoin para ejecutar ambos observables en paralelo y esperar a que ambos completen.
+     */
     forkJoin([ACUSE_SOLICITUD, CONSTANCIA_SOLICITUD])
       .pipe(
         takeUntil(this.destroyed$),

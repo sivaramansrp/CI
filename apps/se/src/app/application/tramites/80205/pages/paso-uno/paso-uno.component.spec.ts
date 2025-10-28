@@ -12,7 +12,10 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 
 @Injectable()
-class MockAmpliacionServiciosService {}
+class MockAmpliacionServiciosService {
+  getServiciosData = jest.fn().mockReturnValue(observableOf({}));
+  actualizarEstadoFormulario = jest.fn();
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -48,7 +51,7 @@ describe('PasoUnoComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        ConsultaioQuery,
+        { provide: ConsultaioQuery, useValue: { selectConsultaioState$: observableOf({ update: false }) } },
         { provide: AmpliacionServiciosService, useClass: MockAmpliacionServiciosService }
       ]
     }).overrideComponent(PasoUnoComponent, {
@@ -63,35 +66,115 @@ describe('PasoUnoComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
+    expect(component.indice).toBe(1);
+    expect(component.esDatosRespuesta).toBe(false);
   });
 
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
+  it('debería seleccionar pestaña correctamente', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+    
+    component.seleccionaTab(1);
+    expect(component.indice).toBe(1);
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
-    component.guardarDatosFormulario = jest.fn();
+  it('debería inicializar correctamente en ngOnInit', () => {
+    jest.spyOn(component, 'guardarDatosFormulario');
+    const mockConsultaQuery = TestBed.inject(ConsultaioQuery);
+    mockConsultaQuery.selectConsultaioState$ = observableOf({ update: true });
+    
     component.ngOnInit();
-     });
+    
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
 
-  it('should run #guardarDatosFormulario()', async () => {
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.getServiciosData = jest.fn().mockReturnValue(observableOf({}));
-    component.ampliacionServiciosService.actualizarEstadoFormulario = jest.fn();
+  it('debería establecer esDatosRespuesta cuando update es false', () => {
+    const mockConsultaQuery = TestBed.inject(ConsultaioQuery);
+    mockConsultaQuery.selectConsultaioState$ = observableOf({ update: false });
+    
+    component.ngOnInit();
+    
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('debería guardar datos del formulario correctamente', () => {
+    const mockService = TestBed.inject(AmpliacionServiciosService);
+    const mockResponse = { data: 'test' };
+    mockService.getServiciosData.mockReturnValue(observableOf(mockResponse));
+    
     component.guardarDatosFormulario();
-   });
+    
+    expect(mockService.getServiciosData).toHaveBeenCalled();
+    expect(mockService.actualizarEstadoFormulario).toHaveBeenCalledWith(mockResponse);
+    expect(component.esDatosRespuesta).toBe(true);
+  });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('debería validar formularios cuando índice es menor a 2', () => {
+    component.indice = 1;
+    
+    const result = component.validarTodosLosFormularios();
+    
+    expect(result).toBe(true);
+  });
+
+  it('debería validar formularios cuando índice es >= 2 pero no hay solicitudComponent', () => {
+    component.indice = 2;
+    component.solicitudComponent = undefined;
+    
+    const result = component.validarTodosLosFormularios();
+    
+    expect(result).toBe(true);
+  });
+
+  it('debería validar formularios cuando índice es >= 2 y solicitudComponent tiene datos IMMEX', () => {
+    component.indice = 2;
+    component.solicitudComponent = {
+      datosImmex: [{ id: 1, data: 'test' }]
+    } as any;
+    
+    const result = component.validarTodosLosFormularios();
+    
+    expect(result).toBe(true);
+  });
+
+  it('debería fallar validación cuando índice es >= 2 y solicitudComponent no tiene datos IMMEX', () => {
+    component.indice = 3;
+    component.solicitudComponent = {
+      datosImmex: []
+    } as any;
+    
+    const result = component.validarTodosLosFormularios();
+    
+    expect(result).toBe(false);
+  });
+
+  it('debería validar formularios con múltiples escenarios de índice', () => {
+    // Escenario 1: índice = 2, sin datos
+    component.indice = 2;
+    component.solicitudComponent = { datosImmex: [] } as any;
+    expect(component.validarTodosLosFormularios()).toBe(false);
+    
+    // Escenario 2: índice = 5, con datos
+    component.indice = 5;
+    component.solicitudComponent = { datosImmex: [{ id: 1 }, { id: 2 }] } as any;
+    expect(component.validarTodosLosFormularios()).toBe(true);
+    
+    // Escenario 3: índice = 1, sin importar datos
+    component.indice = 1;
+    component.solicitudComponent = { datosImmex: [] } as any;
+    expect(component.validarTodosLosFormularios()).toBe(true);
+  });
+
+  it('debería limpiar recursos en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    
     component.ngOnDestroy();
-    });
+    
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 
 });
