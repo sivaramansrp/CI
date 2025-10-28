@@ -116,7 +116,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="estadoDatos" formControlName="estado" [label]="'Estado'" [required]="true"
-            name="estado" [placeholder]="'Selecciona un valor'" (selectionChange)="cambioDeEstado($event)"
+            name="estado"   [placeholder]="'Selecciona una opción'" (selectionChange)="cambioDeEstado($event)"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -348,7 +348,7 @@
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
-            [placeholder]="'Selecciona un valor'" [isBold]="true" [tooltipQuestionCircle]="true"
+              [placeholder]="'Selecciona una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircleText]="
               'Régimen al que se destinará la mercancía'
             " [required]="true" name="regimen" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
@@ -357,7 +357,7 @@
       <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
           <app-catalogo-select [catalogo]="adunasDeEntradasDatos" [isBold]="true" formControlName="adunasDeEntradas"
-            [label]="'Aduanas de entradas'" [placeholder]="'selecciona un valor'" [required]="true"
+            [label]="'Aduanas de entradas'"   [placeholder]="'Selecciona una opción'" [required]="true"
             name="adunasDeEntradas" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
