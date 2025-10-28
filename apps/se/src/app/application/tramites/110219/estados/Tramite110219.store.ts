@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { ColumnasTabla } from '../models/certificado.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -71,9 +72,9 @@ export interface ProductorAsociado {
  * Estado inicial para la interfaz del trámite 110219.
  */
 export interface Solicitud110219State {
-    /** ID de la solicitud */
+  /** ID de la solicitud */
   idSolicitud: number | null;
-  
+
   /** Lista de catálogos disponibles. */
   catalogos: Catalogo[];
 
@@ -140,6 +141,8 @@ export interface Solicitud110219State {
   fax: number;
   /** Correo electrónico de contacto del solicitante. */
   correoElectronico: string;
+
+  columnasTabla: ColumnasTabla[];
 }
 
 /**
@@ -176,6 +179,7 @@ export function createInitialState(): Solicitud110219State {
     ciudad: 0,
     fax: 0,
     correoElectronico: '',
+    columnasTabla: [],
   };
 }
 
