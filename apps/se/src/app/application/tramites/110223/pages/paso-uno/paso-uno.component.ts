@@ -201,6 +201,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       isValid = false;
     }
+
     if(this.destinatario){
        if (!this.destinatario.validateAllForms()) {
         isValid = false;
@@ -208,6 +209,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       isValid = false;
     }
+    
     return isValid;
   }
 

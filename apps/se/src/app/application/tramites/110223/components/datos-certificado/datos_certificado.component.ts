@@ -120,6 +120,14 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     esFormularioSoloLectura: boolean = false;
   
     /**
+     * @property {number} idProcedimiento
+     * @description
+     * Identificador único del procedimiento 110223.
+     * Se utiliza para configurar validaciones y comportamientos específicos del trámite.
+     */
+    public readonly idProcedimiento: number = 110223;
+
+    /**
      * @descripcion
      * Constructor del componente DatosCertificado.
      * 
@@ -137,26 +145,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @param {Tramite110221Query} query - Consultas al estado del trámite
      * @param {ConsultaioQuery} consultaQuery - Consultas generales del sistema
      * 
-     * @example
-     * ```typescript
-     * constructor(
-     *   private readonly fb: FormBuilder,
-     *   private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
-     *   private store: Tramite110221Store,
-     *   private query: Tramite110221Query,
-     *   private consultaQuery: ConsultaioQuery
-     * ) {
-     *   // Suscripción al estado del formulario
-     *   this.query.formDatosCertificado$.pipe(
-     *     takeUntil(this.destroyNotifier$)
-     *   ).subscribe(estado => {
-     *     this.formDatosCertificadoValues = estado;
-     *   });
-     * }
-     * ```
      */
     constructor(
-      private readonly fb: FormBuilder,
       private ValidarInicialmenteCertificadoService: CertificadosOrigenService,
       private store: Tramite110223Store,
       private query: Tramite110223Query,
