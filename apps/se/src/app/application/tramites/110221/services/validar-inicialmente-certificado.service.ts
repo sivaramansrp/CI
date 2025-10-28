@@ -13,6 +13,10 @@ import { Mercancias } from '../models/plantas-consulta.model';
 import { PROC_110221 } from '../servers/api-route';
 import { Tramite110221Query } from '../estados/tramite110221.query';
 
+import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/cadena-original-request.model';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+
 /**
  * @descripcion
  * Servicio encargado de validar y obtener datos iniciales para el trámite de certificado.
@@ -32,7 +36,8 @@ export class ValidarInicialmenteCertificadoService {
    * @param http Cliente HTTP para realizar solicitudes.
    * @param tramite110221Store Store para manipular el estado del trámite.
    */
-  constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store, public httpService: HttpCoreService,    public query: Tramite110221Query
+  constructor(private readonly http: HttpClient, public tramite110221Store: Tramite110221Store, public httpService: HttpCoreService,
+        public query: Tramite110221Query
 ) { }
 
     private get apiRoutes(): typeof PROC_110221 {
@@ -95,7 +100,7 @@ export class ValidarInicialmenteCertificadoService {
    */
   obtenerMercancia(): Observable<Mercancias[]> {
     return this.http
-      .get<{ data: Mercancias[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
+      .get<{ data: Mercancias[] }>('assets/json/110221/mercancia.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
@@ -410,4 +415,25 @@ obtenerProductorPorExportador(): Observable<ProductorExportador> {
   getAllState(): Observable<Tramite110221State> {
     return this.query.selectTramite$;
   }
+  obtenerCadenaOriginal<T>(
+        idSolicitud: string,
+        body: CadenaOriginalRequest
+      ): Observable<BaseResponse<T>> {
+        return this.http
+          .post<BaseResponse<T>>(
+            PROC_110221.API_POST_CADENA_ORIGINAL(idSolicitud),
+            body
+          )
+          .pipe(
+            map((response) => response),
+            catchError(() => {
+              const ERROR = new Error(
+                `Error al obtener la cadena original en ${PROC_110221.API_POST_CADENA_ORIGINAL(
+                  idSolicitud
+                )}`
+              );
+              return throwError(() => ERROR);
+            })
+          );
+      }
 }

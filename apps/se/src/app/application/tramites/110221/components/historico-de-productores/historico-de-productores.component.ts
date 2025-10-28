@@ -177,20 +177,16 @@ this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
     });
   }
 conseguirDisponiblesDatos(): void {
-    console.log('conseguirDisponiblesDatos method called');
 
     const SELECTED_RFC = this.agregarDatosProductor['numeroRegistroFiscal'];
-    console.log('Selected RFC:', SELECTED_RFC);
     const PAYLOAD = {
       rfc_solicitante: SELECTED_RFC,
     };
-    console.log('Payload:', PAYLOAD);
     this.certificadoDeService
       .obtenerProductoruNevo(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: any) => {
-          console.log('Response from agregar productor nuevo:', response);
           const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
             (item: any) => ({
               id: item.id,
@@ -216,19 +212,12 @@ conseguirDisponiblesDatos(): void {
     const PAYLOAD = {
       rfc_solicitante: event.numeroRegistroFiscal,
     };
-    console.log('PAYLOAD', PAYLOAD);
 
-    let DATOS: HistoricoColumnas | null = null;
-    console.log(
-      'Event received in emitAgregarExportador:',
-      this.solicitudState.agregarProductoresExportador
-    );
     this.certificadoDeService
       .obtenerProductoruNevo(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: any) => {
-          console.log('Response from agregar productor nuevo:', response);
           const MAPPED_DATA: HistoricoColumnas[] = (response?.datos ?? []).map(
             (item: any) => ({
               id: item.id,
@@ -240,9 +229,7 @@ conseguirDisponiblesDatos(): void {
               fax: item.fax,
             })
           );
-          // this.datosTablaUno$ = of(MAPPED_DATA || []);
-          //     this.store.setmercanciaTabla(this.datosTablaUno$ as unknown as Mercancia[]);
-          console.log('MAPPED_DATA', MAPPED_DATA);
+          
           this.store.setProductores(MAPPED_DATA);
         },
         error: () => {

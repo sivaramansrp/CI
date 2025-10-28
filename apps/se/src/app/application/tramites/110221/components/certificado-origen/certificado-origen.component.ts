@@ -19,17 +19,19 @@ import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { IDPROCEDIMIENTO } from '../../constantes/peru-certificado.model';
+
 import { ConfiguracionColumna, Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
-import { Mercancias } from '../../models/plantas-consulta.model';
 import { Modal } from 'bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
-import { Tramite110221Store } from '../../estados/tramite110221.store';
+
+import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 
 /**
@@ -285,6 +287,8 @@ export class CertificadoOrigenComponent
    */
   idProcedimiento: number = IDPROCEDIMIENTO;
 
+  private certificadoState!: Tramite110221State;
+
   /**
    * Constructor del componente CertificadoOrigenComponent.
    * Inicializa las dependencias necesarias para la gestión de certificados de origen.
@@ -319,11 +323,7 @@ export class CertificadoOrigenComponent
         }
       });
 
-       this.tramiteQuery.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((estado) => {
-        this.pais = estado.paisBloques;
-      });
+   
 
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
@@ -349,33 +349,12 @@ export class CertificadoOrigenComponent
     );
   }
 
-   /**
-     * @descripcion
-     * Obtiene la lista de países disponibles.
-     */
-    paisOpcion(): void {
-      this.certificadoService
-        .obtenerMenuDesplegable('pais.json')
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe({
-          next: (data) => {
-            this.pais = data as Catalogo[];
-            this.store.setBloque(this.pais);
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.pais = [];
-          },
-        });
-    }
-
   /**
    * Método del ciclo de vida ngOnInit. Se utiliza para cargar los datos iniciales
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    // this.cargarEstados();
-    // this.cargarBloque();
+    
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -407,22 +386,7 @@ export class CertificadoOrigenComponent
       );
   }
 
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.certificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
+
 
   /**
    * Establece el estado seleccionado en el store.
@@ -437,7 +401,7 @@ export class CertificadoOrigenComponent
    * @param {Catalogo} estado El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloque(estado);
   }
 
   /**
@@ -451,65 +415,75 @@ export class CertificadoOrigenComponent
   /**
    * Busca la mercancia y actualiza los datos en el store.
    */
-buscarrMercancia(): void {  
-  const PAYLOAD = {
-    rfcExportador: 'AAL0409235E6', // Replace with the appropriate field for the new component
-    tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] }, // Adjust field names as needed
-    pais: { cvePais: this.formCertificado['bloque'] || '' }, // Adjust field names as needed
-  };
+  buscarrMercancia(): void {
+    // Get selected catalog values from the store state
+    const SELECTED_ESTADO = this.certificadoState?.estado;
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques; 
 
-  console.log('Payload:', PAYLOAD);
-
-  this.certificadoService
-    .buscarMercanciasCert(PAYLOAD)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-                console.log('Raw API Response:', response); // Log the raw API response
-
-        // interface TratadoAplicable {
-        //   nombreTratado?: string;
-        // }
-
-        interface ResponseItem {
-          idMercancia?: number | null;
-          fraccionArancelaria?: string;
-          numeroRegistro?: string;
-          fechaExpedicion?: string;
-          fechaVencimiento?: string;
-          nombreTecnico?: string;
-          
-          nombreComercial?: string;
-      
-        }
-
-        interface ResponseType {
-          datos?: ResponseItem[];
-        }
-
-       const MAPPED_DATA: Mercancia[] = ((response as ResponseType)?.datos ?? []).map((item: ResponseItem): Mercancia => ({
-         id: item.idMercancia ?? undefined,
-         fraccionArancelaria: item.fraccionArancelaria || '',
-         numeroDeRegistrodeProductos: item.numeroRegistro || '',
-         nombreTecnico: item.nombreTecnico || '',
-         nombreComercial: item.nombreComercial || '',
-         fechaExpedicion: item.fechaExpedicion || '',
-         fechaVencimiento: item.fechaVencimiento || '',
-         fraccionNaladi: '',
-         fraccionNaladiSa93: '',
-         fraccionNaladiSa96: '',
-         fraccionNaladiSa02: ''
-       }));
-                  console.log('Mapped Data:', MAPPED_DATA); // Log the mapped data
-        this.store.setbuscarMercancia(MAPPED_DATA);
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {
+        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
       },
-      error: () => {
-
-        this.toastr.error('Error al buscar Mercancia');
+      pais: {
+        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
       },
-    });
-}
+    };
 
+    this.certificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              
+              id: item.idMercancia,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              nombreIngles: item.nombreIngles || '',
+              fraccionNaladi: item.fraccionNaladi || '',
+              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
+              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
+              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.valorDeContenidoRegional || '',
+              normaOrigen: item.normaOrigen || '',
+              otrasInstancias: item.otrasInstancias || '',
+              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.datosTabla$ = of(MAPPED_DATA || []);
+
+          this.store.setbuscarMercancia(
+            MAPPED_DATA
+          );
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+
+    this.mercanciasDisponibles = true;
+  }
   /**
    * @method abrirModalCargaPorArchivo
    * @description
@@ -610,17 +584,42 @@ buscarrMercancia(): void {
    *
    * @returns {boolean} Indica si el formulario es válido.
    */
- validarFormulario(): boolean {
-    let ESVALIDO = true;
-    if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validatorCheck()) {
-        ESVALIDO = false;
-      }
-    } else {
+validarFormulario(): boolean {
+  let ESVALIDO = true;
+
+  if (this.certificadoDeOrigen) {
+    if (!this.certificadoDeOrigen.validatorCheck()) {
       ESVALIDO = false;
-    }
-    return ESVALIDO;
+
+      this.logFieldErrors(this.certificadoDeOrigen.formCertificado as FormGroup);
+    } 
+  } else {
+    ESVALIDO = false;
   }
+
+  return ESVALIDO;
+}
+
+/**
+ * Helper function to log field validation errors.
+ * @param form - The form object containing fields to validate.
+ */
+private logFieldErrors(form: FormGroup): void {
+  if (!form || !form.controls) {
+    console.error('Form object or controls are not available.');
+    return;
+  }
+
+
+  Object.keys(form.controls).forEach((field) => {
+    const CONTROL = form.get(field); // Get the control by field name
+    if (CONTROL?.disabled) {
+      console.warn(`Field "${field}" is disabled.`);
+    } else if (CONTROL?.invalid) {
+      console.error(`Field "${field}" is invalid. Errors:`, CONTROL.errors);
+    } 
+  });
+}
 
   /**
    * @inheritdoc

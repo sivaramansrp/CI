@@ -209,34 +209,41 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       // Agrega otros controles aquí si es necesario
     });
   }
- public validateAllForms(): boolean {
-    let valid = true;
-    this.destinatarioComponent?.markAllFieldsTouched();
-    this.datosDelDestinatarioComponent?.markAllFieldsTouched();
-    this.representanteLegalExportadorComponent?.markAllFieldsTouched();
-    if (
-      this.destinatarioComponent &&
-      this.destinatarioComponent.formDestinatario &&
-      !this.destinatarioComponent.formDestinatario.valid
-    ) {
+public validateAllForms(): boolean {
+  let valid = true;
+
+  // Mark all fields as touched for validation
+  this.destinatarioComponent?.markAllFieldsTouched();
+  this.datosDelDestinatarioComponent?.markAllFieldsTouched();
+  this.representanteLegalExportadorComponent?.markAllFieldsTouched();
+
+  // Validate DestinatarioComponent
+  if (this.destinatarioComponent?.formDestinatario) {
+    if (!this.destinatarioComponent.formDestinatario.valid) {
       valid = false;
-    }
-    if (
-      this.datosDelDestinatarioComponent &&
-      this.datosDelDestinatarioComponent.formDatosDelDestinatario &&
-      !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid
-    ) {
-      valid = false;
-    }
-    if (
-      this.representanteLegalExportadorComponent &&
-      this.representanteLegalExportadorComponent.form &&
-      !this.representanteLegalExportadorComponent.form.valid
-    ) {
-      valid = false;
-    }
-    return valid;
+    } 
+  } else {
+    valid = false;
   }
+
+  if (this.datosDelDestinatarioComponent?.formDatosDelDestinatario) {
+    if (!this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
+      valid = false;
+    } 
+  } else {
+    valid = false;
+  }
+
+  if (this.representanteLegalExportadorComponent?.form) {
+    if (!this.representanteLegalExportadorComponent.form.valid) {
+      valid = false;
+    }
+  } else {
+    valid = false;
+  }
+
+  return valid;
+}
 
 
 
@@ -260,27 +267,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
-// validarFormulario(): boolean {
-//     let isValid = true;
-//     if (this.datosDelDestinatarioComponent) {
-//       if (!this.datosDelDestinatarioComponent.validarFormularios()) {
-//         isValid = false;
-//       }
-//     }
-//     if (this.destinatarioComponent) {
-//       if (!this.destinatarioComponent.validarFormularios()) {
-//         isValid = false;
-//       }
-//     }
-//     if (this.representanteLegalExportadorComponent) {
-//       if (!this.representanteLegalExportadorComponent.validarFormularios()) {
-//         isValid = false;
-//       }
-//     } else {
-//       isValid = false;
-//     }
-//     return isValid;
-//   }
+
   /**
    * @method setValoresStoreExportador
    * @descripcion

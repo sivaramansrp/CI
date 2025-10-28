@@ -314,7 +314,6 @@ representacionFederalOpcion(): void {
         if ((response.codigo === '200' || response.codigo === '00') && response.datos) { 
           this.representacionFederal = response.datos;
         } else {
-          console.error('Error: Código de respuesta no esperado', response);
           this.representacionFederal = [];
         }
       },
@@ -400,8 +399,31 @@ representacionFederalOpcion(): void {
    * }
    * ```
    */
-  validarFormulario(): boolean {
-      return this.datosCertificadoDeRef.validarFormularios();
-    }
+  // validarFormulario(): boolean {
+  //     return this.datosCertificadoDeRef.validarFormularios();
+  //   }
+    validarFormulario(): boolean {
+  let ESVALIDO = true;
+
+  if (this.datosCertificadoDeRef) {
+    if (!this.datosCertificadoDeRef.validarFormularios()) {
+      ESVALIDO = false;
+
+      const FORM = this.datosCertificadoDeRef.formDatosCertificado;
+      if (FORM) {
+        Object.keys(FORM.controls).forEach((field) => {
+          const CONTROL = FORM.get(field);
+          if (CONTROL && CONTROL.invalid) {
+            //
+          }
+        });
+      }
+    } 
+  } else {
+    ESVALIDO = false;
+  }
+
+  return ESVALIDO;
+}
  
 }

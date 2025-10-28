@@ -122,8 +122,6 @@ export class DatosDelDestinatarioComponent
       this.idProcedimiento
     );
     this.inicializarEstadoFormulario();
-        this.applyNumeroRegistroFiscalValidation();
-
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
@@ -163,8 +161,6 @@ export class DatosDelDestinatarioComponent
    * * @returns {void} No retorna ningún valor.
    * */
   applyNumeroRegistroFiscalValidation(): void {
-    console.log('applyNumeroRegistroFiscalValidation called for idProcedimiento:', this.idProcedimiento);
-
     const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
     const NOMBRES = this.formDatosDelDestinatario.get('nombres'); // Add validation for nombres
@@ -173,7 +169,7 @@ export class DatosDelDestinatarioComponent
         return;
     }
 
-    if ([110205, 110221].includes(this.idProcedimiento)) {
+    if (this.idProcedimiento === 110205) {
         NUMERO_REGISTRO_FISCAL.setValidators([
             Validators.required,
             Validators.maxLength(30),

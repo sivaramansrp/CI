@@ -3,7 +3,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { Mercancias } from '../models/plantas-consulta.model';
 
 import { GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.model';
 
@@ -46,7 +45,8 @@ export interface Tramite110221State {
    * @description
    * Lista de bloques de países que se pueden seleccionar en el formulario, representados como objetos `Catalogo`.
    */
-  paisBloques: Catalogo[];
+  paisBloques: Catalogo;
+ 
   /**
    * @property {Mercancia[]} mercanciaTabla - Tabla de mercancías agregadas.
    * @description
@@ -281,7 +281,7 @@ export function createInitialState(): Tramite110221State {
       id: -1,
       descripcion: '',
     },
-    paisBloques: [],
+     paisBloques: { id: -1, descripcion: '' },
  mercanciaProductores: [],
     mercanciaTabla: [],
     formDatosCertificado: {
@@ -551,7 +551,7 @@ export class Tramite110221Store extends Store<Tramite110221State> {
    * Actualiza los bloques de países en el almacén.
    * @param paisBloques - Array de objetos `Catalogo` que representa los bloques de países.
    */
-  setBloque(paisBloques: Catalogo[]): void {
+ setBloque(paisBloques: Catalogo): void {
     this.update((state) => ({
       ...state,
       paisBloques,
@@ -925,6 +925,7 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     }));
   }
 
+
   setformdestinatario(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDestinatario: {
@@ -933,6 +934,7 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       },
     }));
   }
+
   setformDatosDelDestinatario(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
@@ -941,6 +943,7 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       },
     }));
   }
+
   setformExportor(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formExportor: {
@@ -956,14 +959,25 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   setProductores(productores: HistoricoColumnas[]): void {
     this.update((state) => ({ ...state, productores }));
   }
- setAgregarProductoresExportador(productor: HistoricoColumnas): void {
-      this.update((state) => ({
-        ...state,
-        agregarProductoresExportador: [
-          ...state.agregarProductoresExportador,
-          {...productor},
-        ],
-      }));
-    }
-  
+
+/**
+ * @descripcion
+ * Agrega un productor al arreglo de productores exportadores en el estado.
+ * 
+ * @param productor - Objeto de tipo `HistoricoColumnas` que representa el productor a agregar.
+ * 
+ * @detalle
+ * - Crea una nueva instancia del arreglo `agregarProductoresExportador` con el productor proporcionado.
+ * - Mantiene los productores existentes en el arreglo y agrega el nuevo productor al final.
+ * - Actualiza el estado global del store con el nuevo arreglo de productores exportadores.
+ */
+setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+  this.update((state) => ({
+    ...state,
+    agregarProductoresExportador: [
+      ...state.agregarProductoresExportador,
+      { ...productor },
+    ],
+  }));
+}
 }
