@@ -11,7 +11,7 @@ import { DatosDelDestinatarioComponent } from '../../../../shared/components/dat
 import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
-import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
+import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/detalles-del-transporte.component';
 
 /**
  * Componente para gestionar los datos del destinatario.

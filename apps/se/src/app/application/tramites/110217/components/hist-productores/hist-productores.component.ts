@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ENVIRONMENT } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
 import { Mercancia } from '../../../../shared/models/modificacion.enum.js';
@@ -76,7 +76,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
   public solicitudState!: Tramite110217State;
 
   /** RFC del usuario actualmente autenticado utilizado para consultas y servicios. */
-  private loginRFC = 'AAL0409235E6';
+  private loginRFC = ENVIRONMENT.RFC;
 
   /** Observable que expone la lista de mercancia al store. */
   public mercanciaProductores!: Mercancia[]; 
