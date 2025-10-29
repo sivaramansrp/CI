@@ -420,6 +420,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
+  tipoFOFA='FOFA.OTR';
+
   /**
    * @property {Subscription} subscription
    * @description Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
