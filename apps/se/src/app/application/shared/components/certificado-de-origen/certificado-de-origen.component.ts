@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, PROCEDIMIENTO_EXCLUDED, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -569,6 +569,12 @@ export class CertificadoDeOrigenComponent
    * lo que activa validaciones adicionales en ciertos campos del formulario.
    */
   requerida: boolean = false;
+  /**   * @property {number[]} procedimientoExcluded
+   * @description
+   * Arreglo de IDs de procedimientos que están excluidos de ciertas validaciones o funcionalidades.
+   * Utilizado para condicionar el comportamiento del formulario según el tipo de trámite.
+   */
+  procedimientoExcluded = PROCEDIMIENTO_EXCLUDED;
 
   /**
    * @property {boolean} isInvalidaMercanciaSeleccion

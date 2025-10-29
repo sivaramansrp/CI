@@ -887,10 +887,13 @@
     </div>
     } @if (mercanciasDisponibles) {
     <div class="row">
+
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="cargaMercanciaConfiguracionTabla"
         [datos]="guardarClicado || []"  [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
         [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
-      <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0">Por favor, necesitas
+      <span class="mensaje-error" 
+    *ngIf="tableErrorMensajeError && guardarClicado.length === 0 && idProcedimiento !== procedimientoExcluded[0]">
+      Por favor, necesitas
         agregar un valor en la tabla dinámica</span>
     </div>
     } @else {

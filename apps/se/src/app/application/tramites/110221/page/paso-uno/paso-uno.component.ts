@@ -3,7 +3,8 @@ import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/d
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+
+import { DestinatarioDeCertificadoComponent } from '../../components/destinatario/destinatario-de-certificado.component';
 import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
 import { Tramite110221Store } from '../../estados/tramite110221.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
@@ -46,7 +47,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property destinatario - Referencia al componente `DestinatarioComponent` para manejar la lógica y datos del destinatario.
    */
-  @ViewChild('destinatarioRef') destinatario!: DestinatarioComponent;
+  @ViewChild('destinatarioRef') destinatario!: DestinatarioDeCertificadoComponent;
 
   /**
    * @property datosCertificado - Referencia al componente `DatosCertificadoComponent` para manejar la lógica y datos del certificado.
@@ -88,6 +89,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
   }
+  /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.destinatario?.validateAllForms() ?? true;
+  }
+
   /**
 * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
 * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -145,7 +153,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     if (this.destinatario) {
-      if (!this.destinatario.validatorCheck()) {
+      if (!this.destinatario.validateAllForms()) {
         isValid = false;
       }
     } else {
@@ -159,6 +167,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       isValid = false;
     }
+    
     return isValid;
   }
 }
