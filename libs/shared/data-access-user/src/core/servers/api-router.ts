@@ -925,7 +925,7 @@ export const CATALOGO_UNIDAD_DE_MASA_BRUTA = (TRAMITE: string): string => `sat-t
   * API para obtener el catálogo de tratados y acuerdos por país
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
-export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdo`;
+export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdos`;
 
 /*
   * API para obtener el catálogo de tratados y acuerdos por país
@@ -1041,9 +1041,3 @@ export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: str
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
  */
 export const CATALOGO_BANCOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/bancos`;
-
-/*
-  * API para obtener el catálogo de tratados y acuerdos por país
-  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdos
-  */
-export const CATALOGO_TRATADO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdos`;
