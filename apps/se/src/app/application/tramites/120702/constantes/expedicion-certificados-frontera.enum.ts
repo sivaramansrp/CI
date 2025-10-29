@@ -246,3 +246,23 @@ export const MONTO_DATOS: Monto[] = [
   {
     Montoaexpedir: '10',
   },]
+
+  /**
+ * @description
+ * Mensaje de alerta en formato HTML que se muestra cuando faltan campos por capturar en un formulario.
+ * Utiliza clases de Bootstrap para centrar y alinear el contenido visualmente.
+ *
+ * @example
+ * // Uso típico:
+ * mostrarAlerta(ERROR_FORMA_ALERT);
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <b>¡Error de registro!</b> Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`
