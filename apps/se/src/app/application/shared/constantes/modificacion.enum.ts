@@ -383,7 +383,8 @@ export const BOTON_DE_OPCION_VER = [110221];
 /**
  * Identificadores de procedimientos que requieren validaciones específicas.
  */
-export const PROCEDIMIENTO_EXCLUDED = [110221];
+export const PROCEDIMIENTO_EXCLUDED = [110221, 110223];
+
 
 /**
  * @constant CONFIGURACION_EXPORTACION

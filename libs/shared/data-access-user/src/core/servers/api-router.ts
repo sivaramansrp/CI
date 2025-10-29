@@ -1053,4 +1053,3 @@ export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: str
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
  */
 export const CATALOGO_BANCOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/bancos`;
-
