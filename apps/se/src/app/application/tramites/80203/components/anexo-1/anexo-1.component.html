@@ -1,7 +1,7 @@
 <div class="container">
   <!-- Pasos para la sección de exportación -->
   <form [formGroup]="immexRegistroform">
-    <ng-titulo titulo="Permiso Immex"></ng-titulo>
+    <ng-titulo titulo="Permiso IMMEX"></ng-titulo>
     <div class="row">
       <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
         <label for="permiso-immex">Permiso IMMEX:</label>
@@ -30,14 +30,15 @@
         <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
           <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
           <input type="text" class="form-control" formControlName="fraccionArancelariaExportacion"
-            id="fraccion-arancelaria-exportacion" placeholder="" />
+            id="fraccion-arancelaria-exportacion" placeholder="" maxlength="10" 
+            libSoloNumeros/>
         </div>
       </div>
       <div class="col-12 mt-5">
         <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
           <label for="description-del-producto">Descripción del producto:</label>
           <textarea class="form-control" id="description-del-producto" formControlName="FraccionDescExportacion"
-            rows="5" placeholder=""></textarea>
+            rows="5" placeholder="" maxlength="1000"></textarea>
         </div>
       </div>
       <div class="col-12 container text-end mt-5">
@@ -57,10 +58,6 @@
     </div>
   </form>
 
-  @if(espectaculoAlertaAgregar) {
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="showTableExportacion()"></lib-notificaciones>
-  }
   @if(eliminarPlantasAlerta) {
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
     (confirmacionModal)="eliminarPermisoImmex()"></lib-notificaciones>
@@ -69,7 +66,12 @@
   <!-- Add notifications for modal forms -->
   @if(espectaculoAlerta) {
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="espectaculoAlerta = false"></lib-notificaciones>
+    (confirmacionModal)="cerrarModal()"></lib-notificaciones>
+  }
+
+  @if(eliminarPermisoImmexConfirmacion) {
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPermisoImmexDatos($event)"></lib-notificaciones>
   }
 </div>
 
@@ -125,9 +127,9 @@
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-primary" (click)="showTableNicoImport()">Agregar Nico</button>
             </div>
-            <div class="col-12 mt-5" *ngIf="(nicoTablaDatosImportacion?.length ?? 0) > 0">
+            <div class="col-12 mt-5">
               <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-                <h6>Nico</h6>
+                <h6>Nicos</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                   [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatosImportacion" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
                 <button class="btn btn-danger me-2 mt-3" (click)="eliminarNico('Importacion')">Eliminar Nico</button>
@@ -136,13 +138,17 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelar('Importacion')">
-            Regresar
-          </button>
           <button type="button" class="btn btn-primary" (click)="guardarMercanciaImportacion()">
             Guardar
           </button>
+          <button type="button" class="btn btn-danger" (click)="modalCancelar('Importacion')">
+            Cancelar
+          </button>
         </footer>
+        @if(eliminarNICOAlerta){
+          <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+          (confirmacionModal)="eliminarNICOAlerta = false"></lib-notificaciones>
+        }
       </div>
     </div>
   </div>
@@ -197,11 +203,11 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelar('Exportacion')">
-            Regresar
-          </button>
           <button type="button" class="btn btn-primary" (click)="guardarMercanciaExportacion()">
             Guardar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="modalCancelar('Exportacion')">
+            Cancelar
           </button>
         </footer>
       </div>

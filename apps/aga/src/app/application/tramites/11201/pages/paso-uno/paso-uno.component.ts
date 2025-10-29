@@ -102,13 +102,38 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
+  /**
+   * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * Inicializa las dependencias necesarias para el funcionamiento del componente:
+   * - DatosTramiteService para obtener datos del trámite
+   * - ConsultaioQuery para consultar el estado de la consulta
+   * - Tramite11201Store para gestionar el estado del trámite
+   * 
+   * @param {DatosTramiteService} datosTramiteService - Servicio para obtener datos del trámite
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de consulta
+   * @param {Tramite11201Store} tramite11201Store - Store para gestionar el estado del trámite
+   */
   constructor(private datosTramiteService: DatosTramiteService,
     private consultaioQuery: ConsultaioQuery,
     public tramite11201Store: Tramite11201Store,
   ) {
 
   }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * 
+   * Suscribe a los cambios del estado de consulta y, si hay una actualización pendiente,
+   * obtiene los datos de consulta del servicio para actualizar el estado del componente.
+   * 
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -163,12 +188,20 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
     this.abrirModal();
   }
 
+  /**
+   * Abre el modal de confirmación para cancelar la operación.
+   * 
+   * Este método configura una notificación de tipo alerta que pregunta al usuario
+   * si está seguro de cancelar la operación, advirtiendo que se borrarán los datos capturados.
+   * 
+   * @returns {void}
+   */
   abrirModal(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
       modo: 'action',
-      titulo: '',
+      titulo: 'Cancelar',
       mensaje: '¿Está seguro que desea cancelar?. Se borrarán los datos capturados.',
       cerrar: false,
       tiempoDeEspera: 0,
@@ -179,7 +212,16 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
 
   /**
    * Maneja la confirmación del modal de cancelación.
-   * @param confirmar - Indica si el usuario confirmó la cancelación.
+   * 
+   * Si el usuario confirma la cancelación:
+   * - Restablece los formularios del solicitante
+   * - Limpia el store del trámite
+   * - Reinicia el formulario del contenedor
+   * - Navega al paso 2
+   * - Emite el evento de cancelación
+   * 
+   * @param {boolean} confirmar - Indica si el usuario confirmó la cancelación.
+   * @returns {void}
    */
   confirmarCancelacion(confirmar: boolean): void {
     if (confirmar) {

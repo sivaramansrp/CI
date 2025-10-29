@@ -1,8 +1,9 @@
 // Componente para la vista de los anexos dos y tres en el trámite 80103
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, doDeepCopy, esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
@@ -35,11 +36,18 @@ export class EmpresasControladasComponent implements OnDestroy, OnInit {
 
   public estadosCatalogo$!: Observable<Catalogo[]>;
 
+  /**
+   * Arreglo que contiene las entidades fiscales disponibles para selección.
+   * Cada elemento representa una instancia de `DisponsibleFiscal`.
+   */
+  disponiblesDatos: DisponsibleFiscal[] = []; 
+
   /*
   * Constructor del componente.
   * @param {NuevoProgramaIndustrialService} nuevoProgramaIndustrialService - Servicio para gestionar la información del nuevo programa industrial.
   */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80104Store: Tramite80101Store, private tramite80104Query: Tramite80101Query){
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80104Store: Tramite80101Store,
+     private tramite80104Query: Tramite80101Query,private _compartidaSvc: ComplimentosService){
 
   }
 
@@ -83,6 +91,36 @@ export class EmpresasControladasComponent implements OnDestroy, OnInit {
       this.tramite80104Store.setEstadosOpciones(event);
     }
   }
+
+/**
+ * Obtiene la lista de empresas controladas disponibles según el RFC y estado proporcionados.
+ *
+ * Envía una solicitud al servicio compartido para recuperar las empresas controladas
+ * disponibles, utilizando el RFC y la entidad federativa recibidos en el evento.
+ * Si la respuesta es válida y contiene un arreglo de datos, transforma los datos
+ * utilizando el método `toDisponsibleFiscal` y los asigna a la propiedad `disponiblesDatos`.
+ *
+ * @param event Objeto que contiene el RFC de la empresa y el estado seleccionado.
+ */
+obtenerControladasDisponibles(event: { rfc: string; estado: string }): void {
+  const PAYLOAD = {
+    "rfcEmpresaSubManufacturera": event.rfc,
+    "entidadFederativa": event.estado,
+    "idPrograma": null
+  };
+
+  this._compartidaSvc
+    .getControladasDisponibles(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((response) => {
+        if(esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if(esValidArray(API_DATOS.datos)) {
+            this.disponiblesDatos = this._compartidaSvc.toDisponsibleFiscal(API_DATOS.datos);
+          } 
+        }
+    });
+}
 
     /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

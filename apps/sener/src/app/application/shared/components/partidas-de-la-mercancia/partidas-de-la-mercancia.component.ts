@@ -174,46 +174,72 @@ ngOnInit(): void {
    * @description Valida y envía el formulario, emitiendo un evento.
    */
   validarYEnviarFormulario(): void {
+    const { cantidadModificar, descripcionModificar, valorPartidaUSDPartidasDeLaMercancia } = this.partidasDelaMercanciaForm.value;
+  
+    const NUMERIC_VALUE = Number(cantidadModificar);
+    const IS_VALID_NUMBER = !isNaN(NUMERIC_VALUE);
+    const USD = valorPartidaUSDPartidasDeLaMercancia;
+    const numericUSD = Number(USD);
+    const IS_VALID_USD = !isNaN(numericUSD);
+    const PARTIDA_STRING_VALUE = String(USD);
+    const IS_VALID_PARTIDA_STRING_FORMAT = /^(\d{1,12})(\.\d{1,2})?$/.test(PARTIDA_STRING_VALUE);
+  
+    // Validate cantidadModificar
+    if (cantidadModificar === '' || cantidadModificar <= 0 || !IS_VALID_NUMBER) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: !IS_VALID_NUMBER
+          ? "La cantidad debe ser un dato numérico"
+          : "La cantidad no debe ser igual a 0",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+  
+    // Validate descripcionModificar
+    if (descripcionModificar === '' || descripcionModificar.length > 1000) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: descripcionModificar.length > 1000
+          ? 'La descripción no puede ser mayor de 1000 caracteres'
+          : "Debe agregar una descripción",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+  
+    // Validate valorPartidaUSDPartidasDeLaMercancia
+    if (USD === '' || USD <= 0 || !IS_VALID_USD || !IS_VALID_PARTIDA_STRING_FORMAT) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: (!IS_VALID_PARTIDA_STRING_FORMAT && IS_VALID_USD && USD > 0)
+          ? "El valor USD no cumple el formato especificado. Formato es máximo 12 dígitos enteros y máximo 2 decimales"
+          : "Debe agregar el valor en dolares de la partida.",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+  
+    // All validations passed
     this.validarYEnviarFormularioEvent.emit();
-    if(this.partidasDelaMercanciaForm.value.cantidadModificar===''||this.partidasDelaMercanciaForm.value.cantidadModificar<=0){
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje:"La cantidad no debe ser igual a 0",
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      }
-    }
-    else if(this.partidasDelaMercanciaForm.value.descripcionModificar===''){
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje:"Debe agregar una descripción",
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      }
-    }
-    else if(this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===''||this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===0){
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje:"Debe agregar el valor en dolares de la partida.",
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      }
-    }
   }
 
   /**
@@ -246,6 +272,15 @@ ngOnInit(): void {
         txtBtnCancelar: '',
       }}
     else {
+       // Patch only the fields that exist in your form
+  const selected = this.datosDelSubfabricanteSeleccionado[0];
+  this.partidasDelaMercanciaForm.patchValue({
+    cantidadModificar: selected.cantidad,
+    descripcionModificar: selected.descripcion,
+    valorPartidaUSDPartidasDeLaMercancia: selected.precioUnitarioUSD,
+    
+  });
+     
     const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
     const MODALINSTANCE = new Modal(MODALELEMENT);
     MODALINSTANCE.show();}
@@ -310,56 +345,87 @@ formularioSolicitudValidacion(): boolean {
  */
 
   onModificarPartida(): void {
-    if(this.partidasDelaMercanciaForm.value.cantidadModificar===''||this.partidasDelaMercanciaForm.value.cantidadModificar<=0){
+    const { cantidadModificar, descripcionModificar, valorPartidaUSDPartidasDeLaMercancia } = this.partidasDelaMercanciaForm.value;
+    const numericValue = Number(cantidadModificar);
+    const IS_VALID_NUMBER = !isNaN(numericValue);
+    const USD = valorPartidaUSDPartidasDeLaMercancia;
+    const numericUSD = Number(USD);
+    const IS_VALID_USD = !isNaN(numericUSD);
+    const PARTIDA_STRING_VALUE = String(USD);
+    const IS_VALID_PARTIDA_STRING_FORMAT = /^(\d{1,12})(\.\d{1,2})?$/.test(PARTIDA_STRING_VALUE);
+    const DESCRIPCION = descripcionModificar;
+  
+    // Validate cantidadModificar
+    if (cantidadModificar === '' || cantidadModificar <= 0 || !IS_VALID_NUMBER) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje:"La cantidad no debe ser igual a 0",
+        mensaje: !IS_VALID_NUMBER
+          ? "La cantidad debe ser un dato numérico"
+          : "La cantidad no debe ser igual a 0",
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-      }
+      };
+      return;
     }
-    else if(this.partidasDelaMercanciaForm.value.descripcionModificar===''){
+  
+    // Validate descripcionModificar
+    if (DESCRIPCION === '' || DESCRIPCION.length > 1000) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje:"Debe agregar una descripción",
+        mensaje: DESCRIPCION.length > 1000
+          ? 'La descripción no puede ser mayor de 1000 caracteres'
+          : "Debe agregar una descripción",
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-      }
+      };
+      return;
     }
-    else if(this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===''||this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===0){
+  
+    // Validate valorPartidaUSDPartidasDeLaMercancia
+    if (
+      USD === '' ||
+      USD <= 0 ||
+      !IS_VALID_USD ||
+      !IS_VALID_PARTIDA_STRING_FORMAT
+    ) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje:"Debe agregar el valor en dolares de la partida.",
+        mensaje:
+          (!IS_VALID_PARTIDA_STRING_FORMAT && IS_VALID_USD && USD > 0)
+            ? "El valor USD no cumple el formato especificado. Formato es máximo 12 dígitos enteros y máximo 2 decimales"
+            : "Debe agregar el valor en dolares de la partida.",
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-      }
+      };
+      return;
     }
-    else if (this.partidasDelaMercanciaForm.valid ) {
+  
+    // If valid, close modal and cleanup
+    if (this.partidasDelaMercanciaForm.valid) {
       const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
       const MODALINSTANCE = Modal.getOrCreateInstance(MODALELEMENT);
       MODALINSTANCE.hide();
-
+  
       setTimeout(() => {
-      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
-      BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = '';
-    }, 500);
+        document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+      }, 500);
     } else {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     }

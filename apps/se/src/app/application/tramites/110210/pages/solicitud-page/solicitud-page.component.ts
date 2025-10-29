@@ -2,7 +2,7 @@ import {
   AVISO,
   DatosPasos,
   ListaPasosWizard,
-  PASOS,
+  PASOS2,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
@@ -11,7 +11,9 @@ import {
   Tramite110210State,
   Tramite110210Store,
 } from '../../estados/store/tramite110210.store';
-import { ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
+import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
+import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
+import { ERROR_CATALOGO_ALERT, ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 
@@ -51,6 +53,16 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /** Identificador numérico para guardar la solicitud.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  guardarIdSolicitud: number = 0;
+
+  /** Mensaje de confirmación al guardar la solicitud.
+   * Se inicializa como una cadena vacía y se actualiza cuando se guarda la solicitud.
+   */
+  guardarMensaje: string = '';
+
   /**
    * Identificador numérico de la solicitud actual.
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
@@ -68,7 +80,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Lista de pasos del asistente.
    * @type {ListaPasosWizard[]}
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS2;
 
   /**
    * Índice del paso actual.
@@ -99,6 +111,13 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   esFormaValido: boolean = false;
 
+  /** @property {boolean} showCatalogoError
+   * @description
+   * Indica si se debe mostrar un error relacionado con el catálogo.
+   * Se utiliza para controlar la visualización de mensajes de error específicos en la interfaz.
+   */
+  public showCatalogoError: boolean = false;
+
   /**
    * @property {Object} formErrorAlert
    * @description
@@ -107,6 +126,12 @@ export class SolicitudPageComponent implements OnDestroy {
    * Define el título, mensaje y opciones de visualización para la alerta de error de validación de formularios.
    */
   public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /** @property {Object} catalogoErrorAlert
+   * @description
+   * Objeto que contiene la configuración del mensaje de error para errores de catálogo.
+   */
+  public catalogoErrorAlert = ERROR_CATALOGO_ALERT;
 
   /**
    * Datos de los pasos del asistente.
@@ -136,7 +161,8 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   constructor(
     public TramiteStore: Tramite110210Store,
-    public tramiteQuery: Tramite110210Query
+    public tramiteQuery: Tramite110210Query,
+    private service: BuscarCertificadoDeOrigenService,
   ) {
     this.tramiteQuery.selectTramite110210$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -159,7 +185,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * Obtiene el valor del índice de la acción del botón.
    * @param {AccionBoton} e - Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
+  async getValorIndice(e: AccionBoton): Promise<void> {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -180,15 +206,74 @@ export class SolicitudPageComponent implements OnDestroy {
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
       // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
+      
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        await this.guardar();
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
       } else if (e.accion === 'ant') {
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * @method guardar
+   * @description
+   * Envía la solicitud de guardar los datos del formulario al servicio correspondiente.
+   * Utiliza el estado actual de la solicitud para construir el payload.
+   * Si la respuesta es válida, actualiza los identificadores de solicitud y muestra un mensaje de éxito.
+   */
+  public guardar():Promise<void> {
+    const SOLICITUD = this.solicitudState;
+    const PAYLOAD = {
+        "solicitud": {
+          "solicitante": {
+            "rfc": "AAL0409235E6",
+            "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+            "correoElectronico": "vucem2021@gmail.com",
+            "telefono": "55-98764532",
+            "cveUsuario": "AAL0409235E6"
+          },
+          "cveRolCapturista": "PersonaMoral",
+          "cveUsuarioCapturista": "AAL0409235E6",
+          "clavePaisSeleccionado": SOLICITUD.paisBloqueClave ? SOLICITUD.paisBloqueClave : "",
+          "idTratadoAcuerdoSeleccionado": SOLICITUD.tratadoAcuerdoClave ? SOLICITUD.tratadoAcuerdoClave : "",
+          "discriminatorValue": "110210",
+          "tramite": {
+            "numFolioTramite": ""
+          },
+          "idSolicitud": ""
+        },
+        "puedeCapturarRepresentanteLegalCG": false,
+        "datosMercancia": {
+          "numeroCertificado": SOLICITUD.cveRegistroProductor ? SOLICITUD.cveRegistroProductor : ""
+        },
+        "guardar": "Continuar",
+        "parametrosBP": {
+          "idTramite": 110210
+        }
+      };
+      return new Promise((resolve, reject) => {
+        this.service.guardar(PAYLOAD).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe((response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            this.TramiteStore.setIdSolicitud(RESPONSE?.datos?.idSolicitud ?? 0);
+            this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+            this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+            this.wizardComponent.siguiente();
+            resolve();
+          }
+        },error=>{
+          reject(error);
+        });
+      });
   }
 
   /**
@@ -211,6 +296,14 @@ export class SolicitudPageComponent implements OnDestroy {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Muestra un error relacionado con el catálogo.
+   * Establece la propiedad `showCatalogoError` en `true` para activar la visualización del mensaje de error en la interfaz.
+   */
+  public showError(): void {
+    this.showCatalogoError = true;
   }
 
   /**

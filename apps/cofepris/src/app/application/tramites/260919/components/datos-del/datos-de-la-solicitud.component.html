@@ -451,7 +451,7 @@
 >
 
   <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['pattern']">
-    Por favor, ingresa solo números.
+   Por favor,escribe un número entero válido.
   </small>
 </div>
         
@@ -498,7 +498,7 @@
             <small
               *ngIf="datosDelTramiteRealizar.get('telefono')?.errors?.['pattern']"
             >
-              Por favor, ingresa solo números.
+   Por favor,escribe un número entero válido.
             </small>
           </div>
         </div>
@@ -536,7 +536,7 @@
   aria-labelledby="claveScianModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="claveScianModalLabel">Clave S.C.I.A.N</h5>
@@ -579,10 +579,10 @@
               </div>
             </div>
           </ng-container>
-          <div class="col-md-12 d-flex justify-content-end">
+          <div class="col-md-12 d-flex justify-content-end mt-3">
             <div class="btn-group">
               <button
-                class="btn btn-danger"
+                class="btn btn-danger me-2"
                 type="button"
                 data-bs-dismiss="modal"
                 (click)="onCancelar()"
@@ -853,14 +853,14 @@
               <div class="col-md-12 mt-4">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
-                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                    <div class="panel-heading" (click)="paisProcedencis_colapsable()" tabindex="0">
                       <h4 class="panel-title">País de procedencia</h4>
                       <button type="button" class="collpase-button collapsed"></button>
                     </div>
                     @if(paisProcedencisColapsable){
-                    <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
+                    <div class="panel-collapse collapse in" id="panel-01">
                       <div class="panel-body">
-                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                        <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas"></crosslist>
                       </div>
                     </div>
                     }

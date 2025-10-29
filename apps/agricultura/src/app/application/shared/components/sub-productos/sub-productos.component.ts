@@ -1,12 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
-import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
+import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { CommonModule } from '@angular/common';
+import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
+import { RegistroSolicitudService } from '../../../tramites/220201/services/220201/registro-solicitud/registro-solicitud.service';
+import { Subject } from 'rxjs';
+
 
 
 /**
@@ -40,7 +44,9 @@ import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '
     TituloComponent,
     InputRadioComponent,
     InputFechaComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './sub-productos.component.html',
   styleUrl: './sub-productos.component.scss',
@@ -144,13 +150,66 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   @Input() formularioSolicitud!: FilaSolicitud;
   @Output() cerrar = new EventEmitter<void>();
 
+
+  /**
+   * Configuración de las columnas sensibles para la tabla de sub-productos.
+   * Utiliza la configuración definida en `CONFIGURACION_DETALLAS_DATOS` para
+   * mostrar los datos detallados de los sub-productos en la interfaz.
+   *
+   * @type {ConfiguracionColumna<DetallasDatos>[]}
+   * @see CONFIGURACION_DETALLAS_DATOS
+   */
+  public configuracionSensiblesTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;
+
+
+  /**
+   * Lista de objetos de tipo `DetallasDatos` que contiene los datos detallados
+   * para mostrar en la tabla de sub-productos.
+   * 
+   * @remarks
+   * Este input permite recibir desde el componente padre la información
+   * necesaria para renderizar los detalles en la tabla.
+   */
+  @Input() detalleTablaDatos: DetallasDatos[] = [];
+
+  /**
+   * Arreglo que almacena los detalles seleccionados en la tabla de sub-productos.
+   * Cada elemento es un objeto de tipo `DetallasDatos` que representa una fila seleccionada por el usuario.
+   * 
+   * @type {DetallasDatos[]}
+   */
+  public detalleTablaDatosSeleccionada: DetallasDatos[] = [];
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion | null;
+
+  /**
+   * Guarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
+   */
+  public procesoModal!: string;
+
+  /**
+   * Obtiene el grupo de formulario 'datosServicio' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormGroup} El grupo de formulario 'datosServicio'.
+   */
+  get datosServicio(): FormGroup {
+    return this.detalleForm?.get('detalleForm') as FormGroup;
+  }
+
+  @Input() cantidadRegistros: number = 0;
+
   /**
    * Constructor del componente.
    * 
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param ubicaccion - Servicio de ubicación para navegar entre páginas.
    */
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
   }
 
@@ -230,18 +289,26 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       tipoPlanta: [''],
       plantaAutorizadaOrigen: [''],
       presentacion: [''],
-      cantidadPresentacion: []
+      cantidadPresentacion: [],
+      detalleProductos: this.fb.array([]),
+      modificado: [false], 
     });
 
     this.detalleForm = this.fb.group({
-      numeroLote: [''],
-      rangoDeFecha: ['no'],
+      numeroLote: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      rangoDeFecha: ['si'],
       procesoStart: [''],
       procesoEnd: [''],
       sacrificio: [''],
       sacrificioEnd: [''],
       caducidad: [''],
-      caducidadEnd: ['']
+      caducidadEnd: [''],
+      fechaElaboracionEmpaqueProceso: [null],
+      fechaProduccionSacrificio: [''],
+      fechaCaducidadProducto: [''],
+      fechaFinElaboracionEmpaqueProceso: [''],
+      fechaFinProduccionSacrificio: [''],
+      fechaFinCaducidadProducto: ['']
 
     });
     if (this.formularioSolicitud) {
@@ -249,6 +316,10 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         ...this.formularioSolicitud
       });
     }
+    if (this.formularioSolicitud) {
+      this.detalleTablaDatos = [...(this.formularioSolicitud.detalleProductos || [])];
+    }
+
   }
 
   /**
@@ -273,18 +344,68 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Método para agregar animales a la lista de datos sensibles.
- * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
- */
-  agregarAnimales(): void {
+   * Agrega los productos al formulario y emite un evento con los datos.
+   * 
+   * Este método recopila los valores actuales del formulario `productosForm` y los detalles
+   */
+  // eslint-disable-next-line complexity
+  agregarProductos(): void {
+    const FUEMODIFICADO = this.productosForm.get('modificado')?.value as boolean;
+    const DETALLE_PRODUCTOS_ARRAY = this.productosForm.get('detalleProductos') as FormArray;
+    
+    if(FUEMODIFICADO) {
+      this.productosForm.reset();
+      this.detalleForm.reset();
+      this.detalleTablaDatos = [];
+    }
 
-    this.agregarDatosFormulario.emit(
-      {
-        formulario: this.productosForm.value,
-        detallasDatosTablaDatos: this.detallasDatosTablaDatos
+    if (this.productosForm.invalid) {
+      this.productosForm.markAllAsTouched();
+    }
+    else {
+    
+        // Formatea cantidadUMC a dos decimales si es un número válido
+      let cantidadUMCValue = this.productosForm.get('cantidadUMC')?.value || '';
+      if (cantidadUMCValue !== '' && !isNaN(Number(cantidadUMCValue))) {
+        cantidadUMCValue = Number(cantidadUMCValue).toFixed(2);
       }
-    );
+      DETALLE_PRODUCTOS_ARRAY.clear();
+      this.detalleTablaDatos.forEach(detalle => {
+        DETALLE_PRODUCTOS_ARRAY.push(this.fb.group(detalle));
+      });
+
+  // Build the FilaSolicitud object from the form values
+  const NUEVOS_SENSIBLES: FilaSolicitud = {
+    ...this.productosForm.getRawValue(),
+    noPartida: FUEMODIFICADO ? this.productosForm.get('noPartida')?.value : this.cantidadRegistros + 1,
+    descripcionTipoRequisito: this.catalogosDatos.tipoRequisitoList.find(item => item.clave === this.productosForm.get('tipoRequisito')?.value)?.descripcion || '',
+    descripcionEspecie: this.catalogosDatos.especieList.find(item => item.clave === this.productosForm.get('especie')?.value)?.descripcion || '',
+    descripcionUso: this.catalogosDatos.usoList.find(item => item.clave === this.productosForm.get('uso')?.value)?.descripcion || '',
+    descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.productosForm.get('paisDeOrigen')?.value)?.descripcion || '',
+    descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.productosForm.get('paisDeProcedencia')?.value)?.descripcion || '',
+    descripcionNico: this.productosForm.get('descripcionNico')?.value || '',
+    descripcionFraccion: this.productosForm.get('descripcionFraccion')?.value || '',
+    descripcionUMT: this.productosForm.get('umt')?.value || '',
+    descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.productosForm.get('umc')?.value)?.descripcion || '',
+    tipoPresentacion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+    tipoPlanta: this.catalogosDatos.tipoPlantaList.find(item => item.clave === this.productosForm.get('tipoPlanta')?.value)?.descripcion || '',
+    plantaAutorizadaOrigen: this.catalogosDatos.plantaAutorizadaOrigenList.find(item => item.clave === this.productosForm.get('plantaAutorizadaOrigen')?.value)?.descripcion || '',   
+    tipoPresentacionDescripcion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+    cantidadUMC: cantidadUMCValue,
+    modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
+    detalleProductos: this.detalleTablaDatos
+  };
+
+  // Si no hay selección, agrega normalmente
+  this.agregarDatosFormulario.emit(
+    {
+      formulario: NUEVOS_SENSIBLES,
+      detallasDatosTablaDatos: this.detalleTablaDatos
+    }
+  );
+
     this.cerrar.emit();
+    }
   }
 
   /**
@@ -298,6 +419,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.productosForm.reset();
     this.detalleForm.reset();
     this.detallasDatosTablaDatos = [];
+    this.detalleForm.get('rangoDeFecha')?.setValue('si');
   }
 
   /**
@@ -338,7 +460,133 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       fechaFinCaducidadProducto: ''
     }
     this.detallasDatosTablaDatos.push(VALOR);
+    this.detalleTablaDatos = [...this.detalleTablaDatos, VALOR];
     this.detalleForm.reset();
+  }
+
+  /**
+     * Actualiza los datos almacenados en el store.
+     * @method setValoresStore
+     */
+  setValoresStoreFraccion(): void {
+    const VALOR = this.productosForm.value.fraccionArancelaria;
+    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220201, VALOR).subscribe(
+      (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+        } else {
+          this.productosForm.get('descripcionFraccion')?.setValue('');
+        }
+      }
+    );
+
+    this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
+      (response: BaseResponse<Catalogo>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('umt')?.setValue(response.datos.descripcion);
+        } else {
+          this.productosForm.get('umt')?.setValue('');
+        }
+      }
+    );
+
+  }
+
+  setValoresStoreFraccionNico(): void {
+    const VALOR_FRACCION = this.productosForm.value.fraccionArancelaria;
+    const VALOR_NICO = this.productosForm.value.nico;
+    this.registroSolicitudService.obtieneNicoDescripcion(220201, VALOR_FRACCION, VALOR_NICO).subscribe(
+      (response: BaseResponse<Catalogo>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('descripcionNico')?.setValue(response.datos);
+        } else {
+          this.productosForm.get('descripcionNico')?.setValue('');
+        }
+      }
+    );
+  }
+
+
+  /**
+   * Agrega un nuevo detalle a la tabla de datos utilizando los valores actuales del formulario.
+   * 
+   * - Crea un objeto `DETALLE` con los valores del formulario, asignando cada campo a su propiedad correspondiente.
+   * - Añade el objeto `DETALLE` al arreglo `detalleTablaDatos`.
+   * - Reinicia el formulario para permitir la captura de nuevos datos.
+   *
+   * @remarks
+   * Este método se utiliza para registrar los detalles de subproductos en la tabla de datos,
+   * asegurando que cada registro provenga de los valores ingresados en el formulario.
+   */
+  agregarDetalleTablaDatos(): void {
+    if (
+      this.detalleForm.value.numeroLote === '' ||
+      this.detalleForm.value.numeroLote === null
+    ) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.detalleForm.get('numeroLote')?.markAsTouched();
+      return;
+    }
+
+
+
+    if (this.detalleForm.value.numeroDeLote !== '') {
+      const DETALLE: DetallasDatos = {
+        numeroDeLote: this.detalleForm.value.numeroLote,
+        fechaElaboracionEmpaqueProceso: this.detalleForm.value.fechaElaboracionEmpaqueProceso,
+        fechaProduccionSacrificio: this.detalleForm.value.fechaProduccionSacrificio,
+        fechaCaducidadProducto: this.detalleForm.value.fechaCaducidadProducto,
+        fechaFinElaboracionEmpaqueProceso: this.detalleForm.value.fechaFinElaboracionEmpaqueProceso,
+        fechaFinProduccionSacrificio: this.detalleForm.value.fechaFinProduccionSacrificio,
+        fechaFinCaducidadProducto: this.detalleForm.value.fechaFinCaducidadProducto,
+      };
+      this.detalleTablaDatos = [...this.detalleTablaDatos, DETALLE];
+
+
+
+
+
+      this.detalleForm.reset();
+    }
+    this.detalleForm.get('rangoDeFecha')?.setValue('si');
+  }
+
+
+  public seleccionaFecha(nuevo_valor: string, campo: string): void {
+    this.detalleForm.get(campo)?.setValue(nuevo_valor);
+    this.detalleForm.get(campo)?.markAsUntouched();
+  }
+
+  /**
+   * Elimina todos los elementos del arreglo `detalleTablaDatos`.
+   * 
+   * Esta función limpia la tabla de detalles, dejando el arreglo vacío.
+   */
+  eliminarDetalleTablaDatos(items: DetallasDatos[]): void {
+
+    if (!items || items.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona al menos un registro para eliminar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.detalleTablaDatos = this.detalleTablaDatos.filter(detalle => !items.includes(detalle));
   }
 
   /**
@@ -350,4 +598,21 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+      case 'lda_dd':
+        {
+          if (confirmar) {
+            this.eliminarDetalle();
+          }
+          this.procesoModal = '';
+          break;
+        }
+      default:
+        // No action required for other cases
+        break;
+    }
+  }
+
 }

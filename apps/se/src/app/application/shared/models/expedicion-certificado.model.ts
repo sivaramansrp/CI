@@ -79,7 +79,16 @@ export interface DistribucionSaldo {
 export interface DetalledelaLicitacion{
         numeraDelicitacion:string,
         fechaDelEventoDelicitacion:string,
-        descripcionDelProducto:string   
+        descripcionDelProducto:string,
+        unidadMedidaTarifaria:string,
+        montoAdjudicado:string,
+        regimenAduanero:string,
+        fraccionArancelaria:string,
+        fechaInicioVigenciaCupo:string,
+        fechaFinVigenciaCupo:string,
+        observaciones:string,
+        bloqueComercial:string,
+        paises:string   
 }
 
 /**

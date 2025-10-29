@@ -4,7 +4,7 @@ import { CertificadoOrigenComponent } from '../../components/certificado-origen/
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Subject } from 'rxjs';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './paso-uno.component.scss',
   standalone: true,
   imports: [CommonModule, SolicitanteComponent,
-    DatosCertificadoComponent, HistoricoProductoresComponent,
+    DatosCertificadoComponent, HistProductoresComponent,
     DestinatarioComponent, CertificadoOrigenComponent
   ]
 })
@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 /** Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
  * Permite gestionar sus métodos y propiedades.
  */
-@ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
+@ViewChild('HistProductoresComponent', { static: false }) histProductoresComponent!: HistProductoresComponent;
 
 /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
  * Proporciona acceso a sus métodos y propiedades.
@@ -65,6 +65,18 @@ consultaDatos!: ConsultaioState;
 
 /** Bandera que indica si los datos de la consulta ya están disponibles. */
 public esDatosRespuesta: boolean = false;
+
+/** Indica si el formulario del componente DatosCertificadoComponent es válido. */
+private isDatosCertificadoComponentValid: boolean = false;
+
+/** Indica si el formulario del componente DestinatarioComponent es válido. */
+private isDestinarioComponentValid: boolean = false;
+
+/** Indica si el formulario del componente HistProductoresComponent es válido. */
+private isHistProductoresComponentValid: boolean = false;
+
+/** Indica si el formulario del componente CertificadoOrigenComponent es válido. */
+private isCertificadoOrigenComponentValid: boolean = false;
 
 /**
  * Constructor del componente.
@@ -150,51 +162,30 @@ public esDatosRespuesta: boolean = false;
    * Retorna true si todos los formularios son válidos, false en caso contrario.
    */
   public validarFormularios(): boolean {
-    let isValid = true;
+    this.isCertificadoOrigenComponentValid = this.tramiteQuery.getValue().formValidity?.certificadoOrigen ?? false; 
+    this.isDatosCertificadoComponentValid = this.tramiteQuery.getValue().formValidity?.datosCertificado ?? false;
+    this.isDestinarioComponentValid = this.tramiteQuery.getValue().formValidity?.destinatario ?? false;
+    this.isHistProductoresComponentValid = this.tramiteQuery.getValue().formValidity?.histProductores ?? false;
 
-    if (this.solicitante?.form) {
-      if (this.solicitante.form.invalid) {
-        this.solicitante.form.markAllAsTouched();
-        isValid = false;
-      }
-    } else {
-      isValid = false;
+    if (!this.isCertificadoOrigenComponentValid) {
+      this.certificadoOrigenComponent?.validarFormulario(); 
     }
 
-  if (!this.datosCertificadoComponent) {
-  console.error('DatosCertificadoComponent is not loaded');
-  isValid = false;
-} else {
-  if (!this.datosCertificadoComponent.validarFormulario()) {
-    isValid = false;
-  }
-}
-
-    if (this.destinatarioComponent) {
-      if (!this.destinatarioComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
+    if (!this.isDatosCertificadoComponentValid) {
+      this.datosCertificadoComponent?.validarFormulario();
     }
 
-    if (this.historicoProductoresComponent) {
-      if (!this.historicoProductoresComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
+    if (!this.isDestinarioComponentValid) {
+      this.destinatarioComponent?.validarFormulario();
     }
 
-    if (this.certificadoOrigenComponent) {
-      if (!this.certificadoOrigenComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
+    if (!this.isHistProductoresComponentValid) {
+      this.histProductoresComponent?.validarFormulario();
     }
 
-    return isValid;
+    return this.isDatosCertificadoComponentValid && this.isDestinarioComponentValid &&
+      this.isHistProductoresComponentValid && this.isCertificadoOrigenComponentValid;
+
   }
 
   /**

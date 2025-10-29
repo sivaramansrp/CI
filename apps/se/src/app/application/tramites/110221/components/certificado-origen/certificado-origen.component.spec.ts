@@ -152,6 +152,19 @@ describe('CertificadoOrigenComponent', () => {
     component.abrirModificarModal({});
   });
 
+  it('should run #setValoresStore()',  () => {
+    component.store = component.store || {};
+    component.store.setFormCertificadoGenric = jest.fn();
+    component.setValoresStore({});
+    expect(component.store.setFormCertificadoGenric).toHaveBeenCalled();
+  });
+
+
+  it('should run #conseguirDisponiblesDatos()',  () => {
+    component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
+  component.ValidarInicialmenteCertificadoService.obtenerTablaDatos = jest.fn().mockReturnValue(of({}));
+    component.conseguirDisponiblesDatos();
+  });
   it('should run #cerrarModificarModal()', async () => {
     component.modalInstance = component.modalInstance || {};
     component.modalInstance.hide = jest.fn();

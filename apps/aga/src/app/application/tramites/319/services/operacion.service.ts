@@ -6,7 +6,7 @@ import { Observable, map} from 'rxjs';
 import {Catalogo, RespuestaCatalogos} from '@libs/shared/data-access-user/src';
 import { URL } from '../constantes/operaciones-de-comercio-exterior.enum';
 
-import { FinalDataToSend } from '../models/tramite319-state.model';
+import { FinalDataToSend, PeriodoCatalogo } from '../models/tramite319-state.model';
 import { Personas } from '../models/personas.module';
 import { Tramite319Store } from '../estados/tramite319Store.store';
 
@@ -53,7 +53,7 @@ export class OperacionService {
    * @param fileName - Nombre del archivo que contiene los datos del catálogo.
    * @returns Un observable que emite una lista de catálogos.
    */
-  obtenerSelectorList(fileName: string): Observable<Catalogo[]> {
+  obtenerSelectorList(fileName: string): Observable<PeriodoCatalogo[]> {
     const BASEURL = this.url + fileName;
     return this.http.get<RespuestaCatalogos>(BASEURL).pipe(
       map(response => response.data)

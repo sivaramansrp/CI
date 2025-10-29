@@ -4,11 +4,6 @@
   -webkit-overflow-scrolling: touch;
 }
 
-table {
-  width: 100%;
-
-}
-
 .table-responsive {
   font-size: 13px;
 }
@@ -58,4 +53,9 @@ input[type="radio"] {
 .table-invalid {
   border-collapse: separate;
   border: 1px solid #dc3545;
+}
+
+.text-center {
+  text-align: center !important;
+  vertical-align: middle;
 }

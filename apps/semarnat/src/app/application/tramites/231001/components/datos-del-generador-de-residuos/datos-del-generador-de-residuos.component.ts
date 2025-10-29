@@ -1,8 +1,8 @@
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, Input } from '@angular/core';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosTramite231001Service } from '../../services/catalogos-tramite-231001.service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -35,6 +35,11 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-generador-de-residuos.component.scss',
 })
 export class DatosDelGeneradorDeResiduosComponent implements OnInit {
+  /**
+   * Indica si el formulario es válido.
+   */
+  @Input() esFormValido!: boolean;
+
   /**
    * Subject utilizado para limpiar las suscripciones y evitar fugas de memoria.
    * Se debe emitir y completar en ngOnDestroy.
@@ -115,9 +120,9 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
   /**
    * Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
    */
-  isInvalid(id: string): boolean | undefined {
-    const CONTROL = this.solicitudForm.get('datosdelForm')?.get(id);
-    return CONTROL?.invalid && CONTROL?.touched;
+  isInvalid(field: string): boolean | undefined {
+    const CONTROL = this.solicitudForm.get(field);
+    return (CONTROL?.invalid && CONTROL?.touched) || !this.esFormValido;
   }
 
   /**

@@ -46,13 +46,13 @@
           }
         </div>       
       </div>
-
+<div>{{sagar}}</div>
       <!-- Estado (using <app-catalogo-select>) -->
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="bancoDatos"
-          formControlName="banco"
-          [label]="'Banco'"
+          [catalogo]="bancoDatossagar"
+          formControlName="bancosagar12"
+          [label]="'Bancosagar'"
           [required]="true"
           [markTouched]="pagoDerechosForm.get('banco')?.touched??false"
           [isDisabled]="esFormularioSoloLectura"

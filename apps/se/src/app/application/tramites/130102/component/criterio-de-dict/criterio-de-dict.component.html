@@ -3,15 +3,15 @@
   <form [formGroup]="frmCriterioDictamen">
     <div class="row">
       <div class="col-md-7 form-group">
-        <app-catalogo-select
+       <app-catalogo-select-clave
           [catalogo]="solicitudMercanciaLista"
           [label]="'Solicitud mercancia esquema regla octava clave'"
           [required]="true"
-          (selectionChange)="fetchSolicitudMercancia($event);setValoresStore(frmCriterioDictamen,'solicitudMercancia', 'setsolicitudMercancia')"
+          (selectionChange)="fetchSolicitudMercancia($event);setValoresStore(frmCriterioDictamen,'solicitudMercancia', 'setsolicitudMercancia'); setCriterioDictamenText(frmCriterioDictamen);"
           [placeholder]="'Seleccione un valor'"
           formControlName="solicitudMercancia"
           [isDisabled]="esFormularioSoloLectura ? true : false"
-        ></app-catalogo-select>
+        ></app-catalogo-select-clave>
         @if (frmCriterioDictamen.controls['solicitudMercancia'].invalid && frmCriterioDictamen.controls['solicitudMercancia'].touched) {
           <div class="text-danger">
             @if (frmCriterioDictamen.controls['solicitudMercancia'].errors?.['required']) {
@@ -24,18 +24,18 @@
     </div>
     <div class="row">
       <div class="col-md-7 mb-3">
-        <label class="form-label" for="domicilio"
+        <label class="form-label" for="criterioDictamen"
           >Criterio de dictamen de regla octava seleccionado*:</label
         >
         <textarea
           class="form-control textarea-h"
-          id="domicilio"
+          id="criterioDictamen"
           rows="2"
-          [value]="seleccionadaSolicitudMercancia.descripcion"
-           formControlName ="criterioDictamen"
+          [value]="dataCriteroDictamen"
+          formControlName="criterioDictamen"
+          [disabled]="criteroDisabled"
+          [readonly]="criteroDisabled"
           placeholder=""
-       
-         
         ></textarea>
       </div>
     </div>

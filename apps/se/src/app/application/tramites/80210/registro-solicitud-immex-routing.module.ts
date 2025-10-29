@@ -1,3 +1,4 @@
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -7,6 +8,13 @@ const ROUTES: Routes = [
   {
     path: 'confirmacion',
     component: registroSolicitudImmexComponent,
+    canActivate: [IniciarTramiteResolver],
+    resolve: { iniciarResolverData: IniciarTramiteResolver },
+    data: {
+      iniciarConfig: {
+        procedureId: '80210',
+      },
+    },
   },
   {
     path: '',

@@ -255,10 +255,113 @@ export const PRODUCTO_TABLA = [
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
     orden: 19,
+  }
+];
+export const PRODUCTO_TABLA_218 = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.clasificacionProducto,
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string =>
+      ele.especificarClasificacionProducto,
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específica del producto',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionEspecificaProducto,
+    orden: 3,
+  },
+  {
+    encabezado: 'Denominación distintiva',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionDistintiva,
+    orden: 4,
+  },
+  {
+    encabezado: 'Denominación común, nombre común o nombre científico',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionComun,
+    orden: 5,
+  },
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica,
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado físico',
+    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: TablaMercanciasDatos): string => ele.fraccionArancelaria,
+    orden: 8,
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.descripcionFraccion,
+    orden: 9,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.unidadMedidaComercializacion,
+    orden: 10,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC,
+    orden: 11,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa,
+    orden: 12,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT,
+    orden: 13,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion,
+    orden: 14,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario,
+    orden: 15,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisOrigen,
+    orden: 16,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisProcedencia,
+    orden: 17,
+  },
+  {
+    encabezado: 'Tipo producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto,
+    orden: 18,
+  },
+  {
+    encabezado: 'Uso específico',
+    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico,
+    orden: 19,
   },
   {
     encabezado: 'Fecha de caducidad',
-    clave: (ele: TablaMercanciasDatos): string => ele.fechaCaducidad ?? '', // Reemplaza 'ele.fechaCaducidad' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string => ele.caducidad ?? '',
     orden: 20,
   },
 ];
@@ -356,21 +459,200 @@ export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
  */
 export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   {
-    fechaCreacion: '2025-02-19 11:26:55.0',
-    mercancia:
-      'Los demás. Únicamente: Los que no sean estupefacientes o psicotrópicos, o contengan dichas sustancias...',
-    cantidad: '0.5',
-    proveedor: 'TramitesVUCEM SA de CV',
+    fechaCreacion: '2024-01-15',
+    mercancia: 'Medicamentos',
+    cantidad: '100',
+    proveedor: 'Farmacéutica ABC S.A.',
+    rfcSanitario: 'FAR840315ABC',
+    denominacionRazon: 'Farmacéutica ABC S.A. de C.V.',
+    correoElectronico: 'contacto@farmabc.com',
+    codigoPostal: '01000',
+    estado: '101',
+    municipioAlcaldia: 'Álvaro Obregón',
+    localidad: 'Santa Fe',
+    colonia: 'Santa Fe Centro',
+    calleYNumero: 'Av. Santa Fe 495',
+    calle: 'Av. Santa Fe',
+    lada: '55',
+    telefono: '12345678',
+    aviso: 'AV-2024-001',
+    licenciaSanitaria: 'LS-2024-001',
+    regimen: '101',
+    adunasDeEntradas: '101',
+    aeropuerto: true,
+    aeropuertoDos: false,
+    publico: 'Si',
+    representanteRfc: 'REP840315XYZ',
+    representanteNombre: 'Juan Carlos',
+    apellidoPaterno: 'García',
+    apellidoMaterno: 'López',
+    regimenLaMercancia: 'Importación',
+    aduana: 'México - Aeropuerto Internacional',
+    mercancias: [
+      {
+        clasificacionProducto: 'Dispositivo Médico',
+        especificarClasificacionProducto: 'Instrumental Médico',
+        denominacionEspecificaProducto: 'Estetoscopio Digital',
+        formaFarmaceutica: 'N/A',
+        estadoFisico: 'Sólido',
+        fraccionArancelaria: '9018.11.01',
+        unidadMedidaComercializacion: 'Piezas',
+        cantidadUMC: '25',
+        unidadMedidaTarifa: 'Piezas',
+        cantidadUMT: '25',
+        presentacion: 'Piezas',
+        numeroRegistroSanitario: 'REG-002-2024',
+        paisOrigen: 'Alemania',
+        paisProcedencia: 'Estados Unidos',
+        tipoProducto: 'Dispositivo Médico',
+        usoEspecifico: 'Diagnóstico médico'
+      },
+    ],
+    scian: [
+      {
+        clave: '325412',
+        descripcion: 'Fabricación de preparaciones farmacéuticas'
+      }
+    ],
+    manifesto: 'MAN-2024-001',
+    manifiestosCasillaDeVerificacion: true
   },
   {
-    fechaCreacion: '2024-11-08 13:02:58.0',
-    mercancia:
-      'Los demás. Únicamente: Los que no sean estupefacientes o psicotrópicos, o contengan',
-    cantidad: '0.5',
-    proveedor: 'TramitesVUCEM SA de CV',
+    fechaCreacion: '2024-02-20',
+    mercancia: 'Dispositivos Médicos',
+    cantidad: '50',
+    proveedor: 'Medtech Solutions Ltd.',
+    rfcSanitario: 'MED850420DEF',
+    denominacionRazon: 'Medtech Solutions México S.A.',
+    correoElectronico: 'importaciones@medtech.mx',
+    codigoPostal: '64000',
+    estado: '101',
+    municipioAlcaldia: 'Monterrey',
+    localidad: 'Centro',
+    colonia: 'Centro Histórico',
+    calleYNumero: 'Morelos 123',
+    calle: 'Morelos',
+    lada: '81',
+    telefono: '87654321',
+    aviso: 'AV-2024-002',
+    licenciaSanitaria: 'LS-2024-002',
+    regimen: '101',
+    adunasDeEntradas: '101',
+    aeropuerto: false,
+    aeropuertoDos: true,
+    publico: 'Si',
+    representanteRfc: 'REP850420ABC',
+    representanteNombre: 'María Elena',
+    apellidoPaterno: 'Rodríguez',
+    apellidoMaterno: 'Martínez',
+    regimenLaMercancia: 'Importación Temporal',
+    aduana: 'Nuevo Laredo - Terrestre',
+    mercancias: [ {
+      clasificacionProducto: 'Dispositivo Médico',
+      especificarClasificacionProducto: 'Instrumental Médico',
+      denominacionEspecificaProducto: 'Estetoscopio Digital',
+      formaFarmaceutica: 'N/A',
+      estadoFisico: 'Sólido',
+      fraccionArancelaria: '9018.11.01',
+      unidadMedidaComercializacion: 'Piezas',
+      cantidadUMC: '25',
+      unidadMedidaTarifa: 'Piezas',
+      cantidadUMT: '25',
+      presentacion: 'Piezas',
+      numeroRegistroSanitario: 'REG-002-2024',
+      paisOrigen: 'Alemania',
+      paisProcedencia: 'Estados Unidos',
+      tipoProducto: 'Dispositivo Médico',
+      usoEspecifico: 'Diagnóstico médico'
+    },
+    {
+      clasificacionProducto: 'Dispositivo Médico',
+      especificarClasificacionProducto: 'Instrumental Médico',
+      denominacionEspecificaProducto: 'Estetoscopio Digital',
+      formaFarmaceutica: 'N/A',
+      estadoFisico: 'Sólido',
+      fraccionArancelaria: '9018.11.01',
+      unidadMedidaComercializacion: 'Piezas',
+      cantidadUMC: '25',
+      unidadMedidaTarifa: 'Piezas',
+      cantidadUMT: '25',
+      presentacion: 'Piezas',
+      numeroRegistroSanitario: 'REG-002-2024',
+      paisOrigen: 'Alemania',
+      paisProcedencia: 'Estados Unidos',
+      tipoProducto: 'Dispositivo Médico',
+      usoEspecifico: 'Diagnóstico médico'
+    },
+    ],
+    scian: [
+      {
+        clave: '334510',
+        descripcion: 'Fabricación de instrumentos y aparatos de medición'
+      }
+    ],
+    manifesto: 'MAN-2024-002',
+    manifiestosCasillaDeVerificacion: false
   },
+  {
+    fechaCreacion: '2024-03-10',
+    mercancia: 'Suplementos Alimenticios',
+    cantidad: '200',
+    proveedor: 'NutriHealth Corp.',
+    rfcSanitario: 'NUT860512GHI',
+    denominacionRazon: 'NutriHealth México S.A. de C.V.',
+    correoElectronico: 'legal@nutrihealth.mx',
+    codigoPostal: '44100',
+    estado: '101',
+    municipioAlcaldia: 'Guadalajara',
+    localidad: 'Zona Centro',
+    colonia: 'Centro',
+    calleYNumero: 'Juárez 456',
+    calle: 'Juárez',
+    lada: '33',
+    telefono: '11223344',
+    aviso: 'AV-2024-003',
+    licenciaSanitaria: 'LS-2024-003',
+    regimen: '101',
+    adunasDeEntradas: '101',
+    aeropuerto: true,
+    aeropuertoDos: true,
+    publico: 'Si',
+    representanteRfc: 'REP860512DEF',
+    representanteNombre: 'Carlos Alberto',
+    apellidoPaterno: 'Hernández',
+    apellidoMaterno: 'Silva',
+    regimenLaMercancia: 'Importación',
+    aduana: 'Guadalajara - Aeropuerto',
+    mercancias: [
+      {
+        clasificacionProducto: 'Dispositivo Médico',
+        especificarClasificacionProducto: 'Instrumental Médico',
+        denominacionEspecificaProducto: 'Estetoscopio Digital',
+        formaFarmaceutica: 'N/A',
+        estadoFisico: 'Sólido',
+        fraccionArancelaria: '9018.11.01',
+        unidadMedidaComercializacion: 'Piezas',
+        cantidadUMC: '25',
+        unidadMedidaTarifa: 'Piezas',
+        cantidadUMT: '25',
+        presentacion: 'Piezas',
+        numeroRegistroSanitario: 'REG-002-2024',
+        paisOrigen: 'Alemania',
+        paisProcedencia: 'Estados Unidos',
+        tipoProducto: 'Dispositivo Médico',
+        usoEspecifico: 'Diagnóstico médico'
+      },
+    ],
+    scian: [
+      {
+        clave: '311999',
+        descripcion: 'Elaboración de otros alimentos'
+      }
+    ],
+    manifesto: 'MAN-2024-003',
+    manifiestosCasillaDeVerificacion: true
+  }
 ];
-
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE
  * @description Lista de identificadores de procedimientos que no deben ser utilizados
@@ -379,7 +661,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103, 260213,
+  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203
 ];
 
 /**
@@ -499,7 +781,7 @@ export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
  * @description Arreglo que contiene los identificadores relacionados con el representante legal.
  * @type {number[]}
  */
-export const REPRESENTANTE_LEGAL = [260208, 260213];
+export const REPRESENTANTE_LEGAL = [260208];
 
 /**
  * @const BANCO
@@ -514,7 +796,7 @@ export const REPRESENTANTE_LEGAL = [260208, 260213];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -606,6 +888,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_260201: 260201,
   TRAMITE_260301: 260301,
   TRAMITE_260210: 260210,
+
 }
 
 /**
@@ -739,6 +1022,8 @@ export const MOSTRAR_NOTIFICACION = [
   260209, 260205, 260204, 260202,
 ];
 
+export const ENABLE_FIELDS = [ 260209, 260210];
+
 /**
  * Enumera los tipos de actualización que se pueden realizar.
  *
@@ -756,7 +1041,7 @@ export enum TIPO_ACTUALIZACION {
  * @remarks
  * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
  */
-export const TIPO_PRODUCTO_ESPECIAL = '3';
+export const TIPO_PRODUCTO_ESPECIAL = '137';
 
 /**
  * Constante que representa los procedimientos que no son aplicables para manifiestos y declaraciones.
@@ -773,7 +1058,7 @@ export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [
  * @const ES_PUNTO_Y_COMA
  * @description Lista de identificadores de procedimientos para los cuales se utiliza punto y coma.
  */
-export const ES_PUNTO_Y_COMA = [260210];
+export const ES_PUNTO_Y_COMA = [260210, 260209];
 
 /**
  * Constante que representa el texto del manifiesto y declaraciones.
@@ -800,7 +1085,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260201]
 
 /**
  * Constante que representa el código AIFA.
@@ -846,4 +1131,13 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210];
+
+
+
+/**
+ * @const REPRESENTANTE_LEGAL
+ * @description Arreglo que contiene los identificadores relacionados con el representante legal.
+ * @type {number[]}
+ */
+export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];

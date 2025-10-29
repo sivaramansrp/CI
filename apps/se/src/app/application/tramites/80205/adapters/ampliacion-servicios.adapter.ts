@@ -1,14 +1,14 @@
 /**
  * @fileoverview
- * This file contains the adapter service for converting between Akita state and API payload formats
- * for the ampliacion servicios trámite 80205.
+ * Este archivo contiene el servicio adaptador para convertir entre el estado de Akita y los formatos de payload de API
+ * para el trámite de ampliación de servicios 80205.
  */
 
 import type { AmpliacionServiciosState } from '../estados/tramite80205.store';
 import { Injectable } from '@angular/core';
 
 /**
- * Interface representing a service in the payload
+ * Interfaz que representa un servicio en el payload
  */
 interface Servicio {
   tipoServicio: string;
@@ -21,7 +21,7 @@ interface Servicio {
 }
 
 /**
- * Interface representing a national company in the payload
+ * Interfaz que representa una empresa nacional en el payload
  */
 interface EmpresaNacional {
   razonSocial: string;
@@ -35,7 +35,7 @@ interface EmpresaNacional {
 }
 
 /**
- * Interface representing the solicitud details
+ * Interfaz que representa los detalles de la solicitud
  */
 interface Solicitud {
   modalidad: string;
@@ -45,7 +45,7 @@ interface Solicitud {
 }
 
 /**
- * Interface representing the domicilio details
+ * Interfaz que representa los detalles del domicilio
  */
 interface Domicilio {
   idDomicilio: number;
@@ -71,7 +71,7 @@ interface Domicilio {
 }
 
 /**
- * Interface representing the solicitante details
+ * Interfaz que representa los detalles del solicitante
  */
 interface Solicitante {
   idPersonaPersonaSolicitudR: number;
@@ -131,7 +131,7 @@ interface Solicitante {
 }
 
 /**
- * Interface representing the API payload structure for trámite 80205
+ * Interfaz que representa la estructura del payload de API para el trámite 80205
  */
 export interface AmpliacionServiciosPayload {
   tipoDeSolicitud: string;
@@ -161,50 +161,48 @@ export interface AmpliacionServiciosPayload {
 })
 export class AmpliacionServiciosAdapter {
   /**
-   * Converts from Akita state to API payload format using the same keys
-   * @param state The current Akita state
-   * @returns Formatted payload for API
+   * Convierte del estado de Akita al formato de payload de API usando las mismas claves
+   * @param state El estado actual de Akita
+   * @returns Payload formateado para la API
    */
   static toFormPayload(state: AmpliacionServiciosState): AmpliacionServiciosPayload {
-    // Combine servicios from datosAutorizados and datosImmex
+    // Combinar servicios de datosAutorizados y datosImmex
     const COMBINED_SERVICIOS: Servicio[] = [
       ...state.datosImmex.map(si => ({
         tipoServicio: si.tipoServicio,
         claveServicio: Number(si.claveServicio),
         testado: true,
-        descripcion: si.descripcion,
+        descripcion: si.descripcion ?? "",
         descripcionTipo: si.descripcionTipo,
       })),
       ...state.datosAutorizados.map(sa => ({
         tipoServicio: sa.tipoServicio,
         claveServicio: Number(sa.claveServicio),
         testado: true,
-        descripcion: sa.descripcion,
+        descripcion: sa.descripcion ?? "",
         descripcionTipo: sa.descripcionTipo,
       }))
     ];
 
-    // Convert empresas to empresasNacionales format
+    // Convertir empresas al formato empresasNacionales
     const EMPRESAS_NACIONALES: EmpresaNacional[] = state.empresas.map(e => ({
-      razonSocial: e.razonSocial,
-      rfc: e.rfc,
-      idServicio: e.idServicio,
-      descripcionServicio: e.descripcionServicio,
-      numeroPrograma: e.numeroPrograma,
-      tiempoPrograma: e.tiempoPrograma,
-    //   idCompuestoEmpresa: e.idCompuestoEmpresa,
-    //   idServicioAutorizado: Number(e.idServicioAutorizado),
+      razonSocial: e.razonSocial ?? "",
+      rfc: e.rfc ?? "",
+      idServicio: e.idServicio ?? "",
+      descripcionServicio: e.descripcionServicio ?? "",
+      numeroPrograma: e.numeroPrograma ?? "",
+      tiempoPrograma: e.tiempoPrograma ?? "",
     }));
 
-    // Get solicitud data from infoRegistro
+    // Obtener datos de solicitud desde infoRegistro
     const SOLICITUD: Solicitud = {
       modalidad: state.infoRegistro.seleccionaLaModalidad,
-      folioProgramaAutorizado: 0, // This should come from somewhere else in state
+      folioProgramaAutorizado: 0, // Esto debería venir de otro lugar en el estado
       anioPrograma: state.infoRegistro.ano
     };
 
     return {
-      // Static values for now, these should come from configuration or other state
+      // Valores estáticos por ahora, estos deberían venir de configuración o otro estado
       tipoDeSolicitud: "guardar",
       idSolicitud: state.idSolicitud ?? 0,
       idTipoTramite: 80205,
@@ -224,13 +222,14 @@ export class AmpliacionServiciosAdapter {
       discriminatorValue: "80205",
       solicitante: {},
       domicilio: {}
+
     };
   }
 
   /**
-   * Maps API response back to Akita state format
-   * @param payload The API response payload
-   * @returns Formatted state object
+   * Mapea la respuesta de la API de vuelta al formato de estado de Akita
+   * @param payload El payload de respuesta de la API
+   * @returns Objeto de estado formateado
    */
 //   static toState(payload: AmpliacionServiciosPayload): AmpliacionServiciosState {
 //     return {

@@ -9,6 +9,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 import {
   DatosSubcontratista,
@@ -24,8 +25,6 @@ import { Subject } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
-import { ComplimentosService } from '../../../../shared/services/complimentos.service';
-
 /**
  * Componente Angular para gestionar las empresas subfabricantes en el trámite 80101.
  * Este componente permite la visualización, adición y eliminación de subfabricantes

@@ -114,27 +114,42 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
   anexoTressDatos: EventEmitter<DatosAnexotressUno> =
     new EventEmitter<DatosAnexotressUno>(true);
 
-    @Output()
+  @Output()
   anexoTressDatosDos: EventEmitter<DatosAnexotressUno> =
     new EventEmitter<DatosAnexotressUno>(true);
 
-  @Input()
   /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
+  @Input()
   set formularioDatosSubcontratista(valor: FormGroup) {
     this.anexoDosFormGroup.setValue(valor.value);
   }
 
+  /**
+   * Obtiene el formulario de datos del subcontratista.
+   * @returns Formulario reactivo con los datos del subcontratista.
+   */
+  get formularioDatosSubcontratista(): FormGroup {
+    return this.anexoDosFormGroup;
+  }
 
-   @Input()
   /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
+  @Input()
   set formularioDatosDosSubcontratista(valor: FormGroup) {
     this.anexoTresFormGroup.setValue(valor.value);
+  }
+
+  /**
+   * Obtiene el formulario de datos del subcontratista.
+   * @returns Formulario reactivo con los datos del subcontratista.
+   */
+  get formularioDatosDosSubcontratista(): FormGroup {
+    return this.anexoTresFormGroup;
   }
   /**
 * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -193,7 +208,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       .subscribe((_) => {
         this.anexoTressDatos.emit(this.anexoDosFormGroup.value);
       });
-      this.anexoTresFormGroup.valueChanges
+    this.anexoTresFormGroup.valueChanges
       .pipe(delay(100))
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((_) => {
@@ -204,16 +219,16 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
   /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
   ngOnChanges(): void {
     if (this.anexoDosTablaLista.length === 0) {
-        this.servicioDeFormularioService.registerArray('anexoDosTablaLista', this.anexoDosTablaLista);
-      } else {
-        this.servicioDeFormularioService.setArray('anexoDosTablaLista', this.anexoDosTablaLista);
-      }
+      this.servicioDeFormularioService.registerArray('anexoDosTablaLista', this.anexoDosTablaLista);
+    } else {
+      this.servicioDeFormularioService.setArray('anexoDosTablaLista', this.anexoDosTablaLista);
+    }
 
-      if (this.anexoTresTablaLista.length === 0) {
-        this.servicioDeFormularioService.registerArray('anexoTresTablaLista', this.anexoTresTablaLista);
-      } else {
-        this.servicioDeFormularioService.setArray('anexoTresTablaLista', this.anexoTresTablaLista);
-      }
+    if (this.anexoTresTablaLista.length === 0) {
+      this.servicioDeFormularioService.registerArray('anexoTresTablaLista', this.anexoTresTablaLista);
+    } else {
+      this.servicioDeFormularioService.setArray('anexoTresTablaLista', this.anexoTresTablaLista);
+    }
   }
 
   /**
@@ -231,7 +246,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
    */
   crearFormularioAnexoTres(): void {
     this.anexoTresFormGroup = this.fb.group({
-      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(100)]],
       descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
     });
   }
@@ -240,18 +255,30 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
    * Elimina elementos del Anexo Dos que no tienen estatus
    */
   eliminarAnexoDos(): void {
+    // Si hay elementos seleccionados, mostrar popup de confirmación
+    if (this.seleccionarDosTablaData.length > 0) {
+      // Si el popup no está abierto, abrirlo
+      if (!this.nuevaDosNotificacion || !this.nuevaDosNotificacion.cerrar) {
+        this.abrirDosModal();
+        return;
+      }
+    }
+    else {
+      this.abrirDosModal();
+      return;
+    }
+
+    // Proceder con la eliminación
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
       return !idx.estatus;
     });
+
     if (this.nuevaDosNotificacion) {
       this.nuevaDosNotificacion.cerrar = false;
     }
 
-
     if (this.seleccionarDosTablaData.length > 0) {
-
       this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
-
         return !this.seleccionarDosTablaData.some(selectedItem =>
           selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
           selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
@@ -286,12 +313,11 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje:
-        '¿Estás seguro de que deseas eliminar?',
+      mensaje: this.seleccionarDosTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el anexo que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: this.seleccionarDosTablaData.length > 0 ? 'Cancelar' : '',
     };
   }
 
@@ -302,7 +328,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
+      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value?.toUpperCase() || '',
       estatus: false,
     };
     if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
@@ -337,11 +363,11 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       modo: 'action',
       titulo: '',
       mensaje:
-        '¿Estás seguro de que deseas eliminar?',
+        this.seleccionarTresTablaData.length > 0 ? '¿Está seguro de eliminar el registro de los anexos?' : 'Seleccione el registro que desea eliminar.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: this.seleccionarTresTablaData.length > 0 ? ' Cancelar' : '',
     };
   }
 
@@ -349,18 +375,30 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
    * Elimina elementos del Anexo Tres que no tienen estatus
    */
   eliminarAnexoTres(): void {
+    // Si hay elementos seleccionados, mostrar popup de confirmación
+    if (this.seleccionarTresTablaData.length > 0) {
+      // Si el popup no está abierto, abrirlo
+      if (!this.nuevaTresNotificacion || !this.nuevaTresNotificacion.cerrar) {
+        this.abrirTresModal();
+        return;
+      }
+    }
+    else if (this.seleccionarTresTablaData.length === 0) {
+      this.abrirTresModal();
+      return;
+    }
+
+    // Proceder con la eliminación
     this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
       return !idx.estatus;
     });
+
     if (this.nuevaTresNotificacion) {
       this.nuevaTresNotificacion.cerrar = false;
     }
 
-
     if (this.seleccionarTresTablaData.length > 0) {
-
       this.anexoTresTablaLista = this.anexoTresTablaLista.filter(item => {
-
         return !this.seleccionarTresTablaData.some(selectedItem =>
           selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
           selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
@@ -384,7 +422,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
+      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value?.toUpperCase() || '',
       estatus: false,
     };
     if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
@@ -411,5 +449,70 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
   setAnexoTresLista(event: AnexoEncabezado[]): void {
     this.seleccionarTresTablaData = event;
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+  }
+
+  /**
+   * Convierte el texto a mayúsculas en tiempo real
+   * @param event Evento del input
+   * @param formulario Tipo de formulario ('anexoDos' o 'anexoTres')
+   */
+  convertirAMayusculas(event: Event, formulario: 'anexoDos' | 'anexoTres'): void {
+    const TARGET = event.target as HTMLTextAreaElement;
+    const VALORMAYUSCULA = TARGET.value.toUpperCase();
+
+    if (formulario === 'anexoDos') {
+      this.anexoDosFormGroup.get('descripcion')?.setValue(VALORMAYUSCULA, { emitEvent: false });
+    } else if (formulario === 'anexoTres') {
+      this.anexoTresFormGroup.get('descripcion')?.setValue(VALORMAYUSCULA, { emitEvent: false });
+    }
+
+    // Mantener la posición del cursor
+    const CURSORPOSITION = TARGET.selectionStart;
+    setTimeout(() => {
+      TARGET.setSelectionRange(CURSORPOSITION, CURSORPOSITION);
+    });
+  }
+
+  /**
+   * Confirma la eliminación del Anexo Dos después de la confirmación del modal
+   */
+  confirmarEliminacionDos(confirmado: boolean): void {
+    // Cerrar el modal
+    this.nuevaDosNotificacion.cerrar = false;
+
+    // Proceder con la eliminación
+    if (confirmado && this.seleccionarDosTablaData.length > 0) {
+      this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
+        return !this.seleccionarDosTablaData.some(selectedItem =>
+          selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
+          selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
+        );
+      });
+
+      this.seleccionarDosTablaData = [];
+      this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+    }
+  }
+
+  /**
+   * Confirma la eliminación del Anexo Tres después de la confirmación del modal
+   */
+  confirmarEliminacionTres(confirmado: boolean): void {
+    // Cerrar el modal
+    this.nuevaTresNotificacion.cerrar = false;
+    if (confirmado) {
+      // Proceder con la eliminación
+      if (this.seleccionarTresTablaData.length > 0) {
+        this.anexoTresTablaLista = this.anexoTresTablaLista.filter(item => {
+          return !this.seleccionarTresTablaData.some(selectedItem =>
+            selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
+            selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
+          );
+        });
+
+        this.seleccionarTresTablaData = [];
+        this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+      }
+    }
   }
 }

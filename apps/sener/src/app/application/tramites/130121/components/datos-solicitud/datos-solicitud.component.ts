@@ -519,9 +519,7 @@ tituloParte = TITULO_ORIGEN;
       cantidadModificar: [
         this.seccionState?.cantidadModificar,
         [
-          
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-         
+             
         ],
       ],
      
@@ -542,9 +540,6 @@ tituloParte = TITULO_ORIGEN;
         this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
         [
           
-          Validators.min(0),
-          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
-          Validators.maxLength(20),
         ],
       ],
     });

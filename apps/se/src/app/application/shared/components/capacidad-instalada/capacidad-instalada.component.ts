@@ -1,15 +1,15 @@
 import { CAPACIDAD_INSTALADA, CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
 import { ComplementosSeccionState } from '../../../estados/tramites/complementos-seccion.store';
 import { Location } from '@angular/common';
-import { d } from '@datorama/akita-ngdevtools';
 
 /**
  * Componente para la capacidad instalada
@@ -23,12 +23,26 @@ import { d } from '@datorama/akita-ngdevtools';
     TituloComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent, FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './capacidad-instalada.component.html',
   styleUrl: './capacidad-instalada.component.css',
 })
 export class CapacidadInstaladaComponent implements OnInit {
+  /**
+   * Notificación que se muestra al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Notificación que se muestra al usuario al eliminar un registro.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
+  /**
+   * Índice de la capacidad instalada que se está editando actualmente.
+   */
+  editingIndex: number | null = null;
   /**
   * Formulario reactivo que gestiona los datos relacionados con el pago de derechos, como clave, dependencia, banco,
   * llave, fecha e importe.
@@ -156,21 +170,34 @@ export class CapacidadInstaladaComponent implements OnInit {
       .subscribe();
     this.capacidadForm = this.fb.group({
       fraccionArancelariaProductoTerminado: [this.solicitudState.fraccionArancelariaProductoTerminado, Validators.required],
-      umt: [this.solicitudState.umt, Validators.required],
-      descripcionComercialProductoTerminado: [this.solicitudState.descripcionComercialProductoTerminado, Validators.required],
-      turnos: [this.solicitudState.turnos, [Validators.required, Validators.maxLength(3), Validators.pattern('^\\d{1,3}$')]],
-      horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required, Validators.maxLength(2), Validators.pattern('^\\d{1,2}$')]],
-      cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
-      cantidadMaquinaria: [this.solicitudState.cantidadMaquinaria, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      umt: [{ value: this.solicitudState.umt, disabled: true }, Validators.required],
+      descripcionComercialProductoTerminado: [{ value: this.solicitudState.descripcionComercialProductoTerminado, disabled: true }, Validators.required],
+      turnos: [this.solicitudState.turnos, [Validators.required]],
+      horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required]],
+      cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required]],
+      cantidadMaquinaria: [this.solicitudState.cantidadMaquinaria, [Validators.required]],
       descripcionMaquinaria: [this.solicitudState.descripcionMaquinaria, [Validators.required, Validators.maxLength(300)]],
       capacidadInstaladaMensual: [this.solicitudState.capacidadInstaladaMensual, [Validators.required, Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
-      capacidadInstaladaAnual: [this.solicitudState.capacidadInstaladaAnual, [Validators.required, Validators.maxLength(16)]],
+      capacidadInstaladaAnual: [this.solicitudState.capacidadInstaladaAnual, [Validators.required]],
       calculoCapacidadInstalada: [{ value: this.solicitudState.calculoCapacidadInstalada, disabled: true }, Validators.required],
       capacidadUtilizadaPct: [this.solicitudState.capacidadUtilizadaPct, Validators.required]
     });
 
   }
 
+  /**
+   * Limita la entrada de un campo de texto a un número máximo de caracteres numéricos.
+   * @param event Event del input
+   * @param maxLength Longitud máxima permitida
+   * @param controlPath Ruta del control en el formulario
+   */
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
+    const TARGET = event.target as HTMLInputElement;
+    let value = TARGET.value;
+    value = value.replace(/\D/g, '').slice(0, maxLength);
+    TARGET.value = value;
+    this.capacidadForm.get(controlPath)?.setValue(value, { emitEvent: false });
+  }
   /**
   * Método que se ejecuta cuando el campo capacidadUtilizadaPct pierde el foco (blur).
   * Autopopula el valor de calculoCapacidadInstalada con el valor actual de capacidadUtilizadaPct.
@@ -230,7 +257,15 @@ export class CapacidadInstaladaComponent implements OnInit {
       CALCULO_CAPACIDAD_INSTALADA: this.capacidadForm.value.calculoCapacidadInstalada,
     };
 
-    this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos, CAPACIDAD];
+    if (this.editingIndex !== null && this.editingIndex > -1) {
+      this.capacidadInstaladaDatos[this.editingIndex] = CAPACIDAD;
+      this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];
+      this.editingIndex = null;
+     
+    } else {  
+      this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos, CAPACIDAD];
+    }
+    this.SelectedInstaladaDatos = [];
     this.limpiar();
   }
 
@@ -273,10 +308,9 @@ export class CapacidadInstaladaComponent implements OnInit {
    * @param capacidadInstalada - Arreglo de objetos `CapacidadInstalada` seleccionados.
    * Si el arreglo contiene elementos, actualiza la propiedad `SelectedInstaladaDatos` con la selección.
    */
-  onCapacidadInstaladaSeleccionadas(capacidadInstalada: CapacidadInstalada[]): void {
-    if (capacidadInstalada.length > 0) {
+  onCapacidadInstaladaSeleccionadas(capacidadInstalada: CapacidadInstalada[]): void { 
       this.SelectedInstaladaDatos = capacidadInstalada;
-    }
+
   }
 
   /**
@@ -291,7 +325,8 @@ export class CapacidadInstaladaComponent implements OnInit {
    * de objetos comparables mediante igualdad estricta (`===`).
    */
   eliminarCapacidadInstalada(): void {
-    if (this.SelectedInstaladaDatos?.length > 0) {
+    if (this.SelectedInstaladaDatos?.length > 0) { 
+      this.mostrarEliminarCapacidadInstalada();
       this.SelectedInstaladaDatos.forEach(planta => {
         const INDEX = this.capacidadInstaladaDatos.findIndex(row => row === planta);
         if (INDEX !== -1) {
@@ -300,6 +335,86 @@ export class CapacidadInstaladaComponent implements OnInit {
       });
       this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];
     }
+    else
+    {
+      this.mostrarEliminarCapacidadInstalada();
+    }
   }
 
+  /**
+   * Muestra una notificación de advertencia si no se ha seleccionado ningún registro para eliminar.
+   * 
+   * Esta función configura la propiedad `nuevaNotificacionEliminar` con los detalles de la notificación
+   */
+  mostrarEliminarCapacidadInstalada(): void {
+     this.nuevaNotificacionEliminar = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.SelectedInstaladaDatos?.length > 0 ? 'El registro fue eliminado correctamente.':'Debe elegir al menos un registro de Capacidad Instalada para eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+  }
+  /**
+   * Edita la capacidad instalada seleccionada.
+   */
+  editarCapacidadInstalada(): void {
+    if (this.SelectedInstaladaDatos?.length === 1) {
+      const SELECTED = this.SelectedInstaladaDatos[0];
+      this.capacidadForm.patchValue({
+        fraccionArancelariaProductoTerminado: SELECTED.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO,
+        umt: SELECTED.UMT,
+        descripcionComercialProductoTerminado: SELECTED.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO,
+        turnos: SELECTED.TURNOS,
+        horasPorTurno: SELECTED.HORAS_POR_TURNO,
+        cantidadEmpleados: SELECTED.CANTIDAD_EMPLEADOS,
+        cantidadMaquinaria: SELECTED.CANTIDAD_MAQUINARIA,
+        descripcionMaquinaria: SELECTED.DESCRIPCION_MAQUINARIA,
+        capacidadInstaladaMensual: SELECTED.CAPACIDAD_INSTALADA_MENSUAL,
+        capacidadInstaladaAnual: SELECTED.CAPACIDAD_INSTALADA_ANUAL,
+        calculoCapacidadInstalada: SELECTED.CALCULO_CAPACIDAD_INSTALADA,
+        capacidadUtilizadaPct: SELECTED.CAPACIDAD_EFECTIVAMENTE_UTILIZADA
+      });
+
+      setTimeout(() => {
+        const NATIVE_EL = document.querySelector(
+          'app-catalogo-select[formControlName="fraccionArancelariaProductoTerminado"] select'
+        ) as HTMLElement | null;
+        if (NATIVE_EL) {
+          NATIVE_EL.focus();
+        }
+      }, 0);
+      this.editingIndex = this.capacidadInstaladaDatos.findIndex(row => row === SELECTED);
+    }
+    else if (!this.SelectedInstaladaDatos || this.SelectedInstaladaDatos.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe elegir un registro de complemento para actualizar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+}
+/**
+ * Maneja el cambio en la fracción arancelaria del producto terminado.
+ * 
+ * Actualiza los campos 'umt' y 'descripcionComercialProductoTerminado' en el formulario
+ * `capacidadForm` basándose en la selección realizada.
+ * @param selected 
+ */
+onFraccionArancelariaProductoTerminadoChange(selected: any): void {
+  if (selected) {
+    this.capacidadForm.patchValue({
+      umt: selected.umt || '',
+      descripcionComercialProductoTerminado: selected.descripcionComercialProductoTerminado || ''
+    });
+  }
+}
 }

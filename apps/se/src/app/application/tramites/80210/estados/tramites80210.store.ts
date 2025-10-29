@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Plantas } from '../modelos/registro-solicitud-immex.model';
 
@@ -10,7 +11,12 @@ import { Plantas } from '../modelos/registro-solicitud-immex.model';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80210State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
 
+  modalidad: string;
+  folio: string;
+  ano: string;
   /**
    * Lista de identificadores de plantas disponibles.
    */
@@ -25,6 +31,16 @@ export interface Tramites80210State {
    * Indica si las plantas deben mostrarse en la interfaz.
    */
   showPlantas: boolean;
+
+  /**
+   * RFC de la empresa.
+   */
+  rfc: string;
+
+  /**
+   * Indica el estado actual del trámite.
+   */
+  estado: Catalogo[];
 }
 
 /**
@@ -37,9 +53,15 @@ export interface Tramites80210State {
  */
 export function createInitialState(): Tramites80210State {
   return {
-    plantasDisponibles: [],
-    plantasSeleccionadas: [],
+    idSolicitud: 0,
+    modalidad: '',
+    folio: '',
+    ano: '',
+    plantasDisponibles: [] as Plantas[],
+    plantasSeleccionadas: [] as Plantas[],
     showPlantas: false,
+    rfc: '',
+    estado: [],
   };
 }
 
@@ -72,13 +94,33 @@ export class Tramite80210Store extends Store<Tramites80210State> {
    * @nombre establecerDatos
    * @descripción
    * Actualiza el estado con los valores proporcionados.
-   * 
+   *
    * @param {Partial<Tramites80210State>} values - Valores parciales para actualizar el estado.
    */
   public establecerDatos(values: Partial<Tramites80210State>): void {
     this.update((state) => ({
       ...state,
       ...values,
+    }));
+  }
+
+  /**
+   * Establece las plantas buscadas para el subfabricante.
+   *
+   * @param plantasBuscadas - Una lista de objetos de tipo `PlantasSubfabricante`
+   * que representan las plantas buscadas.
+   */
+  setPlantasBuscadas(plantasDisponibles: Plantas[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponibles: plantasDisponibles,
+    }));
+  }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

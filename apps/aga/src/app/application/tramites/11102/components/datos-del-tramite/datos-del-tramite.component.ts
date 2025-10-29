@@ -6,18 +6,19 @@ import {
   REGEX_CANTIDAD_15_4,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NUMERO_INTERIOR,
+  REGEX_NUMERO_PROGRAMA_IMMEX,
   REGEX_POSTAL,
   REGEX_RFC,
   REGEX_TELEFONO_DIGITOS,
   REGEX_TELEFONO_OPCIONAL,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
+  TituloComponent,  
 } from '@ng-mf/data-access-user';
 import { 
   CatalogoSelectComponent, 
-  InputCheckComponent 
+  InputCheckComponent,
+  ValidacionesFormularioService 
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -369,7 +370,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         ],
         numeroProgramaImmex: [
           this.solicitudState?.numeroProgramaImmex,
-          [Validators.required, Validators.maxLength(11)],
+          [Validators.required, Validators.maxLength(11), Validators.pattern(REGEX_NUMERO_PROGRAMA_IMMEX)],
         ],
         razonSocial: [
           { value: this.solicitudState?.razonSocial, disabled: true },

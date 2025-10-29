@@ -1,4 +1,3 @@
-<div class="container">
   <ng-titulo titulo="Datos mercancía"></ng-titulo>
 
   <form [formGroup]="mercanciaForm">
@@ -12,6 +11,8 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('clasificacionProducto')?.errors?.['required'] && mercanciaForm.get('clasificacionProducto')?.touched ? true : false"
             name="clasificacionProducto"
+            [placeholder]="'Selecciona una opción'"
+           (selectionChange)="onCambioClasificacionProducto($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -26,6 +27,7 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('especificarClasificacionProducto')?.errors?.['required'] && mercanciaForm.get('especificarClasificacionProducto')?.touched? true : false"
             name="especificarClasificacionProducto"
+              [placeholder]="'Selecciona una opción'"
           ></app-catalogo-select>
         </div>
       </div>
@@ -170,6 +172,7 @@
           [required]="true"
           [markUntouched]="mercanciaForm.get('tipoProducto')?.errors?.['required'] && mercanciaForm.get('tipoProducto')?.touched ? true : false"
           name="tipoProducto"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -214,6 +217,7 @@
           [label]="'Forma farmacéutica'"
           [required]="true"
           name="formaFarmaceutica"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -260,11 +264,12 @@
           [label]="'Estado físico'"
           [required]="true"
           name="estadoFisico"
+          [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
     } @if(elementosAnadidos.includes('especifiqueEstado') &&
-    mercanciaForm.get('estadoFisico')?.value === tipoProductoEspecial ){
+    mercanciaForm.get('estadoFisico')?.value === 'ESFIMG.OTRE' ){
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -335,10 +340,11 @@
     }
 
     <div class="row">
+@if(fraccionArancelariaCatalog){
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria<span
+            >Fracción arancelaria <span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
@@ -360,6 +366,7 @@
             (change)="cambiarFraccionArancelaria()"
             (keydown)="validarFraccionArancelaria()"
           />
+
           <div
             class="mensaje-error"
             *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched"
@@ -382,7 +389,24 @@
           </div>
         </div>
       </div>
+    }
+
+    @else{
+      <div class="col-md-10">
+        <div class="form-group">
+         <app-catalogo-select
+            [catalogo]="fraccionArancelariaDatos"
+            formControlName="fraccionArancelaria"
+            [label]="'Fracción arancelaria'"
+            [required]="true"
+            [markUntouched]="mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched ? true : false"
+            name="fraccionArancelaria"
+              [placeholder]="'Selecciona una opción'"
+          ></app-catalogo-select>
+      </div>
     </div>
+  }
+  </div>
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -425,7 +449,7 @@
             >:</label
           >
           <input
-            maxlength="16"
+            maxlength="20"
             class="form-control"
             id="cantidadUmtValor"
             type="text"
@@ -446,12 +470,20 @@
           >
             Por favor, escribe un número entero válido.
           </div>
+          <div *ngIf="mercanciaForm.get('cantidadUmtValor')?.errors?.['formatoInvalido'] && 
+           !mercanciaForm.get('cantidadUmtValor')?.errors?.['required'] && 
+           !mercanciaForm.get('cantidadUmtValor')?.errors?.['pattern'] && 
+           mercanciaForm.get('cantidadUmtValor')?.touched" 
+     class="mensaje-error">
+ 
+     Este campo permite doce números enteros y hasta cinco decimales
+</div>
         </div>
       </div>
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmt"
-            >UMT<span
+            >UMT <span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
@@ -492,7 +524,7 @@
             >:</label
           >
           <input
-            maxlength="16"
+            maxlength="20"
             class="form-control"
             id="cantidadUmcValor"
             type="text"
@@ -514,6 +546,14 @@
           >
             Por favor, escribe un número entero válido.
           </div>
+          <div *ngIf="mercanciaForm.get('cantidadUmcValor')?.errors?.['formatoInvalido'] && 
+          !mercanciaForm.get('cantidadUmcValor')?.errors?.['required'] && 
+          !mercanciaForm.get('cantidadUmcValor')?.errors?.['pattern'] && 
+          mercanciaForm.get('cantidadUmcValor')?.touched" 
+    class="mensaje-error">
+
+    Este campo permite doce números enteros y hasta diez decimales
+  </div>
         </div>
       </div>
       <div class="col-md-5 ml-2">
@@ -526,6 +566,8 @@
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
           name="cantidadUmc"
+
+
         ></app-catalogo-select>
       </div>
     </div>
@@ -559,7 +601,7 @@
     }
 
     <div class="row">
-      @if(!elementosNoValidos.includes('numeroRegistroSanitario')){
+      @if(!elementosNoValidos.includes('numeroRegistroSanitario') && !requiedField) {
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="numeroRegistroSanitario"
@@ -569,34 +611,22 @@
             maxlength="50"
             class="form-control"
             id="numeroRegistroSanitario"
-            type="number"
+            type="text"
             formControlName="numeroRegistroSanitario"
-            [ngClass]="
-              isValid(mercanciaForm, 'numeroRegistroSanitario')
-                ? 'required'
-                : ''
-            "
+           
           />
-          <div
-            class="mensaje-error"
-            *ngIf="mercanciaForm.get('numeroRegistroSanitario')?.errors?.['required'] && mercanciaForm.get('numeroRegistroSanitario')?.touched"
-          >
-            Este campo es obligatorio.
-          </div>
+          
         </div>
       </div>
-      } @if(!elementosNoValidos.includes('fechaCaducidad')){
+      } @if(!elementosNoValidos.includes('fechaCaducidad') && !requiedField){
       <div class="col-md-5">
         <div class="form-group">
-          <ng-container
-            *ngTemplateOutlet="
-              fecha;
-              context: {
-                controlName: 'fechaCaducidad',
-                lableName: 'Fecha de caducidad:'
-              }
-            "
-          ></ng-container>
+          <input-fecha
+          [datos]="fechaDeCaducidadInputMercanica"
+          name="fechaCaducidad"
+          (valorCambiado)="fechaDeCaducidadValor($event)"
+          [setFecha]="mercanciaForm.get('fechaCaducidad')?.value"
+        ></input-fecha>
         </div>
       </div>
       }
@@ -888,7 +918,6 @@
       </div>
     </div>
   </div>
-</div>
 
 @if (nuevaNotificacion) {
 <section>

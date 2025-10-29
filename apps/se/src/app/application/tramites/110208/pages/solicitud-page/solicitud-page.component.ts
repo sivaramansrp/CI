@@ -1,10 +1,13 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, DatosPasos, ERROR_FORMA_ALERT, JSONResponse, ListaPasosWizard, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modificacion.enum";
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Solocitud110208Service } from '../../services/service110208.service';
+import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
 /**
  * Componente para la página de solicitud.
@@ -21,6 +24,38 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    */
   indice: number = 1;
 
+    /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+    public formErrorAlert = ERROR_FORMA_ALERT;
+    /**
+  * @property {boolean} esFormaValido
+  * @description
+  * Indica si el formulario del paso actual es válido.
+  * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+  */
+  esFormaValido: boolean = false;
+
+  /**
+  * @property {PasoUnoComponent} pasoUnoComponent
+  * @description
+  * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+  * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+  */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Estado actual de la 110208.
+   * @type {Solicitud110208State}
+   */
+  public solicitudState!: Solicitud110208State;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
   /**
    * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
    * @param consultaQuery Consulta a los datos del store.
@@ -29,7 +64,16 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solocitud110208Service: Solocitud110208Service,
-  ) {}
+    public tramite110208Store: Tramite110208Store,
+    private tramite110208Query: Tramite110208Query,
+  ) {
+    this.tramite110208Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+
+  }
 
   /**
    * Constante de alerta utilizada en el componente.
@@ -132,24 +176,127 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    * 
    * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
    * 
-   * @param {AccionBoton} e Acción del botón (cont o atras) y el valor asociado a la acción.
-   * @returns {void}
+   * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+    this.esFormaValido = false;
+    if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
+      this.obtenerDatosDelStore()
+    }
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.pasoNavegarPor(e);
+    }
+  }
+    /**
+    * Obtiene los datos del store y los guarda utilizando el servicio.
+    */
+    obtenerDatosDelStore(): void {
+      this.solocitud110208Service.getAllState()
+        .pipe(take(1))
+        .subscribe(data => {
+          this.guardar(data);
+  
+        });
+    }
+      /**
+    * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+    * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+    *
+    * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+    *
+    * @remarks
+    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
+    * La llamada al servicio actualmente está comentada.
+    */
+     guardar(data: Solicitud110208State): Promise<JSONResponse> {
+     const CERTIFICADO = this.solocitud110208Service.buildCertificado(data);
+      const DATOS_CERTIFICADO = this.solocitud110208Service.buildDatosCertificado(data);   
+      const DESTINATARIO = this.solocitud110208Service.buildDestinatario(data);
+       const PAYLOAD = {
+          rfc_solicitante: 'AAL0409235E6',
+          idSolicitud: this.solicitudState.idSolicitud || 0,
+          solicitante: {
+            rfc: "AAL0409235E6",
+            nombre: "ACEROS ALVARADO S.A. DE C.V.",
+            actividad_economica: "Fabricación de productos de hierro y acero",
+            correo_electronico: "contacto@acerosalvarado.com",
+            domicilio: {
+              pais: "México",
+              codigo_postal: "06700",
+              estado: "Ciudad de México",
+              municipio_alcaldia: "Cuauhtémoc",
+              localidad: "Centro",
+              colonia: "Roma Norte",
+              calle: "Av. Insurgentes Sur",
+              numero_exterior: "123",
+              numero_interior: "Piso 5, Oficina A",
+              lada: "",
+              telefono: "123456"
+            }
+          },
+          certificado: CERTIFICADO,
+          destinatario: DESTINATARIO,
+          datos_del_certificado: DATOS_CERTIFICADO
+        };
+    
+         return new Promise((resolve, reject) => {
+               this.solocitud110208Service.guardarDatosPost(PAYLOAD).subscribe(response => {
+                 const API_RESPONSE = doDeepCopy(response);
+                 if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+                   if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
+                     this.tramite110208Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
+                     this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+                   } else {
+                     this.tramite110208Store.setIdSolicitud(0);
+                   }
+                 }
+                 resolve(response);
+               }, error => {
+                 reject(error);
+               });
+               });
+      }
 
-      // Dependiendo de la acción, avanza o retrocede en el wizard
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
+  pasoNavegarPor(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
       if (e.accion === 'cont') {
-        // Si la acción es 'cont', avanza al siguiente paso
         this.wizardComponent.siguiente();
       } else {
-        // Si la acción es 'atras', retrocede al paso anterior
         this.wizardComponent.atras();
       }
     }
+  }
+
+    /**
+ * @method validarTodosFormulariosPasoUno
+ * @description
+ * Valida todos los formularios del componente `PasoUnoComponent`.
+ * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+ * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+ * Retorna `true` si todos los formularios son válidos.
+ *
+ * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+ */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validateAll();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
   /**
    * Hook de destrucción del componente. Limpia las suscripciones activas para evitar fugas de memoria.

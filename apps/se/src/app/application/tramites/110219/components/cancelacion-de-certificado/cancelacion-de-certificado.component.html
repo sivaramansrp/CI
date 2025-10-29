@@ -1,5 +1,5 @@
-<form [formGroup]="cancelacionForm" (ngSubmit)="validarDestinatarioFormulario()">
-  <ng-container formGroupName="validacionForm">
+<ng-container>
+  <form [formGroup]="validacionForm" (ngSubmit)="validarDestinatarioFormulario()">
     <ng-titulo titulo="Buscar certificado de origen" />
     <div class="row mt-5">
       <div class="col-md-4">
@@ -21,7 +21,8 @@
       </div>
       <div class="col-md-4"></div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
-        <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()">
+        <button type="button" class="btn btn-primary ms-3" (click)="getSolicitudesTabla()" 
+          [disabled]="!validacionForm.get('numeroCertificado')?.value || validacionForm.get('numeroCertificado')?.invalid">
           Buscar Certificado
         </button>
       </div>
@@ -30,7 +31,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="paisCatalogo.catalogos" [label]="'País / Bloque'" [required]="false" id="pais"
-          formControlName="pais" (change)="setValoresStore(validacionForm, 'pais', 'setPais')"></app-catalogo-select>
+          formControlName="pais" (change)="setValoresStore(validacionForm, 'pais', 'setPais')" (selectionChange)="onChangeEntidad($event)"></app-catalogo-select>
       </div>
     </div>
     <div class="row">
@@ -42,11 +43,11 @@
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaInicial')?.value" [datos]="fechaInicialInput"
+        <input-fecha [setFecha]="validacionForm.get('fechaInicial')?.value" [datos]="fechaInicialInput"
           (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput"
+        <input-fecha [setFecha]="validacionForm.get('fechaFinal')?.value" [datos]="fechaFinalInput"
           (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscars">
@@ -76,6 +77,5 @@
         [configuracionTabla]="headers"></app-tabla-dinamica>
       }
     </div>
-  </ng-container>
-</form>
-<btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>
+  </form>
+</ng-container>

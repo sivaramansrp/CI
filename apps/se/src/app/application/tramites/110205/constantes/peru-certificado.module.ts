@@ -59,3 +59,36 @@ export const FECHA = {
    */
   habilitado: true,
 };
+
+export const IS_FORM_VALID =`<div class="d-flex justify-content-center text-center">
+<div>
+  <div class="col-md-12"><strong>¡Error de registro! </strong> Faltan campos por capturar
+  </div>
+</div>
+</div>
+`;
+
+export const FORM_ERROR_ALERT_CANT_VAL = `<div class="d-flex justify-content-center text-center">
+<div>
+  <div class="col-md-12">
+    La cantidad a exportar debe ser mayor a cero.El valor de la mercancía debe ser mayor a cero
+
+  </div>
+</div>
+</div>
+`;
+export const FORM_ERROR_ALERT_VALORES =`<div class="d-flex justify-content-center text-center">
+<div>
+  <div class="col-md-12">
+   El valor de la mercancía debe ser mayor a cero
+  </div>
+</div>
+</div>
+`
+export const FORM_ERROR_ALERT_CANTIDAD=`<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      El campo cantidad no puede ser cero.
+    </div>
+  </div>
+</div>`

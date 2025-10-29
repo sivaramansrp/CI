@@ -1,4 +1,6 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
+import { AfterViewInit,ElementRef,ViewChild } from '@angular/core';
+import {CategoriaMensaje,TipoNotificacionEnum} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
@@ -7,11 +9,14 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Modal } from 'bootstrap';
+import {Notificacion} from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+
 
 
 @Component({
@@ -21,7 +26,7 @@ import { Validators } from '@angular/forms';
 })
 
 
-export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
+export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Formulario para capturar los datos de la solicitud.
    */
@@ -41,6 +46,34 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * @descripcion
+   * Instancia del modal de modificación.
+   */
+  modalInstanceDos!: Modal;
+
+  /**
+   * Instancia del modal para gestionar archivos.
+   *
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
+  modalInstances: Modal | null = null;
+  /**
+   * RFC del solicitante obtenido del store.
+   */
+  rfcSolicitante: string = '';
+
+  /**
+   * Clave de entidad federativa obtenida del store.
+   */
+  claveEntidadFederativa: string = 'SIN';
+
+  /**
+   * ID del tipo de trámite obtenido del store.
+   */
+  idTipoTramite: number = 140105;
+
+  
 
   /**
    * Configuración de las columnas de la tabla de solicitudes de cancelación.
@@ -64,12 +97,69 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * Almacena los registros de cancelación para mostrar en la tabla.
    */
   cuerpoTablaCancelacion: Cancelacion[] = [];
+
+  cuerpoTablaSeleccionado: Cancelacion[] = [];
+
+  /**
+   * Referencia al elemento del modal para buscar mercancías.
+   *
+   * Se utiliza para abrir o cerrar el modal de búsqueda.
+   */
+  @ViewChild('modalBuscar') modalBuscar!: ElementRef;
+
   
   /**
    * Indica si el usuario tiene permiso para realizar ciertas acciones.
    */
   public datosDePermiso: boolean = false;
 
+  /**
+   * @descripcion
+   * Referencia al elemento del modal de modificación.
+   */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   *
+   * Se utiliza para cerrar el modal de manera programada.
+   */
+@ViewChild('closeModal') closeModal!: ElementRef;
+
+/**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+public nuevaNotificacion!: Notificacion;
+/**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+public nuevaNotificacionUno!: Notificacion;
+
+
+  /**
+   * Formulario utilizado para capturar el número de folio del trámite.
+   * Este formulario incluye validaciones requeridas y de patrón numérico.
+   */
+  public busquedaForm!: FormGroup;
+  /**
+   * Indica si una fila de la tabla está seleccionada.
+   * Cuando es `true`, significa que al menos una fila ha sido seleccionada por el usuario.
+   * Esto puede ser útil para habilitar o deshabilitar acciones basadas en la selección.
+   * */
+  esRowSelected: boolean = false;
+  
+  /**
+   * Indica si se está en el proceso de eliminación de registros.
+   * Cuando es `true`, significa que el usuario ha iniciado una acción para eliminar uno o más registros.
+   * Esto puede activar la visualización de un modal de confirmación o habilitar opciones relacionadas con la eliminación.
+   * */
+  esEliminarDos: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -83,7 +173,9 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     private servicioDeMensajesService: ServicioDeMensajesService,
     private consultaQuery: ConsultaioQuery,
     private desistimientoQuery: DesistimientoQuery
-  ) { }
+  ) { this.establecerBusquedaForm();
+
+  }
    /**
    * Método que se ejecuta al iniciar el componente.
    * Inicializa los formularios de solicitud y cancelación, 
@@ -106,8 +198,8 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     this.cancelacionForm = this.fb.group({
      motivoCancelacion: ['', [Validators.required, Validators.maxLength(250)]],
     });
-    
-
+    this.initializeStoreData();
+    this.suscribirseAStoreData();
 
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
@@ -124,14 +216,14 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
      
       }
     });
-
-
-     // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
       .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe(data => {
         if (Array.isArray(data?.datos)) {
           this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
+          this.cancelacionForm.patchValue({
+            motivoCancelacion: data.motivoCancelacion,
+          });       
         } else {
           this.cuerpoTablaCancelacion = [];
         }
@@ -147,7 +239,392 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  /**
+   * Inicializa los datos del store con información del usuario si están vacíos.
+   * Esto asegura que tengamos los datos necesarios para el payload.
+   */
+  private initializeStoreData(): void {
+    this.desistimientoQuery.selectTramite$
+      .pipe(takeUntil(this.destroyNotificationSubject$))
+      .subscribe((storeData) => {
+        // Si el RFC está vacío, podemos establecer un valor predeterminado o obtenerlo de otro lugar
+        if (!storeData.rfc) {
+          // Aquí podrías obtener el RFC de:
+          // 1. Un servicio de autenticación
+          // 2. Session storage
+          // 3. Un servicio de usuario global
+          // 4. O pedir al usuario que lo ingrese
+          
+          // Por ejemplo, podrías hacer:
+          // const userRfc = this.authService.getCurrentUserRfc();
+          // if (userRfc) {
+          //   this.servicioDeMensajesService.actualizarEstadoFormulario({ rfc: userRfc });
+          // }
+          
+          // this.servicioDeMensajesService.actualizarEstadoFormulario({ rfc: "AAL0409235E6" });
+        }
+
+        // Inicializar clave_entidad_federativa si está vacía
+        if (!storeData.claveEntidadFederativa) {
+          // Podrías obtener esto de:
+          // 1. Ubicación del usuario
+          // 2. Configuración del sistema
+          // 3. Selección del usuario
+          // 4. Servicio de geolocalización
+          
+          // Ejemplo:
+          // const userState = this.locationService.getUserState();
+          // if (userState) {
+          //   this.servicioDeMensajesService.actualizarEstadoFormulario({ 
+          //     claveEntidadFederativa: userState 
+          //   });
+          // }
+        }
+
+        // Inicializar idTipoTramite si está vacío o incorrecto
+        if (!storeData.idTipoTramite || storeData.idTipoTramite !== 140105) {
+          // Este valor generalmente es fijo para cada componente/trámite
+          // pero podría venir de:
+          // 1. Configuración del componente
+          // 2. Parámetros de la ruta
+          // 3. Configuración del sistema
+          
+          // Para este trámite específico, asegurar que sea 140105:
+          this.servicioDeMensajesService.actualizarEstadoFormulario({ 
+            idTipoTramite: 140105 
+          });
+        }
+      });
+  }
+
+  /**
+   * Suscribe a los valores del store y los mantiene actualizados en propiedades locales.
+   * Similar al patrón usado en 80205 suscribirseAFields().
+   */
+  private suscribirseAStoreData(): void {
+    this.desistimientoQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((state) => ({
+          rfc: state.rfc,
+          claveEntidadFederativa: state.claveEntidadFederativa,
+          idTipoTramite: state.idTipoTramite,
+          idSolicitud: state.idSolicitud,
+          folioCancelar: state.folioCancelar,
+        }))
+      )
+      .subscribe((storeValues) => {
+        this.rfcSolicitante = storeValues.rfc || 'AAL0409235E6';
+        this.claveEntidadFederativa = storeValues.claveEntidadFederativa || 'SIN';
+        this.idTipoTramite = storeValues.idTipoTramite || 140105;
+      });
+  }
+
+   /**
+   * @description Actualiza las ventas totales en el store y recalcula el reporte.
+   * @param evento - Evento del input para capturar el valor introducido.
+   */
+   motivoCancelacion(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    this.servicioDeMensajesService.actualizarEstadoFormulario({ motivoCancelacion: VALUE }); 
+  }
+
+
+  /**
+   * Muestra el formulario modal para buscar mercancías.
+   * Inicializa la instancia del modal si no está creada y luego lo muestra.
+   * @return void
+   * */
+  showForm():void{
+    if (this.modalBuscar) {
+      if (!this.modalInstances) {
+        this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+      }
+    }
+    this.modalInstances?.show();
+  }
+
+   /**
+   * Inicializa el formulario de búsqueda de trámites.
+   * Contiene el campo `tramite` con validaciones de requerido y solo números.
+   */
+   public establecerBusquedaForm(): void {
+    this.busquedaForm = this.fb.group({
+      tramite: ['', [Validators.required,]]
+    });
+  }
   
+  /**
+   * Cierra el modal activo.
+   *
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo
+   * y resetea el estado de validación del formulario de mercancía.
+   */
+  cerrarModal(): void {
+   
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    
+    }
+
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+   
+  }
+
+   /**
+   * @descripcion
+   * Hook del ciclo de vida que se llama después de que la vista del componente se haya inicializado.
+   * Inicializa el modal de modificación.
+   */
+   ngAfterViewInit(): void {
+    if (this.modifyModal) {
+      this.modalInstanceDos = new Modal(this.modifyModal.nativeElement);
+    }
+  }
+
+   /**
+   * @descripcion
+   * Abre el modal de modificación con los datos seleccionados.
+   * @param disponiblesDatos - Los datos seleccionados para modificación.
+   */
+   abrirModificarModal(): void {
+    const TRAMITEVALUE = this.busquedaForm.get('tramite')?.value;
+ 
+    if (!TRAMITEVALUE || TRAMITEVALUE === '') {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite es un dato requerido",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return 
+    }
+    if(TRAMITEVALUE.length < 25){
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite no puede ser menor de 25 carácteres",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return 
+    }
+     if(TRAMITEVALUE.length > 25){
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite no puede ser mayor de 25 carácteres",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return 
+    }
+    if(this.modalInstanceDos) {
+      this.modalInstanceDos.show();
+    }
+  
+    }
+
+  /**
+   * Busca permisos para cancelación basado en el folio del trámite.
+   * @method buscarPermisoCancelacion
+   */
+  buscarPermisoCancelacion(event?: Event): void {
+    // Prevenir la propagación del evento para evitar activar la validación del formulario padre
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
+    // Validar el formulario antes de proceder
+    if (this.busquedaForm.invalid) {
+      this.busquedaForm.markAllAsTouched();
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite es un dato requerido",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const TRAMITE_VALUE = this.busquedaForm.get('tramite')?.value;
+
+    // Validar longitud del folio
+    if (TRAMITE_VALUE.length !== 25) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "El Folio de Trámite debe tener exactamente 25 caracteres",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.servicioDeMensajesService.actualizarEstadoFormulario({ folioCancelar: TRAMITE_VALUE });
+
+    // Validar que tengamos los datos necesarios del store
+    if (!this.rfcSolicitante) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "No se encontraron los datos del solicitante. Intente recargar la página.",
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.desistimientoQuery.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((storeState) => ({
+          id_solicitud: storeState.idSolicitud || this.idTipoTramite,
+          rfc_solicitante: storeState.rfc || this.rfcSolicitante,
+          clave_entidad_federativa: storeState.claveEntidadFederativa || this.claveEntidadFederativa,
+          id_tipo_tramite: storeState.idTipoTramite || this.idTipoTramite,
+          folio_cancelar: storeState.folioCancelar || TRAMITE_VALUE
+        }))
+      )
+      .subscribe((PAYLOAD) => {
+        this.ejecutarBusquedaPermiso(PAYLOAD);
+      });
+  }
+
+  /**
+   * Ejecuta la búsqueda del permiso con el payload proporcionado.
+   * @param payload - Datos necesarios para la búsqueda del permiso
+   */
+  /**
+   * Ejecuta la búsqueda del permiso con el payload proporcionado.
+   * @param payload - Datos necesarios para la búsqueda del permiso
+   */
+  private ejecutarBusquedaPermiso(PAYLOAD: {
+    id_solicitud: number;
+    rfc_solicitante: string;
+    clave_entidad_federativa: string;
+    id_tipo_tramite: number;
+    folio_cancelar: string;
+  }): void {
+    this.servicioDeMensajesService.buscarPermisoCancelacion(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotificationSubject$))
+      .subscribe({
+            next: (response) => {
+              if (response.codigo === '00' && response.datos) {
+                this.datosDePermiso = true;
+                this.cuerpoTablaCancelacion = response.datos.datos || [];
+                this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion);
+                this.cerrarModal();
+                this.nuevaNotificacion = {
+                  tipoNotificacion: TipoNotificacionEnum.TOASTR,
+                  categoria: CategoriaMensaje.EXITO,
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: 'Permiso encontrado exitosamente',
+                  cerrar: false,
+                  tiempoDeEspera: 2000,
+                  txtBtnAceptar: 'Aceptar',
+                  txtBtnCancelar: '',
+                };
+              } else {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: TipoNotificacionEnum.ALERTA,
+                  categoria: CategoriaMensaje.ERROR,
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: response.error || 'No se encontró el permiso especificado',
+                  cerrar: false,
+                  tiempoDeEspera: 3000,
+                  txtBtnAceptar: 'Aceptar',
+                  txtBtnCancelar: '',
+                };
+              }
+            },
+            error: (error) => {
+              let errorMessage = 'El Folio de Trámite que ingresó no pertenece a PEXIM';
+              if (error.status) {
+                switch (error.status) {
+                  case 400:
+                    errorMessage = 'Error en los datos enviados. Verifique el formato del folio.';
+                    break;
+                  case 401:
+                    errorMessage = 'No tiene autorización para realizar esta consulta.';
+                    break;
+                  case 404:
+                    errorMessage = 'El Folio de Trámite que ingresó no fue encontrado en el sistema.';
+                    break;
+                  case 500:
+                    errorMessage = 'Error interno del servidor. Intente nuevamente más tarde.';
+                    break;
+                  default:
+                    if (error.error?.mensaje) {
+                      errorMessage = error.error.mensaje;
+                    } else if (error.message) {
+                      errorMessage = error.message;
+                    }
+                }
+              }
+
+              this.nuevaNotificacion = {
+                tipoNotificacion: TipoNotificacionEnum.ALERTA,
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: '',
+                mensaje: errorMessage,
+                cerrar: false,
+                tiempoDeEspera: 3000,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
+          });
+  }
+
+  
+
+   /**
+   * @descripcion
+   * Cierra el modal de modificación.
+   */
+   cerrarModificarModal(): void {
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+      this.busquedaForm.reset();
+    }
+    if (this.modalInstanceDos) {
+    
+      this.modalInstanceDos.hide();
+    }
+  }
 
 
   /**
@@ -172,6 +649,43 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
   public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
+
+   /**
+   * Obtiene los datos del subfabricante por eliminar.
+   * @method cueroEliminar
+   * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
+   */
+   cuerpoTablaSelectionEliminar(
+    event: Cancelacion[]
+  ): void {
+    this.cuerpoTablaSeleccionado = event;
+  }
+
+  
+    /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+    cerrarTabla(): void {
+   
+      this.esRowSelected = false;
+    }
+
+     /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+
+  cerrarEliminarDos(evento:boolean): void {
+    this.esEliminarDos=false;
+    if(evento===true){
+      this.cuerpoTablaCancelacion = [];
+      this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
+      this.cuerpoTablaSeleccionado=[];
+     }
+    
+  }
    /**
    * Método que se ejecuta al eliminar un registro de la tabla.
    * Limpia el contenido de la tabla de cancelación y actualiza los datos 
@@ -179,9 +693,37 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la eliminación.
    */
-  public eliminarRegistro(_event: Event): void {
-    this.cuerpoTablaCancelacion = [];
-    this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
+   eliminarRegistro(): void {
+    if(this.cuerpoTablaSeleccionado.length === 0){
+      this.nuevaNotificacionUno = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'action',
+        titulo: '',
+        mensaje: "Seleccione un registro a eliminar.",
+        cerrar: false,
+        tiempoDeEspera: 200,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };  
+    this.esRowSelected= true;
+    }
+      else{
+        this.nuevaNotificacionUno= {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ALERTA,
+          modo: 'modal',
+          titulo: '',
+          mensaje: '¿Esta seguro que desea eliminar el registro marcado?',
+          cerrar: false,
+          tiempoDeEspera: 200,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        };
+        this.esEliminarDos = true;
+      }
+  
+   
   }
 
 

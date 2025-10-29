@@ -32,7 +32,10 @@
                     <div class="form-group">
                         <label class="form-label" for="fraccionArancelariaTIGIE">Fracción arancelaria TIGIE*:</label>
                         <input class="form-control" type="text" id="fraccionArancelariaTIGIE"
-                            formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE" (change)="setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')">
+                            formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE" 
+                            (change)="setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')"
+                            (blur)="onBlurFraccionArancelaria()"
+                            maxlength="10" libUppercase>
                             @if (esInvalido('fraccionArancelariaTIGIE')) {
                                 <div class="text-danger">
                                   @if (form.controls['fraccionArancelariaTIGIE'].errors?.['required']) {
@@ -50,8 +53,14 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE_TIGIE"
-                    [required]="true" (change)=" setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                   <div class="form-group">
+                   <label class="form-label" for="fraccionArancelariaTIGIE_TIGIE"></label>
+                    <select class="form-control form-select" formControlName="fraccionArancelariaTIGIE_TIGIE" (change)="setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE');">
+                      <option [ngValue]="null">Selecciona una opción</option>
+                      <option *ngFor="let reg of fraccionArancelariaTigieData" [value]="reg.cveFraccion">
+                        {{ reg.cveFraccion }} - {{ reg.descripcion }}
+                      </option>
+                    </select>
                     @if (esInvalido('fraccionArancelariaTIGIE')) {
                         <div class="text-danger">
                           @if (form.controls['fraccionArancelariaTIGIE_TIGIE'].errors?.['required']) {
@@ -59,7 +68,7 @@
                           }
                         </div>
                       }
-                      
+                   </div>
                 </div>
             </div>
             <div class="row">

@@ -763,6 +763,21 @@ export const PATRON_LETRAS_NUMEROS_ESPACIOS = /^[A-Za-z0-9 ]+$/;
 export const PATRON_NUMERO_DECIMAL_10_2 = /^\d{1,10}\.\d{2}$/;
 
 /**
+ * Expresión regular para validar números enteros o decimales con hasta 10 dígitos enteros y opcionalmente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890"
+ * - "1234567890.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901" (más de 10 dígitos enteros)
+ * - "123.1" (menos de 2 decimales si hay decimales)
+ * - "abc" (no es un número)
+ */
+export const REGEX_ENTERO_O_DECIMAL_10_2 = /^\d{1,10}(\.\d{2})?$/;
+
+/**
  * Expresión regular para validar números decimales con hasta 3 dígitos enteros y hasta 18 decimales.
  *
  * Ejemplos válidos:
@@ -858,6 +873,23 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+
+/**
+ * Expresión regular para validar números de teléfono de 10 dígitos.
+ * 
+ * Acepta únicamente caracteres numéricos (0-9) y requiere que el número tenga exactamente 10 dígitos.
+ * 
+ * Ejemplos válidos:
+ * - 5512345678
+ * - 8187654321
+ * 
+ * Ejemplos inválidos:
+ * - 123456789 (menos de 10 dígitos)
+ * - 12345678901 (más de 10 dígitos)
+ * - 55-1234-5678 (contiene caracteres no numéricos)
+ */
+export const TELEFONO = /^[0-9]{10}$/;
+
 /**
  * Expresión regular para validar números decimales con hasta 13 dígitos enteros y exactamente 2 decimales.
  *
@@ -871,6 +903,23 @@ export const IMPORTE = /^\d{1,16}$/;
  * - "123" (sin decimales)
  */
 export const REGEX_DECIMAL_16_TOTAL = /^\d{1,13}\.\d{2}$/;
+
+/**
+ * Expresión regular para validar números con hasta 13 dígitos enteros y opcionalmente hasta 2 decimales.
+ * Total máximo de 16 caracteres (13 enteros + punto + 2 decimales).
+ *
+ * Ejemplos válidos:
+ * - "1234567890123" (13 dígitos enteros)
+ * - "1234567890123.12" (13 enteros + 2 decimales)
+ * - "123.45" (3 enteros + 2 decimales)
+ * - "1.5" (1 entero + 1 decimal)
+ *
+ * Ejemplos no válidos:
+ * - "12345678901234" (más de 13 dígitos enteros)
+ * - "123.456" (más de 2 decimales)
+ * - "123." (punto sin decimales)
+ */
+export const REGEX_DECIMAL_13_2_OPTIONAL = /^\d{1,13}(\.\d{1,2})?$/;
 
 
 /**
@@ -925,6 +974,8 @@ export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   * Ejemplos no válidos: "1234567" (menos de 8 dígitos), "123456789" (más de 8 dígitos), "1234abcd" (contiene letras)
   */
 export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
+
+export const VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
@@ -1126,7 +1177,7 @@ export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
  * - Letras mayúsculas y minúsculas (A-Z, a-z)
  * - Espacios en blanco
  */
-export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s]+$/;
+export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s.]+$/;
 
 /**
  * Expresión regular para detectar caracteres especiales no permitidos.
@@ -1135,3 +1186,104 @@ export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s]+$/;
  * o campos alfanuméricos específicos.
  */
 export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico con caracteres especiales limitados.
+ *
+ * Esta expresión regular permite:
+ * - Letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
+ * - Dígitos del 0 al 9
+ * - Caracteres especiales específicos: & ) , (
+ * - No permite espacios ni otros caracteres especiales
+ *
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "Empresa&Asociados"
+ * - "Test(México),SA"
+ * - "ABC123(&),"
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial no permitido)
+ * - "Test-Case" (contiene un guión no permitido)
+ */
+export const REGEX_RFC_ALPHANUMERICO = /^[A-Za-z0-9Ññ&(),]+$/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico con caracteres especiales limitados.
+ *
+ * Esta expresión regular permite:
+ * - Letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
+ * - Dígitos del 0 al 9
+ * - Caracteres especiales específicos: , ( )
+ * - No permite espacios ni otros caracteres especiales
+ *
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "Empresa,Asociados"
+ * - "Test(México),SA"
+ * - "ABC123(),"
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial no permitido)
+ * - "Test-Case" (contiene un guión no permitido)
+ */
+export const REGEX_NOMBRE_ALPHANUMERICO = /^[A-Za-z0-9Ññ(), ]+$/;
+
+/**
+ * PATRONES PARA FILTRADO DE ENTRADA EN TIEMPO REAL
+ * Estos patrones se usan para bloquear caracteres no permitidos mientras el usuario escribe
+ */
+
+/**
+ * Patrón para permitir solo letras, números y caracteres específicos: &, (, ), ,
+ * Usado para filtrar entrada en tiempo real en campos RFC
+ */
+export const INPUT_FILTER_RFC_ALPHANUMERICO = /[A-Za-z0-9Ññ&(),]/;
+
+/**
+ * Patrón para permitir solo letras, números, comas, paréntesis y espacios
+ * Usado para filtrar entrada en tiempo real en campos de nombres
+ */
+export const INPUT_FILTER_NOMBRE_ALPHANUMERICO = /[A-Za-z0-9Ññ(), ]/;
+
+/**
+ * Patrón para permitir solo letras, números, comas, paréntesis y espacios
+ * Usado para filtrar entrada en tiempo real en campos de dirección
+ */
+export const INPUT_FILTER_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /[A-Za-z0-9,() ]/;
+
+/**
+ * Expresión regular para validar el formato del número de programa IMMEX.
+ * El formato esperado es: 123456/2023
+ * - Antes de la barra (/) puede haber entre 1 y 6 dígitos.
+ * - Después de la barra (/) debe haber exactamente 4 dígitos.
+ */
+export const REGEX_NUMERO_PROGRAMA_IMMEX = /^\d{1,6}[/]\d{4}$/;
+
+/**
+ * Expresión regular para encontrar caracteres que no sean números (0-9).
+ * Utilizada para filtrar o reemplazar caracteres no numéricos en campos NICO.
+ * 
+ * @example
+ * // Uso para limpiar una cadena manteniendo solo números
+ * const input = "ABC123DEF456";
+ * const soloNumeros = input.replace(REGEX_NICO, ''); // Resultado: "123456"
+ */
+export const REGEX_NICO = /[^0-9]/g;
+
+/**
+ * Expresión regular para validar un solo carácter numérico o punto decimal.
+ * Utilizada para validación de entrada de teclas en campos numéricos.
+ */
+export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
+
+/**
+ * Expresión regular para reemplazar la parte decimal de un número.
+ * Coincide con el punto seguido de uno o más dígitos al final de la cadena.
+ * Ejemplo: "123.45" => ".45"
+ */
+export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;

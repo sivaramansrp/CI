@@ -1,5 +1,5 @@
+import { AVISO, ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, JSONResponse, WizardService, doDeepCopy } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, WizardService } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
@@ -44,6 +44,16 @@ import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-acci
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+  * compo doc
+  * Mensaje relacionado con el aviso de privacidad simplificado.
+  * 
+  * @type {string}
+  * @memberof PantallasComponent
+  */
+    public avisoPrivacidadAlert: string = AVISO.Aviso;
+
   padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
@@ -130,7 +140,6 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private complimentosBase = complimentos;
  
   /**
@@ -301,6 +310,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -313,6 +323,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
               this.indice = NEXT_INDEX;
               this.datosPasos.indice = NEXT_INDEX;
               this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
             } else {
               this.indice = e.valor;
               this.datosPasos.indice = e.valor;
@@ -341,12 +352,13 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       take(1),
       switchMap(data => this.guardar(data)),
       map(response => {
+        const DATOS = doDeepCopy(response);
         const OK = response.codigo === '00';
         if (OK) {
-          this.toastrService.success(response.mensaje);
+          this.toastrService.success(DATOS.mensaje);
         } else {
           this.padreBtn = true;
-          this.toastrService.error(response.mensaje);
+          this.toastrService.error(DATOS.mensaje);
         }
         return OK;
       })
@@ -370,20 +382,26 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns void
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): Promise<any> {
+  guardar(data: Tramite80101State): Promise<JSONResponse> {
     const PLANTAS = this.nuevoProgramaIndustrialService.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
-    const PLANTAS_SUBMANUFACTURERAS = this.nuevoProgramaIndustrialService.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
-    const SOLICITUD = this.nuevoProgramaIndustrialService.buildComplimentos(data, this.complimentosBase);
-    const DECLARACION_SOLICUTUD_ENTRIES = NuevoProgramaIndustrialService.buildDeclaracionSolicitudEntries(data);
+    const PLANTAS_SUBMANUFACTURERAS = this.nuevoProgramaIndustrialService.buildPlantasSubmanufactureras(
+      Array.isArray(this.plantasSubmanufacturerasBase) ? this.plantasSubmanufacturerasBase : [this.plantasSubmanufacturerasBase],
+      Array.isArray(data.empressaSubFabricantePlantas?.plantasSubfabricantesAgregar) ? data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar : []
+    );
+    const SOLICITUD = this.nuevoProgramaIndustrialService.buildComplimentos(data as unknown as Record<string, unknown>, this.complimentosBase);
+    const DECLARACION_SOLICUTUD_ENTRIES = this.nuevoProgramaIndustrialService.buildDeclaracionSolicitudEntries(data as unknown as Record<string, unknown>);
     const NOTARIOS = this.nuevoProgramaIndustrialService.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     const ANEXO_ALL = this.nuevoProgramaIndustrialService.buildAnexo(data);
-    const SOCIOS_ACCIONISTAS = this.nuevoProgramaIndustrialService.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
-   
+    const SOCIOS_ACCIONISTAS = this.nuevoProgramaIndustrialService.buildSociosAccionistas(
+      Array.isArray(data.tablaDatosComplimentos) ? data.tablaDatosComplimentos : [],
+      Array.isArray(data.tablaDatosComplimentosExtranjera) ? data.tablaDatosComplimentosExtranjera : [],
+      Array.isArray(this.sociosAccionistas) ? this.sociosAccionistas[0] : this.sociosAccionistas
+    );
+
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+      "idSolicitud": this.solicitudState.idSolicitud || 0,
       "idTipoTramite": 80101,
       "rfc": "AAL0409235E6",
       "cveUnidadAdministrativa": "8101",
@@ -435,9 +453,10 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
     }
     return new Promise((resolve, reject) => {
       this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-        if(esValidObject(response) && esValidObject(response.datos)) {
-          if(getValidDatos(response.datos.id_solicitud)) {
-            this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud);
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+          if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+            this.tramite80101Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
           } else {
             this.tramite80101Store.setIdSolicitud(0);
           }

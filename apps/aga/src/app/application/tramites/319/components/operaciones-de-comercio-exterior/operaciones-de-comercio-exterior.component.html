@@ -25,11 +25,12 @@
             [datos]="cuerpoSolicitarTablaFila"
             (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [styleCenter]="true"
           >
           </app-tabla-dinamica>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" (click)="abrirModuloPersonasNotificaciones(true)">Agregar</button>
-            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()" [disabled]="cuerpoSolicitarTablaFila.length === 0 ? true : false">Eliminar</button>
+            <button type="button" class="btn btn-danger ms-2" (click)="eliminarPeriodoPorId()" >Eliminar</button>
            
             </div>
         </div>
@@ -43,6 +44,7 @@
         [tipoSeleccionTabla]="tipoPersonasSeleccion"
         [configuracionTabla]="configuracionPersonasColumnas"
         [datos]="cuerpoPersonasTablaFila"
+        [styleCenter]="true"
       >
       </app-tabla-dinamica>
    
@@ -69,14 +71,26 @@
       <div class="col-md-12">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="periodoInicial">Periodo inicial*:</label>
-            <input class="form-control" id="periodoInicial" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoInicial" />
+            <label class="form-label" for="periodoInicial">Periodo inicial<span [ngClass]="{ 'text-danger': periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid }">*</span>:</label>
+            <input class="form-control" id="periodoInicial" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoInicial" (input)="formatPeriodoInicial($event)"
+            [class.is-invalid]="periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid"/>
+            <div *ngIf="periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid">
+              <small *ngIf="periodoForm.get('periodoInicial')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
+            <small *ngIf="periodoForm.get('periodoInicial')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">Por favor, no escribas menos de 7 caracteres</small>
+            <small *ngIf="periodoForm.get('periodoInicial')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Formato inválido</small>
           </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="periodoFinal">Periodo final*:</label>
-              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal" />
+              <label class="form-label" for="periodoFinal">Periodo final<span [ngClass]="{ 'text-danger': periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid }">*</span>:</label>
+              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal"  (input)="formatPeriodoFinal($event)"
+              [class.is-invalid]="periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid"/>
+              <div *ngIf="periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid">
+              <small *ngIf="periodoForm.get('periodoFinal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
+            <small *ngIf="periodoForm.get('periodoFinal')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">Por favor, no escribas menos de 7 caracteres</small>
+            <small *ngIf="periodoForm.get('periodoFinal')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Formato inválido</small>
             </div>
             </div>
         </div>
@@ -88,3 +102,6 @@
         </div>
 
 </div>
+<lib-notificaciones *ngIf="mostrarAlerta" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="aceptar()"></lib-notificaciones>
+
+<lib-notificaciones *ngIf="mostrarInfo" [notificacionInput]="nuevaNotificacionInfo" (confirmacionModal)="aceptarInfo($event)"></lib-notificaciones>

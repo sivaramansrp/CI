@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h1>Autorización de importación temporal de equipo e instrumentos musicales</h1>
+      <h1>Autorización de importación temporal (formato general)</h1>
     </div>
     @if (esFormaValido) {
       <div class="col-md-12">
@@ -31,7 +31,7 @@
     }
   </div>
   <div class="container px-3">
-    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"></btn-continuar>
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" ></btn-continuar>
     @if (indice === 1) {
     <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
     }

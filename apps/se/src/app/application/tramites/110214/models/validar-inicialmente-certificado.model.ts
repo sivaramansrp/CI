@@ -165,7 +165,8 @@ export interface GrupoDeDirecciones {
  * Contiene el número de registro fiscal del productor.
  */
 export interface AgregarDatosProductorFormulario {
-  numeroRegistroFiscal: string;
+  numeroRegistroFiscal?: string;
+  fax?: string;
 }
 
 /**
@@ -199,7 +200,7 @@ export interface FormularioMercancia {
  * nombre comercial y fechas de inicio y fin.
  */
 export interface GrupoTratado {
-  tratado: string;
+  tratado: string; 
   pais: string;
   fraccionArancelaria: string;
   numeroRegistro: string;
@@ -284,4 +285,46 @@ export interface ConsultaDatos {
   segundoApellidoTercerOperador : string,
   registroFiscalTercerOperador : string,
   razonSocialTercerOperador : string,
+}
+
+/**
+ * @interface MercanciaTabla
+ * @description
+ * Interfaz que representa la tabla de mercancías.
+ * Contiene información detallada sobre las mercancías, incluyendo fracción arancelaria,
+ * tipo de factura, cantidad, unidad de medida, nombres técnicos y comerciales, 
+ * valor de la mercancía y RFC del productor.
+ * 
+ */
+export interface MercanciaTabla {
+  fraccionArancelaria?: string;
+  tipoFactura?: string;
+  cantidad?: string;
+  unidadMedida?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
+  valorMercancia: string;
+  rfcProductor?: string;
+  numeroFactura?: string;
+  complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
+}
+
+/**
+ * @interface MercanciasHistorico
+ * @description
+ * Interfaz que representa el historial de mercancías.
+ * Contiene una lista de objetos de tipo `MercanciaTabla` que almacenan los datos históricos de las mercancías asociadas al trámite.
+ * 
+ */
+export interface MercanciasHistorico {
+  /**
+  * @property {MercanciaTabla[]} datos - Lista de datos históricos de mercancías.
+  * @description
+  * Arreglo que contiene los datos históricos de mercancías, cada uno representado por un
+  * objeto de tipo `MercanciaTabla`.
+  */
+  datos: MercanciaTabla[];
 }

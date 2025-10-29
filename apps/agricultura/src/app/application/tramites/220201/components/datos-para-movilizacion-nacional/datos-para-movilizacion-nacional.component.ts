@@ -9,6 +9,7 @@ import {
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -98,7 +99,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private catalogoService: CatalogosService
   ) {
     this.movilizacionForm = this.fb.group({
       coordenadas: [''],
@@ -159,10 +161,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerTransporteListList
    */
   obtenerTransporteListList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.medioTransporteList = data?.data;
+
+    this.catalogoService.obtieneCatalogoMedioTransporte(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.medioTransporteList = data.datos ?? [];
       });
   }
 
@@ -171,10 +172,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenernombreDeLaEmpresaTransportistaList
    */
   obtenernombreDeLaEmpresaTransportistaList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.nombreDeLaEmpresaTransportista = data?.data;
+      this.catalogoService.obtieneCatalogoMedioTransporte(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+        this.nombreDeLaEmpresaTransportista = data.datos ?? [];
       });
   }
 
@@ -183,11 +182,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerPuntoDeVerificaciónList
    */
   obtenerPuntoDeVerificaciónList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.puntoDeVerificacionFederal = data?.data;
-      });
+    this.catalogoService.obtieneCatalogoPuntosVerificacion(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.puntoDeVerificacionFederal = data.datos ?? [];
+    });
   }
 
   /**
@@ -195,10 +192,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerIdentificacionTransporteList
    */
   obtenerIdentificacionTransporteList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.identificacionTransporteList = data?.data;
+    this.catalogoService.obtieneCatalogoMedioTransporte(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.identificacionTransporteList = data.datos ?? [];
       });
   }
 

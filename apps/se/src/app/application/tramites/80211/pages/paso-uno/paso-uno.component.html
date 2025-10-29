@@ -25,11 +25,13 @@
   </ul>
 
   <ng-container>
-
-    <solicitante [hidden]="indice !==1" [tabindex]="1" #solicitante></solicitante>
-
+    @switch (indice) { @case (1) {
+    <solicitante></solicitante>
+    } @case (2) {
       @if(esDatosRespuesta){
-      <app-empresas-terciarizadas [hidden]="indice !==2" [active]="indice === 2" #empresasTerciarizadas></app-empresas-terciarizadas>
-       }
+      <app-empresas-terciarizadas></app-empresas-terciarizadas>
+      }
+    }
+  }
   </ng-container>
 </div>

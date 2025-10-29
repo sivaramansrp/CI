@@ -356,10 +356,19 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   public mostrarProveedorPorArchivoPopup: boolean = false;
 
   /**
+   * Controla la visibilidad del popup "Eliminar Planta".
+   * @property {boolean} mostrarEliminarPlantaPopup
+   */
+  public mostrarEliminarPlantaPopup: boolean = false;
+
+  /**
    * Objeto de notificación utilizado para mostrar mensajes relacionados con el proceso del federatario.
    * @property {Notificacion} federatarioNotificacion
    */
   public federatarioNotificacion?: Notificacion;
+
+  /** Objeto de notificación utilizado para mostrar mensajes relacionados con el proceso de eliminación de plantas. */  
+  public eliminarPlantaNotificacion?: Notificacion;
 
   /**
    * Contiene la planta IMMEX seleccionada por el usuario o `null` si no hay selección.
@@ -388,8 +397,11 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   @Output() obtenerCapacidadInstaladaTablaDatos: EventEmitter<
     CapacidadInstalada[]
   > = new EventEmitter<CapacidadInstalada[]>(true);
-
-
+  
+/**
+ * Contiene la lista de plantas disponibles seleccionadas por el usuario.
+ */
+public seleccionados: PlantasDisponibles[] = [];
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -689,16 +701,26 @@ buscarPlantasImmex(): void {
 }
 
 /**
+ * Maneja el cambio de selección de plantas disponibles.
+ * Actualiza la propiedad `seleccionados` con los datos seleccionados.
+ * @param event 
+ */
+onSeleccionChange(event: PlantasDisponibles[]): void { 
+  this.seleccionados = event;
+}
+/**
  * Adds IMMEX plant data to the `plantasImmexDatos` array.
  * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
  *
  * @remarks
  * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
  */
-agregarPlantas(): void {
+agregarPlantas(): void { 
+  if(this.seleccionados && this.seleccionados.length >=1){
   this.plantasImmexDatos = [INMEX_PLANTAS];
   this.servicioDeFormularioService.pushToArray('plantasImmexDatos', INMEX_PLANTAS);
   this.datosPlantasImmex.emit(this.plantasImmexDatos);
+  }
 }
 
 
@@ -846,6 +868,53 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
       };
     }
   }
+  /** Abre un cuadro de diálogo para confirmar la eliminación de plantas.
+   *  Si no hay plantas seleccionadas, muestra una notificación de error.
+   */
+  abrirDialogoEliminarPlantas(): void {
+    if (this.selectedPlantaImmex) {
+      this.eliminarPlantaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Al eliminar el registro de plantas, se eliminará toda la información asociada al monto de inversión, empleados y capacidad instalada de la misma. ¿Estás seguro de eliminar la(s) planta(s)?',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      
+
+    } else {
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la planta que desea eliminar.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+  }
+
+  /**
+   * Elimina la planta seleccionada de la lista de plantas.
+   * 
+   * Este método filtra la lista de plantas para eliminar la planta
+   * que coincide con la planta seleccionada.
+   */
+  eliminarPlanta(evento:boolean): void {
+      if (evento) {
+        this.plantasImmexDatos = this.plantasImmexDatos.filter(row => this.selectedPlantaImmex?.codigoPostal !== row.codigoPostal);
+        this.selectedPlantaImmex = null;
+        this.servicioDeFormularioService.setArray('plantasImmexDatos', this.plantasImmexDatos);
+        this.datosPlantasImmex.emit(this.plantasImmexDatos);
+      }
+  }
 
   /**
   * Cierra el popup de complementar planta.
@@ -895,6 +964,16 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
    */
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
+  }
+
+  /**
+   * Cierra el popup de eliminar planta.
+   * 
+   * Cambia la variable `mostrarEliminarPlantaPopup` a `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarEliminarPlanta(): void {
+    this.mostrarEliminarPlantaPopup = false;
   }
 
   /**

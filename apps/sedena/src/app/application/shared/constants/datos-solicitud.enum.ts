@@ -164,7 +164,7 @@ export const TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE = [
  * @description Contiene un arreglo de identificadores numéricos que representan
  * los campos que son obligatorios para el destinatario en el contexto de la solicitud.
  */
-export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111,240105];
+export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111,240105,240117];
 
 /**
  * @const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR
@@ -197,7 +197,7 @@ export const MOSTRAR_INFORMACION = [240118];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para el proveedor en el sistema.
  */
-export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111,240105];
+export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111, 240105];
 
 /**
  * Constante que representa los campos obligatorios para el formulario de agregar proveedor.
@@ -209,7 +209,7 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111,240105];
  * Estos identificadores se utilizan para validar y mostrar los campos correspondientes
  * en el formulario de proveedores.
  */
-export const AGREGARPROVEEDORFORM =[240118, 240120];
+export const AGREGARPROVEEDORFORM =[240118, 240120, 240117];
 
 /**
  * Constante que representa los campos obligatorios para los derechos.
@@ -219,7 +219,7 @@ export const AGREGARPROVEEDORFORM =[240118, 240120];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120,240114,240108,240105];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120,240114,240108,240105,240117,240305];
 
 
 /**

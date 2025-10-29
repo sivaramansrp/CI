@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="row">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
@@ -50,5 +50,43 @@
         }}
     }
     </ng-container>
+  </div>
+</div> -->
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li *ngFor="let tab of seccionesDeLaSolicitud" [ngClass]="indice === tab.index ? 'active' : ''">
+        <a [class.active]="indice === tab.index"
+          (click)="seleccionaTab(tab.index)"
+          (keydown.enter)="seleccionaTab(tab.index)"
+          (keydown.space)="seleccionaTab(tab.index)"
+          role="button"
+          [attr.tabindex]="tab.index"
+          data-toggle="tab">
+          {{ tab.title }}
+        </a>
+      </li>
+    </ul>
+
+    <ng-container>
+      <solicitante #solicitanteRef [hidden]="indice !== 1" [tabindex]="1"></solicitante>
+
+      @if(esDatosRespuesta){
+      <app-ampliacion-servicios #ampliacionServiciosRef 
+        [hidden]="indice !== 2" 
+        [tabindex]="2" 
+        [esFormularioSoloLectura]="esFormularioSoloLectura">
+      </app-ampliacion-servicios>
+      }
+
+      @if(esDatosRespuesta){
+      <app-ampliacion-3rs #ampliacion3RsRef 
+        [hidden]="indice !== 3" 
+        [tabindex]="3" 
+        [esFormularioSoloLectura]="esFormularioSoloLectura">
+      </app-ampliacion-3rs>
+      }
+    </ng-container>
+
   </div>
 </div>

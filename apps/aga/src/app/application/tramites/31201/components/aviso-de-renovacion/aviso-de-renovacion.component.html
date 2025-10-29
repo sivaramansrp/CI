@@ -11,7 +11,7 @@
       <lib-input-check [label]="'* Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas.'" [id]="'acepto3061'" [required]="true" formControlName="mapDeclaracionSolicitud" (change)="setValoresStore(avisoForm,'mapDeclaracionSolicitud', 'setmapDeclaracionSolicitud')" [isDisabled]="soloLectura"></lib-input-check>
     </div>
     <div class="mt-3">
-      <lib-input-check [label]="'* Con el envío del presente aviso, me doy por enterado que en caso de que se presente fuera de los plazos legales señalados en la normatividad vigente, se tendrá por no presentado sin que medie declaración, notificación o requerimiento por parte de la autoridad..'" [id]="'envioAviso'" [required]="true" formControlName="envioAviso" (change)="setValoresStore(avisoForm,'envioAviso', 'setenvioAviso')" [isDisabled]="soloLectura"></lib-input-check>
+      <lib-input-check [label]="'* Con el envío del presente aviso, me doy por enterado que en caso de que se presente fuera de los plazos legales señalados en la normatividad vigente, se tendrá por no presentado sin que medie declaración, notificación o requerimiento por parte de la autoridad.'" [id]="'envioAviso'" [required]="true" formControlName="envioAviso" (change)="setValoresStore(avisoForm,'envioAviso', 'setenvioAviso')" [isDisabled]="soloLectura"></lib-input-check>
     </div>
     <div class="mt-3">
       <lib-input-check [label]="' * Que las circunstancias por la cual se me otorgó el registro en el Esquema Integral de Certificación, en el rubro que ostento, no han variado y se continúan cumpliendo con los requisitos inherentes de la misma.'" [id]="'numeroAviso'" [required]="true" formControlName="numeroAviso" (change)="setValoresStore(avisoForm,'numeroAviso', 'setnumeroAviso')" [isDisabled]="soloLectura"></lib-input-check>
@@ -27,19 +27,23 @@
       <div class="col-md-6">
         <label for="numeroOperacion">Número de operación:</label>
         <input id="numeroOperacion" type="text" class="form-control" formControlName="numeroOperacion" id="numeroOperacion"
-          maxlength="30" minlength="10" [ngClass]="{'is-invalid': esInvalido('numeroOperacion')}"
+          [ngClass]="{'is-invalid': esInvalido('numeroOperacion')}"
           (blur)="onFieldBlur('numeroOperacion')"
           (change)="setValoresStore(avisoForm,'numeroOperacion', 'setnumeroOperacion')" />
-        <div *ngIf="esInvalido('numeroOperacion')" class="text-danger">
-          <small *ngIf="avisoForm.controls['numeroOperacion'].errors?.['required']">
-            Este campo es obligatorio.
-          </small>
-          <small
-            *ngIf="avisoForm.get('numeroOperacion')?.errors?.['minlength'] || avisoForm.get('numeroOperacion')?.errors?.['maxlength']"
-            class="d-block">
-            Por favor, no escriba menos de 10 caracteres ni más de 30 caracteres.
-          </small>
-        </div>
+        @if (esInvalido('numeroOperacion')) {
+          <div class="text-danger">
+            @if (avisoForm.controls['numeroOperacion'].errors?.['required'] || avisoForm.get('numeroOperacion')?.errors?.['minlength']) {
+              <small class="d-block">
+                Debe capturar al menos 1 caracter.
+              </small>
+            }
+            @if (avisoForm.get('numeroOperacion')?.errors?.['maxlength']) {
+              <small class="d-block">
+                El texto no debe exceder 50 caracteres.
+              </small>
+            }
+          </div>
+        }
       </div>
     </div>
     <div class="row mt-5">
@@ -58,16 +62,20 @@
           maxlength="30" minlength="10" [ngClass]="{'is-invalid': esInvalido('llavePago')}"
           (blur)="onFieldBlur('llavePago')"
           (change)="setValoresStore(avisoForm,'llavePago', 'setllavePago')" />
-        <div *ngIf="esInvalido('llavePago')" class="text-danger">
-          <small *ngIf="avisoForm.controls['llavePago'].errors?.['required']">
-            Este campo es obligatorio.
-          </small>
-          <small
-            *ngIf="avisoForm.get('llavePago')?.errors?.['minlength'] || avisoForm.get('llavePago')?.errors?.['maxlength']"
-            class="d-block">
-            Debe capturar exactamente 10 caracteres alfanuméricos en mayúsculas.
-          </small>
-        </div>
+        @if (esInvalido('llavePago')) {
+          <div class="text-danger">
+            @if (avisoForm.controls['llavePago'].errors?.['required']) {
+              <small>
+                Este campo es obligatorio.
+              </small>
+            }
+            @if (avisoForm.get('llavePago')?.errors?.['minlength'] || avisoForm.get('llavePago')?.errors?.['maxlength']) {
+              <small class="d-block">
+                Debe capturar exactamente 10 caracteres alfanuméricos en mayúsculas.
+              </small>
+            }
+          </div>
+        }
       </div>
       <div class="col-md-4 custom-fetchapago">
         <input-fecha [datos]="fechaInicioInput" formControlName="fechaPago" (valorCambiado)="onFechaCambiada($event)" [setFecha]="avisoForm.get('fechaPago')?.value" [isDisabled]="soloLectura"></input-fecha>

@@ -1,4 +1,5 @@
 import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../models/registro.model';
+import { GrupoRepresentativo, HistoricoColumnas } from '../models/certificado-origen.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
@@ -10,6 +11,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Este estado contiene formularios, catálogos, listas, valores seleccionados y otros datos requeridos.
  */
 export interface TramiteState {
+    /** ID de la solicitud */
+    idSolicitud: number | null;
+
     /**
      * @property {DestinatarioForm} destinatarioForm - Formulario de destinatario.
      * @description
@@ -63,7 +67,7 @@ export interface TramiteState {
   umcs: Catalogo[];
 
   /** Lista de catálogos que representan países bloqueados. */
-  paisBloques: Catalogo[];
+  paisBloques: Catalogo;
 
 
   /**
@@ -77,6 +81,31 @@ export interface TramiteState {
    * Contiene campos como observaciones, idioma, entidad federativa y representación federal.
    */
   formDatosCertificado: { [key: string]: unknown};
+
+  /**
+   * @property {Object} formDatosDelDestinatario - Datos del destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como nombres, apellidos, número de registro fiscal y razón social.
+   */
+  formDatosDelDestinatario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} formDestinatario - Datos del formulario de destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como país, ciudad, número de teléfono, fax y correo electrónico.
+   */
+  formDestinatario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} formExportor - Datos del exportador.
+   * @description
+   * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  formExportor: { [key: string]: unknown };
+
+  /** Régimen de la mercancía. */
+  grupoRepresentativo: GrupoRepresentativo;
+
   /**
    * Objeto que contiene datos del formulario de mercancía.
    * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
@@ -119,6 +148,18 @@ export interface TramiteState {
    * Contiene campos adicionales para el formulario del productor, como número de registro fiscal y fax.
    */
   agregarDatosProductorFormulario: { [key: string]: unknown};
+
+  /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
+  optionsTipoFactura: Catalogo[];
+
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
+
+  /** Historial de productores exportador agregados. */
+  agregarProductoresExportador: HistoricoColumnas[];
  
 }
 
@@ -129,12 +170,13 @@ export interface TramiteState {
  * Estado inicial que se utiliza para crear el store con valores por defecto.
  */
 export const INITIAL_STATE: TramiteState = {
+  idSolicitud: 0,
   selectedMercancia: {} as Mercancia,
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
   representanteLegalForm: {} as RepresentanteLegalForm,
   altaPlanta: [],
-  paisBloques: [],
+  paisBloques: { id: -1, descripcion: '' },
   estado: { id: -1, descripcion: '' },
   umc: { id: -1, descripcion: '' },
   umcs: [],
@@ -194,6 +236,46 @@ export const INITIAL_STATE: TramiteState = {
       numeroRegistroFiscal: '',
       fax: '',      
     },
+    optionsTipoFactura: [],
+  productoresExportador: [],
+  agregarProductoresExportador: [],
+  formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
+  formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      celle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  formExportor: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  grupoRepresentativo: {
+      lugar: '',
+      nombre: '',
+      empresa: '',
+      cargo: '',
+      registroFiscal: '',
+      telefono: '',
+      fax: '',
+      correo: '',
+    },
 };
 
 /**
@@ -211,6 +293,19 @@ export class Tramite110223Store extends Store<TramiteState> {
   constructor() {
     super(INITIAL_STATE);
   }
+
+   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
     /**
    * Elimina una o varias mercancías de la tabla.
    * @param ids Lista de IDs de mercancías a eliminar.
@@ -263,7 +358,7 @@ export class Tramite110223Store extends Store<TramiteState> {
    * Establece los bloques de países disponibles.
    * @param paisBloques Lista de catálogos de países por bloque.
    */
-  setBloque(paisBloques: Catalogo[]): void {
+  setBloque(paisBloques: Catalogo): void {
     this.update((state) => ({ ...state, paisBloques }));
   }
 
@@ -521,4 +616,92 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       selectedMercancia: {} as Mercancia,
     }));
   }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setTipoFacturaOpciones(tipoFactura: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      optionsTipoFactura: tipoFactura,
+    }));
+  }
+
+  /**
+     * @method setProductoresExportador
+     * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+     *
+     * Este método permite establecer los datos de los productores asociados al exportador.
+     *
+     * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+     *
+     * @returns {void}
+     */
+    public setProductoresExportador(
+      productoresExportador: HistoricoColumnas[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        productoresExportador,
+      }));
+    }
+
+    /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+    setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+      this.update((state) => ({
+        ...state,
+        agregarProductoresExportador: [
+          ...state.agregarProductoresExportador,
+          ...productor.map(item => ({ ...item })),
+        ],
+      }));
+    }
+
+    /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de exportador en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de exportador.
+   */
+  setFormExportador(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
+
 }

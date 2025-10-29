@@ -197,7 +197,7 @@ export const EXPEDICION_FACTURA_FECHA = {
      * @property {string} labelNombre
      * Etiqueta descriptiva para el campo de fecha.
      */
-    labelNombre: 'Fecha de expedición de la factura:',
+    labelNombre: 'Fecha de expedición de la factura',
 
     /**
      * @property {boolean} required
@@ -359,6 +359,16 @@ export const REPRESENTACION_FEDERAL_NOTA = '*El monto mostrado es de carácter i
 export const ERROR_FORMA_ALERT = `
       <p class="m-0">Corrija los siguientes errores:</p>
       <p class="text-danger m-0">Debe seleccionar una constancia de registro.</p>
+`;
+
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que Faltan campos por capturar
+ * antes de poder continuar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_FALTAN = `
+    <p class="text-danger m-0">Faltan campos por capturar.</p>
 `;
 /**
  * Constante que define el mensaje de error para validación de formularios.

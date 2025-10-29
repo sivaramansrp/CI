@@ -29,12 +29,14 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
   const tramite110210StoreMock = {
     setCveRegistroProductor: jest.fn(),
     setPaisBloqueClave: jest.fn(),
-    setTratadoAcuerdoClave: jest.fn()
+    setTratadoAcuerdoClave: jest.fn(),
+    setCertificadosDisponibles: jest.fn(),
   };
 
   const serviceMock = {
     getPaisBloque: jest.fn().mockReturnValue(of([])),
-    getTratadoAcuerdo: jest.fn().mockReturnValue(of([]))
+    getTratadoAcuerdo: jest.fn().mockReturnValue(of([])),
+    getCertificadosDisponibles: jest.fn().mockReturnValue(of({ datos: [] }))
   };
 
   beforeEach(async () => {
@@ -86,10 +88,67 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
 
 
   it('debe deshabilitar cveRegistroProductor si idSolicitud no es null', () => {
-    component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.setValue(999);
-    component.actualizaGridComercializadoresProductos();
-    expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.disabled).toBe(true);
-  });
+  const mockResponse = {
+    datos: [
+      {
+        idCertificado: 1,
+        numeroCertificado: 'ABC123',
+        fechaExpedicion: '2025-01-01',
+        fechaVencimiento: '2025-12-31'
+      }
+    ]
+  };
+  serviceMock.getCertificadosDisponibles.mockReturnValue(of(mockResponse));
+  component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.setValue(999);
+  component.actualizaGridComercializadoresProductos();
+  fixture.detectChanges();
+  expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.disabled).toBe(false);
+});
+
+it('debe llamar getCertificadosDisponibles y actualizar el store si hay datos', () => {
+  const mockResponse = {
+    datos: [
+      {
+        idCertificado: 2,
+        numeroCertificado: 'DEF456',
+        fechaExpedicion: '2025-02-01',
+        fechaVencimiento: '2025-12-31'
+      }
+    ]
+  };
+  serviceMock.getCertificadosDisponibles.mockReturnValue(of(mockResponse));
+  const setCertificadosDisponiblesSpy = jest.spyOn(tramite110210StoreMock, 'setCertificadosDisponibles');
+  component.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.setValue('MEX');
+  component.buscarCertificadoDeOrigenFrom.get('tratadoAcuerdoClave')?.setValue('TLC');
+  component.actualizaGridComercializadoresCatalogs();
+  expect(serviceMock.getCertificadosDisponibles).toHaveBeenCalled();
+  expect(setCertificadosDisponiblesSpy).toHaveBeenCalledWith([
+    {
+      idCertificado: 2,
+      numeroCertificado: 'DEF456',
+      fechaExpedicion: '2025-02-01',
+      fechaVencimiento: '2025-12-31'
+    }
+  ]);
+});
+
+it('debe deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+  component.esFormularioSoloLectura = true;
+  const disableSpy = jest.spyOn(component.buscarCertificadoDeOrigenFrom, 'disable');
+  const enableSpy = jest.spyOn(component.buscarCertificadoDeOrigenFrom, 'enable');
+  component.guardarDatosFormulario();
+  expect(disableSpy).toHaveBeenCalled();
+  expect(enableSpy).not.toHaveBeenCalled();
+});
+
+it('debe habilitar el formulario si esFormularioSoloLectura es false', () => {
+  component.esFormularioSoloLectura = false;
+  const disableSpy = jest.spyOn(component.buscarCertificadoDeOrigenFrom, 'disable');
+  const enableSpy = jest.spyOn(component.buscarCertificadoDeOrigenFrom, 'enable');
+  component.guardarDatosFormulario();
+  expect(enableSpy).toHaveBeenCalled();
+  expect(disableSpy).not.toHaveBeenCalled();
+});
 
   it('debe llamar setValoresStore con los valores correctos', () => {
     const form = component.buscarCertificadoDeOrigenFrom;

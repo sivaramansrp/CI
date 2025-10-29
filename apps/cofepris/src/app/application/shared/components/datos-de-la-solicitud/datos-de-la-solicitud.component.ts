@@ -23,6 +23,7 @@ import {
   REPRESENTANTE_LEGAL_EN_INIT,
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
+  ENABLE_FIELDS
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -34,6 +35,20 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {
   AlertComponent,
   CatalogoSelectComponent,
@@ -55,6 +70,7 @@ import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
+  MercanciaForm,
   OpcionConfig,
   ScianConfig,
   TablaMercanciasConfig,
@@ -62,23 +78,17 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import { Subject, delay, map, takeUntil } from 'rxjs';
+import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
+
 import { ScianDataService } from '../../services/scian-data.service';
+import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -95,13 +105,16 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     TooltipModule,
     InputRadioComponent,
     TablePaginationComponent,
+    ScianTablaComponent,
+    DatosMercanciaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent
-  implements OnInit, OnDestroy, OnChanges
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -141,6 +154,7 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
 
+  @Input() public mercanciaFormState! : MercanciaForm;
   /**
    * @property {boolean} opcionesColapsableState
    * Estado colapsable inicial para mostrar u ocultar ciertas secciones.
@@ -217,6 +231,9 @@ export class DatosDeLaSolicitudComponent
    */
   public datosSolicitudForm!: FormGroup;
 
+  public isContinuarButtonClicked: boolean = false;
+
+
   /**
    * @property {Catalogo[]} estadoDatos
    * Lista de estados para catálogos relacionados.
@@ -257,6 +274,8 @@ export class DatosDeLaSolicitudComponent
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  public enableFields = ENABLE_FIELDS;
 
   /**
    * @property {string} textoManifestoContenido
@@ -531,6 +550,47 @@ export class DatosDeLaSolicitudComponent
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Reference to the SCIAN modal element
+   */
+  @ViewChild('scianModal') scianModal!: ElementRef;
+
+
+  /**
+   * Indicates if the SCIAN modal is currently open
+   */
+  public scianModalAbierto: boolean = false;
+
+   /**
+   * Indicates if the merchandise modal is currently open
+   */
+  public mercanciaModalAbierto: boolean = false;
+
+    /**
+     * @property {Subscription} subscription
+     * @private
+     * @description
+     * Contenedor principal para gestionar suscripciones a observables que requieren
+     * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+     * para casos específicos que necesitan control granular de suscripciones.
+     * 
+     * @pattern Subscription Management
+     * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+     * @cleanup Se desuscribe manualmente en ngOnDestroy()
+     * @use_case Suscripciones que requieren lógica de limpieza personalizada
+     * 
+     * @example
+     * ```typescript
+     * this.subscription.add(
+     *   this.service.getData().subscribe(data => { ... })
+     * );
+     * ```
+     */
+    private subscription: Subscription = new Subscription();
+   
+
+public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
+
+  /**
    * Constructor del componente.
    *
    * Inyecta los servicios y dependencias necesarias para la construcción del formulario,
@@ -542,6 +602,8 @@ export class DatosDeLaSolicitudComponent
    * @param datosSolicitudService - Servicio para gestionar la información de la solicitud.
    * @param consultaioQuery - Servicio para la consulta de datos relacionados con la solicitud.
    * @param scianDataService - Servicio para la obtención de datos del catálogo SCIAN.
+   * @param catalogoService - Servicio para la obtención de catálogos diversos.
+   * @param cdr - Servicio para la detección de cambios en el componente.
    */
   constructor(
     public fb: FormBuilder,
@@ -549,33 +611,38 @@ export class DatosDeLaSolicitudComponent
     public activatedRoute: ActivatedRoute,
     public datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery,
-    private scianDataService: ScianDataService
+    private scianDataService: ScianDataService,
+    private cdr: ChangeDetectorRef,
+    private catalogoService: CatalogoServices,
+    private toastr: ToastrService
+
+
   ) {
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenDatos',
-      '/cofepris/regimenDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'adunasDeEntradasDatos',
-      '/cofepris/adunasDeEntradasDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'estadoDatos',
-      '/cofepris/estadoDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenLaMercanciaDatos',
-      '/cofepris/regimenLaMercanciaDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'aduanaDatos',
-      '/cofepris/aduanaDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenDatos',
+    //   '/cofepris/regimenDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'adunasDeEntradasDatos',
+    //   '/cofepris/adunasDeEntradasDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'estadoDatos',
+    //   '/cofepris/estadoDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenLaMercanciaDatos',
+    //   '/cofepris/regimenLaMercanciaDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'aduanaDatos',
+    //   '/cofepris/aduanaDatos.json'
+    // );
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -605,7 +672,9 @@ export class DatosDeLaSolicitudComponent
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.inicializarCatalogo(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
+   
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
@@ -679,7 +748,96 @@ export class DatosDeLaSolicitudComponent
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
+
+
+        Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+          const CONTROL = this.datosSolicitudForm.get(controlName);
+          CONTROL?.enable();
+         
+    
+        });
   }
+
+  inicializarCatalogo(tramite: string): void {
+   this.subscription.add(
+      this.catalogoService
+      .estadosCatalogo(tramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const DATOS = response.datos as Catalogo[];
+        
+        if (response) {
+          this.estadoDatos = DATOS;
+        }
+      })
+    );  
+    this.subscription.add(
+      this.catalogoService
+        .regimenesCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.regimenDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .aduanasCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.adunasDeEntradasDatos = DATOS;
+          }
+        })
+    );
+  }
+
+   /**
+   * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
+   * @param datos1 Los datos de la mercancia seleccionada.
+   */
+   patchOpcionesValue(datos1: TablaOpcionConfig): void {
+    this.datosSolicitudForm.patchValue({
+      rfcSanitario: datos1.rfcSanitario || '',
+      denominacionRazon: datos1.denominacionRazon || '',
+      correoElectronico: datos1.correoElectronico || '',
+      codigoPostal: datos1.codigoPostal || '',
+      estado: datos1.estado || '',
+      municipioAlcaldia: datos1.municipioAlcaldia || '',
+      localidad: datos1.localidad || '',
+      colonia: datos1.colonia || '',
+      calleYNumero: datos1.calleYNumero || '',
+      calle: datos1.calle || '',
+      lada: datos1.lada || '',
+      telefono: datos1.telefono || '',
+      aviso: datos1.aviso || '',
+      licenciaSanitaria: datos1.licenciaSanitaria || '',
+      regimen: datos1.regimen || '',
+      adunasDeEntradas: datos1.adunasDeEntradas || '',
+      aeropuerto: datos1.aeropuerto || false,
+      aeropuertoDos: datos1.aeropuertoDos || false,
+      publico: datos1.publico || '',
+      representanteRfc: datos1.representanteRfc || '',
+      representanteNombre: datos1.representanteNombre || '',
+      apellidoPaterno: datos1.apellidoPaterno || '',
+      apellidoMaterno: datos1.apellidoMaterno || '',
+      regimenLaMercancia: datos1.regimenLaMercancia || '',
+      aduana: datos1.aduana || '',
+      mercancias: datos1.mercancias || [],
+      manifesto: datos1.manifesto || '',
+      manifiestosCasillaDeVerificacion: datos1.manifiestosCasillaDeVerificacion || false
+    });
+    
+    this.scianConfig.datos =  datos1.scian;
+    this.tablaMercanciasConfig.datos = datos1.mercancias;
+   
+    }
 
   /**
    * @method crearDatosSolicitudForm
@@ -690,7 +848,7 @@ export class DatosDeLaSolicitudComponent
       rfcSanitario: [
         {
           value: this.datosSolicitudFormState.rfcSanitario,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -702,7 +860,7 @@ export class DatosDeLaSolicitudComponent
       denominacionRazon: [
         {
           value: this.datosSolicitudFormState.denominacionRazon,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -713,7 +871,7 @@ export class DatosDeLaSolicitudComponent
       correoElectronico: [
         {
           value: this.datosSolicitudFormState.correoElectronico,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -725,7 +883,7 @@ export class DatosDeLaSolicitudComponent
       codigoPostal: [
         {
           value: this.datosSolicitudFormState.codigoPostal,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -744,7 +902,7 @@ export class DatosDeLaSolicitudComponent
       municipioAlcaldia: [
         {
           value: this.datosSolicitudFormState.municipioAlcaldia,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -755,14 +913,14 @@ export class DatosDeLaSolicitudComponent
       localidad: [
         {
           value: this.datosSolicitudFormState.localidad,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       colonia: [
         {
           value: this.datosSolicitudFormState.colonia,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
       ],
       calleYNumero: [
@@ -782,18 +940,18 @@ export class DatosDeLaSolicitudComponent
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
         {
           value: this.datosSolicitudFormState.telefono,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
-          Validators.maxLength(5),
+          
           Validators.pattern(REGEX_SOLO_DIGITOS),
         ],
       ],
@@ -911,9 +1069,7 @@ export class DatosDeLaSolicitudComponent
         [Validators.required],
       ],
     });
-    if (this.formularioDeshabilitado) {
-      this.datosSolicitudForm.disable();
-    }
+    
 
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
@@ -922,6 +1078,41 @@ export class DatosDeLaSolicitudComponent
       if (EMPTY) {
         this.alternarControlesDeFormulario(false);
       }
+    }
+  }
+
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Hook del ciclo de vida de Angular que se ejecuta después de que se inicializa la vista del componente.
+   * Verifica el estado del formulario y realiza las siguientes acciones:
+   * - Si `formularioDeshabilitado` es `true` y existe `datosSolicitudForm`, deshabilita todo el formulario.
+   * - En caso contrario, crea un nuevo formulario de datos de solicitud llamando a `crearDatosSolicitudForm()`.
+   * 
+   * Este método es especialmente útil para manejar el estado de habilitación/deshabilitación del formulario
+   * después de que todos los elementos de la vista han sido inicializados.
+   * 
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if (this.formularioDeshabilitado && this.datosSolicitudForm) {
+      this.datosSolicitudForm.disable();
+    }
+    else {
+      this.crearDatosSolicitudForm()
+      if(this.idProcedimiento===260209){
+      Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+        const CONTROL = this.datosSolicitudForm.get(controlName);
+        if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
+        
+        
+        CONTROL?.enable();
+        
+        }
+       
+  
+      });
+    }
     }
   }
 
@@ -937,9 +1128,9 @@ export class DatosDeLaSolicitudComponent
         this.datosSolicitudForm.disable();
       } else {
         this.datosSolicitudForm.enable();
-      }
+      } 
     }
-    if (
+    if ( changes['datosSolicitudFormState'] &&
       changes['datosSolicitudFormState'].currentValue &&
       this.datosSolicitudForm
     ) {
@@ -988,31 +1179,153 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
-   * Busca el RFC del representante en el formulario y, si existe,
-   * actualiza los campos relacionados con el nombre, apellido paterno
-   * y apellido materno del representante con valores predeterminados.
+   * Busca el RFC del representante en el formulario usando API calls similares al patrón de SE 80205.
+   * Si existe el RFC, realiza una llamada al método del servicio para obtener los datos del representante.
+   * Actualiza los campos relacionados con el nombre, apellido paterno y apellido materno.
    */
   buscarRepresentanteRfc(): void {
-    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value;
-    if (RFC_VALUE) {
-      if (this.esProcedimiento260210) {
-      
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL',
-        });
-      } else {
-      
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL',
-        });
-      }
-    } else {
+    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value?.trim();
+    
+    if (!RFC_VALUE || RFC_VALUE === '') {
       this.abrirRfcModal();
+      return;
     }
+
+    // Realizar llamada API con payload desde el store usando el método del servicio
+    this.buscarDatosRepresentante(RFC_VALUE);
+  }
+
+  
+  /**
+   * Busca los datos del representante legal utilizando el RFC proporcionado.
+   *
+   * @param rfc - RFC del representante legal a buscar.
+   *
+   * Realiza una petición al servicio para obtener los datos del representante legal
+   * según el RFC ingresado. Si la respuesta es válida y contiene datos, procesa la información
+   * del representante. Si no se encuentran datos o la respuesta no es válida, muestra una advertencia
+   * y carga datos predeterminados. En caso de error en la petición, muestra un mensaje de error
+   * y notifica al usuario sobre el problema de conexión.
+   */
+  private buscarDatosRepresentante(rfc: string): void {
+    const PAYLOAD: RfcSearchPayload = {
+      rfcRepresentanteLegal: rfc
+    };
+    this.datosSolicitudService
+      .buscarRepresentantePorRfc(this.idProcedimiento.toString(), PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response?.codigo === '00' && Array.isArray(response.datos) && response.datos.length > 0) {
+            this.procesarDatosRepresentante(response.datos[0]);
+          } else {
+            console.warn('Respuesta no válida del servidor:', response);
+            this.toastr.warning('No se encontraron datos para el RFC proporcionado', 'Búsqueda de RFC');
+            this.mostrarDatosPredeterminados();
+          }
+        },
+        error: (error) => {
+          console.error('Error en la búsqueda de RFC:', error);
+          this.toastr.error('Error al buscar los datos del representante', 'Error de Búsqueda');
+          this.mostrarErrorRfc('Error al conectar con el servidor. Por favor, intente nuevamente.');
+        }
+      });
+  }
+
+  /**
+   * Datos predeterminados para el representante legal
+   */
+  private readonly DATOS_PREDETERMINADOS = {
+    representanteNombre: 'EUROFOODS DE MEXICO',
+    apellidoPaterno: 'GONZALEZ',
+    apellidoMaterno: 'PINAL',
+  };
+
+  /**
+   * Procesa los datos del representante obtenidos de la API
+   */
+  private procesarDatosRepresentante(data: RepresentanteData): void {
+    // Determinar el campo de nombre según el procedimiento
+    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    
+    // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
+    const DATOS_FORMULARIO = {
+      representanteNombre: NOMBRE_FIELD,
+      apellidoPaterno: data.apellidoPaterno,
+      apellidoMaterno: data.apellidoMaterno,
+    };
+
+    this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
+
+    // Mostrar notificación de éxito
+    this.toastr.success('Datos del representante cargados exitosamente', 'Búsqueda de RFC');
+    this.mostrarNotificacionExito('Datos del representante cargados exitosamente.');
+  }
+
+  /**
+   * Muestra datos predeterminados cuando no se encuentran en la API
+   */
+  private mostrarDatosPredeterminados(): void {
+    this.datosSolicitudForm.patchValue(this.DATOS_PREDETERMINADOS);
+
+    // Mostrar notificación informativa
+    this.toastr.info('Se cargaron datos predeterminados del representante', 'Información');
+    this.mostrarNotificacionInfo('Se cargaron datos predeterminados del representante.');
+  }
+
+  /**
+   * Muestra notificación de error para RFC inválido
+   */
+  private mostrarErrorRfc(mensaje: string): void {
+    this.toastr.error(mensaje, 'Error de Validación');
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Muestra notificación de éxito
+   */
+  private mostrarNotificacionExito(mensaje: string): void {
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Muestra notificación informativa
+   */
+  private mostrarNotificacionInfo(mensaje: string): void {
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
   }
 
   /**
@@ -1136,6 +1449,7 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
+    if (this.scianLista && this.scianLista.length > 0) {
     if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
       this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
     }
@@ -1143,8 +1457,81 @@ export class DatosDeLaSolicitudComponent
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
-    this.irAAcciones('../scian-selecion');
   }
+  this.abrirScianModal();
+  }
+
+    /**
+   * Opens the SCIAN selection modal
+   */
+  abrirScianModal(): void {
+    this.scianModalAbierto = true;
+    // If using Bootstrap 5
+    const MODALELEMENT = document.getElementById('scianModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+   /**
+   * Closes the SCIAN selection modal
+   */
+  cerrarScianModal(): void {
+    this.scianModalAbierto = false;
+    const MODALELEMENT = document.getElementById('scianModal');
+    if (MODALELEMENT) {
+      const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
+      if (MODAL) {
+        MODAL.hide();
+      }
+    }
+  }
+
+  
+
+  /**
+   * Handles SCIAN selection from the modal
+   */
+ onScianSeleccionado(scianData: TablaScianConfig): void {
+  if (this.scianConfig && this.scianConfig.datos) {
+    const EXISTE = this.scianConfig.datos.find(item => item.clave === scianData.clave);
+    if (!EXISTE) {
+      this.scianConfig.datos = [...this.scianConfig.datos, scianData];
+      
+      this.scianDataService.updateScianData(this.scianConfig.datos);
+      
+      if (this.scianSeleccionado) {
+        this.scianSeleccionado.emit(this.scianConfig.datos);
+      }      
+      this.cdr.markForCheck();
+    } else {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El elemento SCIAN seleccionado ya existe en la tabla.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarAlerta = true;
+    }
+  } else {
+    this.scianConfig = {
+      ...this.scianConfig,
+      datos: [scianData]
+    };
+    this.scianDataService.updateScianData(this.scianConfig.datos);
+    if (this.scianSeleccionado) {
+      this.scianSeleccionado.emit(this.scianConfig.datos);
+    }
+  }
+}
+
+  
 
   /**
    * Agrega las mercancías seleccionadas a la configuración de la tabla y emite el evento correspondiente.
@@ -1155,15 +1542,10 @@ export class DatosDeLaSolicitudComponent
    *
    * @returns {void} Este método no devuelve ningún valor.
    */
-  agregarMercancias(): void {
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(
-      this.tablaMercanciasLista
-    );
-    if (this.mercanciasSeleccionado) {
-      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
-    }
-    this.irAAcciones('../mercancia-datos');
-  }
+ agregarMercancias(): void {
+  this.mercanciaSeleccionada = undefined; // Clear any previous selection
+  this.abrirMercanciaModal();
+}
 
   /**
    * Emite un evento con los datos seleccionados de las listas asociadas.
@@ -1191,14 +1573,24 @@ export class DatosDeLaSolicitudComponent
       };
       this.mostrarAlerta = true;
     } else if (this.tablaMercanciasLista.length === 1) {
-      this.datosDeTablaSeleccionados.emit({
-        scianSeleccionados: this.scianLista,
-        mercanciasSeleccionados: this.tablaMercanciasLista,
-        opcionSeleccionados: this.opcionLista,
-        opcionesColapsableState: this.opcionesColapsable,
-      });
-      this.irAAcciones('../mercancia-datos');
-    }
+    // Set the selected merchandise data before opening modal
+    this.mercanciaSeleccionada = this.tablaMercanciasLista[0];
+    this.abrirMercanciaModal();
+  } else {
+    // No merchandise selected
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar una mercancía para modificar.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
   }
 
   /**
@@ -1381,7 +1773,6 @@ export class DatosDeLaSolicitudComponent
         representanteRfc: 'REP123456789',
         representanteNombre: 'EUROFOODS DE MEXICO',
         apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL',
       });
       this.mostrarAlerta = false;
     }
@@ -1440,8 +1831,9 @@ export class DatosDeLaSolicitudComponent
         CONTROL?.disable();
       }
     });
-
+   if(this.idProcedimiento!==260209 && this.idProcedimiento!==260210){
     this.establecimientoSeleccionado = enable;
+  }
   }
 
   /**
@@ -1487,7 +1879,7 @@ export class DatosDeLaSolicitudComponent
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado') {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
         return;
       }
 
@@ -1495,7 +1887,13 @@ export class DatosDeLaSolicitudComponent
         CONTROL?.enable();
       }
     });
+    if(this.idProcedimiento===260209|| this.idProcedimiento===260210){
+      this.establecimientoSeleccionado = false;
+    }
+    else{
     this.establecimientoSeleccionado = true;
+    }
+
   }
 
   /**
@@ -1516,12 +1914,116 @@ export class DatosDeLaSolicitudComponent
    * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
    */
   formularioSolicitudValidacion(): boolean {
-    if (this.datosSolicitudForm.valid) {
+    this.isContinuarButtonClicked = true;
+  this.marcarTodosLosCamposComoTocados();
+    if (this.verificarCamposValidosODeshabilitados()) {
       return true;
     }
-    this.datosSolicitudForm.markAllAsTouched();
+    //this.datosSolicitudForm.markAllAsTouched();
     return false;
   }
+  /**
+ * Marca todos los campos del formulario como tocados (touched) uno por uno.
+ * Esto permite mostrar mensajes de validación para todos los campos.
+ * @returns {void}
+ */
+marcarTodosLosCamposComoTocados(): void {
+  const EXCLUDED_FIELDS = [
+    'aduana',
+    'aeropuertoDos',
+    'calleYNumero',
+    'manifiestosCasillaDeVerificacion',
+    'regimenLaMercancia',
+    'aviso',
+    'licenciaSanitaria'
+  ];
+  if (!this.datosSolicitudForm) {
+   
+    return;
+  }
+
+  // Get all control names
+  const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
+  
+
+  // Loop through each control and mark as touched
+  CONTROL_NAMES.forEach((controlName: string) => {
+    const CONTROL = this.datosSolicitudForm.get(controlName);
+    
+    if (CONTROL) {
+      // Mark the control as touched
+      if (EXCLUDED_FIELDS.includes(controlName)) {
+       
+        return; // Continue to next field
+      }
+      CONTROL.markAsTouched();
+      
+      // Optional: Also mark as dirty to trigger additional validation states
+  
+    }
+  });
+
+  // Update the form's validation status
+  this.datosSolicitudForm.updateValueAndValidity();
+  
+  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
+}
+
+/**
+ * Verifica si todos los campos del formulario (excepto los excluidos) son válidos o están deshabilitados.
+ * @returns {boolean} - Retorna `true` si todos los campos requeridos son válidos o están deshabilitados, `false` en caso contrario.
+ */
+verificarCamposValidosODeshabilitados(): boolean {
+  if (!this.datosSolicitudForm) {
+    console.warn('Form is not initialized');
+    return false;
+  }
+
+  // Fields to exclude from validation check
+  const EXCLUDED_FIELDS = [
+    'aduana',
+    'aeropuertoDos',
+    'calleYNumero',
+    'manifiestosCasillaDeVerificacion',
+    'regimenLaMercancia',
+    'aviso',
+    'licenciaSanitaria'
+  ];
+
+  const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
+  
+  let allFieldsValidOrDisabled = true;
+
+
+  // Loop through each control to check validation status
+  CONTROL_NAMES.forEach((controlName: string) => {
+    const CONTROL = this.datosSolicitudForm.get(controlName);
+    
+    if (CONTROL) {
+      // Skip excluded fields
+      if (EXCLUDED_FIELDS.includes(controlName)) {
+       
+      
+        return; // Continue to next field
+      }
+
+
+      // Check if field is valid or disabled
+     else if (CONTROL.disabled) {
+       return ;
+      
+      } else if (!CONTROL.valid) {
+        allFieldsValidOrDisabled = false;
+
+      } 
+    }
+  });
+
+ 
+  
+
+  return allFieldsValidOrDisabled;
+}
 
   /**
    * Emite el evento de acción seleccionada en la solicitud.
@@ -1537,6 +2039,89 @@ export class DatosDeLaSolicitudComponent
   }): void {
     this.accioneSolitudValor.emit(event);
   }
+
+   /**
+   * Opens the merchandise selection modal
+   */
+  abrirMercanciaModal(): void {
+    this.mercanciaModalAbierto = true;
+    const MODALELEMENT = document.getElementById('mercanciaModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
+  }
+
+   /**
+   * Closes the merchandise selection modal
+   */
+ cerrarMercanciaModal(): void {
+  this.mercanciaModalAbierto = false;
+  this.mercanciaSeleccionada = undefined; // Clear selection when closing
+  const MODALELEMENT = document.getElementById('mercanciaModal');
+  if (MODALELEMENT) {
+    const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
+    if (MODAL) {
+      MODAL.hide();
+    }
+  }
+}
+
+ /**
+ * Handles merchandise selection from the modal
+ */
+onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
+  if (this.mercanciaSeleccionada) {
+    // Busque el índice del objeto existente que coincida con TODAS las propiedades
+    const INDEX = this.tablaMercanciasConfig.datos.findIndex(item =>
+      Object.keys(item).every(
+        key => item[key as keyof TablaMercanciasDatos] ===
+               this.mercanciaSeleccionada![key as keyof TablaMercanciasDatos]
+      )
+    );
+
+    if (INDEX !== -1) {
+      // Reemplace ese objeto específico con los nuevos datos
+      this.tablaMercanciasConfig.datos[INDEX] = { ...mercanciaData };
+    }
+
+  } else {
+    // Agregar nueva mercancía si no hay nada seleccionado
+    this.tablaMercanciasConfig.datos = [
+      ...this.tablaMercanciasConfig.datos,
+      mercanciaData
+    ];
+  }
+  
+  // Update the form control value
+  this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
+  
+  if (this.mercanciasSeleccionado) {
+    this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+  }
+  
+  // Clear selected merchandise and close modal
+  this.mercanciaSeleccionada = undefined;
+  this.cerrarMercanciaModal();
+  
+  // Force change detection
+  this.cdr.markForCheck();
+}
+
+  /**
+ * Updates the table after merchandise changes
+ */
+private updateMercanciaTable(): void {
+  // Force the table to refresh by reassigning the data
+  this.tablaMercanciasConfig = {
+    ...this.tablaMercanciasConfig,
+    datos: [...this.tablaMercanciasConfig.datos]
+  };
+  
+  // Update the form control
+  this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
+  this.datosSolicitudForm.get('mercancias')?.updateValueAndValidity();
+}
 
   /**
    * Emite un evento con los datos seleccionados de la tabla.

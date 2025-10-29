@@ -17,6 +17,11 @@
         maxlength="9"
         (change)="setClaveDeReferencia($event)"
       />
+      @if (esContinuarClicked && !pagoDeDerechosForm.get('claveDeReferencia')?.value) {
+        <span class="mensaje-error"
+          >Todos los campos de pago son requeridos</span
+        >
+      }
     </div>
 
     <div class="col-md-4 mt-3">
@@ -32,6 +37,11 @@
         maxlength="14"
         (change)="setCadenaDeDependencia($event)"
       />
+      @if (esContinuarClicked && !pagoDeDerechosForm.get('cadenaDeDependencia')?.value) {
+        <span class="mensaje-error"
+          >Todos los campos de pago son requeridos</span
+        >
+      }
     </div>
 
     <div class="col-md-4 mt-3">
@@ -44,6 +54,7 @@
         [required]="bancoCatalogo.required"
         (selectionChange)="setBanco($event)"
         [isDisabled]="esFormularioSoloLectura"
+        [markTouched]="pagoDeDerechosForm.get('banco')?.touched??false"
       >
       </app-catalogo-select>
     </div>
@@ -69,13 +80,18 @@
       pagoDeDerechosForm.get('liaveDePago')?.dirty)) {
         <span class="mensaje-error">Solo se permiten 10 caracteres en mayúsculas y números.</span>
       }
+      @if (esContinuarClicked && !pagoDeDerechosForm.get('liaveDePago')?.value) {
+        <span class="mensaje-error"
+          >Todos los campos de pago son requeridos</span
+        >
+      }
     </div>
 
     <div class="col-md-4 mt-3">
       <input-fecha
         [datos]="fechaPago"
         [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
-        (valorCambiado)="seleccionarFechaInicio($event)" [isDisabled]="esFormularioSoloLectura"
+        (valorCambiado)="seleccionarFechaInicio($event)" [isDisabled]="disableFechaDePago"
       ></input-fecha>
     </div>
 
@@ -99,6 +115,11 @@
       (pagoDeDerechosForm.get('importeDePago')?.touched ||
       pagoDeDerechosForm.get('importeDePago')?.dirty)) {
         <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+      }
+      @if (esContinuarClicked && !pagoDeDerechosForm.get('importeDePago')?.value) {
+        <span class="mensaje-error"
+          >Todos los campos de pago son requeridos</span
+        >
       }
     </div>
 

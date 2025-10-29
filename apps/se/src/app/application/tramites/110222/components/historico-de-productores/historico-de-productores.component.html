@@ -1,6 +1,17 @@
-<app-historico-productores (formHistoricoEvent)="setValoresStore($event)"
-    (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)" [tramiteState]="tramiteState"
-    [agregarDatosProductor]="agregarDatosProductor" [productoresExportador]="productoresExportador || []"
-    [mercanciaDatos]="mercancia || []" [ocultarFax]="ocultarFax" [esTipoDeSeleccionado]="esTipoDeSeleccionado"
-    [optionsTipoFactura]="optionsTipoFactura ||[]"
-    [esFormularioSoloLectura]="esFormularioSoloLectura"></app-historico-productores>
+<app-historico-productores #HistoricoProductoresComponent
+  (formHistoricoEvent)="setValoresStore($event)"
+  (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)"
+  [tramiteState]="tramiteState"
+  [agregarDatosProductor]="agregarDatosProductor"
+  [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
+  [mercanciaDatos]="mercanciaProductores || []"
+  [productoresExportador]="productoresExportador || []"
+  [ocultarFax]="true"
+  [esTipoDeSeleccionado]="esTipoDeSeleccionado"
+  [optionsTipoFactura]="optionsTipoFactura || []"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+  [sortMercanciasTablaOrder]="true"
+  (emitAgregarExportador)="emitAgregarExportador($event)"
+  (formaValida)="formaValida($event)"
+  (emitMercanciaDatos)="setMercanciaDatos($event)"
+></app-historico-productores>

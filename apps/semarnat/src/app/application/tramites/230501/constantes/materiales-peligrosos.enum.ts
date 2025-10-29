@@ -102,7 +102,7 @@ export const PASOS = [
  * @property {boolean} habilitado - Indicates if the invoice date field is enabled.
  */
 export const FECHA_FACTURA = {
-  labelNombre: 'Fecha de la factura',
+  labelNombre: 'Fecha prevista para llevar a cabo la exportación:',
   required: false,
   habilitado: true,
 };

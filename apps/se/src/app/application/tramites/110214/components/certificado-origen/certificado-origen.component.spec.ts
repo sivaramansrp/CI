@@ -1,237 +1,144 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
+import { Modal } from 'bootstrap';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { of, Subject } from 'rxjs';
+import { ConsultaioQuery, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { DisponiblesTabla, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
-import { Modal } from 'bootstrap';
+
+// Mock services and dependencies
+const mockStore = {
+  setPaisBloqu: jest.fn(),
+  setPaisBloque: jest.fn(),
+  setFormCertificadoGenric: jest.fn(),
+  setEstado: jest.fn(),
+  setBloque: jest.fn(),
+  setFormMercancia: jest.fn(),
+  setmercanciaTabla: jest.fn(),
+  setFormValida: jest.fn(),
+  setFormValidity: jest.fn(),
+  setDisponsiblesDatos: jest.fn(),
+};
+
+const mockQuery = {
+  selectPaisBloque$: of([]),
+  selectPaisBloqu$: of([]),
+  selectSolicitud$: of({
+    mercanciaTabla: [],
+    disponiblesDatos: [],
+    formCertificado: { entidadFederativa: '1', bloque: 'MX' },
+  }),
+  formCertificado$: of({ bloque: 'MX' }),
+  selectPaisBloque: jest.fn(() => of([])),
+  selectPaisBloqu: jest.fn(() => of([])),
+  selectSolicitud: jest.fn(() =>
+    of({
+      mercanciaTabla: [],
+      disponiblesDatos: [],
+      formCertificado: { entidadFederativa: '1', bloque: 'MX' },
+    })
+  ),
+};
+
+const mockSeccionQuery = {
+  selectSeccionState$: of({}),
+};
+
+const mockConsultaQuery = {
+  selectConsultaioState$: of({ readonly: false }),
+};
+
+const mockValidarInicialmenteCertificadoService = {
+  getPaisBloqu: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Test' }] })),
+  obtenerPaisBloque: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Bloque' }])),
+  obtenerMercanciasDisponibles: jest.fn().mockReturnValue(of({ datos: [{ fraccionArancelaria: '1234' }] })),
+};
+
+const mockPeruCertificadoService = {
+  obtenerMenuDesplegable: jest.fn(() => of([{ id: 1, descripcion: 'Mock Estado' }])),
+};
 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
   let fixture: ComponentFixture<CertificadoOrigenComponent>;
-  let validarInicialmenteCertificadoServiceMock: any;
-  let tramiteQueryMock: any;
-  let validacionesServiceMock: any;
-  let mercanciaSeleccionadasTablaDatos: SeleccionadasTabla;
-  let disponiblesTabla: DisponiblesTabla;
-  let tramiteStoreMock: any;
-
 
   beforeEach(async () => {
-    validarInicialmenteCertificadoServiceMock = {
-      obtenerTratado: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombre: 'Tratado 1' }] })),
-      obtenerPais: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombre: 'País 1' }] })),
-      obtenerMercanciasDisponibles: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancía Disponible' }])),
-      obtenerMercanciasSeleccionadas: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancía Seleccionada' }])),
-    };
-    tramiteStoreMock = {
-      setGrupoTratadoFechaFinalInput: jest.fn(),
-      setFecha: jest.fn(),
-      setGrupoTratadoFechaInicialInput: jest.fn(),
-    };
-    tramiteQueryMock = {
-      selectSolicitud$: of({
-        tercerOperador: true,
-        grupoOperador: { nombre: 'Operador 1' },
-        grupoDeDomicilio: { pais: 'País 1' },
-        grupoTratado: { tratado: 'Tratado 1' },
-        formularioMercancia: { fraccionMercanciaArancelaria: '1234' },
-      }),
-    };
-    mercanciaSeleccionadasTablaDatos =
-    {
-      "id": 0,
-      "rfcProductor": "",
-      "fraccionArancelaria": "08888888",
-      "cantidad": "100.00",
-      "unidadMedida": "Caja",
-      "valorMercancia": "100.00",
-      "tipoFactura": "Manual",
-      "numFactura": "1122232",
-      "complementoDescripcion": "CAJA ROJA GRANDE",
-      "fechaFactura": "2015-03-01"
-    };
-    disponiblesTabla = {
-      "fraccionArancelaria": "40021901",
-      "nombreTecnico": "Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y10% a 3% respectivamente, de estireno.",
-      "nombreComercial": "Patitos de hule",
-      "numeroRegistroProductos": "254023028953",
-      "fechaVencimiento": "2023-07-05",
-      "fechaExpedicion": "2023-07-05"
-    }
-
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CertificadoOrigenComponent],
+      imports: [CommonModule, ReactiveFormsModule, CertificadoOrigenComponent, HttpClientTestingModule],
       providers: [
         FormBuilder,
-        { provide: ValidarInicialmenteCertificadoService, useValue: validarInicialmenteCertificadoServiceMock },
-        { provide: Tramite110214Store, useValue: tramiteStoreMock },
-        { provide: Tramite110214Query, useValue: tramiteQueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: PeruCertificadoService, useValue: mockPeruCertificadoService },
+        { provide: Tramite110214Store, useValue: mockStore },
+        { provide: Tramite110214Query, useValue: mockQuery },
+        { provide: SeccionLibQuery, useValue: mockSeccionQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
+        { provide: ValidarInicialmenteCertificadoService, useValue: mockValidarInicialmenteCertificadoService },
+        ToastrService,
+        provideToastr({
+        positionClass: 'toast-top-right',
+        }),
       ],
-    }).compileComponents();
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(CertificadoOrigenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formularioCertificado on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.formularioCertificado).toBeDefined();
-    expect(component.formularioCertificado.get('tercerOperador')?.value).toBe(true);
+  it('should call store.setEstado when tipoEstadoSeleccion is called', () => {
+    const estado = { id: 1, descripcion: 'Activo' };
+    component.tipoEstadoSeleccion(estado);
+    expect(mockStore.setEstado).toHaveBeenCalledWith(estado);
   });
 
-  it('should call cargarTratado and set optionsTratado', () => {
-    component.cargarTratado();
-    expect(validarInicialmenteCertificadoServiceMock.obtenerTratado).toHaveBeenCalled();
-    expect(component.optionsTratado).toEqual([{ id: 1, nombre: 'Tratado 1' }]);
+  it('should call store.setBloque when tipoSeleccion is called', () => {
+    const estado = { id: 1, descripcion: 'Bloque Test' };
+    component.tipoSeleccion(estado);
+    expect(mockStore.setBloque).toHaveBeenCalledWith('Bloque Test');
   });
 
-  it('should call cargarPais and set optionsPais and optionsTipoFactura', () => {
-    component.cargarPais();
-    expect(validarInicialmenteCertificadoServiceMock.obtenerPais).toHaveBeenCalled();
-    expect(component.optionsPais).toEqual([{ id: 1, nombre: 'País 1' }]);
-    expect(component.optionsTipoFactura).toEqual([{ id: 1, nombre: 'País 1' }]);
+  it('should open and close modal correctly', () => {
+    const mockModal = { show: jest.fn(), hide: jest.fn() } as unknown as Modal;
+    component.modalInstance = mockModal;
+    component.abrirModificarModal({} as any, true);
+    expect(mockStore.setFormMercancia).toHaveBeenCalled();
+    expect(mockModal.show).toHaveBeenCalled();
+
+    component.cerrarModificarModal();
+    expect(mockModal.hide).toHaveBeenCalled();
   });
 
-  it('should call cargarMercanciasDisponibles and set mercanciaDisponsiblesTablaDatos', () => {
-    component.cargarMercanciasDisponibles();
-    expect(validarInicialmenteCertificadoServiceMock.obtenerMercanciasDisponibles).toHaveBeenCalled();
-    expect(component.mercanciaDisponsiblesTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Disponible' }]);
+  it('should call store.setmercanciaTabla when emitmercaniasDatos is called', () => {
+    const mercancia = { id: 1, nombre: 'Producto A' } as any;
+    component.emitmercaniasDatos(mercancia);
+    expect(mockStore.setmercanciaTabla).toHaveBeenCalledWith([mercancia]);
   });
 
-  it('should call cargarMercanciasSeleccionadas and set mercanciaSeleccionadasTablaDatos', () => {
-    component.cargarMercanciasSeleccionadas();
-    expect(validarInicialmenteCertificadoServiceMock.obtenerMercanciasSeleccionadas).toHaveBeenCalled();
-    expect(component.mercanciaSeleccionadasTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Seleccionada' }]);
+  it('should set form validity in store', () => {
+    component.setFormValida(true);
+    expect(mockStore.setFormValida).toHaveBeenCalledWith({ certificado: true });
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('certificadoOrigen', true);
   });
 
-  it('should handle seleccionDeFilas and set mercanciaSeleccionadasFila', () => {
-    const mockFila = { id: 1, nombre: 'Mercancía Seleccionada' };
-    component.seleccionDeFilas(mockFila as any);
-    expect(component.mercanciaSeleccionadasFila).toEqual(mockFila);
-  });
-
-  it('should handle eliminar and remove selected row from mercanciaSeleccionadasTablaDatos', () => {
-    component.mercanciaSeleccionadasTablaDatos = [mercanciaSeleccionadasTablaDatos];
-    component.mercanciaSeleccionadasFila = { id: 1, nombre: 'Mercancía Seleccionada' } as any;
-    component.eliminar();
-    expect(component.mercanciaSeleccionadasTablaDatos).toEqual([mercanciaSeleccionadasTablaDatos]);
-    expect(component.mercanciaSeleccionadasFila).toBeNull();
-  });
-
-  it('should handle alSeleccionarArchivo and set nombreArchivo', () => {
-    const mockEvent = {
-      target: {
-        files: [{ name: 'archivo.txt' }],
-      },
-    } as unknown as Event;
-    component.alSeleccionarArchivo(mockEvent);
-    expect(component.nombreArchivo).toBe('archivo.txt');
-  });
-
-  it('should call cerrarModal and close the modal', () => {
-    const closeModalMock = { nativeElement: { click: jest.fn() } };
-    component.closeModal = closeModalMock as any;
-    component.cerrarModal();
-    expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
-  });
-
-  it('should call cambioFechaInicial and update the store', () => {
-    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
-    component.cambioFechaInicial('2023-01-01');
-    expect(spySetValoresStore).toHaveBeenCalledWith(component.grupoTratado, 'fechaInicial', 'setGrupoTratadoFechaFinalInput');
-  });
-
-  it('should call cambioFechaFinal and update the store', () => {
-    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
-    component.cambioFechaFinal('2023-12-31');
-    fixture.detectChanges();
-    expect(spySetValoresStore).toHaveBeenCalledWith(component.grupoTratado, 'fechaFinal', 'setGrupoTratadoFechaInicialInput');
-  });
-
-  it('should call cambioFechaFactura and update the store', () => {
-    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
-    component.cambioFechaFactura('2023-06-15');
-    expect(spySetValoresStore).toHaveBeenCalledWith(component.formularioMercancia, 'fecha', 'setFecha');
-  });
-
-  it('should handle disponiblesSeleccionDeFilas and show modalBuscar', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalBuscar');
-    component.modalBuscar = { nativeElement: modalElement };
-    const clickSpy = jest.spyOn(Modal.prototype, 'show');
-    component.disponiblesSeleccionDeFilas(disponiblesTabla);
-    expect(clickSpy).toHaveBeenCalled();
-  });
-
-  it('should handle cargaArchivo and show modalArchivo', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalArchivo');
-    component.modalArchivo = { nativeElement: modalElement };
-    const clickSpy = jest.spyOn(Modal.prototype, 'show');
-    component.cargaArchivo();
-    expect(clickSpy).toHaveBeenCalled();
-  });
-
-  it('should clean up observables on ngOnDestroy', () => {
-    const spyDestroyNotifier = jest.spyOn(component.destroyNotifier$, 'next');
-    const spyDestroyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(spyDestroyNotifier).toHaveBeenCalled();
-    expect(spyDestroyComplete).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-  it('should set estaDeshabilitado to true on onClick', () => {
-    component.onClick();
-    expect(component.estaDeshabilitado).toBe(true);
-  });
-
-  it('should call cerrarModal on enviar', () => {
-    const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
-    component.enviar();
-    expect(cerrarModalSpy).toHaveBeenCalled();
-  });
-
-  it('should set nuevaNotificacion correctly on abrirModal', () => {
-    component.abrirModal();
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje:
-        'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/ acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    });
-  });
-
-  it('should disable all forms when soloLectura is true', () => {
-    component.soloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(component.formularioCertificado.disabled).toBe(true);
-    expect(component.formularioMercancia.disabled).toBe(true);
-    expect(component.formularioArchivo.disabled).toBe(true);
-  });
-
-  it('should enable all forms when soloLectura is false', () => {
-    component.soloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(component.formularioCertificado.enabled).toBe(true);
-    expect(component.formularioMercancia.enabled).toBe(true);
-    expect(component.formularioArchivo.enabled).toBe(true);
-  });
-
 });

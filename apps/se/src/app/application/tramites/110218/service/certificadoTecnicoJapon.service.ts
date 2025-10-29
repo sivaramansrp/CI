@@ -72,4 +72,17 @@ export class CertificadoTecnicoJaponService {
       ...registro
     });
   }
+
+  /** Actualiza el estado del formulario en el store con los datos proporcionados.  
+ *  Establece el régimen seleccionado desde el objeto de estado.
+ *  */
+  actualizarEstadoFormulario(DATOS: Solicitud110218State): void {
+    this.estado.update(DATOS);
+  }
+
+/** Obtiene los datos simulados del registro de toma de muestras de mercancías  
+ *  desde un archivo JSON local para el trámite 110203. */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud110218State> {
+    return this.http.get<Solicitud110218State>('assets/json/110203/serviciosExtraordinarios.json');
+  }
 }

@@ -14,3 +14,17 @@ export const DESTINATARIO_DATOS: DestinatarioDatos = {
   fax: "55446778899",
   telefono: "2-55446778899"
 };
+
+/**
+ * Plantilla HTML para mostrar una alerta de error cuando faltan campos por capturar en el registro.
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

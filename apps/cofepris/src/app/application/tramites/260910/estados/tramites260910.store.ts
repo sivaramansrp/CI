@@ -86,7 +86,7 @@ export interface Solicitud260910State {
   apellidoPaterno: string;
 
   /** Apellido materno del solicitante. */
-  apellidoMeterno: string;
+  apellidoMaterno: string;
 
   /** Lista de mercancías asociadas con la solicitud. */
   mercanciasDatos: Mercancia[];
@@ -228,6 +228,18 @@ export interface Solicitud260910State {
 
   /** Folio original asociado a la solicitud. */
   folioOriginal: string;
+
+  /** Estado de la solicitud. */
+  solicitudValida: boolean;
+
+  /** Estado del pago de derechos. */
+  pagoDerechosValido: boolean;
+
+  /** Indica si el formulario de solicitud ha sido tocado. */
+  marcarSolicitudTouched: boolean;
+
+  /** Indica si el formulario de pago de derechos ha sido tocado. */
+  marcarPagoDerechosTouched: boolean;
 }
 
 /**
@@ -261,7 +273,7 @@ export function createInitialState(): Solicitud260910State {
     rfc: '',
     legalRazonSocial: '',
     apellidoPaterno: '',
-    apellidoMeterno: '',
+    apellidoMaterno: '',
     mercanciasDatos: [],
     SCIANDatos: [],
     manifesto: false,
@@ -308,7 +320,11 @@ export function createInitialState(): Solicitud260910State {
     fechaDePago: '',
     importeDePago: '',
     folioDeDesistimiento: '',
-    folioOriginal: '0402600201020254006000002'
+    folioOriginal: '0402600201020254006000002',
+    solicitudValida: false,
+    pagoDerechosValido: false,
+    marcarSolicitudTouched: false,
+    marcarPagoDerechosTouched: false,
   };
 }
 
@@ -596,12 +612,12 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
 
   /**
    * Actualiza el apellido materno en el estado.
-   * @param apellidoMeterno - Nuevo valor para el apellido materno.
+   * @param apellidoMaterno - Nuevo valor para el apellido materno.
    */
-  public setApellidoMeterno(apellidoMeterno: string): void {
+  public setApellidoMaterno(apellidoMaterno: string): void {
     this.update((state) => ({
       ...state,
-      apellidoMeterno
+      apellidoMaterno
     }));
   }
 
@@ -1217,6 +1233,48 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     this.update((state) => ({
       ...state,
       folioOriginal
+    }));
+  }
+
+  /**
+   * Actualiza el estado de la solicitud en el estado.
+   * @param solicitudValida - Nuevo valor para el estado de la solicitud.
+   */
+  public setSolicitudValida(solicitudValida: boolean): void {
+    this.update((state) => ({
+      ...state,
+      solicitudValida
+    }));
+  }
+
+  /**
+   * Actualiza el estado del pago de derechos en el estado.
+   * @param pagoDerechosValido - Nuevo valor para el estado del pago de derechos.
+   */
+  public setPagoDerechosValido(pagoDerechosValido: boolean): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechosValido
+    }));
+  }
+
+  /**
+   * Marca el formulario de solicitud como tocado.
+   */
+  public setMarcarSolicitudTouched(marcarSolicitudTouched: boolean): void {
+    this.update((state) => ({
+      ...state,
+      marcarSolicitudTouched: marcarSolicitudTouched
+    }));
+  }
+
+  /**
+   * Marca el formulario de pago de derechos como tocado.
+   */
+  public setMarcarPagoDerechosTouched(marcarPagoDerechosTouched: boolean): void {
+    this.update((state) => ({
+      ...state,
+      marcarPagoDerechosTouched: marcarPagoDerechosTouched
     }));
   }
 

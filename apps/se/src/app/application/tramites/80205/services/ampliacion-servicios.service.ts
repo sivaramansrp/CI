@@ -1,4 +1,4 @@
-import { AmpliacionServiciosState, ServicioAmpliacion, ServicioAutorizado } from '../models/datos-info.model';
+import { AmpliacionServiciosState, ServicioAmpliacion } from '../models/datos-info.model';
 import {Observable,map } from 'rxjs';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
 import { COMUN_URL } from '../../../core/server/api-router';
@@ -10,13 +10,28 @@ import { Servicio } from '../models/datos-info.model';
 
 
 
+/**
+ * Servicio para la gestión de ampliación de servicios IMMEX.
+ * 
+ * @export
+ * @class AmpliacionServiciosService
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AmpliacionServiciosService {
 
+  /**
+   * URL base para las peticiones HTTP.
+   * @type {string}
+   */
   host!: string;
 
+  /**
+   * Constructor del servicio.
+   * @param {HttpClient} http - Cliente HTTP de Angular
+   * @param {AmpliacionServiciosStore} tramite80205Store - Store de Akita
+   */
   constructor(private readonly http: HttpClient,
     private tramite80205Store: AmpliacionServiciosStore
   ) {
@@ -25,7 +40,7 @@ export class AmpliacionServiciosService {
 
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
-   * @returns {Observable<any>} - Observable con los datos obtenidos.
+   * @returns {Observable<Servicio[]>} Observable con array de servicios
    */
   getDatos(): Observable<Servicio[]> {
     return this.http
@@ -36,7 +51,7 @@ export class AmpliacionServiciosService {
 
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
-   * @param DATOS - Objeto que contiene los datos a actualizar en el estado del formulario.
+   * @param {AmpliacionServiciosState} DATOS - Datos a actualizar en el estado
    */
 
   actualizarEstadoFormulario(DATOS:AmpliacionServiciosState): void {
@@ -52,19 +67,12 @@ export class AmpliacionServiciosService {
 
   }
   /**
-   * Obtiene los datos de ampliación de servicios desde un archivo JSON.
-   * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
+   * Obtiene el estado de ampliación de servicios desde archivo JSON.
+   * @returns {Observable<AmpliacionServiciosState>} Observable con el estado completo
    */
 
   getServiciosData(): Observable<AmpliacionServiciosState> {
     return this.http.get<AmpliacionServiciosState>('assets/json/80205/ampliacion-campo.json');
-  }
-/**
- * Obtiene la tabla de datos desde un archivo JSON.
- * @return {Observable<ServicioAutorizado[]>} - Observable con la tabla de datos.
- */
-  getTablaDatos(): Observable<ServicioAutorizado[]> {
-    return this.http.get<ServicioAutorizado[]>('assets/json/80205/ampliaciaon-autrazidos.json');
   }
 
 }

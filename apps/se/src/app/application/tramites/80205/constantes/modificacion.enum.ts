@@ -5,7 +5,8 @@
  * que se utilizan para mostrar información relacionada con los domicilios y servicios IMMEX.
  */
 
-import { EmpresasNacionales, Servicio, ServicioAmpliacion, ServicioAutorizado, ServicioInmex } from '../models/datos-info.model';
+import { ServicioAmpliacion, ServicioAutorizado } from '../models/datos-info.model';
+import { EmpresaNacional } from '../../../shared/models/modelo-interface.model';
 
 /**
  * Configuración de los pasos del trámite.
@@ -49,28 +50,28 @@ export const PASOS = [
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
-    clave: (ele: EmpresasNacionales): string | undefined => ele.descripcionServicio,
+    clave: (ele: EmpresaNacional): string => ele.descripcionServicio ?? '',
     orden: 1,
   },
   {
     encabezado: 'Registro federal de contribuyentes',
-    clave: (ele: EmpresasNacionales): string | undefined =>
-      ele.rfc,
+    clave: (ele: EmpresaNacional): string =>
+      ele.rfc ?? '',
     orden: 2,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: EmpresasNacionales): string | undefined => ele.razonSocial,
+    clave: (ele: EmpresaNacional): string => ele.razonSocial ?? '',
     orden: 3,
   },
   {
     encabezado: 'Número del programa IMMEX',
-    clave: (ele: EmpresasNacionales): string | undefined => ele.numeroPrograma,
+    clave: (ele: EmpresaNacional): string => ele.numeroPrograma ?? '',
     orden: 4,
   },
   {
     encabezado: 'Año del programa IMMEX',
-    clave: (ele: EmpresasNacionales): string | undefined => ele.tiempoPrograma,
+    clave: (ele: EmpresaNacional): string => ele.tiempoPrograma ?? '',
     orden: 5,
   },
 ];
@@ -87,12 +88,12 @@ export const CONFIGURACION_DOMICILIOS = [
 export const CONFIGURACION_SERVICIO_IMMEX = [
   {
     encabezado: 'Descripción del servicio',
-    clave: (ele: ServicioAmpliacion): string | undefined => ele.descripcion ?? undefined,
+    clave: (ele: ServicioAmpliacion): string => ele.descripcion ?? '',
     orden: 1,
   },
   {
     encabezado: 'Tipo de servicio',
-    clave: (ele: ServicioAmpliacion): string | undefined => ele.descripcionTipo,
+    clave: (ele: ServicioAmpliacion): string => ele.descripcionTipo ?? '',
     orden: 2,
   },
 ];
@@ -101,12 +102,12 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
 export const CONFIGURACION_SERVICIO_AUTORIZADO = [
   {
     encabezado: 'Descripción del servicio',
-    clave: (ele: ServicioAutorizado): string | undefined => ele.descripcion,
+    clave: (ele: ServicioAutorizado): string => ele.descripcion ?? '',
     orden: 1,
   },
   {
     encabezado: 'Tipo de servicio',
-    clave: (ele: ServicioAutorizado): string | undefined => ele.descripcionTipo,
+    clave: (ele: ServicioAutorizado): string => ele.descripcionTipo ?? '',
     orden: 2,
   },
 ];
@@ -119,4 +120,6 @@ export interface Catalogo {
   descripcion: string;
   /** Clave opcional del catálogo. */
   tipode?: string;
+  clave?: string;
 }
+

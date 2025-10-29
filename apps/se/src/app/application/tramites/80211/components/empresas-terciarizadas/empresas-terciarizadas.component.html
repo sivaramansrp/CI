@@ -6,37 +6,19 @@
           <label class="control-label" for="modalidad"
             >Selecciona la modalidad:</label
           >
-          <input
-            id="modalidad"
-            class="form-control"
-            type="text"
-            name="modalidad"
-            formControlName="modalidad"
-          />
+          <input id="modalidad" class="form-control" type="text" name="modalidad" formControlName="modalidad" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="folio">Folio:</label>
-          <input
-            id="folio"
-            name="folio"
-            type="text"
-            class="form-control"
-            formControlName="folio"
-          />
+          <input id="folio" name="folio" type="text" class="form-control" formControlName="folio" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="ano">Año:</label>
-          <input
-            id="ano"
-            name="ano"
-            type="text"
-            class="form-control"
-            formControlName="ano"
-          />
+          <input id="ano" name="ano" type="text" class="form-control" formControlName="ano" />
         </div>
       </div>
     </div>
@@ -47,49 +29,18 @@
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="rfc">RFC*:</label>
-          <input
-            id="rfc"
-            name="rfc"
-            type="text"
-            class="form-control"
-            formControlName="rfc"
-            [class.is-invalid]="
-              empresasForm.get('rfc')?.touched &&
-              empresasForm.get('rfc')?.invalid
-            "
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              empresasForm.get('rfc')?.touched &&
-              empresasForm.get('rfc')?.invalid
-            "
-          >
-            <span *ngIf="empresasForm.get('rfc')?.hasError('required')"
-              >Este campo es obligatorio.</span
-            >
-            <span *ngIf="empresasForm.get('rfc')?.hasError('pattern')">
-            El RFC no es válido
-            </span>
-          </div>
+          <input id="rfc" name="rfc" type="text" class="form-control" formControlName="rfc"
+            (change)="setValoresStore(empresasForm, 'rfc')" />
         </div>
       </div>
       <div class="col-md-6">
-        <app-catalogo-select
-          name="estado"
-          id="estado"
-          formControlName="estado"
-          [catalogo]="optionsEstado"
-          [label]="'Estado'"
-          [required]="true"
-          [markTouched]="empresasForm.get('estado')?.touched??false"
-          [isDisabled]="esFormularioSoloLectura"
-        ></app-catalogo-select>
+        <app-catalogo-select name="estado" id="clave" formControlName="estado" [catalogo]="estado" [label]="'Estado'"
+          [required]="true" [isDisabled]="esFormularioSoloLectura" (change)="procesarDatosDelHijo()"></app-catalogo-select>
       </div>
 
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary" (click)="buscarControladoras()">
-          Buscar terciarizadas
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarTerciarizadas()">
+         Buscar terciarizadas
         </button>
       </div>
 
@@ -110,7 +61,7 @@
       </div>
       
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary"  [disabled]="esFormularioSoloLectura" (click)="agregarPlantas()">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarPlantas()">
           Agregar plantas
         </button>
       </div>
@@ -128,40 +79,24 @@
         ></app-tabla-dinamica>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura"  (click)="eliminarPlantas()">
+        <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="eliminarPlantas()">
           Eliminar plantas
         </button>
       </div>
     </div>
   </form>
+<div>
+  @if(eliminarPlantasAlerta) {
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+  }
+  @if(espectaculoAlerta) {
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="mostrarDomicilios()"></lib-notificaciones>
+  }
+  @if(espectaculoAlertaAgregar){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="agregarPlantasconfirmar()"></lib-notificaciones>
+  }
 </div>
-
-<lib-notificaciones 
-  *ngIf="errorBuscar"
-  [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="errorBuscar = false">
-</lib-notificaciones>
-
-<lib-notificaciones 
-  *ngIf="errorRFC"
-  [notificacionInput]="nuevaNotificacionRFC"
-  (confirmacionModal)="errorRFC = false">
-</lib-notificaciones>
-
-<lib-notificaciones 
-  *ngIf="errorAgregar"
-  [notificacionInput]="nuevaNotificacionAgregar"
-  (confirmacionModal)="errorAgregar = false">
-</lib-notificaciones>
-
-<lib-notificaciones 
-  *ngIf="errorEliminar"
-  [notificacionInput]="nuevaNotificacionEliminar"
-  (confirmacionModal)="errorEliminar = false">
-</lib-notificaciones>
-
-<lib-notificaciones 
-  *ngIf="confirmarEliminar"
-  [notificacionInput]="nuevaNotificacionConfirmarEliminar"
-  (confirmacionModal)="aceptarEliminar($event)">
-</lib-notificaciones>
+</div>

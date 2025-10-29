@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { doDeepCopy, esValidArray, esValidObject, Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent, TablaSeleccion,doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -11,22 +11,20 @@ import {
   PlantasDisponibles,
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
-import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
-
 import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
-import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
-import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
-
-import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
-import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { ComplimentosService } from '../../../../shared/services/complimentos.service';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
+import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
+import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
+import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent

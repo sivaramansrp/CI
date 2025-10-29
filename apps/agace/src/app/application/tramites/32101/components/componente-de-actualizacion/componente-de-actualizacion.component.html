@@ -1,8 +1,7 @@
 <div class="modal fade" id="modalModificar" tabindex="-1" aria-labelledby="modalModificarLabel"
   aria-hidden="true" #modalModificar>
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
     <div class="modal-content">
-      <div class="modal-header"></div>
       <div class="modal-body">
         <form [formGroup]="modificarFormulario">
           <div class="row mb-3">
@@ -14,13 +13,13 @@
             <div class="col-md-4">
               <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
               <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos"
-                id="valorEnPesos" />
+                id="valorEnPesos" maxlength="15" inputmode="numeric" (input)="onNumericInput($event)"  />
             </div>
           </div>
           <div class="row mb-3">     
-            <div class="col-md-8 textarea-container">
+            <div class="col-md-8">
               <label for="descripcionGeneral" class="form-label">Descripción general*:</label>
-              <textarea class="form-control" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral"
+              <textarea class="form-control" rows="3" formControlName="descripcionGeneral" name="descripcionGeneral"
                 id="descripcionGeneral"></textarea>
             </div>
           </div>
@@ -39,8 +38,8 @@
         </form>
       </div>      
       <div class="modal-footer justify-content-end">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="onGuardarCambios()">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
       </div>
     </div>
   </div>

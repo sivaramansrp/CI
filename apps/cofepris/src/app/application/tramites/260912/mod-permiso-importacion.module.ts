@@ -10,7 +10,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoSanitarioComponent } from './pages/permiso-sanitario/permiso-sanitario.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroComoEmpresaRoutingModule } from './mod-permiso-importacion-routing.module';
-import { TercerosRelacionadosVistaComponent } from './component/terceros-relacionados/terceros-relacionados-vista.component.ts';
+import { TercerosRelacionadosVistaComponent } from './component/terceros-relacionados/terceros-relacionados-vista.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './component/tramites-asociado/tramites-asociado.component';
 

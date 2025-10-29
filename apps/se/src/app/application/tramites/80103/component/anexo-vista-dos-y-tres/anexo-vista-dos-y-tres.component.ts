@@ -155,13 +155,18 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
           fraccionArancelaria: state.fraccionArancelaria,
           descripcion: state.descripcion
         });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.anexoDosTablaLista = (state.anexoDos || []).map((item: any) => ({
-          ...item,
-          encabezadoFraccion: item.fraccionArancelaria ?? '',
-          encabezadoDescripcion: item.descripcion ?? '',
-          estatus: item.estatus ?? ''
-        }));
+        this.anexoDosTablaLista = (state.anexoDos || []).map((item: unknown) => {
+          const TYPED_ITEM = item as { fraccionArancelaria?: string; descripcion?: string; estatus?: string | boolean };
+          return {
+            fraccionArancelaria: TYPED_ITEM.fraccionArancelaria ?? '',
+            descripcion: TYPED_ITEM.descripcion ?? '',
+            encabezadoFraccion: TYPED_ITEM.fraccionArancelaria ?? '',
+            encabezadoDescripcion: TYPED_ITEM.descripcion ?? '',
+            estatus: typeof TYPED_ITEM.estatus === 'boolean'
+              ? TYPED_ITEM.estatus
+              : TYPED_ITEM.estatus === 'true'
+          };
+        });
       });
   }
 
@@ -177,13 +182,18 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
           fraccionArancelaria: state.fraccionTres,
           descripcion: state.descripcionTres
         });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.anexoTresTablaLista = (state.anexoTres || []).map((item: any) => ({
-          ...item,
-          encabezadoFraccion: item.fraccionArancelaria ?? '',
-          encabezadoDescripcion: item.descripcion ?? '',
-          estatus: item.estatus ?? ''
-        }));
+        this.anexoTresTablaLista = (state.anexoTres || []).map((item: unknown) => {
+          const TYPED_ITEM = item as { fraccionArancelaria?: string; descripcion?: string; estatus?: string | boolean };
+          return {
+            fraccionArancelaria: TYPED_ITEM.fraccionArancelaria ?? '',
+            descripcion: TYPED_ITEM.descripcion ?? '',
+            encabezadoFraccion: TYPED_ITEM.fraccionArancelaria ?? '',
+            encabezadoDescripcion: TYPED_ITEM.descripcion ?? '',
+            estatus: typeof TYPED_ITEM.estatus === 'boolean'
+              ? TYPED_ITEM.estatus
+              : TYPED_ITEM.estatus === 'true'
+          };
+        });
       });
   }
 

@@ -1,7 +1,7 @@
+import { CatalogoServices,InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -10,13 +10,16 @@ import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/11020
 import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponse, CertificadoData, TablaRow } from '../../models/datos-tramite.model';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Solocitud110203Service } from '../../service/service110203.service';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
-import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+
+
 /**
  * Standalone component for managing search data.
  * 
@@ -52,6 +55,18 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * Cada elemento define las propiedades necesarias para construir un dropdown dinámico.
    */
   configuracionesDropdown: ConfiguracionDropdown[] = [];
+
+  /**
+   * Lista de objetos de tipo Catalogo que representa los tratados o acuerdos disponibles para la búsqueda.
+   * Se utiliza para mostrar las opciones en el componente de datos de búsqueda.
+   */
+  tratadoAcuerdo: Catalogo[] = [];
+
+  /**
+   * Lista de objetos de tipo Catalogo que representa los países disponibles para seleccionar en el bloque correspondiente.
+   * Se utiliza para mostrar opciones de países en el componente de búsqueda.
+   */
+  paisBloque: Catalogo[] = [];
 
   /**
    * Colección de entidades del catálogo.
@@ -131,6 +146,31 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  tramites:string='110203';
+
+  /**
+ * Indica si una fila de la tabla o listado está actualmente seleccionada.
+ */
+  public filaSeleccionada: boolean = false;
+
+  /**
+ * Almacena los datos de las filas que han sido seleccionadas en una tabla.
+ * Cada elemento del arreglo corresponde a un objeto de tipo `TableBodyData`.
+ */
+  public datosFilasSeleccionadas: TableBodyData[] = [];
+
+  /**
+ * Almacena el estado completo del certificado de la solicitud 110203.
+ * Se utiliza internamente en la clase para mantener los datos del certificado actual.
+ */
+  private certificadoState!: Solicitud110203State;
+
   /** 
    * Constructor del componente.
    * Se inyectan las dependencias necesarias para el funcionamiento del componente.
@@ -147,7 +187,8 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     private tramite110203Store: Tramite110203Store, // Almacenamiento para manejar el estado del trámite 110203
      private Solocitud110203Service: Solocitud110203Service,
        private consultaQuery: ConsultaioQuery,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private catalogoService: CatalogoServices
   ) {
     /** 
      Configuración de dropdowns para los catálogos de búsqueda
@@ -222,9 +263,19 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      * Si el usuario cambia el valor, este se almacena en la tienda de Akita  
      * llamando al método setTratadoAcuerdo.  
      */
-    this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110203Store.setTratadoAcuerdo(valor));
+  this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
+  .pipe(takeUntil(this.unsubscribe$),
+   distinctUntilChanged(),
+  debounceTime(200))
+  .subscribe(valor => {
+    this.tramite110203Store.setTratadoAcuerdo(valor);
+    
+    this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
+    
+    if (valor) {
+      this.obtenerPaisesPorTratado(valor);
+    } 
+  });
 
     /** 
      * Escucha los cambios en el campo "paisBloque" del formulario.  
@@ -239,11 +290,13 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
 
-    /** 
-    * Llama a la función para obtener los datos del establecimiento.
-    */
-    this.getEstableCimiento();
-
+    this.tramite110203Query.selectSolicitud$
+  .pipe(takeUntil(this.unsubscribe$))
+  .subscribe((state) => {
+    this.certificadoState = state;
+  });
+    
+    this.obtenerTratadoAcuerdo();
   }
   /**
    * Handles radio value changes.
@@ -255,14 +308,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.valorSeleccionado = valor;
     this.validadoresActualización();
     this.tramite110203Store.setValorSeleccionado(valor);
-  }
-
-  /**
-   * Assigns establishment table data, including headers and body, from a JSON file.
-   */
-  private getEstableCimiento(): void {
-    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
-    this.establecimientoBodyData = this.destinatarioTableData?.cuerpoTabla;
   }
 
   /**
@@ -338,6 +383,7 @@ public buscar(): void {
     }
   } else {
     this.verTabla = true;
+    this.buscarDatos();
   }
 }
 
@@ -365,9 +411,206 @@ public buscar(): void {
    * Redirects to `/pago/seleccion-tramite` using Angular's Router.
    */
   navigateToSeleccionTramite(): void {
+    if (!this.filaSeleccionada) {
+    this.alertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Es necesario seleccionar un certificado',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  } else {
     this.router.navigate(['../tecnicosdatos'], { relativeTo: this.route });
-
   }
+  }
+
+  /**
+   * Obtiene el catálogo de tratados o acuerdos relacionados con el trámite actual.
+   * 
+   * Realiza una solicitud al servicio `catalogoService` para recuperar los datos de tratados/acuerdos,
+   * utilizando el identificador de trámite almacenado en `this.tramites`. Los resultados se asignan a
+   * la propiedad `this.tratadoAcuerdo`. La suscripción se gestiona para finalizar automáticamente cuando
+   * el componente se destruye, evitando fugas de memoria.
+   */
+  obtenerTratadoAcuerdo(): void {
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites,"TITRAC.TA")
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tratadoAcuerdo = response?.datos ?? []
+        }
+      });
+  }
+
+/**
+ * Actualiza el estado de selección de filas y guarda las filas seleccionadas.
+ *
+ * @param tieneSeleccion - Indica si hay filas seleccionadas (true) o no (false).
+ */
+  onRowSelectionChange(tieneSeleccion: boolean): void {
+  this.filaSeleccionada = tieneSeleccion;
+    if (tieneSeleccion) {
+    this.datosFilasSeleccionadas = this.establecimientoBodyData.filter(row => row.selected);
+  } else {
+    this.datosFilasSeleccionadas = [];
+  }
+}
+
+/**
+ * Obtiene la lista de países asociados a un tratado y, si hay resultados, 
+ * obtiene los tratados y acuerdos relacionados al primer país clave encontrado.
+ *
+ * @param tratadoId - Identificador del tratado para filtrar los países.
+ */
+obtenerPaisesPorTratado(tratadoId: string): void {
+  this.catalogoService.getPaisesPorTratado(this.tramites, tratadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {        
+        if (response?.datos && response.datos.length > 0) {
+          // Extract the first país clave from the response
+          const PAIS_CLAVE = response.datos[0].clave;
+          if (PAIS_CLAVE !== undefined) {
+            this.obtenerTratadosAcuerdosPorPais(PAIS_CLAVE);
+          }
+        } else {
+          this.paisBloque = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error obteniendo países por tratado:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Obtiene los tratados y acuerdos asociados a un país específico.
+ *
+ * @param cvePais - Clave o código del país para filtrar tratados y acuerdos.
+ */
+obtenerTratadosAcuerdosPorPais(cvePais: string): void {
+  this.catalogoService.getTratadosAcuerdosPorPais(this.tramites, cvePais)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        this.paisBloque = response?.datos ?? [];
+      },
+      error: (error) => {
+        console.error('Error obteniendo tratados-acuerdos por país:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
+ */
+buscarDatos(): void {
+    const PAYLOAD = {
+      numeroCertificado: "25402500186802", 
+      // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
+      rfcSolicitante: "AAL0409235E6"
+    };
+
+    this.Solocitud110203Service.buscarCertificado(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response: unknown) => {
+        // const DATOS = (response as any).datos ?? [];
+      const API_RESPONSE = response as ApiResponse;
+      const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
+
+        if (DATOS.length > 0) {
+          this.procesarDatosCertificado(DATOS[0]);
+          this.actualizarTabla(DATOS);
+        }
+      });
+
+    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
+}
+
+private procesarDatosCertificado(data: CertificadoData): void {
+    this.actualizarDatosTratado(data);
+    this.actualizarDatosDestinatario(data);
+    this.actualizarDatosTransporte(data);
+    this.actualizarDatosCertificado(data);
+    this.actualizarDatosMercancias(data);
+}
+
+private actualizarDatosTratado(data: CertificadoData): void {
+    this.tramite110203Store.setTratado(data.tratadoAsociado.nombre ?? '');
+    this.tramite110203Store.setBloque(data.paisAsociado.nombre ?? '');
+    this.tramite110203Store.setOrigen(data.cvePaisFabricacion || 'México');
+    this.tramite110203Store.setDestino(data.solicitud.paisDestino ?? '');
+    this.tramite110203Store.setExpedicion(data.fechaExpedicion ?? '');
+    this.tramite110203Store.setVencimiento(data.fechaVencimiento ?? '');
+}
+
+private actualizarDatosDestinatario(data: CertificadoData): void {
+    const PERSONA = data.solicitud.personaSolicitud;
+    this.tramite110203Store.setNombre(PERSONA.nombre ?? '');
+    this.tramite110203Store.setPrimer(PERSONA.apellidoMaterno ?? '');
+    this.tramite110203Store.setSegundo(PERSONA.apellidoPaterno ?? '');
+    this.tramite110203Store.setFiscal(PERSONA.numeroIdentificacionFiscal ?? '');
+    this.tramite110203Store.setRazon(PERSONA.razonSocial ?? '');
+
+    const DOMICILIO = PERSONA.domicilio;
+    this.tramite110203Store.setCalle(DOMICILIO.calle ?? '');
+    this.tramite110203Store.setLetra(DOMICILIO.letra ?? '');
+    this.tramite110203Store.setCiudad(DOMICILIO.ciudad ?? '');
+    this.tramite110203Store.setCorreo(PERSONA.correoElectronico ?? '');
+    this.tramite110203Store.setFax(DOMICILIO.fax ?? '');
+    this.tramite110203Store.setTelefono(DOMICILIO.telefono ?? '');
+}
+
+private actualizarDatosTransporte(data: CertificadoData): void {
+    this.tramite110203Store.setMedio(data.medioTransporte);
+}
+
+private actualizarDatosCertificado(data: CertificadoData): void {
+    this.tramite110203Store.setPrecisa(data.precisa);
+    this.tramite110203Store.setPresenta(data.presenta);
+    this.tramite110203Store.setObservaciones(data.observaciones);
+}
+
+private actualizarDatosMercancias(data: CertificadoData): void {
+    const MERCANCIA = data.mercanciasAsociadas[0];
+    this.tramite110203Store.setOrden(MERCANCIA.numeroOrden ?? '');
+    this.tramite110203Store.setArancelaria(MERCANCIA.fraccionArancelaria ?? '');
+    this.tramite110203Store.setNombretecnico(MERCANCIA.nombreTecnico ?? '');
+    this.tramite110203Store.setComercial(MERCANCIA.nombreComercial ?? '');
+    this.tramite110203Store.setIngles(MERCANCIA.nombreIngles ?? '');
+    this.tramite110203Store.setRegistro(MERCANCIA.numeroRegistro ?? '');
+    this.tramite110203Store.setComplemento(MERCANCIA.complementoDescripcion ?? '');
+    this.tramite110203Store.setMarca(MERCANCIA.marca ?? '');
+    this.tramite110203Store.setValor(MERCANCIA.valorMercancia ?? '');
+    this.tramite110203Store.setCantidad(MERCANCIA.cantidad ?? '');
+    this.tramite110203Store.setComercializacion(MERCANCIA.unidadMedidaComercial ?? '');
+    this.tramite110203Store.setBruta(MERCANCIA.masaBruta ?? '');
+    this.tramite110203Store.setMedida(MERCANCIA.unidadMedidaMasaBruta ?? '');
+    this.tramite110203Store.setFactura(MERCANCIA.numeroFactura ?? '');
+    this.tramite110203Store.setTipo(MERCANCIA.tipoFactura ?? '');
+    this.tramite110203Store.setFechaFactura(MERCANCIA.fechaFactura ?? '');
+}
+
+private actualizarTabla(datos: CertificadoData[]): void {
+    const CUERPO_TABLA = datos.map((item: CertificadoData) => ({
+      numeroDeCertificado: item.numeroCertificado,
+      expedicion: item.fechaExpedicion,
+      vencimiento: item.fechaVencimiento,
+    }));
+
+    this.establecimientoBodyData = [];
+    CUERPO_TABLA.forEach((row: TablaRow) => {
+      const TABLE_ROW: TableBodyData = { tbodyData: [] };
+      TABLE_ROW.tbodyData = [row.numeroDeCertificado, row.expedicion, row.vencimiento];
+      this.establecimientoBodyData.push(TABLE_ROW);
+    });
+}
 
   /** 
    * Método de ciclo de vida de Angular que se ejecuta cuando el componente se destruye.  

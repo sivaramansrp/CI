@@ -110,6 +110,12 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Indica si existe un error relacionado con el RFC.
+   * Se establece en `true` cuando el RFC ingresado no es válido.
+   */
+  rfcError: boolean = false;
+
   configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
 
@@ -237,6 +243,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
  * @method obtenerSubfabricantesDisponibles
  */
   obtenerSubfabricantesDisponibles(): void {
+    this.rfcError=false;
       const PAYLOAD = {
         "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
         "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
@@ -253,7 +260,14 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
               this.store.setPlantasBuscadas(RESPONSE);
             } 
           }
-      });
+      },(err) => { 
+        if(err.error.codigo==="01"){
+         this.rfcError=true;
+        }
+         
+      }
+    
+    );
   }
 
   /**

@@ -10,6 +10,24 @@ import { Tramite110217Store } from '../tramites/tramite110217.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110217Query extends Query<Tramite110217State> {
+  /**
+   * Selecciona el formulario del certificado.
+   * @returns {Observable<any>} - Observable con el formulario del certificado.
+   */
+  formCertificado$ = this.select((state) => {
+    return state.formCertificado;
+  });
+  
+  /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+  /**
+   * Observable que expone la lista de productores exportador agregados al estado del trámite.
+   */
+    selectAgregarProductoresExportador$ = this.select((state) => {
+      return state.agregarProductoresExportador;
+    });
 
   /**
    * Observable que selecciona el estado completo del trámite.
@@ -18,6 +36,30 @@ export class Tramite110217Query extends Query<Tramite110217State> {
    */
   selectSolicitud$ = this.select((state) => {
     return state;
+  });
+
+  /**
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */ 
+    datosProductorFormulario$ = this.select((state) => {
+      return state.datosProductorFormulario;
+    });
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
+    formulario$ = this.select((state) => {
+      return state.formulario;
+    });
+
+    /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+  formDatosCertificado$ = this.select((state) => {
+    return state.formDatosCertificado;
   });
 
   /**

@@ -58,6 +58,7 @@ export interface ModeloDeFormaDinamica {
   marginLeft?:string,
   divWidth?:string,         
   buttonWidth?:string
+  inputFilter?: RegExp; 
 }
 
 export interface Validadores {

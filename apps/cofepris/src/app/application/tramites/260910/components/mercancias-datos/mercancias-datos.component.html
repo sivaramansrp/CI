@@ -112,16 +112,14 @@
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
-            <h4 class="panel-title">País de de origen</h4>
-            <button type="button" class="collpase-button collapsed"></button>
+            <h4 class="panel-title">País de origen</h4>
+            <button type="button" class="collpase-button" [class.collapsed]="!paisOrigen"></button>
           </div>
-          @if(paisOrigen){
-          <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-collapse" [ngClass]="{'collapse': !paisOrigen, 'in': paisOrigen}" id="panel-01">
             <div class="panel-body">
               <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas" [botones]="paisDeOrigenBotons"></crosslist>
             </div>
           </div>
-          }
         </div>
       </div>
     </div>
@@ -131,16 +129,14 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="paisProcedencis_colapsable()" tabindex="0">
             <h4 class="panel-title">País de procedencia</h4>
-            <button type="button" class="collpase-button collapsed"></button>
+            <button type="button" class="collpase-button" [class.collapsed]="!paisProcedencisColapsable"></button>
           </div>
-          @if(paisProcedencisColapsable){
-          <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-collapse" [ngClass]="{'collapse': !paisProcedencisColapsable, 'in': paisProcedencisColapsable}" id="panel-01">
             <div class="panel-body">
               <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas" [botones]="paisDeProcedenciaBotons">
               </crosslist>
             </div>
           </div>
-          }
         </div>
       </div>
     </div>
@@ -151,16 +147,14 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
             <h4 class="panel-title">Uso específico</h4>
-            <button type="button" class="collpase-button collapsed"></button>
+            <button type="button" class="collpase-button" [class.collapsed]="!usoEspecifico"></button>
           </div>
-          @if(usoEspecifico){
-          <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-collapse" [ngClass]="{'collapse': !usoEspecifico, 'in': usoEspecifico}" id="panel-01">
             <div class="panel-body">
               <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label" [botones]="usoEspecificoBotons">
               </crosslist>
             </div>
           </div>
-          }
         </div>
       </div>
     </div>

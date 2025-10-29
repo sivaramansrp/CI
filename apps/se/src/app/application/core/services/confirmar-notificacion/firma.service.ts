@@ -34,10 +34,9 @@ export class FirmaService {
    * @param PAYLOAD - Datos requeridos para generar la firma electrónica
    * @returns Observable que emite la respuesta del servidor con el resultado de la firma
    */
-  postFirma(numFolio: string, PAYLOAD: FirmaRequest):
+  postFirma(tramite: string, numFolio: string, PAYLOAD: FirmaRequest):
     Observable<BaseResponse<FirmaConfirmarResponse>> {
-    const ENDPOINT = `${this.host}` +
-      API_POST_FIRMA.replace(NUMFOLIOTRAMITE, numFolio);
+    const ENDPOINT = `${this.host}${API_POST_FIRMA(tramite, numFolio)}`;
 
     return this.http.post<BaseResponse<FirmaConfirmarResponse>>(ENDPOINT, PAYLOAD);
   }

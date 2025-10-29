@@ -3,10 +3,37 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11201/pasos.enums';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
+/**
+ * Interfaz que define las propiedades para las acciones de los botones del wizard.
+ * 
+ * @interface AccionBoton
+ */
 interface AccionBoton {
+  /**
+   * Tipo de acción a realizar (ej: 'cont' para continuar, 'ant' para anterior).
+   * 
+   * @type {string}
+   */
   accion: string;
+  
+  /**
+   * Valor numérico que indica el índice del paso al cual navegar.
+   * 
+   * @type {number}
+   */
   valor: number;
 }
+
+/**
+ * Componente principal para la gestión de solicitudes con navegación por pasos.
+ * 
+ * Este componente actúa como contenedor principal para un wizard de múltiples pasos,
+ * proporcionando navegación entre diferentes secciones del formulario de solicitud
+ * y gestionando el estado general del proceso.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',

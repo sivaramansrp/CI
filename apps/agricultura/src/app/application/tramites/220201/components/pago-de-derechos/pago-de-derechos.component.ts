@@ -2,6 +2,7 @@ import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-acces
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -87,6 +88,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
     private readonly httpServicios: HttpClient,
+    private catalogoService: CatalogosService
   ) {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
@@ -120,24 +122,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Realiza una petición para obtener el catálogo de bancos.
    */
   obtenerBancoSelectorList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.pagoSelect.bancoSelector = DATOS;
-      });
+
+    this.catalogoService.obtieneCatalogoBancos(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.pagoSelect.bancoSelector = data.datos ?? [];
+    });
   }
 
   /**
    * Realiza una petición para obtener el catálogo de justificaciones.
    */
   obtenerListaDeJustificaciones(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.pagoSelect.justificacionSelector = DATOS as Catalogo[];
-      });
+
+    this.catalogoService.obtieneCatalogoJustificacionesPago(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.pagoSelect.justificacionSelector = data.datos ?? [];
+    });
   }
   /**
    * Envía los valores actuales del formulario al store compartido.

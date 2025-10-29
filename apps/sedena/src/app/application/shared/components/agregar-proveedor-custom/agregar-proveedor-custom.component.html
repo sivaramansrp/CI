@@ -21,6 +21,7 @@
           [radioOptions]="tipoPersonaRadioOpciones"
           [isRequired]="true"
           [layout]="'vertical'"
+           [showTooltip]="true"
           formControlName="tipoPersona"
           (valueChange)="tipoPersonaCambioDeValor($event)"
            [disabled]="esFormularioSoloLectura"
@@ -374,7 +375,13 @@
       </div>        
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico:</label>
+        <label class="form-label">Correo electrónico:
+           <span
+      class="bi bi-question-circle-fill fs-4 m-1"
+      title="ejemplo@dominio.com"
+      data-bs-toggle="tooltip"
+    ></span>
+        </label>
         <input
           type="email"
           class="form-control"
@@ -394,6 +401,9 @@
 
     <div class="row mt-5 mb-5">
       <div class="col-md-12">
+        <div class="col-md-4">
+          <p>* Campos obligatorios</p>
+      </div>
         <div class="pull-right">
           <button
             type="button"

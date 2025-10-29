@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-titulo titulo="Histórico Productores" />
+    <ng-titulo titulo="Histórico productores" />
 
     <form [formGroup]="formulario">
         <div class="row">
@@ -57,10 +57,8 @@
                 </div>
             </div>
         </div>
-        <div class="table-container mt-5" *ngIf="tramiteState?.productorMismoExportador">
-            <div>
-                <p>Mercancías Seleccionadas</p>
-            </div>
+        <div class="table-container mt-5" *ngIf="tramiteState?.productorMismoExportador && mostrarMercanciasSeleccionadas">
+            <h6>Mercancías Seleccionadas</h6>
             @if(esTipoDeSeleccionado){
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
                 [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaDatos"
@@ -183,8 +181,19 @@
                             <div class="col-md-4">
                                 <label>Número de registro fiscal*:</label>
                                 <input type="text" required="false" class="form-control"
+                                    [ngClass]="isValid(formularioMercancia, 'numeroDeRegistroFiscal') ? 'required' : ''"
                                     formControlName="numeroDeRegistroFiscal"
-                                    (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') " />
+                                    (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') "
+                                     />
+                                      @if (formularioMercancia.controls['numeroDeRegistroFiscal'].invalid &&
+                                    (formularioMercancia.controls['numeroDeRegistroFiscal'].touched ||
+                                        formularioMercancia.controls['numeroDeRegistroFiscal'].dirty)) {
+                                    <div class="text-danger mt-1">
+                                    @if (formularioMercancia.controls['numeroDeRegistroFiscal'].errors?.['required']) {
+                                        <small>Este campo es obligatorio.</small>
+                                    }
+                                    </div>
+                                }
                             </div>
                         </div>
                     </ng-container>

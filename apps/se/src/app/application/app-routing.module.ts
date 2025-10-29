@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcusePageComponent } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent, AcuseResolucionComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
@@ -144,8 +144,8 @@ const ROUTES: Routes = [
     path: 'cancelacion-de-certificados-de-cupo',
     loadChildren: () =>
       import(
-        './tramites/140104/cancelacion-de-certificados-de-cupo.module'
-      ).then((m) => m.CancelacionDeCertificadosDeCupoModule),
+        './tramites/140104/desistimiento-de-permiso.module'
+      ).then((m) => m.DesistimientoDePermisoModule),
   },
   {
     path: 'desistimiento-de-permiso',
@@ -494,8 +494,8 @@ const ROUTES: Routes = [
   {
     path: 'registro-expansion',
     loadChildren: () =>
-      import('./tramites/80211/registro-expansion.module').then(
-        (m) => m.RegistroExpansionModule
+      import('./tramites/80211/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
       ),
   },
   {
@@ -722,6 +722,10 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent,
+  },
+    {
+    path: 'acuse-resolucion',
+    component: AcuseResolucionComponent,
   },
 ];
 

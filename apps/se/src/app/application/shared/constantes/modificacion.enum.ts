@@ -24,7 +24,7 @@ export const CONFIGURACION_MERCANCIA = [
   },
   {
     encabezado: 'Número de registro de productos', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve la fracción Naladi SA02
+    clave: (ele: Mercancia): string | undefined => ele.numeroRegistroProducto, // Función que devuelve la fracción Naladi SA02
     orden: 4, // Orden en que se mostrará la columna
   },
   {
@@ -36,7 +36,7 @@ export const CONFIGURACION_MERCANCIA = [
     encabezado: 'Fecha vencimiento', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento, // Función que devuelve el nombre comercial de la mercancía
     orden: 5, // Orden en que se mostrará la columna
-  }
+  },
 ];
 
 /**
@@ -88,9 +88,9 @@ export const MERCANCIA_SELECCIONADAS = [
   },
   {
     encabezado: 'numero', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve el nombre comercial de la mercancía
+    clave: (ele: Mercancia): string | undefined => ele.numeroRegistroProducto, // Función que devuelve el nombre comercial de la mercancía
     orden: 5, // Orden en que se mostrará la columna
-  }
+  },
 ];
 
 /**`
@@ -257,7 +257,31 @@ export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
  * @descripcion
  * Identificador único del procedimiento.
  */
-export const CAMPO_DE_DESTINATARIO = [110222, 110221]
+export const CAMPO_DE_DESTINATARIO = [110221, 110222, 110223];
+
+/**
+ * Identificadores de procedimientos que requieren campos de destinatarios.
+ * @type {number[]}
+ */
+export const CAMPO_DE_DESTINATARIOS = [110203];
+
+/**
+ * Identificadores de procedimientos que requieren campos de representante.
+ * @type {number[]}
+ */
+export const CAMPO_DE_REPRESENTANTE = [110202, 110223];
+
+/**
+ * Identificadores de procedimientos que requieren campos de transporte.
+ * @type {number[]}
+ */
+export const CAMPO_DE_TRANSPORTE = [110207, 110208];
+
+/**
+ * Identificadores de procedimientos que requieren campos de detalles.
+ * @type {number[]}
+ */
+export const CAMPO_DE_DETALLES = [110216, 110217];
 
 /**
  * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.
@@ -317,7 +341,7 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
   },
   {
     encabezado: 'Número de registro de productos', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve el número de registro de productos
+    clave: (ele: Mercancia): string | undefined => ele.numeroRegistroProducto, // Función que devuelve el número de registro de productos
     orden: 6, // Orden en que se mostrará la columna
   },
   {
@@ -329,7 +353,7 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
     encabezado: 'Fecha vencimiento', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento, // Función que devuelve la fecha de vencimiento de la mercancía
     orden: 8, // Orden en que se mostrará la columna
-  }
+  },
 ];
 
 /**
@@ -339,7 +363,7 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
  * @type {number[]}
  */
-export const FECHA_ID = [ 110204,110223 ];
+export const FECHA_ID = [110204, 110223];
 /**
  * @constant REQUIREDA
  * @description
@@ -348,7 +372,7 @@ export const FECHA_ID = [ 110204,110223 ];
  * coincide con algún valor de este arreglo.
  * @type {number[]}
  */
-export const REQUIREDA = [110204,110205];
+export const REQUIREDA = [110204, 110205];
 /**
  * @constant BOTON_DE_OPCION_VER
  * @description
@@ -356,4 +380,9 @@ export const REQUIREDA = [110204,110205];
  * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
  * @type {number[]}
  */
-export const BOTON_DE_OPCION_VER =[110221];
+export const BOTON_DE_OPCION_VER = [110221];
+
+/**
+ * Identificadores de procedimientos que requieren validaciones específicas.
+ */
+export const PROCEDIMIENTO_EXCLUDED = [110221, 110223];

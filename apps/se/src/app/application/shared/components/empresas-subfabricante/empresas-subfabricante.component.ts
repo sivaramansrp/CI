@@ -6,11 +6,13 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, EventEmitter, Input,OnInit,Output,ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input,OnChanges,OnInit,Output,ViewChild} from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
@@ -31,6 +33,7 @@ import { Router } from '@angular/router';
 import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
 import { ComplimentosService } from '../../services/complimentos.service';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
 /**
  * Componente para mostrar y gestionar subfabricantes y sus plantas.
@@ -45,7 +48,8 @@ import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    DetallesPlantasComponent
+    DetallesPlantasComponent,
+    NotificacionesComponent
   ],
   templateUrl: './empresas-subfabricante.component.html',
   styleUrl: './empresas-subfabricante.component.scss',
@@ -55,8 +59,18 @@ import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class EmpresasSubfabricantesComponent implements OnInit {
-
+export class EmpresasSubfabricantesComponent implements OnInit, OnChanges {
+/**
+ * Guarda los datos del formulario de detalles de plantas.
+ * Valida el formulario y muestra notificaciones según el resultado.
+ */
+  @ViewChild(DetallesPlantasComponent)
+detallesPlantasComponent!: DetallesPlantasComponent; 
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Referencia al elemento modal para complementar plantas.
    * 
@@ -215,13 +229,34 @@ set formularioDatosSubcontratista(valor: FormGroup) {
   }
 }
 
-
   /**
    * Obtiene el formulario de datos del subcontratista.
    * @returns {FormGroup} - El formulario de datos del subcontratista.
    */
   get formularioDatosSubcontratista(): FormGroup {
     return this._formularioDatosSubcontratista;
+  }
+
+  
+   /**
+* @description
+* Objeto que representa una nueva notificación.
+* Se utiliza para mostrar mensajes de alerta o información al usuario.
+*/
+  public NotValidRfcNotificacion!: Notificacion;
+
+
+ /**
+   * Establece el estado de error para el RFC.
+   * 
+   * Cuando el valor es `true`, se muestra un modal indicando que el RFC no es válido.
+   * 
+   * @param value Indica si existe un error en el RFC.
+   */
+  @Input() set rfcError(value: boolean) {
+    if (value) {
+      this.notValidRfcModal();
+    }
   }
 
   /**
@@ -308,7 +343,7 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
   constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery, public query: Tramite80101Query,
-      private store: Tramite80101Store,private complimentosService: ComplimentosService
+      private store: Tramite80101Store,private complimentosService: ComplimentosService,private servicioDeFormularioService: ServicioDeFormularioService
   ) { 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -494,7 +529,7 @@ set formularioDatosSubcontratista(valor: FormGroup) {
  * Cierra el modal de detalles de la planta.
  * Establece showDetallesPlanta en false para ocultar el componente.
  */
-  cerrarDetallesModal(): void {
+  cerrarDetallesModal(): void { 
     this.showDetallesPlanta = false;  
   }
 
@@ -509,4 +544,71 @@ obtenerEstados():void {
     });
     
   }
+
+  /**
+   * Muestra una notificación de alerta cuando el RFC consultado no tiene ningún domicilio con tipo de planta válido.
+   * 
+   * La notificación es de tipo "alerta" y categoría "peligro", con modo de acción. 
+   * El mensaje indica la ausencia de domicilios válidos y se muestra durante 2000 ms.
+   * El botón de aceptar está disponible, mientras que el de cancelar no se muestra.
+   */
+  notValidRfcModal(): void {
+    this.NotValidRfcNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'El RFC consultado no tiene ningun domicilio con tipo de planta válido.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+    /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.datosTablaSubfabricantesSeleccionadas.length === 0) {
+      this.servicioDeFormularioService.registerArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    } else {
+      this.servicioDeFormularioService.setArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    }
+  }
+
+/**
+ * Guarda los datos del formulario de detalles de plantas.
+ * Valida el formulario y muestra notificaciones según el resultado.
+ */
+  onGuardarPlantas(): void { 
+  const CHILD_FORM = this.detallesPlantasComponent.formularioDatosPlantas;
+
+  if (CHILD_FORM && CHILD_FORM.invalid) {
+    CHILD_FORM.markAllAsTouched();
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+  }
+  else {
+    this.showDetallesPlanta = false;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'La operación se realizó exitosamente.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  }
 }
+

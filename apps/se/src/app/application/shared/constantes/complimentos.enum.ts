@@ -34,7 +34,7 @@ import { SociaoAccionistas } from '../models/complimentos.model';
  */
 export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
   {
-    labelNombre: 'Tax ID',
+    labelNombre: 'TAX ID',
     campo: 'taxId',
     class: 'col-md-6 col-sm-10 pr-5',
     tipo_input: 'text',
@@ -76,6 +76,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     opciones: [],
+    maxlength: 255,
     orden: 6,
   },
   {
@@ -254,7 +255,7 @@ export const TABLA_SOCIO_ACCIONISTAS = [
     orden: 1,
   },
   {
-    encabezado: 'razón social',
+    encabezado: 'Razón social',
     clave: (ele: SociaoAccionistas): string | undefined => ele.razonSocial,
     orden: 2,
   },
@@ -315,7 +316,7 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
     orden: 1,
   },
   {
-    encabezado: 'razón social',
+    encabezado: 'Razón social',
     clave: (ele: SociaoAccionistas): string | undefined => ele.razonSocial,
     orden: 2,
   },

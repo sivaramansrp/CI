@@ -1,6 +1,6 @@
+import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { SeleccionadasTabla } from '../models/registro.model';
 /**
  * Representa un catálogo con un identificador y una descripción.
  */
@@ -12,6 +12,7 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 110201.
  */
 export interface Solicitud110201State {
+  idSolicitud: number | null;
   tratado: string;
   pais: string;
   fraccionArancelaria: string;
@@ -57,6 +58,20 @@ export interface Solicitud110201State {
   numeroFactura: string;
   justificacion: string;
   casillaVerificacion: string;
+  idiomaDescripcion?: string;
+  entidadDescripcion?: string;
+  representacionDescripcion?: string;
+  tratadoDescripcion?: string;
+  paisDescripcion?: string;
+  transporteDescripcion?: string;
+  nacionDescripcion?: string;
+  mercanciaSeleccionadasTablaData: SeleccionadasTabla[];
+    /**
+     * @property {ColumnasTabla[]} mercancias_disponibles - Tabla de mercancías agregadas.
+     * @description
+     * Arreglo que almacena las mercancías disponibles, cada una representada por un objeto `ColumnasTabla`.
+     */
+    mercancias_disponibles: ColumnasTabla[];
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110201.
@@ -64,8 +79,11 @@ export interface Solicitud110201State {
  */
 export function createInitialState(): Solicitud110201State {
   return {
-    tratado: ' ',
-    pais: ' ',
+    idSolicitud: 0,
+    tratado: '',
+    tratadoDescripcion: '',
+    paisDescripcion: '',
+    pais: '',
     fraccionArancelaria: '',
     numeroRegistro: '',
     nombreComercial: '',
@@ -75,9 +93,14 @@ export function createInitialState(): Solicitud110201State {
     observaciones: '',
     presica: '',
     presenta: '',
-    idioma: ' ',
-    entidad: ' ',
-    representacion: ' ',
+    idioma: '',
+    idiomaDescripcion: '',
+    entidad: '',
+    entidadDescripcion: '',
+    representacionDescripcion: '',
+    nacionDescripcion: '',
+    transporteDescripcion: '',
+    representacion: '',
     nombre: '',
     apellidoPrimer: '',
     apellidoSegundo: '',
@@ -90,25 +113,27 @@ export function createInitialState(): Solicitud110201State {
     telefono: '',
     fax: '',
     correoElectronico: '',
-    nacion: ' ',
-    transporte: ' ',
+    nacion: '',
+    transporte: '',
     fraccionMercanciaArancelaria: '',
     nombreTecnico: '',
     nombreEnIngles: '',
     criterioParaConferir: '',
     marca: '',
     cantidad: '',
-    umc: ' ',
+    umc: '',
     valorDelaMercancia: '',
     complementoDelaDescripcion: '',
     masaBruta: '',
     nombreComercialDelaMercancia: '',
-    unidadMedida: ' ',
-    tipoFactura: ' ',
+    unidadMedida: '',
+    tipoFactura: '',
     fecha: '',
     numeroFactura: '',
     justificacion: '',
     casillaVerificacion: '',
+    mercancias_disponibles: [],
+    mercanciaSeleccionadasTablaData: []
   };
 }
 
@@ -120,7 +145,43 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
   constructor() {
     super(createInitialState());
   }
+   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
 
+ public setMercanciaTabla(mercanciaTabla: ColumnasTabla[]): void {
+    this.update((state) => {
+
+      const EXISTING_LIST = state.mercancias_disponibles;
+
+      const UPDATED_LIST = [...EXISTING_LIST];
+
+      for (const NEW_DEST of mercanciaTabla) {
+        const INDEX = EXISTING_LIST.findIndex(
+          (existing) => existing.id === NEW_DEST.id
+        );
+
+        if (INDEX !== -1) {
+          UPDATED_LIST[INDEX] = NEW_DEST;
+        } else {
+          UPDATED_LIST.push(NEW_DEST);
+        }
+      }
+
+      return {
+        ...state,
+        mercancias_disponibles: UPDATED_LIST,
+      };
+    });
+  }
     /**
    * Actualiza los datos de la solicitud en el estado.
    * @param {DatosMercancia[]} mercanciaDatos - Lista de datos de la solicitud.
@@ -141,6 +202,106 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
       tratado,
     }));
   }
+
+  /** Establece la descripción del tratado.
+   * @param tratadoDescripcion Cadena que representa la descripción del tratado.
+   */
+  public setTratadoDescripciones(tratadoDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      tratadoDescripcion,
+    }));
+  }
+
+  /** Establece la descripción del país.
+   *  @param paisDescripcion Cadena que representa la descripción del país.
+   */
+  public setPaisDescripcion(paisDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      paisDescripcion,
+    }));
+  }
+
+  /** Establece la descripción del transporte.
+   * @param umcDescripcion Cadena que representa la descripción del transporte.
+   */
+  public setUmcDescripcion(umcDescripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      umcDescripcion,
+    }));
+  }
+
+  /** Establece la descripción del tipo de factura.
+   * @param tipoFacturaDescripcion Cadena que representa la descripción del tipo de factura.
+   **/
+  public setTipoFacturaDescripcion(tipoFacturaDescripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoFacturaDescripcion,
+    }));
+  }
+
+  /** Establece la descripción de la unidad de medida.
+   * @param unidadMedidaDescripcion Cadena que representa la descripción de la unidad de medida.
+   * */
+  public setUnidadMedidaDescripcion(unidadMedidaDescripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      unidadMedidaDescripcion,
+    }));
+  }
+  
+  /** Establece la descripción del idioma.
+   * @param idiomaDescripcion Cadena que representa la descripción del idioma.
+   * */
+  public setIdiomaDescripcion(idiomaDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      idiomaDescripcion,
+    }));
+  }
+
+  /** Establece la descripción de la entidad.
+   * @param entidadDescripcion Cadena que representa la descripción de la entidad.
+   */
+  public setEntidadDescripcion(entidadDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      entidadDescripcion,
+    }));
+  }
+  /** Establece la descripción de la representación.
+   *    @param representacionDescripcion Cadena que representa la descripción de la representación.
+   * */
+  public setRepresentacionDescripcion(representacionDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      representacionDescripcion,
+    }));
+  }
+  
+  /** Establece la descripción de la nación.
+   *  @param nacionDescripcion Cadena que representa la descripción de la nación.
+   * */
+  public setNacionDescripcion(nacionDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      nacionDescripcion,
+    }));
+  }
+
+  /** Establece la descripción del transporte.
+   * @param transporteDescripcion Cadena que representa la descripción del transporte.
+   * */
+  public setTransporteDescripcion(transporteDescripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      transporteDescripcion,
+    }));
+  }
+
   /**
    * Establece el catálogo de países.
    * @param pais Lista de objetos de tipo `Catalogo`.

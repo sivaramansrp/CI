@@ -1,13 +1,20 @@
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosGeneralesComponent } from "../../components/datos-generales/datos-generales.component";
+
+import { Component, ViewChild } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PermisoImportacionService } from "../../services/permiso-importacion.service";
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
+import { DatosExportadorComponent } from "../../components/datos-exportador/datos-exportador.component";
+import { DatosMercanciaComponent } from "../../components/datos-mercancia/datos-mercancia.component";
+import { DatosProductorComponent } from "../../components/datos-productor/datos-productor.component";
+import { DocumentoExportacionComponent } from "../../components/documento-exportacion/documento-exportacion.component";
+import { RepresentacionFederalComponent } from "../../components/representacion-federal/representacion-federal.component";
+import { TramiteRealizerComponent } from "../../components/tramite_realizer/tramite_realizer.component";
 
 /**
  * Componente para el paso uno del trámite 130120.
@@ -23,7 +30,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent, SolicitanteComponent, DatosGeneralesComponent],
+  imports: [CommonModule, SolicitanteComponent, SolicitanteComponent, TramiteRealizerComponent, DatosMercanciaComponent, DocumentoExportacionComponent, DatosProductorComponent, DatosExportadorComponent, RepresentacionFederalComponent],
   standalone: true,
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
@@ -33,6 +40,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @type {ConsultaioState}
    */
   public consultaState!: ConsultaioState;
+
+  @ViewChild(TramiteRealizerComponent) tramiteRealizer!: TramiteRealizerComponent;
+  @ViewChild(DatosMercanciaComponent) datosMercancia!: DatosMercanciaComponent;
+  @ViewChild(DocumentoExportacionComponent) documentoExportacion!: DocumentoExportacionComponent;
+  @ViewChild(DatosProductorComponent) datosProductor!: DatosProductorComponent;
+  @ViewChild(DatosExportadorComponent) datosExportador!: DatosExportadorComponent;
+  @ViewChild(RepresentacionFederalComponent) representacionFederal!: RepresentacionFederalComponent;
 
   /**
    * Indica si los datos de respuesta del servidor están disponibles para actualizar el formulario.
@@ -106,6 +120,24 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  validarFormulario(): boolean {
+    const VALID_TRAMITE = this.tramiteRealizer?.validarFormulario() ?? false;
+    const VALID_MERCANCIA = this.datosMercancia?.validarFormulario() ?? false;
+    const VALID_EXPORTA = this.documentoExportacion?.validarFormulario() ?? false;
+    const VALID_PRODUCTOR = this.datosProductor?.validarFormulario() ?? false;
+    const VALID_EXPORTADOR = this.datosExportador?.validarFormulario() ?? false;
+    const VALID_FEDERAL = this.representacionFederal?.validarFormulario() ?? false;
+
+    return (
+      VALID_TRAMITE &&
+      VALID_MERCANCIA &&
+      VALID_EXPORTA &&
+      VALID_PRODUCTOR &&
+      VALID_EXPORTADOR &&
+      VALID_FEDERAL
+    );
   }
 
   /**

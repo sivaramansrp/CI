@@ -1,6 +1,14 @@
-<app-historico-productores (formHistoricoEvent)="setValoresStore($event)"
-    (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)" [tramiteState]="tramiteState"
-    [agregarDatosProductor]="agregarDatosProductor" [productoresExportador]="productoresExportador || []"
-    [mercanciaDatos]="mercancia || []" [ocultarFax]="ocultarFax" [esTipoDeSeleccionado]="esTipoDeSeleccionado"
-    [optionsTipoFactura]="optionsTipoFactura ||[]"
-    [esFormularioSoloLectura]="esFormularioSoloLectura"></app-historico-productores>
+<app-historico-productores
+  (formHistoricoEvent)="setValoresStore($event)"
+  (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)"
+  [tramiteState]="tramiteState"
+  [agregarDatosProductor]="agregarDatosProductor"
+  [productoresExportador]="productoresExportador || []"
+  [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
+  [mercanciaDatos]="[]"
+  [ocultarFax]="ocultarFax"
+  [esTipoDeSeleccionado]="esTipoDeSeleccionado"
+  [optionsTipoFactura]="optionsTipoFactura || []"
+  (emitAgregarExportador)="emitAgregarExportador($event)"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+></app-historico-productores>

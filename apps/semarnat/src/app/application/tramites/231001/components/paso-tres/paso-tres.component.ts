@@ -1,13 +1,12 @@
 import {
-  CategoriaMensaje, FirmaElectronicaComponent,
+  CategoriaMensaje,
+  FirmaElectronicaComponent,
   Notificacion,
   NotificacionesComponent,
   TramiteFolioQueries,
-  
   base64ToHex,
-  encodeToISO88591Hex
+  encodeToISO88591Hex,
 } from '@ng-mf/data-access-user';
-
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
@@ -140,7 +139,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       },
       cve_rol_capturista: 'CapturistaGubernamental',
       cve_usuario_capturista: 'Gubernamental',
-      fecha_firma: '2025-07-01 20:01:25',
+      fecha_firma: PasoTresComponent.formatFecha(new Date()),
     };
     this.cadena
       .obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD)
@@ -217,7 +216,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    */
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
-      console.error('Faltan datos para completar la firma');
       this.nuevaNotificacion = {
         tipoNotificacion: 'toastr',
         categoria: CategoriaMensaje.ERROR,

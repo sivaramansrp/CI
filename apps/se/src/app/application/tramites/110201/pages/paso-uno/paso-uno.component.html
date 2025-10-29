@@ -20,20 +20,12 @@
     </ul>
 
     <ng-container>
-      @switch (indice) {
-      @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
-      }
-      @case (2) {
-      <app-certificado-de-origen (dataEvent)="cargaArchivo($event)" [tabIndex]="2" #CertificadoOrigen></app-certificado-de-origen>
-      }
-      @case (3) {
-      <app-destinatario [tabIndex]="3" #Destinatario></app-destinatario>
-      }
-      @case (4) {
-      <app-datos-certificado [tabIndex]="4" [entidadFederativaData]="entidadFederativa" #DatosCertificado></app-datos-certificado>
-      }
-      }
+      <solicitante [hidden]="indice !==1" [tabindex]="1" #solicitante></solicitante>
+      <app-certificado-de-origen [hidden]="indice !==2" [active]="indice === 2" (dataEvent)="cargaArchivo($event)" [tabIndex]="2"
+        #CertificadoOrigen></app-certificado-de-origen>
+      <app-destinatario [hidden]="indice !==3" [tabIndex]="3" [active]="indice === 3" #Destinatario></app-destinatario>
+      <app-datos-certificado [hidden]="indice !==4" [tabIndex]="4" [active]="indice === 4" [entidadFederativaData]="entidadFederativa"
+        #DatosCertificado></app-datos-certificado>
     </ng-container>
   </div>
 </div>

@@ -14,7 +14,7 @@
                 es obligatoria.</small>
               <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('pattern')">Solo se
                 permiten números.</small>
-              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('maxlength')">Máximo
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('maxlength')&&idProcedominto!==idNumeroProcedimiento">Máximo
                 18 caracteres.</small>
             </div>
           </div>

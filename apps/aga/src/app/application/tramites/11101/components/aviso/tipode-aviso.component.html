@@ -44,7 +44,7 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="alcadilamunicipio" formControlName="alcadilamunicipio"
-          [label]="'Alcaldía o Municipio'" [placeholder]="'Seleccione una opción'" [required]="true"
+          [label]="'Alcaldía o municipio'" [placeholder]="'Seleccione una opción'" [required]="true"
           [markTouched]="avisoForm.get('alcadilamunicipio')?.touched??false" (change)="alcadilamunicipioSeleccion()"
           [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       </div>
@@ -113,9 +113,9 @@
     </div>
   </form>
 
-  <!-- Descripción de la mercancia section -->
+  <!-- Descripción de la mercancía section -->
     <div *ngIf="isManualSelected" class="mt-5">
-      <ng-titulo titulo="Descripción de la mercancia" />
+      <ng-titulo titulo="Descripción de la mercancía" />
       <form [formGroup]="mercanciaForm">
         <div class="row">
           <div class="col-md-4">
@@ -141,7 +141,7 @@
                 [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="descripcion" >Descripcion<span [ngClass]="mercanciaForm.get('descripcion')?.invalid && 
+            <label class="form-label" for="descripcion" >Descripción<span [ngClass]="mercanciaForm.get('descripcion')?.invalid && 
               mercanciaForm.get('descripcion')?.touched ? 'text-danger' : ''">*</span>:</label>
             <textarea class="form-control textarea-container" rows="3" id="descripcion" formControlName="descripcion"
             [ngClass]="{'is-invalid': isInvalid('descripcion')}"></textarea>
@@ -201,7 +201,7 @@
               </div>
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="numerodeserie">Numero de serie<span [ngClass]="mercanciaForm.get('numerodeserie')?.invalid && 
+            <label class="form-label" for="numerodeserie">Número de serie<span [ngClass]="mercanciaForm.get('numerodeserie')?.invalid && 
               mercanciaForm.get('numerodeserie')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="numerodeserie" formControlName="numerodeserie"
             [ngClass]="{'is-invalid': isInvalid('numerodeserie')}"/>

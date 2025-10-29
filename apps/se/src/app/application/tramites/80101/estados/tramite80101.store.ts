@@ -322,7 +322,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       nombreDeActa: '',
       fechaDeActa: '',
       rfc: '',
-      nombreDeRepresentante: '',
+      nombreDeRepresentante: 'Maria Lopez',
     },
     formaCertificacion: {
       certificada: 'No',
@@ -872,7 +872,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   eliminarTablaDatosComplimentos(datos: SociaoAccionistas[]): void {
     this.update((state) => {
       const DOMICILIOS = [...state.tablaDatosComplimentos].filter((ele) =>
-        datos.some((datos) => ele.id !== datos.id)
+        datos.some((datos) => ele.id === datos.id)
       );
       return {
         ...state,
@@ -918,7 +918,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   eliminarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas[]): void {
     this.update((state) => {
       const DOMICILIOS = [...state.tablaDatosComplimentosExtranjera].filter(
-        (ele) => datos.some((datos) => ele.id !== datos.id)
+        (ele) => datos.some((datos) => ele.id === datos.id)
       );
       return {
         ...state,

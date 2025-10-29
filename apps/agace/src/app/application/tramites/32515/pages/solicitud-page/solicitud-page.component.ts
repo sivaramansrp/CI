@@ -1,6 +1,6 @@
 import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
+import { ERROR_FORMA_ALERT, NOTIFICACION_DE_TITULO, PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
@@ -114,6 +114,14 @@ esFormaValido: boolean = false;
    * @command Estos textos son importados desde una constante compartida y pueden ser utilizados en la plantilla.
    */
   TEXTOS = AVISO;
+
+  /**
+   * @property NOTIFICACION_DE_TITULO
+   * @description
+   * Propiedad de instancia que hace referencia a la constante global `NOTIFICACION_DE_TITULO`.
+   * Esto permite utilizar el mensaje de advertencia directamente en el template HTML.
+   */
+  NOTIFICACION_DE_TITULO: string = NOTIFICACION_DE_TITULO;
 
   /**
    * @method seleccionaTab

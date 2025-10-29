@@ -237,6 +237,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.store.setFormValidity('destinatario', this.registroFormulario.valid);
   }
 
   /**
@@ -265,20 +266,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   get grupoRepresentativo(): FormGroup {
     return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
   }
+
   /**
    * Valida el formulario del destinatario.
    * 
    * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
    */
-  public validarFormulario(): boolean {
-  let isValid = true;
-
-  if (this.registroFormulario.invalid) {
+  public validarFormulario(): void {
     this.registroFormulario.markAllAsTouched();
-    isValid = false;
   }
-
-
-  return isValid;
-}
 }

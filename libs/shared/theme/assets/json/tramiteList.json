@@ -206,7 +206,7 @@
     "id": 30,
     "tramite": 80207,
     "linkDashboard": "/se/subfabricante-immex/contenedor-de-pasos",
-    "linkDepartment": "/se/subfabricante-immex/contenedor-de-pasos",
+    "linkDepartment": "/pago/subfabricante-immex/contenedor-de-pasos",
     "department": "se"
   },
   {
@@ -744,8 +744,8 @@
   {
     "id": 107,
     "tramite": 260204,
-    "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos",
-    "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos",
+    "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos/solicitud",
+    "linkDepartment": "/pago/permiso-sanitario-importacion-medicamentos/solicitud",
     "department": "cofepris"
   },
   {
@@ -789,13 +789,6 @@
     "linkDashboard": "/agace/aviso/aviso-modificacion",
     "linkDepartment": "/pago/aviso/aviso-modificacion",
     "department": "agace"
-  },
-  {
-    "id": 114,
-    "tramite": 260202,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "cofepris"
   },
   {
     "id": 115,

@@ -1,14 +1,5 @@
-<app-datos-certificado-de
-    [idioma]="idioma" 
-    [idiomaDatos]="idiomaDatos || []" 
-    [entidadFederativaDatos]="entidadFederativas || []"
-    [representacionFederalDatos]="representacionFederal || []"
-    (formDatosCertificadoEvent)="obtenerDatosFormulario($event)"
-    (idiomaSeleccionEvent)="idiomaSeleccion($event)"
-    (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
-    (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
-    [datosFormCertificado]="formDatosCertificadoValues"
-    (formaValida)="setFormValida($event)"
-     [esFormularioSoloLectura]="esFormularioSoloLectura"
-    (formDatosCertificadoEvent)="setValoresStore($event)"
-></app-datos-certificado-de>
+<app-datos-certificado-de [precisa]="precisa" [presenta]="presenta" [idProcedimiento]="110222"
+    (formDatosCertificadoEvent)="setValoresStore($event)"    [entidadFederativaDatos]="(entidadFederativas$ | async) || []"  [idoPeam]="false"
+    [representacionFederalDatos]="(representacionFederal$ | async) || []"
+    [esFormularioSoloLectura]="esFormularioSoloLectura" [datosFormCertificado]="formDatosCertificadoValues"
+    (formaValida)="setFormValida($event)"></app-datos-certificado-de>

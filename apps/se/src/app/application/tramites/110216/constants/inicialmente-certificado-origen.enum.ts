@@ -257,3 +257,11 @@ export const TABLE_COLUMNS = [
     orden: 6,
   },
 ];
+
+/**
+ * @constant IDPROCEDIMIENTO
+ * @description
+ * Identificador numérico del procedimiento actual para el trámite 110204.
+ * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
+ */
+export const IDPROCEDIMIENTO = 110216;

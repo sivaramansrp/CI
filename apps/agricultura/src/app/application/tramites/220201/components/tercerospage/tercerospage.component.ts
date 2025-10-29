@@ -12,6 +12,7 @@ import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../.
 import { Subject, takeUntil } from 'rxjs';
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -107,7 +108,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     private consultaQuery: ConsultaioQuery,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     public tercerosrelacionadosService: TercerosrelacionadosService,
-    public certificadoZoosanitarioStore: ZoosanitarioStore
+    public certificadoZoosanitarioStore: ZoosanitarioStore,
+    private catalogoService: CatalogosService
 
   ) { }
 
@@ -147,11 +149,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @method pairsCatalogChange
    */
   pairsCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.catalogosDatos.paises = data;
-      });
+    this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogosDatos.paises = data.datos ?? [];
+    });
   }
 
   /**
@@ -159,11 +159,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.catalogosDatos.estados = data;
-      });
+    this.catalogoService.obtieneCatalogoEntidadesFederativasGeneral(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogosDatos.estados = data.datos ?? [];
+    });
   }
 
   /**

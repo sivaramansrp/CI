@@ -60,7 +60,7 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
   public actualizarDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
     this.update(state => ({
       ...state,
-      datosDeLaSolicitud: { ...datosDeLaSolicitud }
+      datosDeLaSolicitud: datosDeLaSolicitud,
     }));
   }
 
@@ -146,7 +146,7 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
     this.update(state => ({
       ...state,
       tercerosRelacionados: [
-        ...state.tercerosRelacionados,
+        ...(state.tercerosRelacionados || []),
         nuevoTercero
       ]
     }));
@@ -185,8 +185,8 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
     }));
   }
 
-      async actualizarTodoElEstado(datos: CapturarSolicitud): Promise<void> {
-    await this.update(state => ({
+  actualizarTodoElEstado(datos: CapturarSolicitud): void {
+    this.update(state => ({
       ...state,
       datosDeLaSolicitud: datos.datosDeLaSolicitud,
       datosParaMovilizacionNacional: datos.datosParaMovilizacionNacional,

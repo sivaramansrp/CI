@@ -4,22 +4,32 @@
       <button class="currentPageBtn">{{currentPage}}</button>
     </div>
   } @else {
-    <div class="d-flex align-items-center">
-    <label class="me-2" for="">Pagina</label>
-    <select class="form-select" (change)="onItemsPerPageChange($event)">
-      <option
-        *ngFor="let option of [5, 10, 20, 50]"
-        [selected]="option === itemsPerPage"
-      >
-        {{ option }}
-      </option>
-    </select>
-    <label class="ms-2" for="">de</label>
-  </div>
-
+    <div class="d-flex flex-row align-items-center">
+      <strong class="me-2">Registros por página</strong>
+      <select class="form-select w-auto" (change)="onItemsPerPageChange($event)">
+        <option
+          *ngFor="let option of [5, 10, 20, 50]"
+          [selected]="option === itemsPerPage"
+        >
+          {{ option }}
+        </option>
+      </select>
+    </div>
   <nav *ngIf="totalPages > 1">
     <ul class="pagination justify-content-center d-flex">
-      <!-- Anterior -->
+      <!-- Anterior 10 -->
+      <li class="page-item"
+          [class.disabled]="((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) === 1)">
+        <button
+          class="page-link"
+          (click)="onPageChange(((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) - 10) < 1 ? 1 : ((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) - 10))"
+          [disabled]="((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) === 1)"
+        >
+          «
+        </button>
+      </li>
+
+      <!-- Anterior simple -->
       <li class="page-item" [class.disabled]="currentPage === 1">
         <button
           class="page-link"
@@ -30,21 +40,23 @@
         </button>
       </li>
 
-      <!-- Page Numbers -->
-      <li
-        class="page-item"
-        *ngFor="let page of [].constructor(totalPages); let i = index"
-      >
-        <button
-          class="page-link"
-          (click)="onPageChange(i + 1)"
-          [class.active]="currentPage === i + 1"
+      <!-- Números (bloque de 10) -->
+      <ng-container *ngFor="let _ of [].constructor(totalPages); let i = index">
+        <li
+          class="page-item"
+          *ngIf="(i + 1) >= (((currentPage - 1) - ((currentPage - 1) % 10)) + 1) && (i + 1) <= ((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) + 9)"
         >
-          {{ i + 1 }}
-        </button>
-      </li>
+          <button
+            class="page-link"
+            (click)="onPageChange(i + 1)"
+            [class.active]="currentPage === i + 1"
+          >
+            {{ i + 1 }}
+          </button>
+        </li>
+      </ng-container>
 
-      <!-- Siguiente -->
+      <!-- Siguiente simple -->
       <li class="page-item" [class.disabled]="currentPage === totalPages">
         <button
           class="page-link"
@@ -52,6 +64,18 @@
           [disabled]="currentPage === totalPages"
         >
           Siguiente
+        </button>
+      </li>
+
+      <!-- Siguiente 10 -->
+      <li class="page-item"
+          [class.disabled]="((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) + 10) > totalPages">
+        <button
+          class="page-link"
+          (click)="onPageChange(((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) + 10) > totalPages ? totalPages : (((currentPage - 1) - ((currentPage - 1) % 10)) + 1) + 10)"
+          [disabled]="((((currentPage - 1) - ((currentPage - 1) % 10)) + 1) + 10) > totalPages"
+        >
+          »
         </button>
       </li>
     </ul>

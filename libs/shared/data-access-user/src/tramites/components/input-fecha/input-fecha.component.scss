@@ -158,3 +158,13 @@ select {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+:host {
+  .has-error & {
+    .form-control,
+    .input-group .form-control,
+    .input-group-text {
+      border-color: #dc3545 !important;
+    }
+  }
+}

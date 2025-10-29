@@ -13,6 +13,7 @@ import { CambioModalidadService } from '../../service/cambio-modalidad.service';
 import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { CambioModalidadStore } from '../../estados/tramite80208.store';
 import { SeccionLibQuery, SeccionLibStore, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockCambioModalidadService {}
@@ -49,7 +50,7 @@ describe('CambioDeModalidadComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,CambioDeModalidadComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule,CambioDeModalidadComponent, HttpClientTestingModule ],
       declarations: [
         
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
@@ -214,22 +215,11 @@ describe('CambioDeModalidadComponent', () => {
     component.seleccionarDesplegable();
      });
 
-  it('should run #seleccionarDesplegableServicios()', async () => {
-    component.cambioModalidadStore = component.cambioModalidadStore || {};
-    component.cambioModalidadStore.actualizarEstado = jest.fn();
-    component.serviciosImmxForm = component.serviciosImmxForm || {};
-    component.serviciosImmxForm.value = {
-      serviciosImmx: {
-        toString: function() {}
-      }
-    };
-    component.seleccionarDesplegableServicios();
-    });
 
   it('should run #seleccionarDomicilios()', async () => {
-
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.setDomiciliosSeleccionados = jest.fn();
     component.seleccionarDomicilios({});
-
   });
 
   it('should run #eliminarEmpresasNacionales()', async () => {
@@ -261,9 +251,9 @@ describe('CambioDeModalidadComponent', () => {
     });
 
   it('should run #seleccionarEmpresas()', async () => {
-
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.setEmpresasSeleccionados = jest.fn();
     component.seleccionarEmpresas({});
-
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -272,5 +262,68 @@ describe('CambioDeModalidadComponent', () => {
     component.unsubscribe$.complete = jest.fn();
     component.ngOnDestroy();
     });
+
+  it('should run #doAgregarDos() when no service is selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [];
+    component.autorizadosSeleccionados = [];
+    component.nuevaNotificacion = {};
+    component.rowNotSeleccionada = false;
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.rowNotSeleccionada).toBe(true);
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Debe seleccionar un Servicio.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should run #doAgregarDos() when service is selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [{ idServicio: '123' }];
+    component.autorizadosSeleccionados = [];
+    component.actualizaGridEmpresasNacionales = jest.fn();
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.actualizaGridEmpresasNacionales).toHaveBeenCalled();
+  });
+
+  it('should run #doAgregarDos() when authorized service is selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [];
+    component.autorizadosSeleccionados = [{ idServicio: '456' }];
+    component.actualizaGridEmpresasNacionales = jest.fn();
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.actualizaGridEmpresasNacionales).toHaveBeenCalled();
+  });
+
+  it('should run #doAgregarDos() when both services are selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [{ idServicio: '123' }];
+    component.autorizadosSeleccionados = [{ idServicio: '456' }];
+    component.actualizaGridEmpresasNacionales = jest.fn();
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.actualizaGridEmpresasNacionales).toHaveBeenCalled();
+  });
 
 });

@@ -5,8 +5,8 @@
  * @module SolicitantetabComponent
  */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {ListaPasosWizard, PASOS, TituloComponent, ValidacionesFormularioService, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
@@ -54,7 +54,7 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
    * @param service Servicio para obtener los datos de asignación.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService) { }
+  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService,private validacionesService: ValidacionesFormularioService) { }
 
   /**
    * Referencia al componente Wizard.
@@ -88,7 +88,7 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
       autorizado: [{ value: '', disabled: true }],
       expendido: [{ value: '', disabled: true }],
       disponible: [{ value: '', disabled: true }],
-      ampliar: [{ value: ''}],
+      ampliar: [{ value: '', disabled: false }, [Validators.required]]
     });
   }
 
@@ -111,6 +111,16 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
         });
       }
     );
+  }
+  /**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 
   /**

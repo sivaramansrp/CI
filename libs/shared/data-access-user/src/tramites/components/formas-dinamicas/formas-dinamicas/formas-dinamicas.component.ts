@@ -676,7 +676,6 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   public obtenerControlsPorFilas(row: number): ModeloDeFormaDinamica[] {
     return this.formularioDatos.filter(control => (control.row !== undefined ? control.row : 0) === row);
   }
-
   /**
  * Obtiene el valor máximo de caracteres permitido (maxlength) de la lista de validadores de un campo.
  * @param validadores - Arreglo de validadores asociados al campo.
@@ -688,5 +687,38 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
       return MAXLENGTH && typeof MAXLENGTH.valor === 'number' ? MAXLENGTH.valor : null;
     }
     return null;
+  }
+
+  /**
+   * Filtra los caracteres de entrada basándose en el patrón de expresión regular proporcionado.
+   * Permite teclas especiales de navegación y edición, y bloquea caracteres no permitidos.
+   * 
+   * @param event - Evento de teclado del input o textarea
+   * @param inputFilter - Patrón de expresión regular que define los caracteres permitidos
+   */
+  public filtrarCaracteres(event: KeyboardEvent, inputFilter?: RegExp): void {
+    if (!inputFilter) {
+      return;
+    }
+
+    const CARACTER = event.key;
+
+    // Permitir teclas especiales de navegación y edición
+    const TECLAS_ESPECIALES = [
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 
+      'Home', 'End', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+      'PageUp', 'PageDown', 'Insert'
+    ];
+
+    if (event.ctrlKey || event.metaKey) {
+      return;
+    }
+    if (TECLAS_ESPECIALES.includes(CARACTER)) {
+      return;
+    }
+    // Verificar si el carácter coincide con el patrón del filtro
+    if (!inputFilter.test(CARACTER)) {
+      event.preventDefault();
+    }
   }
 }

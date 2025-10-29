@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit,ViewChild} from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -11,6 +11,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
 import { Tramite260209Store } from '../../estados/tramite260209Store.store';
+import {ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -60,6 +61,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   proveedorTablaDatos: Proveedor[] = [];
 
+  
+    @ViewChild('TercerosRelacionadosComponent')
+    tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+       
+ /**
+    * @property {string[]} elementosRequeridos
+    * @description
+    * Lista de elementos requeridos para completar el formulario o proceso.
+    */
+   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
+ 
   /**
    * @property {Facturador[]} facturadorTablaDatos
    * @description Almacena la lista de facturadores que se muestran en la tabla correspondiente.
@@ -218,6 +230,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
   }
 
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * @method addProveedores
    * @description Método público que permite agregar nuevos proveedores a la tabla de datos del trámite.

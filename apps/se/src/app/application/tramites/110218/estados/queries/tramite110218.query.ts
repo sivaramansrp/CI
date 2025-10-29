@@ -3,6 +3,8 @@ import { Query } from '@datorama/akita';
 import { Solicitud110218State } from '../tramites/tramite110218.store';
 import { Tramite110218Store } from '../tramites/tramite110218.store';
 
+import { Observable } from 'rxjs';
+
 /**
  * @class Tramite110218Query
  * @extends Query<Solicitud110218State>
@@ -32,6 +34,14 @@ export class Tramite110218Query extends Query<Solicitud110218State> {
    * Se puede suscribir para obtener los datos actualizados del estado en tiempo real.
    */
   selectTramite110218State$ = this.select((state) => state);
+
+  /**
+   * Obtiene el valor seleccionado de la radio
+   * @returns Observable<string | number>
+   */
+  public get valorSeleccionado$(): Observable<string | number> {
+    return this.select('valorSeleccionado');
+  }  
 
   /**
    * @constructor

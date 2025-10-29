@@ -106,16 +106,28 @@ describe('PasoUnoComponent', () => {
     expect(spy).toHaveBeenCalledWith('');
   });
 
-  it('should reset solicitudForm, set indice to 1, and emit cancelarEvento when cancelar is called', () => {
-    component.contenedorComponent = { solicitudForm: { reset: jest.fn() } } as any;
+  it('should open modal when cancelar is called', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.cancelar();
+    expect(abrirModalSpy).toHaveBeenCalled();
+  });
+
+  it('should reset solicitudForm, set indice to 2, and emit cancelarEvento when confirmarCancelacion is called with true', () => {
+    component.contenedorComponent = { 
+      solicitudForm: { reset: jest.fn() },
+      limpiarCampos: jest.fn(),
+      datosTabla: [],
+      datosDelContenedor: []
+    } as any;
+    component.tramite11201Store = { limpiarSolicitud: jest.fn() } as any;
     const resetSpy = jest.spyOn(component.contenedorComponent.solicitudForm, 'reset');
     const cancelarSpy = jest.spyOn(component.cancelarEvento, 'emit');
     const obtenerTipoPersonaSpy = jest.spyOn(component, 'obtenerTipoPersona');
 
-    component.cancelar();
+    component.confirmarCancelacion(true);
 
     expect(resetSpy).toHaveBeenCalled();
-    expect(component.indice).toBe(1);
+    expect(component.indice).toBe(2);
     expect(cancelarSpy).toHaveBeenCalled();
     expect(obtenerTipoPersonaSpy).toHaveBeenCalled();
   });

@@ -19,3 +19,23 @@ export interface FraccionArancelariaProsec {
     fraccionArancelariaProsec: number | string,
     descripción: string
 }
+
+
+/**
+ * Modelo de respuesta para catálogos.
+ */ 
+export interface PaisesBloqueCatalogo {
+    descripcion: string;
+    clave: string;
+    id?: number;
+    bloque: boolean;
+}
+
+/*
+* Modelo para almacenar la respuesta de las apis de catálogos para paises de bloque
+*/
+export interface CatalogosBloquesResponse {
+    codigo: string;
+    mensaje: string;
+    datos: PaisesBloqueCatalogo[];
+}

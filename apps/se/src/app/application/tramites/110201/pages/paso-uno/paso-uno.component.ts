@@ -56,7 +56,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public esDatosRespuesta: boolean = false;
   
   /** Referencia al componente hijo SolicitanteComponent para acceso a sus métodos y propiedades */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild(SolicitanteComponent , { static: true }) solicitante!: SolicitanteComponent;
   
   /** Referencia al componente hijo CertificadoDeOrigenComponent para validación y control */
   @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoDeOrigenComponent;
@@ -92,15 +92,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    Promise.resolve().then(() => {
+ 
       if (this.consultaState.update) {
         this.guardarDatosFormularios();
       } else {
         this.esDatosRespuesta = true;
       }
-    });
+    
   }
-  
+
   /**
    * Carga datos desde el servicio y actualiza el estado de formularios con información persistida
    */
@@ -132,6 +132,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
+
     if (this.certificadoOrigen) {
       if (!this.certificadoOrigen.validarFormularios()) {
         isValid = false;
@@ -149,11 +150,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     if (this.destinatario) {
-      if (!this.destinatario.validarFormularios()) {
+      if (!this.destinatario.validarFormulario()) {
         isValid = false;
       }
     } else {
-      isValid = false;
+     isValid = false;
     }
 
     return isValid;

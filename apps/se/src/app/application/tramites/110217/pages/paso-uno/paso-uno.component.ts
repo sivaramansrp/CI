@@ -6,8 +6,8 @@ import { CertificadoOrigenComponent } from '../../components/certificado-origen/
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { DestinatariosComponent } from '../../components/destinatarios/destinatario.component';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
 /**
@@ -26,9 +26,9 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
     CommonModule,
     SolicitanteComponent,
     DatosCertificadoComponent,
-    HistoricoProductoresComponent,
-    DestinatarioComponent,
+    DestinatariosComponent,
     CertificadoOrigenComponent,
+    HistProductoresComponent
   ],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
@@ -58,9 +58,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @ViewChild('certificadoOrigenRef') certificadoOrigenComp!: CertificadoOrigenComponent;
 
   /**
-   * Referencia al componente `DestinatarioComponent`.
+   * Referencia al componente `DestinatariosComponent`.
    */
-  @ViewChild('destinatarioRef') destinatarioComp!: DestinatarioComponent;
+  @ViewChild('destinatarioRef') destinatarioComp!: DestinatariosComponent;
 
   /**
    * Referencia al componente `DatosCertificadoComponent`.
@@ -70,7 +70,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente `HistoricoProductoresComponent`.
    */
-  @ViewChild('historicoProductoresRef') historicoProductoresComp!: HistoricoProductoresComponent;
+  @ViewChild('historicoProductoresRef') historicoProductoresComp!: HistProductoresComponent;
 
   /**
    * Evento que se emite cuando cambia de tab.
@@ -105,6 +105,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+   /** Indica si el formulario del componente DatosCertificadoComponent es válido. */
+  private isDatosCertificadoComponentValid: boolean = false;
+
+  /** Indica si el formulario del componente DestinatarioComponent es válido. */
+  private isDestinarioComponentValid: boolean = false;
+
+  /** Indica si el formulario del componente HistProductoresComponent es válido. */
+  private isHistProductoresComponentValid: boolean = false;
+
+  /** Indica si el formulario del componente CertificadoOrigenComponent es válido. */
+  private isCertificadoOrigenComponentValid: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -133,7 +145,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.indice = this.tramiteState.pestanaActiva;
+    // this.indice = this.tramiteState.pestanaActiva;
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -149,7 +161,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
-    this.indice = this.tramiteState.pestanaActiva;
+    // this.indice = this.tramiteState.pestanaActiva;
   }
 
   /**
@@ -195,7 +207,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     // Marcar la tab actual como completada si tiene form válido
-    this.marcarTabComoCompletada(this.indice);
+    // this.marcarTabComoCompletada(this.indice);
     
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
@@ -206,32 +218,32 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Marca una tab como completada si su formulario es válido
    * @param tabIndex - Índice de la tab a verificar
    */
-  private marcarTabComoCompletada(tabIndex: number): void {
-    let isValid = false;
+  // private marcarTabComoCompletada(tabIndex: number): void {
+  //   let isValid = false;
     
-    // Tab 2: Certificado de origen
-    if (tabIndex === 2 && this.certificadoOrigenComp?.formularioCertificado) {
-      isValid = this.certificadoOrigenComp.formularioCertificado.valid;
-    }
+  //   // Tab 2: Certificado de origen
+  //   if (tabIndex === 2 && this.certificadoOrigenComp?.formCertificado) {
+  //     isValid = this.certificadoOrigenComp.formCertificado.valid;
+  //   }
     
-    // Tab 4: Destinatario  
-    if (tabIndex === 4 && this.destinatarioComp?.registroFormulario) {
-      isValid = this.destinatarioComp.registroFormulario.valid;
-    }
+  //   // Tab 4: Destinatario  
+  //   if (tabIndex === 4 && this.destinatarioComp?.validateAllForms) {
+  //     isValid = this.destinatarioComp.validateAllForms();
+  //   }
     
-    // Tab 5: Datos certificado
-    if (tabIndex === 5 && this.datosCertificadoComp?.formDatosCertificado) {
-      isValid = this.datosCertificadoComp.formDatosCertificado.valid;
-    }
+  //   // Tab 5: Datos certificado
+  //   if (tabIndex === 5 && this.datosCertificadoComp?.formDatosCertificado) {
+  //     isValid = this.datosCertificadoComp.formDatosCertificado.valid;
+  //   }
     
-    // Si es válida, marcarla como completada
-    if (isValid) {
-      this.tabsCompletadas.add(tabIndex);
-    } else if ([2, 4, 5].includes(tabIndex)) {
-      // Si es una tab requerida pero inválida, removerla de completadas
-      this.tabsCompletadas.delete(tabIndex);
-    }
-  }
+  //   // Si es válida, marcarla como completada
+  //   if (isValid) {
+  //     this.tabsCompletadas.add(tabIndex);
+  //   } else if ([2, 4, 5].includes(tabIndex)) {
+  //     // Si es una tab requerida pero inválida, removerla de completadas
+  //     this.tabsCompletadas.delete(tabIndex);
+  //   }
+  // }
 
   /**
    * Valida todos los formularios del paso uno.
@@ -244,34 +256,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si TODAS las tabs requeridas están completadas
    */
   public validarTodosLosFormularios(): boolean {
-    // Marcar la tab actual como completada antes de validar
-    this.marcarTabComoCompletada(this.indice);
-    
-    // Tabs requeridas que deben estar completadas
-    const REQUIRED_TABS = [2, 4, 5];
-    
-    // Verificar si todas las tabs requeridas están completadas
-    const ALL_TABS_COMPLETED = REQUIRED_TABS.every(tab => this.tabsCompletadas.has(tab));
-    
-    // Si no todas están completadas, mostrar errores en la tab actual
-    if (!ALL_TABS_COMPLETED) {
-      // Validar y mostrar errores en la tab actual
-      if (this.indice === 2 && this.certificadoOrigenComp?.formularioCertificado) {
-        this.certificadoOrigenComp.formularioCertificado.markAllAsTouched();
-      }
-      
-      if (this.indice === 4 && this.destinatarioComp?.registroFormulario) {
-        this.destinatarioComp.registroFormulario.markAllAsTouched();
-      }
-      
-      if (this.indice === 5 && this.datosCertificadoComp?.formDatosCertificado) {
-        this.datosCertificadoComp.formDatosCertificado.markAllAsTouched();
-      }
+    this.isCertificadoOrigenComponentValid = this.tramiteQuery.getValue().formValidity?.certificadoOrigen ?? false; 
+    this.isDatosCertificadoComponentValid = this.tramiteQuery.getValue().formValidity?.datosCertificado ?? false;
+    this.isDestinarioComponentValid = (this.tramiteQuery.getValue().formValidity?.datosDestinatario && this.tramiteQuery.getValue().formValidity?.domicilioDestinatario && this.tramiteQuery.getValue().formValidity?.datosRepresentante && this.tramiteQuery.getValue().formValidity?.detallesTransporte) ?? false;
+    this.isHistProductoresComponentValid = this.tramiteQuery.getValue().formValidity?.histProductores ?? false;
+
+    if (!this.isCertificadoOrigenComponentValid) {
+      this.certificadoOrigenComp?.validarFormulario(); 
     }
-    
-    // Verificar que todas las tabs requeridas estén completadas
-    return ALL_TABS_COMPLETED;
-  }
+
+    if (!this.isDatosCertificadoComponentValid) {
+      this.datosCertificadoComp?.isChildFormValid();
+    }
+
+    if (!this.isDestinarioComponentValid) {
+      this.destinatarioComp?.validateAllForms();
+    }
+
+    if (!this.isHistProductoresComponentValid) {
+      this.historicoProductoresComp?.validarFormulario();
+    }
+
+    return this.isDatosCertificadoComponentValid && this.isDestinarioComponentValid &&
+      this.isHistProductoresComponentValid && this.isCertificadoOrigenComponentValid;
+    }
 
   /**
    * Método que se ejecuta al destruir el componente.

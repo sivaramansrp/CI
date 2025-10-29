@@ -1,0 +1,15 @@
+    <app-historico-productores #HistoricoProductoresComponent
+    (formHistoricoEvent)="setValoresStore($event)"
+    (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)"
+    [tramiteState]="tramiteState"
+    [agregarDatosProductor]="agregarDatosProductor"
+    [productoresExportador]="productoresExportador || []"
+    [ocultarFax]="ocultarFax"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
+    (formaValida)="formaValida($event)"
+    [mostrarMercanciasSeleccionadas]="false"
+    [mercanciaDatos]="mercanciaProductores || []"
+    (emitMercanciaDatos)="setMercanciaDatos($event)"
+    [agregarProductoresExportador]="(agregarProductoresExportador$ | async) || []"
+    (emitAgregarExportador)="emitAgregarExportador($event)" 
+    ></app-historico-productores>

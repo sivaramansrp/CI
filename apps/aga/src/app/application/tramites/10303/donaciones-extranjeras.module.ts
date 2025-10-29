@@ -31,6 +31,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -67,7 +68,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TableComponent,
     InputRadioComponent,
     InputFechaComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    TooltipModule
   ],
   providers: [
     ToastrService,
