@@ -45,18 +45,14 @@ import { ToastrService } from 'ngx-toastr';
     InputRadioComponent,
     ToastrModule.forRoot(),
     TablaDinamicaComponent,
-<<<<<<< HEAD:apps/se/src/app/application/tramites/140104/cancelacion-de-certificados-de-cupo.module.ts
-    TituloComponent
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-=======
+    TituloComponent,
     NotificacionesComponent,
     PasoFirmaComponent,
     PasoCargaDocumentoComponent
   ],
+   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     ToastrService
   ]
->>>>>>> 8ebc368dc2fe7285319c3e01597edc737aa67f35:apps/se/src/app/application/tramites/140104/desistimiento-de-permiso.module.ts
 })
 export class DesistimientoDePermisoModule { }
