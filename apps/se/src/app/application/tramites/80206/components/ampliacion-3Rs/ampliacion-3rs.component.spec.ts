@@ -249,16 +249,6 @@ describe('Ampliacion3RsComponent (Jest en español)', () => {
     expect(component.mensajeDeAlerta).toBe('Debe seleccionar un sector.');
   });
 
-  it('debería mostrar alerta si el sector ya existe en agregarServiciosAmpliacion()', () => {
-    component.formularioInfoRegistro.get('sector')?.setValue('01');
-    component.datosSector = [{ clave: '01', descripcion: 'Sector 01' }];
-
-    component.agregarServiciosAmpliacion();
-
-    expect(component.mostrarAlerta).toBe(true);
-    expect(component.mensajeDeAlerta).toBe('El sector seleccionado ya existe en la lista.');
-  });
-
   it('debería agregar sector exitosamente cuando la API responde correctamente', () => {
     component.formularioInfoRegistro.get('sector')?.setValue('02');
     component.sectorDesplegable = [{

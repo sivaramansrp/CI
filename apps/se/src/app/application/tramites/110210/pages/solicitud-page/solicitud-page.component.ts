@@ -13,7 +13,7 @@ import {
 } from '../../estados/store/tramite110210.store';
 import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscar-certificado-de-origen.service';
-import { ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
+import { ERROR_CATALOGO_ALERT, ERROR_FORMA_ALERT } from '../../constantes/tramite110210.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 
@@ -111,6 +111,13 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   esFormaValido: boolean = false;
 
+  /** @property {boolean} showCatalogoError
+   * @description
+   * Indica si se debe mostrar un error relacionado con el catálogo.
+   * Se utiliza para controlar la visualización de mensajes de error específicos en la interfaz.
+   */
+  public showCatalogoError: boolean = false;
+
   /**
    * @property {Object} formErrorAlert
    * @description
@@ -119,6 +126,12 @@ export class SolicitudPageComponent implements OnDestroy {
    * Define el título, mensaje y opciones de visualización para la alerta de error de validación de formularios.
    */
   public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /** @property {Object} catalogoErrorAlert
+   * @description
+   * Objeto que contiene la configuración del mensaje de error para errores de catálogo.
+   */
+  public catalogoErrorAlert = ERROR_CATALOGO_ALERT;
 
   /**
    * Datos de los pasos del asistente.
@@ -283,6 +296,14 @@ export class SolicitudPageComponent implements OnDestroy {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Muestra un error relacionado con el catálogo.
+   * Establece la propiedad `showCatalogoError` en `true` para activar la visualización del mensaje de error en la interfaz.
+   */
+  public showError(): void {
+    this.showCatalogoError = true;
   }
 
   /**

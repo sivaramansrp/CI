@@ -18,6 +18,8 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * Representa el estado de la aplicación para el trámite 260204.
  */
 export interface Tramite260204State {
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Datos de la tabla de destinatarios finales.
    * @type {Destinatario[]}
@@ -171,6 +173,7 @@ export interface Tramite260204State {
  */
 export function createInitialState(): Tramite260204State {
   return {
+    idSolicitud:0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -420,6 +423,14 @@ public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
   }));
 }
 
-
+ /**
+   * Actualiza el estado con el nuevo valor de `idSolicitud`.
+   */
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
 
 }

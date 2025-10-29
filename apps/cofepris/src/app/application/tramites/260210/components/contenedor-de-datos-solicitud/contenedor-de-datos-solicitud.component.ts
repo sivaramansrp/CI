@@ -51,7 +51,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     'denominacionRazon',
     'scian',
     'correoElectronico',
-    'rfcSanitario',
+    
     'manifesto'
   ];
   /**
