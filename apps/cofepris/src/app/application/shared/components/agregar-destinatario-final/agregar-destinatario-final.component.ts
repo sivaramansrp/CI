@@ -293,110 +293,169 @@ export class AgregarDestinatarioFinalComponent
       }
     }
   }
-
+/**
+ * Sets up the form in edit mode, loading dependent catalogs as needed
+ */
 private setupEditMode(): void {
   setTimeout(() => {
     this.agregarDestinatarioFinal.enable();
-    
-    let valorEstado = this.datoSeleccionado?.[0]?.estadoLocalidad;
+    const VALOR_ESTADO = this.datoSeleccionado?.[0]?.estadoLocalidad;
     let claveEstado = '';
+    if (VALOR_ESTADO && this.estadosDatos.length > 0) {
+      const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
+        e.descripcion === VALOR_ESTADO || 
+        e.clave?.toString() === VALOR_ESTADO?.toString()
+      );
+      claveEstado = ESTADO_ENCONTRADO ? (ESTADO_ENCONTRADO.clave || '') : '';
+    }
+    
+    const VALOR_MUNICIPIO = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    let claveMunicipio = '';
+    
+    if (claveEstado) {
+      this.subscription.add(this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, claveEstado).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.municipiosDatos = DATOS;
+        
+        if (VALOR_MUNICIPIO && this.municipiosDatos.length > 0) {
+          const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+            m.descripcion === VALOR_MUNICIPIO || 
+            m.clave?.toString() === VALOR_MUNICIPIO?.toString()
+          );
+          claveMunicipio = MUNICIPIO_ENCONTRADO ? (MUNICIPIO_ENCONTRADO.clave || '') : '';
+        }
+        
+        if (claveMunicipio) {
+          this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((localidadesData) => {
+            const LOCALIDADES_DATOS = localidadesData.datos as Catalogo[];
+            this.localidadesDatos = LOCALIDADES_DATOS;
+          }));
+
+          // Load colonias
+          this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((coloniasData) => {
+            const COLONIAS_DATOS = coloniasData.datos as Catalogo[];
+            this.coloniasDatos = COLONIAS_DATOS;
+            
+            this.aplicarValoresDespuesDeCarga();
+          }));
+        } else {
+          this.aplicarValoresDespuesDeCarga();
+        }
+      }));
+    } else {
+      this.aplicarValoresDespuesDeCarga();
+    }
+  }, 50);
+}
+
+/**
+ * Patches form values after all required catalogs have been loaded
+ */
+private aplicarValoresDespuesDeCarga(): void {
+  setTimeout(() => {
+    // País
+    let valorPais = this.datoSeleccionado?.[0]?.pais;
+    if (valorPais && this.paisesDatos.length > 0) {
+      const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+        p.descripcion === valorPais || 
+        p.clave?.toString() === valorPais?.toString()
+      );
+      valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+    }
+    
+    // Estado
+    let valorEstado = this.datoSeleccionado?.[0]?.estadoLocalidad;
     if (valorEstado && this.estadosDatos.length > 0) {
       const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
         e.descripcion === valorEstado || 
         e.clave?.toString() === valorEstado?.toString()
       );
       valorEstado = ESTADO_ENCONTRADO ? ESTADO_ENCONTRADO.clave : valorEstado;
-      claveEstado = ESTADO_ENCONTRADO ? (ESTADO_ENCONTRADO.clave || '') : '';
     }
     
+    // Municipio
     let valorMunicipio = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    if (valorMunicipio && this.municipiosDatos.length > 0) {
+      const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+        m.descripcion === valorMunicipio || 
+        m.clave?.toString() === valorMunicipio?.toString()
+      );
+      valorMunicipio = MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.clave : valorMunicipio;
+    }
+
+    // Localidad
+    let valorLocalidad = this.datoSeleccionado?.[0]?.localidad;
+    if (valorLocalidad && this.localidadesDatos.length > 0) {
+      const LOCALIDAD_ENCONTRADA = this.localidadesDatos.find(l => 
+        l.descripcion === valorLocalidad || 
+        l.clave?.toString() === valorLocalidad?.toString()
+      );
+      valorLocalidad = LOCALIDAD_ENCONTRADA ? LOCALIDAD_ENCONTRADA.clave : valorLocalidad;
+    }
+
+    // Código Postal
+    let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
+    if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
+      const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
+        cp.descripcion === valorCodigoPostal || 
+        cp.clave?.toString() === valorCodigoPostal?.toString()
+      );
+      valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
+    }
+
+    // Colonia
+    let valorColonia = this.datoSeleccionado?.[0]?.colonia;
+    if (valorColonia && this.coloniasDatos.length > 0) {
+      const COLONIA_ENCONTRADA = this.coloniasDatos.find(c => 
+        c.descripcion === valorColonia || 
+        c.clave?.toString() === valorColonia?.toString()
+      );
+      valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
+    }
+
+    this.agregarDestinatarioFinal.patchValue({
+      tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+      rfc: this.datoSeleccionado?.[0]?.rfc,
+      curp: this.datoSeleccionado?.[0]?.curp,
+      nombres: this.datoSeleccionado?.[0]?.nombres,
+      primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+      segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+      denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
+      pais: valorPais,
+      estado: valorEstado,
+      municipio: valorMunicipio,
+      localidad: valorLocalidad,
+      codigoPostal: valorCodigoPostal,
+      colonia: valorColonia,
+      calle: this.datoSeleccionado?.[0]?.calle,
+      numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+      numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+      lada: this.datoSeleccionado?.[0]?.lada,
+      telefono: this.datoSeleccionado?.[0]?.telefono,
+      correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+      coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
+    });
     
-    if (claveEstado) {
-      this.cargarCatalogosParaModificacion(claveEstado, valorMunicipio || '');
+    this.estaDeshabilitadoDesplegable = false;
+    this.actualizarEstadoHabilitacionDesplegables();
+    
+    if (this.elementosDeshabilitados.includes('pais')) {
+      this.agregarDestinatarioFinal.get('pais')?.disable();
     }
     
-    setTimeout(() => {
-      let valorPais = this.datoSeleccionado?.[0]?.pais;
-      if (valorPais && this.paisesDatos.length > 0) {
-        const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
-          p.descripcion === valorPais || 
-          p.clave?.toString() === valorPais?.toString()
-        );
-        valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
-      }
-      
-      if (valorMunicipio && this.municipiosDatos.length > 0) {
-        const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
-          m.descripcion === valorMunicipio || 
-          m.clave?.toString() === valorMunicipio?.toString()
-        );
-        valorMunicipio = MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.clave : valorMunicipio;
-      }
-
-      let valorLocalidad = this.datoSeleccionado?.[0]?.localidad;
-      if (valorLocalidad && this.localidadesDatos.length > 0) {
-        const LOCALIDAD_ENCONTRADA = this.localidadesDatos.find(l => 
-          l.descripcion === valorLocalidad || 
-          l.clave?.toString() === valorLocalidad?.toString()
-        );
-        valorLocalidad = LOCALIDAD_ENCONTRADA ? LOCALIDAD_ENCONTRADA.clave : valorLocalidad;
-      }
-
-      let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
-      if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
-        const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
-          cp.descripcion === valorCodigoPostal || 
-          cp.clave?.toString() === valorCodigoPostal?.toString()
-        );
-        valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
-      }
-
-      let valorColonia = this.datoSeleccionado?.[0]?.colonia;
-      if (valorColonia && this.coloniasDatos.length > 0) {
-        const COLONIA_ENCONTRADA = this.coloniasDatos.find(c => 
-          c.descripcion === valorColonia || 
-          c.clave?.toString() === valorColonia?.toString()
-        );
-        valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
-      }
-
-      this.agregarDestinatarioFinal.patchValue({
-        tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
-        rfc: this.datoSeleccionado?.[0]?.rfc,
-        curp: this.datoSeleccionado?.[0]?.curp,
-        nombres: this.datoSeleccionado?.[0]?.nombres,
-        primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
-        segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-        denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
-        pais: valorPais,
-        estado: valorEstado,
-        municipio: valorMunicipio,
-        localidad: valorLocalidad,
-        codigoPostal: valorCodigoPostal,
-        colonia: valorColonia,
-        calle: this.datoSeleccionado?.[0]?.calle,
-        numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
-        numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
-        lada: this.datoSeleccionado?.[0]?.lada,
-        telefono: this.datoSeleccionado?.[0]?.telefono,
-        correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
-        coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
-      });
-      
-      this.estaDeshabilitadoDesplegable = false;
-      
-      this.updateDropdownEnableState();
-      
-      if (this.elementosDeshabilitados.includes('pais')) {
-        this.agregarDestinatarioFinal.get('pais')?.disable();
-      }
-      
-      this.forzarDeshabilitarPais();
-    }, 200);
-    
-  }, 50);
+    this.forzarDeshabilitarPais();
+   
+  }, 100);
 }
-
+/**
+ * Sets up the form in add mode (chequeoValidacionAlGuardar === true)
+ */
   private setupAddMode(): void {
     setTimeout(() => {
       if (this.chequeoValidacionAlGuardar) {
@@ -417,118 +476,66 @@ private setupEditMode(): void {
       }
     }, 50);
   }
-
-  private setupNonModalMode(): void {
+/**
+ * Sets up the form in non-modal mode (chequeoValidacionAlGuardar === false)
+ */
+private setupNonModalMode(): void {
   setTimeout(() => {
     if (this.datoSeleccionado?.[0]?.tipoPersona) {
       this.agregarDestinatarioFinal.enable();
     }
     
-    // País
-    let valorPais = this.datoSeleccionado?.[0]?.pais;
-    if (valorPais && this.paisesDatos.length > 0) {
-      const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
-        p.descripcion === valorPais || 
-        p.clave?.toString() === valorPais?.toString()
-      );
-      valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
-    }
-    
-    // Estado
-    let valorEstado = this.datoSeleccionado?.[0]?.estadoLocalidad;
+    const VALOR_ESTADO = this.datoSeleccionado?.[0]?.estadoLocalidad;
     let claveEstado = '';
-    if (valorEstado && this.estadosDatos.length > 0) {
+    if (VALOR_ESTADO && this.estadosDatos.length > 0) {
       const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
-        e.descripcion === valorEstado || 
-        e.clave?.toString() === valorEstado?.toString()
+        e.descripcion === VALOR_ESTADO || 
+        e.clave?.toString() === VALOR_ESTADO?.toString()
       );
-      valorEstado = ESTADO_ENCONTRADO ? ESTADO_ENCONTRADO.clave : valorEstado;
       claveEstado = ESTADO_ENCONTRADO ? (ESTADO_ENCONTRADO.clave || '') : '';
     }
     
-    // Municipio - obtener la clave antes de cargar catálogos dependientes
-    let valorMunicipio = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    const VAOR_MUNICIPIO = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    let claveMunicipio = '';
     
-    // Cargar catálogos dependientes basados en el estado y municipio seleccionados
     if (claveEstado) {
-      this.cargarCatalogosParaModificacion(claveEstado, valorMunicipio);
+      this.subscription.add(this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, claveEstado).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.municipiosDatos = DATOS;
+        
+        if (VAOR_MUNICIPIO && this.municipiosDatos.length > 0) {
+          const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+            m.descripcion === VAOR_MUNICIPIO || 
+            m.clave?.toString() === VAOR_MUNICIPIO?.toString()
+          );
+          claveMunicipio = MUNICIPIO_ENCONTRADO ? (MUNICIPIO_ENCONTRADO.clave || '') : '';
+        }
+        
+        if (claveMunicipio) {
+          this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((localidadesData) => {
+            const LOCALIDADES_DATOS = localidadesData.datos as Catalogo[];
+            this.localidadesDatos = LOCALIDADES_DATOS;
+          }));
+
+          this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((coloniasData) => {
+            const COLONIAS_DATOS = coloniasData.datos as Catalogo[];
+            this.coloniasDatos = COLONIAS_DATOS;
+            
+            this.aplicarValoresDespuesDeCarga();
+          }));
+        } else {
+          this.aplicarValoresDespuesDeCarga();
+        }
+      }));
+    } else {
+      this.aplicarValoresDespuesDeCarga();
     }
-    
-    // Establecer los valores después de un pequeño delay para permitir que se carguen los catálogos
-    setTimeout(() => {
-      // Municipio
-      if (valorMunicipio && this.municipiosDatos.length > 0) {
-        const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
-          m.descripcion === valorMunicipio || 
-          m.clave?.toString() === valorMunicipio?.toString()
-        );
-        valorMunicipio = MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.clave : valorMunicipio;
-      }
-
-      // Localidad
-      let valorLocalidad = this.datoSeleccionado?.[0]?.localidad;
-      if (valorLocalidad && this.localidadesDatos.length > 0) {
-        const LOCALIDAD_ENCONTRADA = this.localidadesDatos.find(l => 
-          l.descripcion === valorLocalidad || 
-          l.clave?.toString() === valorLocalidad?.toString()
-        );
-        valorLocalidad = LOCALIDAD_ENCONTRADA ? LOCALIDAD_ENCONTRADA.clave : valorLocalidad;
-      }
-
-      // Código Postal
-      let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
-      if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
-        const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
-          cp.descripcion === valorCodigoPostal || 
-          cp.clave?.toString() === valorCodigoPostal?.toString()
-        );
-        valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
-      }
-
-      // Colonia
-      let valorColonia = this.datoSeleccionado?.[0]?.colonia;
-      if (valorColonia && this.coloniasDatos.length > 0) {
-        const COLONIA_ENCONTRADA = this.coloniasDatos.find(c => 
-          c.descripcion === valorColonia || 
-          c.clave?.toString() === valorColonia?.toString()
-        );
-        valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
-      }
-
-      // Aplicar todos los valores al formulario
-      this.agregarDestinatarioFinal?.patchValue({
-        tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
-        rfc: this.datoSeleccionado?.[0]?.rfc,
-        curp: this.datoSeleccionado?.[0]?.curp,
-        nombres: this.datoSeleccionado?.[0]?.nombres,
-        primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
-        segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-        razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
-        denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
-        pais: valorPais,
-        estado: valorEstado,
-        municipio: valorMunicipio,
-        localidad: valorLocalidad,
-        codigoPostal: valorCodigoPostal,
-        colonia: valorColonia,
-        calle: this.datoSeleccionado?.[0]?.calle,
-        numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
-        numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
-        lada: this.datoSeleccionado?.[0]?.lada,
-        telefono: this.datoSeleccionado?.[0]?.telefono,
-        correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
-        coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
-      });
-      
-      this.estaDeshabilitadoDesplegable = false;
-      
-      this.updateDropdownEnableState();
-      
-      if (this.elementosDeshabilitados.includes('pais')) {
-        this.agregarDestinatarioFinal.get('pais')?.disable();
-      }
-    }, 200);
-    
   }, 500);
 }
 
@@ -558,7 +565,7 @@ private setupEditMode(): void {
     }
     
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-    const NUEVO_DESTINATARIO = this.buildDestinatarioObject(VALOR_FORMULARIO);
+    const NUEVO_DESTINATARIO = this.construirObjetoDestinatario(VALOR_FORMULARIO);
     let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
       ? [...this.destinatarioFinalTablaDatos] 
       : [];
@@ -604,7 +611,7 @@ private setupEditMode(): void {
   }
   
   const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-  const NUEVO_DESTINATARIO = this.buildDestinatarioObject(VALOR_FORMULARIO);
+  const NUEVO_DESTINATARIO = this.construirObjetoDestinatario(VALOR_FORMULARIO);
   let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
     ? [...this.destinatarioFinalTablaDatos] 
     : [];
@@ -636,7 +643,7 @@ private setupEditMode(): void {
 /**
  * Builds destinatario object from form values
  */
-private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
+private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
   let nombreRazonSocial: string;
   if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
     nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
@@ -646,7 +653,7 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
     nombreRazonSocial = '';
   }
 
-  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], clave: string | number): string => {
+  const OBTENER_DESCRIPCION_DEL_CATALOGO = (catalogArray: Catalogo[], clave: string | number): string => {
     if (!catalogArray || catalogArray.length === 0 || !clave) {
       return clave?.toString() || '';
     }
@@ -673,13 +680,13 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
     calle: VALOR_FORMULARIO['calle'] as string || '',
     numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string || '',
     numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
-    pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
-    colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
-    municipioAlcaldia: GET_DESCRIPTION_FROM_CATALOG(this.municipiosDatos, VALOR_FORMULARIO['municipio'] as string),
-    localidad: GET_DESCRIPTION_FROM_CATALOG(this.localidadesDatos, VALOR_FORMULARIO['localidad'] as string),
+    pais: OBTENER_DESCRIPCION_DEL_CATALOGO(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
+    colonia: OBTENER_DESCRIPCION_DEL_CATALOGO(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
+    municipioAlcaldia: OBTENER_DESCRIPCION_DEL_CATALOGO(this.municipiosDatos, VALOR_FORMULARIO['municipio'] as string),
+    localidad: OBTENER_DESCRIPCION_DEL_CATALOGO(this.localidadesDatos, VALOR_FORMULARIO['localidad'] as string),
     entidadFederativa: '',
-    estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
-    codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
+    estadoLocalidad: OBTENER_DESCRIPCION_DEL_CATALOGO(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
+    codigoPostal: OBTENER_DESCRIPCION_DEL_CATALOGO(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
     coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string || '',
     nombres: VALOR_FORMULARIO['nombres'] as string || '',
     primerApellido: VALOR_FORMULARIO['primerApellido'] as string || '',
@@ -1148,7 +1155,7 @@ changeNacionalidad(): void {
           Validators.required,
           AgregarDestinatarioFinalComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
         ]);
-        RFC_CONTROL.markAsTouched();
+        
         RFC_CONTROL.updateValueAndValidity();
       }
       
@@ -1324,55 +1331,13 @@ changeNacionalidad(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-  /**
- * Carga los catálogos dependientes cuando se está modificando un destinatario
- * @param valorEstado - Clave del estado seleccionado
- * @param valorMunicipio - Clave del municipio seleccionado
- */
-private cargarCatalogosParaModificacion(valorEstado: string, valorMunicipio?: string): void {
-  // Cargar municipios para el estado seleccionado
-  if (valorEstado) {
-    this.subscription.add(this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, valorEstado).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe((data) => {
-      const DATOS = data.datos as Catalogo[];
-      this.municipiosDatos = DATOS;
-      
-      // Después de cargar municipios, cargar localidades y colonias para el municipio seleccionado
-      if (valorMunicipio) {
-        this.cargarLocalidadesYColoniasParaModificacion(valorMunicipio);
-      }
-    }));
-  }
-}
 
-/**
- * Carga localidades y colonias para el municipio seleccionado durante modificación
- * @param valorMunicipio - Clave del municipio seleccionado
- */
-private cargarLocalidadesYColoniasParaModificacion(valorMunicipio: string): void {
-  // Cargar localidades
-  this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, valorMunicipio).pipe(
-    takeUntil(this.unsubscribe$)
-  ).subscribe((data) => {
-    const DATOS = data.datos as Catalogo[];
-    this.localidadesDatos = DATOS;
-  }));
-
-  // Cargar colonias
-  this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, valorMunicipio).pipe(
-    takeUntil(this.unsubscribe$)
-  ).subscribe((data) => {
-    const DATOS = data.datos as Catalogo[];
-    this.coloniasDatos = DATOS;
-  }));
-}
 
 /**
  * Updates the estaDeshabilitadoDesplegable flag and enables all form controls
  * This mirrors the logic from fabricante component
  */
-private updateDropdownEnableState(): void {
+private actualizarEstadoHabilitacionDesplegables(): void {
   const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
   
   if (TIPO_PERSONA) {

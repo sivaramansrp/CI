@@ -310,7 +310,7 @@ export class AgregarFacturadorComponent
    *
    * @returns {string} Descripción del país o cadena vacía si no se encuentra.
    */
-  private getPaisDescription(paisId: string | number): string {
+  private obtenerDescripcionPais(paisId: string | number): string {
     if (!paisId || !this.paisesDatos || this.paisesDatos.length === 0) {
       return '';
     }
@@ -362,7 +362,7 @@ export class AgregarFacturadorComponent
       calle: VALOR_FORMULARIO.calle || '',
       numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
       numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-      pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
+      pais: this.obtenerDescripcionPais(VALOR_FORMULARIO.pais),
       colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
