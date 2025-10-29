@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -38,7 +38,7 @@ import { Tramite260201Query } from '../../estados/tramite260201Query.query';
  * - DatosDeLaSolicitudComponent
  */
 @Component({
-  selector: 'app-contenedor-de-datos-solicitud',
+  selector: 'app-contenedor-de-datos-solicitud', 
   standalone: true,
   imports: [CommonModule, DatosDeLaSolicitudComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',

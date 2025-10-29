@@ -1474,7 +1474,7 @@ public convertToStringArray(value: unknown): string[] {
     const FRACCION_ARANCELARIA = this.mercanciaForm.get(
       'fraccionArancelaria'
     )?.value;
-    if (FRACCION_ARANCELARIA.length < 8) {
+    if (FRACCION_ARANCELARIA?.length < 8) {
       this.showLimitError = true;
     } else {
       this.showLimitError = false;
