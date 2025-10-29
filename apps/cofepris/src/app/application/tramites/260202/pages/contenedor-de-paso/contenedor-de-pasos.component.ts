@@ -5,7 +5,8 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * @component
@@ -60,6 +61,10 @@ export class ContenedorDePasosComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * @property {DatosPasos} datosPasos
    * @description Objeto que contiene información sobre los pasos del wizard.
@@ -71,6 +76,8 @@ export class ContenedorDePasosComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  esFormaValido!: boolean;
 
   /**
    * @method seleccionaTab
@@ -88,16 +95,26 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
+    this.esFormaValido = false
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (this.indice === 1) {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+      }
+      if (this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+    }
+    else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
@@ -119,5 +136,16 @@ export class ContenedorDePasosComponent {
       default:
         return TITULO_MENSAJE;
     }
+  }
+
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 }

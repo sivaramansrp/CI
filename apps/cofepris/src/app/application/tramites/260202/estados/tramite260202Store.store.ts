@@ -177,6 +177,8 @@ export function createInitialState(): Tramite260202State {
       fechaCaducidad: '',
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
+      especifique: '',
+      especifiqueForma: '',
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA

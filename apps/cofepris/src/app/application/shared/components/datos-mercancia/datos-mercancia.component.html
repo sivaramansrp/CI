@@ -12,6 +12,7 @@
             [markUntouched]="mercanciaForm.get('clasificacionProducto')?.errors?.['required'] && mercanciaForm.get('clasificacionProducto')?.touched ? true : false"
             name="clasificacionProducto"
             [placeholder]="'Selecciona una opción'"
+            [markTouched]="mercanciaForm.get('clasificacionProducto')?.touched??false"
           ></app-catalogo-select>
         </div>
       </div>
@@ -27,6 +28,7 @@
             [markUntouched]="mercanciaForm.get('especificarClasificacionProducto')?.errors?.['required'] && mercanciaForm.get('especificarClasificacionProducto')?.touched? true : false"
             name="especificarClasificacionProducto"
               [placeholder]="'Selecciona una opción'"
+            [markTouched]="mercanciaForm.get('especificarClasificacionProducto')?.touched??false"
           ></app-catalogo-select>
         </div>
       </div>
