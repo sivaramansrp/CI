@@ -12,10 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Find microfrontend apps in apps/
+      - name: Find microfrontend apps in apps/ (excluding dashboard)
         id: set-matrix
         run: |
-          APPS=$(find apps -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+          APPS=$(find apps -maxdepth 1 -mindepth 1 -type d -exec basename {} \; \
+            | grep -v '^dashboard$' \
+            | jq -R -s -c 'split("\n")[:-1]')
           echo "apps=$APPS" >> $GITHUB_OUTPUT
 
   build-push-deploy:
@@ -24,17 +26,22 @@ jobs:
     strategy:
       matrix:
         app_name: ${{ fromJson(needs.discover-apps.outputs.apps) }}
+    continue-on-error: true
     environment:
       name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set Node.js memory limit
+        run: echo "NODE_OPTIONS=--max-old-space-size=10096"
+
       - name: Install dependencies
         run: npm install
 
       - name: Build microfront app
-        run: npx nx build ${{ matrix.app_name }}-microfront
+        run: npx nx build ${{ matrix.app_name }}
+        
 
       - name: Reset Nx cache
         run: npx nx reset
@@ -55,9 +62,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
+      - name: Ensure Docker Compose file exists
+        run: |
+          if [ ! -f docker/modulefederation-${{ matrix.app_name }}-microfront.yml ]; then
+            echo "ERROR: docker/modulefederation-${{ matrix.app_name }}-microfront.yml does not exist!"
+            exit 1
+          fi
+
       - name: Update Docker Compose image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ matrix.app_name }}-microfront.yml || echo "No compose file for ${{ matrix.app_name }}-microfront"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ matrix.app_name }}-microfront.yml
 
       - name: Build Docker image for microfront app
         run: |
@@ -67,6 +81,13 @@ jobs:
         run: |
           docker push ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}
 
+      - name: Ensure k8s deployment folder exists
+        run: |
+          if [ ! -d k8s/${{ matrix.app_name }}-microfront ]; then
+            echo "ERROR: k8s/${{ matrix.app_name }}-microfront does not exist!"
+            exit 1
+          fi
+
       - name: List yaml files before copy
         run: |
           echo "Showing YAML files in k8s/${{ matrix.app_name }}-microfront/"
@@ -75,7 +96,7 @@ jobs:
 
       - name: Update deployment YAML image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ matrix.app_name }}-microfront/*.yaml || echo "No k8s yaml for ${{ matrix.app_name }}-microfront"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ matrix.app_name }}-microfront/*-deployment-dev.yaml
 
       - name: Copy deployment files to server
         uses: appleboy/scp-action@v0.1.7
