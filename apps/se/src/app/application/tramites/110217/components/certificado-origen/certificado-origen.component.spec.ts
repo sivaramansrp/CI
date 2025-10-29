@@ -23,14 +23,22 @@ describe('CertificadoOrigenComponent', () => {
 
   beforeEach(async () => {
     tramite110217StoreMock = {
-      setFormCertificadoOrigen: jest.fn(),
+      setFormCertificadoGenric: jest.fn(),
+      setEstado: jest.fn(),
+      setBloque: jest.fn(),
+      setFormMercancia: jest.fn(),
+      setmercanciaTabla: jest.fn(),
+      setDisponsiblesDatos: jest.fn(),
       setFormValida: jest.fn(),
+      setFormValidity: jest.fn()
     };
 
     tramite110217QueryMock = {
+      formCertificado$: of({ testField: 'value' }),
       selectSolicitud$: of({
-        observaciones: 'Test observaciones',
-        mercancia: []
+        formCertificado: { entidadFederativa: 105, bloque: 'ARG' },
+        mercanciaTabla: [{ id: 1, name: 'Mercancia1' }],
+        disponiblesDatos: [{ id: 2, name: 'Mercancia2' }]
       }),
       select: jest.fn().mockReturnValue(of({}))
     };
@@ -46,7 +54,8 @@ describe('CertificadoOrigenComponent', () => {
     };
 
     seccionLibQueryMock = {
-      select: jest.fn().mockReturnValue(of({}))
+      select: jest.fn().mockReturnValue(of({})),
+      selectSeccionState$: of({})
     };
 
     await TestBed.configureTestingModule({
@@ -79,9 +88,119 @@ describe('CertificadoOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize component properties', () => {
-    expect(component.estado).toEqual([]);
-    expect(component['destroyNotifier$']).toBeDefined();
+  it('should initialize observables on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component['certificadoState']).toBeTruthy();
+    expect(component.datosTabla$.length).toBeGreaterThan(0);
+    expect(component.datosTablaUno$.length).toBeGreaterThan(0);
+  });
+
+  it('should call store.setFormCertificadoGenric in setValoresStore', () => {
+    const spy = jest.spyOn(tramite110217StoreMock, 'setFormCertificadoGenric');
+    component.setValoresStore({
+      formGroupName: 'testForm',
+      campo: 'campo1',
+      valor: 'valor1',
+      storeStateName: 'state1'
+    });
+    expect(spy).toHaveBeenCalledWith({ campo1: 'valor1' });
+  });
+
+  it('should call store.setEstado when tipoEstadoSeleccion is called', () => {
+    const estado = { id: 1, descripcion: 'Estado 1', clave: '1' };
+    component.tipoEstadoSeleccion(estado);
+    expect(tramite110217StoreMock.setEstado).toHaveBeenCalledWith(estado);
+  });
+
+  it('should call store.setBloque when tipoSeleccion is called', () => {
+    const estado = { id: 1, descripcion: 'Bloque 1', clave: '1' };
+    component.tipoSeleccion(estado);
+    expect(tramite110217StoreMock.setBloque).toHaveBeenCalledWith('Bloque 1');
+  });
+
+  it('should call setmercanciaTabla in emitmercaniasDatos', () => {
+    const spy = jest.spyOn(tramite110217StoreMock, 'setmercanciaTabla');
+    const mercancia = { id: 1, nombre: 'Mercancia' } as any;
+    component.emitmercaniasDatos(mercancia);
+    expect(spy).toHaveBeenCalledWith([mercancia]);
+  });
+
+  it('should call store methods in setFormValida', () => {
+    component.setFormValida(true);
+    expect(tramite110217StoreMock.setFormValida).toHaveBeenCalledWith({ certificado: true });
+    expect(tramite110217StoreMock.setFormValidity).toHaveBeenCalledWith('certificadoOrigen', true);
+  });
+
+  it('should update datosTabla$ on guardarClicado', () => {
+    const evento = [{ id: 1, nombre: 'Nuevo' }] as any;
+    component.guardarClicado(evento);
+    expect(component.datosTabla$).toEqual(evento);
+  });
+
+  it('should validate formulario correctly', () => {
+    component.certificadoDeOrigen = { validarFormularios: jest.fn().mockReturnValue(true) } as any;
+    expect(component.validarFormulario()).toBe(true);
+    component.certificadoDeOrigen = { validarFormularios: jest.fn().mockReturnValue(false) } as any;
+    expect(component.validarFormulario()).toBe(false);
+    component.certificadoDeOrigen = undefined as any;
+    expect(component.validarFormulario()).toBe(false);
+  });
+
+  it('should call store.setDisponsiblesDatos with mapped data when conseguirDisponiblesDatos is called', () => {
+    const mockResponse = {
+      datos: [
+        {
+          fraccionArancelaria: '1234',
+          nombreTecnico: 'Tecnico A',
+          nombreComercial: 'Comercial A',
+          numeroRegistroProducto: '5678',
+          fechaExpedicion: '2024-01-01',
+          fechaVencimiento: '2024-12-31',
+        },
+      ],
+    };
+    const obtenerSpy = jest.spyOn(
+      component['certificadosOrigenService'],
+      'obtenerMercanciasDisponibles'
+    ).mockReturnValue(of(mockResponse));
+    const storeSpy = jest.spyOn(tramite110217StoreMock, 'setDisponsiblesDatos');
+    component['certificadoState'] = {
+      formCertificado: { entidadFederativa: 105, bloque: 'ARG' },
+    } as any;
+    component.conseguirDisponiblesDatos();
+    expect(obtenerSpy).toHaveBeenCalled();
+    expect(storeSpy).toHaveBeenCalledWith([
+      {
+        fraccionArancelaria: '1234',
+        nombreTecnico: 'Tecnico A',
+        nombreComercial: 'Comercial A',
+        numeroDeRegistrodeProductos: '5678',
+        fechaExpedicion: '2024-01-01',
+        fechaVencimiento: '2024-12-31',
+      },
+    ]);
+  });
+
+  it('should handle conseguirDisponiblesDatos gracefully when response has no datos', () => {
+    const obtenerSpy = jest.spyOn(
+      component['certificadosOrigenService'],
+      'obtenerMercanciasDisponibles'
+    ).mockReturnValue(of({}));
+    const storeSpy = jest.spyOn(tramite110217StoreMock, 'setDisponsiblesDatos');
+    component['certificadoState'] = {
+      formCertificado: { entidadFederativa: 105, bloque: 'ARG' },
+    } as any;
+    component.conseguirDisponiblesDatos();
+    expect(obtenerSpy).toHaveBeenCalled();
+    expect(storeSpy).toHaveBeenCalledWith([]);
+  });
+
+  it('should handle tipoSeleccion and tipoEstadoSeleccion independently', () => {
+    const estado = { id: 2, descripcion: 'Test Estado', clave: 'X1' };
+    component.tipoEstadoSeleccion(estado);
+    expect(tramite110217StoreMock.setEstado).toHaveBeenCalledWith(estado);
+    component.tipoSeleccion(estado);
+    expect(tramite110217StoreMock.setBloque).toHaveBeenCalledWith('Test Estado');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
