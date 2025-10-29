@@ -100,7 +100,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * @param toastr Servicio para mostrar notificaciones.
    */
   constructor(
-    private modificionService: ModificacionSolicitudeService,
+    public modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService
   ) {
     this.obtenerFederetarios(); // Carga los federetarios.
