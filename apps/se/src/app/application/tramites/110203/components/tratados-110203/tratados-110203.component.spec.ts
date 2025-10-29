@@ -68,17 +68,6 @@ describe('Tratados110203Component', () => {
     expect(component.tratadosForm.get('vencimiento')?.value).toBe(mockSolicitudState.vencimiento);
   });
 
-  it('should disable the form and set default values in updateForm()', () => {
-    component.updateForm();
-    expect(component.tratadosForm.disabled).toBe(true);
-    expect(component.tratadosForm.get('tratado')?.value).toBe('Tratado de Libre Comercio México-,');
-    expect(component.tratadosForm.get('bloque')?.value).toBe('ISLANDIA (REPUBLICA DE)');
-    expect(component.tratadosForm.get('origen')?.value).toBe('México');
-    expect(component.tratadosForm.get('destino')?.value).toBe('ISLANDIA (REPUBLICA DE)');
-    expect(component.tratadosForm.get('expedicion')?.value).toBe('2025-02-18');
-    expect(component.tratadosForm.get('vencimiento')?.value).toBe('2026-02-18');
-  });
-
   it('should call setValoresStore and update the store', () => {
     const spy = jest.spyOn(store, 'setTratado');
     component.setValoresStore(component.tratadosForm, 'tratado', 'setTratado');

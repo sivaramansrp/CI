@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_ENVIAR_FIRMA, API_GENERAR_CADENA_ORIGINAL, AUTH_ROUTE } from '../../../servers/api-router';
 import { FielPayload, FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';

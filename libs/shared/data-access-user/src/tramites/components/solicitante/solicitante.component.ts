@@ -30,9 +30,10 @@ import { SolicitanteService } from '../../../core/services/shared/solicitante/so
 import { TituloComponent } from '../titulo/titulo.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
+
 import { SolicitanteEvaluarResponse } from '../../../core/models/datos-solicitante-evaluar.model';
-import { CategoriaMensaje, Notificacion } from '@ng-mf/data-access-user';
-import { Location } from '@angular/common';
+
+import { Notificacion } from '@ng-mf/data-access-user';
 
 
 @Component({
@@ -111,51 +112,6 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       this.getDatosGenerales(this.RFC);
     }
 
-  }
-
-      /**
-   * @method iniciar
-   * @description Método que inicia el trámite 120301 enviando una solicitud
-   * al servicio IniciarService. Maneja la respuesta del servidor
-   */
-  iniciar(): void {
-    const PAYLOAD: any = {
-      rfc_solicitante: this.datosGenerales?.datos?.rfc_original,
-      rol_actual: 'SOLICITANTE'
-    };
-
-    // Realiza la solicitud de inicio del trámite
-    this.solicitanteServicio.postIniciar(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response.codigo !== '00') {
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
-            modo: 'action',
-            titulo: response.error || 'Error al iniciar el trámite.',
-            mensaje:
-              response.causa ||
-              response.mensaje ||
-              'Ocurrió un error al guardar la solicitud.',
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-        }
-      },
-      error: (error) => {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
-          modo: 'action',
-          titulo: '',
-          mensaje: error?.error?.error || 'Error inesperado al iniciar el trámite.',
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-      }
-    });
   }
 
   /**
@@ -408,7 +364,6 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
           tap((response) => {
             if (response) {
               this.datosGenerales = response;
-              this.iniciar();
               const IDENTIFICACION = response.datos.identificacion;
               this.solicitanteStore.setRfc(response.datos.rfc_original ?? '');
               this.solicitanteStore.setNombre(IDENTIFICACION.nombre ?? '');

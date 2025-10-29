@@ -139,6 +139,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
           this.tramite103Store.setEstado(respuesta?.datos?.importadorExportador?.estado);
           this.tramite103Store.setColonia(respuesta?.datos?.importadorExportador?.colonia);
           this.tramite103Store.setOpcion(respuesta?.datos?.importadorExportador?.opcion);
+          this.tramite103Store.setPersonaMoral(respuesta?.datos?.importadorExportador?.personaMoral);
 
           this.tramite103Store.setTipoDeMercancia(respuesta?.datos?.datosMercancia?.tipoDeMercancia);
           this.tramite103Store.setUsoEspecifico(respuesta?.datos?.datosMercancia?.usoEspecifico);

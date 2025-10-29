@@ -1,67 +1,19 @@
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  InputFecha,
-  InputFechaComponent,
-  InputRadioComponent,
-  Notificacion,
-  SoloLetrasNumerosDirective,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import {
-  BOTON_DE_OPCION_VER,
-  CARGA_MERCANCIA_EXPORT,
-  CARGA_MERCANCIA_SELECCIONADAS,
-  CONFIGURACION_MERCANCIA,
-  CONFIGURACION_MERCANCIA_TABLA,
-  FECHA_ID,
-  MERCANCIA_SELECCIONADAS,
-  REQUIREDA,
-  TEXTOS_REQUISITOS,
-} from '../../constantes/modificacion.enum';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  forwardRef,
-} from '@angular/core';
-import {
-  ConfiguracionColumna,
-  MenusDesplegables,
-} from '../../models/modificacion.enum';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
+import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
+import { Subject, takeUntil } from 'rxjs';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { FormularioSi } from '../../models/certificado-origen.model';
+import { MERCANCIA_SELECCIONADAS_REQUIRED } from '../../constantes/mercancia.enum';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-
-import { Subject, takeUntil } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-
-import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { RADIO_OPTIONS } from '../../../tramites/110214/constants/validar-inicialmente-certificado.enum';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
@@ -122,6 +74,7 @@ export const FECHA_FIN = {
     AlertComponent,
     NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective),
+    InputRadioComponent,
     InputRadioComponent,
   ],
   templateUrl: './certificado-de-origen.component.html',
@@ -232,9 +185,9 @@ export class CertificadoDeOrigenComponent
    */
   tratadoAcuerdoCertificado?: Catalogo[];
 
-  /** 
+  /**
    * Propiedad de entrada que recibe los datos de los países.
-  */
+   */
   pais?:Catalogo[];
 
   /*
@@ -340,7 +293,6 @@ export class CertificadoDeOrigenComponent
    */
   @Output() setbuscarMercanciaEvent: EventEmitter<boolean> =
     new EventEmitter<boolean>();
-
   /**
    * @property {EventEmitter<boolean>} setModelCargaPorArchivo
    * @description
@@ -619,6 +571,14 @@ export class CertificadoDeOrigenComponent
   requerida: boolean = false;
 
   /**
+   * @property {boolean} isInvalidaMercanciaSeleccion
+   * @description
+   * Indica si la selección de mercancía en la tabla es inválida.
+   * Se utiliza para mostrar mensajes de error cuando no se ha seleccionado ninguna mercancía.
+   */
+  isInvalidaMercanciaSeleccion: boolean = false;
+
+  /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
@@ -658,25 +618,25 @@ export class CertificadoDeOrigenComponent
         nombreComercialForm: ['', [Validators.maxLength(200)]],
         fechaInicioInput: [''],
         fechaFinalInput: [''],
-        nombres: ['', [Validators.required, Validators.maxLength(20)]],
-        primerApellido: ['', [Validators.required, Validators.maxLength(20)]],
-        segundoApellido: ['', [Validators.maxLength(20)]],
+        nombres: ['', [Validators.required, Validators.maxLength(25)]],
+        primerApellido: ['', [Validators.required, Validators.maxLength(25)]],
+        segundoApellido: ['', [Validators.maxLength(25)]],
         numeroDeRegistroFiscal: [
           '',
           [Validators.required, Validators.maxLength(30)],
         ],
         razonSocial: ['', Validators.required],
-        calle: ['', [Validators.required, Validators.maxLength(90)]],
-        numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
+        // calle: ['', [Validators.required, Validators.maxLength(90)]],
+        // numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
         // numeroLetras: ['', [Validators.required, Validators.maxLength(30)]],
-        pais: [''],
-        ciudad: ['', Validators.required],
-        lada: ['', Validators.required],
-        telefono: ['', Validators.required],
-        fax: [''],
-        correo: ['', Validators.required],
-        correoElectronico: [''],
-        domTercerOperador: [''],
+        // pais: [''],
+        // ciudad: ['', Validators.required],
+        // lada: ['', Validators.required],
+        // telefono: ['', Validators.required],
+        // fax: [''],
+        // correo: ['', Validators.required],
+        // correoElectronico: [''],
+        // domTercerOperador: [''],
         // Nuevos controles de formulario para el procedimiento 110222
         // calle1: ['', Validators.required],
         // numeroLetra1: ['', Validators.required],
@@ -685,6 +645,7 @@ export class CertificadoDeOrigenComponent
         // correo1: ['', Validators.required],
         // telefono1: [''],
         // fax1: [''],
+        mercanciasSeleccionadas: [this.guardarClicado || [], MERCANCIA_SELECCIONADAS_REQUIRED.includes(this.idProcedimiento) ? [matrizRequerida] : []],
       },
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
@@ -703,8 +664,19 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
     }
 
+    if (this.domicilioTercer) {
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('lada', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('fax', new FormControl(''));
+      this.formCertificado.addControl('correo', new FormControl('', [Validators.required])); 
+    }
+
     if (this.idProcedimiento === 110204) {
-      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];      
+      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formCertificado.get(key)?.clearValidators();
         this.formCertificado.get(key)?.updateValueAndValidity({ emitEvent: false });
@@ -1157,6 +1129,11 @@ export class CertificadoDeOrigenComponent
     this.seletedccionadaguardarClicado = evento;
     this.seleccionadaguardarClicado = [evento];
     this.seleccionado.emit(evento);
+
+    const CONTROL = this.formCertificado.get('mercanciasSeleccionadas');
+    CONTROL?.setValue([evento]);
+    CONTROL?.markAsDirty();
+    CONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -1436,7 +1413,6 @@ export class CertificadoDeOrigenComponent
     this.service.getTratadoCertificado(this.idProcedimiento.toString()).subscribe((data) => {
       this.tratadoAcuerdoCertificado = data as Catalogo[];
     });
-
   }
 
   /**
@@ -1450,9 +1426,9 @@ export class CertificadoDeOrigenComponent
     });
   }
 
-   /**
+  /**
    * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
-   * 
+   *
    * @returns {void}
    */
   getPais():void{
@@ -1488,13 +1464,38 @@ export class CertificadoDeOrigenComponent
   /**
    * Getter para obtener el catálogo de países o bloques.
    * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
-   * 
+   *
    * @returns {Catalogo[]} El catálogo de países o bloques.
    */
   get paisGet(): Catalogo[]{
     return this.circulacion?.length
-      ? this.circulacion
-      : this.paises;
+    ? this.circulacion
+    : this.paises;
+  }
+
+  /**
+   * Getter method to access form control values from parent components
+   * @param controlName - Name of the form control to get value from
+   * @returns The value of the specified form control
+   */
+  public getFormControlValue(controlName: string): unknown {
+    return this.formCertificado?.get(controlName)?.value;
+  }
+
+  /**
+   * Getter method specifically for entidadFederativa control
+   * @returns The value of entidadFederativa form control
+   */
+  public get entidadFederativaValue(): string | null {
+    return this.formCertificado?.get('entidadFederativa')?.value || null;
+  }
+
+  /**
+   * Getter method specifically for entidadFederativa control
+   * @returns The value of entidadFederativa form control
+   */
+  public get bloqueValue(): string | null {
+    return this.formCertificado?.get('bloque')?.value || null;
   }
 
   /**
@@ -1510,4 +1511,27 @@ export class CertificadoDeOrigenComponent
       domTercerOperador: evento,
     });
   }
+
+  /**
+   * Verifica si un campo es requerido según la configuración de campos requeridos.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+   */
+  esCampoRequerido(campo: string): boolean {
+    return this.elementosRequeridos?.includes(campo) ?? false;
+  }
+}
+
+/**
+ * Valida que el valor del control sea una matriz no vacía.
+ *
+ * @param {AbstractControl} control - El control de formulario a validar.
+ * @returns {ValidationErrors | null} - Retorna un objeto de errores si la validación falla, o `null` si pasa.
+ */
+export function matrizRequerida(
+  control: AbstractControl
+): ValidationErrors | null {
+  const VALUE = control.value;
+  return Array.isArray(VALUE) && VALUE.length === 0 ? { required: true } : null;
 }

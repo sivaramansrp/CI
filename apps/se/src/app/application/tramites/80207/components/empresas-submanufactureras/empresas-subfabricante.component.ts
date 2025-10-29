@@ -1102,6 +1102,9 @@ if(RFC_VALUE && ESTADO_RAW) {
   }
   else if(RFC_VALUE.length > 0 && ESTADO_RAW === '-1' ){
    this.mostrarNotificacion('El RFC de la empresa submanufacturera no está registrado');
+   this.formularioDatosSubcontratista.patchValue({
+          rfc: ''
+        });
   }
   else {
       this.mostrarNotificacion('Debe introducir el RFC');

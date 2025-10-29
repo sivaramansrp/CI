@@ -10,8 +10,8 @@ import { Component } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder } from '@angular/forms';
 import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
-import { Solicitud230301Store } from '../../estados/tramites/tramites230301.store';
-import { ConsultaSolicitud230301Query } from '../../estados/queries/tramites230301.query';
+import { Tramite230301Store } from '../../estados/tramites/tramites230301.store';
+import { Solicitud230301Query } from '../../estados/queries/tramites230301.query';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 @Injectable()
@@ -37,8 +37,8 @@ describe('SolicitudComponent', () => {
       providers: [
         FormBuilder,
         { provide: DesistimientoSolicitudService, useClass: MockDesistimientoSolicitudService },
-        { provide: Solicitud230301Store, useClass: MockSolicitud230301Store },
-        { provide: ConsultaSolicitud230301Query, useClass: MockConsultaSolicitud230301Query },
+        { provide: Tramite230301Store, useClass: MockSolicitud230301Store },
+        { provide: Solicitud230301Query, useClass: MockConsultaSolicitud230301Query },
         SeccionLibQuery,
         SeccionLibStore
       ]
