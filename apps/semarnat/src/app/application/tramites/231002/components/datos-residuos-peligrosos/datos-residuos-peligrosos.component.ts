@@ -54,7 +54,6 @@ import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.que
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 import { Modal } from 'bootstrap';
 
-import { SoloNumericaDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numerica/solo-numerica.directive';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
@@ -70,7 +69,6 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   selector: 'app-datos-residuos-peligrosos',
   standalone: true,
   imports: [
-    SoloNumericaDirective,
     CommonModule,
     TituloComponent,
     ReactiveFormsModule,
@@ -115,8 +113,11 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
   /** Opciones de clasificación del residuo. */
-  clasificacionRadioOptions: RadioOpcion[] =
-    RADIO_OPCIONES?.clasificacionRadioOptions;
+  clasificacionRadioOptions: RadioOpcion[] = [
+    { label: 'Clave de residuo', value: 'CLAVE' },
+    { label: 'Nombre', value: 'NOMBRE' },
+    { label: 'Descripción', value: 'DESCRIPCION' },
+  ];
 
   /** Estructura de datos completa de etiquetas y opciones del JSON. */
   etiquetasForm = RADIO_OPCIONES;
@@ -618,11 +619,11 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     }
 
     // Habilitar el dropdown correspondiente según la selección
-    if (clasificacionSeleccionada === 'Clave de residuo') {
+    if (clasificacionSeleccionada === 'CLAVE') {
       this.formularioResiduo.get('claveResiduo')?.enable();
-    } else if (clasificacionSeleccionada === 'Nombre') {
+    } else if (clasificacionSeleccionada === 'NOMBRE') {
       this.formularioResiduo.get('nombre')?.enable();
-    } else if (clasificacionSeleccionada === 'Descripción') {
+    } else if (clasificacionSeleccionada === 'DESCRIPCION') {
       this.formularioResiduo.get('descripcion')?.enable();
     }
 
@@ -716,6 +717,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       capacidad: this.formularioResiduo.get('capacidad')?.value || '',
       tipoContenedorDesc: this.getTipoContenedor(),
       materiasPrimasRelacionadas: this.materiasPrimas,
+      desc_especie: this.formularioResiduo.get('clasificacion')?.value || '',
     };
     // Emitir el evento con los datos
     this.residuoAgregado.emit(RESIDUO_DATA);
