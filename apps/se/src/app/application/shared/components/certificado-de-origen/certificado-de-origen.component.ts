@@ -650,6 +650,10 @@ export class CertificadoDeOrigenComponent
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
 
+    if(this.idProcedimiento && MERCANCIA_SELECCIONADAS_REQUIRED?.includes(this.idProcedimiento)){
+      this.formCertificado.get('mercanciasSeleccionadas')?.setValidators(matrizRequerida);
+    }
+
     if (this.idProcedimiento === 110222) {
       this.formCertificado.addControl('calle1', new FormControl('', [Validators.required]));
       this.formCertificado.addControl('numeroLetra1', new FormControl('', [Validators.required]));
