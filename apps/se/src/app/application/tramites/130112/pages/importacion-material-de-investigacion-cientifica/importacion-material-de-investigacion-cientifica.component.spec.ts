@@ -48,6 +48,12 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     };
     component.wizardComponent = wizardComponentSpy as any;
 
+    // Mock pasoUno component to return true for form validation
+    const pasoUnoSpy = {
+      validarTodosLosFormularios: jest.fn().mockReturnValue(true)
+    };
+    component.pasoUno = pasoUnoSpy as any;
+
     const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
 
@@ -69,6 +75,12 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
       cambiarPaso: jest.fn(),
     };
     component.wizardComponent = wizardComponentSpy as any;
+
+    // Mock pasoUno component to return true for form validation
+    const pasoUnoSpy = {
+      validarTodosLosFormularios: jest.fn().mockReturnValue(true)
+    };
+    component.pasoUno = pasoUnoSpy as any;
 
     const accionBoton: AccionBoton = { accion: 'prev', valor: 1 };
     component.getValorIndice(accionBoton);
@@ -113,6 +125,12 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
       cambiarPaso: jest.fn(),
     };
     component.wizardComponent = wizardComponentSpy as any;
+
+    // Mock pasoUno component to return true for form validation
+    const pasoUnoSpy = {
+      validarTodosLosFormularios: jest.fn().mockReturnValue(true)
+    };
+    component.pasoUno = pasoUnoSpy as any;
 
     // Test case for "cont" action
     const accionBotonCont: AccionBoton = { accion: 'cont', valor: 2 };
