@@ -92,7 +92,7 @@ export class ExpedicionCertificadosFronteraComponent {
           this.wizardComponent.siguiente();
         } else {
           this.esFormaValido = true; // Mostrar mensaje de error
-          return; // No continuar si la validación falla
+          // No continuar si la validación falla
         }
       } else {
         this.esFormaValido = false; // Ocultar mensaje de error al retroceder
