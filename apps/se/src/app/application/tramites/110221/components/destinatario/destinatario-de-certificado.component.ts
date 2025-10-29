@@ -17,11 +17,11 @@ import { Validators } from '@angular/forms';
 import { Tramite110221State } from '../../estados/tramite110221.store';
 
 /**
- * @description
- * Represents a generic object for form values, where each property key is a string and the value can be of any type.
- *
- * @typeParam key - The name of the form field.
- * @typeParam unknown - The value associated with the form field, of any type.
+* @description
+* Representa un objeto genérico para valores de formulario, donde cada clave de propiedad es una cadena y el valor puede ser de cualquier tipo.
+*
+* @typeParam key: El nombre del campo de formulario.
+* @typeParam unknown: El valor asociado al campo de formulario, de cualquier tipo.
  *
  * @see https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html
  *
@@ -132,6 +132,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
     @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
   
+  /** Referencia al componente DestinatarioComponent */
   @ViewChild('destinatarioRef') destinatario!: DestinatarioDeCertificadoComponent;
 
 
@@ -209,15 +210,21 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       // Agrega otros controles aquí si es necesario
     });
   }
-public validateAllForms(): boolean {
-  let valid = true;
+  /**
+   * @method validateAllForms
+   * @descripcion
+   * Valida todos los formularios hijos marcando todos los campos como tocados.
+   * @returns {boolean} - Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validateAllForms(): boolean {
+    let valid = true;
 
-  // Mark all fields as touched for validation
+  // Marque todos los campos como modificados para su validación.
   this.destinatarioComponent?.markAllFieldsTouched();
   this.datosDelDestinatarioComponent?.markAllFieldsTouched();
   this.representanteLegalExportadorComponent?.markAllFieldsTouched();
 
-  // Validate DestinatarioComponent
+  // Validar componente de destino
   if (this.destinatarioComponent?.formDestinatario) {
     if (!this.destinatarioComponent.formDestinatario.valid) {
       valid = false;
@@ -301,10 +308,6 @@ public validateAllForms(): boolean {
     const { VALOR, METODO_NOMBRE } = event;
     (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);
   }
-
-
-
-  
   /**
      * Inicializa el formulario con los datos del estado de la solicitud.
      */
@@ -360,7 +363,14 @@ public validateAllForms(): boolean {
   setFormValidaDestinatario(valida: boolean): void {
     this.store.setFormValida({ datosDestinatario: valida });
   }
-validatorCheck(): boolean {
+
+  /**
+   * @method validatorCheck
+   * @descripcion
+   * Verifica la validez del formulario de registro.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+  validatorCheck(): boolean {
     if (!this.registroFormulario) {
       return false;
     }
@@ -376,6 +386,12 @@ validatorCheck(): boolean {
     this.registroFormulario.get('representanteLegalForm')?.markAllAsTouched();
     return false;
   }
+  /**
+   * @method validarFormulario
+   * @descripcion
+   * Valida el formulario de registro.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
   validarFormulario(): boolean {
     let isValid = true;
     if (this.datosDelDestinatarioComponent) {

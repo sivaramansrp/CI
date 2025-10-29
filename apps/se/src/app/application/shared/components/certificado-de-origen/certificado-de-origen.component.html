@@ -892,7 +892,7 @@
         [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
         [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
       <span class="mensaje-error" 
-    *ngIf="tableErrorMensajeError && guardarClicado.length === 0 && idProcedimiento !== 110221">
+    *ngIf="tableErrorMensajeError && guardarClicado.length === 0 && idProcedimiento !== procedimientoExcluded[0]">
       Por favor, necesitas
         agregar un valor en la tabla dinámica</span>
     </div>

@@ -254,6 +254,11 @@ export class DatosDelDestinatarioComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * @description
+   * Valida el estado completo del formulario de datos del destinatario.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
   validarFormularios(): boolean {
     if (this.formDatosDelDestinatario.valid) {
       return true;

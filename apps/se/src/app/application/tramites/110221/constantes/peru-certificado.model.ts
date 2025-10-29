@@ -79,10 +79,16 @@ export const ELEMENTOS_REQUERIDOS = [
   'calle',
   'numeroLetra'
 ];
-
-
+/**
+ * @const ID_PROCEDIMIENTO
+ * @description Identificador único del procedimiento asociado al trámite.
+ */
 export const IDPROCEDIMIENTO = 110221;
 
+/**
+ * @interface Payload
+ * @description Estructura de datos para la respuesta del servidor al guardar una solicitud.
+ */
 export interface Payload { 
   /** 
    * Código de respuesta del servidor que indica el resultado de la operación.

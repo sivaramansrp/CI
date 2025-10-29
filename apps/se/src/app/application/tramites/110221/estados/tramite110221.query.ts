@@ -18,9 +18,15 @@ export class Tramite110221Query extends Query<Tramite110221State> {
     return state;
   });
 
+    /** @descripcion
+   * Observable que selecciona los productores agregados por el exportador.
+   */
    selectAgregarProductoresExportador$ = this.select((state) => {
     return state.agregarProductoresExportador;
   });
+    /** @descripcion
+   * Observable que selecciona la mercancía de los productores.
+   */
     selectMercanciaProductores$ = this.select((state) => {
     return state.mercanciaProductores;
   });
@@ -32,6 +38,9 @@ export class Tramite110221Query extends Query<Tramite110221State> {
     return state.formDatosDelDestinatario;
   });
 
+  /** @descripcion
+   * Observable que selecciona el formulario del exportador.
+   */
   selectFormExportador$ = this.select((state) => {
     return state.formExportor;
   });
@@ -153,5 +162,8 @@ export class Tramite110221Query extends Query<Tramite110221State> {
     super(store);
   }
 }
-
+/**
+ * @descripcion
+ * Exporta el store del trámite 110221 para su uso en otros módulos.
+ */
 export { Tramite110221Store };

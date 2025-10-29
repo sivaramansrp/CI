@@ -11,11 +11,12 @@
  * @import { PASOS } from '../../constantes/peru-certificado.module';
  */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos, esValidObject, getValidDatos, JSONResponse } from '@ng-mf/data-access-user';
 import { Subject, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/peru-certificado.model';
 import { ERROR_FORMA_ALERT } from '@ng-mf/data-access-user';
-import { PASOS, Payload } from '../../constantes/peru-certificado.model';
+
+import { PASOS } from '../../constantes/peru-certificado.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
 
@@ -143,6 +144,10 @@ getValorIndice(e: AccionBoton): void {
       this.pasoNavegarPor(e);
     }
   }
+  /**
+   * Navega a un paso específico en el wizard basado en la acción del botón.
+   * @param {AccionBoton} e - Objeto que contiene la acción ('cont' o 'ant') y el valor del índice del paso.
+   */
    pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;
@@ -175,8 +180,12 @@ getValorIndice(e: AccionBoton): void {
     }
     return true;
   }
+  /**
+   * Guarda los datos del trámite en el backend.
+   * @param {Tramite110221State} item - Estado actual del trámite a guardar.
+   * @returns {Promise<JSONResponse>} - Promesa que resuelve con la respuesta del backend.
+   */
   guardar(item: Tramite110221State): Promise<JSONResponse> {
-  console.log('item', item);
 
   const MERCANCIA_SELECCIONADAS = this.certificadoService.buildMercanciaSeleccionadas(item.mercanciaTabla);
 
@@ -304,8 +313,6 @@ getValorIndice(e: AccionBoton): void {
       }
     },
   };
-
-  console.log(PAYLOAD, 'PAYLOAD');
 
 return new Promise((resolve, reject) => {
       this.certificadoService.guardarDatosPost(PAYLOAD).subscribe(

@@ -78,6 +78,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * ```
    */
   idiomaDatos: Catalogo[] = [];
+  /**
+   * @description
+   * Identificador del procedimiento asociado al componente.
+   */
   public idProcedimiento = 110221;
 
   /**
@@ -399,9 +403,14 @@ representacionFederalOpcion(): void {
    * }
    * ```
    */
-  // validarFormulario(): boolean {
-  //     return this.datosCertificadoDeRef.validarFormularios();
-  //   }
+  
+  /**
+   * 
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   * @description
+   * Valida el formulario completo del certificado.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
     validarFormulario(): boolean {
   let ESVALIDO = true;
 

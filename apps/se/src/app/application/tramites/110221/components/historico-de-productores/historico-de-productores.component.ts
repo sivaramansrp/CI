@@ -74,6 +74,7 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
   public solicitudState!: Tramite110221State;
  /** Observable que expone la lista de mercancías asociadas a los productores en el estado del trámite. */
     public mercanciaProductores$!: Observable<MercanciaTabla[]>;
+    /** Observable que expone la lista de productores agregados por el exportador en el estado del trámite. */
   public agregarProductoresExportador$!: Observable<HistoricoColumnas[]>;
  
   /**
@@ -176,6 +177,9 @@ this.mercanciaProductores$ = this.tramiteQuery.selectMercanciaProductores$;
       this.mercancia = respuesta.datos;
     });
   }
+  /**
+   * Obtiene los datos disponibles de productores y los actualiza en el store.
+   */
 conseguirDisponiblesDatos(): void {
 
     const SELECTED_RFC = this.agregarDatosProductor['numeroRegistroFiscal'];
@@ -201,14 +205,16 @@ conseguirDisponiblesDatos(): void {
          
           this.store.setProductores(MAPPED_DATA);
         },
-        error: () => {
-          // this.toastr.error('Error al buscar Mercancia');
-        },
+        
       });
 
-    // this.mercanciasDisponibles = true;
   }
-   public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
+  /**
+   * Emite un evento para agregar un nuevo exportador y actualizar la lista de productores en el store.
+   *
+   * @param event - Objeto que contiene los datos del exportador a agregar.
+   */
+  public emitAgregarExportador(event: { [key: string]: unknown } | HistoricoColumnas): void {
     const PAYLOAD = {
       rfc_solicitante: event.numeroRegistroFiscal,
     };
@@ -232,9 +238,7 @@ conseguirDisponiblesDatos(): void {
           
           this.store.setProductores(MAPPED_DATA);
         },
-        error: () => {
-          // this.toastr.error('Error al buscar Mercancia');
-        },
+        
       });
   }
 

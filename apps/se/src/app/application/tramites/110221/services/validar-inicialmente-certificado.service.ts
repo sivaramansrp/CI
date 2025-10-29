@@ -249,12 +249,22 @@ export class ValidarInicialmenteCertificadoService {
       false
     );
   }
-    obtenerPaisBloque(): Observable<Catalogo[]> {
+
+  /**
+   * Obtiene la lista de países bloque desde un archivo JSON local.
+   * @method obtenerPaisBloque
+   * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
+   */
+  obtenerPaisBloque(): Observable<Catalogo[]> {
     return this.http
       .get<{ data: Catalogo[] }>('assets/json/110221/país-bloque.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
+    /**
+     * Obtiene la entidad federativa asociada a la solicitud.
+     * @returns {Observable<JsonResponseCatalogo>} Observable con la entidad federativa.
+     */
     obtenerEntidadFederativa(): Observable<JsonResponseCatalogo> {
     return this.httpService.get<JsonResponseCatalogo>(
       PROC_110221.ENTIDAD_FEDERATIVA,
@@ -282,12 +292,18 @@ obtenerRepresentacionFederal(): Observable<JsonResponseCatalogo> {
     return this.httpService.post<Record<string, unknown>>(PROC_110221.GUARDAR, {
       body: body,
     });
-    // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
   }
 
+  /**
+   * Busca las mercancías asociadas a un certificado.
+   * @param body Cuerpo de la solicitud con los parámetros de búsqueda.
+   * @returns Observable con la respuesta de la API.
+   */
 buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
     return this.httpService.post<JSONResponse>(PROC_110221.BUSCAR, { body: body });
   }
+
+  /** Construye el arreglo de mercancías seleccionadas para el certificado. */
 buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
     const RESULT: unknown[] = [];
 
@@ -396,13 +412,18 @@ buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
       }
     }
 
+  /** Agrega un nuevo productor/exportador. */
     obtenerProductoruNevo(body: Record<string, unknown>): Observable<unknown> {
     return this.httpService.post<unknown>(PROC_110221.AGREGAR_PRODUCTOR, {
       body: body,
     });
   }
- 
-obtenerProductorPorExportador(): Observable<ProductorExportador> {
+
+  /**
+   * Obtiene el productor/exportador asociado a la solicitud.
+   * @returns {Observable<ProductorExportador>} Observable con el productor/exportador.
+   */
+  obtenerProductorPorExportador(): Observable<ProductorExportador> {
     return this.httpService.get<ProductorExportador>(
       PROC_110221.BUSCAR_PRODUCTOR
     );
@@ -415,6 +436,13 @@ obtenerProductorPorExportador(): Observable<ProductorExportador> {
   getAllState(): Observable<Tramite110221State> {
     return this.query.selectTramite$;
   }
+
+  /**
+   * Obtiene la cadena original del trámite.
+   * @param {string} idSolicitud - ID de la solicitud.
+   * @param {CadenaOriginalRequest} body - Cuerpo de la solicitud.
+   * @returns {Observable<BaseResponse<T>>} Observable con la respuesta de la API.
+   */
   obtenerCadenaOriginal<T>(
         idSolicitud: string,
         body: CadenaOriginalRequest

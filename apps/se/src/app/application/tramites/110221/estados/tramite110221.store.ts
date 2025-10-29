@@ -18,9 +18,12 @@ import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../../1
 
 
 export interface Tramite110221State {
- 
-   grupoRepresentativo: GrupoRepresentativo;
- 
+
+  /** @descripcion
+   * Grupo representativo asociado al trámite.
+   */
+  grupoRepresentativo: GrupoRepresentativo;
+
   /** ID de la solicitud */
   idSolicitud: number | null;
   
@@ -228,6 +231,7 @@ export interface Tramite110221State {
   altaPlanta: Catalogo[],
    /** Lista de catálogos que representan facturas disponibles. */
   factura: Catalogo[];
+    /** Lista de mercancías asociadas a los productores. */
   mercanciaProductores: MercanciaTabla[];
     /** Lista de mercancías encontradas o buscadas. */
     buscarMercancia: Mercancia[];
@@ -243,8 +247,14 @@ export interface Tramite110221State {
    */
   formDatosDelDestinatario: { [key: string]: unknown };
 
+  /** @property {Object} agregarProductoresExportador - Datos de los productores a agregar.
+   * @description
+   * Contiene información sobre los productores que se desean agregar al exportador.
+   */
   agregarProductoresExportador: HistoricoColumnas[];
-   formDestinatario: { [key: string]: unknown };
+  /** @property {Object} formDestinatario - Datos del destinatario.
+   */
+  formDestinatario: { [key: string]: unknown };
   /**
    * @property {Object} formExportor - Datos del exportador.
    * @description
@@ -447,6 +457,9 @@ export class Tramite110221Store extends Store<Tramite110221State> {
   constructor() {
     super(createInitialState());
   }
+  /** @descripcion
+   * Observable que selecciona todo el estado del trámite.
+   */
   selectTramite$ = this._select((state) => state);
 
   /**
@@ -460,7 +473,10 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       idSolicitud,
     }));
   }
-
+  /**
+   * Actualiza los datos del formulario de destinatario.
+   * @param values Clave/valor con campos del formulario.
+   */
   setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
@@ -469,7 +485,12 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       },
     }));
   }
- public setFormExportor(values: { [key: string]: undefined | string }): void {
+
+  /**
+   * Actualiza los datos del formulario del exportador.
+   * @param values Clave/valor con campos del formulario.
+   */
+  public setFormExportor(values: { [key: string]: undefined | string }): void {
     this.update((state) => ({
       formExportor: {
         ...state.formExportor,
@@ -477,6 +498,10 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       },
     }));
   }
+  /**
+   * Actualiza los datos del formulario del destinatario.
+   * @param values Clave/valor con campos del formulario.
+   */
   public setFormDestinatario(values: { [key: string]: undefined | string }): void {
     this.update((state) => ({
       formDestinatario: {
@@ -512,6 +537,10 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       },
     }));
   }
+  /** @descripcion
+   * Actualiza los datos del formulario de exportador.
+   * @param values - Valores a actualizar en el formulario.
+   */
   setFormExportador(values: { [key: string]: unknown }): void {
     this.update((state) => ({
       formExportor: {
@@ -924,8 +953,10 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       optionsTipoFactura: tipoFactura,
     }));
   }
-
-
+  /**
+   * Actualiza los datos del formulario de destinatario.
+   * @param values - Valores a actualizar en el formulario.
+   */
   setformdestinatario(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDestinatario: {
@@ -935,6 +966,10 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     }));
   }
 
+  /** @descripcion
+   * Actualiza los datos del formulario de destinatario.
+   * @param values - Valores a actualizar en el formulario.
+   */
   setformDatosDelDestinatario(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
@@ -944,6 +979,10 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     }));
   }
 
+  /** @descripcion
+   * Actualiza los datos del formulario de exportador.
+   * @param values - Valores a actualizar en el formulario.
+   */
   setformExportor(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formExportor: {

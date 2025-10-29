@@ -244,7 +244,9 @@ export class CertificadoOrigenComponent
    */
   @ViewChild('certificadoDeOrigen')
   certificadoDeOrigen!: CertificadoDeOrigenComponent;
-  
+  /**
+   * Configuración de las columnas para la tabla de carga de mercancías.
+   */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
 
   /**
@@ -287,6 +289,11 @@ export class CertificadoOrigenComponent
    */
   idProcedimiento: number = IDPROCEDIMIENTO;
 
+  /**
+   * @property {Tramite110221State} certificadoState
+   * @description
+   * Estado del certificado de origen para el trámite 110221.
+   */
   private certificadoState!: Tramite110221State;
 
   /**
@@ -341,7 +348,6 @@ export class CertificadoOrigenComponent
      * Asignación de los observables que contienen los catálogos de estados y países.
      */
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
-    //  this.pais = this.tramiteQuery.paisBloques;
     this.datos1 = (
       this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>
     ).pipe(
@@ -366,7 +372,6 @@ export class CertificadoOrigenComponent
       .subscribe();
 
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
-    // this.paisOpcion();
   }
 
   /**
@@ -416,9 +421,9 @@ export class CertificadoOrigenComponent
    * Busca la mercancia y actualiza los datos en el store.
    */
   buscarrMercancia(): void {
-    // Get selected catalog values from the store state
+    // Obtener los valores del catálogo seleccionados del estado de la tienda
     const SELECTED_ESTADO = this.certificadoState?.estado;
-    const SELECTED_BLOQUE = this.certificadoState?.paisBloques; 
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
 
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
@@ -477,9 +482,7 @@ export class CertificadoOrigenComponent
             MAPPED_DATA
           );
         },
-        error: () => {
-          // this.toastr.error('Error al buscar Mercancia');
-        },
+       
       });
 
     this.mercanciasDisponibles = true;
@@ -601,9 +604,11 @@ validarFormulario(): boolean {
 }
 
 /**
- * Helper function to log field validation errors.
- * @param form - The form object containing fields to validate.
- */
+
+* Función auxiliar para registrar errores de validación de campos.
+* @param form - El objeto formulario que contiene los campos a validar.
+
+*/
 private logFieldErrors(form: FormGroup): void {
   if (!form || !form.controls) {
     console.error('Form object or controls are not available.');
