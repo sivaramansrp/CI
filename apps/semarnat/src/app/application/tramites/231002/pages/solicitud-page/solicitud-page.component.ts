@@ -13,12 +13,14 @@ import {
   MSG_REGISTRO_EXITOSO,
 } from '../../../231001/enum/enum-tramite';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import {
+  ES_PRIMERA_VEZ,
   PAGO_DE_DERECHOS,
   PASOS,
+  REQUIERE_EMPRESA_RECICLAJE,
   TRAMITE_ID,
 } from '../../constantes/aviso-retorno.enum';
+import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
@@ -383,7 +385,6 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     );
   }
 
- 
   /**
    * Genera el payload para guardar la solicitud basado en el estado actual.
    * @returns GuardarSolicitud231002Request con los datos estructurados para el guardado.
@@ -391,7 +392,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
   generarRequestGuardarSolicitud(): GuardarSolicitud231002Request {
     const DATOS = this.estadoSolicitud;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { solicitudForm,empresaReciclaje,empresaTransportista,lugarReciclaje,precaucionesManejo,residuos} = DATOS;
+    const {solicitudForm,empresaReciclaje,empresaTransportista,lugarReciclaje,precaucionesManejo,residuos} = DATOS;
 
     return {
       id_solicitud: DATOS.idSolicitud,
@@ -399,12 +400,14 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
       discriminator_value: Number(TRAMITE_ID),
       cve_rol_capturista: 'PersonaMoral',
       cve_usuario_capturista: 'AAL0409235E6',
-      boolean_generico: true, // boolean
+      boolean_generico: solicitudForm.ideGenerica1 === ES_PRIMERA_VEZ, // boolean (es primera vez)
+      descripcion_generica1: solicitudForm.descripcionGenerica1, //Giro del importador
       numero_registro_ambiental: solicitudForm.numeroRegistroAmbiental,
       descripcion_clob_generica2: Number(solicitudForm.domicilio), //Domicilio IMMEX
       descripcion_clob_generica1: precaucionesManejo.precaucionesManejo, // precauciones de manejo que se debe dar al residuo peligroso
       empresa_controladora:
-        empresaReciclaje.requiereEmpresa.toLowerCase() === 'si', // Requiere empresa retorno
+        empresaReciclaje.requiereEmpresa.toLowerCase() ===
+        REQUIERE_EMPRESA_RECICLAJE, // Requiere empresa retorno
       solicitante: {
         rfc: 'AAL0409235E6',
         nombre: 'IGNACIO EDUARDO',
@@ -458,6 +461,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
         numero_manifiesto: residuo.numeroManifiesto,
         tipo_contenedor: residuo.tipoContenedorCve,
         desc_otro_contenedor: residuo.tipoContenedorOtro,
+        desc_especie: residuo.desc_especie, // valores de los radios de "Tipo de residuo" que se selecciona
         capacidad: residuo.capacidad, //descripcionDenominacionEspecifica
         fraccion_name: residuo.fraccionDesc,
         nico_name: residuo.nicoDesc,
