@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-material-de-investigacion-cientifica.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * @descripcion
@@ -33,6 +34,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   indice: number = 1;
+
+  @ViewChild('solicitud', { static: false })
+  solicitudComponent: SolicitudComponent | undefined;
+
 
   /**
    * @descripcion
@@ -93,6 +98,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+    /**
+   * Valida todos los formularios en el componente.
+   * @returns si todos los formularios son válidos
+   */
+  validarTodosLosFormularios(): boolean {
+    if (this.indice >= 2 && this.solicitudComponent) {
+      this.solicitudComponent.marcarCamposComoTocados();
+      return this.solicitudComponent.validarFormulario();
+    }
+    
+    this.indice = 2;
+    return false;
   }
 
   /**
