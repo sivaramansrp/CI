@@ -212,16 +212,40 @@ export class Tramite260201Store extends Store<Tramite260201State> {
   }
 
   /**
-   * @method updateFabricanteTablaDatos
-   * @description Agrega nuevos fabricantes a la lista existente.
-   * @param {Fabricante[]} newFabricantes - Lista de nuevos fabricantes.
-   */
-  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
-    this.update((state) => ({
-      ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
-    }));
-  }
+     * @method updateFabricanteTablaDatos
+     * @description
+     * Agrega nuevos fabricantes a la tabla de datos de fabricantes.
+     *
+     * @param {Fabricante[]} newFabricantes
+     * Lista de nuevos fabricantes a agregar.
+     */
+    public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+      this.update((state) => {
+        const ACTUALIZADA = [...state.fabricanteTablaDatos];
+  
+        newFabricantes.forEach((nuevo) => {
+          if (!nuevo?.id) {
+            nuevo.id =
+              ACTUALIZADA.length > 0
+                ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+                : 1;
+          }
+  
+          const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+  
+          if (INDICE > -1) {
+            ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+          } else {
+            ACTUALIZADA.push(nuevo);
+          }
+        });
+  
+        return {
+          ...state,
+          fabricanteTablaDatos: ACTUALIZADA,
+        };
+      });
+    }
 
   /**
    * @method updateDestinatarioFinalTablaDatos
@@ -325,6 +349,18 @@ export class Tramite260201Store extends Store<Tramite260201State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
     }));
   }
 }

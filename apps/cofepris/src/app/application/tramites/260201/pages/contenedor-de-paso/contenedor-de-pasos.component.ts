@@ -4,13 +4,18 @@ import {
   DatosPasos,
   ListaPasosWizard,
   Notificacion,
+  RegistroSolicitudService,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
 import { MENSAJE_DE_VALIDACION, PASOS, TITULOMENSAJE } from '../../constants/psicotropicos-poretorno.enum';
+import { Tramite260201State, Tramite260201Store } from '../../estados/tramite260201Store.store';
+import { GuardarAdapter_260201 } from '../../adapters/guardar-payload.adapter';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
-import { Tramite260201State } from '../../estados/tramite260201Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
  * @component
@@ -85,6 +90,11 @@ export class ContenedorDePasosComponent implements OnInit {
   infoError = 'alert-danger text-center';
 
   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+  /**
    * @property {WizardComponent} wizardComponent
    * @description Referencia al componente del wizard.
    * Utilizado para manejar la navegación entre pasos.
@@ -151,7 +161,7 @@ export class ContenedorDePasosComponent implements OnInit {
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
 
-  constructor(private tramite260201Query: Tramite260201Query) {}
+  constructor(private tramite260201Query: Tramite260201Query, private tramite260201Store: Tramite260201Store, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
     this.tramite260201Query.selectTramiteState$.pipe().subscribe((data) => {
@@ -203,10 +213,48 @@ export class ContenedorDePasosComponent implements OnInit {
         return;
       }
 
-      this.esFormaValido = false;
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.siguiente();
+      const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if(shouldNavigate) {
+          if(esValidObject(response) && esValidObject(response.datos)) {
+            const DATOS = response.datos as { id_solicitud?: number };
+            if(getValidDatos(DATOS.id_solicitud)) {
+              this.tramite260201Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+            } else {
+              this.tramite260201Store.setIdSolicitud(0);
+            }
+          }
+          // Calcular el nuevo índice basado en la acción
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = e.valor + 1;
+          }
+          this.toastrService.success(response.mensaje);
+          if (indiceActualizado > 0 && indiceActualizado < 5) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            } else {
+              this.wizardComponent.atras();
+            }
+          }
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
     }else{
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
@@ -231,6 +279,22 @@ export class ContenedorDePasosComponent implements OnInit {
       default:
         return TITULOMENSAJE;
     }
+  }
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
   }
 
   /**

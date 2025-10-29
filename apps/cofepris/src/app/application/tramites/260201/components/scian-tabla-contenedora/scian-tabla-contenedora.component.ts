@@ -1,11 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+
 import { ID_PROCEDIMIENTO } from '../../constants/psicotropicos-poretorno.enum';
+import { ScianDataService } from '../../../../shared/services/scian-data.service';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
-import { ScianDataService } from '../../../../shared/services/scian-data.service';
-import { Subscription } from 'rxjs';
 
 /**
  * @component ScianTablaContenedoraComponent
