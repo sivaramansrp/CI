@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
-import { DestinatarioComponent as DestinatarioSharedComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 
-import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
+import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
+import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/detalles-del-transporte.component';
 
 /**
  * Componente para gestionar los datos del destinatario.
@@ -20,20 +20,20 @@ import { DetallesDelTransporteComponent } from '../../../../shared/components/de
  * como datos personales, direcciones, información representativa y detalles de transporte.
  */
 @Component({
-  selector: 'app-destinatario',
+  selector: 'app-destinatarios',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     DatosDelDestinatarioComponent,
-    DestinatarioSharedComponent,
     RepresentanteLegalExportadorComponent,
-    DetallesDelTransporteComponent
+    DetallesDelTransporteComponent,
+    DestinatarioComponent
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatariosComponent implements OnInit, OnDestroy {
 
 /**
  * Valores actuales del formulario de datos del destinatario.
@@ -63,7 +63,7 @@ soloLectura: boolean = false;
 /**
  * Referencia al componente hijo DestinatarioComponent
  */
-@ViewChild(DestinatarioSharedComponent) destinatarioRef!: DestinatarioSharedComponent;
+@ViewChild(DestinatarioComponent) destinatarioRef!: DestinatarioComponent;
 
 /**
  * Referencia al componente hijo RepresentanteLegalExportadorComponent
@@ -178,6 +178,22 @@ setValoresStoreTransporte(event: { formGroupName: string; campo: string; valor: 
   if (typeof METODO_STORE === 'function') {
     (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
   }
+}
+
+setFormValidaDatosDestinatario(esValido: boolean): void {
+  this.store.setFormValidity('datosDestinatario', esValido);
+}
+
+setFormValidaDestinatario(esValido: boolean): void {
+  this.store.setFormValidity('domicilioDestinatario', esValido);
+}
+
+setFormValidaRepresentanteLegal(esValido: boolean): void {
+  this.store.setFormValidity('datosRepresentante', esValido);
+}
+
+setFormValidaTransporte(esValido: boolean): void {
+  this.store.setFormValidity('detallesTransporte', esValido);
 }
 
 /**

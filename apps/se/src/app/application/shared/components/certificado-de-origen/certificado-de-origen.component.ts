@@ -626,18 +626,17 @@ export class CertificadoDeOrigenComponent
           [Validators.required, Validators.maxLength(30)],
         ],
         razonSocial: ['', Validators.required],
-        calle: ['', [Validators.required, Validators.maxLength(90)]],
-        numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
+        // calle: ['', [Validators.required, Validators.maxLength(90)]],
+        // numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
         // numeroLetras: ['', [Validators.required, Validators.maxLength(30)]],
-        pais: [''],
-        ciudad: ['', Validators.required],
-        lada: ['', Validators.required],
-        telefono: ['', Validators.required],
-        fax: [''],
-        correo: ['', Validators.required],
-        correoElectronico: [''],
-        domTercerOperador: [''],
-        mercanciasSeleccionadas: [this.guardarClicado || []],
+        // pais: [''],
+        // ciudad: ['', Validators.required],
+        // lada: ['', Validators.required],
+        // telefono: ['', Validators.required],
+        // fax: [''],
+        // correo: ['', Validators.required],
+        // correoElectronico: [''],
+        // domTercerOperador: [''],
         // Nuevos controles de formulario para el procedimiento 110222
         // calle1: ['', Validators.required],
         // numeroLetra1: ['', Validators.required],
@@ -646,6 +645,7 @@ export class CertificadoDeOrigenComponent
         // correo1: ['', Validators.required],
         // telefono1: [''],
         // fax1: [''],
+        mercanciasSeleccionadas: [this.guardarClicado || [], MERCANCIA_SELECCIONADAS_REQUIRED.includes(this.idProcedimiento) ? [matrizRequerida] : []],
       },
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
@@ -666,6 +666,17 @@ export class CertificadoDeOrigenComponent
 
     if (this.domicilio) {
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
+    }
+
+    if (this.domicilioTercer) {
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('lada', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('fax', new FormControl(''));
+      this.formCertificado.addControl('correo', new FormControl('', [Validators.required])); 
     }
 
     if (this.idProcedimiento === 110204) {
