@@ -1,18 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
+  PASOS,
+  Pedimento,
+} from '@ng-mf/data-access-user';
+
+import {
   DatosPasos,
   ListaPasosWizard,
   Notificacion,
-  PASOS,
-  Pedimento,
   WizardComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 
-/**
- * Texto de alerta para terceros.
- */
-const TERCEROS_TEXTO_DE_ALERTA =
-  'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -37,6 +35,13 @@ interface AccionBoton {
   styles: ``,
 })
 export class SolicitudPageComponent implements OnInit {
+
+    
+	/**
+   * Textos utilizados en el componente.
+   */
+  TEXTOS ='La solicitud ha quedado registrada con el número temporal 202767895. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.'
+
   /**
    * Indica si el modal debe estar oculto.
    * Se utiliza para controlar la visibilidad del modal en la interfaz de usuario.
@@ -63,11 +68,6 @@ export class SolicitudPageComponent implements OnInit {
    */
   cargarArchivo: boolean = false;
 
-  /**
-   * Texto de alerta para terceros.
-   * Este texto se muestra en la interfaz de usuario para informar a los usuarios sobre el estado de su solicitud.
-   */
-  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
    * Lista de pasos del asistente.

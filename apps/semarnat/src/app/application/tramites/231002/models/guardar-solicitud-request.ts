@@ -20,6 +20,8 @@ export interface GuardarSolicitud231002Request {
   cve_usuario_capturista: string;
   /** Campo booleano genérico para uso general. */
   boolean_generico: boolean;
+  /** Descripción genérica 1. (Giro del importador) */
+  descripcion_generica1: string;
   /** Número de registro ambiental asociado. */
   numero_registro_ambiental: string;
   /** Descripción genérica en formato CLOB 2. */

@@ -50,6 +50,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
      */
     @ViewChild(ContenedorDeDatosSolicitudComponent)
     contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+    @ViewChild(PagoDeDerechosContenedoraComponent)
+    pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+    @ViewChild(TercerosRelacionadosVistaComponent)
+    tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
    
   /**
    * @property destroyNotifier$
@@ -149,8 +155,12 @@ actualizarEstadoFormulario(DATOS: Tramite260210State): void {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
    validarPasoUno(): boolean {
+    const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
     return (
-      this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false
+      (esTabValido && esTercerosValido&& esPagoValido)? true : false
+
     );
   }
 

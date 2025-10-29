@@ -160,6 +160,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   public esFechaValida: boolean = true;
 
+  public isContinuarButtonClicked: boolean = false; 
+
   /**
    * Estado actual de la solicitud, obtenido del store.
    * @type {PagoDerechosState}
@@ -402,6 +404,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     )(VALOR);
   }
 
+
+  formularioSolicitudValidacion(): boolean {
+    this.isContinuarButtonClicked = true;
+    
+    const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
+    const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
+    const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
+    const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
+    const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    
+    const ALL_FIELDS_VALID = (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) && 
+                            (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) && 
+                            (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) && 
+                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null) && 
+                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null);
+    
+    if (ALL_FIELDS_VALID) {
+      this.isContinuarButtonClicked = false;
+      return true;
+    }
+    
+    this.pagoDerechosForm.markAllAsTouched();
+    
+    
+    
+    return false;
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * Se encarga de liberar las suscripciones para evitar fugas de memoria.

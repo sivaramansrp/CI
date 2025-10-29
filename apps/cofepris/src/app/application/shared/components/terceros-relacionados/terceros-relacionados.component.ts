@@ -310,6 +310,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
     public proveedorSeleccionadoParaModificar: Proveedor[] = [];
+    /**
+ * Identificador del trámite asociado.
+ * Se recibe como propiedad de entrada desde el componente padre.
+ */
+@Input() tramiteID: string = '';
   /**
    * Constructor del componente.
    *
@@ -939,6 +944,25 @@ cerrarFacturadorModal(): void {
     this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
     this.eliminarFacturadorAlerta = true;
     this.eliminarAlerta = true;
+  }
+
+  formularioSolicitudValidacion(): boolean {
+    const IS_DESTINATARIO_REQUERIDO = !this.esCampoRequerido('DestinatarioFinal');
+    
+    var IS_DESTINATARIO_DATOS = true;
+    
+    if(IS_DESTINATARIO_REQUERIDO && this.destinatarioFinalTablaDatos.length === 0){
+
+      IS_DESTINATARIO_DATOS = false;
+    }
+    
+    if(IS_DESTINATARIO_DATOS === true){
+
+return true;
+    }
+  this.isContinuarButtonClicked = true;
+  return false;
+   
   }
 
   /**
