@@ -159,7 +159,7 @@ export function createChoferState(): Choferesnacionales40102State {
     segundoApellido: '',
     solicitudeId: '',
     isShowDirector: false,
-    codigo: '0',
+    codigo: '00',
     cadenaOriginal: '',
     catErrorMessage: '',
     isCaat: false,

@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
-
+import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 
 export interface Certificado {
   certSerialNumber: string;
@@ -83,6 +83,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogosService,
     private chofer40101Query: Chofer40101Query,
     private modificarTerrestreService: modificarTerrestreService,
+    private NOTIF: NotificacionesService
   ) { }
   /**
    * 
@@ -119,6 +120,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       certificate_serial_number: event ? event.certSerialNumber : '',
       solicitudId: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
+      if (res.codigo !== '00') {
+        this.NOTIF.showNotification({
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          mensaje: res.mensaje ? res.mensaje : '',
+          titulo: 'Error',
+          modo: '',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        });
+      }
       this.isLoading = false
       if (Number(res.codigo) === 0) {
         this.acuseDocumentos = [

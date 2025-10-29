@@ -32,7 +32,7 @@ import { DocumentoDetalle, IniciarResponse } from '../../../40101/pages/solicita
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
-
+import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 /**
  * Interfaz que define la estructura de un objeto de acción de botón para la navegación del wizard.
  *
@@ -330,6 +330,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     private chofer40102Query: Chofer40102Query,
     private chofer40102Store: Chofer40102Store,
     private modificarTerrestreService: modificarTerrestreService,
+    private NOTIF: NotificacionesService
   ) { }
 
   /**
@@ -383,7 +384,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     //   .subscribe();
 
     this.chofer40102Query.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data: Choferesnacionales40102State) => {
-      this.isCaat = data.codigo !== '0' ? true : false;
+      this.isCaat = data.codigo !== '00' ? true : false;
       this.catErrorMessage = data.catErrorMessage;
     });
 
@@ -509,6 +510,20 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         }
       }
       this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
+        this.isLoading = false
+
+        if (res.codigo !== '00') {
+          this.NOTIF.showNotification({
+            tipoNotificacion: 'toastr',
+            categoria: 'danger',
+            mensaje: res.mensaje ? res.mensaje : '',
+            titulo: 'Error',
+            modo: '',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: 'Cancelar',
+          });
+        }
         // this.chofer40101Service.guardarDatosFirma(res.datos);
         (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res?.datos?.cadena_original ?? '');
         (this.chofer40102Store['setSolicitudeId'] as (valor: unknown) => void)(res?.datos?.id_solicitud);
@@ -535,12 +550,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
           this.pasos = PASOS.slice(0, 1)
         }
         if (!this.isExtrajero) {
-          if (e.valor > 0 && e.valor < 6) {
-            this.indice = e.valor;
-            this.wizardComponent.siguiente();
+          if (res.codigo === '00') {
+            if (e.valor > 0 && e.valor < 6) {
+              this.indice = e.valor;
+              this.wizardComponent.siguiente();
+            }
           }
         }
-        this.isLoading = false
 
       });
 

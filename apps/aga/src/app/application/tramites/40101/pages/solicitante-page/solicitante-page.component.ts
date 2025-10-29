@@ -11,7 +11,7 @@ import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { DirectorGeneralQuery } from '../../estado/director-general.query';
 import { Chofer40101Store } from '../../estado/chofer40101.store';
-
+import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -189,7 +189,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     private chofer40101Query: Chofer40101Query,
     private directorQuery: DirectorGeneralQuery,
     private chofer40101Service: Chofer40101Service,
-    private chofer40101Store: Chofer40101Store
+    private chofer40101Store: Chofer40101Store,
+    private NOTIF: NotificacionesService
   ) { }
 
   ngOnInit(): void {
@@ -390,6 +391,18 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         };
 
         this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
+          if (res.codigo !== '00') {
+            this.NOTIF.showNotification({
+              tipoNotificacion: 'toastr',
+              categoria: 'danger',
+              mensaje: res.mensaje ? res.mensaje : '',
+              titulo: 'Error',
+              modo: '',
+              cerrar: true,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: 'Cancelar',
+            });
+          }
           this.chofer40101Service.guardarDatosFirma({
             id_solicitud: res.datos?.id_solicitud ?? 0,
             cadena_original: res.datos?.cadena_original ?? '', // Add appropriate value if available
@@ -421,9 +434,11 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
             this.pasos = PASOS.slice(0, 1)
           }
           if (!this.isExtrajero) {
-            if (e.valor > 0 && e.valor < 6) {
-              this.indice = e.valor;
-              this.wizardComponent.siguiente();
+            if (res.codigo === '00') {
+              if (e.valor > 0 && e.valor < 6) {
+                this.indice = e.valor;
+                this.wizardComponent.siguiente();
+              }
             }
           }
 

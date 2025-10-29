@@ -9,6 +9,7 @@ import { Certificado } from '../../../40101/pages/paso-dos/paso-dos.component';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { Chofer40102Query } from '../../estados/chofer40102.query';
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
+import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -73,7 +74,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$ = new Subject<void>();
 
-  constructor(private catalogosServices: CatalogosService, private modificarTerrestreService: modificarTerrestreService, private chofer40102Query: Chofer40102Query) { }
+  constructor(private catalogosServices: CatalogosService, private modificarTerrestreService: modificarTerrestreService, private chofer40102Query: Chofer40102Query
+    , private NOTIF: NotificacionesService
+  ) { }
   /**
    * 
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
@@ -115,6 +118,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       id_solicitud: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
       this.isLoading = false
+      if (res.codigo !== '00') {
+        this.NOTIF.showNotification({
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          mensaje: res.mensaje ? res.mensaje : '',
+          titulo: 'Error',
+          modo: '',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        });
+      }
       if (Number(res.codigo) === 0) {
         this.acuseDocumentos = [
           {
