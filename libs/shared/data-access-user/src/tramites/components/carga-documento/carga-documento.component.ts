@@ -222,10 +222,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['idTipoTRamite'] && this.idTipoTRamite) {
+    if (changes['idTipoTRamite'] && this.idTipoTRamite && this.idTipoTRamite !== 'requerimiento') {
       this.getDocumentosDesdeSolicitud();
       this.getDocumentosDesdeSolicitudOpcionales();
-    } else {
+    } else if (!this.idTipoTRamite) {
       this.getListaDocumentoObligatorios();
       this.getListaDocumentoOpcionales();
     }

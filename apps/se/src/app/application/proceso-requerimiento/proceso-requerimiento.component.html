@@ -35,7 +35,8 @@
     }
 
     @if(indice === 2) {
-       <app-paso-carga-documento
+       <app-paso-carga-documento 
+        [idTipoTRamite]="'requerimiento'"
         [cargaArchivosEvento]="cargarArchivosEvento"
         (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
         (reenviarCargaRealizada)="cargaRealizada($event)"
