@@ -337,7 +337,8 @@
           [datoSeleccionado]="proveedorSeleccionadoParaModificar"
           (updateProveedorTablaDatos)="onProveedorUpdated($event)"
           (cancelarmodal)="cerrarProveedorModal()"
-          (guardarYSalir)="cerrarProveedorModal()">
+          (guardarYSalir)="cerrarProveedorModal()"
+          [tramiteID]="tramiteID">
         </app-agregar-proveedor>
       </div>
     </div>

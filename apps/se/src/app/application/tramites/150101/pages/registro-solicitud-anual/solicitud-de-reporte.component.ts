@@ -1,4 +1,4 @@
-import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
+import { ALERTA_COM, ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { Component } from '@angular/core';
 import { DatosComponent} from '../datos/datos.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
@@ -47,6 +47,11 @@ interface AccionBoton {
  * utilizando un asistente (wizard) para navegar entre los diferentes pasos.
  */
 export class SolicitudDeReporteComponent {
+
+   /**
+     * Constante que asigna el texto de alerta definido en `ALERTA_COM`.
+     */
+    TEXTOSR = ALERTA_COM;
   /**
    * Referencia al componente del asistente (wizard) utilizado en este componente.
    * 
@@ -128,70 +133,20 @@ export class SolicitudDeReporteComponent {
     txtBtnSig: 'Continuar',
   };
 
-  /**
-   * Método que actualiza el índice del paso actual basado en la acción del botón.
-   * 
-   * @param {AccionBoton} e - Objeto que contiene la acción ('cont' para continuar, 'atras' para retroceder) y el valor del índice del paso.
-   * @returns {void}
+ /**
+   * Updates the index value based on the action button event.
+   * @param e The action button event containing the action and value.
    */
-  getValorIndice(e: AccionBoton): void {
-  if (e.accion === 'cont') {
-    let noError=0;
-    if (this.indice === 1 ) {
-      noError = this.pasoUnoComponent.validarTodosLosFormularios();
-    }
-    if (noError===1) {
-      this.esFormaValido = true;
-      this.esFormaValidoDos = false;
-      this.esFormaValidoTres = false;
-      this.esFormaValidoCuatro = false;
-      this.datosPasos.indice = this.indice;
-      return;
-    }
-    else if (noError===2) {
-      this.esFormaValidoDos = true;
-      this.esFormaValido = false;
-      this.esFormaValidoTres = false;
-      this.esFormaValidoCuatro = false;
-      this.datosPasos.indice = this.indice;
-      return;
-    }
-    else if (noError===3) {
-      this.esFormaValidoTres = true;
-      this.esFormaValidoDos = false;
-      this.esFormaValido = false;
-      this.esFormaValidoCuatro = false;
-      this.datosPasos.indice = this.indice;
-      return;
-    }
-    else if (noError===4) {
-      this.esFormaValidoCuatro = true;
-      this.esFormaValidoTres = false;
-      this.esFormaValidoDos = false;
-      this.esFormaValido = false;
-      this.datosPasos.indice = this.indice;
-      return;
-    }
-    else if(noError===5) {
-      this.esFormaValido = false;
-      this.esFormaValidoDos = false;
-      this.esFormaValidoTres = false;
-      this.esFormaValidoCuatro = false;
-      this.datosPasos.indice = this.indice;
-      
-      return;
-    }
-      this.esFormaValido = false;
-      this.esFormaValidoDos = false;
-      this.esFormaValidoTres = false;
-      this.esFormaValidoCuatro = false;
-    this.esFormaValido = false;
+  public getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;
-      this.datosPasos.indice = this.indice;    
-    
-      this.wizardComponent.siguiente();
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
-}
  /**
    * Método que se ejecuta cuando cambia de tab en paso-uno.
    * Oculta el mensaje de error de validación.
