@@ -34,11 +34,12 @@ import {
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
 import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
+import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -1037,7 +1038,7 @@ private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): 
       case 260201:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia'];
-        this.elementosRequeridos = ['calle', 'numeroExterior'];
+        this.elementosRequeridos = [];
         break;
       case 260219:
         this.elementosRequeridos = ['calle', 'numeroExterior'];
@@ -1071,6 +1072,11 @@ private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): 
    */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
+    this.agregarDestinatarioFinal.markAsUntouched();
+    this.agregarDestinatarioFinal.markAsPristine();
+    this.agregarDestinatarioFinal.disable();
+    this.estaDeshabilitadoDesplegable=true;
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar
@@ -1187,11 +1193,14 @@ changeNacionalidad(): void {
           this.agregarDestinatarioFinal.get(controlName)?.enable();
         }
       });
-      
+
       if (!this.isEditMode) {
         this.agregarDestinatarioFinal.patchValue({
           pais: 2
         });
+      }
+        if(this.idProcedimiento === 260201){
+        this.agregarDestinatarioFinal.get('pais')?.disable();
       }
     }
   }
