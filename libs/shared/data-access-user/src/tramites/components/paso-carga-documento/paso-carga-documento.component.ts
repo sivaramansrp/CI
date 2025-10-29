@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { TEXTOS } from '../../../core/enums/constantes-alertas.enum';
 import { TituloComponent } from '../../components/titulo/titulo.component';
 import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
+
+import { DocumentoRequerimiento } from '../../../core/models/iniciar-atender-requerimiento.model';
 /**
  * Este componente se muestra en Paso Carga Documento
  */
@@ -106,7 +108,11 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy, OnChanges
    */
   datosUsuario: Usuario = USUARIO_INFO;
 
+  /** Carga progreso del archivo */
   @Output() cargaEnProgreso = new EventEmitter<boolean>();
+
+  /** Documentos adicionales que pueden ser cargados */
+  @Input() documentosAdicionales: DocumentoRequerimiento[] = [];
 
   /**
    * Constructor del componente.
