@@ -129,8 +129,11 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   */
   datosTabla: BodyTablaResolucion[] = [];
 
-
-  tramitesDocumentosResolucion = [130102];
+  /**
+   * Arreglo que contiene los números de trámite que requieren documentos de resolución.
+   * Se deberá añadir un número de trámite a este arreglo si es necesario mostrar documentos de resolución para ese trámite.
+   */
+  tramitesDocumentosResolucion = ['130102'];
 
 
   /**
@@ -177,6 +180,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       )
       .subscribe()
     this.getConfirmarNotificacion();
+    this.obtenerAcusesRecibos();
   }
 
   /**
@@ -454,7 +458,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    * Obtiene los acuses y recibos relacionados con la resolución.
    */
   obtenerAcusesRecibos(): void {
-    if (this.tramitesDocumentosResolucion.indexOf(Number(this.guardarDatos.procedureId)) !== -1) {
+    if (this.tramitesDocumentosResolucion.includes(this.guardarDatos.procedureId)){
       this.confirmarNotificacionService.getAcusesRecibos(this.guardarDatos.procedureId, this.guardarDatos.folioTramite).subscribe({
       next: (data) => {
         if (data?.codigo === "00" && data?.datos) {
