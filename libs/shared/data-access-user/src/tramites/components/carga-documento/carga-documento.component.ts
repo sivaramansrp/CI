@@ -42,6 +42,8 @@ import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { DocumentoRequerimiento } from '../../../core/models/iniciar-atender-requerimiento.model';
+
 @Component({
   selector: 'carga-documento',
   standalone: true,
@@ -164,6 +166,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   listDocOpcionalesAgregar: number[] = [];
 
+  /** Documentos adicionales que pueden ser cargados */
+  @Input() documentosAdicionales: DocumentoRequerimiento[] = [];
+
   /**
    * @description Estado de los documentos.
    * @type {DocumentosState}
@@ -220,9 +225,13 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
       this.getDocumentosDesdeSolicitud();
       this.getDocumentosDesdeSolicitudOpcionales();
-    }else{
+    } else {
       this.getListaDocumentoObligatorios();
-        this.getListaDocumentoOpcionales();
+      this.getListaDocumentoOpcionales();
+    }
+
+    if (changes['documentosAdicionales'] && this.documentosAdicionales?.length > 0) {
+      this.setDocumentosAdicionales();
     }
   }
 
@@ -329,6 +338,28 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
   }
+
+  /**
+   * Agrega documentos adicionales al catálogo de documentos obligatorios.
+   * @description Esta función agrega documentos adicionales al catálogo de documentos obligatorios si existen.
+   */
+  setDocumentosAdicionales(): void {
+  if (this.documentosAdicionales && this.documentosAdicionales.length > 0) {
+    this.documentosAdicionales.forEach((documento) => {
+      this.catalogoDocumentosObligatorios.push({
+        id_tipo_documento: documento.id_tipo_documento ?? 0,
+        tipo_documento: documento.tipo_documento,
+        tamanio_maximo: 10,
+        ide_rango_resolucion_imagen: '150',
+        adicionales: [],
+        cargado: false,
+        error: [],
+      });
+    });
+    this.actualizarEstadoBotonCargarArchivos();
+  }
+}
+
 
   /**
    * Maneja la carga de un documento.
