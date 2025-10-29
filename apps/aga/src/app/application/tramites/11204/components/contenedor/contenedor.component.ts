@@ -2,10 +2,10 @@ import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo, RespuestaCatalog } fro
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
+import { ConsultaioQuery, ConsultaioState,convertDate } from '@ng-mf/data-access-user';
+import { FECHA_INGRESO, VIGENCIA,SearchType } from '../../enums/datos-tramite.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil,tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Modal } from 'bootstrap';
@@ -13,6 +13,10 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 import moment from 'moment';
+import {
+    SolicitanteService
+} from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -34,6 +38,11 @@ import moment from 'moment';
   providers: [BsModalService]
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
+
+  @Input() RFC: string = 'LEQI8101314S7';
+
+  rfc_original: string = "";
+
   /**
    * Formulario principal de la solicitud.
    */
@@ -246,6 +255,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitanteServicio: SolicitanteService
+
   ) {
     this.aduana = {
       catalogos: [],
@@ -295,7 +306,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
-    this.loadDatosTablaData();
+    // this.loadDatosTablaData();
   }
 
   /**
@@ -305,6 +316,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  getDatosGenerales(RFC: string): void {
+        this.solicitanteServicio
+            .getDatosGeneralesAPI(RFC)
+            .pipe(
+                tap((response: any) => {
+                    if (response) {
+                        this.rfc_original = response.datos.rfc_original
+                    }
+                })
+            )
+            .subscribe();
+    }
 
   /**
    * Inicializa el formulario reactivo.
@@ -526,7 +550,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
-      this.agregarSolicitud();
+       const API_PAYLOAD = {
+            "rfc": this.rfc_original,
+            "aduana": ADUANA,
+            "fecha_ingreso": convertDate(FECHAINGRESO),
+            "iniciales_contenedor": INICIALESCONTENEDOR,
+            "numero_contenedor": NUMEROCONTENEDOR,
+            "digito_verificador": VIGENCIA,
+            "tipo_contenedor": CONTENEDORES
+        }
+      this.agregarSolicitud(API_PAYLOAD);
     }
   }
 
@@ -539,23 +572,23 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
     if (FILE) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
-        this.mostrarArchivoSeleccionadoTable = true;
-      };
-      READER.readAsText(FILE);
-    }
-    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      const formData = new FormData();
+            formData.append('archivo', FILE);
+            formData.append('rfc', this.rfc_original);
+            formData.append('aduana', this.solicitudForm.get('aduanaMenuDesplegable')?.value);
+            formData.append('fingreso', convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
+
+             this.datosTramiteService.fileUpload(formData).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
-        if (respuesta?.success) {
+     if (respuesta?.codigo === '00') {
           respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
           this.datosDelCsvArchivo.push(respuesta.datos);
           (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
         }
       }
     );
+    }
+   
   }
 
   /**
@@ -599,12 +632,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Agregar solicitud.
    */
-  agregarSolicitud(): void {
-      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+  agregarSolicitud(payload: any): void {
+      this.datosTramiteService.agregarSolicitud(payload).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
-          this.datosDelContenedor.push(respuesta.datos);
+          this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
@@ -630,9 +663,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public fetchgetaduanaLista(): void {
     this.datosTramiteService
-      .getAduanaLista('aduanaLista')
+      .getAduanaLista()
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
-        this.catalogoList = respuesta.data;
+        this.catalogoList = respuesta.datos;
       });
   }
 
@@ -663,5 +696,93 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   continuar(): void {
     this.continuarEvento.emit('');
   }
+  
+    /**
+     * Guarda la solicitud actual de trámite 11201.
+     *
+     * Selecciona la fuente de datos de contenedores según el valor del campo
+     * "tipoBusqueda" del formulario (puede ser 'Contenedor', 'Archivo CSV' o
+     * 'No. de Manifiesto') y normaliza cada entrada:
+     *  - convierte `existe_en_vucem` de 'Sí'/'No' a booleano,
+     *  - concatena " 00:00:00" a los campos `vigencia` y `fecha_inicio`.
+     *
+     * Construye un payload con:
+     *  - id_solcitud: tomado de `this.solicitud11201State.idSolicitud` o `null`,
+     *  - solicitante: objeto con `rfc` tomado de `this.rfc_original` y demás campos
+     *    de metadatos del solicitante,
+     *  - contenedores: arreglo normalizado según la búsqueda seleccionada.
+     *
+     * Envía el payload a `datosTramiteService.solicitudGuardar(...)` y se suscribe
+     * al observable usando `takeUntil(this.destroyNotifier$)` para manejar el
+     * ciclo de vida del componente. Si la respuesta tiene `codigo === '00'`:
+     *  - actualiza el estado del store con el id de solicitud recibido
+     *    (`this.tramite11201Store.setIdSolicitud(...)`) y
+     *  - invoca `this.continuar()` para avanzar el flujo del trámite.
+     *
+     * Observaciones y efectos secundarios:
+     *  - Modifica el estado del store y puede provocar navegación o cambios en UI
+     *    mediante `continuar()`.
+     *  - No devuelve valor (void). Los errores de la petición deben manejarse
+     *    externamente o ampliando la suscripción para capturar errores.
+     *
+     * @remarks
+     * Este método depende de:
+     *  - `this.solicitudForm` (campo 'tipoBusqueda'),
+     *  - las fuentes de datos `this.datosDelContenedor`, `this.datosTabla`,
+     *    `this.datosTablaManifest`,
+     *  - `this.rfc_original`, `this.solicitud11201State`,
+     *  - `this.datosTramiteService`, `this.tramite11201Store` y `this.continuar()`.
+     *
+     * @returns void
+     */
+
+    solicitudGuardar(): void {
+        const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value as SearchType;
+        const normalize = (item: any) => ({
+            ...item,
+            existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+            vigencia: item.vigencia ? `${item.vigencia} 00:00:00` : item.vigencia,
+            fecha_inicio: item.fecha_inicio ? `${item.fecha_inicio} 00:00:00` : item.fecha_inicio
+        });
+
+        let contenedores: any[] = [];
+
+        switch (TIPO_BUSQUEDA) {
+            case SearchType.Contenedor:
+                contenedores = this.datosDelContenedor.map(normalize);
+                break;
+            case SearchType.ArchivoCsv:
+                contenedores = this.datosDelCsvArchivo.map(normalize);
+                break;
+            default:
+                contenedores = [];
+        }
+
+        const PAYLOAD = {
+            "id_solcitud": this.solicitud11204State.idSolicitud || null,
+            "solicitante": {
+                "rfc": this.rfc_original,
+                "nombre": "Juan Pérez",
+                "es_persona_moral": true,
+                "certificado_serial_number": "string"
+            },
+            "contenedores": contenedores
+        }
+        this.datosTramiteService
+            .solicitudGuardar(PAYLOAD)
+            .pipe(takeUntil(this.destroyNotifier$)
+
+            )
+            .subscribe(
+                (respuesta) => {
+                    // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
+                    if (respuesta?.codigo === '00') {
+                        this.Tramite11204Store.setIdSolicitud(respuesta.datos.id_solicitud);
+                        this.continuar();
+                    }
+                }
+            );
+    }
+
 
 }

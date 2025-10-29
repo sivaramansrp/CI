@@ -14,3 +14,8 @@ export const ANEXAR = {
 export const CARGAR = {
     label: 'Cargar pago'
 }
+export enum SearchType {
+    Contenedor = 'Contenedor',
+    ArchivoCsv = 'Archivo CSV',
+    NoManifiesto = 'No. de Manifiesto'
+  }
