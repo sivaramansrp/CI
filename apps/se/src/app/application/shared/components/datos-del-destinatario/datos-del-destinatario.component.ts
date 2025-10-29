@@ -121,6 +121,7 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
+    this.applyNumeroRegistroFiscalValidation();
     this.inicializarEstadoFormulario();
   }
 
@@ -189,7 +190,7 @@ export class DatosDelDestinatarioComponent
         return;
     }
 
-    if (this.idProcedimiento === 110205) {
+    if (this.idProcedimiento === 110205 || this.idProcedimiento === 110223) {
         NUMERO_REGISTRO_FISCAL.setValidators([
             Validators.required,
             Validators.maxLength(30),

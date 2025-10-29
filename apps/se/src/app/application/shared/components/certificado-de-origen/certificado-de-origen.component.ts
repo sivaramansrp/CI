@@ -249,7 +249,6 @@ export class CertificadoDeOrigenComponent
    * @type {boolean}
    */
   @Input() mercanciasDisponiblesTabla!: boolean;
-
   /**
    * @property {number} idProcedimiento
    * @description
