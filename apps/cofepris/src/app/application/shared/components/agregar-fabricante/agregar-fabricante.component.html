@@ -1,68 +1,32 @@
+
 <div class="mt-4">
+  <div class="row">
+    <div class="col-md-12">
   <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.id; else agregarFabricante"
     titulo="Modificar fabricante"
   ></ng-titulo>
-
   <ng-template #agregarFabricante>
     <ng-titulo titulo="Agregar fabricante"></ng-titulo>
   </ng-template>
+  </div>
+  </div>
+  <div class="row">
   <form [formGroup]="agregarFabricanteForm">
-    <!-- Datos Generales -->
     <h4>Datos generales</h4>
     <div class="row">
       <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad*:</label>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="nacionalidad"
-            [value]="nacionalStr"
-            (change)="changeNacionalidad()"
-          />
-          Nacional
-        </div>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="nacionalidad"
-            value="Extranjero"
-            (change)="changeNacionalidad()"
-          />
-          Extranjero
-        </div>
+        <label class="form-label">Terceros nacionalidad<span [ngClass]="agregarFabricanteForm.controls['nacionalidad'].errors?.['required'] && agregarFabricanteForm.controls['nacionalidad'].touched ? 'text-danger' : ''">*</span>:</label>
+     <app-input-radio  [radioOptions]="losDatos" [selectedValue]="agregarFabricanteForm.get('nacionalidad')?.value" [isRequired]="true"
+        [layout]="'vertical'" formControlName="nacionalidad" (change)="changeNacionalidad()" ></app-input-radio>
           <div *ngIf="chequeoValidacionAlGuardar && esInvalido('nacionalidad')" class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Tipo persona*:</label>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.FISICA"
-            (change)="changeTipoPersona()"
-             />
-          Física
-          <span
-            tooltip="Una persona física es entendida como toda persona con una actividad específica"
-            ><i class="bi bi-question-circle-fill"></i
-          ></span>
-        </div>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.MORAL"
-            (change)="changeTipoPersona()"
-          />
-          Moral
-          <span
-            tooltip="Una persona moral es entendida como una empresa con una actividad específica"
-            ><i class="bi bi-question-circle-fill"></i
-          ></span>
-        </div>
+        <label class="form-label">Tipo persona<span [ngClass]="agregarFabricanteForm.controls['tipoPersona'].errors?.['required'] && agregarFabricanteForm.controls['tipoPersona'].touched ? 'text-danger' : ''">*</span>:</label>
+         <app-input-radio  [radioOptions]="losDatosTipoPersona" [selectedValue]="agregarFabricanteForm.get('tipoPersona')?.value" [isRequired]="true"
+        [layout]="'vertical'" formControlName="tipoPersona" [showTooltip]="true"  [disableLabel]="disableLabel"></app-input-radio>
           <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
@@ -81,8 +45,7 @@
       </div>
     </div>
 
-    @if( agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr ||
-  idProcedimiento === 260904){
+    @if( agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched ? 'text-danger' : ''">*</span>:</label>
@@ -750,8 +713,8 @@
       </div>
     </div>
   </form>
+  </div>
 </div>
-
 @if (nuevaNotificacion) {
 <section>
   <lib-notificaciones

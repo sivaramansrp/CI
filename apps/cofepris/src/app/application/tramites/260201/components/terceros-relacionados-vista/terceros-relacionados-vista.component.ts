@@ -163,6 +163,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
+  onFabricantesChange(event:any):void{
+    console.log(event,"event fabricantes");
+
+  }
+  onDestinatariosChange(event:any):void{
+    console.log(event,"event destinatarios");
+  }
+  onProveedoresChange(event:any):void{
+    console.log(event,"event proveedores");
+  }
+  onFacturadoresChange(event:any):void{
+    console.log(event,"event facturadores");
+  }
+
    /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *

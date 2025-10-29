@@ -949,7 +949,7 @@ cerrarFacturadorModal(): void {
   formularioSolicitudValidacion(): boolean {
     const IS_DESTINATARIO_REQUERIDO = !this.esCampoRequerido('DestinatarioFinal');
     
-    var IS_DESTINATARIO_DATOS = true;
+    let IS_DESTINATARIO_DATOS = true;
     
     if(IS_DESTINATARIO_REQUERIDO && this.destinatarioFinalTablaDatos.length === 0){
 
