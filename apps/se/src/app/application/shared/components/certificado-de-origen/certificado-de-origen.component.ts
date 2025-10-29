@@ -257,11 +257,11 @@ export class CertificadoDeOrigenComponent
   @Input() idProcedimiento!: number;
 
   /**
-   * @property {number} procedimiento110223
+   * @property {number} PROCEDIMIENTO110223
    * @description
    * Constante que contiene el ID del procedimiento 110223 para usar en el template en lugar de valores hardcodeados.
    */
-  readonly procedimiento110223 = PROCEDIMIENTO_110223;
+  PROCEDIMIENTO110223 = PROCEDIMIENTO_110223;
 
   /**
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.
