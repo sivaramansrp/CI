@@ -13,6 +13,7 @@
             name="clasificacionProducto"
             [placeholder]="'Selecciona una opción'"
             [markTouched]="mercanciaForm.get('clasificacionProducto')?.touched??false"
+           (selectionChange)="onCambioClasificacionProducto($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -265,7 +266,7 @@
           [label]="'Estado físico'"
           [required]="true"
           name="estadoFisico"
-            [placeholder]="'Selecciona una opción'"
+          [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -567,7 +568,8 @@
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
           name="cantidadUmc"
-            [placeholder]="'Selecciona una opción'"
+
+
         ></app-catalogo-select>
       </div>
     </div>

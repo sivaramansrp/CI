@@ -35,6 +35,10 @@
         Favor de verificar los campos que marcan error
       </div>
       }
+      @if(esFormaValido){
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div> }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
@@ -49,12 +53,10 @@
       } @case (2) { 
          <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110219" [procedureUrl]="'certificado/solicitud'"></paso-firma>
       } }
-      @if (nombre === 1) {
       <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
-      }
     </div>
   </div>
 </div>

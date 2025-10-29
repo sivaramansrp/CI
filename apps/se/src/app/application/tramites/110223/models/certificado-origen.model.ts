@@ -66,14 +66,15 @@ export interface GrupoDeDirecciones {
  */
 export interface GrupoRepresentativo {
   lugar: string;
-  nombreExportador: string;
+  nombre: string;
   empresa: string;
   cargo: string;
-  lada: string;
+  registroFiscal: string;
+  correo: string;
   telefono: string;
   fax: string;
-  correoElectronico: string;
 }
+
 /**
  * Representa los datos del grupo de transporte.
  */

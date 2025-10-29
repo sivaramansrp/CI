@@ -57,6 +57,8 @@ import {
   FECHA_DE_CADUCIDAD_PAGO,
   FECHA_DE_FABRICACIO_PAGO,
 } from '../../models/terceros-relacionados.model';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { CatalogoServices } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
@@ -420,7 +422,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
-  
+  /**
+   * @property {Subscription} subscription
+   * @description Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
+   * Se inicializa como una nueva instancia de Subscription y se utiliza para evitar fugas de memoria.
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para cancelar suscripciones activas al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
@@ -432,43 +446,44 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private catalogoService: CatalogoServices
   ) {
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'clasificacionProductoDatos',
-      '/cofepris/mercanciaClasificacionProducto.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'especificarClasificacionProductoDatos',
-      '/cofepris/especificarClasificacionProducto.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'tipoProductoDatos',
-      '/cofepris/tipoProductoDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'formaFarmaceuticaDatos',
-      '/cofepris/formaFarmaceutica.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'estadoFisicoDatos',
-      '/cofepris/estadoFisicoDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'cantidadUmcDatos',
-      '/cofepris/cantidadUmcDatos.json'
-    );
-     this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'fraccionArancelariaDatos',
-      '/cofepris/cantidadUmcDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'clasificacionProductoDatos',
+    //   '/cofepris/mercanciaClasificacionProducto.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'especificarClasificacionProductoDatos',
+    //   '/cofepris/especificarClasificacionProducto.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'tipoProductoDatos',
+    //   '/cofepris/tipoProductoDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'formaFarmaceuticaDatos',
+    //   '/cofepris/formaFarmaceutica.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'estadoFisicoDatos',
+    //   '/cofepris/estadoFisicoDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'cantidadUmcDatos',
+    //   '/cofepris/cantidadUmcDatos.json'
+    // );
+    //  this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'fraccionArancelariaDatos',
+    //   '/cofepris/cantidadUmcDatos.json'
+    // );
 
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
       this.idProcedimiento
@@ -574,10 +589,113 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * Llama al método `crearMercanciaForm` para construir el formulario.
    */
   ngOnInit(): void {
+    this.inicializarCatalogo(String(this.idProcedimiento));
     this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
+  }
+
+  /**
+   * Maneja el cambio de clasificación de producto.
+   * Actualiza el valor en el formulario y carga el catálogo de especificar clasificación de producto.
+   *
+   * @param event - Objeto con el valor seleccionado de clasificación de producto.
+   */
+  onCambioClasificacionProducto(event: any): void {
+    const CLASIFICACION_SELECCIONADA = event.clave;
+    this.mercanciaForm
+      .get('clasificacionProducto')
+      ?.setValue(CLASIFICACION_SELECCIONADA);
+    this.subscription.add(
+      this.catalogoService
+        .especificarClasificacionProductoCatalogo(
+          String(this.idProcedimiento),
+          String(CLASIFICACION_SELECCIONADA)
+        )
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.especificarClasificacionProductoDatos = DATOS;
+          }
+        })
+    );
+  }
+
+  /**
+   * Inicializa los catálogos requeridos para el formulario de mercancía.
+   * Carga los catálogos de clasificación de producto, tipo de producto, forma farmacéutica,
+   * estado físico y unidades de medida comercial.
+   *
+   * @param tramite - Identificador del trámite para cargar los catálogos correspondientes.
+   */
+  inicializarCatalogo(tramite: string): void {
+    this.subscription.add(
+      this.catalogoService
+        .clasificacionProductoCatalogo(tramite, String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.clasificacionProductoDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .tiposProductoCatalogo(tramite, String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.tipoProductoDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .formaFarmaceuticaCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.formaFarmaceuticaDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .estadoFisicoMercanciaCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.estadoFisicoDatos = DATOS;
+          }
+        })
+    );
+   
+    this.subscription.add(
+      this.catalogoService
+        .unidadesMedidaComercialCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.cantidadUmcDatos = DATOS;
+          }
+        })
+    );
   }
 
   /**

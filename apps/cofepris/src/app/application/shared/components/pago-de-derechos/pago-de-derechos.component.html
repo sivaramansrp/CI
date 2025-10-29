@@ -65,6 +65,9 @@
             [label]="'Banco'"
             [required]="false"
             [isDisabled]="formularioDeshabilitado"
+            [placeholder]="'Seleccione una opción'"
+            [disabledPrimerOption]="false"
+            [hiddenPrimerOption]="false"
             (change)="
                     setValoresStore(
                       pagoDerechosForm,
@@ -89,6 +92,9 @@
           [label]="'Banco'"
           [required]="true"
           [isDisabled]="formularioDeshabilitado"
+          [placeholder]="'Seleccione una opción'"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           (change)="
                     setValoresStore(
                       pagoDerechosForm,

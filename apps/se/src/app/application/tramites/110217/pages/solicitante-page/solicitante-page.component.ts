@@ -2,17 +2,22 @@ import {
   AlertComponent,
   BtnContinuarComponent,
   DatosPasos,
+  WizardService,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Observable, Subject, switchMap, take } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { AccionBoton } from '../../models/certificado-origen.model';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { ERROR_FORMA_ALERT } from '../../constants/certificado-origen.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/certificado-origen.enum';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
 import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
@@ -133,6 +138,15 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @public
    */
   solicitudState!: Tramite110217State;
+  
+  /**
+   * @property wizardService
+   * @description
+   * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+   * @type {WizardService}
+   */
+    wizardService = inject(WizardService);
+
   /**
    * Constructor del componente.
    *
@@ -141,7 +155,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   constructor(
     public store: Tramite110217Store,
-    public tramiteQuery: Tramite110217Query
+    public tramiteQuery: Tramite110217Query,
+    private certificadosOrigenService: CertificadosOrigenService,
+    private toastrService: ToastrService,
   ) {
     this.tramiteQuery.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -166,48 +182,77 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   /**
-   * Método para manejar las acciones de los botones del wizard.
-   *
-   * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
-   * dependiendo de la acción recibida. También valida los formularios antes de permitir
-   * continuar al siguiente paso.
-   *
-   * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
-   */
-  getValorIndice(e: AccionBoton): void {
-    // Si la acción es continuar, validar formularios del paso actual
-    if (e.accion === 'cont') {
-      let isValid = true;
-
-      // Validar formularios del paso 1 antes de continuar
-      if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
+     * Método para manejar las acciones de los botones del wizard.
+     * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
+     * dependiendo de la acción recibida.
+     * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
+     * Método para manejar las acciones de los botones del wizard.
+     */
+    getValorIndice(e: AccionBoton): void {
+      const NEXT_INDEX =
+          e.accion === 'cont' ? e.valor + 1 :
+          e.accion === 'ant' ? e.valor - 1 :
+          e.valor;
+      if (this.indice === 1 && e.accion === 'cont') {
+        const ES_VALIDO = this.pasoUnoComponent.validarTodosLosFormularios();
+        if (!ES_VALIDO) {
+          this.esFormaValido = true;
+          return;
+        }
+        this.esFormaValido = false;
       }
-
-      // Si los formularios no son válidos, mostrar error y no continuar
-      if (!isValid) {
-        this.esFormaValido = true;
-        this.datosPasos.indice = this.indice;
-        return;
+  
+      if (e.valor > 0 && e.valor <= this.pasos.length) {
+        if (e.accion === 'cont') {
+          this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+        } else {
+          this.indice = NEXT_INDEX;
+          this.datosPasos.indice = NEXT_INDEX;
+          this.wizardComponent.atras();
+        }
+        this.store.setPasoActivo(this.indice);
       }
-
-      this.esFormaValido = false;
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-
-      // Avanzar al siguiente paso
-      this.wizardComponent.siguiente();
-      this.store.setPasoActivo(this.indice);
-      return;
     }
 
-    // Para botón "Anterior" - actualizar índice sin validación
-    this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
-    this.store.setPasoActivo(this.indice);
-  }
+    /**
+   * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+   *
+   * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+   * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+   * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+   * hacia adelante o atrás según el tipo de acción.
+   *
+   * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+   */
+    private shouldNavigate$(): Observable<boolean> {
+      return this.certificadosOrigenService.getAllState().pipe(
+        take(1),
+        switchMap(data => this.guardar(data)),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map((response: any) => {
+          const OK = response.codigo === '00';
+          if (OK) {
+            this.toastrService.success(response.mensaje);
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+          return OK;
+        })
+      );
+    }
 
   /**
    * Método que se ejecuta cuando cambia de tab en paso-uno.
@@ -215,6 +260,85 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   alCambiarPestana(): void {
     this.esFormaValido = false;
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.certificadosOrigenService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
+  }
+
+  /**
+   * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
+   *
+   * @param data - Los datos que se desean guardar y enviar al servidor.
+   * @returns void
+   */
+  guardar(data: Tramite110217State): Promise<unknown> {
+    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadosOrigenService.buildProductoresPorExportador(data.agregarProductoresExportador);
+    const PRODUCTORES_POR_EXPORTADOR = this.certificadosOrigenService.buildProductoresPorExportador(data.productoresExportador);
+    const MERCANCIAS_PRODUCDOR = this.certificadosOrigenService.buildMercanciasProductor(data.mercanciaProductores);
+    const CERTIFICADO = this.certificadosOrigenService.buildCertificado(data);
+    const DESTINATARIO = this.certificadosOrigenService.buildDestinatario(data);
+    const DATOS_CERTIFICADO = this.certificadosOrigenService.buildDatosCertificado(data);
+    // commneted for now, may be used in future
+    // const TRANSPORTE_DETALLES = this.certificadosOrigenService.buildDestinatarioTransporteDetalles(data);
+    const PAYLOAD = {
+      "rfc_solicitante": "AAL0409235E6",
+      "idSolicitud": 0,
+      "solicitante": {
+          "rfc": "AAL0409235E6",
+          "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+          "actividad_economica": "Fabricación de productos de hierro y acero",
+          "correo_electronico": "contacto@acerosalvarado.com",
+          "domicilio": {
+              "pais": "México",
+              "codigo_postal": "06700",
+              "estado": "Jalisco",
+              "municipio_alcaldia": "Cuauhtémoc",
+              "localidad": "Centro",
+              "colonia": "Roma Norte",
+              "calle": "Av. Insurgentes Sur",
+              "numero_exterior": "123",
+              "numero_interior": "Piso 5, Oficina A",
+              "lada": "",
+              "telefono": "123456"
+          }
+      },
+      "historico": {
+        "datosConfidencialesProductor": data.formulario['datosConfidencialesProductor'],
+        "productorMismoExportador": data.formulario['productorMismoExportador'],
+        "productoresPorExportador": [...PRODUCTORES_POR_EXPORTADOR],
+        "mercanciasProductor": [...MERCANCIAS_PRODUCDOR],
+        "ProductoresPorExportadorSeleccionados": [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
+      },
+      "certificado": CERTIFICADO,
+      "destinatario": DESTINATARIO,
+      "datos_del_certificado": DATOS_CERTIFICADO,
+    }
+    return new Promise((resolve, reject) => {
+      this.certificadosOrigenService.guardarDatosPost(PAYLOAD).subscribe({
+        next: (response) => {
+          if (esValidObject(response) && esValidObject(response['datos'])) {
+            const DATOS = response['datos'] as { idSolicitud?: number };
+            if (getValidDatos(DATOS.idSolicitud)) {
+              this.store.setIdSolicitud(DATOS.idSolicitud ?? 0);
+            } else {
+              this.store.setIdSolicitud(0);
+            }
+          }
+          resolve(response);
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+      });
   }
 
   /**

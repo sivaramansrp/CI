@@ -133,7 +133,6 @@ export class CertificadoValidacionService {
       .pipe(
         map(res => res?.datos ?? [])
       );
-
   }
 
 }

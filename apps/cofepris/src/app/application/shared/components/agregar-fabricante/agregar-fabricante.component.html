@@ -287,7 +287,9 @@
           [required]="true"
           [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
-          [placeholder]="''"
+          [placeholder]="'Seleccione una opción'"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
 
@@ -420,9 +422,11 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="''"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -512,12 +516,14 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="''"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')
           "
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -527,9 +533,11 @@
           (selectionChange)="cargarEstados($event)"
           [label]="'Estado/localidad'"
           [required]="true"
-          [placeholder]="''"
+         [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('estado')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -539,9 +547,11 @@
           (selectionChange)="cargarMunicipios($event)"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [placeholder]="''"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('municipio')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -552,10 +562,12 @@
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
-          [placeholder]="''"
+          [placeholder]="'Seleccione una opción'"
           [required]="!elementosNoRequeridos.includes('localidad') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -563,10 +575,12 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
-          [placeholder]="''"
+          [placeholder]="'Seleccione una opción'"
           [required]="!elementosNoRequeridos.includes('codigoPostal')"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('codigoPostal')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -574,10 +588,12 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [placeholder]="''"
           [required]="!elementosNoRequeridos.includes('colonia') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"
+          [placeholder]="'Seleccione una opción'"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
     </div>

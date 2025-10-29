@@ -9,11 +9,14 @@
           <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
         }
       </div>
+      @if(!isValid) {
+          <ng-alert [CONTENIDO]="errorAlerta" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUno></app-paso-uno>
       } @case (2) {
       <app-paso-carga-documento 
         [idSolicitud]="storeData.idSolicitud"

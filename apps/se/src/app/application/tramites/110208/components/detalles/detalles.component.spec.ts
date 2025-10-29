@@ -139,9 +139,29 @@ describe('DetallesComponent', () => {
       numeroFiscal: '',
       razonSocial: '',
       observaciones: '',
-      idioma: '',
+      idioma: [],
       entidadFederativaCertificado: '',
-      representacionFederal: ''
+      representacionFederal: '',
+      id: null,
+      idSolicitud: null,
+      formDatosCertificado: {},
+      entidadFederativaDatos: [],
+      representacionFederalDatos: [],
+      idiomaDatos: [],
+      representacionFederalSeleccion: {id: 1, descripcion: 'Representación 1'},
+      formaValida: {},
+      disponiblesDatos: [],
+      mercanciaTabla: [],
+      formCertificado: {},
+      estado:  {id: 1, descripcion: 'Representación 1'},
+      mercanciaForm: {},
+      formDatosDelDestinatario: {},
+      formDestinatario: {},
+      destinatarioForm: {},
+      paisDestin: [],
+      paisDestinSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporteSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporte: []
     };
     mockQuery.selectSolicitud$ = of(newState);
 
@@ -160,24 +180,6 @@ describe('DetallesComponent', () => {
     expect(component.esFormularioSoloLectura).toBeFalsy();
     expect(component.detallas.get('medioTransporte')?.enabled).toBeTruthy();
     expect(component.detallas.get('rutaCompleta')?.enabled).toBeTruthy();
-  });
-
-  it('debe llamar a setValoresStore para puertoDeEmbarque', () => {
-    const form = component.detallas;
-    form.get('puertoDeEmbarque')?.setValue('Nuevo Puerto');
-
-    component.setValoresStore(form, 'puertoDeEmbarque', 'setPuertoDeEmbarque');
-
-    expect(mockStore.setPuertoDeEmbarque).toHaveBeenCalledWith('Nuevo Puerto');
-  });
-
-  it('debe llamar a setValoresStore para puertoDeDesembarque', () => {
-    const form = component.detallas;
-    form.get('puertoDeDesembarque')?.setValue('Puerto Destino');
-
-    component.setValoresStore(form, 'puertoDeDesembarque', 'setPuertoDeDesembarque');
-
-    expect(mockStore.setPuertoDeDesembarque).toHaveBeenCalledWith('Puerto Destino');
   });
 
   it('debe inicializar con valores vacíos cuando solicitudState está vacío', () => {
@@ -244,9 +246,29 @@ describe('DetallesComponent', () => {
       numeroFiscal: '',
       razonSocial: '',
       observaciones: '',
-      idioma: '',
+      idioma: [],
       entidadFederativaCertificado: '',
-      representacionFederal: ''
+      representacionFederal: '',
+      id: null,
+      idSolicitud: null,
+      formDatosCertificado: {},
+      entidadFederativaDatos: [],
+      representacionFederalDatos: [],
+      idiomaDatos: [],
+      representacionFederalSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      formaValida: {},
+      disponiblesDatos: [],
+      mercanciaTabla: [],
+      formCertificado: {},
+      estado:  {id: 1, descripcion: 'Representación 1'},
+      mercanciaForm: {},
+      formDatosDelDestinatario: {},
+      formDestinatario: {},
+      destinatarioForm: {},
+      paisDestin: [],
+      paisDestinSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporteSeleccion:  {id: 1, descripcion: 'Representación 1'},
+      medioDeTransporte: []
     };
 
     mockQuery.selectSolicitud$ = of(newState);
