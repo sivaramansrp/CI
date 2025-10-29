@@ -34,15 +34,6 @@ const SOLICITUD = ENVIRONMENT.SOLICITUD_URL;
  */
 const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 
-// /**
-//  * Rutas de la API para el procedimiento 110223.
-//  * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
-//  */
-// export const PROC_110223 = {
-//     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
-//     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
-// }
-
 /**
  * Rutas de la API para el procedimiento PROC_110223
  */

@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, PROCEDIMIENTO_110223, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -249,13 +249,19 @@ export class CertificadoDeOrigenComponent
    * @type {boolean}
    */
   @Input() mercanciasDisponiblesTabla!: boolean;
-
   /**
    * @property {number} idProcedimiento
    * @description
    * Identificador del procedimiento actual. Se utiliza para configurar el formulario y la lógica del componente según el tipo de trámite.
    */
   @Input() idProcedimiento!: number;
+
+  /**
+   * @property {number} procedimiento110223
+   * @description
+   * Constante que contiene el ID del procedimiento 110223 para usar en el template en lugar de valores hardcodeados.
+   */
+  readonly procedimiento110223 = PROCEDIMIENTO_110223;
 
   /**
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.

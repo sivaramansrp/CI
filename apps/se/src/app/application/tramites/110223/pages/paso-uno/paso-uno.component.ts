@@ -29,11 +29,6 @@ import { ReactiveFormsModule } from "@angular/forms";
   ]
 })
 export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  /**
-   * Referencia al componente SolicitanteComponent mediante ViewChild.
-   * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
-   */
   
     /**
    * @property {SolicitanteComponent} solicitante

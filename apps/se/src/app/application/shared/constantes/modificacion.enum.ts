@@ -381,3 +381,12 @@ export const REQUIREDA = [110204, 110205];
  * @type {number[]}
  */
 export const BOTON_DE_OPCION_VER = [110221];
+
+/**
+ * @constant PROCEDIMIENTO_110223
+ * @description
+ * Identificador del procedimiento 110223 (Certificado de Origen).
+ * Se utiliza para comparaciones en lugar de valores hardcodeados en los templates.
+ * @type {number}
+ */
+export const PROCEDIMIENTO_110223 = 110223;

@@ -176,10 +176,7 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
           });
           this.productoresExportador = RESULT;
           this.store.setProductoresExportador(RESULT);
-        },
-        error: () => {
-          //
-        },
+        }
       });
   }
 
@@ -197,9 +194,6 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
@@ -247,6 +241,12 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }
 
+  /**
+   * Emite un evento para agregar un nuevo productor exportador.
+   * 
+   * @param event - Objeto que contiene los datos del productor a agregar.
+   *                Puede ser un objeto con las propiedades del productor o un objeto con el número de registro fiscal.
+   */
   public emitAgregarExportador(
     event: { [key: string]: unknown } | HistoricoColumnas
   ): void {

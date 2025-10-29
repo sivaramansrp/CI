@@ -78,9 +78,6 @@ export class CertificadosOrigenService {
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
   obtenerProductorPorExportador(rfc: string): Observable<ProductorExportador> {
-    // return this.http.get<ProductorExportador>(
-    //   'assets/json/110223/productor-exportador.json'
-    // );
     return this.httpService.get<ProductorExportador>(BUSCAR_PRODUCTOR(rfc));
   }
 
