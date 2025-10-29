@@ -1110,6 +1110,7 @@ if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.
         });
       }
     }
+    this.agregarFabricanteForm.markAsUntouched();
     this.forzarDeshabilitarPais();
   }
 
@@ -1164,7 +1165,7 @@ changeTipoPersona(): void {
   if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
-  
+      this.agregarFabricanteForm.markAsUntouched();
   this.forzarDeshabilitarPais();
 }
 

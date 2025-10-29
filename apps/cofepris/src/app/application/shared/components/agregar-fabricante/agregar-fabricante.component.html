@@ -72,9 +72,9 @@
         </div>
       </div>
       @if (
-  !agregarFabricanteForm.get('nacionalidad')?.value &&
+  (!agregarFabricanteForm.get('nacionalidad')?.value ||
   !agregarFabricanteForm.get('tipoPersona')?.value &&
-  chequeoValidacionAlGuardar
+  chequeoValidacionAlGuardar ) && agregarFabricanteForm.get('rfc')?.disabled
 ) {
   <div class="col-md-4">
     <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
