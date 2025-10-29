@@ -868,16 +868,14 @@ guardarFabricante(): void {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  limpiarFormulario(): void {
-    if (this.chequeoValidacionAlGuardar) {
-      this.agregarFabricanteForm.reset();
-      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
-        this.agregarFabricanteForm.get(controlName)?.disable();
-      });
+  limpiarFormulario(): void { 
+    this.agregarFabricanteForm.reset();
+    this.agregarFabricanteForm.markAsUntouched();
+
+    if (this.chequeoValidacionAlGuardar) {    
+          this.agregarFabricanteForm.disable(); 
       this.agregarFabricanteForm.get('nacionalidad')?.enable();
       this.estaDeshabilitadoDesplegable = true;
-    } else {
-      this.agregarFabricanteForm.reset();
     }
   }
   /**
