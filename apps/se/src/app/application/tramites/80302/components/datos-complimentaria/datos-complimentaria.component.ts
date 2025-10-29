@@ -5,9 +5,9 @@ import { DatosDelModificacion, DatosDelModificaciondos } from '../../estados/mod
 import { Subject, takeUntil } from 'rxjs';
 import { ComplementariaComponent } from '../../../../shared/components/complementaria/complementaria.component';
 import { ConfiguracionColumna } from '../../estados/models/cambio-de-modalidad.model';
+import { Empresas } from '../../../../shared/models/complementaria.model';
 import { SolicitudService } from '../../service/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
-import { Empresas } from '../../../../shared/models/complementaria.model';
 
 @Component({
   selector: 'app-datos-complimentaria',

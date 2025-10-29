@@ -3,11 +3,11 @@ import { Anexo, Complimentaria, Federetarios, Operacions } from '../estados/mode
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { DatosModificacion } from '../../../shared/models/modificacion.model';
+import { Empresas } from '../../../shared/models/complementaria.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Solicitud80302State } from '../../../estados/tramites/tramite80302.store';
-import { Empresas } from '../../../shared/models/complementaria.model';
 
 @Injectable({
   providedIn: 'root',
