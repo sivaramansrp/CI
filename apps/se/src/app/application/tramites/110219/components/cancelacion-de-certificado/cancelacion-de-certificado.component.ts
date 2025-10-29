@@ -569,7 +569,6 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       clave: SELECTED_ENTIDAD.clave ?? '',
       descripcion: SELECTED_ENTIDAD.descripcion ?? '',
     });
-    // this.store.setEntidadDescripcion(SELECTED_ENTIDAD.descripcion ?? '');
   }
 
   /**

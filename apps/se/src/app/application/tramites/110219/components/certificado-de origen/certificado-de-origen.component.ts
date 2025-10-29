@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TELEFONO, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CertificadoApiData, ColumnasTabla, FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -353,11 +353,11 @@ export class CertificadoDeOrigenComponent
       ),
       telefono: new FormControl(
         { value: this.solicitudState?.telefono, disabled: true },
-        [Validators.pattern(/^[0-9]{10}$/)]
+        [Validators.pattern(TELEFONO)]
       ),
       ciudad: new FormControl(this.solicitudState?.ciudad, ),
       fax: new FormControl(this.solicitudState?.fax, [
-        Validators.pattern(/^[0-9]{10}$/),
+        Validators.pattern(TELEFONO),
       ]),
       correoElectronico: new FormControl(
         this.solicitudState?.correoElectronico,
@@ -654,7 +654,7 @@ export class CertificadoDeOrigenComponent
         ],
         telefono: [
           { value: this.solicitudState?.telefono, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+          [Validators.required, Validators.pattern(TELEFONO)],
         ],
         ciudad: [
           { value: this.solicitudState?.ciudad, disabled: this.soloLectura },
@@ -662,7 +662,7 @@ export class CertificadoDeOrigenComponent
         ],
         fax: [
           { value: this.solicitudState?.fax, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+          [Validators.required, Validators.pattern(TELEFONO)],
         ],
         correoElectronico: [
           {

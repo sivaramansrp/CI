@@ -142,6 +142,11 @@ export interface Solicitud110219State {
   /** Correo electrónico de contacto del solicitante. */
   correoElectronico: string;
 
+  /**
+   * Representa el estado de la solicitud para el trámite 110219.
+   * Contiene información relevante sobre la solicitud, incluyendo datos del solicitante,
+   * mercancías, productores, fechas, catálogos, certificados y otros detalles asociados al trámite.
+   */
   columnasTabla: ColumnasTabla[];
 }
 

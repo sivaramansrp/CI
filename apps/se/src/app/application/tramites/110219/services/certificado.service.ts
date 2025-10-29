@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ColumnasTabla, MercanciaCertificado} from '../models/certificado.model';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../estados/Tramite110219.store';
