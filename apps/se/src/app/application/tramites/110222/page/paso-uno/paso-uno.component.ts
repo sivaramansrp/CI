@@ -1,16 +1,14 @@
-/**
- * @component PasoUnoComponent
- * @description Este componente es responsable de manejar el primer paso del trámite.
- * Incluye la lógica para seleccionar una pestaña y actualizar el índice.
- * 
- * @import { Component } from '@angular/core';
- */
-
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioDeCertificadoComponent } from '../../components/destinatario-de-certificado/destinatario-de-certificado.component';
+import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 @Component({
@@ -30,22 +28,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-  @ViewChild(DestinatarioDeCertificadoComponent) destinatarioDeCertificadoComponent?: DestinatarioDeCertificadoComponent;
+  /** Referencia al componente DestinatarioDeCertificadoComponent mediante ViewChild. */
+  @ViewChild('DestinatarioDeCertificadoComponent')
+  destinatarioComponent!: DestinatarioDeCertificadoComponent;
+  /** Referencia al componente CertificadoOrigenComponent mediante ViewChild. */
+  @ViewChild('CertificadoOrigen')
+  certificadoOrigen!: CertificadoOrigenComponent;
+  /** Referencia al componente HistoricoDeProductoresComponent mediante ViewChild. */
+  @ViewChild('HistoricoDeProductoresComponent')
+  HistoricoDeProductoresComponent!: HistoricoDeProductoresComponent;
+  /** Referencia al componente DatosCertificadoComponent mediante ViewChild. */
+  @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
 
   /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Referencia al componente `DatosCertificadoComponent` dentro de la vista.
-   *
-   * Esta propiedad permite acceder a los métodos y propiedades públicos del componente
-   * hijo `DatosCertificadoComponent` desde el componente padre, facilitando la interacción
-   * y manipulación de sus datos o comportamientos.
-   *
-   * @see DatosCertificadoComponent
+   * Referencia al componente SolicitanteComponent mediante ViewChild.
+   * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
    */
-  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+  /** Inyección de dependencias a través del constructor. */
   constructor(
     private consultaQuery: ConsultaioQuery,
     public validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService
@@ -84,11 +88,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  /**
    * Delegates validation to PeruDestinatarioComponent
    */
   public validateAllForms(): boolean {
-    return this.destinatarioDeCertificadoComponent?.validateAllForms() ?? true;
+    return this.destinatarioComponent?.validateAllForms() ?? true;
   }
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -107,15 +114,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         }
       });
   }
-  /**
-   * @method ngOnDestroy
-   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
 
   /**
    * @method seleccionaTab
@@ -127,15 +125,52 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /** Método público para validar todos los formularios del paso uno */
-  public validarTodo(): boolean {
-    let ES_VALIDA = true;
-    if (this.datosCertificadoComponent) {
-      if (!this.datosCertificadoComponent.validateAll()) {
-        ES_VALIDA = false;
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
       }
     } else {
-      ES_VALIDA = false;
+      isValid = false;
     }
-    return ES_VALIDA;
+
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificado) {
+      if (!this.datosCertificado.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

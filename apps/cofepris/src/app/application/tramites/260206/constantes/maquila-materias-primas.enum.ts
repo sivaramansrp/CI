@@ -61,3 +61,17 @@ export const SECCIONES_TRAMITE_260206 = {
   
     'fabricante'
   ];
+
+  /**
+ * Constante que representa el título del mensaje utilizado en el permiso sanitario
+ * de importación de medicamentos y materias primas destinados a investigación en humanos.
+ * 
+ * Esta constante se utiliza para mostrar un mensaje descriptivo en la interfaz de usuario
+ * relacionado con el trámite correspondiente. Proporciona información clara y específica
+ * sobre el propósito del permiso sanitario.
+ * 
+ * @constant
+ * @type {string}
+ */
+export const TITULO_MENSAJE =
+  'Permiso sanitario de importación de medicamentos y materias primas destinados a investigación en humanos';

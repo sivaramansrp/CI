@@ -373,6 +373,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * Método para cargar la lista de idiomas desde el servicio global.
    */
   cargarIdioma(tramite: string): void {
+    if(this.idioma === true){
     this.catalogoServices
       .catalogoIdioma(tramite)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -381,6 +382,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
           this.idiomaDatos = data.datos as Catalogo[];
         }
       );
+    }
   }
 
     /**

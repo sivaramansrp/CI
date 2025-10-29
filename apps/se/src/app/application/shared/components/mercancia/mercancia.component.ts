@@ -416,6 +416,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.getTipoFactura();
     this.initActionFormBuild();
   }
+   /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.mercanciaForm) {
+      this.mercanciaForm.markAllAsTouched();
+    }
+  }
 
   /**
    * Detecta los cambios en las propiedades de entrada del componente y actualiza el estado en consecuencia.

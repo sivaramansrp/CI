@@ -23,6 +23,7 @@ import {
   REPRESENTANTE_LEGAL_EN_INIT,
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
+  ENABLE_FIELDS
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -51,7 +52,6 @@ import {
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  CatalogoServices,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
@@ -78,15 +78,17 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
+import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+
 import { ScianDataService } from '../../services/scian-data.service';
 import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -272,6 +274,8 @@ export class DatosDeLaSolicitudComponent
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  public enableFields = ENABLE_FIELDS;
 
   /**
    * @property {string} textoManifestoContenido
@@ -598,6 +602,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param datosSolicitudService - Servicio para gestionar la información de la solicitud.
    * @param consultaioQuery - Servicio para la consulta de datos relacionados con la solicitud.
    * @param scianDataService - Servicio para la obtención de datos del catálogo SCIAN.
+   * @param catalogoService - Servicio para la obtención de catálogos diversos.
+   * @param cdr - Servicio para la detección de cambios en el componente.
    */
   constructor(
     public fb: FormBuilder,
@@ -607,36 +613,36 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     private consultaioQuery: ConsultaioQuery,
     private scianDataService: ScianDataService,
     private cdr: ChangeDetectorRef,
-    private catalogoService: CatalogoServices
+    private catalogoService: CatalogoServices,
+    private toastr: ToastrService
 
 
   ) {
-
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenDatos',
-      '/cofepris/regimenDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'adunasDeEntradasDatos',
-      '/cofepris/adunasDeEntradasDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenDatos',
+    //   '/cofepris/regimenDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'adunasDeEntradasDatos',
+    //   '/cofepris/adunasDeEntradasDatos.json'
+    // );
     // this.datosSolicitudService.obtenerRespuestaPorUrl(
     //   this,
     //   'estadoDatos',
     //   '/cofepris/estadoDatos.json'
     // );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'regimenLaMercanciaDatos',
-      '/cofepris/regimenLaMercanciaDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'aduanaDatos',
-      '/cofepris/aduanaDatos.json'
-    );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'regimenLaMercanciaDatos',
+    //   '/cofepris/regimenLaMercanciaDatos.json'
+    // );
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'aduanaDatos',
+    //   '/cofepris/aduanaDatos.json'
+    // );
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -666,8 +672,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.catalogoLista(String(this.idProcedimiento));
+    this.inicializarCatalogo(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
+   
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
@@ -741,9 +748,17 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
+
+
+        Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+          const CONTROL = this.datosSolicitudForm.get(controlName);
+          CONTROL?.enable();
+         
+    
+        });
   }
 
-  catalogoLista(tramite: string): void {
+  inicializarCatalogo(tramite: string): void {
    this.subscription.add(
       this.catalogoService
       .estadosCatalogo(tramite)
@@ -756,8 +771,32 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         }
       })
     );  
-  }
+    this.subscription.add(
+      this.catalogoService
+        .regimenesCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
 
+          if (response) {
+            this.regimenDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .aduanasCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.adunasDeEntradasDatos = DATOS;
+          }
+        })
+    );
+  }
 
    /**
    * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
@@ -809,7 +848,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       rfcSanitario: [
         {
           value: this.datosSolicitudFormState.rfcSanitario,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -821,7 +860,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       denominacionRazon: [
         {
           value: this.datosSolicitudFormState.denominacionRazon,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -832,7 +871,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       correoElectronico: [
         {
           value: this.datosSolicitudFormState.correoElectronico,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -844,7 +883,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       codigoPostal: [
         {
           value: this.datosSolicitudFormState.codigoPostal,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -863,7 +902,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       municipioAlcaldia: [
         {
           value: this.datosSolicitudFormState.municipioAlcaldia,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -874,14 +913,14 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       localidad: [
         {
           value: this.datosSolicitudFormState.localidad,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
         },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       colonia: [
         {
           value: this.datosSolicitudFormState.colonia,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
       ],
       calleYNumero: [
@@ -901,18 +940,18 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
         {
           value: this.datosSolicitudFormState.telefono,
-          disabled: true, // Disabled by default (as shown in screenshot)
+          disabled:!ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
-          Validators.maxLength(5),
+          
           Validators.pattern(REGEX_SOLO_DIGITOS),
         ],
       ],
@@ -1061,6 +1100,19 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     }
     else {
       this.crearDatosSolicitudForm()
+      if(this.idProcedimiento===260209){
+      Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+        const CONTROL = this.datosSolicitudForm.get(controlName);
+        if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
+        
+        
+        CONTROL?.enable();
+        
+        }
+       
+  
+      });
+    }
     }
   }
 
@@ -1127,31 +1179,153 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
   }
 
   /**
-   * Busca el RFC del representante en el formulario y, si existe,
-   * actualiza los campos relacionados con el nombre, apellido paterno
-   * y apellido materno del representante con valores predeterminados.
+   * Busca el RFC del representante en el formulario usando API calls similares al patrón de SE 80205.
+   * Si existe el RFC, realiza una llamada al método del servicio para obtener los datos del representante.
+   * Actualiza los campos relacionados con el nombre, apellido paterno y apellido materno.
    */
   buscarRepresentanteRfc(): void {
-    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value;
-    if (RFC_VALUE) {
-      if (this.esProcedimiento260210) {
-      
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL',
-        });
-      } else {
-      
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL',
-        });
-      }
-    } else {
+    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value?.trim();
+    
+    if (!RFC_VALUE || RFC_VALUE === '') {
       this.abrirRfcModal();
+      return;
     }
+
+    // Realizar llamada API con payload desde el store usando el método del servicio
+    this.buscarDatosRepresentante(RFC_VALUE);
+  }
+
+  
+  /**
+   * Busca los datos del representante legal utilizando el RFC proporcionado.
+   *
+   * @param rfc - RFC del representante legal a buscar.
+   *
+   * Realiza una petición al servicio para obtener los datos del representante legal
+   * según el RFC ingresado. Si la respuesta es válida y contiene datos, procesa la información
+   * del representante. Si no se encuentran datos o la respuesta no es válida, muestra una advertencia
+   * y carga datos predeterminados. En caso de error en la petición, muestra un mensaje de error
+   * y notifica al usuario sobre el problema de conexión.
+   */
+  private buscarDatosRepresentante(rfc: string): void {
+    const PAYLOAD: RfcSearchPayload = {
+      rfcRepresentanteLegal: rfc
+    };
+    this.datosSolicitudService
+      .buscarRepresentantePorRfc(this.idProcedimiento.toString(), PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response?.codigo === '00' && response.datos) {
+            this.procesarDatosRepresentante(response.datos);
+          } else {
+            console.warn('Respuesta no válida del servidor:', response);
+            this.toastr.warning('No se encontraron datos para el RFC proporcionado', 'Búsqueda de RFC');
+            this.mostrarDatosPredeterminados();
+          }
+        },
+        error: (error) => {
+          console.error('Error en la búsqueda de RFC:', error);
+          this.toastr.error('Error al buscar los datos del representante', 'Error de Búsqueda');
+          this.mostrarErrorRfc('Error al conectar con el servidor. Por favor, intente nuevamente.');
+        }
+      });
+  }
+
+  /**
+   * Datos predeterminados para el representante legal
+   */
+  private readonly DATOS_PREDETERMINADOS = {
+    representanteNombre: 'EUROFOODS DE MEXICO',
+    apellidoPaterno: 'GONZALEZ',
+    apellidoMaterno: 'PINAL',
+  };
+
+  /**
+   * Procesa los datos del representante obtenidos de la API
+   */
+  private procesarDatosRepresentante(data: RepresentanteData): void {
+    // Determinar el campo de nombre según el procedimiento
+    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    
+    // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
+    const DATOS_FORMULARIO = {
+      representanteNombre: NOMBRE_FIELD || this.DATOS_PREDETERMINADOS.representanteNombre,
+      apellidoPaterno: data.apellidoPaterno || this.DATOS_PREDETERMINADOS.apellidoPaterno,
+      apellidoMaterno: data.apellidoMaterno || this.DATOS_PREDETERMINADOS.apellidoMaterno,
+    };
+
+    this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
+
+    // Mostrar notificación de éxito
+    this.toastr.success('Datos del representante cargados exitosamente', 'Búsqueda de RFC');
+    this.mostrarNotificacionExito('Datos del representante cargados exitosamente.');
+  }
+
+  /**
+   * Muestra datos predeterminados cuando no se encuentran en la API
+   */
+  private mostrarDatosPredeterminados(): void {
+    this.datosSolicitudForm.patchValue(this.DATOS_PREDETERMINADOS);
+
+    // Mostrar notificación informativa
+    this.toastr.info('Se cargaron datos predeterminados del representante', 'Información');
+    this.mostrarNotificacionInfo('Se cargaron datos predeterminados del representante.');
+  }
+
+  /**
+   * Muestra notificación de error para RFC inválido
+   */
+  private mostrarErrorRfc(mensaje: string): void {
+    this.toastr.error(mensaje, 'Error de Validación');
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Muestra notificación de éxito
+   */
+  private mostrarNotificacionExito(mensaje: string): void {
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Muestra notificación informativa
+   */
+  private mostrarNotificacionInfo(mensaje: string): void {
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAlerta = true;
   }
 
   /**
@@ -1599,7 +1773,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         representanteRfc: 'REP123456789',
         representanteNombre: 'EUROFOODS DE MEXICO',
         apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL',
       });
       this.mostrarAlerta = false;
     }
@@ -1658,8 +1831,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.disable();
       }
     });
-
+   if(this.idProcedimiento!==260209 && this.idProcedimiento!==260210){
     this.establecimientoSeleccionado = enable;
+  }
   }
 
   /**
@@ -1705,7 +1879,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado') {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
         return;
       }
 
@@ -1713,7 +1887,13 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.enable();
       }
     });
+    if(this.idProcedimiento===260209|| this.idProcedimiento===260210){
+      this.establecimientoSeleccionado = false;
+    }
+    else{
     this.establecimientoSeleccionado = true;
+    }
+
   }
 
   /**
@@ -1735,13 +1915,115 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   formularioSolicitudValidacion(): boolean {
     this.isContinuarButtonClicked = true;
-  
-    if (this.datosSolicitudForm.valid) {
+  this.marcarTodosLosCamposComoTocados();
+    if (this.verificarCamposValidosODeshabilitados()) {
       return true;
     }
-    this.datosSolicitudForm.markAllAsTouched();
+    //this.datosSolicitudForm.markAllAsTouched();
     return false;
   }
+  /**
+ * Marca todos los campos del formulario como tocados (touched) uno por uno.
+ * Esto permite mostrar mensajes de validación para todos los campos.
+ * @returns {void}
+ */
+marcarTodosLosCamposComoTocados(): void {
+  const EXCLUDED_FIELDS = [
+    'aduana',
+    'aeropuertoDos',
+    'calleYNumero',
+    'manifiestosCasillaDeVerificacion',
+    'regimenLaMercancia',
+    'aviso',
+    'licenciaSanitaria'
+  ];
+  if (!this.datosSolicitudForm) {
+   
+    return;
+  }
+
+  // Get all control names
+  const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
+  
+
+  // Loop through each control and mark as touched
+  CONTROL_NAMES.forEach((controlName: string) => {
+    const CONTROL = this.datosSolicitudForm.get(controlName);
+    
+    if (CONTROL) {
+      // Mark the control as touched
+      if (EXCLUDED_FIELDS.includes(controlName)) {
+       
+        return; // Continue to next field
+      }
+      CONTROL.markAsTouched();
+      
+      // Optional: Also mark as dirty to trigger additional validation states
+  
+    }
+  });
+
+  // Update the form's validation status
+  this.datosSolicitudForm.updateValueAndValidity();
+  
+  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
+}
+
+/**
+ * Verifica si todos los campos del formulario (excepto los excluidos) son válidos o están deshabilitados.
+ * @returns {boolean} - Retorna `true` si todos los campos requeridos son válidos o están deshabilitados, `false` en caso contrario.
+ */
+verificarCamposValidosODeshabilitados(): boolean {
+  if (!this.datosSolicitudForm) {
+    console.warn('Form is not initialized');
+    return false;
+  }
+
+  // Fields to exclude from validation check
+  const EXCLUDED_FIELDS = [
+    'aduana',
+    'aeropuertoDos',
+    'calleYNumero',
+    'manifiestosCasillaDeVerificacion',
+    'regimenLaMercancia',
+    'aviso',
+    'licenciaSanitaria'
+  ];
+
+  const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
+  
+  let allFieldsValidOrDisabled = true;
+
+
+  // Loop through each control to check validation status
+  CONTROL_NAMES.forEach((controlName: string) => {
+    const CONTROL = this.datosSolicitudForm.get(controlName);
+    
+    if (CONTROL) {
+      // Skip excluded fields
+      if (EXCLUDED_FIELDS.includes(controlName)) {
+       
+      
+        return; // Continue to next field
+      }
+
+
+      // Check if field is valid or disabled
+     else if (CONTROL.disabled) {
+       return ;
+      
+      } else if (!CONTROL.valid) {
+        allFieldsValidOrDisabled = false;
+
+      } 
+    }
+  });
+
+ 
+  
+
+  return allFieldsValidOrDisabled;
+}
 
   /**
    * Emite el evento de acción seleccionada en la solicitud.
