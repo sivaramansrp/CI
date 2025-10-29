@@ -283,6 +283,7 @@
         <app-agregar-fabricante
           *ngIf="fabricanteModalAbierto"
           [idProcedimiento]="idProcedimiento"
+          [tramiteID]="tramiteID"
           [fabricanteTablaDatos]="fabricanteTablaDatos"
           [datoSeleccionado]="fabricanteSeleccionadoParaModificar"
           (updateFabricanteTablaDatos)="onFabricanteUpdated($event)"
