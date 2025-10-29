@@ -14,8 +14,8 @@ import { Subject } from 'rxjs';
   selector: 'app-detalles-del-transporte',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
-  templateUrl: './DetallesDelTransporte.component.html',
-  styleUrl: './DetallesDelTransporte.component.scss',
+  templateUrl: './detalles-del-transporte.component.html',
+  styleUrl: './detalles-del-transporte.component.scss',
 })
 export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
@@ -50,7 +50,9 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy, OnChan
   ngOnInit(): void {
     this.campoDestinatario = CAMPO_DE_TRANSPORTE.includes(this.idProcedimiento);
     this.campoDetalles = CAMPO_DE_DETALLES.includes(this.idProcedimiento);
-    this.getMedioTransporte();
+    if (!this.campoDetalles) {
+      this.getMedioTransporte();
+    }
     this.createForm();
   }
 

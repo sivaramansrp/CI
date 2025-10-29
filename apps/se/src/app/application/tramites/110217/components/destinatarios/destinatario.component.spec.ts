@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Destinatario110217Component } from './destinatario.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
@@ -7,10 +6,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, Subject } from 'rxjs';
+import { DestinatariosComponent } from './destinatario.component';
 
 describe('Destinatario110217Component', () => {
-  let component: Destinatario110217Component;
-  let fixture: ComponentFixture<Destinatario110217Component>;
+  let component: DestinatariosComponent;
+  let fixture: ComponentFixture<DestinatariosComponent>;
   let store: Tramite110217Store;
   let query: Tramite110217Query;
   let consultaioQuery: ConsultaioQuery;
@@ -53,7 +53,7 @@ describe('Destinatario110217Component', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [Destinatario110217Component, ReactiveFormsModule],
+      imports: [DestinatariosComponent, ReactiveFormsModule],
       providers: [
         provideHttpClient(),
         { provide: Tramite110217Store, useValue: store },
@@ -64,7 +64,7 @@ describe('Destinatario110217Component', () => {
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Destinatario110217Component);
+    fixture = TestBed.createComponent(DestinatariosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

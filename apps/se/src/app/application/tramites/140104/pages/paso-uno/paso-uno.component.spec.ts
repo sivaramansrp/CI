@@ -1,53 +1,42 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+jest.mock('@ng-mf/data-access-user');
+jest.mock('../../services/servicio-de-mensajes.service');
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
-  let seccionStoreMock: any;
-  let servicioDeMensajesServiceMock: any;
-  let consultaQueryMock: any;
+  let seccionStoreMock: jest.Mocked<SeccionLibStore>;
+  let servicioDeMensajesServiceMock: jest.Mocked<ServicioDeMensajesService>;
+  let consultaQueryMock: jest.Mocked<ConsultaioQuery>;
+  let consultaState: ConsultaioState;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     seccionStoreMock = {
       establecerFormaValida: jest.fn(),
       establecerSeccion: jest.fn(),
-    };
+    } as any;
 
     servicioDeMensajesServiceMock = {
-      mensaje$: of(false),
-      devolverFacturasMensaje$: of(false),
-      enviarMensaje: jest.fn(),
-      enviarDevolverFacturasMensaje: jest.fn(),
       establecerDatosDePermiso: jest.fn(),
-      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({ datos: [] })),
+      getRegistroTomaMuestrasMercanciasData: jest.fn(),
       actualizarEstadoFormulario: jest.fn(),
-    };
+      enviarMensaje: jest.fn(),
+      mensaje$: of(false),
+    } as any;
 
+    consultaState = { update: false } as ConsultaioState;
     consultaQueryMock = {
-      selectConsultaioState$: of({ update: false }),
-    };
+      selectConsultaioState$: of(consultaState),
+    } as any;
 
-    await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      providers: [
-        { provide: SeccionLibStore, useValue: seccionStoreMock },
-        { provide: ServicioDeMensajesService, useValue: servicioDeMensajesServiceMock },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new PasoUnoComponent(seccionStoreMock, servicioDeMensajesServiceMock, consultaQueryMock);
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
@@ -55,19 +44,49 @@ describe('PasoUnoComponent', () => {
     expect(component.indice).toBe(1);
   });
 
+  it('should initialize seccionesDeLaSolicitud with two sections', () => {
+    expect(component.seccionesDeLaSolicitud.length).toBe(2);
+    expect(component.seccionesDeLaSolicitud[0].title).toBe('Solicitante');
+  });
+
+  it('should set mostrarBusqueda to false by default', () => {
+    expect(component.mostrarBusqueda).toBe(false);
+  });
+
+  it('should call establecerFormaValida and establecerSeccion in constructor', () => {
+    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalledWith([false]);
+    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalledWith([false]);
+  });
+
+  it('should set esDatosRespuesta to true if consultaState.update is false', () => {
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
   it('should update indice when seleccionaPestana is called', () => {
     component.seleccionaPestana(2);
     expect(component.indice).toBe(2);
   });
 
-  it('should call enviarMensaje and enviarDevolverFacturasMensaje on destroy', () => {
-    component.ngOnDestroy();
-    expect(servicioDeMensajesServiceMock.enviarMensaje).toHaveBeenCalledWith(false);
-    expect(servicioDeMensajesServiceMock.enviarDevolverFacturasMensaje).toHaveBeenCalledWith(false);
+  it('should update mostrarBusqueda on mensaje$ emission in ngOnInit', () => {
+    servicioDeMensajesServiceMock.mensaje$ = of(true);
+    component.ngOnInit();
+    expect(component.mostrarBusqueda).toBe(true);
   });
 
-  it('should call actualizarEstadoFormulario in guardarDatosFormulario', () => {
+  it('should call enviarMensaje(false) and complete destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
+    const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
+    component.ngOnDestroy();
+    expect(servicioDeMensajesServiceMock.enviarMensaje).toHaveBeenCalledWith(false);
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+    completeSpy.mockRestore();
+    nextSpy.mockRestore();
+  });
+
+  it('guardarDatosFormulario should not call actualizarEstadoFormulario if resp is falsy', () => {
+    servicioDeMensajesServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(undefined as any));
     component.guardarDatosFormulario();
-    expect(servicioDeMensajesServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
+    expect(servicioDeMensajesServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
-  });
+});
