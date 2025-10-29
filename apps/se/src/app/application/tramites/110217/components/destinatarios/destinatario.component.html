@@ -3,6 +3,7 @@
   [esFormularioSoloLectura]="soloLectura"
   [idProcedimiento]="110217"
   (formDatosDelDestinatarioEvent)="setValoresStoreDatosDestinatario($event)"
+  (formaValida)="setFormValidaDatosDestinatario($event)"
   #datosDelDestinatarioRef>
 </app-datos-del-destinatario>
 
@@ -11,10 +12,11 @@
   [esFormularioSoloLectura]="soloLectura"
   [idProcedimiento]="110217"
   [paisDestino]="false"
-  [ocultarLada]="false"
+  [ocultarLada]="false" 
   [ocultarFax]="false"
   [data]="[]"
   [paisDestin]="[]"
+  (formaValida)="setFormValidaDestinatario($event)"
   (formDestinatarioEvent)="setValoresStoreDestinatario($event)"
   #destinatarioRef>
 </app-destinatario>
@@ -22,6 +24,7 @@
 <app-representante-legal-exportador
   [datosForm]="formDestinatarioValues"
   [procedimiento]="'110217'"
+  (formaValida)="setFormValidaRepresentanteLegal($event)"
   (formDatosDelDestinatarioEvent)="setValoresStoreRepresentante($event)"
   #representanteRef>
 </app-representante-legal-exportador>
@@ -30,6 +33,7 @@
   [datosForm]="formDestinatarioValues"
   [idProcedimiento]="110217"
   [medioTransporte]="[]"
+  (formaValida)="setFormValidaTransporte($event)"
   (formTransporteEvent)="setValoresStoreTransporte($event)"
   #transporteRef>
 </app-detalles-del-transporte>

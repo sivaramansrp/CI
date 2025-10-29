@@ -493,7 +493,7 @@ guardarProveedor(): void {
     calle: VALOR_FORMULARIO.calle || '',
     numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
     numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-    pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
+    pais: this.obtenerDescripcionPais(VALOR_FORMULARIO.pais),
     colonia: VALOR_FORMULARIO.colonia || '',
     municipioAlcaldia: VALOR_FORMULARIO.municipioAlcaldia || '',
     localidad: VALOR_FORMULARIO.localidad || '',
@@ -542,7 +542,13 @@ guardarProveedor(): void {
   this.guardarYSalir.emit();
 }
 
-private getPaisDescription(paisId: string | number): string {
+/**
+ * Obtiene la descripción de un país basado en su identificador.
+ * @description Este método busca en el arreglo de países y retorna la descripción
+ * del país que coincida con el ID proporcionado. Si no encuentra coincidencias
+ * o los datos no están disponibles, retorna una cadena vacía.
+ */
+private obtenerDescripcionPais(paisId: string | number): string {
   if (!paisId || !this.paisesDatos || this.paisesDatos.length === 0) {
     return '';
   }
