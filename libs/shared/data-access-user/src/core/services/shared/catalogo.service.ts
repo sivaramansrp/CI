@@ -565,7 +565,7 @@ export class CatalogoServices {
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
   tratadoCatalogoPais(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    if (tramite === '110214' || tramite === '110216' || tramite === '110207' || tramite === '110205') {
+    if (tramite === '110214' || tramite === '110216' || tramite === '110207' || tramite === '110205' || tramite === '110221') {
       const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC(tramite)}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
