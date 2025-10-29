@@ -1,6 +1,6 @@
 import { AccionBoton,AlertComponent,NotificacionesComponent, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
 import { Component, EventEmitter } from '@angular/core';
-import { MENSAJE_DE_VALIDACION,PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
+import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 import { Tramite260205State, Tramite260205Store } from '../../estados/stores/tramite260205.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -238,7 +238,7 @@ public mostrarAlerta: boolean = false;
                categoria: 'danger',
                modo: 'action',
                titulo: '',
-               mensaje: MENSAJE_DE_VALIDACION,
+               mensaje: MENSAJE_DE_PAGE,
                cerrar: true,
                tiempoDeEspera: 2000,
                txtBtnAceptar: 'SI',
