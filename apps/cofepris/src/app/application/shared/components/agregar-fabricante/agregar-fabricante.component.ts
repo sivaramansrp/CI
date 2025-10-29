@@ -20,6 +20,7 @@ import {
   TipoPersona,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, CatalogoServices} from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import {
   Component,
@@ -36,8 +37,7 @@ import {
   PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
   STR_NACIONAL,
 } from '../../constantes/datos-solicitud.enum';
-import { Subject, takeUntil } from 'rxjs';
-import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
@@ -180,6 +180,8 @@ export class AgregarFabricanteComponent
    */
   @Input() datoSeleccionado: Fabricante[] | undefined;
 
+  @Input() tramiteID: string = '';
+
   /**
    * Indica si se debe mostrar la colonia o equivalente.
    * @type {boolean}
@@ -286,6 +288,28 @@ export class AgregarFabricanteComponent
 
   public requestedFocus: boolean = true;
 
+      /**
+       * @property {Subscription} subscription
+       * @private
+       * @description
+       * Contenedor principal para gestionar suscripciones a observables que requieren
+       * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+       * para casos específicos que necesitan control granular de suscripciones.
+       * 
+       * @pattern Subscription Management
+       * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+       * @cleanup Se desuscribe manualmente en ngOnDestroy()
+       * @use_case Suscripciones que requieren lógica de limpieza personalizada
+       * 
+       * @example
+       * ```typescript
+       * this.subscription.add(
+       *   this.service.getData().subscribe(data => { ... })
+       * );
+       * ```
+       */
+      private subscription: Subscription = new Subscription();
+
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
@@ -298,7 +322,8 @@ export class AgregarFabricanteComponent
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService
+    private datosSolicitudService: DatosSolicitudService,
+    private catalogoService: CatalogoServices
   ) {
     //constructor necesario para inyectar el servicio
   }
@@ -310,7 +335,7 @@ export class AgregarFabricanteComponent
   ngOnInit(): void {
     this.requestedFocus = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento) ? false : true;
     this.cambiarHabilitacionContribuyente();
-    this.cargarDatos();
+    this.cargarDatos(this.tramiteID);
     this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
         ? true
@@ -728,7 +753,7 @@ guardarFabricante(): void {
    * utilizando el servicio `DatosSolicitudService`.
    * Se desuscribe automáticamente al destruir el componente.
    */
-  cargarDatos(): void {
+  cargarDatos(tramite: string): void {
     this.datosSolicitudService
       .obtenerListaCodigosPostales()
       .pipe(takeUntil(this.unsubscribe$))
@@ -736,41 +761,76 @@ guardarFabricante(): void {
         this.codigosPostalesDatos = data;
       });
 
-    this.datosSolicitudService
-      .obtenerListaPaises()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.paisesDatos = data;
-      });
+       this.subscription.add(
+            this.catalogoService
+            .paisesCatalogo(tramite)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((response) => {
+              const DATOS = response.datos as Catalogo[];
+              
+              if (response) {
+                this.paisesDatos = DATOS;
+              }
+            })
+          );  
+        
 
-    this.datosSolicitudService
-      .obtenerListaEstados()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.estadosDatos = data;
-      });
+    // this.datosSolicitudService
+    //   .obtenerListaPaises()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.paisesDatos = data;
+    //   });
 
-    this.datosSolicitudService
-      .obtenerListaMunicipios()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.municipiosTempDatos = data;
-      });
+    // this.datosSolicitudService
+    //   .obtenerListaEstados()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.estadosDatos = data;
+    //   });
 
-    this.datosSolicitudService
-      .obtenerListaLocalidades()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.localidadesTempDatos = data;
-      });
+       this.subscription.add(
+            this.catalogoService
+            .estadosCatalogo(tramite)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((response) => {
+              const DATOS = response.datos as Catalogo[];
+              
+              if (response) {
+                this.estadosDatos = DATOS;
+              }
+            })
+          );  
 
-    this.datosSolicitudService
-      .obtenerListaColonias()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.coloniasTempDatos = data;
-      });
+
+    // this.datosSolicitudService
+    //   .obtenerListaMunicipios()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.municipiosTempDatos = data;
+    //   });
+
+      
+
+    // this.datosSolicitudService
+    //   .obtenerListaLocalidades()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.localidadesTempDatos = data;
+    //   });
+
+
+    // this.datosSolicitudService
+    //   .obtenerListaColonias()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.coloniasTempDatos = data;
+    //   });
+
   }
+
+
+
 
   /**
    * @method limpiarFormulario
@@ -812,10 +872,18 @@ guardarFabricante(): void {
    *   a la lista principal (`municipiosDatos`).
    */
   cargarEstados(evento: Catalogo): void {
-    if (evento.id > 0) {
-      this.municipiosDatos = this.municipiosTempDatos;
-    }
+    if (evento.clave) {
+    this.subscription.add(this.catalogoService.municipiosDelegacionesCatalogo(this.tramiteID, evento.clave).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.municipiosDatos = DATOS;
+    }));
+  } else {
+    this.municipiosDatos = [];
   }
+  }
+  
   /**
    * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
    *
@@ -827,10 +895,24 @@ guardarFabricante(): void {
    *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
    */
   cargarMunicipios(evento: Catalogo): void {
-    if (evento.id > 0) {
-      this.localidadesDatos = this.localidadesTempDatos;
-      this.coloniasDatos = this.coloniasTempDatos;
-    }
+    if (evento.clave) {
+    this.subscription.add(this.catalogoService.localidadesCatalogo(this.tramiteID, evento.clave).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.localidadesDatos = DATOS;
+    }));
+
+    this.subscription.add(this.catalogoService.coloniasCatalogo(this.tramiteID, evento.clave).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.coloniasDatos = DATOS;
+    }));
+  } else {
+    this.localidadesDatos = [];
+    this.coloniasDatos = [];
+  }
   }
 
   /**
