@@ -1,5 +1,5 @@
-import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_DATOS_GRID, API_BUSCAR_TERCIARIZADAS, API_GET_DETALLE_DEL_PERMISO_DATOS } from '../../core/server/api-router';
-import { DetalleDelPermiso, DetalleDelPermisoPayload } from '../models/detalleDelPermiso.model';
+import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_DATOS_GRID, API_BUSCAR_DETALLE_DEL_PERMISO_DATOS, API_BUSCAR_TERCIARIZADAS } from '../../core/server/api-router';
+import { DetalleDelBuscarPayload, DetalleDelBuscarResponse } from '../models/detalleDelPermiso.model';
 import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
 import { PlantasDisponiblesPayload, PlantasDisponiblesResponse } from '../models/modelo-interface.model';
 import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_EMPRESAS_NACIONALES, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
@@ -90,9 +90,9 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
    * @param PAYLOAD Datos necesarios para obtener el detalle del permiso.
    * @returns Observable con la respuesta del servidor que contiene el detalle del permiso.
    */
-  obtenerDetalleDelPermisoDatos(tramite: string, PAYLOAD: DetalleDelPermisoPayload): Observable<BaseResponse<DetalleDelPermiso[]>> {
-    const ENDPOINT = `${this.host}${API_GET_DETALLE_DEL_PERMISO_DATOS(tramite.toString())}`;
-    return this.http.post<BaseResponse<DetalleDelPermiso[]>>(ENDPOINT, PAYLOAD);
+  obtenerDetalleDelPermisoDatos(tramite: string, PAYLOAD: DetalleDelBuscarPayload): Observable<BaseResponse<DetalleDelBuscarResponse[]>> {
+    const ENDPOINT = `${this.host}${API_BUSCAR_DETALLE_DEL_PERMISO_DATOS(tramite.toString())}`;
+    return this.http.post<BaseResponse<DetalleDelBuscarResponse[]>>(ENDPOINT, PAYLOAD);
   }
 
   /**

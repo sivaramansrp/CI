@@ -18,6 +18,7 @@ import {
   REGEX_PATRON_DECIMAL_2,
   TituloComponent
 } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, CatalogoServices} from '@libs/shared/data-access-user/src';
 import {
   Component,
   EventEmitter,
@@ -36,9 +37,8 @@ import {
   PagoDerechosState,
   PagoDerechosStore
 } from '../../estados/stores/pago-de-derechos.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
@@ -97,6 +97,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {boolean} campoRequerido - Indica si el campo es obligatorio.
    */
   @Input() public campoRequerido: boolean = false;
+
+  @Input() tramiteID: string = '';
+
+       /**
+         * @property {Subscription} subscription
+         * @private
+         * @description
+         * Contenedor principal para gestionar suscripciones a observables que requieren
+         * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+         * para casos específicos que necesitan control granular de suscripciones.
+         * 
+         * @pattern Subscription Management
+         * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+         * @cleanup Se desuscribe manualmente en ngOnDestroy()
+         * @use_case Suscripciones que requieren lógica de limpieza personalizada
+         * 
+         * @example
+         * ```typescript
+         * this.subscription.add(
+         *   this.service.getData().subscribe(data => { ... })
+         * );
+         * ```
+         */
+        private subscription: Subscription = new Subscription();
+  
+  
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
    * @description Output property that emits the updated state of the payment form whenever changes occur.
@@ -141,13 +167,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {Catalogo[]} estadosDatos
    * Lista de estados obtenida desde el servicio de catálogos.
    */
-  public estadosDatos: Catalogo[] = ESTADO_CATALOGOS;
+  public estadosDatos: Catalogo[] = [];
 
   /**
    * Arreglo que contiene los datos del catálogo.
    * @type {Catalogo[]}
    */
-  public bancoDatos: Catalogo[] = BANCO_CATALOGOS;
+  public bancoDatos: Catalogo[] = [];
   /**
    * Indica si el campo "banco" es obligatorio.
    * @type {boolean}
@@ -181,7 +207,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private datosSolicitudService: DatosSolicitudService,
     private pagoDerechosStore: PagoDerechosStore,
     private pagoDerechosQuery: PagoDerechosQuery,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
+    
   ) {
 
     // Inicializa el formulario.
@@ -203,6 +231,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    this.getBancoDatos();
     this.pagoDerechosQuery.selectSolicitud$
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -291,16 +320,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * y los asigna a la propiedad `bancoDatos`.
    */
   getBancoDatos(): void {
-    this.datosSolicitudService
-      .getBancoDatos()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.bancoDatos = data;
-        this.pagoDerechosForm.patchValue({
-          banco: this.solicitudState?.banco || '',
-          estado: this.solicitudState?.estado || '',
-        });
-      });
+    this.subscription.add(
+            this.catalogoService
+            .bancosCatalogo(this.tramiteID)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((response) => {
+              const DATOS = response.datos as Catalogo[];
+              
+              if (response) {
+                
+                this.bancoDatos = DATOS;
+                this.estadosDatos = DATOS;
+              }
+            })
+          );
   }
 
   /**
