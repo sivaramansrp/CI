@@ -36,6 +36,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './acuse-recibo.component.scss',
 })
 export class AcuseReciboComponent implements OnInit, OnDestroy {
+  
   /**
    * @property unsubscribe$
    * @description
@@ -92,6 +93,11 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   public alertaNotificacion: string = '';
 
   /**
+   * Datos de la tabla de resoluciones.Indica si se deben mostrar docs de resoluciones. Opcional ejemplo en trámite 130102.
+   */
+  @Input() datosTablaResolucion?: BodyTablaResolucion[] = [];
+
+  /**
    * Datos de la tabla de resoluciones.
    * Contiene los registros que se mostrarán en la tabla de resoluciones.
    * @type {BodyTablaResolucion[]}
@@ -122,10 +128,7 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @type {HeaderTablaResolucion[]}
   */
   readonly encabezadoTablaResolucion: HeaderTablaResolucion[] = CONSULTA_RESOLUCIONES.encabezadoTablaResolucion;
-  /**
-   * Datos de la tabla de resoluciones.
-   */
-  datosTablaResolucion: BodyTablaResolucion[] = [];
+  
   /**
    * @constructor
    * @param {ConfirmarNotificacionService} confirmarNotificacionService - Servicio para obtener datos de Acuse de Recibo.
@@ -154,32 +157,10 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
 
       if(this.banderaVista === "Resolucion"){
        this.alertaNotificacion = GENERARMENSAJERESOLUCION(this.guardarDatos.folioTramite);
-       if(this.guardarDatos.procedureId === '130102'){
-        
-          this.obtenerAcusesRecibos();
-       }
 
       }else{
         this.alertaNotificacion = GENERARMENSAJENOTIFICACION(this.guardarDatos.folioTramite);
       }
-  }
-
-  /**
-   * Obtiene los acuses y recibos relacionados con la resolución.
-   */
-  obtenerAcusesRecibos(): void {
-    this.confirmarNotificacionService.getAcusesRecibos(this.guardarDatos.procedureId, this.guardarDatos.folioTramite).subscribe({
-      next: (data) => {
-        if (data?.codigo === "00" && data?.datos) {
-          this.datosTablaResolucion = [{
-            id: 1,
-            idDocumento: data.datos[0].id_documento_oficial + "",
-            documento: data.datos[0].desc_documento,
-            urlPdf: data.datos[0].documento_minio
-          }]
-        }
-      },
-    });
   }
 
 
