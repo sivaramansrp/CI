@@ -22,7 +22,7 @@ import { AcuseReciboComponent } from '../../../../../se/src/app/application/shar
 import { FirmaConfirmarResponse } from '../../../../../se/src/app/application/core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
 
 import { AcusesRecibidosNotificacion } from '../core/models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
-
+import { formatFecha } from '@libs/shared/data-access-user/src';
 /**
  * @component ConfirmarNotificacionComponent
  * @description
@@ -218,7 +218,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         cadena_original: CADENAHEX,
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
-        fecha_firma: ConfirmarNotificacionComponent.formatFecha(new Date()), // fecha actual formateada
+        fecha_firma: formatFecha(new Date()), // fecha actual formateada
         clave_rol: 'Solicitante',
         sello: FIRMAHEX,
       }
@@ -502,7 +502,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   obtenerCadenaOriginal(): void {
     const NUMFOLIO = this.guardarDatos.folioTramite;
     const PAYLOAD: CadenaOriginalRequest = {
-      fecha_firma: ConfirmarNotificacionComponent.formatFecha(new Date()),
+      fecha_firma: formatFecha(new Date()),
       usuario: {
         apellido_materno: 'Pérez',
         rfc: 'MAVL621207C95',
@@ -543,26 +543,6 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  /** 
-   * Formatea una fecha a string en formato YYYY-MM-DD HH:MM:SS
-   * @param fecha - Fecha a formatear (string o objeto Date)
-   * @returns String con la fecha formateada
-   */
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
-  }
-
   /**
 * Maneja el evento de firma y obtiene los datos de la firma.
 * @param datos - Objeto que contiene la firma, número de serie del certificado y RFC.
@@ -578,8 +558,10 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para obtener la cadena original del trámite.
-   * Este método se encarga de llamar al servicio correspondiente para obtener la cadena original.
+   * @method ngOnDestroy
+   * @description
+   * Método de ciclo de vida de Angular que se llama cuando el componente es destruido.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroy$.next();

@@ -363,3 +363,34 @@ export function formatDateToYYYYMMDD(dateString: string): string {
   const DATE = new Date(dateString);
   return DATE.toISOString().split('T')[0];
 }
+
+    /**
+  * Método genérico para manejar un PDF en base64.
+  *
+  * @param base64 Contenido del PDF en base64.
+  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+  */
+  export function  manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
+  }

@@ -78,6 +78,8 @@ import { ModeloConfig, ServiceConfig } from '../../../../../se/src/app/applicati
 import { IniciarAutorizacionRequest } from '../core/models/autorizar-requerimiento/request/autorizar-dictamen-request.model';
 import { Firma } from '../../../../../se/src/app/application/core/models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../../../../../se/src/app/application/core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
+import { formatFecha, manejarPdf } from '@libs/shared/data-access-user/src';
+
 /**
  * @component
  * @name EvaluarComponent
@@ -601,7 +603,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   getEvaluacionTramite(): void {
     this.evaluarSolicitudService.getEvaluacionTramite(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+    ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.evaluacionTramite = response.datos ?? {} as EvaluacionOpcionResponse;
@@ -653,7 +657,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   getPrepararEvaluacion(opcion: string): void {
     this.evaluarSolicitudService.postPrepararEvaluacion(this.tramite, this.guardarDatos.folioTramite, opcion)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo !== '00') {
 
@@ -702,7 +708,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   getDocumentosSolicitud(): void {
     this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, this.guardarDatos.id_solicitud)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.documentosSolicitud = response.datos ?? [];
@@ -752,7 +760,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   getRequerimientos(): void {
     this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.requerimientosSolicitud = response.datos ?? [];
@@ -802,7 +812,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   getDictamenes(): void {
     this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.dictamenesSolicitud = response.datos ?? [];
@@ -852,7 +864,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   getTareasSolicitud(): void {
     this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.tareasSolicitud = response.datos ?? [];
@@ -899,7 +913,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   getOpiniones(): void {
     this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.opinion = response.datos ?? [];
@@ -947,7 +963,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   getAcusesResolucion(): void {
     this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
@@ -992,7 +1010,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   getEnvioDigital(): void {
     this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, this.guardarDatos.folioTramite)
-      .subscribe({
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
@@ -1493,10 +1513,10 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         cadena_original: CADENAHEX,
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
-        fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+        fecha_firma: formatFecha(new Date()),
         clave_rol: 'Autorizador',
         sello: FIRMAHEX,
-        fecha_fin_vigencia: AutorizarDictamenComponent.formatFecha(this.datosFirmaReales.fechaFin),
+        fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
         documentos_requeridos: []
       }
     };
@@ -1576,7 +1596,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
-      fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+      fecha_firma: formatFecha(new Date()),
       clave_rol: 'Autorizador',
       sello: this.sello
     }
@@ -1640,7 +1660,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
-      fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+      fecha_firma: formatFecha(new Date()),
       clave_rol: 'Autorizador',
       sello: this.sello
     } 
@@ -1725,7 +1745,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         cadena_original: CADENAHEX,
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
-        fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
+        fecha_firma: formatFecha(new Date()),
         clave_rol: 'Dictaminador',
         sello: FIRMAHEX,
       }
@@ -1780,19 +1800,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
-  }
 
   /**
    * @method cancelar
@@ -2162,7 +2169,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.acuseDetalleService.getDescargarAcuse(this.tramite, uuid).subscribe({
       next: (data) => {
         if (data?.codigo === "00" && data?.datos?.contenido) {
-          AutorizarDictamenComponent.manejarPdf(
+          manejarPdf(
             data.datos.contenido,
             data.datos.nombre_archivo,
             accion
@@ -2172,36 +2179,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
-  * Método genérico para manejar un PDF en base64.
-  *
-  * @param base64 Contenido del PDF en base64.
-  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
-  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
-  */
-  static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
-    // Decodificar el base64
-    const BYTE_CHARACTERS = atob(base64);
-    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
-    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
-      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
-    }
-    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
-
-    // Crear el Blob y la URL
-    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
-    const URLCODIFICADA = URL.createObjectURL(BLOB);
-
-    if (accion === 'abrir') {
-      window.open(URLCODIFICADA, '_blank');
-    } else {
-      const LINK = document.createElement('a');
-      LINK.href = URLCODIFICADA;
-      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
-      LINK.click();
-      URL.revokeObjectURL(URLCODIFICADA);
-    }
-  }
 
   /**
    * @method postTerminar
