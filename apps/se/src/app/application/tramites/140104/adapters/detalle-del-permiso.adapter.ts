@@ -4,7 +4,7 @@
  * para el trámite de ampliación de servicios 80205.
  */
 import { Cancelacion } from '../models/cancelacion-de-solicitus.model';
-import { DetalleDelPermisoPayload } from '../../../shared/models/detalleDelPermiso.model';
+import { DetalleDelPermisoGuardarPayload } from '../../../shared/models/detalleDelPermiso.model';
 import { Injectable } from '@angular/core';
 import { Solicitud140104State } from '../estados/desistimiento-de-permiso.store';
 
@@ -53,54 +53,16 @@ interface Solicitud {
   };
 }
 
-interface CuerpoTablaCancelacion {
-  idResolucion: string;
-  numeroResolucion: string;
-  regimen: string;
-  clasificacionRegimen: string;
-  condicionMercancia: string;
-  fraccionArancelaria: string;
-  unidadMedida: string;
-  cantidadImportarExportar: string;
-  vigenciaResolucion: string;
-  valorAutorizado: string;
-  inicioResolucion: string;
-  numFolioTramite: string;
-  valorSolicitado: string;
-  cantidadImportarExportarSolicitada: string;
-  general: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class DetalleDelAdapter {
-  static cuerpoTablaCancelacion: CuerpoTablaCancelacion[] = [
-    {
-      idResolucion: "0100001000320221005000001",
-      numeroResolucion: "NR",
-      regimen: "Importación",
-      clasificacionRegimen: "General",
-      condicionMercancia: "Nueva",
-      fraccionArancelaria: "72069099",
-      unidadMedida: "Kilogramo",
-      cantidadImportarExportar: "1000000",
-      vigenciaResolucion: "2025-12-31",
-      valorAutorizado: "100000",
-      inicioResolucion: "2025-01-01",
-      numFolioTramite: "140105",
-      valorSolicitado: "95000",
-      cantidadImportarExportarSolicitada: "950000",
-      general: "Sí"
-    }
-  ];
-
   /**
    * Convierte del estado de Akita al formato de payload de API usando las mismas claves
    * @param _state El estado actual de Akita (no usado en este ejemplo)
    * @returns Payload formateado para la API
    */
-  static toFormPayload(_state: Solicitud140104State): DetalleDelPermisoPayload {
+  static toFormPayload(_state: Solicitud140104State): DetalleDelPermisoGuardarPayload {
     const SOLICITUD: Solicitud = {
       idSolicitud: "",
       discriminatorValue: "140105",
@@ -142,7 +104,7 @@ export class DetalleDelAdapter {
       }
     };
 
-    const NUMERO_FOLIO_TRAMITE_CANCELADOS: Cancelacion[] = this.cuerpoTablaCancelacion.map((item) => ({
+    const NUMERO_FOLIO_TRAMITE_CANCELADOS: Cancelacion[] = _state.cuerpoTablaCancelacion.map((item: Cancelacion) => ({
       idResolucion: item.idResolucion,
       numeroResolucion: item.numeroResolucion,
       regimen: item.regimen,
@@ -164,7 +126,7 @@ export class DetalleDelAdapter {
   solicitud: SOLICITUD,
   puedeCapturarRepresentanteLegalCG: false,
   claveEntidadFederativa: "SIN",
-  idTramite: "140105",
+  idTramite: "140104",
   motivoCancelacion: "API Test 2",
   numeroFolioTramiteCancelados: NUMERO_FOLIO_TRAMITE_CANCELADOS
 };

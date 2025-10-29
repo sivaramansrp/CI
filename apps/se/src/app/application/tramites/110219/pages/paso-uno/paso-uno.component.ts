@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { CertificadoApiData, ColumnasTabla } from '../../models/certificado.model';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
@@ -15,10 +16,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
+  imports: [
+    CommonModule,
+    SolicitanteComponent,
+    CancelacionDeCertificadoComponent,
+    CertificadoDeOrigenComponent,
+  ],
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
-
   /**
    * Indica si el número de certificado es válido.
    */
@@ -38,6 +43,16 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Referencia al componente `SolicitanteComponent`.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * Referencia al componente `SolicitanteComponent`.
+   */
+  @ViewChild(CancelacionDeCertificadoComponent) cancelacionDeCertificadoComponent!: CancelacionDeCertificadoComponent;
+
+  /**
+   * Referencia al componente `SolicitanteComponent`.
+   */
+  @ViewChild(CertificadoDeOrigenComponent) certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
 
   /**
    * Tipo de persona seleccionada.
@@ -70,6 +85,16 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   isCertificado!: boolean;
 
   /**
+   * Datos del certificado seleccionado.
+   */
+  certificadoData: ColumnasTabla | null = null;
+
+  /**
+   * Datos completos de la API del certificado seleccionado.
+   */
+  certificadoApiDataCompleto: CertificadoApiData | null = null;
+
+  /**
    * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -87,17 +112,21 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Evento para emitir si el patrón del número de certificado es válido.
    */
-  @Output() eventoNumeroDePattern: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() eventoNumeroDePattern: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   /**
    * Evento para emitir datos del certificado al componente padre.
    */
-  @Output() eventoDatosHijoCertificado: EventEmitter<number> = new EventEmitter<number>();
+  @Output() eventoDatosHijoCertificado: EventEmitter<number> =
+    new EventEmitter<number>();
 
   /**
    * Evento para emitir si los datos del número son válidos.
    */
-  @Output() isDatosNumero: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+  @Output() isDatosNumero: EventEmitter<boolean> = new EventEmitter<boolean>(
+    false
+  );
 
   /**
    * Estado de la consulta, utilizado para manejar el estado de la aplicación.
@@ -113,7 +142,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
-   * 
+   *
    * @param cdr Servicio para detectar cambios manualmente.
    * @param consultaQuery Servicio para consultar el estado de la sección.
    * @param certificadoService Servicio para gestionar certificados.
@@ -131,12 +160,14 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Suscribe al estado de consulta y determina si se deben cargar los datos del formulario.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
     if (this.consultaState.update) {
       this.guardarDatosFormularios();
     } else {
@@ -150,9 +181,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   guardarDatosFormularios(): void {
     this.certificadoService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyed$)
-      )
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
@@ -177,7 +207,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Cambia la pestaña seleccionada en la UI.
-   * 
+   *
    * @param i Índice de la pestaña a activar.
    */
   seleccionaTab(i: number): void {
@@ -187,7 +217,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Emite un evento al componente padre con los datos proporcionados.
-   * 
+   *
    * @param data Datos a emitir al componente padre.
    */
   emitirCancelacion(data: number): void {
@@ -236,8 +266,26 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Actualiza el estado de habilitación del certificado.
    * @param event Valor booleano que indica si el certificado está habilitado.
    */
-  certificadoEnable(event: boolean):void {
+  certificadoEnable(event: boolean): void {
     this.isCertificado = event;
+  }
+
+  /**
+   * Maneja la selección de un certificado desde la tabla.
+   * @param certificado Datos del certificado seleccionado.
+   */
+  onCertificadoSeleccionado(certificado: ColumnasTabla): void {
+    this.certificadoData = certificado;
+  }
+
+  /**
+   * Maneja la recepción de los datos completos de la API del certificado seleccionado.
+   * @param certificadoApiData Datos completos de la API del certificado seleccionado.
+   */
+  onCertificadoApiDataSeleccionado(
+    certificadoApiData: CertificadoApiData
+  ): void {
+    this.certificadoApiDataCompleto = certificadoApiData;
   }
 
   /**
@@ -247,5 +295,26 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso uno: solicitante, certificado de origen y datos del certificado.
+   * Marca los controles como tocados si algún formulario es inválido para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigenComponent) {
+      if (!this.certificadoDeOrigenComponent.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
 }

@@ -75,11 +75,6 @@ export class DestinatarioComponent
    * @type {Catalogo[]}
    */
   @Input() paisDestin!: Catalogo[];
-  /**
-   * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
-   * @type {Catalogo[]}
-   */
-  paisDestinDestinatario!: Catalogo[];
 
   /**
    * Evento que se emite cuando se selecciona un país de destino
@@ -152,6 +147,7 @@ export class DestinatarioComponent
 
   // Indica si los campos de destinatarios están activos
   camposDestinatarios = false;
+  circulacion?: Catalogo[];
 
   /**
    * Constructor del componente
@@ -288,11 +284,15 @@ export class DestinatarioComponent
    * Obtiene la lista de países de destino desde el servicio
    */
   getPaisDestino(): void {
-    this.destinatarioService
-      .getPaisDestino(this.idProcedimiento.toString())
-      .subscribe((data) => {
-        this.paisDestinDestinatario = data as Catalogo[];
-      });
+    this.destinatarioService.getPaisDestino(this.idProcedimiento.toString()).subscribe((data) => {
+      this.circulacion = data as Catalogo[];
+    });
+  }
+
+  get paisDestinDestinatario(): Catalogo[]{
+    return this.circulacion?.length
+      ? this.circulacion
+      : this.paisDestin;
   }
   /**
    * Establece valores en el store y emite eventos relacionados con el formulario.

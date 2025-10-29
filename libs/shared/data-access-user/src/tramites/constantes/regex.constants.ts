@@ -873,6 +873,23 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+
+/**
+ * Expresión regular para validar números de teléfono de 10 dígitos.
+ * 
+ * Acepta únicamente caracteres numéricos (0-9) y requiere que el número tenga exactamente 10 dígitos.
+ * 
+ * Ejemplos válidos:
+ * - 5512345678
+ * - 8187654321
+ * 
+ * Ejemplos inválidos:
+ * - 123456789 (menos de 10 dígitos)
+ * - 12345678901 (más de 10 dígitos)
+ * - 55-1234-5678 (contiene caracteres no numéricos)
+ */
+export const TELEFONO = /^[0-9]{10}$/;
+
 /**
  * Expresión regular para validar números decimales con hasta 13 dígitos enteros y exactamente 2 decimales.
  *
