@@ -9,16 +9,12 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ELEMENTOS_REQUERIDOS } from '../../constants/psicotropicos-poretorno.enum';
 
-import {
-  Observable,
-  Subject } from 'rxjs';
+import {Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
 
-import {
-  map,
-  takeUntil } from 'rxjs';
+import {takeUntil } from 'rxjs';
 
 /**
  * @component TercerosRelacionadosVistaComponent
