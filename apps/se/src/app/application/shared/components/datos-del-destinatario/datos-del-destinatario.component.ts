@@ -53,7 +53,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110221];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207,110208];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -125,12 +125,13 @@ export class DatosDelDestinatarioComponent
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
-  public markAllFieldsTouched(): void {
-    if (this.formDatosDelDestinatario) {
+  public markAllFieldsTouched(): boolean{
+    if (this.formDatosDelDestinatario.invalid) {
       this.formDatosDelDestinatario.markAllAsTouched();
+      return false;
     }
+    return true;
   }
-
   /**
    * Inicializa el formulario 'formDatosDelDestinatario' con los campos requeridos.
    *
@@ -148,8 +149,27 @@ export class DatosDelDestinatarioComponent
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
-    });
+    });  
+    this.updateRequiredValidators();
   }
+
+  /**
+   * Actualiza los validadores requeridos del campo 'numeroDeRegistroFiscal'
+   * en el formulario 'formDatosDelDestinatario' según el procedimiento actual.
+   * * @remarks
+   * Este método verifica si el identificador del procedimiento (`idProcedimiento`)
+   * está incluido en la lista de procedimientos que requieren el campo 'numeroDeRegistroFiscal'.
+   */
+  updateRequiredValidators(): void {
+    if (this.NUMERO_REGISTRO_FISCAL_REQUIRED.includes(this.idProcedimiento)) {
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    }else{
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
+        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    }
+  }
+
   /**
    * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
    * 'formDatosDelDestinatario' según el procedimiento actual.
@@ -218,6 +238,9 @@ export class DatosDelDestinatarioComponent
       } else {
         this.createForm();
       }
+    }
+    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+      this.updateRequiredValidators();
     }
   }
   /**

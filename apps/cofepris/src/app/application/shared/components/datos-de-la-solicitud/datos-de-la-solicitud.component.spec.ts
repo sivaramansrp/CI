@@ -2,18 +2,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { HttpClientModule } from '@angular/common/http';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ScianDataService } from '../../services/scian-data.service';
+import { CatalogoServices } from '@libs/shared/data-access-user/src';
 
 @Injectable()
 class MockRouter {
@@ -22,7 +25,34 @@ class MockRouter {
 
 @Injectable()
 class MockDatosSolicitudService {
-  obtenerRespuestaPorUrl = function() {};
+  obtenerRespuestaPorUrl = jest.fn();
+  buscarRepresentantePorRfc = jest.fn().mockReturnValue(observableOf({
+    codigo: '00',
+    datos: {
+      nombre: 'Test Nombre',
+      apellidoPaterno: 'Test Apellido Paterno',
+      apellidoMaterno: 'Test Apellido Materno'
+    }
+  }));
+}
+
+@Injectable()
+class MockConsultaioQuery {
+  selectConsultaioState$ = observableOf({
+    readonly: false
+  });
+}
+
+@Injectable()
+class MockScianDataService {
+  updateScianData = jest.fn();
+}
+
+@Injectable()
+class MockCatalogoServices {
+  estadosCatalogo = jest.fn().mockReturnValue(observableOf({
+    datos: []
+  }));
 }
 
 describe('DatosDeLaSolicitudComponent', () => {
@@ -42,6 +72,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         HttpClientModule
       ],
       providers: [
+        FormBuilder,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -51,10 +82,37 @@ describe('DatosDeLaSolicitudComponent', () => {
             },
           },
         },
+        {
+          provide: Router,
+          useClass: MockRouter,
+        },
+        {
+          provide: DatosSolicitudService,
+          useClass: MockDatosSolicitudService,
+        },
+        {
+          provide: ConsultaioQuery,
+          useClass: MockConsultaioQuery,
+        },
+        {
+          provide: ScianDataService,
+          useClass: MockScianDataService,
+        },
+        {
+          provide: CatalogoServices,
+          useClass: MockCatalogoServices,
+        },
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
       ],
     }).compileComponents();
    fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
+    
+    // Set up all required input properties
+    component.idProcedimiento = 260103;
     component.datosSolicitudFormState = {
       rfcSanitario: '',
       denominacionRazon: '',
@@ -64,6 +122,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       municipioAlcaldia: '',
       localidad: '',
       colonia: '',
+      calleYNumero: '',
       calle: '',
       lada: '',
       telefono: '',
@@ -72,12 +131,67 @@ describe('DatosDeLaSolicitudComponent', () => {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
+      aeropuertoDos: false,
       publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
       apellidoMaterno: '',
+      regimenLaMercancia: '',
+      aduana: '',
+      mercancias: [],
+      manifesto: '',
+      manifiestosCasillaDeVerificacion: false
     };
+    
+    component.scianConfig = {
+      datos: [],
+      titulo: 'Test SCIAN',
+      columnas: []
+    };
+    
+    component.tablaMercanciasConfig = {
+      datos: [],
+      titulo: 'Test Mercancías',
+      columnas: []
+    };
+    
+    component.opcionConfig = {
+      datos: [],
+      titulo: 'Test Opciones',
+      columnas: []
+    };
+    
+    component.mercanciaFormState = {
+      clasificacionProducto: '',
+      descripcionMercancia: '',
+      paisOrigen: '',
+      fabricante: '',
+      tipoEnvase: '',
+      materialEnvase: '',
+      capacidad: '',
+      unidadMedida: '',
+      cantidad: 0,
+      unidadComercial: '',
+      pesoNeto: 0,
+      pesoBruto: 0,
+      valorComercial: 0,
+      incoterm: '',
+      fraccionArancelaria: '',
+      nico: '',
+      tigie: '',
+      cuentaPedimento: '',
+      marca: '',
+      modelo: '',
+      numeroSerie: '',
+      uso: ''
+    };
+    
+    component.opcionesColapsableState = false;
+    component.elementosAnadidos = [];
+    component.elementosRequeridos = [];
+    component.tablaAcciones = [];
+    
     fixture.detectChanges();
   });
 

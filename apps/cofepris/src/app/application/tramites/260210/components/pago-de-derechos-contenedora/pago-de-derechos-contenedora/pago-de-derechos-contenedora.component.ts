@@ -2,9 +2,12 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260214Store } from '../../../estados/tramite260210Store.store';
+import { ViewChild } from '@angular/core';
+
 
 /**
  * @component PagoDeDerechosContenedoraComponent
@@ -44,6 +47,16 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @memberof PagoDeDerechosContenedoraComponent
    */
   public esFormularioSoloLectura: boolean = false;
+
+  @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
+   /**
+     * Identificador único del procedimiento.
+     * Esta propiedad es de solo lectura y se inicializa con el valor constante `ID_PROCEDIMIENTO`.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
+  
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -121,6 +134,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

@@ -613,7 +613,6 @@
           id="capacidad"
           formControlName="capacidad"
           maxlength="250"
-          [libSoloNumerica]="true"
           (change)="actualizarCampoFormularioResiduo('capacidad')"
           [ngClass]="
             esControlValido(formularioResiduo, 'capacidad') ? 'required' : ''

@@ -65,6 +65,7 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * Índice de la pestaña seleccionada.
  */
 export interface Tramite260216State {
+   idSolicitud: number;
   /**
    * Lista de destinatarios finales asociados al trámite.
    */
@@ -159,6 +160,7 @@ export interface Tramite260216State {
  */
 export function createInitialState(): Tramite260216State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
