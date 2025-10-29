@@ -476,7 +476,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     let value = TARGET.value;
     value = value.replace(/\D/g, '').slice(0, maxLength);
     TARGET.value = value;
-    this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
+    this.formaComplimentos.get('formaModificaciones.nombreDeActa')?.setValue(value, { emitEvent: false });
   }
 
   /**
@@ -1486,6 +1486,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
     );
+     const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+     if (RFC_CONTROL?.valid) {   
+    this.formaModificaciones.get('nombreDeRepresentante')?.setValue('Maria Lopez');
+     }
+     else{
+      this.formaModificaciones.get('nombreDeRepresentante')?.setValue('');
+     }
   }
   /**
    * Handles keypress events to allow only letters and common characters

@@ -138,7 +138,7 @@ export const ANEXO_I_SERVICIO = [
     orden: 6,
   },
   {
-    encabezado: 'Categoria',
+    encabezado: 'Categoría',
     clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoCategoria,
     orden: 7,
   },
@@ -233,7 +233,7 @@ export const ANEXO_IMPORTACION_SERVICIO = [
     orden: 8,
   },
   {
-    encabezado: 'Categoria',
+    encabezado: 'Categoría',
     clave: (ele: AnexoDosEncabezado): string =>
       ele.encabezadoCategoria ?? '',
     orden: 9,
