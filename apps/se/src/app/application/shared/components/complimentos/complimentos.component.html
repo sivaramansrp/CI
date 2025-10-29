@@ -273,7 +273,7 @@
 
           @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.hasError('pattern')
           && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
-          <p class="mensaje-error">Por favor, escribe una dirección de correo válida.</p>
+          <p class="mensaje-error">El correo no cumple con el formato requerido.</p>
           }
           @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid &&
           formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
@@ -295,7 +295,7 @@
             El estado no puede exceder los 250 caracteres.
             }
             @case ('correoElectronico') {
-            El correo electrónico no puede exceder los 200 caracteres.
+            El correo no cumple con el formato requerido.
             }
             @case ('taxId') {
             El Tax ID no puede exceder los 12 caracteres.

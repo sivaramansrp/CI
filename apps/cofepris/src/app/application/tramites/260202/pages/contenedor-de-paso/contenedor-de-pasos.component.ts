@@ -4,8 +4,10 @@ import {
   ListaPasosWizard,
   WizardComponent
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { Tramite260202Query } from '../../estados/tramite260202Query.query';
+import { Tramite260202State } from '../../estados/tramite260202Store.store';
 
 /**
  * @component
@@ -30,7 +32,14 @@ import { PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-prim
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit {
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
   /**
    * @property {string | null} tituloMensaje
    * @description Título del mensaje que se muestra en el wizard.
@@ -71,6 +80,36 @@ export class ContenedorDePasosComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * @property {Tramite260202State} storeData
+   * @description Estado de la tienda para el trámite 260202.
+   */
+  storeData!: Tramite260202State;
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  constructor(private tramite260202Query: Tramite260202Query) {}
+  
+  ngOnInit(): void {
+    this.tramite260202Query.selectTramiteState$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+  }
 
   /**
    * @method seleccionaTab
@@ -119,5 +158,60 @@ export class ContenedorDePasosComponent {
       default:
         return TITULO_MENSAJE;
     }
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 }

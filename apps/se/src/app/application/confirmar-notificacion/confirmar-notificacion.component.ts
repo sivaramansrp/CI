@@ -74,6 +74,13 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   folio: string = '';
 
   /**
+   * Datos de la resolución que se mostrarán en la tabla.
+   * @type {BodyTablaResolucion[]}
+   * Solo se utiliza si hay resoluciones que mostrar y si el trámite lo requiere.
+   */
+  datosTablaResolucion?: BodyTablaResolucion[] = [];
+
+  /**
   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
   * Se utiliza para completar el observable cuando el componente se destruye.
   */
@@ -122,6 +129,12 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   */
   datosTabla: BodyTablaResolucion[] = [];
 
+  /**
+   * Arreglo que contiene los números de trámite que requieren documentos de resolución.
+   * Se deberá añadir un número de trámite a este arreglo si es necesario mostrar documentos de resolución para ese trámite.
+   */
+  tramitesDocumentosResolucion = ['130102'];
+
 
   /**
 * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
@@ -167,6 +180,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       )
       .subscribe()
     this.getConfirmarNotificacion();
+    this.obtenerAcusesRecibos();
   }
 
   /**
@@ -438,6 +452,29 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+
+    /**
+   * Obtiene los acuses y recibos relacionados con la resolución.
+   */
+  obtenerAcusesRecibos(): void {
+    if (this.tramitesDocumentosResolucion.includes(this.guardarDatos.procedureId)){
+      this.confirmarNotificacionService.getAcusesRecibos(this.guardarDatos.procedureId, this.guardarDatos.folioTramite).subscribe({
+      next: (data) => {
+        if (data?.codigo === "00" && data?.datos) {
+          this.datosTablaResolucion = [{
+            id: 1,
+            idDocumento: data.datos[0].id_documento_oficial + "",
+            documento: data.datos[0].desc_documento,
+            urlPdf: data.datos[0].documento_minio
+          }]
+        }
+      },
+    });
+    }
+    
+  }
+
 
 
   /**

@@ -700,6 +700,12 @@ export const API_POST_REQUERIMIENTO_GUARDAR = (TRAMITE: string, IDREQUERIMIENTO:
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/c…
  */
 export const API_GET_ACUSES_RECIBOS_NOTIFICACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos-notificacion`;
+
+/**
+ * API para obtener la notificacion de los acuses recibidos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Confirmar-Notificacion/consulta-acuse-recibo-notificacion
+ */
+export const API_GET_ACUSES_RECIBOS = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos`;
  
 /**
  * API para iniciar la confirmación de notificación del tramite generico.
@@ -771,6 +777,12 @@ export const CATALOGO_ESTADOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/c
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
  */
 export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises`;
+
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
+ */
+export const CATALOGO_PAISES_DESTINO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises-destino/SGPPRO004/TICERM.SOA`;
 
 /*
  * API para obtener el catálogo de NICO
@@ -925,7 +937,7 @@ export const CATALOGO_UNIDAD_DE_MASA_BRUTA = (TRAMITE: string): string => `sat-t
   * API para obtener el catálogo de tratados y acuerdos por país
   * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratado-acuerdo
   */
-export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdo`;
+export const CATALOGO_TRATADO_ACUERDO_PAIS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdos`;
 
 /*
   * API para obtener el catálogo de tratados y acuerdos por país
@@ -1052,4 +1064,3 @@ export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: str
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
  */
 export const CATALOGO_BANCOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/bancos`;
-

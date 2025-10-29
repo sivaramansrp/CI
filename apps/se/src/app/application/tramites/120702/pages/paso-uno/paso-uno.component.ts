@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
+
+import { ExpedicionAsignacionComponent } from '../../components/expedicion-asignacion/expedicion-asignacion.component';
 /**
  * # Documentación - PasoUnoComponent
  *
@@ -18,6 +20,11 @@ import { ExpedicionCertificadosFronteraService } from '../../services/expedicion
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy{
+
+   /**
+     * Referencia ViewChild al componente de asignación de datos de empresa.
+     */
+    @ViewChild('asignacionRef') asignacion!: ExpedicionAsignacionComponent;
 
  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
@@ -51,6 +58,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Valida el formulario del tab actualmente seleccionado.
+   * @returns true si el formulario es válido, false en caso contrario.
+   */
+  public validarTabActual(): boolean {
+    switch (this.indice) {
+      case 1:
+        // Validar tab de Solicitante (implementar según sea necesario)
+        return true;
+      
+      case 2:
+        // Validar tab de Expedición certificados asignación directa
+        if (this.asignacion && this.asignacion.asignacionForm) {
+          // Marcar todos los campos como touched para mostrar errores
+          this.asignacion.asignacionForm.markAllAsTouched();
+          return this.asignacion.asignacionForm.valid;
+        }
+        return false;
+      
+      default:
+        return true;
+    }
   }
 
   /**
