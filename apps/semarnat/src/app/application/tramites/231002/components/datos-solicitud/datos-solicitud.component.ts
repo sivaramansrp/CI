@@ -209,6 +209,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.obtenerAduanasSalida();
     this.obtenerPaisesSalida();
     this.validaEsFormularioValido();
+    this.validaCamposEmpresaReciclaje();
   }
 
   /**
@@ -342,25 +343,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Maneja cambios en el campo "requiereEmpresa" para habilitar/deshabilitar campos relacionados
    * @param valor Valor seleccionado ('Si' o 'No')
    */
-  onRequiereEmpresaChange(valor: string): void {
-    const DEBE_HABILITAR = valor === 'Si';
-    const CAMPOS = [
-      'nombreEmpresa',
-      'representanteLegal',
-      'telefono',
-      'correoElectronico',
-    ];
-
-    CAMPOS.forEach((campo) => {
-      const CONTROL = this.formularioEmpresaReciclaje.get(campo);
-      if (CONTROL) {
-        if (DEBE_HABILITAR) {
-          CONTROL.enable();
-        } else {
-          CONTROL.disable();
-        }
-      }
-    });
+  onRequiereEmpresaChange(): void {
+    this.validaCamposEmpresaReciclaje();
   }
 
   /**
@@ -409,7 +393,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = this.formularioEmpresaReciclaje.get(campo)?.value;
 
     if (campo === 'requiereEmpresa') {
-      this.onRequiereEmpresaChange(VALOR);
+      this.onRequiereEmpresaChange();
     }
 
     this.datoSolicitudStore.actualizarEmpresaReciclaje({
@@ -651,6 +635,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene los países de salida disponibles y los asigna al catálogo correspondiente.
+   */
   obtenerPaisesSalida(): void {
     this.catalogosService
       .obtenerPaisesDestino()
@@ -658,6 +645,31 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.paisesSalidaCatalogo = data.datos;
       });
+  }
+
+  /**
+   * Valida los campos del formulario de empresa reciclaje, si el requisito es "Sí", habilita el formulario.
+   */
+  validaCamposEmpresaReciclaje(): void {
+    const REQUIERE_EMPRESA = this.formularioEmpresaReciclaje.get('requiereEmpresa')?.value;
+    const CAMPOS = [
+      'nombreEmpresa',
+      'representanteLegal',
+      'telefono',
+      'correoElectronico',
+    ];
+    
+
+    CAMPOS.forEach((campo) => {
+      const CONTROL = this.formularioEmpresaReciclaje.get(campo);
+      if (CONTROL) {
+        if (REQUIERE_EMPRESA && REQUIERE_EMPRESA === 'No') {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
+        }
+      }
+    });
   }
 
   /**

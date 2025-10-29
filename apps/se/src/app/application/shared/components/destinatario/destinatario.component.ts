@@ -180,7 +180,9 @@ export class DestinatarioComponent
     );
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
-    this.getPaisDestino();
+    if (this.paisDestino) {
+      this.getPaisDestino();
+    }
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
