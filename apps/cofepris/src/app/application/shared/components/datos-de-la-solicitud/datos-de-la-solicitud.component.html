@@ -666,6 +666,7 @@
       <div class="modal-body">
         <app-scian-tabla
          *ngIf="scianModalAbierto"
+         [idProcedimiento]="idProcedimiento"
          (cerrarModal)="cerrarScianModal()"
          (scianSeleccionado)="onScianSeleccionado($event)">        
         </app-scian-tabla>

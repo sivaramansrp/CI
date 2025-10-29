@@ -1,4 +1,4 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { HistoricoColumnas } from './certificado-origen.model';
 import { TramiteState } from '../estados/Tramite110223.store';
 
@@ -438,4 +438,12 @@ export interface RepresentanteLegalForm{
   telefono: string;
   fax: string;
   correoElectronico: string;
+}
+
+/** Opciones del catálogo de tratados comerciales */
+export const OPTIONS_TRATADO: CatalogosSelect = {
+  labelNombre: 'Tratado/Acuerdo',
+  required: true,
+  primerOpcion: 'Selecciona un valor',
+  catalogos: [],
 }

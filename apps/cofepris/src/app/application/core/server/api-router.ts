@@ -16,4 +16,4 @@ export const COMUN_URL = {
  * @param tramite - Número del trámite
  * @returns string con el endpoint
  */
-export const API_BUSCAR_REPRESENTANTE = (tramite: string): string => `sat-t${tramite}/representante/buscar`;
+export const API_BUSCAR_REPRESENTANTE = (tramite: string): string => `sat-t${tramite}/solicitud/buscar`;

@@ -12,6 +12,7 @@ import {
 } from '../models/cancelacion-de-solicitus.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 import { HttpClient } from '@angular/common/http';
+import { Solicitud140104State } from '../estados/desistimiento-de-permiso.store';
 
 @Injectable({
   providedIn: 'root',
@@ -94,8 +95,10 @@ export class ServicioDeMensajesService {
    *
    * @returns Un observable que emite el estado completo de los permisos de desistimiento.
    */
-  public obtenerDatos(): Observable<PermisosDatos> {
-    return this.desistimientoStore._select((state) => state); // Devuelve el estado completo
+  public obtenerDatos(): Observable<Cancelacion[]> {
+    return this.desistimientoStore._select(
+      (state) => state.cuerpoTablaCancelacion
+    ); // Devuelve solo la propiedad 'cuerpoTablaCancelacion'
   }
 
   /**
@@ -104,7 +107,7 @@ export class ServicioDeMensajesService {
    * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información
    *                del tipo de solicitud a actualizar en el store.
    */
-  actualizarEstadoFormulario(DATOS: Partial<PermisosDatos>): void {
+  actualizarEstadoFormulario(DATOS: Partial<Solicitud140104State>): void {
     this.desistimientoStore.update((state) => ({
       ...state,
       ...DATOS,
@@ -119,6 +122,18 @@ Devuelve un observable que emite el estado de la solicitud de cancelación.
   getRegistroTomaMuestrasMercanciasData(): Observable<PermisosDatos> {
     return this.http.get<PermisosDatos>(
       'assets/json/140104/permisosCancelar.json'
+    );
+  }
+
+  /**
+   * Obtiene los datos simulados para los servicios del formulario.
+   * Realiza una solicitud HTTP al archivo 'datos-del-formulario.json' ubicado en la carpeta de assets.
+   * Devuelve un observable que emite el estado de la solicitud del formulario.
+   * @returns {Observable<Solicitud140104State>} Observable que emite los datos del estado del formulario.
+   */
+  getServiciosData(): Observable<Solicitud140104State> {
+    return this.http.get<Solicitud140104State>(
+      'assets/json/140105/datos-del-formulario.json'
     );
   }
 

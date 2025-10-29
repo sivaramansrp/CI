@@ -33,7 +33,7 @@
               cancelacionForm.get('motivoCancelacion')?.touched
                   ? 'red'
                   : ''
-            }" maxlength="250"></textarea>
+            }" maxlength="250" (valueChange)="setValoresStore(cancelacionForm, 'motivoCancelacion')"></textarea>
         </div>
         @if(cancelacionForm.controls['motivoCancelacion'].errors?.['required']&&
         cancelacionForm.controls['motivoCancelacion'].touched) {
@@ -82,7 +82,7 @@
                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" #closeModal
                 (click)="cerrarModal()">Cancelar</button>
               <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="abrirModificarModal()">Buscar</button>
+                aria-controls="offcanvasRight" (click)="buscarFolioResolucion()">Buscar</button>
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@
   </div>
 
   <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-busqueda-folio (cerrarClicado)="cerrarModificarModal()"></app-busqueda-folio>
+    <app-busqueda-folio (cerrarClicado)="cerrarModificarModal()" [detalleDelPermisoDatos]="detalleDelPermisoDatos"></app-busqueda-folio>
   </div>
 
 
