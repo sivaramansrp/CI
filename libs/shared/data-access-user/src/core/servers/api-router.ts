@@ -700,6 +700,12 @@ export const API_POST_REQUERIMIENTO_GUARDAR = (TRAMITE: string, IDREQUERIMIENTO:
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/c…
  */
 export const API_GET_ACUSES_RECIBOS_NOTIFICACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos-notificacion`;
+
+/**
+ * API para obtener la notificacion de los acuses recibidos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Confirmar-Notificacion/consulta-acuse-recibo-notificacion
+ */
+export const API_GET_ACUSES_RECIBOS = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos`;
  
 /**
  * API para iniciar la confirmación de notificación del tramite generico.

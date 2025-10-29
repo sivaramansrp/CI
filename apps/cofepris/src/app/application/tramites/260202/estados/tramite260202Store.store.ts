@@ -25,6 +25,10 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  */
 export interface Tramite260202State {
   /**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
+  /**
    * Lista de destinatarios finales en la tabla de datos.
    */
   destinatarioFinalTablaDatos: Destinatario[];
@@ -130,6 +134,7 @@ export interface Tramite260202State {
  */
 export function createInitialState(): Tramite260202State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
