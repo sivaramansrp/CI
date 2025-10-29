@@ -487,7 +487,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     }
 
     // Verificar si se ha seleccionado un servicio
-    if (!this.serviciosImmexServId) {
+    if (!this.serviciosImmexServId || this.serviciosImmexServId === '-1') {
+      this.formularioValidacionModal('Debe elegir en la pestaña de servicios, el servicio que se realizará a las mercancías a capturar');
       return;
     }
 
@@ -630,6 +631,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
         this.cambioModalidadStore.actualizarEstado({
         ServiciosDatos: this.ServiciosDatos
       });
+
+      this.tablaA?.clearSelection();
     }
   }
   
@@ -1059,6 +1062,7 @@ this.serviciosService.postServiciosEmpresasNacionales(this.tramiteID,{
       cerrar: false,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
+      alineacionBtonoCerrar: 'justify-content-start flex-row-reverse'
     };
     this.esEliminar = true;}}
     /**
