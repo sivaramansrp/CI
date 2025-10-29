@@ -48,7 +48,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     };
     component.wizardComponent = wizardComponentSpy as any;
 
-    // Mock pasoUno component to return true for form validation
+
     const pasoUnoSpy = {
       validarTodosLosFormularios: jest.fn().mockReturnValue(true)
     };
@@ -76,7 +76,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     };
     component.wizardComponent = wizardComponentSpy as any;
 
-    // Mock pasoUno component to return true for form validation
+
     const pasoUnoSpy = {
       validarTodosLosFormularios: jest.fn().mockReturnValue(true)
     };
@@ -126,20 +126,20 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     };
     component.wizardComponent = wizardComponentSpy as any;
 
-    // Mock pasoUno component to return true for form validation
+
     const pasoUnoSpy = {
       validarTodosLosFormularios: jest.fn().mockReturnValue(true)
     };
     component.pasoUno = pasoUnoSpy as any;
 
-    // Test case for "cont" action
+
     const accionBotonCont: AccionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBotonCont);
     expect(component.indice).toBe(2);
     expect(wizardComponentSpy.siguiente).toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
 
-    // Test case for "prev" action
+
     const accionBotonPrev: AccionBoton = { accion: 'prev', valor: 1 };
     component.getValorIndice(accionBotonPrev);
     expect(component.indice).toBe(1);
@@ -161,17 +161,17 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     };
     component.wizardComponent = wizardComponentSpy as any;
 
-    // Test case for invalid value (out of range)
+
     const accionBotonInvalid: AccionBoton = { accion: 'cont', valor: 5 };
     component.getValorIndice(accionBotonInvalid);
     expect(component.indice).toBe(1); // Default value remains unchanged
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
 
-    // Test case for another invalid value (negative)
+
     const accionBotonNegative: AccionBoton = { accion: 'prev', valor: -1 };
     component.getValorIndice(accionBotonNegative);
-    expect(component.indice).toBe(1); // Default value remains unchanged
+    expect(component.indice).toBe(1); 
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
   });
