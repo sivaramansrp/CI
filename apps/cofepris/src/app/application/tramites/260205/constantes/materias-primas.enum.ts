@@ -78,3 +78,11 @@ export const ELEMENTOS_REQUERIDOS = [
   
   'fabricante'
 ];
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
+
+export const ID_PROCEDIMIENTO = 260210;
