@@ -3,13 +3,14 @@
     [idiomaDatos]="idiomaDatos || []" 
     [entidadFederativaDatos]="entidadFederativas || []"
     [representacionFederalDatos]="representacionFederal || []"
-    (formDatosCertificadoEvent)="obtenerDatosFormulario($event)"
     (idiomaSeleccionEvent)="idiomaSeleccion($event)"
     (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
     (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
     [datosFormCertificado]="formDatosCertificadoValues"
-    (formaValida)="setFormValida($event)"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
+    (formaValida)="setFormValida($event)"
+    (formDatosCertificadoEvent)="setValoresStore($event)"
+    [idProcedimiento]="idProcedimiento"
     [idoPeam]="false"
-    #datosCertificadoDe
+     #datosCertificadoDe
 ></app-datos-certificado-de>
