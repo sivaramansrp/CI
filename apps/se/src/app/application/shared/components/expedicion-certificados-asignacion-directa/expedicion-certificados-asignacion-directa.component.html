@@ -15,7 +15,12 @@
           [placeholder]="'Selecciona un año'"
           [markTouched]="asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.touched ?? false"
           (change)="aniosAutorizacionSeleccion()"
+          (selectionChange)="anoSeleccion($event)"
         ></app-catalogo-select>
+          <!-- <app-catalogo-select [catalogo]="paisDestinDestinatario" [label]="'País Destino'" [required]="true"
+            [markTouched]="formDestinatario.get('paisDestin')?.touched??false" name="estado" formControlName="paisDestin"
+            (selectionChange)="paisDestionSeleccion($event)"
+            (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select> -->
       </div>
       <div class="col-md-4">
         <label for="numFolioAsignacionAux" class="form-label">

@@ -1054,3 +1054,5 @@ export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: str
  */
 export const CATALOGO_BANCOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/bancos`;
 
+export const CATALOGO_ANOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
+
