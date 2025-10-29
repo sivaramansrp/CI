@@ -381,3 +381,8 @@ export const REQUIREDA = [110204, 110205];
  * @type {number[]}
  */
 export const BOTON_DE_OPCION_VER = [110221];
+
+/**
+ * Identificadores de procedimientos que requieren validaciones específicas.
+ */
+export const PROCEDIMIENTO_EXCLUDED = [110221, 110223];

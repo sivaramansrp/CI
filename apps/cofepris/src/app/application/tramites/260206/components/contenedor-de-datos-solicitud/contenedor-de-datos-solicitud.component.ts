@@ -245,16 +245,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
     this.tramite260206Store.updateDatosSolicitudFormState(event);
-    const SECCION: number = 1;
-    const FORMAS_VALIDADAS = this.seccion.formaValida;
-    const ES_VALIDO_EL_FORM = this.esFormValido();
-    if (ES_VALIDO_EL_FORM) {
-      FORMAS_VALIDADAS[SECCION] = true;
-      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-    } else {
-      FORMAS_VALIDADAS[SECCION] = false;
-      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-    }
+   
   }
 
   /**

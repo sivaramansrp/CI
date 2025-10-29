@@ -16,6 +16,20 @@ import { CertificadoDisponibles } from '@libs/shared/data-access-user/src';
   standalone: false, // Indica que este componente no es independiente.
 })
 export class DuplicadoDeCertificadoComponent {
+  /**
+   * Evento que se emite cuando no se encuentran datos.
+   * @type {EventEmitter<void>}
+   */
+  @Output() noDatosError = new EventEmitter<void>();
+   /**
+   * Evento que se emite cuando se deshabilita el certificado.
+   * @type {EventEmitter<void>}
+   */
+  @Output() disableCertificado = new EventEmitter<void>();
+  /**
+   * Evento que se emite cuando se hace clic en una fila de la tabla.
+   * @type {EventEmitter<CertificadoDisponibles>}
+   */
   @Output() rowClicked = new EventEmitter<CertificadoDisponibles>();
   /**
    * @property {BuscarCertificadoDeOrigenComponent} buscarCertificado

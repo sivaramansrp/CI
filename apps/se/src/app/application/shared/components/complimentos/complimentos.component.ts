@@ -471,13 +471,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @param event Event del input
    * @param maxLength 
    */
-  onInputMaxLength(event: Event, maxLength: number): void {
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
     const TARGET = event.target as HTMLInputElement;
     let value = TARGET.value;
     value = value.replace(/\D/g, '').slice(0, maxLength);
     TARGET.value = value;
-    this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
-  }
+    this.formaComplimentos.get(controlPath)?.setValue(value, { emitEvent: false });
+}
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
@@ -1486,6 +1486,26 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
     );
+  /**
+   * Valida el formato del RFC y establece el nombre del representante legal según corresponda
+   */
+  const RFC_REGEX = /^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$/i;
+  if (RFC.length >= 12 && RFC.length <= 13 && RFC_REGEX.test(RFC)) {
+    const NOMBRE_DE_REPRESENTANTE = 'Maria Lopez';
+    this.formaComplimentos.get('formaModificaciones')?.get('nombreDeRepresentante')?.setValue(NOMBRE_DE_REPRESENTANTE, { emitEvent: false });
+    this.servicioDeFormularioService.setFormValue('complimentosForm', {
+      formaModificaciones: {
+        nombreDeRepresentante: NOMBRE_DE_REPRESENTANTE
+      }
+    });
+  } else {
+    this.formaComplimentos.get('formaModificaciones')?.get('nombreDeRepresentante')?.setValue('', { emitEvent: false });
+    this.servicioDeFormularioService.setFormValue('complimentosForm', {
+      formaModificaciones: {
+        nombreDeRepresentante: ''
+      }
+    });
+  }
   }
   /**
    * Handles keypress events to allow only letters and common characters
