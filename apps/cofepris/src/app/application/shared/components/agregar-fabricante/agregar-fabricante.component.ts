@@ -396,7 +396,7 @@ export class AgregarFabricanteComponent
           this.coloniasDatos = [...this.coloniasTempDatos];
           this.agregarFabricanteForm.get('colonia')?.enable();
         }
-        this.updateDropdownEnableState();
+        this.actualizarEstadoDesplegables();
         const RAZON_SOCIAL_CONTROL = this.agregarFabricanteForm.get('razonSocial');
         const NOMBRES_CONTROL = this.agregarFabricanteForm.get('nombres');
         const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm.get('primerApellido');
@@ -672,7 +672,7 @@ guardarFabricante(): void {
     nombreRazonSocial = '';
   }
 
-  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
+  const OBTENER_DESCRIPCION_CATALOGO = (catalogArray: Catalogo[], id: string | number): string => {
     const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
     return ITEM ? ITEM.descripcion : id.toString();
   };
@@ -689,13 +689,13 @@ guardarFabricante(): void {
     calle: VALOR_FORMULARIO.calle,
     numeroExterior: VALOR_FORMULARIO.numeroExterior,
     numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-    pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO.pais),
-    colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO.colonia),
-    municipioAlcaldia: GET_DESCRIPTION_FROM_CATALOG(this.municipiosDatos, VALOR_FORMULARIO.municipio),
-    localidad: GET_DESCRIPTION_FROM_CATALOG(this.localidadesDatos, VALOR_FORMULARIO.localidad),
-    entidadFederativa: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO.estado),
-    estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO.estado),
-    codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO.codigoPostal),
+    pais: OBTENER_DESCRIPCION_CATALOGO(this.paisesDatos, VALOR_FORMULARIO.pais),
+    colonia: OBTENER_DESCRIPCION_CATALOGO(this.coloniasDatos, VALOR_FORMULARIO.colonia),
+    municipioAlcaldia: OBTENER_DESCRIPCION_CATALOGO(this.municipiosDatos, VALOR_FORMULARIO.municipio),
+    localidad: OBTENER_DESCRIPCION_CATALOGO(this.localidadesDatos, VALOR_FORMULARIO.localidad),
+    entidadFederativa: OBTENER_DESCRIPCION_CATALOGO(this.estadosDatos, VALOR_FORMULARIO.estado),
+    estadoLocalidad: OBTENER_DESCRIPCION_CATALOGO(this.estadosDatos, VALOR_FORMULARIO.estado),
+    codigoPostal: OBTENER_DESCRIPCION_CATALOGO(this.codigosPostalesDatos, VALOR_FORMULARIO.codigoPostal),
     coloniaEquivalente: VALOR_FORMULARIO.coloniaOEquivalente,
     nombres: VALOR_FORMULARIO.nombres,
     primerApellido: VALOR_FORMULARIO.primerApellido,
@@ -1110,7 +1110,7 @@ private resetExcept(excludedControls: string[]): void {
    * Updates the estaDeshabilitadoDesplegable flag based on whether both nacionalidad and tipoPersona are selected.
    * If either is missing, disables dropdowns. If both are present, enables them.
    */
-  private updateDropdownEnableState(): void {
+  private actualizarEstadoDesplegables(): void {
     const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
     const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
     if (NACIONALIDAD && TIPO_PERSONA) {
