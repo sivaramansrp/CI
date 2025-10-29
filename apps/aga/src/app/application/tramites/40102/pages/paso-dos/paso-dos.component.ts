@@ -22,6 +22,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Constante que contiene los textos utilizados en el componente.
    */
   TEXTOS: string = '';
+  isLoading: boolean = false;
 
   banderaVista: string = ""
 
@@ -103,6 +104,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
   getDatosOfFirma(event: Certificado): void {
+    this.isLoading = true
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(event ? event.firma : '');
     this.idSolicitud = Number(this.chofer40102Query.getValue().solicitudeId);
@@ -112,6 +114,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       certificate_serial_number: event ? event.certSerialNumber : '',
       id_solicitud: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
+      this.isLoading = false
       if (Number(res.codigo) === 0) {
         this.acuseDocumentos = [
           {

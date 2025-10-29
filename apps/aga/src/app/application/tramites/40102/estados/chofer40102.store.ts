@@ -59,6 +59,7 @@ export interface Choferesnacionales40102State {
 
   solicitudeId: string;
   isShowDirector: boolean
+  codigo: string
 
   /**
    * Primer apellido del chofer.
@@ -158,6 +159,7 @@ export function createChoferState(): Choferesnacionales40102State {
     segundoApellido: '',
     solicitudeId: '',
     isShowDirector: false,
+    codigo: '0',
     cadenaOriginal: '',
     catErrorMessage: '',
     isCaat: false,
@@ -328,6 +330,13 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     this.update((state) => ({
       ...state,
       primerApellido,
+    }));
+  }
+
+  public setCodigo(codigo: string): void {
+    this.update((state) => ({
+      ...state,
+      codigo,
     }));
   }
 

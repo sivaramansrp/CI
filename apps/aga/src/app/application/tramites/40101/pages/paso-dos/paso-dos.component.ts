@@ -37,6 +37,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Lista de tipos de documentos disponibles para el trámite.
    */
   tiposDocumentos: Catalogo[] = [];
+  isLoading: boolean = false;
 
   guardarDatos: ConsultaioState = {
     folioTramite: '',
@@ -108,6 +109,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
   getDatosOfFirma(event: Certificado): void {
+    this.isLoading = true
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(event ? event.firma : '');
     this.idSolicitud = this.chofer40101Query.getValue().id_solicitud;
@@ -117,6 +119,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       certificate_serial_number: event ? event.certSerialNumber : '',
       solicitudId: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
+      this.isLoading = false
       if (Number(res.codigo) === 0) {
         this.acuseDocumentos = [
           {

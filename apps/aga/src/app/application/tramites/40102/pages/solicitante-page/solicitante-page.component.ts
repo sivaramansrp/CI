@@ -31,6 +31,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DocumentoDetalle, IniciarResponse } from '../../../40101/pages/solicitante-page/solicitante-page.component';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
+import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
 
 /**
  * Interfaz que define la estructura de un objeto de acción de botón para la navegación del wizard.
@@ -212,6 +213,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * ```
    */
   public seccion!: Choferesnacionales40102State;
+  isLoading: boolean = false;
 
   /**
    * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
@@ -364,18 +366,34 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return paso;
     });
 
-    this.chofer40102Query.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
+    // this.chofer40102Query.selectSeccionState$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.seccion = seccionState;
+    //       if (this.seccion.codigo !== '0') {
+    //         this.isCaat = true
+    //         this.catErrorMessage = this.chofer40102Query.getValue().catErrorMessage;
+    //       } else {
+    //         this.isCaat = false
+    //       }
+
+    //     })
+    //   )
+    //   .subscribe();
+
+    this.chofer40102Query.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data: Choferesnacionales40102State) => {
+      this.isCaat = data.codigo !== '0' ? true : false;
+      this.catErrorMessage = data.catErrorMessage;
+    });
 
     this.asignarSecciones();
-    this.isCaat = this.chofer40102Query.getValue().isCaat;
-    this.catErrorMessage = this.chofer40102Query.getValue().catErrorMessage;
+    // if (this.chofer40102Query.getValue().codigo !== '0') {
+    //   this.isCaat = true
+    // } else {
+    //   this.isCaat = false
+    // }
+    // this.catErrorMessage = this.chofer40102Query.getValue().catErrorMessage;
   }
 
   /**
@@ -474,6 +492,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.accion === 'cont' && e.valor === 2) {
+      this.isLoading = true
       const IDPERSONASOLICITUD = this.chofer40102Store?.getValue().IdPersonaSolicitud
       const SOLICITUDEID = 123
       const PAYLOAD = {
@@ -521,6 +540,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
             this.wizardComponent.siguiente();
           }
         }
+        this.isLoading = false
 
       });
 

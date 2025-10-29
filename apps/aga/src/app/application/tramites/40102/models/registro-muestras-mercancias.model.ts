@@ -24,6 +24,8 @@ export interface ApiResponseSolicitante {
     caat_existe: boolean | null;
     mensaje: string | null
   };
+  error: string | null;
+  mensage: string | null;
 }
 
 interface DirectorGeneral {

@@ -69,7 +69,8 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
         (this.chofer40102Store['setIsCaat'] as (valor: unknown) => void)(data.datos?.caat_existe);
         (this.chofer40102Store['setIdPersonaSolicitud'] as (valor: unknown) => void)(data.datos?.solicitante?.id_persona_solicitud);
       }
-      (this.chofer40102Store['setCatErrorMessage'] as (valor: unknown) => void)(data?.mensaje);
+      (this.chofer40102Store['setCodigo'] as (valor: unknown) => void)(data.codigo);
+      (this.chofer40102Store['setCatErrorMessage'] as (valor: unknown) => void)(data?.error);
       this.solicitudData = data.datos;
       this.setFormValues();
     });

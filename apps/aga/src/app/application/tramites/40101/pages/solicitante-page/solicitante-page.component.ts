@@ -110,6 +110,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   isBtnShow: string = "yes"
   documentDetails: DocumentoDetalle = {};
   acuseDocumentos: BodyTablaResolucion[] = [];
+  isLoading: boolean = false;
   /** Indica si el trámite es CAAT (Certificado de Autotransporte Aduanal Terrestre).
    * 
    * @type {boolean}
@@ -274,7 +275,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       const CHOFERES$ = this.chofer40101Query.select();
       const TRAMITE$ = this.tramite40101Query.select();
       const DIRECTOR$ = this.directorQuery.select()
-
+      this.isLoading = true
       combineLatest([CHOFERES$, TRAMITE$, DIRECTOR$]).pipe(
         take(1)
       ).subscribe(([choferesState, tramiteState, directorateState]) => {
@@ -394,6 +395,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
             cadena_original: res.datos?.cadena_original ?? '', // Add appropriate value if available
             is_extranjero: res.datos?.is_extranjero ?? false
           });
+          this.isLoading = false
           this.chofer40101Store.setSolicitudId(res.datos?.id_solicitud ?? 0);
           this.isExtrajero = res?.datos?.is_extranjero ?? false
           this.documentDetails = res.datos?.documento_detalle ?? {}
