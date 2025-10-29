@@ -1,13 +1,13 @@
-import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_EMPRESAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES, CONFIGURACION_PLANTA, CONFIGURACION_SERVICIOS } from '../../constantes/modificacion.enum';
+import { CONFIGURACION_EMPRESAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES } from '../../constantes/modificacion.enum';
 import { Complimentaria, Federetarios, Operacions } from '../../estados/models/plantas-consulta.model';
 import { Component, OnDestroy } from '@angular/core';
 import { DatosDelModificacion, DatosDelModificaciondos } from '../../estados/models/datos-tramite.model';
 import { Subject, takeUntil } from 'rxjs';
-import { TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ComplementariaComponent } from '../../../../shared/components/complementaria/complementaria.component';
 import { ConfiguracionColumna } from '../../estados/models/cambio-de-modalidad.model';
-import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
 import { SolicitudService } from '../../service/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
+import { Empresas } from '../../../../shared/models/complementaria.model';
 
 @Component({
   selector: 'app-datos-complimentaria',
@@ -15,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './datos-complimentaria.component.scss',
   standalone: true,
   imports: [
-    TituloComponent,DatosCertificacionComponent,TablaDinamicaComponent
+    ComplementariaComponent
   ],
   providers: [SolicitudService, ToastrService],
 })
@@ -27,13 +27,6 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Configuración de las columnas de la tabla para los accionistas (Complimentaria).
-   * @type {ConfiguracionColumna<Complimentaria>[]}
-   */
-  configuracionTabla: ConfiguracionColumna<Complimentaria>[] =
-    CONFIGURACION_ACCIONISTAS;
 
   /**
    * Configuración de las columnas de la tabla para los federetarios.
@@ -50,15 +43,6 @@ export class DatosComplimentariaComponent implements OnDestroy {
     CONFIGURACION_OPERACIONES;
 
   /**
-   * Configuración de la planta que define las columnas para las operaciones.
-   * 
-   * @type {ConfiguracionColumna<Operacions>[]} 
-   * Contiene la configuración de las columnas basada en la constante `CONFIGURACION_PLANTA`.
-   */
-  configuracionPlanta: ConfiguracionColumna<Operacions>[] =
-    CONFIGURACION_PLANTA;
-
-  /**
    * Configuración de las columnas para las operaciones relacionadas con empresas.
    * 
    * @type {ConfiguracionColumna<Operacions>[]} 
@@ -66,18 +50,8 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * para mostrar y gestionar las operaciones de empresas. La configuración se define
    * en la constante `CONFIGURACION_EMPRESAS`.
    */
-  configuracionEmpresas: ConfiguracionColumna<Operacions>[] =
+  configuracionEmpresas =
     CONFIGURACION_EMPRESAS;
-
-  /**
-   * Configuración de las columnas para los datos de modificación.
-   * 
-   * Esta propiedad utiliza una configuración predefinida (`CONFIGURACION_SERVICIOS`)
-   * para definir las columnas que se mostrarán en el componente. 
-   * Cada columna está configurada utilizando el tipo `ConfiguracionColumna<DatosDelModificacion>`.
-   */
-  configuracionServicios: ConfiguracionColumna<DatosDelModificacion>[] =
-    CONFIGURACION_SERVICIOS;
 
   /**
    * Datos de los federetarios obtenidos desde el servicio.
@@ -91,6 +65,12 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   datosOperacions: Operacions[] = [];
 
+  /**
+   * Datos de las empresas obtenidos desde el servicio.
+   * @type {Empresas[]}
+   */
+  datosEmpresas: Empresas[] = [];
+
     /**
    * Datos de las operaciones obtenidos desde el servicio.
    * @type {Operacions[]}
@@ -102,8 +82,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * 
    * @type {DatosDelModificacion[]}
    */
-  datosServicios: DatosDelModificacion[] = [];
-  
+  datosServicios: DatosDelModificacion[] = [];  
 
   /**
    * Datos de la complimentaria obtenidos desde el servicio.
@@ -133,8 +112,8 @@ export class DatosComplimentariaComponent implements OnDestroy {
     this.obtenerPlanta(); // Carga las plata.
     this.obtenerComplimentaria(); // Carga los datos de complimentaria.
     this.obtenerServicios(); // Carga los servicios.
+    this.obtenerEmpresas(); // Carga los datos de empresas.
   }
-
 
   /**
    * Método que obtiene los datos de complimentaria desde el servicio.
@@ -239,6 +218,18 @@ export class DatosComplimentariaComponent implements OnDestroy {
       );
   }
 
+  /**
+   * Método que obtiene los datos de empresas desde el servicio.
+   * Asigna los datos obtenidos a la variable `datosEmpresas`.
+   */
+  obtenerEmpresas(): void {
+    this.solicitudService.obtenerEmpresas()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data: Empresas[]) => {
+          this.datosEmpresas = [...data];
+        });
+  }
 
   /**
    * Método que se ejecuta cuando el componente es destruido.
