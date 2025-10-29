@@ -381,7 +381,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
-        
+
         //Mantiene ordenados los datos por no de partida
         if (datos.tablaDatos && datos.tablaDatos.length > 0) {
           datos.tablaDatos.sort((a, b) => {
@@ -419,7 +419,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       .subscribe(value => {
         this.establecimientoTIF = [];
         const EXISTE = this.obtenerEstablecimientoTif(value);
-        if (EXISTE) {          
+        if (EXISTE) {
           this.moduloEmergente = EXISTE;
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
@@ -545,7 +545,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerEstablecimientoList
    */
   obtenerEstablecimientoTif(cveUcon: string): boolean {
-    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7', cveUcon).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'AAL0409235E6', cveUcon).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.establecimientoTIF = data.datos ?? [];
     });
     return this.establecimientoTIF.length > 0;
@@ -555,8 +555,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de veterinario.
    * @method obtenerVeterinarioList
    */
-  obtenerVeterinarioList(): void {
-    const CVE_ESTABLECIMIENTO_TIF = this.datosDelaSolicitud.get('establecimientoTIF')?.value || '';
+  obtenerVeterinarioList(CVE_ESTABLECIMIENTO_TIF: string): void {
     this.catalogoService.obtieneCatalogoMedicosVeterinarios(220201, CVE_ESTABLECIMIENTO_TIF).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.veterinario = data.datos ?? [];
     });
@@ -567,7 +566,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerRegimenList
    */
   obtenerRegimenList(clave_regimen: string = ''): void {
-
     this.catalogoService.obtieneCatalogoRegimenes(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.regimen = clave_regimen
         ? (data.datos ?? []).filter((item) => item.clave === clave_regimen)
@@ -575,6 +573,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
   }
 
+  /**
+   * Obtiene los datos de la tabla de solicitud desde el servicio `registroSolicitudService`.
+   * 
+   * @remarks
+   * Este método realiza una llamada al servicio `obtieneDatosDeLaSolicitud` con un ID de trámite
+   * y un identificador específico. Los datos obtenidos se asignan a la propiedad `cuerpoTablaSolicitud`.
+   * 
+   */
   obtenerDatosTablaSolicitud(): void {
     this.registroSolicitudService.obtieneDatosDeLaSolicitud(220201, 'AAL0409235E6').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.cuerpoTablaSolicitud = data.datos ?? [];
@@ -593,7 +599,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     const VALOR = this.forma.get('datosDelaSolicitud')?.get('oficinaInspeccion')?.value || '';
     this.obtenerPuntoInspeccionList(VALOR);
   }
-
 
   /**
    * Actualiza los datos almacenados en el store.
@@ -814,6 +819,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
             if (datos?.datos) {
               this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
               this.obtenerPuntoInspeccionList(datos.datos.punto_inspeccion || '');
+              this.obtenerVeterinarioList(datos.datos.establecimiento_TIF || '');
               //Regimen
               this.obtenerRegimenList(datos.datos?.clave_regimen || '');
               this.datosDelaSolicitud.patchValue({
@@ -822,6 +828,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                 oficinaInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
                 claveUCON: datos.datos.clave_UCON || '',
                 establecimientoTIF: datos.datos.establecimiento_TIF || '',
+
                 nombreVeterinario: datos.datos.nombre_veterinario || '',
                 regimen: datos.datos.clave_regimen || '',
                 numeroGuia: datos.datos.numero_autorizacion || '',
@@ -917,6 +924,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
             };
           }
         });
+
+      this.catalogoService.obtenSolicitudPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            // Manejar la respuesta exitosa aquí
+          },
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
+
     }
   }
 
@@ -994,7 +1023,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   /** Método que se ejecuta cuando una fila es expandida para mostrar detalles adicionales. */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
   onRowExpanded(row: FilaSolicitud): void {
-    
+
     // Aquí puedes cargar los datos para la tabla anidada si es necesario
   }
 
@@ -1021,6 +1050,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
   }
 
+  /**
+   * Maneja la confirmación de un modal basado en el proceso actual.
+   * @param confirmar - Indica si se confirma la acción en el modal.
+   */
   confirmacionModal(confirmar: boolean): void {
     switch (this.procesoModal) {
       case 'validar_formulario':
@@ -1086,12 +1119,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         id_sexo_detalle: detalle.Sexo || '',
         nombre_cientifico_detalle: detalle.NombreCientifico || '',
         nombre_mercancia_detalle: detalle.NombreMercancia || '',
-        fecha_sacrificio: '', 
+        fecha_sacrificio: '',
         fecha_elaboracion: '',
-        fecha_caducidad: '', 
-        fecha_elaboracion_fin: '', 
-        fecha_caducidad_fin: '', 
-        fecha_sacrificio_fin: '', 
+        fecha_caducidad: '',
+        fecha_elaboracion_fin: '',
+        fecha_caducidad_fin: '',
+        fecha_sacrificio_fin: '',
       })) || fila.detalleProductos?.map((detalleProducto) => ({
         numeroDeLote: detalleProducto.numeroDeLote || '',
         fechaElaboracionEmpaqueProceso: detalleProducto.fechaElaboracionEmpaqueProceso || '',
@@ -1100,7 +1133,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         fechaFinElaboracionEmpaqueProceso: detalleProducto.fechaFinElaboracionEmpaqueProceso || '',
         fechaFinProduccionSacrificio: detalleProducto.fechaFinProduccionSacrificio || '',
         fechaFinCaducidadProducto: detalleProducto.fechaFinCaducidadProducto || '',
-    }))
+      }))
     }));
 
     const SOLICITUDPARCIAL: GuardaSolicitud = {

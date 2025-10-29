@@ -1,3 +1,25 @@
+
+/**
+ * Representa el modelo de datos para el prellenado de una solicitud en el sistema.
+ * 
+ * @interface PrellenadoSolicitud
+ * 
+ * @property {number | null} id_solicitud - Identificador único de la solicitud.
+ * @property {string} cve_aduana - Clave de la aduana asociada.
+ * @property {string} oficina_inspeccion_sanidad_agropecuaria - Oficina de inspección sanitaria agropecuaria.
+ * @property {string} punto_inspeccion - Punto de inspección asignado.
+ * @property {string | null} clave_UCON - Clave UCON, puede ser nula.
+ * @property {string | null} establecimiento_TIF - Establecimiento TIF, puede ser nulo.
+ * @property {string | null} nombre_veterinario - Nombre del veterinario responsable, puede ser nulo.
+ * @property {string} numero_autorizacion - Número de autorización asignado.
+ * @property {string} clave_regimen - Clave del régimen aduanero.
+ * @property {Array} mercancia - Lista de mercancías asociadas a la solicitud.
+ * 
+ * La propiedad `mercancia` incluye detalles como tipo, descripción, requisitos, cantidades, 
+ * país de origen/procedencia, presentación, planta autorizada, entre otros.
+ * Además, cada mercancía puede contener una lista de detalles específicos (`lista_detalle_mercancia`),
+ * que incluye información como número de lote, color, edad, raza, fechas relevantes, etc.
+ */
 export interface PrellenadoSolicitud {
     id_solicitud: number | null;
     cve_aduana: string;
@@ -85,4 +107,25 @@ export interface PrellenadoSolicitud {
             ]
         }
     ]
+}
+
+/**
+ * Representa los datos prellenados para una movilización.
+ * 
+ * @property id_solicitud - Identificador de la solicitud (puede ser nulo).
+ * @property id_transporte - Identificador del transporte (puede ser nulo).
+ * @property coordenadas - Coordenadas geográficas asociadas.
+ * @property ide_medio_transporte - Identificador del medio de transporte.
+ * @property identificacion_transporte - Identificación del transporte.
+ * @property id_punto_verificacion - Identificador del punto de verificación.
+ * @property razon_social - Razón social asociada.
+ */
+export interface PrellenadoMovilizacion {
+    id_solicitud: null,
+    id_transporte: null,
+    coordenadas: string,
+    ide_medio_transporte: string,
+    identificacion_transporte: string,
+    id_punto_verificacion: number,
+    razon_social: string
 }

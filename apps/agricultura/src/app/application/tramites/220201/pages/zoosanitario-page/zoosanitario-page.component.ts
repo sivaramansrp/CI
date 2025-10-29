@@ -1,11 +1,15 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -28,7 +32,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   standalone: true,
   imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
-export class ZoosanitarioPageComponent {
+export class ZoosanitarioPageComponent implements OnInit {
   @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;
   /**
    * Array de pasos del asistente.
@@ -108,11 +112,18 @@ export class ZoosanitarioPageComponent {
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
 
+  public solicitudState!: ZoosanitarioStore;
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
    * @method constructor
    */
-  constructor() {
+  constructor(
+    private tramite220201Query: ZoosanitarioQuery,
+
+  ) {
     this.pasos = PASOS;
   }
 
@@ -132,9 +143,6 @@ export class ZoosanitarioPageComponent {
         return; // Detener ejecución si los formularios son inválidos
       }
     }
-
-
-    
 
     // Calcular el nuevo índice basado en la acción
     let indiceActualizado = e.valor;
@@ -222,6 +230,16 @@ export class ZoosanitarioPageComponent {
    */
   guardadoParcialSolicitud(): void {
     this.guardadoParcial.guardaSolicitudParcial();
+  }
+
+  ngOnInit(): void {
+    this.tramite220201Query.seleccionarTodo$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = { ...this.solicitudState, ...seccionState } as unknown as ZoosanitarioStore;
+        })
+      ).subscribe();
   }
 
 }

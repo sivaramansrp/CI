@@ -36,8 +36,9 @@ import {
     API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
     API_GET_CATALOGO_USOS_MERCANCIA,    
     API_GET_DATOS_SOLICITUD,
+    API_GET_SOLICITUDES_MOVILIZACION_NACIONAL,
 } from '../../../../../core/server/api-router';
-import { PrellenadoSolicitud } from "../../../models/220201/prellenado-solicitud.model";
+import { PrellenadoMovilizacion, PrellenadoSolicitud } from "../../../models/220201/prellenado-solicitud.model";
 
 @Injectable({
     providedIn: 'root'
@@ -424,4 +425,16 @@ export class CatalogosService {
         const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITUD(tramite.toString(), esPrellenado, idsolicitud)}`;
         return this.http.get<BaseResponse<PrellenadoSolicitud>>(ENDPOINT);
     }
+
+    /**
+     * Obtiene los datos prellenados para la movilización nacional de una solicitud específica.
+     * 
+     * @param tramite - Identificador numérico del trámite.
+     * @param idsolicitud - Identificador único de la solicitud.
+     * @returns Un observable que emite la respuesta base con los datos prellenados de la movilización.
+     */
+    obtenerMovilizacionPrellenado(tramite: number, idsolicitud: string): Observable<BaseResponse<PrellenadoMovilizacion>> {
+        const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_MOVILIZACION_NACIONAL(tramite.toString(), true, idsolicitud)}`;
+        return this.http.get<BaseResponse<PrellenadoMovilizacion>>(ENDPOINT);
+    }   
 }

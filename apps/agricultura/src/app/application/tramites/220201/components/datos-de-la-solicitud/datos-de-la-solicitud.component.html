@@ -79,7 +79,7 @@
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="establecimientoTIF" formControlName="establecimientoTIF"
           [label]="'Establecimiento TIF'" [required]="false" name="establecimientoTIF"
-          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(); obtenerVeterinarioList()"></app-catalogo-select>
+          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(); obtenerVeterinarioList(forma.get('establecimientoTIF')?.value)"></app-catalogo-select>
       </div>
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="veterinario" formControlName="nombreVeterinario"

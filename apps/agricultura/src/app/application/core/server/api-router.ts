@@ -275,3 +275,35 @@ export const API_GET_SOLICITUDES_GUARDADO_PARCIAL = (TRAMITE: string) : string =
  */
 export const API_GET_SOLICITUDES_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
 
+
+/**
+ * Genera una URL para obtener las solicitudes de movilización nacional.
+ *
+ * @param TRAMITE - Identificador del trámite relacionado.
+ * @param esPrellenado - Indica si la solicitud es un prellenado (true) o no (false).
+ * @param idSolicitud - Identificador único de la solicitud.
+ * @returns Una cadena de texto que representa la URL generada.
+ */
+export const API_GET_SOLICITUDES_MOVILIZACION_NACIONAL = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/movilizacion-nacional`;
+
+/**
+ * Genera la URL para obtener los terceros relacionados a una solicitud específica.
+ * 
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es un prellenado (true) o no (false).
+ * @param idSolicitud - Identificador único de la solicitud.
+ * @returns La URL generada como una cadena de texto.
+ */
+export const API_GET_SOLICITUDES_TERCEROS_RELACIONADOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/terceros-relacionados`;
+
+/**
+ * Genera la URL para obtener las solicitudes de pago de derechos.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es un prellenado (true o false).
+ * @param idSolicitud - Identificador único de la solicitud.
+ * @returns La URL generada como una cadena de texto.
+ */
+export const API_GET_SOLICITUDES_PAGO_DERECHOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/pago-derechos`;
+
+
