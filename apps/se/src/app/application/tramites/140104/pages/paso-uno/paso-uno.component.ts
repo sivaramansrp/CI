@@ -1,164 +1,181 @@
+/**
+ * @fileoverview Componente del primer paso para el trámite de ampliación de servicios IMMEX.
+ *
+ * Este componente maneja la lógica del primer paso del wizard de registro,
+ * incluyendo la selección de pestañas, validación de formularios y gestión del estado.
+ *
+ * @component PasoUnoComponent
+ * @selector app-paso-uno
+ * @templateUrl ./paso-uno.component.html
+ */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import {CancelacionDeSolicitudComponent} from '../../components/cancelacion-de-solicitud/cancelacion-de-solicitud.component';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import { CancelacionDeSolicitudComponent } from '../../components/cancelacion-de-solicitud/cancelacion-de-solicitud.component';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { ViewChild } from '@angular/core';
+
+/**
+ * Componente PasoUnoComponent.
+ *
+ * Este componente representa el primer paso de un flujo de trámites.
+ * Contiene la lógica para manejar la selección de pestañas.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy{
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
- * @description Índice de la pestaña/paso actual.
- * Este valor indica el paso actual en el proceso de formulario.
- * @type {number}
- * @default 1
- */
+   * Índice de la pestaña seleccionada actualmente.
+   * Valor inicial: 1.
+   */
   indice: number = 1;
 
-  /** Referencia al componente hijo SolicitanteComponent para acceso a sus métodos y propiedades */
-  @ViewChild(CancelacionDeSolicitudComponent) cancelacionComp!: CancelacionDeSolicitudComponent;
-
   /**
-   * @description 
-   * Array de objetos que representan las diferentes secciones del formulario.
-   * Cada objeto contiene el índice, título y el nombre del componente correspondiente.
-   * Este arreglo es utilizado para navegar entre los diferentes pasos del formulario.
-   * 
-   * @type {Array<{ index: number, title: string, component: string }>}
+   * Indica si los datos de respuesta están disponibles.
+   * Valor inicial: false.
    */
-  seccionesDeLaSolicitud = [
-    { index: 1, title: 'Solicitante', component: 'solicitante' },
-    { index: 2, title: 'Cancelación de Permisos Previamente Autorizados', component: 'cancelacion-de-solicitus' },
-  ];
-  /**
-   * @description Flag indicating whether the search section should be displayed.
-   * This value is controlled based on messages received from the service.
-   * @type {boolean}
-   * @default false
-   */
-  public mostrarBusqueda: boolean = false;
 
-   /**
-   * Esta variable se utiliza para almacenar el índice del subtítulo.
-   */
-  public consultaState!: ConsultaioState;
-
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
-  
-  /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * Referencia al componente CancelacionDeSolicitudComponent.
+   *
+   * Se utiliza para acceder a las propiedades y métodos del componente hijo,
+   * permitiendo la validación y manipulación de sus datos desde el componente padre.
+   *
+   * @type {CancelacionDeSolicitudComponent | undefined}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild('CancelacionDeSolicitudComponent', { static: false })
+  CancelacionDeSolicitudComponent: CancelacionDeSolicitudComponent | undefined;
 
   /**
-   * Constructor del componente.
-   * Este constructor inicializa el componente y establece el estado inicial de la validación
-   * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
-   * @constructor
-   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
+   * Estado de la consulta actual.
+   *
+   * Este estado se obtiene a través de ConsultaioQuery y contiene
+   * información sobre el estado actual de la consulta y si requiere
+   * actualización de datos.
+   *
+   * @property {ConsultaioState} consultaState
    */
-  constructor(private readonly seccionStore: SeccionLibStore, private servicioDeMensajesService: ServicioDeMensajesService, private consultaQuery: ConsultaioQuery) {
-    // Establece el estado de la forma como no válida al inicio.
-    this.seccionStore.establecerFormaValida([false]);
-    // Establece la primera sección como activa.
-    this.seccionStore.establecerSeccion([false]);
 
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaState = seccionState;
-        })
-      )
-    .subscribe();
-    if (this.consultaState.update) {
-      this.servicioDeMensajesService.establecerDatosDePermiso(true);
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-  }
-}
+  public consultaState!: ConsultaioState;
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Subject para notificar la destrucción del componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
    */
-  guardarDatosFormulario(): void {
 
-    this.servicioDeMensajesService.getRegistroTomaMuestrasMercanciasData()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
-        if (resp) {
-          this.esDatosRespuesta = true;
-          this.servicioDeMensajesService.actualizarEstadoFormulario(resp);
+  public destroyNotifier$: Subject<void> = new Subject();
 
-        }
-      });
-  }
-  
   /**
-   * @description 
-   * Método que se ejecuta al seleccionar una pestaña/paso del formulario.
-   * Actualiza el índice de la pestaña/paso actual, permitiendo la navegación
-   * entre las diferentes secciones del formulario multipaso.
-   * 
-   * @method seleccionaPestana
-   * @param {number} i - Índice de la pestaña/paso seleccionada.
-   * @returns {void}
+   * Cambia el índice de la pestaña seleccionada.
+   *
+   * @param i - El índice de la pestaña a seleccionar.
    */
-  seleccionaPestana(i: number): void {
+  seleccionaTab(i: number): void {
     this.indice = i;
   }
 
   /**
- * Método que se ejecuta al inicializar el componente.
- * Se suscribe a los cambios en el mensaje enviado desde el servicio de mensajes,
- * y actualiza la propiedad 'mostrarBusqueda' con el valor recibido.
- */
-  ngOnInit(): void {
-    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
-      this.mostrarBusqueda = mensaje;
-    });
-  }
-
-   /**
-   * Valida todos los formularios del paso uno incluyendo solicitante, certificado, datos y destinatario
-   * @returns true si todos los formularios son válidos, false en caso contrario
+   * Constructor del componente PasoUnoComponent.
+   *
+   * Inicializa las dependencias necesarias para el funcionamiento del componente,
+   * incluyendo servicios para consultas y manejo de datos de ampliación de servicios.
+   *
+   * @constructor
+   * @param {ConsultaioQuery} consultaQuery - Servicio de consulta para obtener el estado actual
+   * @param {ServicioDeMensajesService} ServicioDeMensajesService - Servicio para manejar mensajes
    */
-   public validarFormularios(): boolean {
-    let isValid = true;
-    if (this.cancelacionComp?.cancelacionForm) {
-      if (this.cancelacionComp.cancelacionForm.invalid) {
-        this.cancelacionComp.cancelacionForm.markAllAsTouched();
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
-
-   
-
-    return isValid;
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private ServicioDeMensajesService: ServicioDeMensajesService
+  ) {
+    // Constructor: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   /**
- * Método que se ejecuta al destruir el componente.
- * Envía un mensaje con el valor 'false' al servicio de mensajes para indicar 
- * que se ha cancelado o finalizado la acción relacionada.
- */
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   *
+   * Se suscribe al estado de consulta para monitorear cambios y determinar
+   * si es necesario cargar datos existentes o inicializar con datos vacíos.
+   * Maneja la lógica de actualización del estado del componente.
+   *
+   * @method ngOnInit
+   * @returns {void} Este método no retorna ningún valor
+   *
+   * @implements {OnInit}
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
+      this.consultaState = seccionState;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    });
+  }
+  /**
+   * Guarda y actualiza los datos del formulario desde el servicio.
+   *
+   * Obtiene los datos más recientes del servicio de ampliación de servicios
+   * y actualiza el estado del formulario. Establece la bandera de datos
+   * de respuesta cuando la operación es exitosa.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor
+   */
+  guardarDatosFormulario(): void {
+    this.ServicioDeMensajesService.getServiciosData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.ServicioDeMensajesService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   *
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   *
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validarTodosLosFormularios(): boolean {
+    let allFormsValid = true;
+    if (this.indice === 1 && this.CancelacionDeSolicitudComponent?.cuerpoTablaCancelacion.length === 0) {
+      allFormsValid = false;
+    }
+    if (this.indice === 2) {
+      if (this.CancelacionDeSolicitudComponent?.cuerpoTablaCancelacion.length === 0) {
+        allFormsValid = false;
+      }
+    }
+    return allFormsValid;
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   *
+   * Emite un valor en el observable destroyNotifier$ para notificar a todas
+   * las suscripciones que deben completarse, evitando fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void} Este método no retorna ningún valor
+   *
+   * @implements {OnDestroy}
+   */
   ngOnDestroy(): void {
-    // Notifica a los suscriptores que el componente se está destruyendo
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-    
-    // Envía un mensaje al servicio de mensajes indicando que la acción ha finalizado 
-  this.servicioDeMensajesService.enviarMensaje(false);
   }
-  
 }
