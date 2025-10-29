@@ -93,7 +93,7 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   public alertaNotificacion: string = '';
 
   /**
-   * Datos de la tabla de resoluciones.Indica si se deben mostrar docs de resoluciones. Opcional ejemplo en tr+amite 130102.
+   * Datos de la tabla de resoluciones.Indica si se deben mostrar docs de resoluciones. Opcional ejemplo en trámite 130102.
    */
   @Input() datosTablaResolucion?: BodyTablaResolucion[] = [];
 
