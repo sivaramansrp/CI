@@ -1,49 +1,64 @@
-import { PASOS, TEXTOS_CANCELACIONS } from '../../constants/intropermiso.enum';
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
+import {
+  Observable,
+  Subject,
+  catchError,
+  map,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ERROR_FORMA_ALERT } from '../../constants/intropermiso.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PASOS } from '../../constants/intropermiso.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { Subject } from 'rxjs';
+import { TODOS_PASOS } from '../../constants/intropermiso.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { takeUntil } from 'rxjs/operators';
-import {PasoUnoComponent} from '../paso-uno/paso-uno.component';
-import {ERROR_FORMA_ALERT} from '../../constants/intropermiso.enum';
 
+import { Solicitud140104State } from '../../estados/desistimiento-de-permiso.store';
+
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
+import { DetalleDelAdapter } from '../../adapters/detalle-del-permiso.adapter';
+
+import { throwError } from 'rxjs';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+
+import { DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
 interface AccionBoton {
+  /**
+   * La acción que se realizará.
+   */
   accion: string;
+
+  /**
+   * El valor asociado a la acción.
+   */
   valor: number;
 }
 @Component({
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-
 })
-export class IntroPermisoComponent implements OnInit, OnDestroy{
-    /**
-   * Indica si se debe mostrar la alerta en la interfaz de usuario.
-   * Se utiliza para controlar la visibilidad de mensajes de advertencia o error.
-   */
-  public showAlert = false;
-    /**
-   * Contiene los textos que se muestran al usuario cuando ocurre una cancelación.
-   * Los textos provienen del archivo de constantes TEXTOS_CANCELACIONS.
-   */
-   TEXTOS = TEXTOS_CANCELACIONS;
-   /**
-   * Clase CSS para la alerta de información.
-   */
-  infoAlert = 'alert-danger';
+export class IntroPermisoComponent implements OnInit, OnDestroy {
   /**
- * @description Array de objetos que definen los pasos del formulario.
- * Cada objeto contiene información sobre un paso específico,
- * incluyendo su número, título y si está completado.
- * Este array permite la gestión de las secciones o pasos dentro del formulario.
- * @type {ListaPasosWizard[]}
- */
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+   */
+  idSolicitudState: number | null = 0;
+  /**
+   * @description Array de objetos que definen los pasos del formulario.
+   * Cada objeto contiene información sobre un paso específico,
+   * incluyendo su número, título y si está completado.
+   * Este array permite la gestión de las secciones o pasos dentro del formulario.
+   * @type {ListaPasosWizard[]}
+   */
   pasos: ListaPasosWizard[] = PASOS;
   /**
    * @description Indicates whether the search section should be displayed.
@@ -51,56 +66,45 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @type {boolean}
    */
   mostrarBusqueda: boolean = false;
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Indica si el formulario del paso actual es válido.
+   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
+   */
+  infoAlert: string = 'info-alert';
   /**
    * @description Referencia al componente Wizard.
    * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
    * como `siguiente()` y `atras()`, para controlar la navegación entre los pasos.
-   * 
+   *
    * @type {WizardComponent}
    * @viewChild WizardComponent
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-   /**
-   * @property {PasoUnoComponent} pasoUnoComponent
-   * @description
-   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
-   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
-   */
-   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
-
   /**
    * @description Índice actual del paso en el que se encuentra el usuario.
    * Este índice se utiliza para determinar qué paso se muestra en cada momento.
    * Los valores posibles de `indice` corresponden a los pasos definidos en el arreglo `pasos`.
-   * 
+   *
    * @type {number}
    * @default 1
    */
   indice: number = 1;
-
-  
-   /**
-    * @property {string} formErrorAlert
-    * @description
-    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
-    */
-   public formErrorAlert = ERROR_FORMA_ALERT;
-
-  /**
-    * @property {boolean} esFormaValido
-    * @description
-    * Indica si el formulario del paso actual es válido.
-    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
-    */
-  esFormaValido: boolean = false;
 
   /**
    * @description Objeto que contiene los datos de los pasos del formulario.
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
    * y el componente Wizard, como el número total de pasos, el índice del paso actual
    * y los textos de los botones de navegación (anterior y siguiente).
-   * 
+   *
    * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
@@ -109,100 +113,290 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  mostrarDevolverFacturas: boolean = false;
-  private destroy$ = new Subject<void>(); // Subject to manage unsubscription
 
   /**
-   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
-   * del formulario.
-   * 
-   * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
-   * y el valor del índice del paso al que se debe navegar.
-   * 
-   * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
-   *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
-   *   (valor `cont`) o retroceder (valor `atras`).
-   * 
-   * @returns {void}
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
    */
-/**
-   * @description Service for managing and receiving messages.
-   * Used to handle communication between components.
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * @property {string} formErrorAlert
+   * @description
+   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+   * @property {TODOS_PASOS} alerta
+   * @description
+   * Variable utilizada para almacenar el tipo de alerta.
+   */
+  alerta = TODOS_PASOS.Importante;
+
+  /**
+   * @property {string} tituloMensaje
+   * @description
+   * Título del mensaje mostrado en la interfaz para la cancelación por permisos previamente autorizados.
+   */
+  tituloMensaje: string = 'Cancelación por Permisos Previamente Autorizados';
+
+  /**
+   * URL de la página actual.
+   */
+  public solicitudState!: Solicitud140104State;
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+  /*
+   * Indica si hay una carga en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+  /**
+   * Identificador del trámite actual.
+   */
+  tramiteId: string = '140104';
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+
+  /**
+   * Notificador para gestionar la destrucción de observables.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @constructor
    * @param {ServicioDeMensajesService} servicioDeMensajesService
+   * Servicio utilizado para la comunicación de mensajes entre componentes.
    */
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService){
-    // Constructor is used for dependency injection
-  }
-/**
+  constructor(
+    private servicioDeMensajesService: ServicioDeMensajesService,
+    private query: DesistimientoQuery,
+    private store: DesistimientoStore
+  ) {}
+
+  /**
    * @description Lifecycle method executed when the component initializes.
    * Subscribes to the message service to update the search display state.
    */
   ngOnInit(): void {
-    this.servicioDeMensajesService.mensaje$
-      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
-      .subscribe((mensaje) => {
-        this.mostrarBusqueda = mensaje;
-      });
-
-    this.servicioDeMensajesService.devolverFacturasMensaje$
-      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
-      .subscribe((mensaje) => {
-        this.mostrarDevolverFacturas = mensaje;
-      });
-     this.servicioDeMensajesService.obtenerMostrarAlerta()
-  .pipe(takeUntil(this.destroy$))
-  .subscribe((valor) => {
-    this.showAlert = valor;
-  });
+    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
+      this.mostrarBusqueda = mensaje;
+    });
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
   }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /*
+   * Maneja el evento de carga en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  // /**
+  //  * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
+  //  * @param e Acción del botón.
+  //  */
+  // getValorIndice(e: AccionBoton): void {
+  //   if (e.accion === 'cont') {
+  //     let isValid = true;
+
+  //     if (this.indice === 1 && this.pasoUnoComponent) {
+  //       isValid = this.pasoUnoComponent.validarFormularios();
+  //     }
+  //     if (!isValid) {
+  //       this.esFormaValido = true;
+  //       this.datosPasos.indice = this.indice;
+  //       return;
+  //     }
+
+  //     this.esFormaValido = false;
+  //     this.indice = e.valor;
+  //     this.datosPasos.indice = this.indice;
+
+  //     this.wizardComponent.siguiente();
+  //     return;
+  //   }
+
+  //   this.indice = e.valor;
+  //   this.datosPasos.indice = this.indice;
+  //   this.wizardComponent.atras();
+  // }
+
+  /**
+   * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
+   * y enviar los datos al servidor.
+   * @returns {Observable<{ exito: boolean; [key: string]: any }>}
+   */
+  onGuardar(): Observable<any> {
+    return this.query.selectSolicitud$.pipe(
+      take(1), // Tomar solo el primer valor para evitar loops
+      map((ESTADO_ACTUAL) => DetalleDelAdapter.toFormPayload(ESTADO_ACTUAL)),
+      switchMap((FORM_PAYLOAD) => {
+        return this.servicioDeMensajesService.postGuardarDatos(
+          this.tramiteId,
+          FORM_PAYLOAD
+        );
+      }),
+      catchError((error) => {
+        console.error('Error al guardar:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getValorIndice(e: AccionBoton): void {
+    if (this.indice === 1) {
+      const FORM_VALIDO = this.pasoUnoComponent?.validarFormularios() ?? false;
+      this.esFormaValido = FORM_VALIDO;
+
+      // if (!this.esFormaValido) {
+      //   this.datosPasos.indice = 1;
+      //   this.formErrorAlert =
+      //     registroSolicitudImmexComponent.generarAlertaDeError(
+      //       ERROR_SERVICIO_ALERT
+      //     );
+      //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      //   return;
+      // }
+
+      this.onGuardar()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
+            // if (respuesta.codigo !== '00') {
+            //   const ERROR_MESSAGE =
+            //     respuesta.error || 'Error desconocido en la solicitud';
+            //   this.formErrorAlert =
+            //     registroSolicitudImmexComponent.generarAlertaDeError(
+            //       ERROR_MESSAGE
+            //     );
+            //   this.esFormaValido = false;
+            //   this.indice = 1;
+            //   this.wizardComponent.indiceActual = 1;
+            //   setTimeout(
+            //     () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+            //     0
+            //   );
+            //   return;
+            // }
+            this.esFormaValido = true;
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+            this.wizardComponent.siguiente();
+            if (respuesta.datos?.id_solicitud) {
+              this.idSolicitudState = respuesta.datos.id_solicitud;
+              this.store.setIdSolicitud(respuesta.datos.id_solicitud);
+            }
+          },
+          error: (error) => {
+            console.error('Error en onGuardar:', error);
+            // this.formErrorAlert =
+            //   registroSolicitudImmexComponent.generarAlertaDeError(
+            //     'Error al procesar la solicitud'
+            //   );
+            this.esFormaValido = false;
+            this.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(
+              () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+              0
+            );
+          },
+        });
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
+  }
+
   /**
    * @description Lifecycle method executed when the component is destroyed.
    * Resets the search display state to false.
    */
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emit a value to signal completion
-    this.destroy$.complete(); // Complete the Subject to clean up resources
-   
-      this.mostrarBusqueda = false;
+    this.mostrarBusqueda = false;
   }
-  /**
-   * @description Handles the button action and determines navigation (next or previous).
-   * Called when the user clicks on one of the form navigation buttons.
-   *
-   * Receives an `AccionBoton` object containing the action to perform (`cont` or `atras`)
-   * and the index value of the step to navigate to.
-   *
-   * @param {AccionBoton} e - Object containing the action and the index value.
-   *   `valor` represents the step index. `accion` indicates whether to proceed (`cont`)
-   *   or go back (`atras`).
-   *
-   * @returns {void}
-   */
-  getValorIndice(e: AccionBoton): void {
-    if (e.accion === 'cont') {
-      let isValid = true;
-    
-        if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarFormularios();
-      }
-      if (!isValid) {
-        this.esFormaValido = true;
-        this.datosPasos.indice = this.indice;
-        return;
-      }
-    
-      this.esFormaValido = false;
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-    
-      this.wizardComponent.siguiente();
-      return;
-    }
-    
-      this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
-    
-}
 }

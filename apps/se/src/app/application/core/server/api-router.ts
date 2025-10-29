@@ -64,3 +64,5 @@ export const API_BUSCAR_CANCELACIONES_GRID = (TRAMITE: string, rfc:string): stri
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Evalua-Solicitud/excel-solicitud
  */
 export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/excel`;
+
+export const API_GET_DETALLE_DEL_PERMISO_DATOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/buscar`;

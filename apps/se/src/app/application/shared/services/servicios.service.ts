@@ -1,4 +1,5 @@
-import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_DATOS_GRID, API_BUSCAR_TERCIARIZADAS } from '../../core/server/api-router';
+import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_DATOS_GRID, API_BUSCAR_TERCIARIZADAS, API_GET_DETALLE_DEL_PERMISO_DATOS } from '../../core/server/api-router';
+import { DetalleDelPermiso, DetalleDelPermisoPayload } from '../models/detalleDelPermiso.model';
 import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
 import { PlantasDisponiblesPayload, PlantasDisponiblesResponse } from '../models/modelo-interface.model';
 import { SERVICIO_AUTORIZADOS_TABLA, SERVICIO_EMPRESAS_NACIONALES, SERVICIO_IMMEX_TABLA } from '../../core/server/api-router';
@@ -81,6 +82,17 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
     const ENDPOINT = `${this.host}${API_BUSCAR_CANCELACIONES_GRID(tramite.toString(), rfc)}`;
     return this.http.get<BaseResponse<ProgramaACancelar[]>>(ENDPOINT);
 
+  }
+
+  /**
+   * Obtiene el detalle del permiso de datos para el trámite especificado.
+   * @param tramite Identificador del trámite.
+   * @param PAYLOAD Datos necesarios para obtener el detalle del permiso.
+   * @returns Observable con la respuesta del servidor que contiene el detalle del permiso.
+   */
+  obtenerDetalleDelPermisoDatos(tramite: string, PAYLOAD: DetalleDelPermisoPayload): Observable<BaseResponse<DetalleDelPermiso[]>> {
+    const ENDPOINT = `${this.host}${API_GET_DETALLE_DEL_PERMISO_DATOS(tramite.toString())}`;
+    return this.http.post<BaseResponse<DetalleDelPermiso[]>>(ENDPOINT, PAYLOAD);
   }
 
   /**

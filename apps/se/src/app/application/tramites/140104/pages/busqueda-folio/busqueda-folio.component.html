@@ -1,160 +1,107 @@
-<div class="container">
-
-    <ng-titulo *ngIf="mostrarBusqueda && !mostrarDevolverFacturas" titulo="Captura monto a favor del certificado" />
-    <div *ngIf="mostrarBusqueda && !mostrarDevolverFacturas">
-        <form [formGroup]="montoACancelarForm">
-            <div class="row">
-                <div class="col-md-8">
-                    <label class="form-label" for="monto">  <span class="text-danger">*</span>Monto a cancelar <span class="text-secondary fw-normal"><i>(en unidades primarias) :</i></span></label>
-                    <input type="text" class="form-control" id="monto" formControlName="monto">
-               @if(montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched) {
-              <div class="d-grid">
-                @if(montoACancelarForm.controls['monto'].errors?.['required']) {
-                  <span class="mensaje-error">*El campo no puede estar vacío.</span>
-                }
-                @if(montoACancelarForm.controls['monto'].errors?.['pattern']) {
-                  <span class="mensaje-error">Por favor, escribe un número entero válido</span>
-                }
-              </div>
-            }
-                </div>
-            </div>
-        </form>
-        
-        <div class="row mt-2">
-            <div class="col-md-12 d-flex justify-content-end">
-                
-                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="agregar($event)">Agregar</button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="cancelar($event)">Cancelar</button>
-            </div>
+<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header d-flex justify-content-between">
+            <h5 class="modal-title" id="exampleModalLabel">Detalle del permiso</h5>
         </div>
-    </div>
-    
-    <ng-titulo *ngIf="mostrarBusqueda && mostrarDevolverFacturas" titulo="Devolver montos de facturas asociadas" />
-    <div *ngIf="mostrarBusqueda && mostrarDevolverFacturas">
-        <form [formGroup]="devloverForm">
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="form-label" for="folioDelOficioDeCertificado">Folio del oficio de certificado:
-                    </label>
-                    <input type="text" class="form-control" id="folioDelOficioDeCertificado" formControlName="folioDelOficioDeCertificado">
+        <div class="modal-body">
+            <form [formGroup]="detalleDelPermisoForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label" for="folioTramite">Folio del permiso:
+                        </label>
+                        <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="tipoDeSolicitud">Tipo de solicitud:
+                        </label>
+                        <input type="text" class="form-control" id="tipoDeSolicitud" formControlName="tipoDeSolicitud">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="regimen">Régimen:
+                        </label>
+                        <input type="text" class="form-control" id="regimen" formControlName="regimen">
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label" for="montoDisponible">Monto disponible <span class="text-secondary fw-normal"><i>(en unidades primarias) :</i></span></label>
-                    <input type="text" class="form-control" id="montoDisponible" formControlName="montoDisponible">
-                </div> 
-            </div>
-        </form>
 
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label" for="condicionDeLaMercancia">Condición de la mercancía:
+                        </label>
+                        <input type="text" class="form-control" id="condicionDeLaMercancia"
+                            formControlName="condicionDeLaMercancia">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="umt">Unidad de medida de la tarifa (UMT):
+                        </label>
+                        <input type="text" class="form-control" id="umt" formControlName="umt">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="cantidad">Cantidad:
+                        </label>
+                        <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label" for="cdr">Clasificación del régimen:
+                        </label>
+                        <input type="text" class="form-control" id="cdr" formControlName="cdr">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="usd">Valor de factura USD:
+                        </label>
+                        <input type="text" class="form-control" id="usd" formControlName="usd">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="usd">último saldo:
+                        </label>
+                        <input type="text" class="form-control" id="usd" formControlName="usd">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:
+                        </label>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="fraccionArancelaria"
+                            formControlName="fraccionArancelaria"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="descripcionDeLaMercancia">Descripción de la mercancía:
+                        </label>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control"
+                            id="descripcionDeLaMercancia" formControlName="descripcionDeLaMercancia"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <label class="form-label" for="beneficioQueSeObtiene">Esquema regla 8va:
+                        </label>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="beneficioQueSeObtiene"
+                            formControlName="beneficioQueSeObtiene"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <label class="form-label" for="observaciones">País(es) de destino:
+                        </label>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="observaciones"
+                            formControlName="observaciones"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end"></div>
         </div>
-
-        <div class="row">
-            <div class="col-md-12">
-              <h5>Facturas disponibles para devolver</h5>
-              <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasFacturasDisponiblesParaDevolver"
-                [datos]="FacturasDisponiblesParaDevolverTabla"></app-tabla-dinamica>
-                <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-          <li class="page-item"><a class="page-link">1</a></li>
-        </ul>
-      </nav>
-                <div class="row mt-2">
-                    <div class="col-md-6 d-flex justify-content-end">
-                        </div>
-                        </div>
-                        <form [formGroup]="cantidadADevolver">
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label class="form-label text-start" for="cantidad">Cantidad a devolver <span class="text-secondary fw-normal"><i>(en unidades primarias) :</i></span></label><br/>
-                                    <input
-                                      class="form-control"
-                                      id="cantidad"
-                                      formControlName="cantidad"
-                                      placeholder=""
-                                      name="cantidad"
-                                      type="text"
-                                      readonly=true
-                                              />
-                    
-                                </div>
-                            </div>
-                        </form>
-
-                <div class="row mt-2">
-                  <div class="col-md-12 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                      aria-controls="offcanvasRight">Devolver monto</button>
-                  </div>
-                </div> 
-            </div>
-
-            <div class="col-md-12">
-                <h5>Facturas seleccionadas para devolver</h5>
-                <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasFacturasSeleccionadasParaDevolver"
-                  [datos]="FacturasSeleccionadasParaDevolverTabla"></app-tabla-dinamica>
-                  <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-          <li class="page-item"><a class="page-link">1</a></li>
-        </ul>
-      </nav>
-                  <div class="row mt-2">
-                      <div class="col-md-6 d-flex justify-content-end">
-                          </div>
-                          </div>
-                          
-  
-                  <div class="row mt-2">
-                    <div class="col-md-12 d-flex justify-content-end">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Eliminar seleccionado</button>
-                    </div>
-                  </div> 
-                  <div class="row mt-2">
-                  <form [formGroup]="devolver">
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label class="form-label" for="totalDevolver">Total a devolver:</label><br/>
-                            <input
-                              class="form-control"
-                              id="totalDevolver"
-                              formControlName="totalDevolver"
-                              placeholder=""
-                              name="totalDevolver"
-                              type="text"
-                                      />
-            
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label class="form-label" for="totalDevolverMetrosCuadrados">Total a devolver en metros cuadrados:</label><br/>
-                            <input
-                              class="form-control"
-                              id="totalDevolverMetrosCuadrados"
-                              formControlName="totalDevolverMetrosCuadrados"
-                              placeholder=""
-                              name="totalDevolverMetrosCuadrados"
-                              type="text"
-                                      />
-            
-                        </div>
-                    </div>
-                </form>
-                </div>
-              </div>
-        </div>
-
-        <div class="row mt-2">
-            <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="agregar($event)">Cerrar</button>
-            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"
+                (click)="detalleCancelar()">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="agregar($event)">Agregar</button>
         </div>
     </div>
 </div>
