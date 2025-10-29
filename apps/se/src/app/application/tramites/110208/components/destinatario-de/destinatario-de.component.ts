@@ -18,7 +18,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { DestinatarioService } from '../../../../shared/services/destinatario.service';
-import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/DetallesDelTransporte.component';
+import { DetallesDelTransporteComponent } from '../../../../shared/components/detalles-del-transporte/detalles-del-transporte.component';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { ViewChild } from '@angular/core';
