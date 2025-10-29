@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Componente del primer paso para el trámite de ampliación de servicios IMMEX.
+ * 
+ * Este componente maneja la lógica del primer paso del wizard de registro,
+ * incluyendo la selección de pestañas, validación de formularios y gestión del estado.
+ * 
+ * @component PasoUnoComponent
+ * @selector app-paso-uno
+ * @templateUrl ./paso-uno.component.html
+ */
+
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { AmpliacionServiciosComponent } from '../../components/ampliacion-servicios/ampliacion-servicios.component';
@@ -32,15 +43,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public esDatosRespuesta: boolean = false;
 
   /**
-   * Referencia al componente `solicitudComponent`.
+   * Referencia al componente hijo de ampliación de servicios.
+   * 
+   * Utiliza ViewChild para acceder al componente hijo y poder invocar
+   * sus métodos de validación y obtener datos del formulario.
+   * 
+   * @property {AmpliacionServiciosComponent | undefined} solicitudComponent
    */
   @ViewChild('solicitudComponent', { static: false }) solicitudComponent: AmpliacionServiciosComponent | undefined;
 
   /**
-
-  /**
    * Estado de la consulta actual.
-   * Este estado se obtiene a través de ConsultaioQuery.
+   * 
+   * Este estado se obtiene a través de ConsultaioQuery y contiene
+   * información sobre el estado actual de la consulta y si requiere
+   * actualización de datos.
+   * 
+   * @property {ConsultaioState} consultaState
    */
 
   public consultaState!: ConsultaioState;
@@ -62,18 +81,35 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * Inicializa las dependencias necesarias para el funcionamiento del componente,
+   * incluyendo servicios para consultas y manejo de datos de ampliación de servicios.
+   * 
+   * @constructor
+   * @param {ConsultaioQuery} consultaQuery - Servicio de consulta para obtener el estado actual
+   * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para manejar datos de ampliación de servicios
+   */
   constructor(
     private consultaQuery: ConsultaioQuery,
     private ampliacionServiciosService: AmpliacionServiciosService
   ) {
-    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+    // Constructor: La inicialización se realizará en métodos específicos según sea necesario.
   }
   
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Se suscribe al estado de consulta y actualiza el estado del componente según sea necesario.
+   * 
+   * Se suscribe al estado de consulta para monitorear cambios y determinar
+   * si es necesario cargar datos existentes o inicializar con datos vacíos.
+   * Maneja la lógica de actualización del estado del componente.
+   * 
+   * @method ngOnInit
+   * @returns {void} Este método no retorna ningún valor
+   * 
+   * @implements {OnInit}
    */
-
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
       this.consultaState = seccionState;
@@ -85,7 +121,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     });
   }
   /**
-   * Guarda los datos del formulario utilizando el servicio de ampliación de servicios.
+   * Guarda y actualiza los datos del formulario desde el servicio.
+   * 
+   * Obtiene los datos más recientes del servicio de ampliación de servicios
+   * y actualiza el estado del formulario. Establece la bandera de datos
+   * de respuesta cuando la operación es exitosa.
+   * 
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor
    */
   guardarDatosFormulario(): void {
     this.ampliacionServiciosService
@@ -124,9 +167,16 @@ public validarTodosLosFormularios(): boolean {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones para evitar fugas de memoria.
+   * 
+   * Emite un valor en el observable destroyNotifier$ para notificar a todas
+   * las suscripciones que deben completarse, evitando fugas de memoria.
+   * 
+   * @method ngOnDestroy
+   * @returns {void} Este método no retorna ningún valor
+   * 
+   * @implements {OnDestroy}
    */
-ngOnDestroy(): void {
+  ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();
 }

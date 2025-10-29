@@ -88,6 +88,12 @@ export interface ImmexRegistroState {
    * @see {@link FraccionInfo} Para la estructura de cada elemento.
    */
   fraccionTablaDatos: FraccionInfo[];
+
+  IMMEXTablaError: boolean;
+
+  fraccionTablaError: boolean;
+
+  mercanciaImportacionFormError: boolean;
 }
 
 /**
@@ -294,6 +300,9 @@ export function createInitialState(): ImmexRegistroState {
      * @default []
      */
     fraccionTablaDatos: [],
+    IMMEXTablaError: false,
+    fraccionTablaError: false,
+    mercanciaImportacionFormError: false,
     };
 }
 

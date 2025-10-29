@@ -406,7 +406,7 @@ export class EmpleadosComponent implements OnInit {
         categoria: 'info',
         modo: 'action',
         titulo: '',
-        mensaje: 'Al menos una de las opciones está seleccionada (checked).',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',

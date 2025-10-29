@@ -6,8 +6,10 @@ import {
 import { Component, ViewChild } from '@angular/core';
 
 import { PASOS, TITULO_MENSAJE } from '../../constants/destinados-donacio.enum';
+import {MENSAJE_DE_VALIDACION}from'../../constants/destinados-donacio.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Notificacion } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-contenedor-de-pasos',
   templateUrl: './contenedor-de-pasos.component.html',
@@ -27,6 +29,34 @@ export class ContenedorDePasosComponent {
    */
   pasos: ListaPasosWizard[] = PASOS;
 
+    /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+ esFormaValido: boolean = false;
+
+   /**
+      * @property {PasoUnoComponent} pasoUnoComponent
+      * @description
+      * Referencia al componente hijo `PasoUnoComponent` mediante
+      * `@ViewChild`. Permite acceder a sus métodos y propiedades
+      * desde este componente padre.
+      */
+      @ViewChild(PasoUnoComponent)
+      pasoUnoComponent!: PasoUnoComponent;
+
+   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+   esMostrarAlerta: boolean = false;
+
+    /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
   /**
    * Índice del paso actual en el wizard.
    * @type {number}
@@ -38,7 +68,20 @@ export class ContenedorDePasosComponent {
    * @type {WizardComponent}
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
+  
+  
+      /** Nueva notificación relacionada con el RFC. */
+      public seleccionarFilaNotificacion!: Notificacion;
+  
+        /**
+       * @property {string} MENSAJE_DE_ERROR
+       * @description
+       * Propiedad usada para almacenar el mensaje de error actual.
+       * Se inicializa como cadena vacía y se actualiza en función
+       * de las validaciones o errores capturados en el flujo.
+       */
+         MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+      
   /**
    * Datos de configuración para los pasos del wizard.
    * @type {DatosPasos}
@@ -65,18 +108,43 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Objeto con la acción y valor del botón
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+     if (e.accion === 'cont') {
+         let isValid = true;
+   
+           if (this.indice === 1 && this.pasoUnoComponent) {
+           isValid = this.pasoUnoComponent.validarPasoUno();
+         }
+         if(!this.pasoUnoComponent.ValidarPagoDerechos()){
+           this.mostrarAlerta=true;
+           this.seleccionarFilaNotificacion = {
+             tipoNotificacion: 'alert',
+             categoria: 'danger',
+             modo: 'action',
+             titulo: '',
+             mensaje: MENSAJE_DE_VALIDACION,
+             cerrar: true,
+             tiempoDeEspera: 2000,
+             txtBtnAceptar: 'SI',
+             txtBtnCancelar: 'NO',
+           }
+         }
+         if (!isValid) {
+           this.esFormaValido = true;
+           this.datosPasos.indice = this.indice;
+           return;
+         }
+   
+         this.esFormaValido = false;
+         this.indice = e.valor;
+         this.datosPasos.indice = this.indice;
+   
+         this.wizardComponent.siguiente();
+         return;
+       }
+   
+         this.indice = e.valor;
+       this.datosPasos.indice = this.indice;
+       this.wizardComponent.atras();
   }
 
   /**
