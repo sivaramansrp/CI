@@ -41,6 +41,7 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * - `seleccionadoTablaFacturadorDatos`: Datos seleccionados de la tabla de facturadores (opcional).
  */
 export interface Tramite260206State {
+  idSolicitud: number | null;
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
   proveedorTablaDatos: Proveedor[];
@@ -89,6 +90,7 @@ export interface Tramite260206State {
  */
 export function createInitialState(): Tramite260206State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -469,4 +471,11 @@ public updateSeleccionadoTablaFacturadorDatos(
     seleccionadoTablaFacturadorDatos: nuevoTablaFacturadorDatos,
   }));
 }
+
+setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
 }

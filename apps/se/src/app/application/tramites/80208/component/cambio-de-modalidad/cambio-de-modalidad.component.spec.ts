@@ -263,4 +263,67 @@ describe('CambioDeModalidadComponent', () => {
     component.ngOnDestroy();
     });
 
+  it('should run #doAgregarDos() when no service is selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [];
+    component.autorizadosSeleccionados = [];
+    component.nuevaNotificacion = {};
+    component.rowNotSeleccionada = false;
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.rowNotSeleccionada).toBe(true);
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Debe seleccionar un Servicio.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should run #doAgregarDos() when service is selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [{ idServicio: '123' }];
+    component.autorizadosSeleccionados = [];
+    component.actualizaGridEmpresasNacionales = jest.fn();
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.actualizaGridEmpresasNacionales).toHaveBeenCalled();
+  });
+
+  it('should run #doAgregarDos() when authorized service is selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [];
+    component.autorizadosSeleccionados = [{ idServicio: '456' }];
+    component.actualizaGridEmpresasNacionales = jest.fn();
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.actualizaGridEmpresasNacionales).toHaveBeenCalled();
+  });
+
+  it('should run #doAgregarDos() when both services are selected', async () => {
+    // Setup
+    component.domiciliosSeleccionados = [{ idServicio: '123' }];
+    component.autorizadosSeleccionados = [{ idServicio: '456' }];
+    component.actualizaGridEmpresasNacionales = jest.fn();
+
+    // Act
+    component.doAgregarDos();
+
+    // Assert
+    expect(component.actualizaGridEmpresasNacionales).toHaveBeenCalled();
+  });
+
 });
