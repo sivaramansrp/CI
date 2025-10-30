@@ -153,7 +153,10 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   @Output() anoSeleccionEvent: EventEmitter<Catalogo> =
     new EventEmitter<Catalogo>();
 
-
+  /**
+   * Años de autorización disponibles.
+   * @type {Catalogo[]}
+   */
   @Input() anoAutorizacion!: Catalogo[];
 
   /**
@@ -693,6 +696,10 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
     (this.tramite120202Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Obtiene los años de autorización disponibles.
+   * @returns {Catalogo[]} - Los años de autorización disponibles.
+   */
    get aniosAutorizacion(): Catalogo[]{
     return this.autorizacion?.length
       ? this.autorizacion
