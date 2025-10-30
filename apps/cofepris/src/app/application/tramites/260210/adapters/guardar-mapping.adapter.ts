@@ -39,7 +39,7 @@ export class GuardarMappingAdapter {
         },
       },
       "solicitud": {
-          "discriminatorValue": 260201,
+          "discriminatorValue": 260210,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "ALTAMIRA",
@@ -101,12 +101,12 @@ export class GuardarMappingAdapter {
               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
       "representanteLegal": {
-          "rfc": state.datosSolicitudFormState.rfcRepresentante,
+          "rfc": state.datosSolicitudFormState.representanteRfc,
           "resultadoIDC": "",
           "nombre": state.datosSolicitudFormState.representanteNombre,
           "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
