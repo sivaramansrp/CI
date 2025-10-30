@@ -121,6 +121,7 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
+    this.applyNumeroRegistroFiscalValidation();
     this.inicializarEstadoFormulario();
   }
 
@@ -181,32 +182,37 @@ export class DatosDelDestinatarioComponent
    * * @returns {void} No retorna ningún valor.
    * */
   applyNumeroRegistroFiscalValidation(): void {
-    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get(
-      'numeroDeRegistroFiscal'
-    );
+    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
+    const NOMBRES = this.formDatosDelDestinatario.get('nombres'); // Add validation for nombres
 
-    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) {
-      return;
+    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO || !NOMBRES) {
+        return;
     }
 
-    if (this.idProcedimiento === 110205) {
-      NUMERO_REGISTRO_FISCAL.setValidators([
-        Validators.required,
-        Validators.maxLength(30),
-      ]);
-      PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
+    if (this.idProcedimiento === 110205 || this.idProcedimiento === 110223) {
+        NUMERO_REGISTRO_FISCAL.setValidators([
+            Validators.required,
+            Validators.maxLength(30),
+        ]);
+        PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
+        NOMBRES.setValidators([
+            Validators.required, // Add required validation for nombres
+            Validators.maxLength(20),
+        ]);
     } else {
-      NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
-      PRIMER_APELLIDO.setValidators([
-        Validators.required,
-        Validators.maxLength(20),
-      ]);
+        NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
+        PRIMER_APELLIDO.setValidators([
+            Validators.required,
+            Validators.maxLength(20),
+        ]);
+        NOMBRES.setValidators([Validators.maxLength(20)]); // Optional for other cases
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
-  }
+    NOMBRES.updateValueAndValidity(); // Update validity for nombres
+}
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -265,7 +271,6 @@ export class DatosDelDestinatarioComponent
       storeStateName,
     });
   }
-
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
    */
@@ -273,7 +278,18 @@ export class DatosDelDestinatarioComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+  /**
+   * @description
+   * Valida el estado completo del formulario de datos del destinatario.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+    if (this.formDatosDelDestinatario.valid) {
+      return true;
+    }
+    this.formDatosDelDestinatario.markAllAsTouched();
+    return false;
+  }
   /**
    * @description
    * Valida el estado completo del formulario de datos del certificado.
@@ -293,11 +309,5 @@ export class DatosDelDestinatarioComponent
    * }
    * ```
    */
-  validarFormularios(): boolean {
-    if (this.formDatosDelDestinatario.valid) {
-      return true;
-    }
-    this.formDatosDelDestinatario.markAllAsTouched();
-    return false;
-  }
+
 }

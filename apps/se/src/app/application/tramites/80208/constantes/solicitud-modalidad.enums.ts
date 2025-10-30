@@ -135,13 +135,17 @@ export const USUARIO_INFO = {
  */
 export const ERROR_FORMA_ALERT =
   `
-<div class="d-flex justify-content-center text-center">
-  <div>
+  <div class="row">
+<div class="col-md-12 justify-content-center text-center">
+  <div class="row">
     <div class="col-md-12">
-      <p>Corrija los siguientes errores:</p>
-      <p> 1. - (Cambio de modalidad) es un campo requerido</p>
+    <p>Corrija los siguientes errores:</p>
+    <ol>
+    <li>(Cambio de modalidad) es un campo requerido</li>
+    </ol>
     </div>
   </div>
+</div>
 </div>
 `
 
@@ -158,12 +162,16 @@ export const ERROR_FORMA_ALERT =
  */
 export const ERROR_SERVICIOS_ALERT =
   `
-<div class="d-flex justify-content-center text-center">
-  <div>
+  <div class="row">
+<div class="col-md-12 justify-content-center text-center">
+  <div class="row">
     <div class="col-md-12">
     <p>Corrija los siguientes errores:</p>
-    <p> 1. - (Debe agregar al menos un servicio) es un campo requerido</p>
+    <ol>
+    <li>(Debe agregar al menos un servicio) es un campo requerido</li>
+    </ol>
     </div>
   </div>
+</div>
 </div>
 `

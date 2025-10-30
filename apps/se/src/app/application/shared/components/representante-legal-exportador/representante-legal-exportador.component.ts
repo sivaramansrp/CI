@@ -258,17 +258,6 @@ export class RepresentanteLegalExportadorComponent
       METODO_NOMBRE: metodoNombre,
     });
   }
-
-  /**
-   * @description
-   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
   /**
    * Valida el formulario y marca los campos como tocados si es inválido
    */
@@ -279,4 +268,14 @@ export class RepresentanteLegalExportadorComponent
      }
      return true;
    }
+  /**
+   * @description
+   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

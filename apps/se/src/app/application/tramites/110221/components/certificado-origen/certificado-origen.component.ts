@@ -19,17 +19,20 @@ import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { IDPROCEDIMIENTO } from '../../constantes/peru-certificado.model';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
+
+import { ConfiguracionColumna, Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
-import { Mercancias } from '../../models/plantas-consulta.model';
 import { Modal } from 'bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
-import { Tramite110221Store } from '../../estados/tramite110221.store';
+
+import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 
 /**
  * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
@@ -124,13 +127,15 @@ export class CertificadoOrigenComponent
    * Observable que emite la lista de países y bloques disponibles.
    * @type {Observable<Catalogo[]>}
    */
-  pais: Catalogo[] = [] as Catalogo[];
+ 
+
+   pais: Catalogo[] = [];
 
   /**
    * Estado seleccionado del catálogo.
    * @type {Catalogo}
    */
-  estado!: Catalogo;
+  estado: Catalogo[] = [];
 
   /**
    * País o bloque seleccionado.
@@ -239,6 +244,10 @@ export class CertificadoOrigenComponent
    */
   @ViewChild('certificadoDeOrigen')
   certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  /**
+   * Configuración de las columnas para la tabla de carga de mercancías.
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
 
   /**
    * Constructor del componente.
@@ -281,6 +290,13 @@ export class CertificadoOrigenComponent
   idProcedimiento: number = IDPROCEDIMIENTO;
 
   /**
+   * @property {Tramite110221State} certificadoState
+   * @description
+   * Estado del certificado de origen para el trámite 110221.
+   */
+  private certificadoState!: Tramite110221State;
+
+  /**
    * Constructor del componente CertificadoOrigenComponent.
    * Inicializa las dependencias necesarias para la gestión de certificados de origen.
    *
@@ -314,11 +330,7 @@ export class CertificadoOrigenComponent
         }
       });
 
-       this.tramiteQuery.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((estado) => {
-        this.pais = estado.paisBloques;
-      });
+   
 
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
@@ -336,41 +348,19 @@ export class CertificadoOrigenComponent
      * Asignación de los observables que contienen los catálogos de estados y países.
      */
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
-    // this.pais = this.tramiteQuery.paisBloques;
     this.datos1 = (
-      this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancias[]>
+      this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>
     ).pipe(
-      map((mercancias: Mercancias[]) => mercancias as unknown as Mercancia[])
+      map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
     );
   }
-
-   /**
-     * @descripcion
-     * Obtiene la lista de países disponibles.
-     */
-    paisOpcion(): void {
-      this.certificadoService
-        .obtenerMenuDesplegable('pais.json')
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe({
-          next: (data) => {
-            this.pais = data as Catalogo[];
-            this.store.setBloque(this.pais);
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.pais = [];
-          },
-        });
-    }
 
   /**
    * Método del ciclo de vida ngOnInit. Se utiliza para cargar los datos iniciales
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
-    this.cargarEstados();
-    this.cargarBloque();
+    
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -382,7 +372,6 @@ export class CertificadoOrigenComponent
       .subscribe();
 
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
-    this.paisOpcion();
   }
 
   /**
@@ -402,22 +391,7 @@ export class CertificadoOrigenComponent
       );
   }
 
-  /**
-   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
-   */
-  cargarBloque(): void {
-    this.certificadoService
-      .obtenerPaisBloque()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
+
 
   /**
    * Establece el estado seleccionado en el store.
@@ -432,7 +406,7 @@ export class CertificadoOrigenComponent
    * @param {Catalogo} estado El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloque(estado);
   }
 
   /**
@@ -447,19 +421,72 @@ export class CertificadoOrigenComponent
    * Busca la mercancia y actualiza los datos en el store.
    */
   buscarrMercancia(): void {
-    this.certificadoService
-      .obtenerMercancia()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Mercancias[]) => {
-          this.store.setbuscarMercancia(data);
-        },
-        () => {
-          this.toastr.error('Error al buscar Mercancia');
-        }
-      );
-  }
+    // Obtener los valores del catálogo seleccionados del estado de la tienda
+    const SELECTED_ESTADO = this.certificadoState?.estado;
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
 
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {
+        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
+      },
+      pais: {
+        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
+      },
+    };
+
+    this.certificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              
+              id: item.idMercancia,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              nombreIngles: item.nombreIngles || '',
+              fraccionNaladi: item.fraccionNaladi || '',
+              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
+              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
+              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.valorDeContenidoRegional || '',
+              normaOrigen: item.normaOrigen || '',
+              otrasInstancias: item.otrasInstancias || '',
+              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.datosTabla$ = of(MAPPED_DATA || []);
+
+          this.store.setbuscarMercancia(
+            MAPPED_DATA
+          );
+        },
+       
+      });
+
+    this.mercanciasDisponibles = true;
+  }
   /**
    * @method abrirModalCargaPorArchivo
    * @description
@@ -560,17 +587,44 @@ export class CertificadoOrigenComponent
    *
    * @returns {boolean} Indica si el formulario es válido.
    */
-  validarFormulario(): boolean {
-    let isValid = true;
-    if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validarFormularios()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
-    return isValid;
+validarFormulario(): boolean {
+  let ESVALIDO = true;
+
+  if (this.certificadoDeOrigen) {
+    if (!this.certificadoDeOrigen.validatorCheck()) {
+      ESVALIDO = false;
+
+      this.logFieldErrors(this.certificadoDeOrigen.formCertificado as FormGroup);
+    } 
+  } else {
+    ESVALIDO = false;
   }
+
+  return ESVALIDO;
+}
+
+/**
+
+* Función auxiliar para registrar errores de validación de campos.
+* @param form - El objeto formulario que contiene los campos a validar.
+
+*/
+private logFieldErrors(form: FormGroup): void {
+  if (!form || !form.controls) {
+    console.error('Form object or controls are not available.');
+    return;
+  }
+
+
+  Object.keys(form.controls).forEach((field) => {
+    const CONTROL = form.get(field); // Get the control by field name
+    if (CONTROL?.disabled) {
+      console.warn(`Field "${field}" is disabled.`);
+    } else if (CONTROL?.invalid) {
+      console.error(`Field "${field}" is invalid. Errors:`, CONTROL.errors);
+    } 
+  });
+}
 
   /**
    * @inheritdoc
