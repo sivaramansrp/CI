@@ -2,23 +2,23 @@
   <div class="row">
     <div class="col-md-3">
       <div class="form-group">
-        <h5 class="form-label text-start">Fracción arancelaria</h5>
+        <h5 class="form-label text-start">Fracción arancelaria:</h5>
         <p class="form-label text-start">
-              {{ selectedRow?.encabezadoFraccionArancelaria || selectedDosRow?.encabezadoFraccionExportacion }}
+          {{ selectedRow?.encabezadoFraccionArancelaria || selectedDosRow?.encabezadoFraccionExportacion }}
         </p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <h5 class="form-label text-start">Anexo II</h5>
+        <h5 class="form-label text-start">Anexo II:</h5>
         <p class="form-label text-start">
-            {{ selectedRow?.encabezadoAnexoII || selectedDosRow?.encabezadoAnexoII }}
+          {{ selectedRow?.encabezadoAnexoII || selectedDosRow?.encabezadoAnexoII }}
         </p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <h5 class="form-label text-start">Tipo</h5>
+        <h5 class="form-label text-start">Tipo:</h5>
         <p class="form-label text-start">
           {{ selectedRow?.encabezadoTipo || selectedDosRow?.encabezadoTipo }}
         </p>
@@ -26,7 +26,7 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <h5 class="form-label text-start">UMT</h5>
+        <h5 class="form-label text-start">UMT:</h5>
         <p class="form-label text-start">{{ selectedRow?.encabezadoUmt || selectedDosRow?.encabezadoUmt }}</p>
       </div>
     </div>
@@ -41,29 +41,17 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          <app-catalogo-select
-            [catalogo]="catagoriaSeleccionDatos"
-            formControlName="catagoria"
-            [label]="'Categoría'"
-            [required]="true"
-            name="catagoria"
-            [isDisabled]="formularioDeshabilitado"
-          ></app-catalogo-select>
+          <app-catalogo-select [catalogo]="catagoriaSeleccionDatos" formControlName="catagoria" [label]="'Categoría'"
+            [required]="true" name="catagoria" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label for="descripcion" class="form-label text-start"
-            >Descripción comercial*:</label
-          >
-          <textarea
-            id="descripcion"
-            class="form-control"
-            style="height: 60%; resize: none"
-            formControlName="descripcion"
-          ></textarea>
+          <label for="descripcion" class="form-label text-start">Descripción comercial*:</label>
+          <textarea id="descripcion" class="form-control" style="height: 60%; resize: none"
+            formControlName="descripcion"></textarea>
         </div>
       </div>
     </div>
@@ -73,14 +61,9 @@
           >Valor en moneda nacional de la producción o del servicio a realizarse mensualmente*:</label>
       </div>
       <div class="col-md-2">
-        <input
-          class="form-control min-hgt"
-          id="monedaNacionalMensual"
-          formControlName="monedaNacionalMensual"
-          type="number"
-          min="0"
-          libRestringirNegativos
-        />
+        <input class="form-control min-hgt" id="monedaNacionalMensual" formControlName="monedaNacionalMensual"
+          type="text" min="0" pattern="^[0-9]*$"
+          (input)="onSoloDigitosInput($event,'monedaNacionalMensual')" />
       </div>
     </div>
 
@@ -91,14 +74,9 @@
         >
       </div>
       <div class="col-md-2">
-        <input
-          class="form-control min-hgt"
-          id="monedaNacionalDeDosPeriodos"
-          formControlName="monedaNacionalDeDosPeriodos"
-          type="number"
-          min="0"
-          libRestringirNegativos
-        />
+        <input class="form-control min-hgt" id="monedaNacionalDeDosPeriodos"
+          formControlName="monedaNacionalDeDosPeriodos" type="text" min="0" pattern="^[0-9]*$"
+          (input)="onSoloDigitosInput($event,'monedaNacionalDeDosPeriodos')" />
       </div>
     </div>
 
@@ -109,14 +87,9 @@
         </label>
       </div>
       <div class="col-md-2">
-        <input
-          class="form-control min-hgt"
-          id="volumenMensual"
-          formControlName="volumenMensual"
-          type="number"
-          min="0"
-          libRestringirNegativos
-        />
+        <input class="form-control min-hgt" id="volumenMensual" formControlName="volumenMensual" type="text" min="0"
+          pattern="^[0-9]*$"
+          (input)="onSoloDigitosInput($event,'volumenMensual')" />
       </div>
     </div>
 
@@ -127,27 +100,27 @@
         </label>
       </div>
       <div class="col-md-2">
-        <input
-          class="form-control min-hgt"
-          id="twoPeriodVolume"
-          formControlName="twoPeriodVolume"
-          type="number"
-          min="0"
-          libRestringirNegativos
-        />
+        <input class="form-control min-hgt" id="twoPeriodVolume" formControlName="twoPeriodVolume" type="text" min="0"
+          pattern="^[0-9]*$"
+          (input)="onSoloDigitosInput($event,'twoPeriodVolume')" />
       </div>
     </div>
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2" (click)="seleccionGuardar()"
-      [disabled]="formularioDeshabilitado">
+      <button class="btn btn-default me-2" (click)="seleccionGuardar()" [disabled]="formularioDeshabilitado">
         Guardar
       </button>
-      <button class="btn btn-primary me-2" (click)="regresar()"
-      [disabled]="formularioDeshabilitado">
+      <button class="btn btn-primary me-2" (click)="regresar()" [disabled]="formularioDeshabilitado">
         Regresar Anexo
       </button>
     </div>
   </div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

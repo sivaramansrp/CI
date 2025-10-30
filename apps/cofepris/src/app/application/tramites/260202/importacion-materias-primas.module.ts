@@ -3,6 +3,8 @@ import {
   AnexarDocumentosComponent,
   BtnContinuarComponent,
   FirmaElectronicaComponent,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   SolicitanteComponent,
   TituloComponent,
   WizardComponent,
@@ -39,6 +41,8 @@ import { ToastrService } from 'ngx-toastr';
     TituloComponent,
     AnexarDocumentosComponent,
     ImportacionMateriasPrimasRoutingModule,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   providers: [ToastrService],
 })

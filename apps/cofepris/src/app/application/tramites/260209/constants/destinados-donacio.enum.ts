@@ -69,24 +69,6 @@ export const TITULO_MENSAJE =
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
-/**
- * Identificador numérico único del procedimiento administrativo en el sistema COFEPRIS.
- * 
- * @description Código oficial que identifica específicamente el trámite de "Permiso sanitario 
- * de importación de medicamentos destinados a donación" dentro del catálogo de procedimientos 
- * de la Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS).
- * 
- * @type {number}
- * @constant
- * @readonly
- * @since 1.0.0
- * @see {@link https://www.gob.mx/cofepris} Portal oficial de COFEPRIS
- * @example
- * // Uso en validaciones de procedimiento
- * if (procedimientoId === ID_PROCEDIMIENTO) {
- *   // Lógica específica para este trámite
- * }
- */
 export const ID_PROCEDIMIENTO = 260209;
 
 /**
@@ -119,3 +101,8 @@ export const ELEMENTOS_REQUERIDOS = [
   'manifesto',
   'fabricante'
 ];
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';

@@ -7,6 +7,8 @@ import { JSONResponse } from '../../../models/shared/catalogos.model';
 import { RFC_GENERICO } from '../../../constants/constantes-generales';
 import { SolicitanteEvaluarResponse } from '../../../models/datos-solicitante-evaluar.model';
 
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+
 import { BaseResponse } from '../../../models/shared/base-response.model';
 @Injectable({
   providedIn: 'root',
@@ -20,7 +22,8 @@ export class SolicitanteService {
   }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
-
+  urlServerTest = ENVIRONMENT.API_HOST;
+  
   /**
    * Obtiene los datos generales de un contribuyente desde la API.
    * @param {string} rfc - RFC del contribuyente para realizar la consulta.
@@ -60,4 +63,5 @@ export class SolicitanteService {
     const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITANTE(tramite,idSolicitud)}`;
     return this.http.get<BaseResponse<SolicitanteEvaluarResponse>>(ENDPOINT);
   }
+
 }

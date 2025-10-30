@@ -9,13 +9,13 @@ import {
   SubirDocumentoService,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA,NgModule } from '@angular/core';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datosCertificado/datosCertificado.component';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from './components/destinatario-de/destinatario-de.component';
 import { MercanciaComponent } from '../../shared/components/mercancia/mercancia.component';
-import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
@@ -35,13 +35,13 @@ import { provideHttpClient } from '@angular/common/http';
     WizardComponent,
     SolicitanteComponent,
     AlertComponent,
-    DestinatarioComponent,
+    DestinatarioDeComponent,
     DatosCertificadoComponent,
     FirmaElectronicaComponent,
     PasoFirmaComponent,
     MercanciaComponent,
     CertificadoDeOrigenComponent,
-    CertificadoOrigenComponent
+    CertificadoOrigenComponent,
   ],
   providers: [
     ToastrService,
@@ -53,5 +53,6 @@ import { provideHttpClient } from '@angular/common/http';
     ValidarInicalmenteService,
     Solocitud110208Service
   ],
+  schemas: [NO_ERRORS_SCHEMA], 
 })
 export class ValidarInicalmenteModule {}

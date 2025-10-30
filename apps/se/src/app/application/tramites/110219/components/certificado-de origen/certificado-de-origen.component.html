@@ -21,25 +21,25 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Número de certificado de origen:</label>
-        <input type="number" required="true" formControlName="certificadoDeOrigen" class="form-control gris-color" readonly />
+        <input type="number" formControlName="certificadoDeOrigen" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-4">
         <label>Fecha de expedición:</label>
-        <input type="number" required="true" formControlName="fechaExpedicion" class="form-control gris-color" readonly />
+        <input type="string" formControlName="fechaExpedicion" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-4">
         <label>Fecha de vencimiento:</label>
-        <input type="number" required="true" formControlName="fechaVencimiento" class="form-control gris-color" readonly />
+        <input type="string" formControlName="fechaVencimiento" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-6">
         <label>País / Bloque:</label>
-        <input type="text" required="true" formControlName="bloque" class="form-control gris-color" readonly />
+        <input type="text" formControlName="bloque" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-6">
         <label>Tratado / Acuerdo:</label>
-        <input type="text" required="true" formControlName="acuerdo" class="form-control gris-color" readonly />
+        <input type="text" formControlName="acuerdo" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row mt-5">
@@ -149,4 +149,3 @@
     </div>
   </ng-container>
 </form>
-<btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>

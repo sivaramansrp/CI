@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 
 import {
   Component,
-  Input
+  Input,
+  ViewChild
 } from '@angular/core';
 
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -35,6 +36,8 @@ export class PagoDeDerechosContenedoraComponent {
   @Input()
   formularioDeshabilitado: boolean = false;
 
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
@@ -65,5 +68,11 @@ export class PagoDeDerechosContenedoraComponent {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

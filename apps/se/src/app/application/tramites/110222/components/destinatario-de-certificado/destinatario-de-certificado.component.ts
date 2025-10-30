@@ -71,7 +71,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Notificador para gestionar la destrucción de suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @descripcion
@@ -120,14 +120,14 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * Se utiliza para habilitar o deshabilitar la navegación en el asistente (wizard).
    */
   registroFormulario!: FormGroup;
-  
-    /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
-    @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
-    /** Referencia al componente destinatario para marcar campos como tocados */
-    @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
-    /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
-    @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
-  
+
+  /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+  @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
+  /** Referencia al componente destinatario para marcar campos como tocados */
+  @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
+  /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
+  @ViewChild(RepresentanteLegalExportadorComponent) representanteLegalExportadorComponent?: RepresentanteLegalExportadorComponent;
+
 
 
   /**
@@ -141,12 +141,12 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @param consultaQuery - Consulta para obtener el estado global de consulta.
    */
   constructor(
-    private readonly fb: FormBuilder,
-    private store: Tramite110222Store,
-    private query: Tramite110222Query,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    public fb: FormBuilder,
+    public store: Tramite110222Store,
+    public query: Tramite110222Query,
+    public seccionStore: SeccionLibStore,
+    public seccionQuery: SeccionLibQuery,
+    public consultaQuery: ConsultaioQuery
   ) {
     this.query.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -197,32 +197,64 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-    /** Inicializa el formulario reactivo del destinatario */
+  /** Inicializa el formulario reactivo del destinatario */
   iniciarFormulario(): void {
     this.registroFormulario = this.fb.group({
       medioDeTransporte: [''],
       // Agrega otros controles aquí si es necesario
     });
   }
- 
-public validateAllForms(): boolean {
-  let valid = true;
-  this.destinatarioComponent?.markAllFieldsTouched();
-  this.datosDelDestinatarioComponent?.markAllFieldsTouched();
-  this.representanteLegalExportadorComponent?.markAllFieldsTouched();
-  if (this.destinatarioComponent && this.destinatarioComponent.formDestinatario && !this.destinatarioComponent.formDestinatario.valid) {
-    valid = false;
+/*
+* @method validateAllForms
+   * @descripcion
+   * Marca todos los campos de los formularios como tocados y verifica su validez.
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validateAllForms(): boolean {
+    if (!this.destinatarioComponent || !this.datosDelDestinatarioComponent || !this.representanteLegalExportadorComponent) {
+      return false;
+    }
+    this.destinatarioComponent.markAllFieldsTouched();
+    this.datosDelDestinatarioComponent.markAllFieldsTouched();
+    this.representanteLegalExportadorComponent.markAllFieldsTouched();
+    return (
+      this.destinatarioComponent.formDestinatario?.valid &&
+      this.datosDelDestinatarioComponent.formDatosDelDestinatario?.valid &&
+      this.representanteLegalExportadorComponent.form?.valid
+    );
   }
-  if (this.datosDelDestinatarioComponent && this.datosDelDestinatarioComponent.formDatosDelDestinatario && !this.datosDelDestinatarioComponent.formDatosDelDestinatario.valid) {
-    valid = false;
-  }
-  if (this.representanteLegalExportadorComponent && this.representanteLegalExportadorComponent.form && !this.representanteLegalExportadorComponent.form.valid) {
-    valid = false;
-  }
-  return valid;
-}
 
-
+  /*
+* @method validarFormulario
+   * @descripcion
+   * Marca todos los campos de los formularios como tocados y verifica su validez.
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+     let isValid = true;
+    if (this.datosDelDestinatarioComponent) {
+      if (!this.datosDelDestinatarioComponent.markAllFieldsTouched()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.representanteLegalExportadorComponent) {
+      if (!this.representanteLegalExportadorComponent.markAllFieldsTouched()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
 
   /**
    * @method datosDelDestinatarioFunc
@@ -266,12 +298,12 @@ public validateAllForms(): boolean {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
-/**
-   * @method setValoresStore1
-   * @descripcion
-   * Actualiza el almacén con los datos del formulario de destinatario.
-   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
-   */
+  /**
+     * @method setValoresStore1
+     * @descripcion
+     * Actualiza el almacén con los datos del formulario de destinatario.
+     * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+     */
   setValoresStore1(event: { formGroupName: string; campo: string; VALOR: undefined; METODO_NOMBRE: string; }): void {
     const { VALOR, METODO_NOMBRE } = event;
     (this.store as unknown as Record<string, (value: unknown) => void>)[METODO_NOMBRE]?.(VALOR);

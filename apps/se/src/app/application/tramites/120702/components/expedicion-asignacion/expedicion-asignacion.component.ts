@@ -248,7 +248,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
 
     this.asignacionForm = this.fb.group({
       anoDelOficio: ['', [Validators.required]],
-      numeroOficio: ['', [Validators.required]],
+      numeroOficio: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(15)]],
       estado: [{ value: 'CHIHUAHUA', disabled: true }],
       representacionFederal: [{ value: 'CIUDAD JUAREZ', disabled: true }],
       montoAsignado: [{ value: '500', disabled: true }],

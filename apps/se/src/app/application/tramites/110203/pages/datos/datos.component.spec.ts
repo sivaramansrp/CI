@@ -22,7 +22,11 @@ describe('DatosComponent', () => {
     readonly: false,
     create: true,
     update: true,
-    consultaioSolicitante: null
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: ''
   };
 
   const MOCK_STATE_FALSE: ConsultaioState = {

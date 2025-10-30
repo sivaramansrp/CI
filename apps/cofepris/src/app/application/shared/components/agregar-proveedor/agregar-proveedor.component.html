@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="mt-4">
    <div *ngIf="message" class="alert alert-danger error-message text-center" style="margin-bottom: 16px;">
     {{ message }}
   </div>
@@ -366,7 +366,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')
@@ -542,7 +542,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')

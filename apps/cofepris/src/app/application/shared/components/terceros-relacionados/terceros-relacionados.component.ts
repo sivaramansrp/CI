@@ -309,6 +309,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
+    public proveedorSeleccionadoParaModificar: Proveedor[] = [];
+    /**
+ * Identificador del trámite asociado.
+ * Se recibe como propiedad de entrada desde el componente padre.
+ */
+@Input() tramiteID: string = '';
   /**
    * Constructor del componente.
    *
@@ -354,6 +360,33 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   @Input() fabricanteTablaDatos: Fabricante[] = [];
 
+  /**
+   * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
+   * Evento que emite la lista actualizada de fabricantes.
+   * Se utiliza para notificar al componente padre que la tabla de fabricantes ha cambiado.
+   */
+  @Output() updateFabricanteTablaDatos: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
+
+  /**
+   * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTablaDatos
+   * Evento que emite la lista actualizada de destinatarios finales.
+   * Se utiliza para notificar al componente padre que la tabla de destinatarios ha cambiado.
+   */
+  @Output() updateDestinatarioFinalTablaDatos: EventEmitter<Destinatario[]> = new EventEmitter<Destinatario[]>();
+
+  /**
+   * @property {EventEmitter<Proveedor[]>} updateProveedorTablaDatos
+   * Evento que emite la lista actualizada de proveedores.
+   * Se utiliza para notificar al componente padre que la tabla de proveedores ha cambiado.
+   */
+  @Output() updateProveedorTablaDatos: EventEmitter<Proveedor[]> = new EventEmitter<Proveedor[]>();
+
+  /**
+   * @property {EventEmitter<Facturador[]>} updateFacturadorTablaDatos
+   * Evento que emite la lista actualizada de facturadores.
+   * Se utiliza para notificar al componente padre que la tabla de facturadores ha cambiado.
+   */
+  @Output() updateFacturadorTablaDatos: EventEmitter<Facturador[]> = new EventEmitter<Facturador[]>();
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
    * Datos de la tabla de destinatarios finales.
@@ -460,6 +493,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   public destinatarioModalAbierto: boolean = false;
 
+  public proveedorModalAbierto: boolean = false;
   public facturadorModalAbierto: boolean = false;
   /**
    * Destinatario data selected for modification
@@ -531,6 +565,24 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.abrirFabricanteModal();
     }
 
+    /**
+     * Emite el evento para agregar un nuevo fabricante.
+     */
+    onAgregarProveedorFinal(): void {
+      this.proveedorSeleccionadoParaModificar = [];
+      this.abrirProveedorModal();
+    }
+     /**
+   * Opens the Proveedor selection modal
+   */
+  abrirProveedorModal(): void {
+    this.proveedorModalAbierto = true;
+    const MODALELEMENT = document.getElementById('proveedorModal');
+    if (MODALELEMENT) {
+    const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+    MODAL.show();
+  }
+}
     onFacturadorAgregar(): void {
       this.facturadorSeleccionadoParaModificar = [];
       this.abrirFacturadorModal();
@@ -547,6 +599,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     MODAL.show();
   }
 }
+/**
+   * Opens the Destinatario selection modal
+   */
   abrirDestinatarioModal(): void {
     this.destinatarioModalAbierto = true;
     const MODALELEMENT = document.getElementById('destinatarioModal');
@@ -580,15 +635,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   
 }
+  /**
+   * Closes the Fabricante selection modal
+   */
+  cerrarProveedorModal(): void {
+   this.proveedorModalAbierto = false;
+   this.proveedorSeleccionadoParaModificar = [];
+    const MODAL_ELEMENT = document.getElementById('proveedorModal');
+    if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = (window as unknown as { bootstrap: { Modal: { getInstance(element: HTMLElement): { hide(): void } | null } } }).bootstrap.Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL_INSTANCE) {
+          MODAL_INSTANCE.hide();
+        }
+    }
+  
+}
 /**
  * Handles the fabricante table data update
   */
 onFabricanteUpdated(fabricantes: Fabricante[]): void {
-  
   this.fabricanteTablaDatos = [...fabricantes];
-  
-  this.fabricanteEliminar.emit([...this.fabricanteTablaDatos]);
-  
+  this.updateFabricanteTablaDatos.emit([...this.fabricanteTablaDatos]);
   this.fabricanteSeleccionadoDatos = [];
   this.fabricanteSeleccionadoParaModificar = [];
   
@@ -598,14 +665,20 @@ onFabricanteUpdated(fabricantes: Fabricante[]): void {
  */
 onDestinatarioUpdated(destinatarios: Destinatario[]): void {
   this.destinatarioFinalTablaDatos = [...destinatarios];
-  this.destinatarioEliminar.emit([...this.destinatarioFinalTablaDatos]);
+  this.updateDestinatarioFinalTablaDatos.emit([...this.destinatarioFinalTablaDatos]);
   this.destinatarioSeleccionadoDatos = [];
   this.destinatarioSeleccionadoParaModificar = [];
+}
+onProveedorUpdated(proveedores: Proveedor[]): void {
+  this.proveedorTablaDatos = [...proveedores];
+  this.updateProveedorTablaDatos.emit([...this.proveedorTablaDatos]);
+  this.proveedorSeleccionadoDatos = [];
+  this.proveedorSeleccionadoParaModificar = [];
 }
 
 onFacturadorUpdated(facturadores: Facturador[]): void {
   this.facturadorTablaDatos = [...facturadores];
-  this.facturadorEliminar.emit([...this.facturadorTablaDatos]);
+  this.updateFacturadorTablaDatos.emit([...this.facturadorTablaDatos]);
   this.facturadorSeleccionadoDatos = [];
   this.facturadorSeleccionadoParaModificar = [];
 }
@@ -719,8 +792,14 @@ cerrarFacturadorModal(): void {
       this.mostrarAlerta = true;
       return;
     }
-    this.proveedorEventoModificar.emit(this.proveedorSeleccionadoDatos);
-    this.irAAcciones('../agregar-proveedor',true);
+    this.proveedorSeleccionadoParaModificar = this.proveedorSeleccionadoDatos.map(d => ({ ...d }));
+    this.proveedorModalAbierto = true;
+
+    const MODALELEMENT = document.getElementById('proveedorModal');
+    if (MODALELEMENT) {
+      const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
+    }
   }
 
   /**
@@ -731,7 +810,7 @@ cerrarFacturadorModal(): void {
    * @returns {void}
    */
   modificarFacturador(): void {
-    if (!this.facturadorSeleccionadoDatos.length) {
+   if (!this.facturadorSeleccionadoDatos.length) {
       this.mostrarAlerta = true;
       return;
     }
@@ -889,6 +968,25 @@ cerrarFacturadorModal(): void {
     this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
     this.eliminarFacturadorAlerta = true;
     this.eliminarAlerta = true;
+  }
+
+  formularioSolicitudValidacion(): boolean {
+    const IS_DESTINATARIO_REQUERIDO = !this.esCampoRequerido('DestinatarioFinal');
+    
+    let IS_DESTINATARIO_DATOS = true;
+    
+    if(IS_DESTINATARIO_REQUERIDO && this.destinatarioFinalTablaDatos.length === 0){
+
+      IS_DESTINATARIO_DATOS = false;
+    }
+    
+    if(IS_DESTINATARIO_DATOS === true){
+
+return true;
+    }
+  this.isContinuarButtonClicked = true;
+  return false;
+   
   }
 
   /**

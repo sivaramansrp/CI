@@ -395,6 +395,11 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
  *  Contiene información necesaria para mostrar o procesar datos en el componente. */
    public consultaState!:ConsultaioState;
 
+  
+/**
+ * Contiene la lista de plantas disponibles seleccionadas por el usuario.
+ */
+public seleccionados: PlantasDisponibles[] = [];
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -699,16 +704,26 @@ buscarPlantasImmex(): void {
 }
 
 /**
+ * Maneja el cambio de selección de plantas disponibles.
+ * Actualiza la propiedad `seleccionados` con los datos seleccionados.
+ * @param event 
+ */
+onSeleccionChange(event: PlantasDisponibles[]): void { 
+  this.seleccionados = event;
+}
+/**
  * Adds IMMEX plant data to the `plantasImmexDatos` array.
  * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
  *
  * @remarks
  * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
  */
-agregarPlantas(): void {
+agregarPlantas(): void { 
+  if(this.seleccionados && this.seleccionados.length >=1){
   this.plantasImmexDatos = [INMEX_PLANTAS];
   this.servicioDeFormularioService.pushToArray('plantasImmexDatos', INMEX_PLANTAS);
   this.datosPlantasImmex.emit(this.plantasImmexDatos);
+  }
 }
 
 

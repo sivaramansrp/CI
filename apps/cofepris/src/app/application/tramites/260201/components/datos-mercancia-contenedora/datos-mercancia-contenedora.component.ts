@@ -115,6 +115,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       paisProcedencia: event.paisProcedencia,
       tipoProducto: event.tipoProducto,
       usoEspecifico: event.usoEspecifico,
+      cantidadUmtValor: event.cantidadUmtValor
     };
 
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(

@@ -58,12 +58,15 @@ export class DetallesPlantasComponent {
   @Output() guadarEvent = new EventEmitter();
 
   /**
+   * Notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
    * Formulario para los datos del subcontratista.
    * @property {FormGroup} formularioDatosPlantas
    */
-
   formularioDatosPlantas!: FormGroup;
-
   /**
    * Catálogo de opciones de sí/no.
    * @property {any} catalogoSiNo
@@ -90,7 +93,7 @@ export class DetallesPlantasComponent {
    * Constructor de la clase ComplementarPlantaComponent.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
-  constructor(private fb: FormBuilder,private ubicaccion: Location,) {
+  constructor(private fb: FormBuilder, private ubicaccion: Location,) {
     this.inicializarFormularioDatosPlantas();
   }
 
@@ -142,10 +145,10 @@ export class DetallesPlantasComponent {
     }
   }
 
-   /**
-   * Vuelve a la ubicación anterior en el historial del navegador.
-   * @returns {void}
-   */
+  /**
+  * Vuelve a la ubicación anterior en el historial del navegador.
+  * @returns {void}
+  */
   regrasar(): void {
     this.ubicaccion.back();
   }
@@ -155,7 +158,7 @@ export class DetallesPlantasComponent {
    *
    * Typically used to signal that the user has requested to save the current state or data.
    */
-  guardar(): void{
+  guardar(): void {
     this.guadarEvent.emit();
      if (!this.formularioDatosPlantas.valid) {
          this.notificacionAgregarServicios = {
@@ -171,5 +174,5 @@ export class DetallesPlantasComponent {
         };
         this.formularioDatosPlantas.markAllAsTouched();
   }
-}
+  }
 }
