@@ -566,7 +566,11 @@ private obtenerDescripcionPais(paisId: string | number): string {
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
+    this.agregarProveedorForm.markAsUntouched();
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.estaDeshabilitadoDesplegable= true;
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar

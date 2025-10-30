@@ -284,6 +284,7 @@
           *ngIf="fabricanteModalAbierto"
           [idProcedimiento]="idProcedimiento"
           [tramiteID]="tramiteID"
+          [idProcedimiento]="tramiteIDNumber"
           [fabricanteTablaDatos]="fabricanteTablaDatos"
           [datoSeleccionado]="fabricanteSeleccionadoParaModificar"
           (updateFabricanteTablaDatos)="onFabricanteUpdated($event)"
@@ -313,7 +314,8 @@
           (updateDestinatarioFinalTablaDatos)="onDestinatarioUpdated($event)"
           (cancelarDestinario)="cerrarDestinatarioModal()"
           (guardarYSalir)="cerrarDestinatarioModal()"
-          [tramiteID]="tramiteID">
+          [tramiteID]="tramiteID"
+           [idProcedimiento]="tramiteIDNumber">
         </app-agregar-destinatario-final>
       </div>
     </div>
@@ -340,7 +342,8 @@
           (updateProveedorTablaDatos)="onProveedorUpdated($event)"
           (cancelarmodal)="cerrarProveedorModal()"
           (guardarYSalir)="cerrarProveedorModal()"
-          [tramiteID]="tramiteID">
+          [tramiteID]="tramiteID"
+           [idProcedimiento]="tramiteIDNumber">
         </app-agregar-proveedor>
       </div>
     </div>
@@ -366,7 +369,8 @@
           (updateFacturadorTablaDatos)="onFacturadorUpdated($event)"
           (cancelarDestinario)="cerrarFacturadorModal()"
           (guardarYSalir)="cerrarFacturadorModal()"
-          [tramiteID]="tramiteID">
+          [tramiteID]="tramiteID"
+           [idProcedimiento]="tramiteIDNumber">
         </app-agregar-facturador>
       </div>
     </div>
