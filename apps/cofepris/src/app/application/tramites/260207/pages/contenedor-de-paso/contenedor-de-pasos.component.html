@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h1>{{ tituloMensaje || null }}</h1>
+      <h4>{{ tituloMensaje || null }}</h4>
     </div>
     <ng-container *ngIf="indice === 2"> </ng-container>
     <app-wizard [listaPasos]="pasos"></app-wizard>
@@ -11,9 +11,19 @@
     @switch (indice) { @case (1) {
     <app-paso-uno></app-paso-uno>
     } @case (2) {
-    <app-paso-dos></app-paso-dos>
+    <app-paso-carga-documento
+      [idSolicitud]="storeData.idSolicitud"
+      [idTipoTRamite]="'260207'"
+      [cargaArchivosEvento]="cargarArchivosEvento"
+      (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+      (reenviarCargaRealizada)="cargaRealizada($event)"
+      (cargaEnProgreso)="onCargaEnProgreso($event)"
+    ></app-paso-carga-documento>
     } @case (3) {
-    <app-paso-tres></app-paso-tres>
+    <paso-firma 
+    [idSolicitud]="storeData.idSolicitud" 
+    [procedure]="260208" 
+    [procedureUrl]="'importacion-tratamientos-especiales/contenedor-de-pasos'"></paso-firma>
 
     } }
 

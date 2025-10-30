@@ -35,6 +35,18 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * @property {number} [tabSeleccionado] - Pestaña seleccionada actualmente.
  */
 export interface Tramite260210State {
+
+   /**
+     * @property {number | null} idSolicitud
+     * @description
+     * Identificador único de la solicitud del trámite 80207 en el sistema VUCEM.
+     * Puede ser nulo si aún no se ha generado o asignado un ID oficial al trámite.
+     * 
+     * @unique_identifier ID único del trámite en sistema
+     * @nullable Puede ser null antes de envío oficial
+     * @system_reference Referencia para tracking y consultas
+     */
+   idSolicitud: number | null;
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
   proveedorTablaDatos: Proveedor[];
@@ -59,6 +71,7 @@ export interface Tramite260210State {
  */
 export function createInitialState(): Tramite260210State {
   return {
+    idSolicitud: 202792606,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -113,7 +126,7 @@ export function createInitialState(): Tramite260210State {
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
-    opcionesColapsableState: false,
+    opcionesColapsableState: true,
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',

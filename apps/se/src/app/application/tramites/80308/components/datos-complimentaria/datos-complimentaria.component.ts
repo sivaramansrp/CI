@@ -1,9 +1,7 @@
 import {
-  CONFIGURACION_ACCIONISTAS,
   CONFIGURACION_ANEXOS_IMMEX,
   CONFIGURACION_FEDERETARIOS,
-  CONFIGURACION_OPERACIONES,
-  CONFIGURACION_SERVICIOS,
+  CONFIGURACION_OPERACIONES
 } from '../../constantes/modificacion.enum';
 import {
   Complimentaria,
@@ -15,11 +13,10 @@ import {
 } from '../../models/plantas-consulta.model';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ComplementariaComponent } from '../../../../shared/components/complementaria/complementaria.component';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
-import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -27,11 +24,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './datos-complimentaria.component.html',
   styleUrl: './datos-complimentaria.component.scss',
   standalone: true,
-  imports: [
-    TituloComponent,
-    DatosCertificacionComponent,
-    TablaDinamicaComponent,
-  ],
+  imports: [CommonModule, ComplementariaComponent],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
 export class DatosComplimentariaComponent implements OnDestroy {
@@ -44,25 +37,19 @@ export class DatosComplimentariaComponent implements OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Configuración de las columnas de la tabla para los accionistas (Complimentaria).
-   * @type {ConfiguracionColumna<Complimentaria>[]}
-   */
-  configuracionTabla: ConfiguracionColumna<Complimentaria>[] =
-    CONFIGURACION_ACCIONISTAS;
-
-  /**
    * Configuración de las columnas de la tabla para los federetarios.
    * @type {ConfiguracionColumna<Federetarios>[]}
    */
   configuracionFederetios: ConfiguracionColumna<Federetarios>[] =
     CONFIGURACION_FEDERETARIOS;
 
-/**
-       * Configuración de las columnas de la tabla para los anexos de importación.
-       * @type {ConfiguracionColumna<DatosImmex>[]}
-       */
-      configuracionTablaImmex: ConfiguracionColumna<DatosImmex>[] =
-        CONFIGURACION_ANEXOS_IMMEX;
+  /**
+   * Configuración de las columnas de la tabla para los anexos de importación.
+   * @type {ConfiguracionColumna<DatosImmex>[]}
+   */
+  configuracionTablaImmex: ConfiguracionColumna<DatosImmex>[] =
+    CONFIGURACION_ANEXOS_IMMEX;
+
   /**
    * Datos de los federetarios obtenidos desde el servicio.
    * @type {Federetarios[]}
@@ -81,46 +68,39 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   datosComplimentaria: Complimentaria[] = [];
 
-   /**
+  /**
    * Datos de los anexos de fracción obtenidos desde el servicio.
    * @type {FracciónArancelaria[]}
    */
   datosImmex: DatosImmex[] = [];
 
+  /**
+   * Datos de las operaciones obtenidos desde el servicio.
+   * @type {Operacions[]}
+   */
+  datosPlanta: Operacions[] = [];
 
-  
-      /**
-     * Datos de las operaciones obtenidos desde el servicio.
-     * @type {Operacions[]}
-     */
-    datosPlanta: Operacions[] = [];
+  /**
+   * Arreglo que contiene los datos de modificación relacionados con los servicios.
+   *
+   * @type {DatosDelModificacion[]}
+   */
+  datosServicios: DatosDelModificacion[] = [];
 
-     /**
-       * Arreglo que contiene los datos de modificación relacionados con los servicios.
-       * 
-       * @type {DatosDelModificacion[]}
-       */
-      datosServicios: DatosDelModificacion[] = [];
+  /**
+   * Configuración de las columnas de la tabla para las operaciones.
+   * @type {ConfiguracionColumna<Operacions>[]}
+   */
+  configuracionOperacion: ConfiguracionColumna<Operacions>[] =
+    CONFIGURACION_OPERACIONES;
 
-        /**
-         * Configuración de las columnas de la tabla para las operaciones.
-         * @type {ConfiguracionColumna<Operacions>[]}
-         */
-        configuracionOperacion: ConfiguracionColumna<Operacions>[] =
-          CONFIGURACION_OPERACIONES;
-
-           /**
-             * Configuración de las columnas para los datos de modificación.
-             * 
-             * Esta propiedad utiliza una configuración predefinida (`CONFIGURACION_SERVICIOS`)
-             * para definir las columnas que se mostrarán en el componente. 
-             * Cada columna está configurada utilizando el tipo `ConfiguracionColumna<DatosDelModificacion>`.
-             */
-            configuracionServicios: ConfiguracionColumna<DatosDelModificacion>[] =
-              CONFIGURACION_SERVICIOS;
-
+  /**
+   * Constructor de la clase DatosComplimentariaComponent.
+   * @param modificionService Servicio para manejar las solicitudes de modificación.
+   * @param toastr Servicio para mostrar notificaciones.
+   */
   constructor(
-    private modificionService: ModificacionSolicitudeService,
+    public modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService
   ) {
     this.obtenerFederetarios(); // Carga los federetarios.
@@ -129,7 +109,6 @@ export class DatosComplimentariaComponent implements OnDestroy {
     this.obtenerImmexdata(); // Carga los datos de anexos.
     this.obtenerServicios(); // Carga los datos de servicios.
   }
-
 
   /**
    * Método que obtiene los datos de complimentaria desde el servicio.
@@ -185,7 +164,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
       );
   }
 
-   /**
+  /**
    * Método que obtiene los anexos complementarios desde el servicio.
    * Asigna los datos a las variables `datosAnexo` y `datosImportacion`.
    */
@@ -204,27 +183,31 @@ export class DatosComplimentariaComponent implements OnDestroy {
   }
 
   /**
-     * Obtiene los servicios relacionados con la solicitud actual.
-     * 
-     * Este método realiza una llamada al servicio `solicitudService` para obtener
-     * los datos de las operaciones y los almacena en la propiedad `datosServicios`.
-     * Además, gestiona la suscripción para que se cancele automáticamente cuando
-     * el componente se destruya, evitando posibles fugas de memoria.
-     * 
-     * En caso de error durante la obtención de los datos, se muestra un mensaje
-     * de error al usuario utilizando el servicio `toastr`.
-     * 
-     * @returns {void} Este método no devuelve ningún valor.
-     */
-    obtenerServicios(): void {
-      this.modificionService.obtenerServicios().pipe(takeUntil(this.destroyNotifier$)).subscribe((data: DatosDelModificaciondos[]) => {
-            this.datosServicios = [...data]; // Almacena los datos de operaciones.
-          },
-          () => {
-            this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
-          }
-        );
-    }
+   * Obtiene los servicios relacionados con la solicitud actual.
+   *
+   * Este método realiza una llamada al servicio `solicitudService` para obtener
+   * los datos de las operaciones y los almacena en la propiedad `datosServicios`.
+   * Además, gestiona la suscripción para que se cancele automáticamente cuando
+   * el componente se destruya, evitando posibles fugas de memoria.
+   *
+   * En caso de error durante la obtención de los datos, se muestra un mensaje
+   * de error al usuario utilizando el servicio `toastr`.
+   *
+   * @returns {void} Este método no devuelve ningún valor.
+   */
+  obtenerServicios(): void {
+    this.modificionService
+      .obtenerServicios()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data: DatosDelModificaciondos[]) => {
+          this.datosServicios = [...data]; // Almacena los datos de operaciones.
+        },
+        () => {
+          this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+        }
+      );
+  }
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Notifica a todos los observables que deben completarse y limpia las suscripciones.

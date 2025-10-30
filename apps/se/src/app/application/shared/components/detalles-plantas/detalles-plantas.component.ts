@@ -1,6 +1,9 @@
+import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -10,12 +13,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
-import { Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
+
 @Component({
   selector: 'app-detalles-plantas',
   standalone: true,
@@ -23,8 +24,7 @@ import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model'
     CommonModule,
     TituloComponent,
     ReactiveFormsModule,
-    CatalogoSelectComponent,
-    NotificacionesComponent
+    CatalogoSelectComponent,NotificacionesComponent
   ],
   templateUrl: './detalles-plantas.component.html',
   styleUrl: './detalles-plantas.component.scss',
@@ -33,6 +33,12 @@ import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model'
  * Componente para gestionar los detalles de las plantas.
  */
 export class DetallesPlantasComponent {
+   /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
   /**
    * Lista de plantas seleccionadas.
    * @property {PlantasSubfabricante[]} plantasSeleccionadas
@@ -97,8 +103,8 @@ export class DetallesPlantasComponent {
    */
   inicializarFormularioDatosPlantas(): void {
     this.formularioDatosPlantas = this.fb.group({
-      permaneceMercancia: [Validators.required],
-      tipoContribuyente: [Validators.required],
+      permaneceMercancia: ['', Validators.required],
+      tipoContribuyente: ['', Validators.required],
       opinionSAT: [{ value: 1, disabled: true }, Validators.required],
       fechaOpinion: ['12/03/2025', Validators.required],
     });
@@ -154,6 +160,19 @@ export class DetallesPlantasComponent {
    */
   guardar(): void {
     this.guadarEvent.emit();
+     if (!this.formularioDatosPlantas.valid) {
+         this.notificacionAgregarServicios = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',          
+        };
+        this.formularioDatosPlantas.markAllAsTouched();
+  }
   }
 }
-

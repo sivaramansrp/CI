@@ -1,10 +1,8 @@
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_SENSIBLES, CONFIGURACION_ANEXOS_TABLA } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../estados/models/plantas-consulta.model';
+import { AnexosComponent } from '../../../../shared/components/anexos/anexos.component';
 import { SolicitudService } from '../../service/solicitud.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -12,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './datos-anexos.component.html',
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
-  imports: [TablaDinamicaComponent, TituloComponent],
+  imports: [AnexosComponent],
 })
 export class DatosAnexosComponent implements OnInit, OnDestroy {
   /**
@@ -22,27 +20,6 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Configuración de las columnas de la tabla para los anexos.
-   * @type {ConfiguracionColumna<Anexo>[]}
-   */
-  configuracionTablaAnexo: ConfiguracionColumna<Anexo>[] =
-    CONFIGURACION_ANEXOS_TABLA;
-
-  /**
-   * Configuración de las columnas de la tabla para los anexos de importación.
-   * @type {ConfiguracionColumna<Anexo>[]}
-   */
-  configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
-    CONFIGURACION_ANEXOS_IMPORTACION;
-
-    /**
-   * Configuración de las columnas de la tabla para los anexos de importación.
-   * @type {ConfiguracionColumna<Anexo>[]}
-   */
-  configuracionTablaSensibles: ConfiguracionColumna<Anexo>[] =
-    CONFIGURACION_ANEXOS_SENSIBLES;
 
   /**
    * Datos de los anexos obtenidos desde el servicio.
