@@ -967,7 +967,12 @@ export const CATALOGO_TRATADO_ACUERDO_PAIS_CON_ID = (TRAMITE: string, ID: string
 export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/tratado/${CLAVEBLOQUE}/paises`;
 
 /**
- * Genera la URL del endpoint para obtener el catálogo de tratados o acuerdos de un tipo específico.
+ * API para descargar datos solicitud en evaluacion.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Evalua-Solicitud/excel-solicitud
+ */
+export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/excel`;
+ 
+/* Genera la URL del endpoint para obtener el catálogo de tratados o acuerdos de un tipo específico.
  * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tipo de tratado/acuerdo (`IDETIPOTRATADOACUERDO`).
  * Devuelve un string con la ruta completa del recurso en el backend.
  */
