@@ -1,6 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
-import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 

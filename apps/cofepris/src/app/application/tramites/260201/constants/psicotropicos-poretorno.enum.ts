@@ -37,3 +37,5 @@ export const ELEMENTOS_REQUERIDOS = [
   'numeroExterior'
   
 ];
+
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
