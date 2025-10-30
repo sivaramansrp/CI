@@ -23,7 +23,14 @@
                   )
                 "
         />
-        <div *ngIf="(esInvalido('claveReferencia') && pagoDerechosForm.controls['claveReferencia'].errors?.['required']) ||((this.pagoDerechosForm.get('claveReferencia')?.value==='' || this.pagoDerechosForm.get('claveReferencia')?.value===null)&& isContinuarButtonClicked)" class="text-danger">
+        <div *ngIf="
+            (esInvalido('claveReferencia') &&
+              (pagoDerechosForm.controls['claveReferencia'].errors?.['required'] ||
+              pagoDerechosForm.controls['claveReferencia'].errors?.['pattern'])) ||
+            ((pagoDerechosForm.get('claveReferencia')?.value === '' ||
+              pagoDerechosForm.get('claveReferencia')?.value === null) &&
+              isContinuarButtonClicked)
+          " class="text-danger">
           <small >
             Todos los campos de pago son requeridos
           </small>
@@ -126,6 +133,7 @@
                     'setllavePago'
                   )
                 "
+          (input)="llavePagoCase()"
         />
         <div *ngIf="(esInvalido('llavePago') && pagoDerechosForm.controls['llavePago'].errors?.['required']) ||((this.pagoDerechosForm.get('llavePago')?.value==='' || this.pagoDerechosForm.get('llavePago')?.value===null)&& isContinuarButtonClicked)" class="text-danger">
          

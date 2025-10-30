@@ -18,6 +18,11 @@ import { ToastrService, provideToastr } from 'ngx-toastr';
 @Injectable()
 class MockServicioDeMensajesService {
   mensaje$ = observableOf({});
+  postGuardarDatos = jest.fn().mockReturnValue(observableOf({ 
+    codigo: '00',
+    datos: { id_solicitud: 123 },
+    mensaje: 'Success'
+  }));
 }
 
 @Injectable()
@@ -34,12 +39,34 @@ class MockDesistimientoQuery {
     idTipoTramite: 140105
   });
 
+  selectTramite140105$ = observableOf({
+    rfc: 'TEST123',
+    claveEntidadFederativa: '09',
+    idTipoTramite: 140105,
+    datos: [],
+    motivoCancelacion: ''
+  });
+
   getValue() {
     return {
       rfc: 'TEST123',
       claveEntidadFederativa: '09',
-      idTipoTramite: 140105
+      idTipoTramite: 140105,
+      idSolicitud: null,
+      datos: [],
+      motivoCancelacion: ''
     };
+  }
+
+  select() {
+    return observableOf({
+      rfc: 'TEST123',
+      claveEntidadFederativa: '09', 
+      idTipoTramite: 140105,
+      idSolicitud: null,
+      datos: [],
+      motivoCancelacion: ''
+    });
   }
 }
 
