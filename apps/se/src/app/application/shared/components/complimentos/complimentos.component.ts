@@ -1486,26 +1486,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
     );
-  /**
-   * Valida el formato del RFC y establece el nombre del representante legal según corresponda
-   */
-  const RFC_REGEX = /^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$/i;
-  if (RFC.length >= 12 && RFC.length <= 13 && RFC_REGEX.test(RFC)) {
-    const NOMBRE_DE_REPRESENTANTE = 'Maria Lopez';
-    this.formaComplimentos.get('formaModificaciones')?.get('nombreDeRepresentante')?.setValue(NOMBRE_DE_REPRESENTANTE, { emitEvent: false });
-    this.servicioDeFormularioService.setFormValue('complimentosForm', {
-      formaModificaciones: {
-        nombreDeRepresentante: NOMBRE_DE_REPRESENTANTE
-      }
-    });
-  } else {
-    this.formaComplimentos.get('formaModificaciones')?.get('nombreDeRepresentante')?.setValue('', { emitEvent: false });
-    this.servicioDeFormularioService.setFormValue('complimentosForm', {
-      formaModificaciones: {
-        nombreDeRepresentante: ''
-      }
-    });
-  }
+     const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+     if (RFC_CONTROL?.valid) {   
+    this.formaModificaciones.get('nombreDeRepresentante')?.setValue('Maria Lopez');
+     }
+     else{
+      this.formaModificaciones.get('nombreDeRepresentante')?.setValue('');
+     }
   }
   /**
    * Handles keypress events to allow only letters and common characters
