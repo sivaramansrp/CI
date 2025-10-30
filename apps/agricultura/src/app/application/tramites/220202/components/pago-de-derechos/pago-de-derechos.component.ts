@@ -1,5 +1,5 @@
 import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
@@ -31,6 +31,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   pagoData: PagoDeDerechos = {} as PagoDeDerechos;
 
+    /**
+     * Referencia al componente hijo de pago de derechos.
+     * Permite acceder a los métodos y propiedades del componente PagoDeDerechoComponent.
+     * 
+     * @public
+     * @type {PagoDeDerechoComponent}
+     * @memberof PagoDeDerechosComponent
+     */
+    @ViewChild('pagoDerechosRef') pagoDerechos!: PagoDeDerechoComponent;
   /**
    * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
    */
@@ -119,12 +128,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Realiza una petición para obtener el catálogo de justificaciones.
    */
   obtenerListaDeJustificaciones(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.pagoSelect.justificacionSelector = DATOS as Catalogo[];
-      });
+    this.catalogosService.obtieneCatalogoJustificacion(220202)
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+      (data): void => {
+         this.pagoSelect.justificacionSelector = data.datos ?? [];
+      }
+    );
   }
 
 
