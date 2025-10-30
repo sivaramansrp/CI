@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Tramite260210State, Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { Tramite260210State, Tramite260210Store } from '../../estados/tramite260210Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { ViewChild } from '@angular/core';
 /**
  * @component PasoUnoComponent
  * @description Container component representing the first step of the procedure form.
- * It handles the selected tab index using state from `Tramite260210Query` and updates it via `Tramite260214Store`.
+ * It handles the selected tab index using state from `Tramite260210Query` and updates it via `Tramite260210Store`.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -76,11 +76,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Initializes the component with required query and store for state management.
    *
    * @param Tramite260210Query Query to access procedure state.
-   * @param tramite260214Store Store to update procedure state.
+   * @param Tramite260210Store Store to update procedure state.
    */
   constructor(
     private Tramite260210Query: Tramite260210Query,
-    private tramite260214Store: Tramite260214Store,
+    private Tramite260210Store: Tramite260210Store,
     private consultaQuery: ConsultaioQuery,
     private readonly http: HttpClient
   ) {
@@ -131,7 +131,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  *                del tipo de solicitud a actualizar en el store.
  */
 actualizarEstadoFormulario(DATOS: Tramite260210State): void {
-  this.tramite260214Store.update((state) => ({
+  this.Tramite260210Store.update((state) => ({
     ...state,
     ...DATOS
   }))
@@ -181,7 +181,7 @@ getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260210State> {
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
-    this.tramite260214Store.updateTabSeleccionado(i);
+    this.Tramite260210Store.updateTabSeleccionado(i);
   }
 
   /**
