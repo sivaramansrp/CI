@@ -14,7 +14,7 @@ export class CatalogoDocumentosService {
     constructor(
         private http: HttpClient,
     ) {
-        this.host = `${ENVIRONMENT.API_HOST}/api`;
+        this.host = `${ENVIRONMENT.API_HOST_TEST}/api`;
     }
 
     getDocumentosObligatorios(tramite: string, params: ParametrosGetDocumentos): Observable<CatalogoDocumentosResponse> {
@@ -50,6 +50,30 @@ export class CatalogoDocumentosService {
 
         const URL = `${this.host}/${API_GET_DOCUMENTOS130118}`;
 
+        return this.http.get<CatalogoDocumentosResponse>(URL, { params }).pipe(
+            map((response) => response),
+            catchError((error) => {
+                console.error('Error en getDocumentosSolicitud:', error);
+                return throwError(() => new Error('Error al obtener documentos'));
+            })
+        );
+    }
+
+
+    /**
+     * Obtiene el catálogo de documentos asociados a una solicitud para un trámite.
+     *
+     * Realiza una petición HTTP GET a la ruta construida a partir de this.host y el identificador de trámite,
+     * incluyendo el parámetro de consulta `especifico` con el valor proporcionado.
+     *
+     * @param especifico - Si es true, solicita los documentos específicos; si es false, solicita la lista genérica.
+     * @param tramiteId - Identificador del trámite (opcional). Si no se suministra, la llamada se realiza sin un id de trámite explícito.
+     * @returns Observable<CatalogoDocumentosResponse> que emite la respuesta del servicio con el catálogo de documentos.
+     * @throws Emitirá un error (Observable) con el mensaje 'Error al obtener documentos' si la petición falla; el error también se registra en consola mediante console.error.
+     */
+    getDocumentosSolicitudById(especifico: boolean, tramiteId?: string): Observable<CatalogoDocumentosResponse> {
+        let params = new HttpParams().set('especifico', String(especifico));
+        const URL = `${this.host}/sat-t${tramiteId}/solicitud/documentos`;
         return this.http.get<CatalogoDocumentosResponse>(URL, { params }).pipe(
             map((response) => response),
             catchError((error) => {

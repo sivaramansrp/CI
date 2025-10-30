@@ -183,15 +183,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public csvTabla: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
-    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
+    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.iniciales_contenedor, orden: 1 },
+    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numero_contenedor, orden: 2 },
+    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digito_verificador, orden: 3 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipo_contenedor, orden: 4 },
+    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fecha_ingreso, orden: 5 },
     { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
     { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.puede_registrar, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe_en_vucem, orden: 9 }
   ];
 
   /**
@@ -308,6 +308,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.fetchgetaduanaLista();
     this.getDatosGenerales(this.RFC);
     // this.loadDatosTablaData();
+    this.solicitudForm.get('archivoSeleccionadoName')?.disable();
   }
 
   /**
@@ -348,7 +349,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.solicitud11204State.aduanaMenuDesplegable,
         Validators.required,
       ],
-      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
+      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required],
+      archivoSeleccionadoName: [{ value: '', disabled: true }],
     });
     this.mostrarCampos();
     if (this.soloLectura) {
@@ -391,8 +393,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       return;
     }
     const VALUE = TARGET.value;
-    console.log('VALUE', VALUE);
-   
     if (controlName === 'inicialesContenedor') {
       const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR,'').toUpperCase();
       this.solicitudForm.get(controlName)?.setValue(SANITIZED);
@@ -417,7 +417,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
     }
 
-    console.log('TIPO_BUSQUEDA', this.solicitudForm.get('tipoBusqueda')?.value);
 
   }
   
@@ -580,7 +579,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'archivoSeleccionado'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
-    console.log('FILE', FILE_INPUT.files);
     if (FILE) {
       const formData = new FormData();
             formData.append('archivo', FILE);
@@ -592,10 +590,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       (respuesta) => {
      if (respuesta?.codigo === '00') {
           respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
+          this.solicitudForm.get('archivoSeleccionadoName')?.setValue(FILE.name);//it not working
           this.datosDelCsvArchivo =  respuesta?.datos.contenedores.map((item: any) => ({
                             ...item,
                             vigencia : item.vigencia.split(' ')[0],
                             fecha_inicio : item.fecha_inicio.split(' ')[0],
+                            fecha_ingreso : item.fecha_ingreso.split(' ')[0],
                             existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
                         }));
         }
@@ -653,6 +653,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
           respuesta.datos.fecha_ingreso = respuesta.datos.fecha_ingreso.split(' ')[0];
           respuesta.datos.fecha_inicio = respuesta.datos.fecha_inicio.split(' ')[0];
+          respuesta.datos.vigencia = respuesta.datos.vigencia.split(' ')[0];
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
@@ -754,15 +755,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
      */
 
     solicitudGuardar(): void {
-      console.log(this.solicitudForm.get('tipoBusqueda')?.value)
       // this.solicitudForm.get('tipoBusqueda')?.value
         const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value as SearchType;
-        console.log('TIPO_BUSQUEDA', this.solicitudForm.get('tipoBusqueda')?.value);
         const normalize = (item: any) => ({
             ...item,
             existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
             fecha_ingreso: item.fecha_ingreso ? `${item.fecha_ingreso} 00:00:00` : item.fecha_ingreso,
-            fecha_inicio: item.fecha_inicio ? `${item.fecha_inicio} 00:00:00` : item.fecha_inicio
+            fecha_inicio: item.fecha_inicio ? `${item.fecha_inicio} 00:00:00` : item.fecha_inicio,
+            vigencia: item.vigencia ? `${item.vigencia} 00:00:00` : item.vigencia
         });
 
         let contenedores: any[] = [];
