@@ -78,7 +78,7 @@ import { ModeloConfig, ServiceConfig } from '../../../../../se/src/app/applicati
 import { IniciarAutorizacionRequest } from '../core/models/autorizar-requerimiento/request/autorizar-dictamen-request.model';
 import { Firma } from '../../../../../se/src/app/application/core/models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../../../../../se/src/app/application/core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
-import { formatFecha, manejarPdf } from '@libs/shared/data-access-user/src';
+import { formatFecha, manejarPdf, exportExcelFile } from '@libs/shared/data-access-user/src';
 
 /**
  * @component
@@ -2073,25 +2073,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
           next: (resp) => {
             if (resp.codigo === CodigoRespuesta.EXITO) {
             // Convertir Base64 a un Blob
-            const BASE64_DATA = resp.datos ?? '';
-            const BYTE_CHARACTERS = atob(BASE64_DATA);
-            const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
-            for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
-              BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
-            }
-            const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
-            const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  
-            // Crear enlace de descarga
-            const LINK = document.createElement('a');
-            LINK.href = window.URL.createObjectURL(BLOB);
-            LINK.download = 'datosRPE.xlsx';
-            LINK.click();
-  
-            // Liberar memoria
-            window.URL.revokeObjectURL(LINK.href);
-  
-    
+              exportExcelFile(resp?.datos || '');
             } else {
               window.scrollTo({ top: 0, behavior: 'smooth' });
               this.nuevaNotificacion = {

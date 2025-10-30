@@ -394,3 +394,29 @@ export function formatDateToYYYYMMDD(dateString: string): string {
       URL.revokeObjectURL(URLCODIFICADA);
     }
   }
+
+  /**
+   *  Exporta un archivo Excel a partir de una cadena base64.
+   * 
+   * @param dataFile 
+   */
+  export function exportExcelFile( dataFile: string): void {
+    const BASE64_DATA = dataFile ?? '';
+    const BYTE_CHARACTERS = atob(BASE64_DATA);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+        BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Crear enlace de descarga
+    const LINK = document.createElement('a');
+    LINK.href = window.URL.createObjectURL(BLOB);
+    LINK.download = 'datosRPE.xlsx';
+    LINK.click();
+
+    // Liberar memoria
+            window.URL.revokeObjectURL(LINK.href);
+  
+  }
