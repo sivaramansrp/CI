@@ -2,5 +2,6 @@
 [pagoDerechoFormState]="pagoDerechos"
 [idProcedimiento]="idProcedimiento"
 (updatePagoDerechos)="updatePagoDerechos($event)"
-[formularioDeshabilitado]="formularioDeshabilitado" 
-[tramiteID]="'260201'"></app-pago-de-derechos>
+[formularioDeshabilitado]="formularioDeshabilitado"
+[tramiteID]="idProcedimiento.toString()"
+></app-pago-de-derechos>

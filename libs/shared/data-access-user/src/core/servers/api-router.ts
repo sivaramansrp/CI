@@ -1064,3 +1064,10 @@ export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: str
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
  */
 export const CATALOGO_BANCOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/bancos`;
+
+/*
+ * API para obtener el catálogo de años de oficio de asignación
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/anios-oficio-asignacion
+ */
+export const CATALOGO_ANOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
+
