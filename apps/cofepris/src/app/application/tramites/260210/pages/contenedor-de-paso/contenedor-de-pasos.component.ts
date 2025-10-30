@@ -306,7 +306,7 @@ ngOnInit(): void {
    */
   getValorIndice(e: AccionBoton): void {
 
-    if (e.accion === 'cont') {
+      if (e.accion === 'cont') {
         let isValid = true;
 
         if (this.indice === 1 && this.pasoUnoComponent) {
