@@ -1,10 +1,11 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ApiResponseSolicitante, ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
+import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Chofer40102Service } from '../../estados/chofer40102.service';
+
 import { Chofer40102Store, Choferesnacionales40102State } from '../../estados/chofer40102.store';
 import { Chofer40102Query } from '../../estados/chofer40102.query';
 

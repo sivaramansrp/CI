@@ -20,18 +20,22 @@ import {
 } from '../../estados/chofer40102.store';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Chofer40102Query } from '../../estados/chofer40102.query';
+
 import { ConsultaioState, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
+
 import { takeUntil } from 'rxjs/operators';
+
 import { DocumentoDetalle, IniciarResponse } from '../../../40101/pages/solicitante-page/solicitante-page.component';
+
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
-import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
+
 import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 /**
  * Interfaz que define la estructura de un objeto de acción de botón para la navegación del wizard.

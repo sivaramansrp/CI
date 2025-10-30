@@ -1,15 +1,15 @@
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiResponseChofer, DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { Chofer, Chofer40101Store, createInitialState } from '../../../../estado/chofer40101.store';
+import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, REGEX_CURP, REGEX_RFC, REGEX_SOLO_DIGITOS, TipoNotificacionEnum } from '@ng-mf/data-access-user';
+import { Chofer40101Store, createInitialState } from '../../../../estado/chofer40101.store';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { REGEX_CURP, REGEX_RFC, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { SharedModule, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Chofer40101Query } from '../../../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
+import { CommonModule } from '@angular/common';
+
+import { SharedModule, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
 
 @Component({

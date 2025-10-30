@@ -1,13 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { base64ToHex, CATALOGOS_ID, ConsultaioState, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+
+import { CATALOGOS_ID, ConsultaioState, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
-import { TEXTOS } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs/operators';
+
 import { Chofer40101Query } from '../../estado/chofer40101.query';
+
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
+
 import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 
 export interface Certificado {

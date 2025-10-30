@@ -1,4 +1,4 @@
-import { AlertComponent, ConsultaioState, NotificacionesComponent, TablaAcciones } from '@ng-mf/data-access-user';
+import { AlertComponent, ConsultaioState, NotificacionesComponent, TablaAcciones, manejarPdf } from '@ng-mf/data-access-user';
 import { AcuseDetalleService } from '@libs/shared/data-access-user/src/core/services/shared/detalleAcuse.service';
 
 import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
@@ -6,7 +6,6 @@ import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/en
 import { CommonModule } from '@angular/common';
 
 import { Component, Input } from '@angular/core';
-import { GENERARMENSAJENOTIFICACION, GENERARMENSAJERESOLUCION } from '../../../tramites/130118/enum/enum-130118';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -167,7 +166,7 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line class-methods-use-this
   descargarPdfResolucion(row: BodyTablaResolucion): void {
     if (row.fullBase64) {
-      AcuseReciboComponent.manejarPdf(row.fullBase64, row.documento, 'descargar');
+    manejarPdf(row.fullBase64, row.documento, 'descargar');
     } else {
       console.error('No base64 data found for this document');
     }
@@ -190,7 +189,7 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
     this.acuseDetalleService.getDescargarAcuse(Number(this.guardarDatos.procedureId), uuid).subscribe({
       next: (data) => {
         if (data?.codigo === "00" && data?.datos?.contenido) {
-          AcuseReciboComponent.manejarPdf(
+          manejarPdf(
             data.datos.contenido,
             data.datos.nombre_archivo,
             accion
@@ -198,37 +197,6 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
         }
       },
     });
-  }
-
-  /**
-  * Método genérico para manejar un PDF en base64.
-  *
-  * @param base64 Contenido del PDF en base64.
-  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
-  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
-  */
-  static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
-    // Decodificar el base64
-    const BYTE_CHARACTERS = atob(base64);
-    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
-    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
-      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
-    }
-    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
-
-    // Crear el Blob y la URL
-    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
-    const URLCODIFICADA = URL.createObjectURL(BLOB);
-
-    if (accion === 'abrir') {
-      window.open(URLCODIFICADA, '_blank');
-    } else {
-      const LINK = document.createElement('a');
-      LINK.href = URLCODIFICADA;
-      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
-      LINK.click();
-      URL.revokeObjectURL(URLCODIFICADA);
-    }
   }
 
   /**

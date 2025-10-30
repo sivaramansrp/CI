@@ -2,6 +2,7 @@ import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancia
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../estado/chofer40101.service';
+
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_40101, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, combineLatest } from 'rxjs';
@@ -9,7 +10,9 @@ import { Tramite40101State, Tramite40101Store } from '../../estado/tramite40101.
 import { map, take, takeUntil } from 'rxjs/operators';
 import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+
 import { DirectorGeneralQuery } from '../../estado/director-general.query';
+
 import { Chofer40101Store } from '../../estado/chofer40101.store';
 import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 interface AccionBoton {

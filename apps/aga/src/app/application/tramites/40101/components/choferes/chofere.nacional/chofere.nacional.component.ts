@@ -180,8 +180,8 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
       return;
     }
     const SELECCIONADO = this.datosDelChoferNacionalSelected[0];
-    const fullDriverList = this.chofer40101Query.getValue().driversNacional;
-    const INDICE = fullDriverList.findIndex(item => item.data === SELECCIONADO);
+    const FULLDRIVERLIST = this.chofer40101Query.getValue().driversNacional;
+    const INDICE = FULLDRIVERLIST.findIndex(item => item.data === SELECCIONADO);
     this.datosChofere = SELECCIONADO;
     setTimeout(() => {
       if (this.datosDeChoferesDialogComponent && INDICE !== -1) {
@@ -203,12 +203,12 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    */
   eliminarFilaSeleccionada(): void {
     if (this.datosDelChoferNacionalSelected.length > 0) {
-      const fullDriverList = this.chofer40101Query.getValue().driversNacional;
-      const indicesToDelete = this.datosDelChoferNacionalSelected.map(selectedDriver => {
-          return fullDriverList.findIndex(item => item.data === selectedDriver);
+      const FULLDRIVERLIST = this.chofer40101Query.getValue().driversNacional;
+      const INDICESTODELETE = this.datosDelChoferNacionalSelected.map(selectedDriver => {
+          return FULLDRIVERLIST.findIndex(item => item.data === selectedDriver);
       }).filter(index => index !== -1).sort((a, b) => b - a); // sort descending
 
-      indicesToDelete.forEach(index => {
+      INDICESTODELETE.forEach(index => {
           this.chofer40101Store.deleteDriver('nacional', index);
       });
 

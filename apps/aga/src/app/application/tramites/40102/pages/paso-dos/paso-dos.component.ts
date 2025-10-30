@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { Catalogo, ConsultaioState } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { base64ToHex, CATALOGOS_ID, encodeToISO88591Hex } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs/operators';
+
+import { base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+
 import { Certificado } from '../../../40101/pages/paso-dos/paso-dos.component';
 import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+
 import { Chofer40102Query } from '../../estados/chofer40102.query';
+
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 @Component({
