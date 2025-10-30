@@ -471,13 +471,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @param event Event del input
    * @param maxLength 
    */
-  onInputMaxLength(event: Event, maxLength: number): void {
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
     const TARGET = event.target as HTMLInputElement;
     let value = TARGET.value;
     value = value.replace(/\D/g, '').slice(0, maxLength);
     TARGET.value = value;
-    this.formaComplimentos.get('formaModificaciones.nombreDeActa')?.setValue(value, { emitEvent: false });
-  }
+    this.formaComplimentos.get(controlPath)?.setValue(value, { emitEvent: false });
+}
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
