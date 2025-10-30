@@ -98,8 +98,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() public campoRequerido: boolean = false;
 
-  @Input() tramiteID: string = '';
-
        /**
          * @property {Subscription} subscription
          * @private
@@ -324,7 +322,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   getBancoDatos(): void {
     this.subscription.add(
             this.catalogoService
-            .bancosCatalogo(this.tramiteID)
+            .bancosCatalogo(String(this.idProcedimiento))
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((response) => {
               const DATOS = response.datos as Catalogo[];
